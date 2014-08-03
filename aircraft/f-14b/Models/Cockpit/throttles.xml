@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+
+
+<PropertyList>
+	<path>throttle.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>throttles</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<effect>
+		<inherits-from>Effects/model-transparent</inherits-from>
+		<object-name>sweep-cover-transparent</object-name>
+	</effect>
+
+
+	<!-- Throttle Right -->
+	<animation> 
+		<object-name>throttle-L</object-name>
+		<type>rotate</type>
+		<property>controls/engines/engine[0]/throttle</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>-5</dep></entry>
+			<entry><ind>0.076</ind><dep>0</dep></entry>
+			<entry><ind>0.8</ind><dep>23.2</dep></entry>
+			<entry><ind>1</ind><dep>47</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>0.0027</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>-0.1478</z-m>
+		</center>
+		<axis> 
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- Throttle Right -->
+	<animation> 
+		<object-name>throttle-R</object-name>
+		<type>rotate</type>
+		<property>controls/engines/engine[1]/throttle</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>-5</dep></entry>
+			<entry><ind>0.076</ind><dep>0</dep></entry>
+			<entry><ind>0.8</ind><dep>23.2</dep></entry>
+			<entry><ind>1</ind><dep>47</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>0.0027</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>-0.1478</z-m>
+		</center>
+		<axis> 
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- Wing Sweep -->
+	<animation> 
+		<object-name>wing-sweep-handle</object-name>
+		<type>rotate</type>
+		<property>surface-positions/wing-pos-norm</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>-54.6</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>0.0027</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>-0.1914</z-m>
+		</center>
+		<axis> 
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>controls/flight/flapscommand
+
+	<!-- Flap Lever -->
+	<animation> 
+		<object-name>flap-handle</object-name>
+		<type>rotate</type>
+		<property>controls/flight/flapscommand</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>-22</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>0.0027</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>-0.1914</z-m>
+		</center>
+		<axis> 
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>shader</type>
+		<shader>chrome</shader>
+		<texture>Aircraft/f-14b/Models/Cockpit/glass_shader_y.png</texture>
+		<object-name>sweep-cover-transparent</object-name>
+	</animation>
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>throttle-L</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.275</red>
+			<green>0.12</green>
+			<blue>0.05</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>throttle-R</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.275</red>
+			<green>0.12</green>
+			<blue>0.05</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>flap-handle</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.275</red>
+			<green>0.12</green>
+			<blue>0.05</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>wing-sweep-handle</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.275</red>
+			<green>0.12</green>
+			<blue>0.05</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>sweep-cover-solid</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.275</red>
+			<green>0.12</green>
+			<blue>0.05</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>5</max-m>
+	</animation>
+
+</PropertyList>

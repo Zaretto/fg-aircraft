@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+<!-- $Id: f-14b-bs-set.xml,v 1.8 2010/03/16 18:32:19 abory Exp $ -->
+<!--
+	F-14b multiplayer back-seater view and control.
+	This config is based on work by Anders.
+-->
+<!--
+	Usage: fgfs - -prop:/sim/remote/pilot-callsign="remote pilot callsign" - -aircraft=f-14b-bs
+-->
+<PropertyList>
+
+
+
+	<input>
+		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml">
+			<!--<multikey include="Models/Cockpit/radios-multikey.xml"/>-->
+
+			<key n="14">
+				<name>Ctrl-n</name>
+				<desc>Toggles Radar PULSE SRCH / TWS AUTO Modes</desc>
+				<binding>
+					<command>nasal</command>
+					<script>awg_9.wcs_mode_toggle()</script>
+				</binding>
+			</key>
+
+			<key n="69">
+				<name>E</name>
+				<desc>Decrease Radar Range</desc>
+				<binding>
+					<command>nasal</command>
+					<script>awg_9.range_control(-1);</script>
+				</binding>
+			</key>
+
+			<key n="82">
+				<name>R</name>
+				<desc>Increase Radar Range</desc>
+				<binding>
+					<command>nasal</command>
+					<script>awg_9.range_control(1);</script>
+				</binding>
+			</key>
+
+			<key n="104">
+				<name>h</name>
+				<desc>ECM cycle modes</desc>
+				<binding>
+					<command>nasal</command>
+					<script>BS_instruments.select_ecm_nav()</script>
+				</binding>
+			</key>
+
+			<key n="113">
+				<name>q</name>
+				<desc>Toggle radar standby mode</desc>
+				<binding>
+					<command>nasal</command>
+					<script>awg_9.toggle_radar_standby();</script>
+				</binding>
+			</key>
+
+		</keyboard>
+	</input>
+
+	<instrumentation>
+		<radar>
+			<az-field type="double">120</az-field>
+			<enabled type="bool">true</enabled>
+			<range type="double">120</range>
+			<radar2-range type="double">50</radar2-range>
+			<radar-standby type="int">0</radar-standby>
+			<symbols-enabled type="bool">true</symbols-enabled>
+		</radar>
+		<ecm>
+			<enabled type="bool">true</enabled>
+			<on-off type="bool">true</on-off>
+		</ecm>
+	</instrumentation>
+
+	<sim>
+		<description>F-14b multiplayer back-seater</description>
+		<author>Anders Gidenstam (Dual Control System), Alexis Bory (Dual Navigation and Radar Systems)</author>
+		<status>alpha</status>
+		<aircraft-version>$Id: f-14b-bs-set.xml,v 1.8 2010/03/16 18:32:19 abory Exp $</aircraft-version>
+
+		<startup>
+			<splash-texture>Aircraft/f-14b/f-14b-splash.rgb</splash-texture>
+		</startup>
+
+		<gui>
+			<style>
+			<colors>
+				<splash-screen>
+					<red>0.57</red>
+					<green>0.60</green>
+					<blue>0.60</blue>
+				</splash-screen>
+			</colors>
+			</style>
+		</gui>
+		
+		<flight-model>null</flight-model>
+
+		<help>
+			<key>
+				<name>E</name>
+				<desc>Decrease Radar Range</desc>
+			</key>
+			<key>
+				<name>R</name>
+				<desc>Increase Radar Range</desc>
+			</key>
+			<key>
+				<name>Ctrl-n</name>
+				<desc>Toggles Radar PULSE SRCH / TWS AUTO Mode</desc>
+			</key>
+
+			<key>
+				<name>Ctrl-v</name>
+				<desc>Back to RIO View.</desc>
+			</key>
+			<title>Grumman F-14B Back Seat (bs) version:</title>
+			<line>NOTE: You will stay standing on the runway until you'll find a f-14b pilot flying in a max. 50NM range.</line>
+			<line>In the Menu 'Tomcat Controls' (Hit F10 if needed) choose 'Select MP-pilot', a small window appears with a list of available pilots.</line>
+			<line>You must choose a currently flying pilot in order to take place in the F-14 back seat. If no f-14b pilot, no back seat.</line>
+			<line>As you check the box for an existing pilot, the message "Welcome on board willappear on the screen. You'll will have to wait a bit before the aircraft loads</line>
+			<line>The back seater in a F-14 is called RIO for Radar Intercept Officer. The RIO is not a copilot and there is no flight controls in the rear cockpit.</line>
+			<line>However you will have a working radar, the basic flight instruments, and a compas. ECM is also working.</line>
+			<Line>Also note that this is a very experimental version, it works with every pilot F-14 but most features will need an up to date pilot aircraft. Only a very few instruments will work with an outdated pilot aircraft.</Line>
+			<line>__________________________________________________</line>
+			<!--<line>VHF: Located on the RIO's left console, 3 bands: 30-88 Mhz, 108-174 Mhz, 225-400 Mhz. Modes TR and TR-G set COMM1. Mode DF sets NAV1,</line>
+			<line>that is Direction Finder displayed with the single needle in both BDHIs. You have Comm *or* DF. Storing frequencies (up to 20 channels) a- PRESET</line>
+			<line>select the desired chan, b- READ tune the desired frequency, c- LOAD stores the frequency in the previously selected chan.</line>
+			<line>UHF: Located on the pilot's left console, 225-400 Mhz. ADF is not enabled on this radio.</line>
+			<line>__________________________________________________</line>-->
+
+
+		</help>
+
+		<menubar>
+			<default>
+				<menu n="50">
+					<label>Tomcat Controls</label>
+					<item>
+						<label>Select MP pilot</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+								dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_type);
+							</script>
+						</binding>
+					</item>
+				</menu>
+			</default>
+		</menubar>
+
+
+		<model>
+
+			<path>Aircraft/f-14b/Models/f-14b-bs.xml</path>
+			<variant type="string">f-14b-bs</variant>
+
+			<f-14b>
+				<controls>
+					<HSD>
+						<on-off type="bool">true</on-off>
+					</HSD>
+
+					<pilots-displays>
+						<steer-submode-code type="int">3</steer-submode-code>
+					</pilots-displays>
+
+					<radar-awg-9>
+						<on-off type="bool">true</on-off>
+						<brightness type="double">1</brightness>
+					</radar-awg-9>
+
+					<rio-ecm-display>
+						<mode-ecm-nav type="bool">false</mode-ecm-nav> <!-- false = NAV, true = ECM -->
+						<!-- steer-submode-code selected by the pilot--> 
+					</rio-ecm-display>
+					
+					<TID>
+						<on-off type="bool">true</on-off>
+						<brightness type="double">1</brightness>
+					</TID>
+					
+					<VDI>
+						<brightness type="double">1</brightness>
+					</VDI>
+					
+				</controls>
+
+				<instrumentation>
+
+					<airspeed-indicator>
+						<safe-speed-limit-bug type="double">830</safe-speed-limit-bug>
+					</airspeed-indicator>
+
+					<hsd>
+						<needle-deflection type="double">0.00</needle-deflection>
+					</hsd>
+
+					<radar>
+						<az-field type="double">120</az-field>
+						<enabled type="bool">true</enabled>
+						<range type="double">120</range>
+						<!--<radar2-range type="double">50</radar2-range>-->
+						<radar-standby type="bool">0</radar-standby>
+						<symbols-enabled type="bool">true</symbols-enabled>
+					</radar>
+
+					<radar-altimeter>
+						<limit-bug type="double">250</limit-bug>
+					</radar-altimeter>
+
+					<tacan>
+						<xy-switch type="bool">0</xy-switch>
+						<nogo-lamp type="bool">false</nogo-lamp>
+						<go-lamp type="bool">false</go-lamp>
+						<mode type="int">0</mode>
+					</tacan>
+
+					<rio-nav-display>
+						<ready-light type="bool">false</ready-light>
+						<track-hold-light type="bool">false</track-hold-light>
+						<clsn-light type="bool">false</clsn-light><!--Constant Angle Collision Steering enabled-->
+					</rio-nav-display>
+
+					<radar-awg-9>
+						<ccm-mode-spl type="bool">false</ccm-mode-spl>
+						<ccm-mode-alt-dhf type="bool">false</ccm-mode-alt-dhf>
+						<ccm-mode-trs type="bool">false</ccm-mode-trs>
+						<display-rdr type="bool">true</display-rdr>
+						<display-ir type="bool">false</display-ir>
+						<display-iff type="bool">false</display-iff>
+						<ant-trk-light type="bool">false</ant-trk-light>
+						<rd-rot-light type="bool">false</rd-rot-light>
+						<jat-light type="bool">false</jat-light>
+						<irot-light type="bool">false</irot-light>
+						<wcs-mode>
+							<pd-stt type="bool">false</pd-stt>
+							<pulse-stt type="bool">false</pulse-stt>
+							<pd-srch type="bool">false</pd-srch>
+							<rws type="bool">false</rws>
+							<tws-auto type="bool">false</tws-auto>
+							<tws-man type="bool">false</tws-man>
+							<pulse-srch type="bool">true</pulse-srch>
+						</wcs-mode>
+					</radar-awg-9>
+
+				</instrumentation>
+
+			</f-14b>
+
+		</model>
+
+		<multiplay>
+			<generic>
+				<!-- <float n="0">0</float> wing-sweep     -->
+				<!-- <float n="1">0</float> free     -->
+				<!-- <float n="2">0</float>aux flaps      -->
+				<!-- <float n="3">0</float>slats          -->
+				<!-- <float n="4">0</float>left elevator  -->
+				<!-- <float n="5">0</float>right elevator -->
+				<!-- <float n="6">0</float>refuel probe   -->
+				<int n="0" type="int">0</int>    <!-- bs_switches1_mpp      -->
+				<!-- <int n="1" type="int">0</int>    formation slimmers -->
+				<int n="2" type="int">1</int>    <!-- force radar standby transmission over MP -->
+				<!-- <int n="3" type="int">0</int>    collision lights -->
+				<!-- <int n="4" type="int">0</int>    position lights -->
+				<!-- <int n="5" type="int">0</int>    left wing torn -->
+				<!-- <int n="6" type="int">0</int>    right wing torn -->
+				<string n="0" type="string"></string>    <!-- bs_TDM1_mpp -->
+				<string n="1" type="string"></string>    <!-- pilot's instruments -->
+			</generic>
+		</multiplay>
+
+		<presets>
+			<onground type="bool">false</onground>
+			<altitude-agl-ft type="double">30.0</altitude-agl-ft>
+		</presets>
+
+		<rendering>
+
+			<camera-group>
+				<znear type="double">0.20</znear>
+			</camera-group>
+
+			<redout>
+				<parameters>
+					<blackout-complete-g>7.9</blackout-complete-g>
+					<blackout-onset-g>5.5</blackout-onset-g>
+				</parameters>
+			</redout>
+
+		</rendering>
+
+		<sound>
+			<audible>false</audible>
+			<path/>
+		</sound>
+
+		<!-- Aircraft specific help. -->
+		<!-- help include="help.xml"/ -->
+
+		<systems>
+			<electrical>
+				<path/>
+			</electrical>
+		</systems>
+
+		<!-- Views -->
+		<view n="0">
+		<!-- RIO's position. -->
+			<name>Back-seat View</name>
+			<type>lookfrom</type>
+			<internal type="bool">true</internal>
+			<config>
+				<from-model type="bool">false</from-model>
+				<from-model-idx type="int">0</from-model-idx>
+				<eye-lat-deg-path>/position/latitude-deg</eye-lat-deg-path>
+				<eye-lon-deg-path>/position/longitude-deg</eye-lon-deg-path>
+				<eye-alt-ft-path>/position/altitude-ft</eye-alt-ft-path>
+				<eye-heading-deg-path>/orientation/heading-deg</eye-heading-deg-path>
+				<eye-pitch-deg-path>/orientation/pitch-deg</eye-pitch-deg-path>
+				<eye-roll-deg-path>/orientation/roll-deg</eye-roll-deg-path>
+				<x-offset-m archive="y">0.0</x-offset-m>
+				<y-offset-m archive="y">0.43</y-offset-m>
+				<z-offset-m archive="y">-3.58</z-offset-m>
+				<pitch-offset-deg>0</pitch-offset-deg>
+				<default-field-of-view-deg>55</default-field-of-view-deg>
+				<limits>
+					<enabled type="bool">true</enabled>
+					<left>
+						<heading-max-deg type="double">161</heading-max-deg>
+						<x-offset-max-m type="double">0.25</x-offset-max-m>
+						<x-offset-threshold-deg type="double">45</x-offset-threshold-deg>
+					</left>
+					<right>
+						<heading-max-deg type="double">161</heading-max-deg>
+						<x-offset-max-m type="double">0.25</x-offset-max-m>
+						<x-offset-threshold-deg type="double">45</x-offset-threshold-deg>
+					</right>
+				</limits>
+			</config>
+		</view>
+
+		<!-- <view n="100"> -->
+		<!-- Pilot's position. -->
+			<!-- <name>Pilot View</name>
+			<type>lookfrom</type>
+			<internal type="bool">true</internal>
+			<config>
+				<from-model type="bool">true</from-model>
+				<from-model-idx type="int">0</from-model-idx>
+				<eye-lat-deg-path>/position/latitude-deg</eye-lat-deg-path>
+				<eye-lon-deg-path>/position/longitude-deg</eye-lon-deg-path>
+				<eye-alt-ft-path>/position/altitude-ft</eye-alt-ft-path>
+				<eye-heading-deg-path>/orientation/heading-deg</eye-heading-deg-path>
+				<eye-pitch-deg-path>/orientation/pitch-deg</eye-pitch-deg-path>
+				<eye-roll-deg-path>/orientation/roll-deg</eye-roll-deg-path>
+				<x-offset-m archive="y">0.0</x-offset-m>
+				<y-offset-m archive="y">0.43</y-offset-m>
+				<z-offset-m archive="y">-5.58</z-offset-m>
+				<pitch-offset-deg>-14.7</pitch-offset-deg>
+				<default-field-of-view-deg>55</default-field-of-view-deg>
+				<limits>
+					<enabled type="bool">true</enabled>
+					<left>
+						<heading-max-deg type="double">140</heading-max-deg>
+						<x-offset-max-m type="double">0.20</x-offset-max-m>
+						<x-offset-threshold-deg type="double">25</x-offset-threshold-deg>
+					</left>
+					<right>
+						<heading-max-deg type="double">140</heading-max-deg>
+						<x-offset-max-m type="double">0.20</x-offset-max-m>
+						<x-offset-threshold-deg type="double">25</x-offset-threshold-deg>
+					</right>
+				</limits>
+			</config>
+		</view> -->
+
+		<view n="1">
+			<config>
+				<at-model type="bool">false</at-model>
+			</config>
+		</view>
+		<view n="2">
+			<config>
+				<at-model type="bool">false</at-model>
+			</config>
+		</view>
+		<view n="3">
+			<config>
+				<at-model type="bool">false</at-model>
+			</config>
+		</view>
+		<view n="5">
+			<config>
+				<at-model type="bool">false</at-model>
+			</config>
+		</view>
+		<view n="6">
+			<config>
+				<at-model type="bool">false</at-model>
+			</config>
+		</view>
+
+	</sim>
+
+	<nasal>
+		<radardist>
+			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
+		</radardist>
+		<awg_9>
+			<file>Aircraft/f-14b/Nasal/awg_9.nas</file>
+		</awg_9>
+		<dual_control_tools>
+			<file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
+		</dual_control_tools>
+		<aircraft_dual_control>
+			<file>Aircraft/f-14b/DualControl/f-14b-dual-control.nas</file>
+		</aircraft_dual_control>
+		<dual_control>
+			<file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
+		</dual_control>
+		<BS_instruments>
+			<file>Aircraft/f-14b/Nasal/back-seat-instruments.nas</file>
+		</BS_instruments>
+	</nasal>
+
+
+</PropertyList>

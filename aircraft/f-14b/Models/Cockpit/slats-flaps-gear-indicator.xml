@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+
+
+
+<PropertyList>
+	<path>flaps-slats-indicator.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>flaps-slats-indicator</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- Flaps -->
+	<animation>
+		<name>flaps</name>
+		<type>rotate</type>
+		<object-name>flaps</object-name>
+		<property>surface-positions/flap-pos-norm</property>
+		<factor>90</factor>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0.0200</y-m>
+			<z-m>0.0182</z-m>
+		</center>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- Slats -->
+	<animation> 
+		<type>select</type>
+		<object-name>slats-in</object-name>
+		<condition>
+			<equals>
+				<property>surface-positions/slats-pos-norm</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>slats-extended</object-name>
+		<condition>
+			<equals>
+				<property>surface-positions/slats-pos-norm</property>
+				<value>1</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- Landing Gear -->
+	<animation> 
+		<type>select</type>
+		<object-name>lw-up</object-name>
+		<condition>
+			<equals>
+				<property>gear/gear[0]/position-norm</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>lw-down</object-name>
+		<condition>
+			<equals>
+				<property>gear/gear[0]/position-norm</property>
+				<value>1</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation> 
+		<type>select</type>
+		<object-name>nw-up</object-name>
+		<condition>
+			<equals>
+				<property>gear/gear[1]/position-norm</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>nw-down</object-name>
+		<condition>
+			<equals>
+				<property>gear/gear[1]/position-norm</property>
+				<value>1</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation> 
+		<type>select</type>
+		<object-name>rw-up</object-name>
+		<condition>
+			<equals>
+				<property>gear/gear[2]/position-norm</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>rw-down</object-name>
+		<condition>
+			<equals>
+				<property>gear/gear[2]/position-norm</property>
+				<value>1</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- Speed Brake/ -->
+	<animation> 
+		<type>select</type>
+		<object-name>sp-in</object-name>
+		<condition>
+			<equals>
+				<property>surface-positions/speedbrake-pos-norm</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-full</object-name>
+		<condition>
+			<equals>
+				<property>surface-positions/speedbrake-pos-norm</property>
+				<value>1</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-partial</object-name>
+		<condition>
+			<greater-than>
+				<property>surface-positions/speedbrake-pos-norm</property>
+				<value>0</value>
+			</greater-than>
+			<less-than>
+				<property>surface-positions/speedbrake-pos-norm</property>
+				<value>1</value>
+			</less-than>
+		</condition>
+	</animation>
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>symbols</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>50</max-m>
+	</animation>
+
+</PropertyList>

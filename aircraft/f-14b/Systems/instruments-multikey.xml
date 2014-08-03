@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+
+<!--
+	This file defines vi-like key sequences which are started with the ':'-key.
+	It's evaluated by $FG_ROOT/Nasal/multikey.nas.
+
+	- <Esc> always aborts.
+	- <Return>/<Enter> executes and terminates the command mode, given that
+	  <binding>s exist (use "null" if there's nothing else to do) and <no-exit/>
+	  isn't defined.
+	- Keys with defined <exit/> property execute their bindings immediately,
+	  that is: without having to press <Return>/<Enter>.
+	- Format placeholder values are available to Nasal code via arg[].
+	- Nasal code can set the dialog title by assignment to the _ variable.
+	- <key> indices aren't used by the system, but are recommended to allow
+	  reliable overwriting by aircraft or user xml files.
+	- Cursor keys are equivalent to characters <, >, ^, _.
+-->
+
+<PropertyList>
+
+
+	<key n="65">
+		<name>A</name>
+		<desc>Aircraft</desc><!-- reserved for aircraft extensions -->
+		
+			
+		<key n="72">
+			<name>H</name>
+			<desc>HUD</desc>
+
+			<key n="115">
+				<name>s</name>
+				<desc>Toggle HUD on/off</desc>
+				<exit/>
+				<binding>
+					<command>property-assign</command>
+					<property>sim/hud/visibility[0]</property>
+					<value>0</value>
+				</binding>
+				<binding>
+					<command>property-toggle</command>
+					<property>sim/hud/visibility[1]</property>
+				</binding>
+			</key>
+
+			<!-- Mode -->
+			<key n="116">
+				<name>t</name>
+				<desc>HUD Takeoff mode</desc>
+				<exit/>
+				<binding>
+					<command>nasal</command>
+					<script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "to-bt")</script>
+				</binding>
+			</key>
+
+			<key n="99">
+				<name>c</name>
+				<desc>HUD Cruise mode</desc>
+				<exit/>
+				<binding>
+					<command>nasal</command>
+					<script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "cruise-bt")</script>
+				</binding>
+			</key>
+
+			<key n="97">
+				<name>a</name>
+				<desc>HUD A/A mode</desc>
+				<exit/>
+				<binding>
+					<command>nasal</command>
+					<script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "aa-bt")</script>
+				</binding>
+			</key>
+
+			<key n="103">
+				<name>g</name>
+				<desc>HUD A/G mode</desc>
+				<exit/>
+				<binding>
+					<command>nasal</command>
+					<script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "ag-bt")</script>
+				</binding>
+			</key>
+
+			<key n="108">
+				<name>l</name>
+				<desc>HUD Landing mode</desc>
+				<exit/>
+				<binding>
+					<command>nasal</command>
+					<script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "ldg-bt")</script>
+				</binding>
+			</key>
+
+		</key>
+
+
+
+
+
+		<!-- UHF an-arc-159v1 -->
+		<key n="117">
+			<name>u</name>
+			<desc>UHF</desc>
+			<binding>
+				<command>null</command>
+			</binding>
+
+			<key n="99">
+				<name>c</name>
+				<desc>UHF set Channel</desc>
+				<key n="60">
+					<name>&gt;</name>
+					<desc>UHF set Channel up</desc>
+					<no-exit/>
+					<binding>
+						<command>nasal</command>
+						<script>_ = sprintf("Chan %02u Freq %3f", an_arc_159v1.adj_channel(1), an_arc_159v1.get_selected())</script>
+					</binding>
+
+
+				</key>
+				<key n="62">
+					<name>&lt;</name>
+					<desc>UHF set Channel down</desc>
+					<no-exit/>
+					<binding>
+						<command>nasal</command>
+						<script>_ = sprintf("Chan %02u Freq %3f", an_arc_159v1.adj_channel(-1), an_arc_159v1.get_selected())</script>
+					</binding>
+				</key>
+
+				<key n="102">
+					<name>f</name>
+					<desc>UHF change Channel Frequency = ? kHz (225000-400000)</desc>
+					<key n="902">
+						<name>%u</name>
+						<desc>UHF frequency = %u kHz</desc>
+						<binding>
+							<command>nasal</command>
+							<script>an_arc_159v1.set_freq(arg[0]); an_arc_159v1.load(arg[0])</script>
+						</binding>
+					</key>
+				</key>
+			</key>
+
+			<key n="111">
+				<name>o</name>
+				<desc>UHF set Function PRESET - Mode MAIN</desc>
+				<binding>
+					<command>nasal</command>
+					<script>an_arc_159v1.Mode.setValue(1); an_arc_159v1.turn_on(); an_arc_159v1.Function.setValue(0);</script>
+				</binding>
+			</key>
+			<key n="47">
+				<name>/</name>
+				<desc>UHF set Mode OFF</desc>
+				<binding>
+					<command>nasal</command>
+					<script>an_arc_159v1.Mode.setValue(0); an_arc_159v1.turn_off()</script>
+				</binding>
+			</key>
+		</key>
+
+
+		<!-- VHF an-arc-182v -->
+		<key n="118">
+			<name>v</name>
+			<desc>VHF/UHF</desc>
+			<binding>
+				<command>null</command>
+			</binding>
+
+			<key n="99">
+				<name>c</name>
+				<desc>VHF/UHF set Channel</desc>
+				<key n="60">
+					<name>&gt;</name>
+					<desc>VHF/UHF set Channel up</desc>
+					<no-exit/>
+					<binding>
+						<command>nasal</command>
+						<script>_ = sprintf("Chan %02u Freq %3f", an_arc_182v.adj_channel(1), an_arc_182v.get_selected())</script>
+					</binding>
+				</key>
+				<key n="62">
+					<name>&lt;</name>
+					<desc>VHF/UHF set Channel down</desc>
+					<no-exit/>
+					<binding>
+						<command>nasal</command>
+						<script>_ = sprintf("Chan %02u Freq %3f", an_arc_182v.adj_channel(-1), an_arc_182v.get_selected())</script>
+					</binding>
+				</key>
+				<key n="102">
+					<name>f</name>
+					<desc>VHF/UHF change Channel Frequency = ? kHz (30000-88000  108000-174000  225000-400000)</desc>
+					<key n="902">
+						<name>%u</name>
+						<desc>VHF/UHF frequency = %u kHz</desc>
+						<binding>
+							<command>nasal</command>
+							<script>an_arc_182v.set_freq(arg[0]); an_arc_182v.load(arg[0])</script>
+						</binding>
+					</key>
+				</key>
+			</key>
+
+			<key n="110">
+				<name>n</name>
+				<desc>VHF/UHF set Function PRESET - Mode DF</desc>
+				<binding>
+					<command>nasal</command>
+					<script>an_arc_182v.set_function(3); an_arc_182v.set_mode(3);</script>
+				</binding>
+			</key>
+			<key n="111">
+				<name>o</name>
+				<desc>VHF/UHF set Function PRESET - Mode T/R</desc>
+				<binding>
+					<command>nasal</command>
+					<script>an_arc_182v.set_function(3); an_arc_182v.set_mode(1);</script><!-- an_arc_182v.Mode.setValue(1);-->
+				</binding>
+			</key>
+			<key n="47">
+				<name>/</name>
+				<desc>VHF/UHF set Mode OFF</desc>
+				<binding>
+					<command>nasal</command>
+					<script>an_arc_182v.set_mode(0)</script>
+				</binding>
+			</key>
+
+		</key>
+
+	</key>
+
+</PropertyList>

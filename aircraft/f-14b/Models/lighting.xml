@@ -1,0 +1,487 @@
+<?xml version="1.0"?>
+
+	<PropertyList>
+
+	<path>external-lights.ac</path>
+
+	<effect>
+		<inherits-from>Effects/model-transparent</inherits-from>
+		<object-name>coll_halo_CP</object-name>
+		<object-name>coll_halo_TL</object-name>
+		<object-name>coll_halo_TR</object-name>
+		<object-name>pos_halo_WR</object-name>
+		<object-name>pos_halo_WL</object-name>
+		<object-name>pos_halo_Tail</object-name>
+	</effect>
+
+	<animation>
+		<type>select</type>
+		<condition><property>sim/rendering/rembrandt/enabled</property></condition>
+		<object-name>RBT-coll_halo_TR</object-name>
+		<object-name>RBT-coll_halo_TL</object-name>
+		<object-name>RBT-coll_halo_WL</object-name>
+		<object-name>RBT-coll_halo_WR</object-name>
+		<object-name>RBT-pos_halo_Tail</object-name>
+		<object-name>RBT-coll_halo_CP</object-name>
+		<object-name>taxi-halo-sphere</object-name>
+		<object-name>taxi-light-cone</object-name>
+	</animation>
+
+	<light-params>
+		<position-factor>sim/multiplay/generic/int[4]</position-factor>
+		<colision-factor>9</colision-factor>
+	</light-params>
+
+	<!-- Collision Chin Pod -->
+	<animation>
+		<type>select</type>
+		<object-name>coll_halo_CP</object-name>
+		<object-name>RBT-coll_halo_CP</object-name><!-- rembrandt halo -->
+		<condition>
+			<property>sim/multiplay/generic/int[3]</property>
+		</condition>
+	</animation> 
+	<animation>
+		<type>translate</type>
+		<object-name>coll_halo_CP</object-name>
+		<offset-m>7.87</offset-m>
+		<axis><x>-7.6800</x><y>0</y><z>-1.7200</z></axis>
+	</animation>
+	<animation>
+		<type>billboard</type>
+		<object-name>coll_halo_CP</object-name>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>coll_halo_CP</object-name>
+		<property>/sim/time/sun-angle-rad</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor alias="../../light-params/colision-factor"/>
+		<y-factor alias="../../light-params/colision-factor"/>
+		<z-factor alias="../../light-params/colision-factor"/>
+		<x-offset>1</x-offset><y-offset>1</y-offset><z-offset>1</z-offset>
+	</animation>
+	<animation>
+		<type>dist-scale</type>
+		<object-name>coll_halo_CP</object-name>
+		<interpolation>
+			<entry><ind>0</ind><dep>1</dep></entry>
+			<entry><ind>350</ind><dep>6</dep></entry>
+			<entry><ind>50000</ind><dep>1000</dep></entry>
+		</interpolation>
+	</animation>
+
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>RBT-coll_halo_CP</name>
+		<object-name>RBT-coll_halo_CP</object-name>
+		<nopreview/>
+		<position><x>-7.7476</x><y>0</y><z>-1.7990</z></position>
+		<ambient><r>1</r><g>0.15</g><b>0</b><a>1.0</a></ambient>
+		<diffuse><r>1</r><g>0.15</g><b>0</b><a>1.0</a></diffuse>
+		<specular><r>1</r><g>0.15</g><b>0</b><a>1.0</a></specular>
+		<attenuation><c>1.3</c><l>1.5</l><q>4</q></attenuation>
+		<cutoff>10</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>10</far-m>
+	</animation>
+
+
+	<!-- Collision Tail Right -->
+	<animation>
+		<type>select</type>
+		<object-name>coll_halo_TR</object-name>
+		<object-name>RBT-coll_halo_TR</object-name><!-- rembrandt halo -->
+		<condition>
+			<property>sim/multiplay/generic/int[3]</property>
+		</condition>
+	</animation> 
+	<animation>
+		<type>translate</type>
+		<object-name>coll_halo_TR</object-name>
+		<offset-m>8.43</offset-m>
+		<axis>
+			<x>8.03</x>
+			<y>-1.7</y>
+			<z>1.95</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>billboard</type>
+		<object-name>coll_halo_TR</object-name>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>coll_halo_TR</object-name>
+		<property>/sim/time/sun-angle-rad</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor alias="../../light-params/colision-factor"/>
+		<y-factor alias="../../light-params/colision-factor"/>
+		<z-factor alias="../../light-params/colision-factor"/>
+		<x-offset>1</x-offset><y-offset>1</y-offset><z-offset>1</z-offset>
+	</animation>
+	<animation>
+		<type>dist-scale</type>
+		<object-name>coll_halo_TR</object-name>
+		<interpolation>
+			<entry><ind>0</ind><dep>1</dep></entry>
+			<entry><ind>350</ind><dep>10</dep></entry>
+			<entry><ind>50000</ind><dep>1000</dep></entry>
+		</interpolation>
+	</animation>
+
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>RBT-coll_halo_TR</name>
+		<object-name>RBT-coll_halo_TR</object-name>
+		<nopreview/>
+		<position><x>9.0232</x><y>1.6616</y><z>1.9674</z></position>
+		<ambient><r>1</r><g>0.15</g><b>0</b><a>1.0</a></ambient>
+		<diffuse><r>1</r><g>0.15</g><b>0</b><a>1.0</a></diffuse>
+		<specular><r>1</r><g>0.15</g><b>0</b><a>1.0</a></specular>
+		<attenuation><c>1.3</c><l>1.5</l><q>4</q></attenuation>
+		<cutoff>10</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>10</far-m>
+	</animation>
+
+	<!-- Collision Tail Left -->
+	<animation>
+		<type>select</type>
+		<object-name>coll_halo_TL</object-name>
+		<object-name>RBT-coll_halo_TL</object-name><!-- rembrandt halo -->
+		<condition>
+			<property>sim/multiplay/generic/int[3]</property>
+		</condition>
+	</animation> 
+	<animation>
+		<type>translate</type>
+		<object-name>coll_halo_TL</object-name>
+		<offset-m>9.47</offset-m>
+		<axis><x>9.11</x><y>1.7</y><z>1.95</z></axis>
+	</animation>
+	<animation>
+		<type>billboard</type>
+		<object-name>coll_halo_TL</object-name>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>coll_halo_TL</object-name>
+		<property>/sim/time/sun-angle-rad</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor alias="../../light-params/colision-factor"/>
+		<y-factor alias="../../light-params/colision-factor"/>
+		<z-factor alias="../../light-params/colision-factor"/>
+		<x-offset>1</x-offset><y-offset>1</y-offset><z-offset>1</z-offset>
+	</animation>
+	<animation>
+		<type>dist-scale</type>
+		<object-name>coll_halo_TL</object-name>
+		<interpolation>
+			<entry><ind>0</ind><dep>1</dep></entry>
+			<entry><ind>350</ind><dep>10</dep></entry>
+			<entry><ind>50000</ind><dep>1000</dep></entry>
+		</interpolation>
+	</animation>
+
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>RBT-coll_halo_TL</name>
+		<object-name>RBT-coll_halo_TL</object-name>
+		<nopreview/>
+		<position><x>8.1077</x><y>-1.6616</y><z>1.9674</z></position>
+		<ambient><r>1</r><g>0.15</g><b>0</b><a>1.0</a></ambient>
+		<diffuse><r>1</r><g>0.15</g><b>0</b><a>1.0</a></diffuse>
+		<specular><r>1</r><g>0.15</g><b>0</b><a>1.0</a></specular>
+		<attenuation><c>1.3</c><l>1.5</l><q>4</q></attenuation>
+		<cutoff>10</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>10</far-m>
+	</animation>
+
+
+	<!-- Navigation Wing Left -->
+	<animation>
+		<type>select</type>
+		<object-name>pos_halo_WL</object-name>
+		<object-name>RBT-coll_halo_WL</object-name>
+		<condition>
+			<property>sim/multiplay/generic/int[4]</property><!--flasher -->
+			<not>
+				<property>sim/multiplay/generic/int[5]</property><!--wing torn -->
+			</not>
+		</condition>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>pos_halo_WL</object-name>
+		<object-name>RBT-coll_halo_WL</object-name>
+		<property>surface-positions/wing-pos-norm</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>49</dep></entry>
+			<entry><ind>1.2</ind><dep>52</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>1.247</x-m>
+			<y-m>-2.615</y-m>
+			<z-m>-0.636</z-m>
+		</center>
+		<axis><z>1.0</z></axis>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>pos_halo_WL</object-name>
+		<object-name>RBT-coll_halo_WL</object-name>
+		<property>surface-positions/wing-fold-pos-norm</property>
+		<factor>-7.0</factor>
+		<center><x-m>1.247</x-m><y-m>-2.615</y-m><z-m>-0.636</z-m></center>
+		<axis><x>1.0</x></axis>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>pos_halo_WL</object-name>
+		<offset-m>9.5998</offset-m>
+		<axis><x>2.9557</x><y>-9.1080</y><z>-0.65</z></axis>
+	</animation>
+	<animation>
+		<type>billboard</type>
+		<object-name>pos_halo_WL</object-name>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>pos_halo_WL</object-name>
+		<property>/sim/time/sun-angle-rad</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor>1</x-factor><y-factor>1</y-factor><z-factor>1</z-factor>
+		<x-offset>0</x-offset><y-offset>0</y-offset><z-offset>0</z-offset>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>pos_halo_WL</object-name>
+		<property>sim/multiplay/generic/int[4]</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor>1</x-factor><y-factor>1</y-factor><z-factor>1</z-factor>
+		<x-offset>0</x-offset><y-offset>0</y-offset><z-offset>0</z-offset>
+	</animation>
+	<animation>
+		<type>dist-scale</type>
+		<object-name>pos_halo_WL</object-name>
+		<interpolation>
+			<entry><ind>0</ind><dep>1</dep></entry>
+			<entry><ind>350</ind><dep>10</dep></entry>
+			<entry><ind>50000</ind><dep>1000</dep></entry>
+		</interpolation>
+	</animation>
+
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>RBT-coll_halo_WL</name>
+		<object-name>RBT-coll_halo_WL</object-name>
+		<nopreview/>
+		<position><x>3.0700</x><y>-9.1247</y><z>-0.5790</z></position>
+		<ambient><r>1</r><g>0.15</g><b>0</b><a>1.0</a></ambient>
+		<diffuse><r>1</r><g>0.15</g><b>0</b><a>1.0</a></diffuse>
+		<specular><r>1</r><g>0.15</g><b>0</b><a>1.0</a></specular>
+		<attenuation><c>1.3</c><l>1.5</l><q>4</q></attenuation>
+		<cutoff>10</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>10</far-m>
+	</animation>
+
+	<!-- Navigation Wing Right -->
+	<animation>
+		<type>select</type>
+		<object-name>pos_halo_WR</object-name>
+		<object-name>RBT-coll_halo_WR</object-name>
+		<condition>
+			<property>sim/multiplay/generic/int[4]</property><!--flasher -->
+			<not>
+				<property>sim/multiplay/generic/int[5]</property><!--wing torn -->
+			</not>
+		</condition>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>pos_halo_WR</object-name>
+		<object-name>RBT-coll_halo_WR</object-name>
+		<property>surface-positions/wing-pos-norm</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>49</dep></entry>
+			<entry><ind>1.2</ind><dep>52</dep></entry>
+		</interpolation>
+		<center><x-m>1.247</x-m><y-m>2.615</y-m><z-m>-0.636</z-m></center>
+		<axis><z>-1.0</z></axis>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>pos_halo_WR</object-name>
+		<object-name>RBT-coll_halo_WR</object-name>
+		<property>surface-positions/wing-fold-pos-norm</property>
+		<factor>-7.0</factor>
+		<center><x-m>1.247</x-m><y-m>2.615</y-m><z-m>-0.636</z-m></center>
+		<axis><x>-1.0</x></axis>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>pos_halo_WR</object-name>
+		<offset-m>9.5998</offset-m>
+		<axis><x>2.9557</x><y>9.1080</y><z>-0.65</z></axis>
+	</animation>
+	<animation>
+		<type>billboard</type>
+		<object-name>pos_halo_WR</object-name>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>pos_halo_WR</object-name>
+		<property>/sim/time/sun-angle-rad</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor>1</x-factor><y-factor>1</y-factor><z-factor>1</z-factor>
+		<x-offset>0</x-offset><y-offset>0</y-offset><z-offset>0</z-offset>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>pos_halo_WR</object-name>
+		<property>sim/multiplay/generic/int[4]</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor>1</x-factor><y-factor>1</y-factor><z-factor>1</z-factor>
+		<x-offset>0</x-offset><y-offset>0</y-offset><z-offset>0</z-offset>
+	</animation>
+	<animation>
+		<type>dist-scale</type>
+		<object-name>pos_halo_WR</object-name>
+		<interpolation>
+			<entry><ind>0</ind><dep>1</dep></entry>
+			<entry><ind>350</ind><dep>10</dep></entry>
+			<entry><ind>50000</ind><dep>1000</dep></entry>
+		</interpolation>
+	</animation>
+
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>RBT-coll_halo_WR</name>
+		<object-name>RBT-coll_halo_WR</object-name>
+		<nopreview/>
+		<position><x>3.0700</x><y>9.1247</y><z>-0.5790</z></position>
+		<ambient><r>0</r><g>1</g><b>0.1</b><a>1</a></ambient>
+		<diffuse><r>0</r><g>1</g><b>0.1</b><a>1</a></diffuse>
+		<specular><r>0</r><g>1</g><b>0.1</b><a>1</a></specular>
+		<attenuation><c>1.3</c><l>1.5</l><q>4</q></attenuation>
+		<cutoff>10</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>10</far-m>
+	</animation>
+
+	<!-- Navigation Wing Tail -->
+	<animation>
+		<type>select</type>
+		<object-name>pos_halo_Tail</object-name>
+		<object-name>RBT-pos_halo_Tail</object-name><!-- rembrandt halo -->
+		<condition>
+			<property>sim/multiplay/generic/int[4]</property><!--flasher -->
+		</condition>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>pos_halo_Tail</object-name>
+		<offset-m>9.4359</offset-m>
+		<axis><x>9.13</x><y>-1.68</y><z>1.69</z></axis>
+	</animation>
+	<animation>
+		<type>billboard</type>
+		<object-name>pos_halo_Tail</object-name>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>pos_halo_Tail</object-name>
+		<property>/sim/time/sun-angle-rad</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor>1</x-factor><y-factor>1</y-factor><z-factor>1</z-factor>
+		<x-offset>0</x-offset><y-offset>0</y-offset><z-offset>0</z-offset>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>pos_halo_Tail</object-name>
+		<property>sim/multiplay/generic/int[4]</property>
+		<x-min>1</x-min><y-min>1</y-min><z-min>1</z-min>
+		<x-factor>1</x-factor><y-factor>1</y-factor><z-factor>1</z-factor>
+		<x-offset>0</x-offset><y-offset>0</y-offset><z-offset>0</z-offset>
+	</animation>
+	<animation>
+		<type>dist-scale</type>
+		<object-name>pos_halo_Tail</object-name>
+		<interpolation>
+			<entry><ind>0</ind><dep>1</dep></entry>
+			<entry><ind>350</ind><dep>10</dep></entry>
+			<entry><ind>50000</ind><dep>1000</dep></entry>
+		</interpolation>
+	</animation>
+
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>RBT-pos_halo_Tail</name>
+		<object-name>RBT-pos_halo_Tail</object-name>
+		<nopreview/>
+		<position><x>9.16</x><y>-1.7127</y><z>1.7549</z></position>
+		<ambient><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></ambient>
+		<diffuse><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></diffuse>
+		<specular><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></specular>
+		<attenuation><c>1.3</c><l>1.5</l><q>4</q></attenuation>
+		<cutoff>10</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>10</far-m>
+	</animation>
+
+
+	<!-- Taxi light cone -->
+	<animation>
+		<type>select</type>
+		<object-name>taxi-lights</object-name>
+		<condition>
+			<property>controls/lighting/taxi-light</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>light</type>
+		<light-type>spot</light-type>
+		<name>taxi-light</name>
+		<object-name>taxi-light-cone</object-name>
+		<nopreview/>
+		<direction><x>-1</x><y>0</y><z>-0.024</z></direction>
+		<position><x>-10.5672</x><y>0</y><z>-1.6267</z></position>
+		<ambient><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></ambient>
+		<diffuse><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></diffuse>
+		<specular><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></specular>
+		<attenuation><c>0.5</c><l>0.07</l><q>0</q></attenuation>
+		<exponent>30.0</exponent>
+		<cutoff>200</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>200</far-m>
+	</animation>
+	<!-- Taxi light halo -->
+	<animation>
+		<type>light</type>
+		<light-type>point</light-type>
+		<name>taxi-halo</name>
+		<object-name>taxi-halo-sphere</object-name>
+		<nopreview/>
+		<position><x>-6.2612</x><y>0</y><z>-2.1269</z></position>
+		<ambient><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></ambient>
+		<diffuse><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></diffuse>
+		<specular><r>0.95</r><g>0.9</g><b>0.9</b><a>1</a></specular>
+		<attenuation><c>1</c><l>1.7</l><q>4</q></attenuation>
+		<cutoff>1.3</cutoff>
+		<near-m>0.01</near-m>
+		<far-m>1.3</far-m>
+	</animation>
+
+
+</PropertyList>

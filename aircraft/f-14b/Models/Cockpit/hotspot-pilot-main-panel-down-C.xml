@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<!DOCTYPE PropertyList SYSTEM "panel.dtd">
+
+<PropertyList>
+	<name>hotspot-pilot-main-panel-down-C</name>
+	<background>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</background>
+	<w>1024</w>
+	<h>768</h>
+	<y-offset>0</y-offset>
+
+	<instruments>
+		<instrument>
+			<name>hotspot-pilot-main-panel-down-C</name>
+			<w>1024</w>
+			<h>768</h>
+			<w-base>1024</w-base>
+			<h-base>1024</h-base>
+			<x>512</x>
+			<y>384</y>
+			<layers>
+				<layer>
+					<name>background</name>
+					<texture>
+						<path>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</path>
+						<!--<path>Aircraft/f-14b/Models/Cockpit/hotspotgrid.rgb</path>-->
+						<x1>0.0</x1>
+						<y1>0.0</y1>
+						<x2>1.0</x2>
+						<y2>1.0</y2>
+					</texture>
+				</layer>
+			</layers>
+			<actions>
+
+				<!-- HSD -->
+				<!-- heading set knob -->
+				<action>
+					<name>heading-ccw</name>
+					<button>0</button>
+					<x>-525</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/instrumentation/hsd/selected-heading</property>
+						<step>-1</step>
+						<min>-180</min>
+						<max>180</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+				<action>
+					<name>heading-ccw-fast</name>
+					<button>1</button>
+					<x>-525</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/instrumentation/hsd/selected-heading</property>
+						<step>-5</step>
+						<min>-180</min>
+						<max>180</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+				<action>
+					<name>heading-cw</name>
+					<button>0</button>
+					<x>-417</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/instrumentation/hsd/selected-heading</property>
+						<step>1</step>
+						<min>-180</min>
+						<max>180</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+				<action>
+					<name>heading-cw-fast</name>
+					<button>1</button>
+					<x>-417</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/instrumentation/hsd/selected-heading</property>
+						<step>5</step>
+						<min>-180</min>
+						<max>180</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+
+				<!-- course knob CCW -->
+				<action>
+					<name>course-ccw</name>
+					<button>1</button>
+					<x>310</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[1]/radials/selected-deg</property>
+						<step>-1</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[2]/radials/selected-deg</property>
+						<step>-1</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+				<action>
+					<name>course-ccw-fast</name>
+					<button>0</button>
+					<x>310</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[1]/radials/selected-deg</property>
+						<step>-5</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[2]/radials/selected-deg</property>
+						<step>-5</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+				<!-- course knob (OBS) CW -->
+				<action>
+					<name>course-cw</name>
+					<button>1</button>
+					<x>418</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[1]/radials/selected-deg</property>
+						<step>1</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[2]/radials/selected-deg</property>
+						<step>1</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+				<action>
+					<name>course-cw-fast</name>
+					<button>0</button>
+					<x>418</x>
+					<y>220</y>
+					<w>100</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[1]/radials/selected-deg</property>
+						<step>5</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+					<binding>
+						<command>property-adjust</command>
+						<property>instrumentation/nav[2]/radials/selected-deg</property>
+						<step>5</step>
+						<min>0</min>
+						<max>360</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+
+
+
+
+
+
+			</actions>
+		</instrument>
+	</instruments>
+</PropertyList>

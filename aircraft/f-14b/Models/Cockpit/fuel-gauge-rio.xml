@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>fuel-gauge-rio.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>fuel-gauge-rio</object-name>
+		<condition>
+			<or>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>RIO View</value>
+				</equals>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Back-seat View</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+
+	<!--Total -->
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>total-1</object-name>
+		<property>sim/model/f-14b/instrumentation/fuel-gauges/total</property>
+		<factor>0.00001</factor>
+		<offset>-10000</offset>
+		<step>10000</step>
+		<scroll>0.5</scroll>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>total-2</object-name>
+		<property>sim/model/f-14b/instrumentation/fuel-gauges/total</property>
+		<factor>0.0001</factor>
+		<offset>-1000</offset>
+		<step>1000</step>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>total-3</object-name>
+		<property>sim/model/f-14b/instrumentation/fuel-gauges/total</property>
+		<factor>0.001</factor>
+		<offset>-100</offset>
+		<step>100</step>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>total-4</object-name>
+		<property>sim/model/f-14b/instrumentation/fuel-gauges/total</property>
+		<factor>0.01</factor>
+		<offset>-10</offset>
+		<step>10</step>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+
+	<!-- lighting -->
+
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>instrument</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>50</max-m>
+	</animation>
+
+</PropertyList>

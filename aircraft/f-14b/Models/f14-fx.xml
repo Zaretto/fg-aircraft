@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<!--<path>Aircraft/f-14b/Models/f14-fx.ac</path>-->
+	<path>f14-fx.ac</path>
+	<nopreview/>
+
+	<effect>
+		<inherits-from>Effects/model-transparent</inherits-from>
+		<object-name>ShockWave</object-name>
+		<object-name>ManeuverVortexR</object-name>
+		<object-name>ManeuverVortexL</object-name>
+		<object-name>HeatBlurR</object-name>
+		<object-name>HeatBlurL</object-name>
+		<object-name>InnerFlameR</object-name>
+		<object-name>InnerFlameL</object-name>
+		<object-name>outerFlame</object-name>
+		<object-name>outerFlame.001</object-name>
+		<object-name>ReheatL</object-name>
+		<object-name>ReheatR</object-name>
+</effect>
+
+
+	<!-- disable heat blur on demand for ATI cards -->
+	<animation>
+		<type>select</type>
+		<object-name>HeatBlurR</object-name>
+		<object-name>HeatBlurL</object-name>
+		<condition>
+			<property>sim/model/f-14b/fx/heat-blur-on</property>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>blend</type>
+		<object-name>ReheatL</object-name>
+		<property>engines/engine[0]/egt-norm</property>
+		<offset>1.1</offset>
+		<factor>-1</factor>
+	</animation>
+
+	<animation>
+		<type>blend</type>
+		<object-name>ReheatR</object-name>
+		<property>engines/engine[0]/egt-norm</property>
+		<offset>1.1</offset>
+		<factor>-1</factor>
+	</animation>
+
+	<!-- Burner Flame -->
+	<animation>
+		<type>select</type>
+		<object-name>outerFlame</object-name>
+		<condition>
+			<greater-than>
+				<property>engines/engine[1]/afterburner</property>
+				<value>0.1</value>
+			</greater-than>
+				<property>engines/engine[1]/running</property>
+			<greater-than>
+				<property>engines/engine[1]/n1</property>
+				<value>90.0</value>
+			</greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>outerFlame</object-name>
+		<factor>0.0</factor>
+		<offset-m>8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>outerFlame</object-name>
+		<property>engines/engine[1]/nozzle-pos-norm</property>
+		<x-factor>0.7</x-factor>
+		<x-offset>1.0</x-offset>
+		<y-factor>0.3</y-factor>
+		<y-offset>1.0</y-offset>
+		<z-factor>0.3</z-factor>
+		<z-offset>1.0</z-offset>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>outerFlame</object-name>  
+		<factor>0.0</factor>
+		<offset-m>-8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>outerFlame.001</object-name>
+		<condition>
+			<greater-than>
+				<property>engines/engine[0]/afterburner</property>
+				<value>0.1</value>
+			</greater-than>
+			<property>engines/engine[0]/running</property>
+			<greater-than>
+				<property>engines/engine[0]/n1</property>
+				<value>90.0</value>
+			</greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>outerFlame.001</object-name>
+		<factor>0.0</factor>
+		<offset-m>8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>-1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>outerFlame.001</object-name>
+		<property>engines/engine[0]/nozzle-pos-norm</property>
+		<x-factor>0.7</x-factor>
+		<x-offset>1.0</x-offset>
+		<y-factor>0.3</y-factor>
+		<y-offset>1.0</y-offset>
+		<z-factor>0.3</z-factor>
+		<z-offset>1.0</z-offset>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>outerFlame.001</object-name>
+		<factor>0.0</factor>
+		<offset-m>-8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>-1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+
+
+	<animation>
+		<type>select</type>
+		<object-name>InnerFlameL</object-name>
+		<condition>
+			<greater-than>
+				<property>engines/engine[0]/afterburner</property>
+				<value>0.1</value>
+			</greater-than>
+			<property>engines/engine[0]/running</property>
+			<greater-than>
+				<property>engines/engine[0]/n1</property>
+				<value>90.0</value>
+			</greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>InnerFlameL</object-name>
+		<factor>0.0</factor>
+		<offset-m>8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>-1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>InnerFlameL</object-name>
+		<property>engines/engine[0]/nozzle-pos-norm</property>
+		<x-factor>0.7</x-factor>
+		<x-offset>1.0</x-offset>
+		<y-factor>0.3</y-factor>
+		<y-offset>1.0</y-offset>
+		<z-factor>0.3</z-factor>
+		<z-offset>1.0</z-offset>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>InnerFlameL</object-name>
+		<factor>0.0</factor>
+		<offset-m>-8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>-1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>InnerFlameR</object-name>
+		<condition>
+			<greater-than>
+				<property>engines/engine[1]/afterburner</property>
+				<value>0.1</value>
+			</greater-than>
+				<property>engines/engine[1]/running</property>
+			<greater-than>
+				<property>engines/engine[1]/n1</property>
+				<value>90.0</value>
+			</greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>InnerFlameR</object-name>
+		<factor>0.0</factor>
+		<offset-m>8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>scale</type>
+		<object-name>InnerFlameR</object-name>
+		<property>engines/engine[1]/nozzle-pos-norm</property>
+		<x-factor>0.7</x-factor>
+		<x-offset>1.0</x-offset>
+		<y-factor>0.3</y-factor>
+		<y-offset>1.0</y-offset>
+		<z-factor>0.3</z-factor>
+		<z-offset>1.0</z-offset>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>InnerFlameR</object-name>
+		<factor>0.0</factor>
+		<offset-m>-8.682</offset-m>
+		<axis>
+			<x>9.835</x>
+			<y>1.724</y>
+			<z>-1.457</z>
+		</axis>
+	</animation>
+
+	<!--flame texture animation -->
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>InnerFlameR</object-name>
+		<property>sim/model/f-14b/fx/burner</property>
+		<factor>-0.0673828125</factor>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>InnerFlameL</object-name>
+		<property>sim/model/f-14b/fx/burner</property>
+		<factor>-0.0673828125</factor>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+
+
+
+
+
+	<!-- Heat Blur -->
+
+	<animation>
+		<type>select</type>
+		<object-name>HeatBlurL</object-name>
+		<condition>
+			<less-than>
+				<property>engines/engine[0]/afterburner</property>
+				<value>0.05</value>
+			</less-than>
+			<property>engines/engine[0]/running</property>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>HeatBlurR</object-name>
+		<condition>
+			<less-than>
+				<property>engines/engine[1]/afterburner</property>
+				<value>0.05</value>
+			</less-than>
+			<property>engines/engine[1]/running</property>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>shader</type>
+		<shader>heat-haze</shader>
+		<object-name>HeatBlurR</object-name>
+		<object-name>HeatBlurL</object-name>
+		<factor>0.12</factor>
+		<speed>120</speed>
+	</animation>
+
+
+
+<!-- ******************************************************************* -->
+<!-- Condensation                                                        -->
+<!-- ******************************************************************* -->
+
+	<!-- shock waves -->
+
+	<animation>
+		<type>select</type>
+		<object-name>ShockWave</object-name>
+		<condition>
+			<and>
+				<greater-than>
+					<property>/velocities/mach</property>
+					<value>0.8</value>
+				</greater-than>
+				<less-than>
+					<property>/position/altitude-ft</property>
+					<value>5000.0</value>
+				</less-than>
+			</and>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>ShockWave</object-name>
+		<property>sim/model/f-14b/fx/burner</property>
+		<!--<factor>-0.123046875</factor>-->
+		<factor>-0.23437</factor>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+	<!-- Left wing -->
+	<animation>
+		<type>select</type>
+		<object-name>ManeuverVortexL</object-name>
+		<condition>
+			<greater-than>
+				<property>/velocities/airspeed-kt</property>
+				<value>100</value>
+			</greater-than>
+			<greater-than>
+				<property>/orientation/alpha-deg</property>
+				<value>8.0</value>
+			</greater-than>
+			<less-than>
+				<property>/position/altitude-ft</property>
+				<value>5000.0</value>
+			</less-than>
+			<not>
+				<property>sim/model/f-14b/wings/left-wing-torn</property>
+			</not>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>ManeuverVortexL</object-name>
+		<property>sim/model/f-14b/fx/burner</property>
+		<factor>-0.082031250</factor>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>ManeuverVortexL</object-name>
+		<property>sim/multiplay/generic/float[0]</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>49</dep></entry>
+			<entry><ind>1.2</ind><dep>52</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>1.247</x-m>
+			<y-m>-2.615</y-m>
+			<z-m>-0.636</z-m>
+		</center>
+		<axis>
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>1.0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>ManeuverVortexL</object-name>
+		<property>surface-positions/wing-fold-pos-norm</property>
+		<factor>-7.0</factor>
+		<center>
+			<x-m>1.247</x-m>
+			<y-m>-2.615</y-m>
+			<z-m>-0.636</z-m>
+		</center>
+		<axis>
+			<x>1.0</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</axis>
+	</animation>
+
+
+	<!-- Right wing -->
+	<animation>
+		<type>select</type>
+		<object-name>ManeuverVortexR</object-name>
+		<condition>
+			<greater-than>
+				<property>/velocities/airspeed-kt</property>
+				<value>100</value>
+			</greater-than>
+			<greater-than>
+				<property>/orientation/alpha-deg</property>
+				<value>8.0</value>
+			</greater-than>
+			<less-than>
+				<property>/position/altitude-ft</property>
+				<value>5000.0</value>
+			</less-than>
+			<not>
+				<property>sim/model/f-14b/wings/right-wing-torn</property>
+			</not>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>ManeuverVortexR</object-name>
+		<property>sim/model/f-14b/fx/burner</property>
+		<factor>-0.082031250</factor>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>ManeuverVortexR</object-name>
+		<property>sim/multiplay/generic/float[0]</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>-49</dep></entry>
+			<entry><ind>1.2</ind><dep>-52</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>1.247</x-m>
+			<y-m>2.615</y-m>
+			<z-m>-0.636</z-m>
+		</center>
+		<axis><z>1.0</z></axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>ManeuverVortexR</object-name>
+		<property>surface-positions/wing-fold-pos-norm</property>
+		<factor>7.0</factor>
+		<center>
+			<x-m>1.247</x-m>
+			<y-m>2.615</y-m>
+			<z-m>-0.636</z-m>
+		</center>
+		<axis><x>1.0</x></axis>
+	</animation>
+
+
+
+	<!-- disable shadows for these objects -->
+	<animation>
+		<type>noshadow</type>
+		<object-name>fx</object-name>
+	</animation>
+
+</PropertyList>

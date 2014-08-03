@@ -1,0 +1,236 @@
+<PropertyList>
+
+	<!-- Bearing, Distance, Heading Indicator -->
+	<name>BDHI</name>
+	<path>bdhi.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>bdhi</object-name>
+		<condition>
+			<or>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>RIO View</value>
+				</equals>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Back-seat View</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>compass-card</object-name>
+		<property>orientation/heading-magnetic-deg</property>
+		<axis><x>1</x></axis>
+	</animation>
+
+	<!-- needle #1 = DF -->
+	<animation>
+		<type>select</type>
+		<object-name>needle-1</object-name>
+		<condition>
+			<property>instrumentation/nav[0]/in-range</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-1</object-name>
+		<property>orientation/heading-magnetic-deg</property>
+		<axis><x>1</x></axis>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-1</object-name>
+		<property>instrumentation/nav[0]/heading-deg</property>
+		<condition>
+			<equals>
+				<property>sim/model/f-14b/instrumentation/an-arc-182v/mode</property>
+				<value>3</value>
+			</equals>
+		</condition>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>needle-1-off</object-name>
+		<condition>
+			<not>
+				<property>instrumentation/nav[0]/in-range</property>
+			</not>
+		</condition>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-1-off</object-name>
+		<property>orientation/heading-magnetic-deg</property>
+		<axis><x>1</x></axis>
+	</animation>
+
+
+	<!-- needle #2 = TACAN -->
+	<animation>
+		<type>select</type>
+		<object-name>needle-2</object-name>
+		<condition>
+			<property>instrumentation/tacan/in-range</property>
+			<or>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>1</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>2</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-2</object-name>
+		<property>orientation/heading-magnetic-deg</property>
+		<axis><x>1</x></axis>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-2</object-name>
+		<property>instrumentation/tacan/indicated-mag-bearing-deg</property>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>needle-2-off</object-name>
+		<condition>
+			<or>
+				<not>
+					<property>instrumentation/tacan/in-range</property>
+				</not>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>0</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>3</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>4</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-2-off</object-name>
+		<property>orientation/heading-magnetic-deg</property>
+		<axis><x>1</x></axis>
+	</animation>
+
+	<!-- tacan distance digital display -->
+	<animation>
+		<type>select</type>
+		<object-name>no-range-flag</object-name>
+		<condition>
+			<or>
+				<not>
+					<property>instrumentation/tacan/in-range</property>
+				</not>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>0</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>1</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+					<value>4</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>range-drum-1</object-name>
+		<property>instrumentation/tacan/indicated-distance-nm</property>
+		<factor>0.1</factor>
+		<offset>-1</offset>
+		<step>1</step>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>range-drum-2</object-name>
+		<property>instrumentation/tacan/indicated-distance-nm</property>
+		<factor>0.01</factor>
+		<offset>-10</offset>
+		<step>10</step>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>range-drum-3</object-name>
+		<property>instrumentation/tacan/indicated-distance-nm</property>
+		<factor>0.001</factor>
+		<offset>-100</offset>
+		<step>100</step>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>range-deci</object-name>
+		<property>instrumentation/tacan/indicated-distance-nm</property>
+		<factor>360</factor>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0.0110</y-m>
+			<z-m>-0.0191</z-m>
+		</center>
+		<axis><x>1</x></axis>
+	</animation>
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>instrument</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>10</max-m>
+	</animation>
+
+</PropertyList>

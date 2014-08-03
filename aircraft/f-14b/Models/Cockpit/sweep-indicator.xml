@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>sweep-indicator.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>sweep-indicator</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>program-tape</object-name>
+		<property>velocities/mach</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>0.5</ind><dep>0</dep></entry>
+			<entry><ind>0.75</ind><dep>0.025</dep></entry>
+			<entry><ind>0.875</ind><dep>0.425</dep></entry>
+			<entry><ind>0.95</ind><dep>0.490</dep></entry>
+			<entry><ind>2.4</ind><dep>0.490</dep></entry>
+		</interpolation>
+		<factor>0.5</factor>
+		<offset>1</offset>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>translate</type>
+		<object-name>index-actual-pos</object-name>
+		<property>surface-positions/wing-pos-norm</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>0.0527</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>0</y>
+			<z>-1</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>translate</type>
+		<object-name>index-commanded-pos</object-name>
+		<property>controls/flight/wing-sweep</property>
+		<factor>0.0527</factor>
+		<axis>
+			<x>0</x>
+			<y>0</y>
+			<z>-1</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>off</object-name>
+		<condition>
+			<property>sim/model/f-14b/systems/wing-sweep/mode/off</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>auto</object-name>
+		<condition>
+			<property>sim/model/f-14b/systems/wing-sweep/mode/auto</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>man</object-name>
+		<condition>
+			<property>sim/model/f-14b/systems/wing-sweep/mode/man</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>emer</object-name>
+		<condition>
+			<property>sim/model/f-14b/systems/wing-sweep/mode/emer</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>over</object-name>
+		<condition>
+			<property>sim/model/f-14b/systems/wing-sweep/mode/over</property>
+		</condition>
+	</animation>
+
+	<!--lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>instrument</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>

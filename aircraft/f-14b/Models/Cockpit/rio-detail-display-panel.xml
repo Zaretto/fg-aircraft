@@ -1,0 +1,491 @@
+<PropertyList>
+
+	<!-- Détailled Cockpit Consoles and Panels -->
+	<name>RIO-TID</name>
+	<path>rio-detail-display-panel.ac</path>
+
+	<!-- don't show it when external view or Pilot View-->
+	<animation>
+		<type>select</type>
+		<object-name>rio-detail-display-panel</object-name>
+		<condition>
+			<or>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>RIO View</value>
+				</equals>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Back-seat View</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+	<!-- Range Buttons Pick Animations -->
+	<animation>
+		<name>rng-5</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rng-5</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.range_control(5);</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<name>rng-10</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rng-10</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.range_control(10);</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<name>rng-20</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rng-20</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.range_control(20);</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<name>rng-50</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rng-50</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.range_control(50);</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<name>rng-100</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rng-100</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.range_control(100);</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<name>rng-200</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rng-200</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.range_control(200);</script>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- Range Display -->
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-200</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/radar/radar2-range</property>
+				<value>200</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-100</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/radar/radar2-range</property>
+				<value>100</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-50</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/radar/radar2-range</property>
+				<value>50</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-20</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/radar/radar2-range</property>
+				<value>20</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-10</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/radar/radar2-range</property>
+				<value>10</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-5</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/radar/radar2-range</property>
+				<value>5</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>rng-disp-fixed10</object-name>
+		<condition>
+			<or>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/radar-awg-9/mode</property>
+					<value>PDSTT</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/instrumentation/radar-awg-9/mode</property>
+					<value>PSTT</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+	<animation>
+		<name>display-rdr</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>display-rdr</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- warning lights -->
+	<animation> 
+		<object-name>ant-trk-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/ant-trk-light</property>
+		</condition>
+	</animation>
+	<animation> 
+		<object-name>rd-rot-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/rd-rot-light</property>
+		</condition>
+	</animation>
+	<animation> 
+		<object-name>jat-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/jat-light</property>
+		</condition>
+	</animation>
+	<animation> 
+		<object-name>irot-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/irot-light</property>
+		</condition>
+	</animation>
+
+						<!--<display-rdr type="bool">true</display-rdr>
+						<display-ir type="bool">false</display-ir>
+						<display-iff type="bool">false</display-iff>
+						<mode type="string">PDS</mode>--> <!-- PDS, RWS, TWS, PDSTT, PSTT, VSL -->
+
+	<!-- CCM Modes push buttons -->
+	<animation> 
+		<object-name>spl-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-spl</property>
+		</condition>
+	</animation>
+	<animation> 
+		<object-name>alt-dhf-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-alt-dhf</property>
+		</condition>
+	</animation>
+	<animation> 
+		<object-name>trs-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-trs</property>
+		</condition>
+	</animation>
+
+
+						<!--<mode type="string">PDS</mode>--> <!-- PDS, PS, RWS, TWSA, TWSM, PDSTT, PSTT, VSL -->
+	<!-- Display push buttons -->
+	<animation> 
+		<object-name>rdr-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
+		</condition>
+	</animation>
+	<animation>
+		<name>display-rdr</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>display-rdr</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
+			</binding>
+		</action>
+	</animation>
+	<animation> 
+		<object-name>ir-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-ir</property>
+		</condition>
+	</animation>
+	<animation> 
+		<object-name>iff-light-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-iff</property>
+		</condition>
+	</animation>
+
+	<!-- WCS Mode push buttons -->
+	<animation>
+		<type>select</type>
+		<object-name>pd-stt-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pd-stt</property>
+		</condition>
+	</animation>
+	<!-- <animation>
+		<name>pd-stt</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>pd-stt</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("pd-stt")</script>
+			</binding>
+		</action>
+	</animation> -->
+
+	<animation>
+		<type>select</type>
+		<object-name>pulse-stt-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-stt</property>
+		</condition>
+	</animation>
+	<!-- <animation>
+		<name>pulse-stt</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>pulse-stt</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("pulse-stt")</script>
+			</binding>
+		</action>
+	</animation> -->
+
+	<animation>
+		<type>select</type>
+		<object-name>pd-srch-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pd-srch</property>
+		</condition>
+	</animation>
+	<!-- <animation>
+		<name>pd-srch</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>pd-srch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("pd-srch")</script>
+			</binding>
+		</action>
+	</animation> -->
+
+	<animation>
+		<type>select</type>
+		<object-name>rws-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/rws</property>
+		</condition>
+	</animation>
+	<!-- <animation>
+		<name>rws</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>rws</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("rws")</script>
+			</binding>
+		</action>
+	</animation> -->
+
+	<animation>
+		<type>select</type>
+		<object-name>tws-auto-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto</property>
+		</condition>
+	</animation>
+	<animation>
+		<name>tws-auto</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>tws-auto</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("tws-auto")</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>tws-man-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-man</property>
+		</condition>
+	</animation>
+	<!-- <animation>
+		<name>tws-man</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>tws-man</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("tws-man")</script>
+			</binding>
+		</action>
+	</animation> -->
+
+	<animation>
+		<type>select</type>
+		<object-name>pulse-srch-light-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch</property>
+		</condition>
+	</animation>
+	<animation>
+		<name>pulse-srch</name>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>pulse-srch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>awg_9.wcs_mode_sel("pulse-srch")</script>
+			</binding>
+		</action>
+	</animation>
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.44</red>
+			<green>0.192</green>
+			<blue>0.08</blue>
+		</emission>
+	</animation>
+
+
+	<animation>
+		<object-name>instrument</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>70</max-m>
+	</animation>
+
+</PropertyList>

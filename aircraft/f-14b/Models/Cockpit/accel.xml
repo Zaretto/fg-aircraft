@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+
+
+<PropertyList>
+
+	<path>accel.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>accel</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>needle</object-name>
+		<property>accelerations/pilot-g</property>
+		<interpolation>
+			<entry><ind>-5</ind><dep>-202.5</dep></entry>
+			<entry><ind>-4</ind><dep>-112.5</dep></entry>
+			<entry><ind>-3</ind><dep>-90</dep></entry>
+			<entry><ind>-1</ind><dep>-45</dep></entry>
+			<entry><ind>0</ind><dep>-22.5</dep></entry>
+			<entry><ind>1</ind><dep>0</dep></entry>
+			<entry><ind>3</ind><dep>45</dep></entry>
+			<entry><ind>5</ind><dep>90</dep></entry>
+			<entry><ind>7</ind><dep>135</dep></entry>
+			<entry><ind>9</ind><dep>180</dep></entry>
+			<entry><ind>10</ind><dep>202.5</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center> 
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-max</object-name>
+		<property>sim/model/f-14b/instrumentation/g-meter/g-max</property>
+		<interpolation>
+			<entry><ind>-5</ind><dep>-202.5</dep></entry>
+			<entry><ind>-4</ind><dep>-112.5</dep></entry>
+			<entry><ind>-3</ind><dep>-90</dep></entry>
+			<entry><ind>-1</ind><dep>-45</dep></entry>
+			<entry><ind>0</ind><dep>-22.5</dep></entry>
+			<entry><ind>1</ind><dep>0</dep></entry>
+			<entry><ind>3</ind><dep>45</dep></entry>
+			<entry><ind>5</ind><dep>90</dep></entry>
+			<entry><ind>7</ind><dep>135</dep></entry>
+			<entry><ind>9</ind><dep>180</dep></entry>
+			<entry><ind>10</ind><dep>202.5</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center> 
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>needle-min</object-name>
+		<property>sim/model/f-14b/instrumentation/g-meter/g-min</property>
+		<interpolation>
+			<entry><ind>-5</ind><dep>-202.5</dep></entry>
+			<entry><ind>-4</ind><dep>-112.5</dep></entry>
+			<entry><ind>-3</ind><dep>-90</dep></entry>
+			<entry><ind>-1</ind><dep>-45</dep></entry>
+			<entry><ind>0</ind><dep>-22.5</dep></entry>
+			<entry><ind>1</ind><dep>0</dep></entry>
+			<entry><ind>3</ind><dep>45</dep></entry>
+			<entry><ind>5</ind><dep>90</dep></entry>
+			<entry><ind>7</ind><dep>135</dep></entry>
+			<entry><ind>9</ind><dep>180</dep></entry>
+			<entry><ind>10</ind><dep>202.5</dep></entry>
+		</interpolation>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<!-- Lighting -->
+	<animation>
+		<object-name>mount</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>instrument</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<!-- *** LoD *** -->
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>

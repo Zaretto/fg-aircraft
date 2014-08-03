@@ -1,0 +1,61 @@
+<PropertyList>
+
+	<!-- Coarse Cockpit Consoles and Panels for external views-->
+	<name>Coarse-Inside</name>
+	<path>coarse-inside.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>inside-front</object-name>
+		<object-name>inside-back</object-name>
+		<condition>
+			<not>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Cockpit View</value>
+				</equals>
+			</not>
+			<not>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>RIO View</value>
+				</equals>
+			</not>
+			<not>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Back-seat View</value>
+				</equals>
+			</not>
+		</condition>
+	</animation>
+
+	<animation>
+		<object-name>video-screens</object-name>
+		<type>material</type>
+		<emission>
+			<factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
+			<red>0.0</red>
+			<green>1.0</green>
+			<blue>0.0</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>panel</object-name>
+		<type>material</type>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>150</max-m>
+	</animation>
+
+</PropertyList>

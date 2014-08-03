@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<name>frequency-display-1</name>
+	<path>radios-display.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>radio-display</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>RIO View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<effect>
+		<inherits-from>Effects/model-transparent</inherits-from>
+		<object-name>digit-6</object-name>
+		<object-name>digit-5</object-name>
+		<object-name>digit-4</object-name>
+		<object-name>digit-3</object-name>
+		<object-name>digit-2</object-name>
+		<object-name>digit-1</object-name>
+		<object-name>dot</object-name>
+	</effect>
+
+	<!-- choose a label: VHF or UHF-VHF -->
+	<animation>
+		<type>select</type>
+		<object-name>UHF-VHF</object-name>
+		<condition>
+			<property>null</property>
+		</condition>
+	</animation>
+
+	<!-- Frequency Digital Display, ta-ta-ta da... -->
+	<animation>
+		<type>textranslate</type>
+		<object-name>digit-1</object-name>
+		<property>sim/model/f-14b/instrumentation/an-arc-159v1/frequencies/selected-mhz</property>
+		<factor>0.000001</factor>
+		<offset>-100000</offset>
+		<step>100000</step>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>digit-2</object-name>
+		<property>sim/model/f-14b/instrumentation/an-arc-159v1/frequencies/selected-mhz</property>
+		<factor>0.00001</factor>
+		<offset>-10000</offset>
+		<step>10000</step>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>digit-3</object-name>
+		<property>sim/model/f-14b/instrumentation/an-arc-159v1/frequencies/selected-mhz</property>
+		<factor>0.0001</factor>
+		<offset>-1000</offset>
+		<step>1000</step>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>digit-4</object-name>
+		<property>sim/model/f-14b/instrumentation/an-arc-159v1/frequencies/selected-mhz</property>
+		<factor>0.001</factor>
+		<offset>-100</offset>
+		<step>100</step>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>digit-5</object-name>
+		<property>sim/model/f-14b/instrumentation/an-arc-159v1/frequencies/selected-mhz</property>
+		<factor>0.01</factor>
+		<offset>-10</offset>
+		<step>10</step>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>digit-6</object-name>
+		<property>sim/model/f-14b/instrumentation/an-arc-159v1/frequencies/selected-mhz</property>
+		<factor>0.1</factor>
+		<offset>-1</offset>
+		<step>1</step>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<object-name>digits</object-name>
+		<type>select</type>
+		<condition>
+			<not>
+				<or>
+					<equals>
+						<property>sim/model/f-14b/instrumentation/an-arc-159v1/mode</property>
+						<value>0</value>
+					</equals>
+					<equals>
+						<property>sim/model/f-14b/instrumentation/an-arc-159v1/mode</property>
+						<value>3</value>
+					</equals>
+				</or>
+			</not>
+		</condition>
+	</animation>
+
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+
+
+
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>50</max-m>
+	</animation>
+
+</PropertyList>

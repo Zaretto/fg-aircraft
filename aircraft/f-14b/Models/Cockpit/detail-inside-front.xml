@@ -1,0 +1,100 @@
+<PropertyList>
+
+	<!-- Détailled Cockpit Consoles and Panels -->
+	<name>Detail-Inside-Front</name>
+	<path>detail-inside-front.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>inside-front</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>translate</type>
+		<object-name>L-pedal</object-name>
+		<property>controls/flight/rudder</property>
+		<factor>0.07</factor>
+		<axis>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>translate</type>
+		<object-name>R-pedal</object-name>
+		<property>controls/flight/rudder</property>
+		<factor>0.07</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!--<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>-->
+	<animation> 
+		<object-name>labels</object-name>
+		<object-name>vert-side-panels</object-name>
+		<object-name>panel-front-up</object-name>
+		<object-name>knee-panels</object-name>
+		<object-name>pedestal</object-name>
+		<object-name>consoles</object-name>
+		<object-name>checklists-pilot</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.275</red>
+			<green>0.12</green>
+			<blue>0.05</blue>
+		</emission>
+	</animation>
+	<animation> 
+		<object-name>pedals</object-name>
+		<object-name>bathtub-sides</object-name>
+		<object-name>fire-handles</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.1375</red>
+			<green>0.06</green>
+			<blue>0.025</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>floor</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.0687</red>
+			<green>0.03</green>
+			<blue>0.0125</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>70</max-m>
+	</animation>
+
+</PropertyList>

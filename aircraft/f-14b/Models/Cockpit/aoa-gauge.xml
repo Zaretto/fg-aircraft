@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>aoa-gauge.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>aoa-gauge</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>tape</object-name>
+		<property>orientation/alpha-deg</property>
+		<interpolation>
+				<!-- AoA at Sea Level, Gross weight 50000lbs, slats, flaps, gear
+				down, speed brakes extended, without DLC -->
+				<entry><ind>1</ind><dep>0</dep></entry> <!--clamp -->
+				<entry><ind>3.6</ind><dep>0.050</dep></entry> <!--200.0 kts -->
+				<entry><ind>6.33</ind><dep>0.130</dep></entry> <!--174.0 kts -->
+			 	<entry><ind>10.5</ind><dep>0.230</dep></entry> <!--142.0 kts -->
+				<entry><ind>15.3</ind><dep>0.320</dep></entry> <!--123.0 kts -->
+				<entry><ind>18.0</ind><dep>0.365</dep></entry> <!--114.0 kts -->
+				<entry><ind>20.0</ind><dep>0.390</dep></entry> <!--110.0 kts -->
+				<entry><ind>29.0</ind><dep>0.5</dep></entry> <!--clamp -->
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+		</axis>
+	</animation>
+
+
+	<!--lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>face</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>tape</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>

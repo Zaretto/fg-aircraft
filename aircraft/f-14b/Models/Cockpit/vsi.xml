@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+
+<!--IVSI (Instantaneous Vertical Speed Indicator)-->
+
+<PropertyList>
+	<path>vsi.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>vsi</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<name>needle</name>
+		<type>rotate</type>
+		<object-name>needle</object-name>
+		<!--<property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>-->
+		<property>velocities/vertical-speed-fps</property>
+		<interpolation>
+			<entry><ind>-100.0</ind><dep>-255.0</dep></entry>
+			<entry><ind>-66.667</ind><dep>-214.8</dep></entry>
+			<entry><ind>-33.333</ind><dep>-170.0</dep></entry>
+			<entry><ind>-16.667</ind><dep>-135.0</dep></entry>
+			<entry><ind>-8.333</ind><dep>-112.4</dep></entry>
+			<entry><ind>0.0</ind><dep>-90.0</dep></entry>
+			<entry><ind>8.333</ind><dep>-67.6</dep></entry>
+			<entry><ind>16.667</ind><dep>-45.0</dep></entry>
+			<entry><ind>33.333</ind><dep>-10.0</dep></entry>
+			<entry><ind>66.667</ind><dep>34.8</dep></entry>
+			<entry><ind>100.0</ind><dep>75.0</dep></entry>
+		</interpolation>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	 <animation>
+		<object-name>face</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>needle-w</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>50</max-m>
+	</animation>
+
+</PropertyList>

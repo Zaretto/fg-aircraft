@@ -1,0 +1,290 @@
+<?xml version="1.0"?>
+
+
+
+
+<PropertyList>
+
+
+	<!-- =============================================================== -->
+	<!-- Prediction filters                                              -->
+	<!-- =============================================================== -->
+
+	<predict-simple>
+		<input>/velocities/mach</input>
+		<output>/autopilot/internal/lookahead-5-sec-mach</output>
+		<seconds>5.0</seconds>
+		<filter-gain>0.0</filter-gain>
+	</predict-simple>
+
+	<predict-simple>
+		<input>/velocities/airspeed-kt</input>
+		<output>/autopilot/internal/lookahead-5-sec-airspeed-kt</output>
+		<seconds>5.0</seconds>
+		<filter-gain>0.0</filter-gain>
+	</predict-simple>
+
+	<predict-simple>
+		<input>/autopilot/internal/nav1-track-error-deg</input>
+		<output>/autopilot/internal/nav1-track-error-lookahead-deg</output>
+		<seconds>8.0</seconds>
+		<filter-gain>0.0</filter-gain>
+	</predict-simple>
+
+	<!-- =============================================================== -->
+	<!-- Roll Axis Modes                                                 -->
+	<!-- =============================================================== -->
+
+	<!-- Wing level -->
+	<pid-controller>
+		<name>Wing Leveler</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/heading</prop>
+			<value>wing-leveler</value>
+		</enable>
+		<input>
+			<prop>orientation/roll-deg</prop>
+		</input>
+		<reference>
+			<prop>autopilot/settings/target-roll-deg</prop>
+		</reference>
+		<output>
+			<prop>/controls/flight/SAS-roll</prop>
+		</output>
+		<config>
+			<Kp>0.038</Kp>
+			<beta>1</beta>
+			<Ti>10</Ti>
+			<Td>0.00000000001</Td>
+			<u_min>-0.3</u_min>
+			<u_max>0.3</u_max>
+		</config>
+	</pid-controller>
+
+	<!-- Magnetic Heading hold -->
+	<pi-simple-controller>
+		<name>Heading Hold</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/heading</prop>
+			<value>dg-heading-hold</value>
+		</enable>
+		<input>
+			<prop>autopilot/internal/fdm-heading-bug-error-deg</prop>
+		</input>
+		<reference>
+			<value>0.0</value>
+		</reference>
+		<output>
+			<prop>autopilot/internal/target-roll-deg</prop>
+		</output>
+		<config>
+			<Kp>-1</Kp>
+			<u_min>-55.0</u_min><!-- +/-2 min. 360 turn at cruise config. -->
+			<u_max>55.0</u_max>
+		</config>
+	</pi-simple-controller>
+
+	<pid-controller>
+		<name>Heading Hold Stage #2</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/heading</prop>
+			<value>dg-heading-hold</value>
+		</enable>
+		<input>
+			<prop>orientation/roll-deg</prop>
+		</input>
+		<reference>
+			<prop>autopilot/internal/target-roll-deg</prop>
+		</reference>
+		<output>
+			<prop>/controls/flight/SAS-roll</prop>
+		</output>
+		<config>
+			<Kp>0.05</Kp>
+			<beta>1</beta>
+			<Ti>10</Ti>
+			<Td>0.00000000001</Td>
+			<u_min>-0.3</u_min>
+			<u_max>0.3</u_max>
+		</config>
+	</pid-controller>
+
+
+	<!-- =============================================================== -->
+	<!-- Pitch Axis Modes                                                -->
+	<!-- =============================================================== -->
+
+	<!--Pitch Hold -->
+	<pid-controller>
+		<name>Pitch hold</name>
+		<debug>false</debug>
+		<enable>
+			<prop>/autopilot/locks/altitude</prop>
+			<value>pitch-hold</value>
+		</enable>
+		<input>
+			<prop>/orientation/pitch-deg</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/target-pitch-deg</prop>
+		</reference>
+		<output>
+			<prop>/controls/flight/elevator-trim</prop>
+		</output>
+		<config>
+			<Kp><prop>sim/model/f-14b/systems/afcs/pitch-pid-pgain</prop></Kp>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>-0.1</u_min>
+			<u_max>0.1</u_max>
+		</config>
+	</pid-controller>
+
+	<!--Vertical Speed Hold-->
+	<pid-controller>
+		<name>Vertical Speed</name>
+		<debug>false</debug>
+		<enable>
+			<prop>/autopilot/locks/altitude</prop>
+			<value>vertical-speed-hold</value>
+		</enable>
+		<input>
+			<prop>/velocities/vertical-speed-fps</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/vertical-speed-fpm</prop>
+			<scale>0.01667</scale>
+		</reference>
+		<output>
+			<prop>/controls/flight/elevator-trim</prop>
+		</output>
+		<config>
+			<Kp><prop>sim/model/f-14b/systems/afcs/vs-pid-pgain</prop></Kp>
+			<beta>0.1</beta>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>-0.15</u_min>
+			<u_max>0.15</u_max>
+		</config>
+	</pid-controller>
+
+	<!-- Altitude hold. -->
+	<pi-simple-controller>
+		<name>Altitude Hold (Altimeter based) Stage 1</name>
+		<debug>false</debug>
+		<enable>
+			<prop>/autopilot/locks/altitude</prop>
+			<value>altitude-hold</value>
+		</enable>
+		<input>
+			<prop>/instrumentation/altimeter/indicated-altitude-ft</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/target-altitude-ft</prop>
+		</reference>
+		<output>
+			<prop>/autopilot/internal/target-climb-rate-fps</prop>
+		</output>
+		<config>
+			<Kp>0.15</Kp>
+			<u_min>-33.34</u_min><!-- 2000ft per nimute -->
+			<u_max>33.34</u_max>
+		</config>
+	</pi-simple-controller>
+	<pid-controller>
+		<name>Altitude Hold (Altimeter based) Stage 2</name>
+		<debug>false</debug>
+		<enable>
+			<prop>/autopilot/locks/altitude</prop>
+			<value>altitude-hold</value>
+		</enable>
+		<input>
+			<prop>/velocities/vertical-speed-fps</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/internal/target-climb-rate-fps</prop>
+		</reference>
+		<output>
+			<prop>/controls/flight/elevator-trim</prop>
+		</output>
+		<config>
+			<Kp>-0.001</Kp>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>-0.1</u_min>
+			<u_max>0.1</u_max>
+		</config>
+	</pid-controller>
+
+
+
+
+	<!-- =============================================================== -->
+	<!-- Velocity Modes                                                  -->
+	<!-- =============================================================== -->
+
+	<!-- AoA with throttle (Approach Power Compensator - APC) -->
+	<pid-controller>
+		<name>AoA-with-throttle</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/aoa</prop>
+			<value>APC</value>
+		</enable>
+		<input>
+			<prop>orientation/alpha-deg</prop>
+		</input>
+		<reference>
+			<prop>sim/model/f-14b/instrumentation/aoa-indexer/target-deg</prop>
+		</reference>
+		<output>
+			<prop>autopilot/internal/target-speed</prop>
+		</output>
+		<config>
+			<Ts>0.02</Ts>
+			<Kp>-2.0</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>20.0</Ti>
+			<Td>0.01</Td>
+			<u_min>100.0</u_min>
+			<u_max>180.0</u_max>
+		</config>
+	</pid-controller>
+
+	<!-- Speed Auto throttle --> 
+	<pid-controller>
+		<name>Speed Auto Throttle</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/speed</prop>
+			<value>APC</value>
+		</enable>
+		<input>
+			<prop>velocities/airspeed-kt</prop>
+		</input>
+		<reference>
+			<prop>autopilot/internal/target-speed</prop>
+		</reference>
+		<output>
+			<prop>/controls/engines/engine[0]/throttle</prop>
+			<prop>/controls/engines/engine[1]/throttle</prop>
+		</output>
+		<config>
+			<Kp>0.1</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.081</u_min>
+			<u_max>0.759</u_max> <!-- no use of reheat and keep in sync with APC range-->
+		</config>
+	</pid-controller>
+
+
+</PropertyList>

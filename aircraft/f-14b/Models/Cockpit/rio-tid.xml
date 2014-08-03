@@ -1,0 +1,115 @@
+<PropertyList>
+
+	<!-- Détailled Cockpit Consoles and Panels -->
+	<name>RIO-TID</name>
+	<path>rio-tid.ac</path>
+
+	<!-- don't show it when external view or Pilot View-->
+	<animation>
+		<type>select</type>
+		<object-name>rio-tid</object-name>
+		<condition>
+			<or>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>RIO View</value>
+				</equals>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Back-seat View</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+					<!--sim/model/f-14b/instrumentation/rio-nav-display/
+						standby-light type="bool"
+						ready-light type="bool"
+						track-hold-light type="bool"
+						clsn-light type="bool"-->
+
+	<effect>
+		<inherits-from>Effects/model-transparent</inherits-from>
+		<object-name>screen-bkg</object-name>
+	</effect>
+
+	<!-- screen background -->
+	<animation>
+		<type>select</type>
+		<object-name>screen-bkg</object-name>
+		<condition>
+			<property>sim/model/f-14b/controls/TID/on-off</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>screen-bkg-off</object-name>
+		<condition>
+			<not>
+				<property>sim/model/f-14b/controls/TID/on-off</property>
+			</not>
+		</condition>
+	</animation>
+
+
+	<animation> 
+		<object-name>lights-on</object-name>
+		<type>select</type>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/rio-nav-display/standby-light</property>
+		</condition>
+	</animation>
+
+	<!-- lighting -->
+	<animation>
+		<object-name>screen-bkg</object-name>
+		<type>material</type>
+		<emission>
+			<factor-prop>sim/model/f-14b/controls/TID/brightness</factor-prop>
+			<red>0.0</red>
+			<green>0.9</green>
+			<blue>0.0</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>instrument</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>rio-tid-inside-mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>sim/model/f-14b/controls/TID/brightness</factor-prop>
+			<red>0.1</red>
+			<green>0.3</green>
+			<blue>0.002</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>70</max-m>
+	</animation>
+
+</PropertyList>

@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!DOCTYPE PropertyList SYSTEM "panel.dtd">
+
+<PropertyList>
+	<name>hotspot-pilot-main-panel-up-L</name>
+	<background>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</background>
+	<w>1024</w>
+	<h>768</h>
+	<y-offset>0</y-offset>
+
+	<instruments>
+		<instrument>
+			<name>hotspot-pilot-main-panel-up-L</name>
+			<w>1024</w>
+			<h>768</h>
+			<w-base>1024</w-base>
+			<h-base>1024</h-base>
+			<x>512</x>
+			<y>384</y>
+			<layers>
+				<layer>
+					<name>background</name>
+					<texture>
+						<path>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</path>
+						<!--<path>Aircraft/f-14b/Models/Cockpit/hotspotgrid.rgb</path>-->
+						<x1>0.0</x1>
+						<y1>0.0</y1>
+						<x2>1.0</x2>
+						<y2>1.0</y2>
+					</texture>
+				</layer>
+			</layers>
+
+			<actions>
+
+
+				<!-- ######### VDI ######### -->
+
+				<!-- Hud Brightness Knob -->
+				<action>
+					<name>hud-brightness-left</name>
+					<button>0</button>
+					<x>-505</x>
+					<y>-230</y>
+					<w>70</w>
+					<h>80</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/hud/intens</property>
+						<step>-0.1</step>
+						<min>0.0</min>
+						<max>1.0</max>
+						<wrap>false</wrap>
+					</binding>
+				</action>
+				<action>
+					<name>hud-brightness-right</name>
+					<button>0</button>
+					<x>-425</x>
+					<y>-230</y>
+					<w>70</w>
+					<h>80</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/hud/intens</property>
+						<step>0.1</step>
+						<min>0.0</min>
+						<max>1.0</max>
+						<wrap>false</wrap>
+					</binding>
+				</action>
+
+				<!-- VDI Brightness Knob -->
+				<action>
+					<name>vdi-brightness-left</name>
+					<button>0</button>
+					<x>-495</x>
+					<y>-360</y>
+					<w>70</w>
+					<h>80</h>
+					<repeatable type="bool">true</repeatable>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/VDI/brightness</property>
+						<step>-0.05</step>
+						<min>0</min>
+					</binding>
+				</action>
+				<action>
+					<name>vdi-brightness-right</name>
+					<button>0</button>
+					<x>-415</x>
+					<y>-360</y>
+					<w>70</w>
+					<h>80</h>
+					<repeatable type="bool">true</repeatable>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/VDI/brightness</property>
+						<step>0.05</step>
+						<max>1</max>
+					</binding>
+				</action>
+
+				<!-- VDI Contrast Knob -->
+				<action>
+					<name>vdi-contrast-left</name>
+					<button>0</button>
+					<x>-415</x>
+					<y>-450</y>
+					<w>70</w>
+					<h>80</h>
+					<repeatable type="bool">true</repeatable>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/VDI/contrast</property>
+						<step>-0.05</step>
+						<min>0</min>
+					</binding>
+				</action>
+				<action>
+					<name>vdi-contrast-right</name>
+					<button>0</button>
+					<x>-335</x>
+					<y>-450</y>
+					<w>70</w>
+					<h>80</h>
+					<repeatable type="bool">true</repeatable>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/VDI/contrast</property>
+						<step>0.05</step>
+						<max>1</max>
+					</binding>
+				</action>
+
+
+				<!-- Hud Filter Knob -->
+				<action>
+					<name>hud-toggle-filter</name>
+					<button>0</button>
+					<x>400</x>
+					<y>-60</y>
+					<w>90</w>
+					<h>90</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/hud/current-color</property>
+						<step>1</step>
+						<min>0</min>
+						<max>2</max>
+						<wrap>true</wrap>
+					</binding>
+				</action>
+
+			</actions>
+		</instrument>
+	</instruments>
+</PropertyList>

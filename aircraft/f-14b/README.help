@@ -1,0 +1,203 @@
+Grumman F-14B Tomcat
+
+Authors:
+
+Enrique Laslo,
+- Aircraft 3D, FDM, AFCS code, textures, effects.
+
+Alexis Bory
+- Aircraft details, wheathering.
+- Cockpit and Weapons 3D, textures, animations.
+- Avionics, autopilot and weapons code.
+- Radar system code and instruments (in collaboration with Jettoo aka
+  Glazmax).
+
+Jano
+- Main test pilot, thanks a lot for the time spent chasing bugs!
+
+
+Flight control shortcuts:
+Home     Increase elevator trim.
+End      Decrease elevator trim.
+f        Lower flaps.
+Shift-F  Raise flaps.
+k        Increase air brakes.
+j        Decrease air brakes.
+Ctrl-b   Toggle air brakes.
+
+Radar shortcuts:
+Shift-E  Decrease Radar Range Display.
+Shift-R  Increase Radar Range Display.
+q        Toggle Radar Standby Mode. 
+h        - Cycle through pilot's HSD displays, (compas, radar, ECM)
+         when in pilot view.
+         - Toggle ECM or compas in the RIO ECM display when in RIO
+         view or Back-seater view (RIO with dualcontrol)
+Ctrl-n   Toggle Radar PULSE SRCH / TWS AUTO Modes.
+
+Autopilot shortcuts:
+Ctrl-t   Toggle AFCS Attitude Mode.
+Ctrl-a   Enable AFCS Altitude Mode.
+*        Engage AFCS Altitude Mode.
+Ctrl-h   Enable AFCS Heading Mode.
+
+Landing helps shortcuts:
+a        Toggle APC, (Landing Automatic Power control).
+Ctrl-d   Toggle DLC, (Landing Direct Lift Control).
+d        DLC increase.
+Shift-D  DLC decrease.
+Ctrl-s   Toggle ground spoilers armed.
+
+Miscelaneous shortcuts:
+c        Toggle canopy and access ladder.
+u        Toggle refuelling probe.
+Ctrl-o   Toggle oversweep (on ground only, otherwise sweep is
+         automatic).
+
+HUD shortcuts:
+:AHs     Toggle HUD on/off
+:AHt     HUD Takeoff mode
+:AHc     HUD Cruise mode
+:AHa     HUD A/A mode
+:AHg     HUD A/G mode
+:AHl     HUD Landing mode
+
+Weapons shortcuts:
+Ctrl-w   Cycle through MasterArm modes.
+w        Cycle Stick Weapon Mode Selector
+Ctrl-m   Toggle AIM-9 selection
+e        Trigger M61A1 Vulcan or AIM-9s
+
+Note on RIO
+
+
+
+Note on Ctrl-C
+
+Hotspots and pick animation can be hilighted with Ctrl-c. Currently
+(may 2010) a bug in FG makes part of the hilighting invisible. To have
+them back, disable the shaders in the Rendering Options menu, you can
+have alook at the totality of the hot-spots and switch back to the
+shader rendering.
+
+Weapons operation
+
+ATM only the gun and the AIM-9s are operational, others ordonances are
+displayed under the wing, their weight is correct but they aren't
+usable.
+
+Gun:
+At startup, the ammunition store is filled with 675 round. It's not
+possible to refill without quiting FG.
+To fire the M61A1 Vulcan:
+- Select HUD A/A Mode on the Display panel, on pilot's right console.
+A multikey shortcut is also available (:AHa). Having the HUD in this
+mode is not mandatory though there won't be any symbology available for
+the gun in other HD modes.
+- Select Gun mode with the Stick Weapon Mode Selector (w). A pipper,
+the G symbol with a number showing aproximatly the remaining rounds
+x 100 and a closure rate scale are displayed in the HUD. The closure
+rate scale is active only if a target is locked by the radar with TWS
+AUTO mode (diamond on the HUD).
+- Switch Master Arm on, the X on the G symbol means Master Arm off or
+in training mode. 
+- Press e to fire the gun.  
+
+
+Sidewinders:
+Crudely modeled on AIM-9L available data.
+
+- Select a weapons set using the menu: Tomcat Controls > Fuel and
+Stores: "FAD light" has 4 sidewinders, "FAD", "FAD heavy" and "Bombcat"
+have 2 of them.
+- Select HUD A/A Mode on the Display panel, on pilot's right console.
+A multikey shortcut is also available (:AHa).
+- Select SW mode with the Stick Weapon Mode Selector (w).
+- Switch to the back seater's view (Ctrl-v).
+- Select pylons 1 and 8, down position, on the Armament panel, on RIO's
+right console. A shortcut toggles these two switches so you can select
+or deselect all AIM-9 in one keyboard stroke (Ctrl-m) without leaving
+pilot's view.   
+- Switch back to the pilot's view (Ctrl-v).
+- Switch Master Arm on, you ear the search signal of the seeker
+head, a low volume buzz sound.
+
+- Now prior to be fired, the AIM-9 must have a lock on a target. For
+the time being only Multiplayers and AI tankers can be locked. The
+minimal lock distance is 10 NM, the target must be aproximately inside
+a 80° cone centered on datum line. When locked, the signal buzz volume
+becomes louder. For best results try to shoot at a 3 to 6 NM range and
+with the target centered on the aircraft velocity vector.
+The missile will explode at the smaller distance possible. However
+if this distance is above 70 meters, it will continue its trajectory
+without guidance.
+
+ 
+
+Autopilot Operation
+
+The main mode is Attitude Hold Mode, (Ctrl-t). Other Modes need this
+main mode activated before being selected. Switching off Attitude Mode
+disables all other modes. When in Attitude Mode, the autopilot
+disengages whenever a certain pressure is put on the stick and it
+reengages when the stick is back in the center position. Attitude Hold
+Mode will hold pitch attitudes up to plus or minus 30 degrees, and bank
+angles up to plus or minus 60 degrees. It shall be switched off for
+aerobatics and inverted flight.
+
+
+
+Autopilot Altitude Mode
+
+Once in Attitude Mode, you can select Altitude Mode by hitting Ctrl-a,
+then the AP REF indicator, (left of the VDI) will illuminate, when at
+the desired altitude using normalstick control, engage by hitting *,
+(asterix). The autopilot will then maintain your altitude.
+CAUTION - at high speeds, it is imperative to stabilize the aircraft
+prior to engage Altitude Mode.
+
+
+Autopilot Heading Mode
+
+Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h.
+After manoeuvering the aircraft to the desired reference heading,
+release the control stick at a bank angle of less than more or less 5
+degrees. The autopilot will then hold the aircraft on the desired
+Heading.
+
+Autopilot need SAS channels to be engaged, (which is the default). SAS
+Pitch and Roll channels may be disengaged by actuating switches located
+on the AFCS panel.
+
+
+Landing Automatic Power Control, (APC) Operation
+
+The APC is a closed loop system that automaticaly regulates basic
+engine thrust to maintain the aircraft at an optimum approach angle of
+attack for landing. Prior to engage APC, gear handle must be down with
+weight off wheels, and the throttles must be set between 98 percent rpm
+and 68 percent rpm, (as shown on the panel gauges).
+Type "a" to toggle the APC on off. APC is also disengaged by setting
+the throttles to MIL, (98 percent rpm) or iddle, (68 percent rpm) or
+raising the landing gear handle or when weight on wheels. 
+When disengaged the AUTO THROT caution light, (on the left side of the
+HUD) illuminates for 10 seconds.
+
+
+Landing Direct Lift Control, (DLC) Operation
+
+During landing approaches, the spoilers and horizontal stabilizers can
+be controled simultaneously to provide glidepath correction without
+changing powersetting or angle of attack.
+
+
+Ground Spoilers Operation
+
+Ground spoilers (that is elevons used as air-brake ) provide aditionnal
+drag immediatly after touch down. Before landing, arm the ground
+spoilers by hiting Ctrl-s. After the aircraft hit the runway pull the
+throttle to idle, then the spoilers(elevons) get fully deployed. Hit
+Ctrl-s again to disengage the ground spoilers.
+
+ 
+

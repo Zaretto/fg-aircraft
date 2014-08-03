@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+	<name>AP-steering-dead-zone</name>
+	<layout>vbox</layout>
+	<default-padding>0</default-padding>
+	<modal>false</modal>
+	<width>450</width>
+	<valign>top</valign>
+
+	<group>
+		<layout>vbox</layout>
+		<default-padding>1</default-padding>
+		<valign>top</valign>
+		<empty>
+			<pref-height>4</pref-height>
+		</empty>
+		<text><label>Steering Threshold Settings</label></text>
+		<empty>
+			<pref-height>3</pref-height>
+		</empty>
+		<hrule/>
+		<empty>
+			<pref-height>4</pref-height>
+		</empty>
+	</group>
+
+	<group>
+		<layout>vbox</layout>
+		<default-padding>1</default-padding>
+		<valign>top</valign>
+
+		<group>
+			<layout>hbox</layout>
+			<text>
+				<halign>left</halign>
+				<label>  </label>
+			</text>
+		</group>
+
+		<group>
+			<layout>hbox</layout>
+			<group>
+				<layout>vbox</layout>
+				<halign>left</halign>
+				<text><halign>left</halign><label>- Concerns Attitude Hold Mode (Ctrl-t) behavior.</label></text>
+				<text><halign>left</halign><label>- Tunes the (normalized) angle of deflection for the</label></text>
+				<text><halign>left</halign><label>  joystick to disengage the Autopilot Attitude Hold Mode.</label></text>
+				<text><halign>left</halign><label>- Please choose a larger value for old and loose joysticks.</label></text>
+				<text><halign>left</halign><label>  For accurate joysticks, try to reduce the value, likely</label></text>
+				<text><halign>left</halign><label>  around 0.01. Warning: a 0 value prevents the AP to engage.</label></text>
+				<text><halign>left</halign><label>- Admissible values: Mini: 0   max: 0.1</label></text>
+			</group>
+		</group>
+
+	</group>
+
+	<empty>
+		<pref-height>6</pref-height>
+	</empty>
+	<hrule/>
+
+	<group>
+		<layout>hbox</layout>
+		<default-padding>1</default-padding>
+		<empty>
+			<pref-height>3</pref-height>
+		</empty>
+		<group>
+			<layout>hbox</layout>
+			<text>
+				<halign>left</halign>
+				<label>     </label>
+			</text>
+		</group>
+		<group>
+			<layout>hbox</layout>
+			<group>
+				<layout>vbox</layout>
+				<halign>left</halign>
+				<width>150</width>
+				<text>
+					<halign>left</halign>
+					<label>Axis</label>
+				</text>
+				<text>
+					<halign>left</halign>
+					<label>Pitch</label>
+				</text>
+				<text>
+					<halign>left</halign>
+					<label>Roll</label>
+				</text>
+			</group>
+			<group> <!-- Sliders -->
+				<layout>vbox</layout>
+				<default-padding>1</default-padding>
+				<text>
+					<label>&lt;-&gt;</label>
+				</text>
+				<slider>
+					<name>Pitch</name>
+					<property>/sim/model/f-14b/controls/AFCS/dead-zone-pitch</property>
+					<live>1</live>
+					<min>0</min>
+					<max>0.1</max>
+					<binding>
+						<command>dialog-apply</command>
+						<object-name>Pitch</object-name>
+					</binding>
+				</slider>
+				<slider>
+					<name>Roll</name>
+					<property>/sim/model/f-14b/controls/AFCS/dead-zone-roll</property>
+					<live>1</live>
+					<min>0</min>
+					<max>0.1</max>
+					<binding>
+						<command>dialog-apply</command>
+						<object-name>Roll</object-name>
+					</binding>
+				</slider>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<halign>right</halign>
+					<label>Value</label>
+				</text>
+				<text>
+					<halign>right</halign>
+					<label>xxxxxxxx</label>
+					<live>true</live>
+					<format>%.3f</format>
+					<property>/sim/model/f-14b/controls/AFCS/dead-zone-pitch</property>
+				</text>
+				<text>
+					<halign>right</halign>
+					<label>xxxxxxxx</label>
+					<live>true</live>
+					<format>%.3f</format>
+					<property>/sim/model/f-14b/controls/AFCS/dead-zone-roll</property>
+				</text>
+			</group>
+		</group>
+		<group>
+			<layout>hbox</layout>
+			<text>
+				<halign>right</halign>
+				<label>     </label>
+			</text>
+		</group>
+	</group>
+
+
+	<empty>
+		<pref-height>6</pref-height>
+	</empty>
+	<hrule/>
+	<empty>
+		<pref-height>10</pref-height>
+	</empty>
+
+	<group>
+		<layout>hbox</layout>
+		<default-padding>1</default-padding>
+		<group>
+			<layout>vbox</layout>
+			<text>
+				<halign>right</halign>
+				<label>                     </label>
+			</text>
+		</group>
+		<group>
+			<layout>vbox</layout>
+			<button>
+				<legend>Apply</legend>
+				<default>true</default>
+				<key>Enter</key>
+				<binding>
+					<command>nasal</command>
+					<script>f14.update_steering_deadZ()</script>
+				</binding>
+			</button>
+		</group>
+		<group>
+			<layout>vbox</layout>
+			<button>
+				<legend>Close</legend>
+				<default>true</default>
+				<key>Esc</key>
+				<binding>
+					<command>dialog-close</command>
+				</binding>
+			</button>
+		</group>
+	</group>
+
+  <empty>
+    <pref-height>4</pref-height>
+  </empty>
+
+</PropertyList>

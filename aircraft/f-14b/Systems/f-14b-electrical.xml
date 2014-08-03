@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+ 
+<!-- Generic 28 Volt electrical system -->
+
+<PropertyList>
+
+  <!-- Supplier list -->
+
+  <supplier>
+    <name>Battery 1</name>
+    <prop>/systems/electrical/suppliers/battery[0]</prop>
+    <kind>battery</kind>
+    <volts>28</volts> <!-- needs to be > 24.5, but this is a guess -->
+    <amps>60</amps>   <!-- I have no idea! -->
+  </supplier>
+
+  <supplier>
+    <name>Alternator 1</name>
+    <prop>/systems/electrical/suppliers/alternator[0]</prop>
+    <kind>alternator</kind>
+    <rpm-source>/engines/engine[0]/rpm</rpm-source>
+    <volts>28</volts> <!-- stubbed in -->
+    <amps>60</amps>   <!-- from the 172S Skyhawk Information Manual -->
+  </supplier>
+
+  <supplier>
+    <name>External 1</name>
+    <prop>/systems/electrical/suppliers/external[0]</prop>
+    <kind>external</kind>
+    <volts>0</volts> <!-- by default not connected -->
+    <amps>0</amps>
+  </supplier>
+
+  <!-- Bus list -->
+
+  <bus>
+    <name>Master Bus</name>
+    <prop>/systems/electrical/outputs/bus[0]</prop>
+    <!-- Avionics outputs tied directly to bus, note that this is a -->
+    <!-- simple way to provide electrical outputs if you don't need -->
+    <!-- to put a circuit breaker or switch in front of the output. -->
+    <!-- *AND* if you don't care about back propogating the output -->
+    <!-- current. -->
+
+	<prop>/systems/electrical/outputs/DG</prop> <!--needed by the F-14B's BDHI -->
+
+    <prop>/systems/electrical/outputs/avionics-fan</prop>
+    <prop>/systems/electrical/outputs/gps-mfd</prop>
+    <prop>/systems/electrical/outputs/gps</prop>
+    <prop>/systems/electrical/outputs/hsi</prop>
+    <prop>/systems/electrical/outputs/nav[0]</prop>
+    <prop>/systems/electrical/outputs/dme</prop>
+    <prop>/systems/electrical/outputs/audio-panel[0]</prop>
+    <prop>/systems/electrical/outputs/nav[1]</prop>
+    <prop>/systems/electrical/outputs/audio-panel[1]</prop>
+    <prop>/systems/electrical/outputs/transponder</prop>
+    <prop>/systems/electrical/outputs/autopilot</prop>
+    <prop>/systems/electrical/outputs/adf</prop>
+    <prop>/systems/electrical/outputs/mk-viii</prop>
+    <prop>/systems/electrical/outputs/tacan</prop>
+  </bus>
+
+  <!-- Generic Outputs -->
+
+  <output>
+    <name>Starter 1 Power</name>
+    <prop>/systems/electrical/outputs/starter[0]</prop>
+  </output>
+
+  <output>
+    <name>Cabin Lights Power</name>
+    <prop>/systems/electrical/outputs/cabin-lights</prop>
+  </output>
+
+  <output>
+    <name>Instrument Power</name>
+    <prop>/systems/electrical/outputs/instr-ignition-switch</prop>
+  </output>
+
+  <output>
+    <name>Fuel Pump Power</name>
+    <prop>/systems/electrical/outputs/fuel-pump</prop>
+  </output>
+
+  <output>
+    <name>Landing Light Power</name>
+    <prop>/systems/electrical/outputs/landing-light</prop>
+  </output>
+
+  <output>
+    <name>Beacon Power</name>
+    <prop>/systems/electrical/outputs/beacon</prop>
+  </output>
+
+  <output>
+    <name>Flaps Power</name>
+    <prop>/systems/electrical/outputs/flaps</prop>
+  </output>
+
+  <output>
+    <name>Turn Coordinator Power</name>
+    <prop>/systems/electrical/outputs/turn-coordinator</prop>
+  </output>
+
+  <output>
+    <name>Map Lights Power</name>
+    <prop>/systems/electrical/outputs/map-lights</prop>
+  </output>
+
+  <output>
+    <name>Instrument Lights Power</name>
+    <prop>/systems/electrical/outputs/instrument-lights</prop>
+  </output>
+
+  <output>
+    <name>Strobe Lights Power</name>
+    <prop>/systems/electrical/outputs/strobe-lights</prop>
+  </output>
+
+  <output>
+    <name>Taxi Lights Power</name>
+    <prop>/systems/electrical/outputs/taxi-lights</prop>
+  </output>
+
+  <output>
+    <name>Pitot Heat Power</name>
+    <prop>/systems/electrical/outputs/pitot-heat</prop>
+  </output>
+
+
+  <!-- connect in power sources -->
+
+  <connector>
+    <input>Alternator 1</input>
+    <output>Master Bus</output>
+    <switch>
+      <prop>/controls/engines/engine[0]/master-alt</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>External 1</input>
+    <output>Master Bus</output>
+  </connector>
+
+  <connector>
+    <input>Battery 1</input>
+    <output>Master Bus</output>
+    <switch>
+      <prop>/controls/engines/engine[0]/master-bat</prop>
+    </switch>
+  </connector>
+
+  <!-- connect starter output -->
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Starter 1 Power</output>
+    <switch>
+      <prop>/controls/engines/engine[0]/starter</prop>
+      <initial-state>off</initial-state>
+    </switch>
+  </connector>
+
+  <!-- connect master bus outputs -->
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Cabin Lights Power</output>
+    <switch>
+      <prop>/controls/circuit-breakers/cabin-lights-pwr</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Instrument Power</output>
+    <switch>
+      <prop>/controls/circuit-breakers/instr-ignition-switch</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Fuel Pump Power</output>
+    <switch>
+      <prop>/controls/engines/engine[0]/fuel-pump</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Landing Light Power</output>
+    <switch>
+      <prop>/controls/switches/landing-light</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Beacon Power</output>
+    <switch>
+      <prop>/controls/switches/flashing-beacon</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Flaps Power</output>
+    <switch>
+      <prop>/controls/circuit-breakers/flaps</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Turn Coordinator Power</output>
+    <switch>
+      <prop>/controls/circuit-breakers/turn-coordinator</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Map Lights Power</output>
+    <switch>
+      <prop>/controls/switches/nav-lights</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Instrument Lights Power</output>
+    <switch>
+      <prop>/controls/circuit-breakers/instrument-lights</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Strobe Lights Power</output>
+    <switch>
+      <prop>/controls/switches/strobe-lights</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Taxi Lights Power</output>
+    <switch>
+      <prop>/controls/switches/taxi-lights</prop>
+    </switch>
+  </connector>
+
+  <connector>
+    <input>Master Bus</input>
+    <output>Pitot Heat Power</output>
+    <switch>
+      <prop>/controls/switches/pitot-heat</prop>
+    </switch>
+  </connector>
+
+</PropertyList>

@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+	<enable3d>true</enable3d>
+
+	<ladder>
+		<name>Pitch Ladder</name>
+		<type>pitch</type>
+		<x>-10</x>
+		<y>-25</y>
+		<width>20</width>
+		<height>50</height>
+		<roll-input>
+			<property>/orientation/roll-deg</property>
+		</roll-input>
+		<pitch-input>
+			<property>/orientation/pitch-deg</property>
+		</pitch-input>
+
+		<compression-factor>11.375</compression-factor>
+		<display-span>14.0</display-span>
+		<divisions>5.0</divisions>
+		<screen-hole>0</screen-hole>
+		<lbl-pos>0</lbl-pos>
+		<enable-fuselage-ref-line>false</enable-fuselage-ref-line>
+		<enable-target-spot>false</enable-target-spot>
+		<enable-velocity-vector>true</enable-velocity-vector>
+		<enable-drift-marker>false</enable-drift-marker>
+		<enable-alpha-bracket>true</enable-alpha-bracket>
+		<enable-energy-marker>false</enable-energy-marker>
+		<enable-climb-dive-marker>false</enable-climb-dive-marker>
+		<enable-glide-slope-marker>false</enable-glide-slope-marker>
+		<glide-slope>0.0</glide-slope>
+		<enable-energy-worm>false</enable-energy-worm>
+		<enable-waypoint-marker>true</enable-waypoint-marker>
+		<zero-bar-overlength>150</zero-bar-overlength>
+	</ladder>
+
+	<tape>
+		<name>Heading</name>
+		<x>-50</x>
+		<y>20</y>
+		<width>100</width>
+		<height>10</height>
+		<input>
+			<property>orientation/heading-magnetic-deg</property>
+			<factor>0.1</factor>
+			<max>85</max>
+			<min>0</min>
+		</input>
+		<major-divisions>1</major-divisions>
+		<minor-divisions>0.5</minor-divisions>
+		<display-span>3.5</display-span>
+		<option>center</option>
+		<option>horizontal</option>
+		<tick-bottom>false</tick-bottom>
+		<tick-top>false</tick-top>
+		<tick-right>false</tick-right>
+		<tick-left>false</tick-left>
+		<cap-bottom>false</cap-bottom>
+		<cap-top>false</cap-top>
+		<cap-right>false</cap-right>
+		<cap-left>false</cap-left>
+		<marker-offset>5</marker-offset>
+		<enable-pointer>false</enable-pointer>
+		<pointer-type>fixed</pointer-type>
+	</tape>
+
+	<tape>
+		<name>radio altitude</name>
+		<condition>
+			<or>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
+			</or>
+		</condition>
+		<x>60</x>
+		<y>-95</y>
+		<width>15</width>
+		<height>70</height>
+		<option>vertical</option>
+		<input>
+			<property>/position/altitude-agl-ft</property>
+			<factor>0.001</factor>
+			<max>1.5</max>
+			<min>0.0</min>
+		</input>
+		<option>right</option>
+		<label-gap-width>0</label-gap-width>
+		<major-divisions>1.0</major-divisions>
+		<minor-divisions>0.25</minor-divisions>
+		<display-span>1.5</display-span>
+		<format>%1.0f</format>
+		<tick-bottom>false</tick-bottom>
+		<tick-top>false</tick-top>
+		<tick-right>false</tick-right>
+		<tick-left>false</tick-left>
+		<cap-bottom>false</cap-bottom>
+		<cap-top>false</cap-top>
+		<cap-right>false</cap-right>
+		<cap-left>false</cap-left>
+		<marker-offset>10</marker-offset>
+		<enable-pointer>true</enable-pointer>
+		<pointer-type>fixed</pointer-type>
+		<tick-type>bullet</tick-type>
+	</tape>
+
+	<tape>
+		<name>vertical speed</name>
+		<condition>
+			<or>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
+			</or>
+		</condition>
+		<x>-60</x>
+		<y>-95</y>
+		<width>10</width>
+		<height>100</height>
+		<option>vertical</option>
+		<input>
+			<property>velocities/vertical-speed-fps</property>
+			<factor>0.06</factor>
+			<max>1.9</max>
+			<min>-1.9</min>
+		</input>
+		<option>left</option>
+		<label-gap-width>0</label-gap-width>
+
+		<major-divisions>1.0</major-divisions>
+		<minor-divisions>0.5</minor-divisions>
+		<display-span>4.0</display-span>
+		<format>%1.0f</format>
+
+		<tick-bottom>false</tick-bottom>
+		<tick-top>false</tick-top>
+		<tick-right>false</tick-right>
+		<tick-left>false</tick-left>
+		<cap-bottom>false</cap-bottom>
+		<cap-top>false</cap-top>
+		<cap-right>false</cap-right>
+		<cap-left>false</cap-left>
+		<marker-offset>10</marker-offset>
+		<enable-pointer>true</enable-pointer>
+		<pointer-type>fixed</pointer-type>
+		<tick-type>bullet</tick-type>
+	</tape>
+
+
+
+</PropertyList>

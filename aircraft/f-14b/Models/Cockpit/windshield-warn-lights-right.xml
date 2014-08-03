@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>windshield-warn-lights-right.ac</path>
+
+
+<!-- Warning Lights -->
+	<animation>
+		<type>select</type>
+		<object-name>type1-lit</object-name>
+		<condition>
+			<property>instrumentation/ecm/on-off</property>
+			<property>instrumentation/ecm/alert-type1</property>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>type2-lit</object-name>
+		<condition>
+			<property>instrumentation/ecm/on-off</property>
+			<property>instrumentation/ecm/alert-type2</property>
+		</condition>
+	</animation>
+
+
+	<animation>
+		<type>material</type>
+		<object-name>type1-lit</object-name>
+		<emission> 
+			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+	</animation>
+	<animation>
+		<type>material</type>
+		<object-name>type2-lit</object-name>
+		<emission> 
+			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+	</animation>
+
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+
+</PropertyList>

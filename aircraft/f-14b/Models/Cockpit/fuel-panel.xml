@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+
+
+
+<PropertyList>
+	<path>fuel-panel.ac</path>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>feed-guard-lever</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/fuel/feed-guard-lever</property>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>feed-guard-lever</object-name>
+		<property>sim/model/f-14b/controls/fuel/feed-guard-lever</property>
+		<factor>85</factor>
+		<center>
+			<x-m>-0.0082</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0860</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>qty-sel-switch-up</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-adjust</command>
+				<property>sim/model/f-14b/controls/fuel/qty-sel-switch</property>
+				<step>1</step>
+				<max>1</max>
+				<wrap>fase</wrap>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>qty-sel-switch-down</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-adjust</command>
+				<property>sim/model/f-14b/controls/fuel/qty-sel-switch</property>
+				<step>-1</step>
+				<min>-1</min>
+				<wrap>fase</wrap>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>qty-sel-switch</object-name>
+		<property>sim/model/f-14b/controls/fuel/qty-sel-switch</property>
+		<factor>20</factor>
+		<center>
+			<x-m>-0.0014</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>0.0000</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>dump-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14.fuel_dump_switch_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>rotate</type>
+		<object-name>dump-switch</object-name>
+		<property>sim/model/f-14b/controls/fuel/dump-switch</property>
+		<factor>45</factor>
+		<center>
+			<x-m>0.0020</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>0.0032</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!---->
+	<animation>
+		<type>rotate</type>
+		<object-name>refuel-probe-switch</object-name>
+		<property>sim/model/f-14b/controls/fuel/refuel-probe-switch</property>
+		<factor>20</factor>
+		<center>
+			<x-m>0.0014</x-m>
+			<y-m>0.0000</y-m>
+			<z-m>-0.0021</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>instrument</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.71</red>
+			<green>0.31</green>
+			<blue>0.13</blue>
+		</emission>
+	</animation>
+
+
+</PropertyList>

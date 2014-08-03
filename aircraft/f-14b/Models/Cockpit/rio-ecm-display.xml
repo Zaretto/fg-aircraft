@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<name>ECM-DISPLAY</name>
+	<path>rio-ecm-display.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>rio-ecm-display</object-name>
+		<condition>
+			<or>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>RIO View</value>
+				</equals>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Back-seat View</value>
+				</equals>
+			</or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>mode-switch</object-name>
+		<property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0100</x-m>
+			<y-m>0.0</y-m>
+			<z-m>-0.0078</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>mode-toggle</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<interval-sec>0.05</interval-sec>
+			<binding>
+				<command>nasal</command>
+				<script>f14_instruments.select_key_ecm_nav();</script>
+			</binding>
+		</action>
+	</animation>
+
+
+	<!-- Lightning -->
+	<animation>
+		<object-name>panel</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>7</max-m>
+	</animation>
+
+</PropertyList>

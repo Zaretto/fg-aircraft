@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+
+	<PropertyList>
+
+	<path>afcs.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>afcs</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- Stab Aug Pitch Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>stab-pitch-switch</object-name>
+		<property>sim/model/f-14b/controls/SAS/pitch</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0137</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sas-pitch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.sas_pitch_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- Stab Aug Roll Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>stab-roll-switch</object-name>
+		<property>sim/model/f-14b/controls/SAS/roll</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0137</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sas-roll</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.sas_roll_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- Stab Aug Yaw Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>stab-yaw-switch</object-name>
+		<property>sim/model/f-14b/controls/SAS/yaw</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0137</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sas-yaw</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.sas_yaw_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- Autopilot Engage Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>engage-switch</object-name>
+		<property>sim/model/f-14b/controls/AFCS/engage</property>
+		<factor>60</factor>
+		<center>
+			<x-m>0.0260</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-ap-engage</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.afcs_engage_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- Autopilot VEC/PCD ACL Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>vec-acl-switch</object-name>
+		<property>sim/model/f-14b/controls/AFCS/vec-acl</property>
+		<factor>30</factor>
+		<center>
+			<x-m>0.0260</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<!-- Autopilot Alt Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>alt-switch</object-name>
+		<property>sim/model/f-14b/controls/AFCS/altitude</property>
+		<factor>30</factor>
+		<center>
+			<x-m>0.0260</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-ap-alt</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.afcs_altitude_engage_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+	<!-- Autopilot HDG GT Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>hdg-gt-switch</object-name>
+		<property>sim/model/f-14b/controls/AFCS/heading-gt</property>
+		<factor>30</factor>
+		<center>
+			<x-m>0.0260</x-m>
+			<y-m>0.0</y-m>
+			<z-m>0.0038</z-m>
+		</center>
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-ap-hdg-up</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.afcs_heading_switch(1)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-ap-hdg-down</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_afcs.afcs_heading_switch(-1)</script>
+			</binding>
+		</action>
+	</animation>
+
+
+	<!-- lighting -->
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>switches</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<!-- LoD -->
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>

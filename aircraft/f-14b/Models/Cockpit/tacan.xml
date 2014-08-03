@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+
+
+<PropertyList>
+	<path>tacan.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>tacan</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>drum-1</object-name>
+		<property>instrumentation/tacan/frequencies/selected-channel[1]</property>
+		<factor>0.1</factor>
+		<offset>-1</offset>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>drum-2</object-name>
+		<property>instrumentation/tacan/frequencies/selected-channel[2]</property>
+		<factor>0.1</factor>
+		<offset>-1</offset>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>drum-3</object-name>
+		<property>instrumentation/tacan/frequencies/selected-channel[3]</property>
+		<factor>0.1</factor>
+		<offset>-1</offset>
+		<axis><y>-1</y></axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>Y-sign</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/tacan/frequencies/selected-channel[4]</property>
+				<value>Y</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>X-sign</object-name>
+		<condition>
+			<equals>
+				<property>instrumentation/tacan/frequencies/selected-channel[4]</property>
+				<value>X</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>go-lamp</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/tacan/go-lamp</property>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>nogo-lamp</object-name>
+		<condition>
+			<property>sim/model/f-14b/instrumentation/tacan/nogo-lamp</property>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>mode-knob</object-name>
+		<property>sim/model/f-14b/instrumentation/tacan/mode</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>2</ind><dep>-60</dep></entry>
+			<entry><ind>4</ind><dep>-120</dep></entry>
+		</interpolation>
+		<center><x-m>0.0196</x-m><y-m>0.0449</y-m></center>
+		<axis><z>1</z></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>mode-knob</object-name>
+		<action>
+			<button>1</button>
+			<repeatable>true</repeatable>
+			<interval-sec>0.3</interval-sec>
+			<binding>
+				<command>nasal</command>
+				<script>f14_instruments.set_tacan_mode(-1)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>mode-knob</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>true</repeatable>
+			<interval-sec>0.3</interval-sec>
+			<binding>
+				<command>nasal</command>
+				<script>f14_instruments.set_tacan_mode(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>chan-knob</object-name>
+		<property>instrumentation/tacan/frequencies/selected-channel</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>63</ind><dep>-120</dep></entry>
+			<entry><ind>126</ind><dep>-240</dep></entry>
+		</interpolation>
+		<center><x-m>0.0176</x-m><y-m>-0.0376</y-m></center>
+		<axis><z>1</z></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>chan-knob</object-name>
+		<action>
+			<button>1</button>
+			<repeatable>true</repeatable>
+			<interval-sec>0.07</interval-sec>
+			<binding>
+				<command>property-adjust</command>
+				<property>instrumentation/tacan/frequencies/selected-channel</property>
+				<step>-1</step>
+				<min>1</min>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>chan-knob</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>true</repeatable>
+			<interval-sec>0.07</interval-sec>
+			<binding>
+				<command>property-adjust</command>
+				<property>instrumentation/tacan/frequencies/selected-channel</property>
+				<step>1</step>
+				<max>126</max>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>xy-switch</object-name>
+		<property>sim/model/f-14b/instrumentation/tacan/xy-switch</property>
+		<factor>40</factor>
+		<center><x-m>0.0156</x-m><z-m>0.0041</z-m></center>
+		<axis><y>1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>xy-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14_instruments.tacan_XYtoggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>panel</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<animation>
+		<object-name>instrument</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.60</red>
+			<green>0.35</green>
+			<blue>0.23</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>tacan</object-name>
+		<type>noshadow</type>
+	</animation>
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>5</max-m>
+	</animation>
+
+</PropertyList>

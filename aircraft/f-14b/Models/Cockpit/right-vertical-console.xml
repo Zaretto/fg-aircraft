@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+
+
+
+<PropertyList>
+	<path>right-vertical-console.ac</path>
+
+	<!-- Hook Handle -->
+	<animation>
+		<object-name>hook-handle</object-name>
+		<type>rotate</type>
+		<property>controls/gear/tailhook</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>30</dep></entry>
+			<entry><ind>1</ind><dep>-10</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0378</x-m>
+			<y-m>0</y-m>
+			<z-m>0.1533</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- Hook Light -->
+	<animation>
+		<type>select</type>
+		<object-name>hook-lamp-on</object-name>
+		<condition>
+			<less-than>
+				<property>gear/tailhook/position-norm</property>
+				<value>0.9700</value>
+			</less-than>
+			<greater-than>
+				<property>gear/tailhook/position-norm</property>
+				<value>0.0300</value>
+			</greater-than>
+		</condition>
+	</animation>
+
+	<!-- gun's rounds counter -->
+	<animation>
+		<type>textranslate</type>
+		<object-name>drum-1</object-name>
+		<property>sim/model/f-14b/systems/gun/rounds</property>
+		<factor>0.1</factor>
+		<offset>-1</offset>
+		<step>1</step>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>drum-2</object-name>
+		<property>sim/model/f-14b/systems/gun/rounds</property>
+		<factor>0.01</factor>
+		<offset>-10</offset>
+		<step>10</step>
+		<scroll>0.5</scroll>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>drum-3</object-name>
+		<property>sim/model/f-14b/systems/gun/rounds</property>
+		<factor>0.001</factor>
+		<offset>-100</offset>
+		<step>100</step>
+		<scroll>0.5</scroll>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+	<!-- Dysplays -->
+	<!-- Mode -->
+	<animation>
+		<object-name>mode-to-bt</object-name>
+		<type>translate</type>
+		<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
+		<factor>0.0073</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<object-name>mode-cruise-bt</object-name>
+		<type>translate</type>
+		<property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
+		<factor>0.0073</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<object-name>mode-aa-bt</object-name>
+		<type>translate</type>
+		<property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
+		<factor>0.0073</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<object-name>mode-ag-bt</object-name>
+		<type>translate</type>
+		<property>sim/model/f-14b/controls/pilots-displays/mode/ag-bt</property>
+		<factor>0.0073</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<object-name>mode-ldg-bt</object-name>
+		<type>translate</type>
+		<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
+		<factor>0.0073</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- HSD Mode Switch -->
+	<animation>
+		<object-name>hsd-mode-switch</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
+		<interpolation>
+			<entry><ind>-1</ind><dep>-30</dep></entry><!-- ECM -->
+			<entry><ind>0</ind><dep>0</dep></entry><!-- TID repeat -->
+			<entry><ind>1</ind><dep>30</dep></entry><!-- NAV -->
+		</interpolation>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- VDI on/off Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>power-vdi-switch</object-name>
+		<property>sim/model/f-14b/controls/VDI/on-off</property>
+		<factor>33</factor>
+		<center>
+			<x-m>0.0</x-m>
+			<y-m>0.0</y-m>
+			<z-m>-0.0357</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<!-- HUD on/off Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>power-hud-switch</object-name>
+		<property>sim/hud/visibility[1]</property>
+		<factor>33</factor>
+		<center>
+			<x-m>-0.0</x-m>
+			<y-m>0.0</y-m>
+			<z-m>-0.0357</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<!-- HSD on/off Switch -->
+	<animation>
+		<type>rotate</type>
+		<object-name>power-hsd-switch</object-name>
+		<property>sim/model/f-14b/controls/HSD/on-off</property>
+		<factor>33</factor>
+		<center>
+			<x-m>-0.0</x-m>
+			<y-m>0.0</y-m>
+			<z-m>-0.0357</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<object-name>hook-lamp-off</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.07</red>
+			<green>0.03</green>
+			<blue>0.012</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>hook-lamp-on</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>sim/model/f-14b/systems/utilities/numeral-1</factor-prop>
+			<red>0.8</red>
+			<green>0.8</green>
+			<blue>0.8</blue>
+		</emission>
+	</animation>
+
+	<animation> 
+		<object-name>mounts</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation> 
+		<object-name>switches-and-buttons</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation> 
+		<object-name>rounds-drums</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.71</red>
+			<green>0.31</green>
+			<blue>0.13</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>50</max-m>
+	</animation>
+
+</PropertyList>

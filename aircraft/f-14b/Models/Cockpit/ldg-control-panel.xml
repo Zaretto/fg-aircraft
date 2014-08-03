@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+
+
+
+<PropertyList>
+	<path>ldg-control-panel.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>ldg-control-panel</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>emerg-stores-jett-button-on</object-name>
+		<condition>
+			<property>sim/model/f-14b/controls/armament/emerg-jettison-switch</property>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>emerg-stores-jett-button-off</object-name>
+		<condition>
+			<not><property>sim/model/f-14b/controls/armament/emerg-jettison-switch</property></not>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>translate</type>
+		<object-name>brake-handle</object-name>
+		<property>controls/gear/brake-parking</property>
+		<factor>0.0834</factor>
+		<axis>
+			<x>0.0834</x>
+			<y>-0.0084</y>
+			<z>0.0000</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>ld-gear-handle</object-name>
+		<property>sim/model/f-14b/controls/gear/ld-gear-handle-anim</property>
+		<interpolation>
+			<entry><ind>-1</ind><dep>-18</dep></entry>
+			<entry><ind>-0.5</ind><dep>6</dep></entry>
+			<entry><ind>0</ind><dep>30</dep></entry> 
+		</interpolation>  
+		<center>
+			<x-m>-0.0322</x-m>
+			<y-m>0</y-m>
+			<z-m>-0.0350</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>hyd-isol-switch</object-name>
+		<property>sim/model/f-14b/controls/gear/ld-gear-handle-anim</property>
+		<interpolation>
+			<entry><ind>-1</ind><dep>-33</dep></entry>
+			<entry><ind>-0.60</ind><dep>33</dep></entry>
+			<entry><ind>0</ind><dep>33</dep></entry> 
+		</interpolation>  
+		<center>
+			<x-m>0.0067</x-m>
+			<y-m>0</y-m>
+			<z-m>-0.0538</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>lamp-on</object-name>
+		<condition>
+			<greater-than>
+				<property>gear/gear[0]/position-norm</property>
+				<value>0</value>
+			</greater-than>
+			<less-than>
+				<property>gear/gear[0]/position-norm</property>
+				<value>1</value>
+			</less-than>
+			<greater-than>
+				<property>gear/gear[1]/position-norm</property>
+				<value>0</value>
+			</greater-than>
+			<less-than>
+				<property>gear/gear[1]/position-norm</property>
+				<value>1</value>
+			</less-than>
+			<greater-than>
+				<property>gear/gear[2]/position-norm</property>
+				<value>0</value>
+			</greater-than>
+			<less-than>
+				<property>gear/gear[2]/position-norm</property>
+				<value>1</value>
+			</less-than>
+		</condition>  
+	</animation>
+
+
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation> 
+		<object-name>switches-and-levers</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>lamp-off</object-name> 
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.07</red>
+			<green>0.03</green>
+			<blue>0.012</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>lamp-on</object-name> 
+		<type>material</type>
+		<emission>
+			<factor-prop>sim/model/f-14b/systems/utilities/numeral-1</factor-prop>
+			<red>0.8</red>
+			<green>0.8</green>
+			<blue>0.8</blue>
+		</emission>
+	</animation>
+
+</PropertyList>
