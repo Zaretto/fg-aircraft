@@ -56,7 +56,7 @@ var computeWingBend = func {
 		setprop ("sim/model/f-14b/wings/right-wing-torn", RightWingTorn);
 	}
 	#effects of normal acceleration
-	var currentG = getprop ("accelerations/pilot-g");   
+	var currentG = getprop ("accelerations/pilot-gdamped");   
 	if (currentG >= MaxGreached) MaxGreached = av_currentG;
 	if (currentG <= MinGreached) MinGreached = av_currentG;
 	if (MaxGreached > MaxG and MaxGreached < UltimateMaxG) {

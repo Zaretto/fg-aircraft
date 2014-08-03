@@ -164,40 +164,41 @@
 	<group>
 		<layout>hbox</layout>
 		<default-padding>1</default-padding>
-		<group>
-			<layout>vbox</layout>
-			<text>
-				<halign>right</halign>
-				<label>                     </label>
-			</text>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<halign>right</halign>
+					<label>                     </label>
+				</text>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<button>
+					<legend>Apply</legend>
+					<default>true</default>
+					<key>Enter</key>
+					<binding>
+						<command>nasal</command>
+						<script>f14.update_steering_deadZ()</script>
+					</binding>
+				</button>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<button>
+					<legend>Close</legend>
+					<default>true</default>
+					<key>Esc</key>
+					<binding>
+						<command>dialog-close</command>
+					</binding>
+				</button>
+			</group>
 		</group>
-		<group>
-			<layout>vbox</layout>
-			<button>
-				<legend>Apply</legend>
-				<default>true</default>
-				<key>Enter</key>
-				<binding>
-					<command>nasal</command>
-					<script>f14.update_steering_deadZ()</script>
-				</binding>
-			</button>
-		</group>
-		<group>
-			<layout>vbox</layout>
-			<button>
-				<legend>Close</legend>
-				<default>true</default>
-				<key>Esc</key>
-				<binding>
-					<command>dialog-close</command>
-				</binding>
-			</button>
-		</group>
-	</group>
 
-  <empty>
-    <pref-height>4</pref-height>
-  </empty>
+		<empty>
+			<pref-height>4</pref-height>
+		</empty>
+	</group>
 
 </PropertyList>

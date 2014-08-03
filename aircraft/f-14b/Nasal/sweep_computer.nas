@@ -34,6 +34,7 @@ var toggleOversweep = func {
 }
 
 var computeSweep = func {
+return;
 	if (AutoSweep) {
 		current_mach = getprop ("/velocities/mach");
 		# Flaps/sweep interlock

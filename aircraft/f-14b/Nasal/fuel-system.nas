@@ -308,15 +308,15 @@ var fuel_update = func {
 	right_fuel_consumed = RightFuel.getValue();
 	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
 	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
-	LeftFuel.setDoubleValue(0);
-	RightFuel.setDoubleValue(0);
-	if ( left_outOfFuel ) {
-		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
-	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
-	if ( right_outOfFuel ) {
-		RightEngine.getNode("out-of-fuel").setBoolValue(1)
-	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
-
+#	LeftFuel.setDoubleValue(0);
+#	RightFuel.setDoubleValue(0);
+#	if ( left_outOfFuel ) {
+#		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
+#	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
+#	if ( right_outOfFuel ) {
+#		RightEngine.getNode("out-of-fuel").setBoolValue(1)
+#	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
+#print("LE:", LeftEngine.getNode("out-of-fuel").getValue(), ", RE ", RightEngine.getNode("out-of-fuel").getValue(), );
 
 	# Transfer from left sump to left proportioner (left feed line).
 	if ( Left_Proportioner.get_ullage() > 0 ) {
@@ -684,7 +684,9 @@ Tank = {
 	new : func (name, number, connect) {
 		var obj = { parents : [Tank]};
 		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
-		obj.name = obj.prop.getNode("name", 1);
+		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
+#		obj.name = obj.prop.getNode("name", 1);
+		obj.name = name;
 		obj.prop.getChild("name", 0, 1).setValue(name);
 		obj.capacity = obj.prop.getNode("capacity-gal_us", 1);
 		obj.ppg = obj.prop.getNode("density-ppg", 1);
@@ -699,7 +701,7 @@ Tank = {
 		obj.ppg.setDoubleValue(6.3);
 
 		append(Tank.list, obj);
-		#print("Tank.new[",number,"], ", obj.level_lbs.getValue());
+		print("Tank.new[",number,"], ", obj.level_lbs.getValue());
 		return obj;
 	},
 	get_capacity : func {
@@ -765,6 +767,7 @@ Prop = {
 		obj.level_lbs = obj.prop.getNode("level-lbs", 1);
 		obj.dumprate = obj.prop.getNode("dump-rate-lbs-hr", 1);
 		obj.running = obj.prop.getNode("running", 1);
+print("Name ",name,running);
 		obj.running.setBoolValue(running);
 		obj.prop.getChild("selected", 0, 1).setBoolValue(connect);
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
@@ -802,6 +805,9 @@ Prop = {
 	update : func (amount_lbs) {
 		var ppg = me.ppg.getValue();
 		var level = me.get_lbs();
+		if (level == nil) {
+print("nil level");
+        }
 		if (level == 0) {
 			return 1;
 		} else {
@@ -859,7 +865,7 @@ Neg_g = {
 		obj.prop = props.globals.getNode("controls/fuel/neg-g",1);
 		obj.switch = switch;
 		obj.prop.setBoolValue(switch);
-		obj.acceleration = props.globals.getNode("accelerations/pilot-g", 1);
+		obj.acceleration = props.globals.getNode("accelerations/pilot-gdamped", 1);
 		obj.check = props.globals.getNode("controls/fuel/recuperator-check", 1);
 		return obj;
 	},

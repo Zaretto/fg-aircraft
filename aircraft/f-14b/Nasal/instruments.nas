@@ -192,7 +192,9 @@ aircraft.data.add(	bingo,
 
 
 # Accelerometer ###########
-var g_curr  = props.globals.getNode("accelerations/pilot-g", 1);
+#var g_curr  = props.globals.getNode("accelerations/pilot-g", 1);
+var g_curr  = props.globals.getNode("accelerations/pilot-gdamped", 1);
+
 var g_max   = props.globals.getNode("sim/model/f-14b/instrumentation/g-meter/g-max", 1);
 var g_min   = props.globals.getNode("sim/model/f-14b/instrumentation/g-meter/g-min", 1);
 aircraft.data.add( g_min, g_max );

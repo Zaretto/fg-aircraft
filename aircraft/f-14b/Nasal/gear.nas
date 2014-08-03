@@ -25,13 +25,13 @@ setprop("sim/model/f-14b/instrumentation/gears/nose-wheel-steering-warnlight", N
 # Hijacked Gear handling so we have a Weight on Wheel security to prevent
 # undercarriage retraction when on ground.
 
-controls.gearDown = func(v) {
-    if (v < 0 and ! wow) {
-      setprop("/controls/gear/gear-down", 0);
-    } elsif (v > 0) {
-      setprop("/controls/gear/gear-down", 1);
-    }
-}
+#controls.gearDown = func(v) {
+#    if (v < 0 and ! wow) {
+#      setprop("/controls/gear/gear-down", 0);
+#    } elsif (v > 0) {
+#      setprop("/controls/gear/gear-down", 1);
+#    }
+#}
 
 
 # Landing gear handle animation 
