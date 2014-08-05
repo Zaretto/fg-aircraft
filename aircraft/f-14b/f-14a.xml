@@ -42,11 +42,13 @@
    <wingarea  unit="FT2">   565 </wingarea>
    <wingspan  unit="FT" >   64.00 </wingspan>
    <wing_incidence>          2.00 </wing_incidence>
-   <chord     unit="FT" >    9.85 </chord>
-   <htailarea unit="FT2">   10.90 </htailarea>
+
+   <chord     unit="FT" >    8.81 </chord>
+   <htailarea unit="FT2">  113.00 </htailarea>
    <htailarm  unit="FT" >   25.10 </htailarm>
-   <vtailarea unit="FT2">    9.81 </vtailarea>
+   <vtailarea unit="FT2">  101.70 </vtailarea>
    <vtailarm  unit="FT" >   25.10 </vtailarm>
+
    <location name="AERORP" unit="IN">
      <x> 451.80 </x>
      <y>   0.00 </y>
@@ -210,7 +212,8 @@
                 <x> 0 </x>
                 <x1> 0.291 </x1>
                 <y> 0 </y>
-                <z> -0.68 </z>
+                <z>0</z>
+<z1> -0.68 </z1>
             </location>
             <capacity unit="KG">2136</capacity>
             <contents unit="KG">2136</contents>
@@ -220,7 +223,8 @@
                 <x> 0 </x>
                 <x1> -0.291 </x1>
                 <y> 0 </y>
-                <z> -0.58 </z>
+                <z>0</z>
+<z1> -0.58 </z1>
             </location>
             <capacity unit="KG">2000</capacity>
             <contents unit="KG">2000</contents>
@@ -230,7 +234,8 @@
                 <x> 0 </x>
                 <x1> -1.291 </x1>
                 <y> 1.98 </y>
-                <z> -0.51 </z>
+                <z>0</z>
+<z1> -0.51 </z1>
             </location>
             <capacity unit="KG">568</capacity>
             <contents unit="KG">568</contents>
@@ -240,7 +245,8 @@
                 <x> 0 </x>
                 <x1> -1.291 </x1>
                 <y> 0.98 </y>
-                <z> -0.58 </z>
+                <z>0</z>
+<z1> -0.58 </z1>
             </location>
             <capacity unit="KG">136</capacity>
             <contents unit="KG">136</contents>
@@ -250,7 +256,8 @@
                 <x> 0 </x>
                 <x1> -1.291 </x1>
                 <y> -1.98 </y>
-                <z> -0.51 </z>
+                <z>0</z>
+<z1> -0.51 </z1>
             </location>
             <capacity unit="KG">568</capacity>
             <contents unit="KG">568</contents>
@@ -260,7 +267,8 @@
                 <x> 0 </x>
                 <x1> -1.291 </x1>
                 <y> -0.98 </y>
-                <z> -0.58 </z>
+                <z>0</z>
+<z1> -0.58 </z1>
             </location>
             <capacity unit="KG">136</capacity>
             <contents unit="KG">136</contents>
@@ -270,7 +278,8 @@
                 <x> 0 </x>
                 <x1> -1.979 </x1>
                 <y> 3.52 </y>
-                <z> -0.51 </z>
+                <z>0</z>
+<z1> -0.51 </z1>
             </location>
             <capacity unit="KG">909</capacity>
             <contents unit="KG">909</contents>
@@ -280,7 +289,8 @@
                 <x> 0 </x>
                 <x1> -1.979 </x1>
                 <y> -3.52 </y>
-                <z> -0.51 </z>
+                <z>0</z>
+<z1> -0.51 </z1>
             </location>
             <capacity unit="KG">909</capacity>
             <contents unit="KG">909</contents>
@@ -290,7 +300,8 @@
                 <x> 0 </x>
                 <x1> 1.05 </x1>
                 <y> 1.41 </y>
-                <z> -2.18 </z>
+                <z>0</z>
+<z1> -2.18 </z1>
             </location>
             <capacity unit="KG">818</capacity>
             <contents unit="KG">818</contents>
@@ -300,7 +311,8 @@
                 <x> 0 </x>
                 <x1> 1.05 </x1>
                 <y> -1.41 </y>
-                <z> -2.18 </z>
+                <z>0</z>
+<z1> -2.18 </z1>
             </location>
             <capacity unit="KG">818</capacity>
             <contents unit="KG">818</contents>
@@ -310,7 +322,8 @@
                 <x> 0 </x>
                 <x1> -1.291 </x1>
                 <y> 0.98 </y>
-                <z> -0.58 </z>
+                <z>0</z>
+<z1> -0.58 </z1>
             </location>
             <capacity unit="KG">5</capacity>
             <contents unit="KG">5</contents>
@@ -320,7 +333,8 @@
                 <x> 0 </x>
                 <x1> -1.291 </x1>
                 <y> -0.98 </y>
-                <z> -0.58 </z>
+                <z>0</z>
+<z1> -0.58 </z1>
             </location>
             <capacity unit="KG">5</capacity>
             <contents unit="KG">5</contents>
@@ -491,7 +505,7 @@
           <time>      0 </time>
        </setting>
        <setting>
-          <position> 25 </position>
+          <position> 30 </position>
           <time>      3 </time>
        </setting>
      </traverse>
@@ -502,7 +516,7 @@
       <input>fcs/flap-pos-deg</input>
       <domain>
         <min>  0 </min>
-        <max> 25 </max>
+        <max> 30 </max>
       </domain>
       <range>
         <min> 0 </min>
@@ -510,8 +524,38 @@
       </range>
       <output>fcs/flap-pos-norm</output>
    </aerosurface_scale>
-
   </channel>
+
+<!--
+  <channel name="AuxiliaryFlaps">
+   <kinematic name="Auxiliary Flaps Control">
+     <traverse>
+       <setting>
+          <position>  0 </position>
+          <time>      0 </time>
+       </setting>
+       <setting>
+          <position> 40 </position>
+          <time>      3 </time>
+       </setting>
+     </traverse>
+     <output>fcs/aux-flap-pos-deg</output>
+   </kinematic>
+
+   <aerosurface_scale name="aux flap normalization">
+      <input>fcs/aux-flap-pos-deg</input>
+      <domain>
+        <min>  0 </min>
+        <max> 30 </max>
+      </domain>
+      <range>
+        <min> 0 </min>
+        <max> 1 </max>
+      </range>
+      <output>fcs/aux-flap-pos-deg</output>
+   </aerosurface_scale>
+  </channel>
+-->
 
   <channel name="Landing Gear">
    <kinematic name="Gear Control">
@@ -913,15 +957,15 @@
  </external_reactions>
     <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <simulation> ON </simulation>
-        <atmosphere> OFF </atmosphere>
-        <massprops> OFF </massprops>
-        <aerosurfaces> OFF </aerosurfaces>
-        <rates> OFF </rates>
-        <velocities> OFF </velocities>
+        <atmosphere> ON </atmosphere>
+        <massprops> ON </massprops>
+        <aerosurfaces> ON </aerosurfaces>
+        <rates> ON </rates>
+        <velocities> ON </velocities>
         <forces> ON </forces>
         <moments> ON </moments>
-        <position> OFF </position>
-        <coefficients> OFF </coefficients>
+        <position> ON </position>
+        <coefficients> ON </coefficients>
         <ground_reactions> ON </ground_reactions>
         <fcs> ON </fcs>
         <propulsion> ON </propulsion>
