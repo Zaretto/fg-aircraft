@@ -72,10 +72,15 @@ var refuel_rate_gpm = 450; # max refuel rate in gallons per minute at 50 psi pre
 var left_shut_off = 0; # TODO: Engine fuel shutoff emergency handles
 var right_shut_off = 0;
 
-var LeftEngine		= props.globals.getNode("engines").getChild("engine", 0);
-var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
-var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
-var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
+
+#var LeftEngine		= props.globals.getNode("engines").getChild("engine", 0);
+#var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
+var LeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
+var RightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
+#var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
+#var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
+var LeftFuel		= LeftEngine.getNode("fuel-used-lbs", 1);
+var RightFuel		= RightEngine.getNode("fuel-used-lbs", 1);
 var left_fuel_consumed  = 0;
 var right_fuel_consumed = 0;
 LeftEngine.getNode("out-of-fuel", 1);
@@ -171,7 +176,6 @@ var build_new_proportioners = func {
 
 
 var fuel_update = func {
-
 	if ( getprop("/sim/freeze/fuel") or getprop("sim/replay/time") > 0 ) { return }
 
 	fuel_time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
@@ -684,7 +688,7 @@ Tank = {
 	new : func (name, number, connect) {
 		var obj = { parents : [Tank]};
 		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
-		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
+#		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
 #		obj.name = obj.prop.getNode("name", 1);
 		obj.name = name;
 		obj.prop.getChild("name", 0, 1).setValue(name);
@@ -701,7 +705,7 @@ Tank = {
 		obj.ppg.setDoubleValue(6.3);
 
 		append(Tank.list, obj);
-		print("Tank.new[",number,"], ", obj.level_lbs.getValue());
+		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
 	get_capacity : func {
@@ -767,12 +771,12 @@ Prop = {
 		obj.level_lbs = obj.prop.getNode("level-lbs", 1);
 		obj.dumprate = obj.prop.getNode("dump-rate-lbs-hr", 1);
 		obj.running = obj.prop.getNode("running", 1);
-print("Name ",name,running);
 		obj.running.setBoolValue(running);
 		obj.prop.getChild("selected", 0, 1).setBoolValue(connect);
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
 		obj.ppg.setDoubleValue(6.3);
 		append(Prop.list, obj);
+print("Name ",name,running,obj.level_lbs, obj.get_capacity());
 		return obj;
 	},
 	
@@ -806,7 +810,12 @@ print("Name ",name,running);
 		var ppg = me.ppg.getValue();
 		var level = me.get_lbs();
 		if (level == nil) {
-print("nil level");
+print("nil level ",obj.name);
+return;
+        }
+		if (amount_lbs == nil) {
+print("nil amount_lbs level ",obj.name);
+return;
         }
 		if (level == 0) {
 			return 1;

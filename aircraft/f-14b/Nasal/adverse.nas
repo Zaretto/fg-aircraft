@@ -7,7 +7,8 @@ var MaxGreached = 0.0;
 var MinGreached = 0.0;
 var MaxG = 7.5;
 var MinG = -3.0;
-var UltimateFactor = 1.5;
+var UltimateFactor = 2; # f14 ok up until 11.5g - possible damage - so raise to 15g
+#var UltimateFactor = 1.5;
 var UltimateMaxG = MaxG * UltimateFactor;
 var UltimateMinG = MinG * UltimateFactor;
 
