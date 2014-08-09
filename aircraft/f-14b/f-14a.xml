@@ -94,8 +94,8 @@
    <location name="CG" unit="IN">
      <x> 451.80 </x>
      <y>   0.00 </y>
-     <z>   0.00 </z>
-     <z1> -18.83 </z1>
+     <z0> -18.83 </z0>
+     <z> 0.00 </z>
    </location>
  </mass_balance>
 
@@ -640,7 +640,12 @@
      <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
      <summer name="cg-x-offset-chord-in">
        <input> inertia/cg-x-in</input>
-       <bias> -451.80</bias>
+<!-- 
+              _   _
+   MAC is 16% c . c is 451.8 giving us 18.81in as offset to %MAC
+.: %MAC -451.8 + 18.8 = -414.18 (-469.98)
+-->
+       <bias> -469.98</bias>
        <output>inertia/cg-x-offset-chord-in</output>
      </summer>
      <pure_gain name="cg-x-chord-percent">
@@ -681,16 +686,16 @@
            <sum>
              <product>
                <property>aero/cos-alpha</property>
-               <property>aero/force/ClBAS</property>
+               <property>aero/coefficients/ClBAS</property>
              </product>
              <product>
                <property>aero/sin-alpha</property>
-               <property>aero/force/CdBAS</property>
+               <property>aero/coefficients/CdBAS</property>
              </product>
            </sum>
          </product>
        </function>
-       <output>aero/force/CLxzcg</output>
+       <output>aero/coefficients/CLDxzcg</output>
      </fcs_function>
    </channel>
  </flight_control>
@@ -732,14 +737,9 @@
                   </table>
             </product>
         </function>
-
-
-  <axis name="LIFT">
-    <function name="aero/force/ClBAS">
+    <function name="aero/coefficients/ClBAS">
     <description>ClBAS</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -759,6 +759,41 @@
                  55     1.34635400 1.38524700 1.39456400 1.41769200 1.42736900 1.41769200 1.39456400 1.38524700 1.34635400 
             </tableData>
           </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/CdBAS">
+    <description>CdBAS</description>
+    <product>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <independentVar lookup="column">aero/beta-deg</independentVar>
+            <tableData>
+                               -20        -15        -10         -5          0          5         10         15         20 
+                 0      0.01700000 0.01705000 0.02160000 0.02295000 0.02520000 0.02295000 0.02160000 0.01705000 0.01700000 
+                 5      0.04338825 0.04781333 0.05320554 0.05617464 0.05818861 0.05617464 0.05320354 0.04781333 0.04338825 
+                 10     0.14076520 0.15650480 0.16247150 0.16777520 0.16784560 0.16777520 0.16247150 0.15650480 0.14076520 
+                 15     0.31166910 0.32756250 0.34487960 0.34548170 0.34631600 0.34548170 0.34487960 0.32756250 0.31166910 
+                 20     0.51235980 0.54320750 0.56292740 0.56514200 0.57722390 0.56514200 0.56292740 0.54320750 0.51235980 
+                 25     0.75231020 0.78257730 0.80420480 0.81740020 0.82113730 0.81740020 0.80420480 0.78257730 0.75221020 
+                 30     0.98698510 1.03105800 1.06849700 1.09583100 1.11304600 1.09583100 1.06849700 1.03105800 0.98698510 
+                 35     1.21140600 1.24374700 1.29458600 1.32128900 1.36258600 1.32128900 1.29458600 1.24374700 1.21140600 
+                 40     1.39821700 1.42475000 1.44800800 1.48316600 1.50487200 1.48316600 1.44800800 1.42475000 1.39821700 
+                 45     1.56330700 1.61255700 1.62553300 1.66403500 1.68355100 1.66403500 1.62553300 1.61255700 1.56330700 
+                 50     1.74877400 1.78230900 1.81470600 1.84961900 1.89047500 1.84961900 1.81470600 1.78230900 1.74877400 
+                 55     1.90570600 1.96386700 1.98249100 2.02153600 2.03465900 2.02153600 1.98249100 1.96386700 1.90570600 
+            </tableData>
+          </table>
+       </product>
+    </function>
+
+
+  <axis name="LIFT">
+    <function name="aero/force/lift-basic">
+    <description>ClBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/ClBAS</property>
        </product>
     </function>
     <function name="aero/force/CLDS1">
@@ -819,26 +854,8 @@
     <description>CdBAS</description>
     <product>
           <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">aero/beta-deg</independentVar>
-            <tableData>
-                               -20        -15        -10         -5          0          5         10         15         20 
-                 0      0.01700000 0.01705000 0.02160000 0.02295000 0.02520000 0.02295000 0.02160000 0.01705000 0.01700000 
-                 5      0.04338825 0.04781333 0.05320554 0.05617464 0.05818861 0.05617464 0.05320354 0.04781333 0.04338825 
-                 10     0.14076520 0.15650480 0.16247150 0.16777520 0.16784560 0.16777520 0.16247150 0.15650480 0.14076520 
-                 15     0.31166910 0.32756250 0.34487960 0.34548170 0.34631600 0.34548170 0.34487960 0.32756250 0.31166910 
-                 20     0.51235980 0.54320750 0.56292740 0.56514200 0.57722390 0.56514200 0.56292740 0.54320750 0.51235980 
-                 25     0.75231020 0.78257730 0.80420480 0.81740020 0.82113730 0.81740020 0.80420480 0.78257730 0.75221020 
-                 30     0.98698510 1.03105800 1.06849700 1.09583100 1.11304600 1.09583100 1.06849700 1.03105800 0.98698510 
-                 35     1.21140600 1.24374700 1.29458600 1.32128900 1.36258600 1.32128900 1.29458600 1.24374700 1.21140600 
-                 40     1.39821700 1.42475000 1.44800800 1.48316600 1.50487200 1.48316600 1.44800800 1.42475000 1.39821700 
-                 45     1.56330700 1.61255700 1.62553300 1.66403500 1.68355100 1.66403500 1.62553300 1.61255700 1.56330700 
-                 50     1.74877400 1.78230900 1.81470600 1.84961900 1.89047500 1.84961900 1.81470600 1.78230900 1.74877400 
-                 55     1.90570600 1.96386700 1.98249100 2.02153600 2.03465900 2.02153600 1.98249100 1.96386700 1.90570600 
-            </tableData>
-          </table>
+          <property>metrics/Sw-sqft</property>aero/coefficients/CdBAS
+          <property>aero/coefficients/CdBAS</property>
        </product>
     </function>
     <function name="aero/force/CdDS1">
@@ -895,6 +912,7 @@
     </function>
   </axis>
   <axis name="SIDE">
+<!--
     <function name="aero/force/CYBAS">
     <description>CYBAS</description>
     <product>
@@ -921,6 +939,7 @@
           </table>
        </product>
     </function>
+-->
     <!--
     <function name="aero/force/xCYP">
     <description>xCYP</description>
@@ -1027,6 +1046,7 @@
     </function>
   </axis>
   <axis name="ROLL">
+<!--
     <function name="aero/force/CLBAS">
     <description>CLBAS</description>
     <product>
@@ -1054,6 +1074,7 @@
           </table>
        </product>
     </function>
+-->
     <!--
     <function name="aero/force/xCRP">
     <description>xCRP</description>
@@ -1166,15 +1187,6 @@
     </function>
   </axis>
   <axis name="PITCH">
-<!--
-    <function name="aero/force/CMxzcg">
-    <description>Pitching moment due to CG alpha lift/drag </description>
-    <product>
-          <property>aero/force/CLxzcg</property>
-       </product>
-    </function>
--->
-
     <function name="aero/force/CMBAS">
     <description>CMBAS</description>
     <product>
@@ -1202,9 +1214,18 @@
           </table>
        </product>
     </function>
+    <function name="aero/force/CMxzcg">
+    <description>Pitching moment due to CG alpha lift/drag </description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/CLDxzcg</property>
+       </product>
+    </function>
     <!--
     <function name="aero/force/xDCMB0">
-    <description>DCMB0</description>
+    <description>xDCMB0</description>
     <product>
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
@@ -1312,6 +1333,7 @@
     </function>
   </axis>
   <axis name="YAW">
+<!--
     <function name="aero/force/CNBAS">
     <description>CNBAS</description>
     <product>
@@ -1339,12 +1361,14 @@
           </table>
        </product>
     </function>
+-->
     <function name="aero/force/DCNDS">
     <description>DCNDS</description>
     <product>
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>metrics/bw-ft</property>
+          <property>fcs/stabilizer-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1424,6 +1448,7 @@
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>metrics/bw-ft</property>
+          <property>fcs/left-aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1449,6 +1474,7 @@
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>metrics/bw-ft</property>
+          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1471,7 +1497,6 @@
        </product>
     </function>
   </axis>
-
  </aerodynamics>
 
  <external_reactions>
@@ -1491,21 +1516,13 @@
     <ground_reactions> ON </ground_reactions>
     <fcs> ON </fcs>
     <propulsion> ON </propulsion>
-    <property>aero/alpha-rad</property>
-    <property>velocities/vc-kts</property>
-    <property>aero/force/CLxzcg</property>
-    <property>/fdm/jsbsim/propulsion/engine/thrust-lbs</property>
-    <property>/fdm/jsbsim/propulsion/engine/fuel-flow-rate-gph</property>
-    <property>/fdm/jsbsim/propulsion/engine/fuel-used-lbs</property>
-    <property>/fdm/jsbsim/propulsion/engine/n1</property>
-    <property>/fdm/jsbsim/propulsion/engine[1]/thrust-lbs</property>
-    <property>/fdm/jsbsim/propulsion/engine[1]/fuel-flow-rate-gph</property>
-    <property>/fdm/jsbsim/propulsion/engine[1]/fuel-used-lbs</property>
-    <property>/fdm/jsbsim/propulsion/engine[1]/n1</property>
-    <property>inertia/cg-x-mac-percent </property>
-    <property>aero/cos-alpha</property>
-    <property>aero/force/ClBAS</property>
-    <property>aero/sin-alpha</property>
-    <property>aero/force/CdBAS</property>
   </output>
 </fdm_config>
+<!--
+    <function name="aero/force/CMxzcg">
+    <description>Pitching moment due to CG alpha lift/drag </description>
+    <product>
+          <property>aero/force/CLxzcg</property>
+       </product>
+    </function>
+-->
