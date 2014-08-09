@@ -737,6 +737,18 @@
                   </table>
             </product>
         </function>
+<!--
+    <function name="aero/force/CMxzcg">
+    <description>Pitching moment due to CG alpha lift/drag </description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/CLDxzcg</property>
+       </product>
+    </function>
+-->
+
     <function name="aero/coefficients/ClBAS">
     <description>ClBAS</description>
     <product>
@@ -757,6 +769,50 @@
                  45     1.56719700 1.61022400 1.61718800 1.65201300 1.66898400 1.65201300 1.61718800 1.61022400 1.56719700 
                  50     1.47601100 1.49990800 1.52134900 1.54679300 1.58094500 1.54679300 1.52131900 1.49990800 1.47601100 
                  55     1.34635400 1.38524700 1.39456400 1.41769200 1.42736900 1.41769200 1.39456400 1.38524700 1.34635400 
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/CLDS1">
+    <description>CLDS1</description>
+    <product>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                      0 0.01650000
+                      5 0.01250000
+                     10 0.01350000
+                     15 0.01500000
+                     20 0.01650000
+                     25 0.01450000
+                     30 0.01300000
+                     35 0.01150000
+                     40 0.00450000
+                     45 0.00600000
+                     50 0.00700000
+                     55 0.00650000
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/CLDS2">
+    <description>CLDS2</description>
+    <product>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                      0 0.00650000
+                      5 0.00950000
+                     10 0.01150000
+                     15 0.01250000
+                     20 0.01200000
+                     25 0.01250000
+                     30 0.01250000
+                     35 0.01350000
+                     40 0.01200000
+                     45 0.01100000
+                     50 0.00800000
+                     55 0.00550000
             </tableData>
           </table>
        </product>
@@ -785,86 +841,9 @@
           </table>
        </product>
     </function>
-
-
-  <axis name="LIFT">
-    <function name="aero/force/lift-basic">
-    <description>ClBAS</description>
-    <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>aero/coefficients/ClBAS</property>
-       </product>
-    </function>
-    <function name="aero/force/CLDS1">
-    <description>CLDS1</description>
-    <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-1p</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                      0 0.01650000
-                      5 0.01250000
-                     10 0.01350000
-                     15 0.01500000
-                     20 0.01650000
-                     25 0.01450000
-                     30 0.01300000
-                     35 0.01150000
-                     40 0.00450000
-                     45 0.00600000
-                     50 0.00700000
-                     55 0.00650000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/force/CLDS2">
-    <description>CLDS2</description>
-    <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-2p</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                      0 0.00650000
-                      5 0.00950000
-                     10 0.01150000
-                     15 0.01250000
-                     20 0.01200000
-                     25 0.01250000
-                     30 0.01250000
-                     35 0.01350000
-                     40 0.01200000
-                     45 0.01100000
-                     50 0.00800000
-                     55 0.00550000
-            </tableData>
-          </table>
-       </product>
-    </function>
-  </axis>
-  <axis name="DRAG">
-    <function name="aero/force/CdBAS">
-    <description>CdBAS</description>
-    <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>aero/coefficients/CdBAS
-          <property>aero/coefficients/CdBAS</property>
-       </product>
-    </function>
-    <function name="aero/force/CdDS1">
+    <function name="aero/coefficients/CdDS1">
     <description>CdDS1</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-1p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -884,13 +863,9 @@
           </table>
        </product>
     </function>
-    <function name="aero/force/CdDS2">
+    <function name="aero/coefficients/CdDS2">
     <description>CdDS2</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-2p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -910,14 +885,9 @@
           </table>
        </product>
     </function>
-  </axis>
-  <axis name="SIDE">
-<!--
-    <function name="aero/force/CYBAS">
+    <function name="aero/coefficients/CYBAS">
     <description>CYBAS</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -939,13 +909,10 @@
           </table>
        </product>
     </function>
--->
     <!--
-    <function name="aero/force/xCYP">
+    <function name="aero/coefficients/xCYP">
     <description>xCYP</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -967,11 +934,9 @@
     </function>
     -->
     <!--
-    <function name="aero/force/xCYR">
+    <function name="aero/coefficients/xCYR">
     <description>xCYR</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -992,12 +957,9 @@
        </product>
     </function>
     -->
-    <function name="aero/force/CYDA">
+    <function name="aero/coefficients/CYDA">
     <description>CYDA</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>fcs/left-aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1017,12 +979,9 @@
           </table>
        </product>
     </function>
-    <function name="aero/force/CYDR">
+    <function name="aero/coefficients/CYDR">
     <description>CYDR</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1044,15 +1003,9 @@
           </table>
        </product>
     </function>
-  </axis>
-  <axis name="ROLL">
-<!--
-    <function name="aero/force/CLBAS">
+    <function name="aero/coefficients/CLBAS">
     <description>CLBAS</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1074,14 +1027,10 @@
           </table>
        </product>
     </function>
--->
     <!--
-    <function name="aero/force/xCRP">
+    <function name="aero/coefficients/xCRP">
     <description>xCRP</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1103,12 +1052,9 @@
     </function>
     -->
     <!--
-    <function name="aero/force/xCLR">
+    <function name="aero/coefficients/xCLR">
     <description>xCLR</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1129,13 +1075,9 @@
        </product>
     </function>
     -->
-    <function name="aero/force/CLDA">
+    <function name="aero/coefficients/CLDA">
     <description>CLDA</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
-          <property>fcs/left-aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1157,13 +1099,9 @@
           </table>
        </product>
     </function>
-    <function name="aero/force/CLDR">
+    <function name="aero/coefficients/CLDR">
     <description>CLDR</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
-          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1185,14 +1123,9 @@
           </table>
        </product>
     </function>
-  </axis>
-  <axis name="PITCH">
-    <function name="aero/force/CMBAS">
+    <function name="aero/coefficients/CMBAS">
     <description>CMBAS</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1214,22 +1147,10 @@
           </table>
        </product>
     </function>
-    <function name="aero/force/CMxzcg">
-    <description>Pitching moment due to CG alpha lift/drag </description>
-    <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
-          <property>aero/coefficients/CLDxzcg</property>
-       </product>
-    </function>
     <!--
-    <function name="aero/force/xDCMB0">
+    <function name="aero/coefficients/xDCMB0">
     <description>xDCMB0</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1251,12 +1172,9 @@
     </function>
     -->
     <!--
-    <function name="aero/force/xCMQ">
+    <function name="aero/coefficients/xCMQ">
     <description>xCMQ</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1277,14 +1195,9 @@
        </product>
     </function>
     -->
-    <function name="aero/force/CMDS1">
+    <function name="aero/coefficients/CMDS1">
     <description>CMDS1</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-1p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1304,14 +1217,9 @@
           </table>
        </product>
     </function>
-    <function name="aero/force/CMDS2">
+    <function name="aero/coefficients/CMDS2">
     <description>CMDS2</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-2p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1331,15 +1239,9 @@
           </table>
        </product>
     </function>
-  </axis>
-  <axis name="YAW">
-<!--
-    <function name="aero/force/CNBAS">
+    <function name="aero/coefficients/CNBAS">
     <description>CNBAS</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1361,14 +1263,9 @@
           </table>
        </product>
     </function>
--->
-    <function name="aero/force/DCNDS">
+    <function name="aero/coefficients/DCNDS">
     <description>DCNDS</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
-          <property>fcs/stabilizer-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1389,12 +1286,9 @@
        </product>
     </function>
     <!--
-    <function name="aero/force/xCNP">
+    <function name="aero/coefficients/xCNP">
     <description>xCNP</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1416,12 +1310,9 @@
     </function>
     -->
     <!--
-    <function name="aero/force/xCNR">
+    <function name="aero/coefficients/xCNR">
     <description>xCNR</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1442,13 +1333,9 @@
        </product>
     </function>
     -->
-    <function name="aero/force/CNDA">
+    <function name="aero/coefficients/CNDA">
     <description>CNDA</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
-          <property>fcs/left-aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1468,13 +1355,9 @@
           </table>
        </product>
     </function>
-    <function name="aero/force/CNDR">
+    <function name="aero/coefficients/CNDR">
     <description>CNDR</description>
     <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/bw-ft</property>
-          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1496,8 +1379,295 @@
           </table>
        </product>
     </function>
+  <axis name="LIFT">
+    <function name="aero/force/ClBAS">
+    <description>ClBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/ClBAS</property>
+       </product>
+    </function>
+    <function name="aero/force/CLDS1">
+    <description>CLDS1</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CLDS1</property>
+          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/stabilizer-1p</property>
+       </product>
+    </function>
+    <function name="aero/force/CLDS2">
+    <description>CLDS2</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CLDS2</property>
+          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/stabilizer-2p</property>
+       </product>
+    </function>
   </axis>
- </aerodynamics>
+  <axis name="DRAG">
+    <function name="aero/force/CdBAS">
+    <description>CdBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CdBAS</property>
+       </product>
+    </function>
+    <function name="aero/force/CdDS1">
+    <description>CdDS1</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CdDS1</property>
+          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/stabilizer-1p</property>
+       </product>
+    </function>
+    <function name="aero/force/CdDS2">
+    <description>CdDS2</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CdDS2</property>
+          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/stabilizer-2p</property>
+       </product>
+    </function>
+  </axis>
+  <axis name="SIDE">
+    <!--
+    <function name="aero/force/CYBAS">
+    <description>CYBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CYBAS</property>
+       </product>
+    </function>
+    <function name="aero/force/xCYP">
+    <description>xCYP</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/xCYP</property>
+       </product>
+    </function>
+    -->
+    <!--
+    <function name="aero/force/xCYR">
+    <description>xCYR</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/xCYR</property>
+       </product>
+    </function>
+    -->
+    <function name="aero/force/CYDA">
+    <description>CYDA</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CYDA</property>
+          <property>fcs/left-aileron-pos-deg</property>
+       </product>
+    </function>
+    <function name="aero/force/CYDR">
+    <description>CYDR</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>aero/coefficients/CYDR</property>
+          <property>fcs/rudder-pos-deg</property>
+       </product>
+    </function>
+  </axis>
+  <axis name="ROLL">
+    <!--
+    <function name="aero/force/CLBAS">
+    <description>CLBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/CLBAS</property>
+       </product>
+    </function>
+    <function name="aero/force/xCRP">
+    <description>xCRP</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/xCRP</property>
+       </product>
+    </function>
+    -->
+    <!--
+    <function name="aero/force/xCLR">
+    <description>xCLR</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/xCLR</property>
+       </product>
+    </function>
+    -->
+    <function name="aero/force/CLDA">
+    <description>CLDA</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/CLDA</property>
+          <property>fcs/left-aileron-pos-deg</property>
+       </product>
+    </function>
+    <function name="aero/force/CLDR">
+    <description>CLDR</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/CLDR</property>
+          <property>fcs/rudder-pos-deg</property>
+       </product>
+    </function>
+  </axis>
+  <axis name="PITCH">
+    <function name="aero/force/CMBAS">
+    <description>CMBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/CMBAS</property>
+       </product>
+    </function>
+    <function name="aero/force/CMxzcg">
+    <description>Pitching moment due to CG alpha lift/drag </description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/CLDxzcg</property>
+       </product>
+    </function>
+    <!--
+    <function name="aero/force/xDCMB0">
+    <description>xDCMB0</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/xDCMB0</property>
+       </product>
+    </function>
+    -->
+    <!--
+    <function name="aero/force/xCMQ">
+    <description>xCMQ</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/xCMQ</property>
+       </product>
+    </function>
+    -->
+    <function name="aero/force/CMDS1">
+    <description>CMDS1</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/CMDS1</property>
+          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/stabilizer-1p</property>
+       </product>
+    </function>
+    <function name="aero/force/CMDS2">
+    <description>CMDS2</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/coefficients/CMDS2</property>
+          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/stabilizer-2p</property>
+       </product>
+    </function>
+  </axis>
+  <axis name="YAW">
+    <!--<function name="aero/force/CNBAS">
+    <description>CNBAS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/CNBAS</property>
+       </product>
+    </function>-->
+    <function name="aero/force/DCNDS">
+    <description>DCNDS</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/DCNDS</property>
+          <property>fcs/stabilizer-pos-deg</property>
+       </product>
+    </function>
+    <!--
+    <function name="aero/force/xCNP">
+    <description>xCNP</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/xCNP</property>
+       </product>
+    </function>
+    -->
+    <!--
+    <function name="aero/force/xCNR">
+    <description>xCNR</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/xCNR</property>
+       </product>
+    </function>
+    -->
+    <function name="aero/force/CNDA">
+    <description>CNDA</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/CNDA</property>
+          <property>fcs/left-aileron-pos-deg</property>
+       </product>
+    </function>
+    <function name="aero/force/CNDR">
+    <description>CNDR</description>
+    <product>
+          <property>aero/qbar-psf</property>
+          <property>metrics/Sw-sqft</property>
+          <property>metrics/bw-ft</property>
+          <property>aero/coefficients/CNDR</property>
+          <property>fcs/rudder-pos-deg</property>
+       </product>
+    </function>
+  </axis>
+</aerodynamics>
 
  <external_reactions>
  </external_reactions>
