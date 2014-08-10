@@ -353,17 +353,17 @@
    <aerosurface_scale name="Elevator Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min> -0.35 </min>
-        <max>  0.35 </max>
+        <min>  -0.15 </min>
+        <max>   0.15 </max>
       </range>
       <output>fcs/elevator-pos-rad</output>
    </aerosurface_scale>
 
-  <aerosurface_scale name="Stabilzer Control">
+  <aerosurface_scale name="Stabilizer Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min> -0.35 </min>
-        <max>  0.35 </max>
+        <min>  -0.15 </min>
+        <max>   0.15 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -371,8 +371,8 @@
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min> -0.35 </min>
-        <max>  0.35 </max>
+        <min>  -0.15 </min>
+        <max>   0.15 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -380,18 +380,36 @@
       </range>
       <output>fcs/elevator-pos-norm</output>
    </aerosurface_scale>
-    <switch name="fcs/stabilizer-1p">
-                <default value="1"/>
-                <test logic="AND" value="-10">
+    <switch name="fcs/stabilizer-1p-factor">
+                <default value="0"/>
+                <test logic="AND" value="1">
                     fcs/elevator-pos-rad ge -0.17453
                 </test>
    </switch>
-    <switch name="fcs/stabilizer-2p">
+    <switch name="fcs/stabilizer-2p-factor">
                 <default value="0.0"/>
-                <test logic="AND" value="1">
+                <test logic="AND" value="10">
                     fcs/elevator-pos-rad lt -0.17453
                 </test>
    </switch>
+     <fcs_function name="fcs/stabilizer-1p">
+       <function>
+         <product>
+             <property>fcs/stabilizer-1p-factor</property>
+             <property>fcs/elevator-pos-deg</property>
+         </product>
+       </function>
+       <output>fcs/stabilizer-1p</output>
+     </fcs_function>
+     <fcs_function name="fcs/stabilizer-2p">
+       <function>
+         <product>
+             <property>fcs/stabilizer-2p-factor</property>
+             <property>fcs/elevator-pos-deg</property>
+         </product>
+       </function>
+       <output>fcs/stabilizer-2p</output>
+     </fcs_function>
   </channel>
 
   <channel name="Roll">
@@ -451,12 +469,12 @@
 
   </channel>
 
-  <property value="0">fcs/yaw-damper-enable</property>
+  <property value="1">fcs/yaw-damper-enable</property>
   <channel name="Yaw">
 
    <summer name="Rudder Command Sum">
       <input>fcs/rudder-cmd-norm</input>
-<!--       <input>fcs/yaw-trim-cmd-norm</input> -->
+       <input>fcs/yaw-trim-cmd-norm</input> 
       <clipto>
         <min> -1 </min>
         <max>  1 </max>
@@ -477,9 +495,7 @@
 
    <summer name="Rudder Sum">
       <input>fcs/rudder-command-sum</input>
-<!-- 
       <input>fcs/yaw-damper-rate</input>
--->
       <clipto>
         <min> -1.1 </min>
         <max>  1.1 </max>
@@ -495,8 +511,8 @@
         <max>  1.1 </max>
       </domain>
       <range>
-        <min> -0.35 </min>
-        <max>  0.35 </max>
+        <min> -0.15 </min>
+        <max>  0.15 </max>
       </range>
       <output>fcs/rudder-pos-rad</output>
    </aerosurface_scale>
@@ -504,8 +520,8 @@
    <aerosurface_scale name="rudder normalization">
       <input>fcs/rudder-pos-rad</input>
       <domain>
-        <min> -0.35 </min>
-        <max>  0.35 </max>
+        <min> -0.15 </min>
+        <max>  0.15 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -644,7 +660,24 @@
        <output>aero/cos-alpha</output>
      </fcs_function>
 
-     <fcs_function name="aero-sin-alpha">
+     <fcs_function name="cbarq-2vo">
+       <function>
+         <quotient>
+           <sum>
+            <property>metrics/cbarw-ft</property>
+            <property>velocities/q-aero-rad_sec</property>
+           </sum>
+<!-- over -->
+          <product>
+             <value>2</value>
+             <property>ic/vt-fps</property>
+           </product>
+         </quotient>
+       </function>
+       <output>aero/cbarq-2vo</output>
+     </fcs_function>
+
+<fcs_function name="aero-sin-alpha">
        <function>
          <product>
            <sin>
@@ -769,7 +802,6 @@
     <function name="aero/coefficients/ClDS1">
     <description>ClDS1</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
           <property>fcs/stabilizer-1p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -793,7 +825,6 @@
     <function name="aero/coefficients/ClDS2">
     <description>ClDS2</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
           <property>fcs/stabilizer-2p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -848,7 +879,6 @@
     <function name="aero/coefficients/CdDS1">
     <description>CdDS1</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
           <property>fcs/stabilizer-1p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -872,7 +902,6 @@
     <function name="aero/coefficients/CdDS2">
     <description>CdDS2</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
           <property>fcs/stabilizer-2p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -1209,8 +1238,7 @@
     <function name="aero/coefficients/CMQ">
     <description>CMQ</description>
     <product>
-          <property>metrics/cbarw-ft</property>
-          <property>aero/ci2vel</property>
+          <property>aero/cbarq-2vo</property>
           <property>velocities/q-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -1234,8 +1262,6 @@
     <function name="aero/coefficients/CMDS1">
     <description>CMDS1</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-1p</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1258,8 +1284,9 @@
     <function name="aero/coefficients/CMDS2">
     <description>CMDS2</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
-          <property>fcs/stabilizer-2p</property>
+      <!-- stabilizer-1p will be 1 or -10 (-10 when applicable)
+           the original equation was -10*CMDS1 +(stab-deg + 10) CMDS2
+           -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1279,14 +1306,33 @@
           </table>
        </product>
     </function>
+    <function name="aero/coefficients/DCMDS1">
+    <description>DCMDS1</description>
+    <product>
+          <property>aero/coefficients/CMDS1</property>
+          <property>fcs/stabilizer-1p</property>
+       </product>
+    </function>
+    <function name="aero/coefficients/DCMDS2">
+    <description>DCMDS2</description>
+    <product>
+      <!-- stabilizer-1p will be 1 or -10 (-10 when applicable)
+           the original equation was -10*CMDS1 +(stab-deg + 10) CMDS2
+           -->
+          <value>-10</value>
+          <property>aero/coefficients/CMDS1</property>
+          <property>fcs/stabilizer-2p</property>
+          <property>aero/coefficients/CMDS2</property>
+       </product>
+    </function>
     <function name="aero/coefficients/CM">
     <sum>
           <property>aero/coefficients/CMBAS</property>
           <property>aero/coefficients/CMxzcg</property>
           <property>aero/coefficients/DCMB0</property>
           <property>aero/coefficients/CMQ</property>
-          <property>aero/coefficients/CMDS1</property>
-          <property>aero/coefficients/CMDS2</property>
+          <property>aero/coefficients/DCMDS1</property>
+          <property>aero/coefficients/DCMDS2</property>
        </sum>
     </function>
     <function name="aero/coefficients/CNBAS">
