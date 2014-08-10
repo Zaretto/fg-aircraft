@@ -97,8 +97,25 @@
      <z0> -18.83 </z0>
      <z> 0.00 </z>
    </location>
+        <pointmass name="Avionics">
+            <weight unit="LBS"> 230 </weight>
+            <location name="POINTMASS" unit="IN">
+                <x> 57 </x>
+                <y> 0 </y>
+                <z> 0 </z>
+            </location>
+        </pointmass>
+        <pointmass name="Avionics Rear">
+            <weight unit="LBS"> 230 </weight>
+            <location name="POINTMASS" unit="IN">
+                <x> 757 </x>
+                <y> 0 </y>
+                <z> 0 </z>
+            </location>
+        </pointmass>
  </mass_balance>
 
+<!-- 0 -->
     <ground_reactions>
         <contact type="BOGEY" name="NOSE_LG">
             <location unit="IN">
@@ -109,12 +126,13 @@
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 85000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 45000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
             <max_steer unit="DEG"> 80 </max_steer>
             <brake_group> NOSE </brake_group>
             <retractable>1</retractable>
         </contact>
+<!-- 1 -->
         <contact type="BOGEY" name="LEFT_MLG">
             <location unit="IN">
                 <x> 470 </x>
@@ -130,6 +148,7 @@
             <brake_group> LEFT </brake_group>
             <retractable>1</retractable>
         </contact>
+<!-- 2 -->
         <contact type="BOGEY" name="RIGHT_MLG">
             <location unit="IN">
                 <x> 470 </x>
@@ -146,34 +165,136 @@
             <retractable>1</retractable>
         </contact>
 
-<!--
-
-  <contact type="STRUCTURE" name="LEFT_WING">
+<!-- 3 -->
+  <contact type="STRUCTURE" name="LEFT_WING_TIP">
     <location unit="IN">
-     <x> 451.80 </x>
-     <y> -384.00 </y>
-     <z> 52 </z>
+     <x> 540 </x>
+     <y> 720.00 </y>
+     <z> -52 </z>
     </location>
-            <static_friction> 0.2 </static_friction>
-            <dynamic_friction> 0.2 </dynamic_friction>
-            <rolling_friction> 0.2 </rolling_friction>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
             <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
   </contact>
 
-  <contact type="STRUCTURE" name="RIGHT_WING">
+<!-- 4 -->
+  <contact type="STRUCTURE" name="RIGHT_WING_TIP">
     <location unit="IN">
-     <x> 451.80 </x>
-     <y> 384.00 </y>
-     <z> 52 </z>
+     <x> 540 </x>
+     <y> -720.00 </y>
+     <z> -52 </z>
     </location>
-            <static_friction> 0.2 </static_friction>
-            <dynamic_friction> 0.2 </dynamic_friction>
-            <rolling_friction> 0.2 </rolling_friction>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="REAR_BODY_LEFT">
+    <location unit="IN">
+                <x> 480</x>
+                <y> -80 </y>
+                <z> -130 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
+    <location unit="IN">
+                <x> 534 </x>
+                <y>  98 </y>
+                <z> -120 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="CANOPY">
+    <location unit="IN">
+                <x> -210 </x>
+                <y>  0 </y>
+                <z>  0 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+
+  <contact type="STRUCTURE" name="RADOME_FRONT">
+    <location unit="IN">
+                <x>  -258 </x>
+                <y>  0 </y>
+                <z>  -86 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+
+<!--
+  <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
+    <location unit="IN">
+                <x> 622 </x>
+                <y> -98 </y>
+                <z>  -50 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="RIGHT_VERTICAL_TAIL">
+    <location unit="IN">
+                <x> 622 </x>
+                <y>  98 </y>
+                <z>   -40 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
             <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
   </contact>
 -->
+
+  <contact type="STRUCTURE" name="FRONT_BODY_LEFT">
+    <location unit="IN">
+                <x> 188 </x>
+                <y>  78 </y>
+                <z> -93 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
+  <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
+    <location unit="IN">
+                <x> 218 </x>
+                <y> -98 </y>
+                <z> -90 </z>
+    </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.2 </dynamic_friction>
+            <rolling_friction> 1.2 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+  </contact>
     </ground_reactions>
 
     <propulsion>
@@ -227,6 +348,7 @@
                 </orient>
             </thruster>
         </engine>
+<!--  FWD Fuselage -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -236,6 +358,7 @@
             <capacity unit="KG">2136</capacity>
             <contents unit="KG">2136</contents>
         </tank>
+<!-- AFT Fuselage -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -245,6 +368,7 @@
             <capacity unit="KG">2000</capacity>
             <contents unit="KG">2000</contents>
         </tank>
+<!-- Left Beam Box - Feed Group   -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -254,6 +378,7 @@
             <capacity unit="KG">568</capacity>
             <contents unit="KG">568</contents>
         </tank>
+<!--  Left Sump - Feed Group    -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -263,6 +388,7 @@
             <capacity unit="KG">136</capacity>
             <contents unit="KG">136</contents>
         </tank>
+<!-- Right Beam Box - Feed Group    -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -272,6 +398,7 @@
             <capacity unit="KG">568</capacity>
             <contents unit="KG">568</contents>
         </tank>
+<!-- Right Sump - Feed Group   -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -281,6 +408,7 @@
             <capacity unit="KG">136</capacity>
             <contents unit="KG">136</contents>
         </tank>
+<!-- Left wing    -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -290,6 +418,7 @@
             <capacity unit="KG">909</capacity>
             <contents unit="KG">909</contents>
         </tank>
+<!-- Right Wing -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -299,6 +428,7 @@
             <capacity unit="KG">909</capacity>
             <contents unit="KG">909</contents>
         </tank>
+<!-- Left External -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -308,6 +438,7 @@
             <capacity unit="KG">818</capacity>
             <contents unit="KG">818</contents>
         </tank>
+<!-- Right External -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -317,6 +448,7 @@
             <capacity unit="KG">818</capacity>
             <contents unit="KG">818</contents>
         </tank>
+<!-- Left Feed line -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
@@ -326,6 +458,7 @@
             <capacity unit="KG">5</capacity>
             <contents unit="KG">5</contents>
         </tank>
+<!-- Right Feed line -->
         <tank type="FUEL">
             <location unit="IN">
                 <x> 451.8 </x>
