@@ -741,6 +741,7 @@
     </function>
 -->
 
+
     <function name="aero/coefficients/ClBAS">
     <description>ClBAS</description>
     <product>
@@ -923,10 +924,11 @@
           </table>
        </product>
     </function>
-    <!--
-    <function name="aero/coefficients/xCyP">
-    <description>xCyP</description>
+    <function name="aero/coefficients/CyP">
+    <description>CyP</description>
     <product>
+          <property>aero/bi2vel</property>
+          <property>velocities/p-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -946,11 +948,11 @@
           </table>
        </product>
     </function>
-    -->
-    <!--
-    <function name="aero/coefficients/xCyR">
-    <description>xCyR</description>
+    <function name="aero/coefficients/CyR">
+    <description>CyR</description>
     <product>
+          <property>aero/bi2vel</property>
+          <property>velocities/r-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -970,7 +972,6 @@
           </table>
        </product>
     </function>
-    -->
     <function name="aero/coefficients/CyDA">
     <description>CyDA</description>
     <product>
@@ -1022,6 +1023,8 @@
     <function name="aero/coefficients/Cy">
     <sum>
           <property>aero/coefficients/CyBAS</property>
+          <property>aero/coefficients/CyP</property>
+          <property>aero/coefficients/CyR</property>
           <property>aero/coefficients/CyDA</property>
           <property>aero/coefficients/CyDR</property>
        </sum>
@@ -1050,10 +1053,11 @@
           </table>
        </product>
     </function>
-    <!--
-    <function name="aero/coefficients/xCRP">
-    <description>xCRP</description>
+    <function name="aero/coefficients/CRP">
+    <description>CRP</description>
     <product>
+          <property>aero/bi2vel</property>
+          <property>velocities/p-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1073,11 +1077,11 @@
           </table>
        </product>
     </function>
-    -->
-    <!--
-    <function name="aero/coefficients/xCLR">
-    <description>xCLR</description>
+    <function name="aero/coefficients/CLR">
+    <description>CLR</description>
     <product>
+          <property>aero/bi2vel</property>
+          <property>velocities/r-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1097,7 +1101,6 @@
           </table>
        </product>
     </function>
-    -->
     <function name="aero/coefficients/CLDA">
     <description>CLDA</description>
     <product>
@@ -1151,6 +1154,8 @@
     <function name="aero/coefficients/CL">
     <sum>
           <property>aero/coefficients/CLBAS</property>
+          <property>aero/coefficients/CRP</property>
+          <property>aero/coefficients/CLR</property>
           <property>aero/coefficients/CLDA</property>
           <property>aero/coefficients/CLDR</property>
        </sum>
@@ -1179,9 +1184,8 @@
           </table>
        </product>
     </function>
-    <!--
-    <function name="aero/coefficients/xDCMB0">
-    <description>xDCMB0</description>
+    <function name="aero/coefficients/DCMB0">
+    <description>DCMB0</description>
     <product>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -1202,11 +1206,12 @@
           </table>
        </product>
     </function>
-    -->
-    <!--
-    <function name="aero/coefficients/xCMQ">
-    <description>xCMQ</description>
+    <function name="aero/coefficients/CMQ">
+    <description>CMQ</description>
     <product>
+          <property>metrics/cbarw-ft</property>
+          <property>aero/ci2vel</property>
+          <property>velocities/q-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1226,7 +1231,6 @@
           </table>
        </product>
     </function>
-    -->
     <function name="aero/coefficients/CMDS1">
     <description>CMDS1</description>
     <product>
@@ -1278,9 +1282,11 @@
     <function name="aero/coefficients/CM">
     <sum>
           <property>aero/coefficients/CMBAS</property>
+          <property>aero/coefficients/CMxzcg</property>
+          <property>aero/coefficients/DCMB0</property>
+          <property>aero/coefficients/CMQ</property>
           <property>aero/coefficients/CMDS1</property>
           <property>aero/coefficients/CMDS2</property>
-          <property>aero/coefficients/CMxzcg</property>
        </sum>
     </function>
     <function name="aero/coefficients/CNBAS">
@@ -1330,10 +1336,11 @@
           </table>
        </product>
     </function>
-    <!--
-    <function name="aero/coefficients/xCNP">
-    <description>xCNP</description>
+    <function name="aero/coefficients/CNP">
+    <description>CNP</description>
     <product>
+          <property>aero/bi2vel</property>
+          <property>velocities/p-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1353,11 +1360,11 @@
           </table>
        </product>
     </function>
-    -->
-    <!--
-    <function name="aero/coefficients/xCNR">
-    <description>xCNR</description>
+    <function name="aero/coefficients/CNR">
+    <description>CNR</description>
     <product>
+          <property>aero/bi2vel</property>
+          <property>velocities/r-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1377,7 +1384,6 @@
           </table>
        </product>
     </function>
-    -->
     <function name="aero/coefficients/CNDA">
     <description>CNDA</description>
     <product>
@@ -1430,12 +1436,14 @@
     <sum>
           <property>aero/coefficients/CNBAS</property>
           <property>aero/coefficients/DCNDS</property>
+          <property>aero/coefficients/CNxzcg</property>
+          <property>aero/coefficients/CNP</property>
+          <property>aero/coefficients/CNR</property>
           <property>aero/coefficients/CNDA</property>
           <property>aero/coefficients/CNDR</property>
-          <property>aero/coefficients/CNxzcg</property>
-    </sum>
+       </sum>
     </function>
- <axis name="LIFT">
+  <axis name="LIFT">
     <function name="aero/force/LIFT">
     <description>LIFT Force</description>
     <product>
