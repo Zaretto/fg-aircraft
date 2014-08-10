@@ -49,6 +49,11 @@ namespace F14AeroPlot
         public Dictionary<int, double> GetValues_1d(string key)
         {
             var tab = aero[key]; int ix = 0;
+            //
+            // handle special case of extra computed vars.
+            if (tab.Count() == 1)
+                return null;
+
             var rd = new Dictionary<int, double>();
             for (var alpha = 0; alpha <= 55; alpha += 5)
                 rd[alpha] = tab[ix++];
@@ -126,7 +131,13 @@ namespace F14AeroPlot
                     lineNumber++;
                     var colNumber = 0;
 
-                    if (line.StartsWith("*+"))
+                    if (line.StartsWith("/="))
+                    {
+                        is_used = true;
+                        data.Clear();
+                        data.Add(1);
+                    }
+                    else if (line.StartsWith("*+"))
                     {
                         ivars.Add(line.Replace("*+",""));
                     }

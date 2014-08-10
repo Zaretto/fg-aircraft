@@ -79,27 +79,29 @@ namespace F14AeroPlot
                         {
 
                             var aero_data_element = aero.GetValues_1d(aero_element);
-
-                            //                        writer.Write("<h2>{0}</h2>", aero_element);
-                            //                        writer.Write("<pre>\n");
-
-                            writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item);
-                            writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
-                            writer.Write("    <product>\n");
-                            OutputExtraIndependentVariables(writer, aero_element);
-                            writer.Write("          <table>\n");
-                            writer.Write("            <independentVar lookup=\"row\">aero/alpha-deg</independentVar>\n");
-                            writer.Write("            <tableData>\n");
-                            var leading = "                 ";
-                            foreach (var q in aero_data_element)
+                            if (aero_data_element != null)
                             {
-                                writer.Write("{0}{1,6} {2,10:0.00000000}\n", leading, q.Key, q.Value);
+                                //                        writer.Write("<h2>{0}</h2>", aero_element);
+                                //                        writer.Write("<pre>\n");
+
+                                writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item);
+                                writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
+                                writer.Write("    <product>\n");
+                                OutputExtraIndependentVariables(writer, aero_element);
+                                writer.Write("          <table>\n");
+                                writer.Write("            <independentVar lookup=\"row\">aero/alpha-deg</independentVar>\n");
+                                writer.Write("            <tableData>\n");
+                                var leading = "                 ";
+                                foreach (var q in aero_data_element)
+                                {
+                                    writer.Write("{0}{1,6} {2,10:0.00000000}\n", leading, q.Key, q.Value);
+                                }
+                                writer.Write("            </tableData>\n");
+                                writer.Write("          </table>\n");
+                                writer.Write("       </product>\n");
+                                writer.Write("    </function>\n");
+                                //                        writer.Write("<pre>\n");
                             }
-                            writer.Write("            </tableData>\n");
-                            writer.Write("          </table>\n");
-                            writer.Write("       </product>\n");
-                            writer.Write("    </function>\n");
-                            //                        writer.Write("<pre>\n");
                         }
                         if (!aero.IsUsed(aero_element))
                             writer.Write("    -->\n");
