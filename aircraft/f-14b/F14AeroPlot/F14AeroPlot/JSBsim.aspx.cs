@@ -24,13 +24,18 @@ namespace F14AeroPlot
             writer.Write("<pre>\n");
             foreach (var aero_axis in aero.GetElements().GroupBy(xx => GetAxis(xx)))
             {
+                var coeffs = new List<String>();
                 foreach (var aero_element in aero_axis)
                 {
                     if (aero.HasData(aero_element))
                     {
                         var aerodat_item = GetVar(aero_element);
+
                         if (!aero.IsUsed(aero_element))
                             writer.Write("    <!--\n");
+                        else
+                            coeffs.Add(aerodat_item);
+
                         if (aero.Is2d(aero_element))
                         {
                             //                          writer.Write("<h2>{0}</h2>", aero_element);
@@ -39,6 +44,7 @@ namespace F14AeroPlot
                             writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item);
                             writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
                             writer.Write("    <product>\n");
+                            OutputExtraIndependentVariables(writer, aero_element);
                             writer.Write("          <table>\n");
                             writer.Write("            <independentVar lookup=\"row\">aero/alpha-deg</independentVar>\n");
                             writer.Write("            <independentVar lookup=\"column\">aero/beta-deg</independentVar>\n");
@@ -80,6 +86,7 @@ namespace F14AeroPlot
                             writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item);
                             writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
                             writer.Write("    <product>\n");
+                            OutputExtraIndependentVariables(writer, aero_element);
                             writer.Write("          <table>\n");
                             writer.Write("            <independentVar lookup=\"row\">aero/alpha-deg</independentVar>\n");
                             writer.Write("            <tableData>\n");
@@ -98,47 +105,38 @@ namespace F14AeroPlot
                             writer.Write("    -->\n");
                     }
                 }
+                
+                if (coeffs.Any())
+                    writer.Write("    <function name=\"aero/coefficients/{0}\">\n", coeffs.First().Substring(0,2));
+                //writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
+                writer.Write("    <sum>\n");
+                foreach (var coeff in coeffs)
+                {
+                    writer.Write("          <property>aero/coefficients/{0}</property>\n", coeff);
+                }
+                writer.Write("       </sum>\n");
+                writer.Write("    </function>\n");
+
             }
             foreach (var aero_axis in aero.GetElements().GroupBy(xx => GetAxis(xx)))
             {
                 writer.Write("  <axis name=\"{0}\">\n", aero_axis.Key);
-                foreach (var aero_element in aero_axis)
-                {
-                    if (aero.HasData(aero_element))
-                    {
-                        var aerodat_item = GetVar(aero_element);
-                        if (!aero.IsUsed(aero_element))
-                            writer.Write("    <!--\n");
+                var coeff = GetVar(aero_axis.First()).Substring(0, 2);
+                writer.Write("    <function name=\"aero/force/{0}\">\n", aero_axis.Key);
+                writer.Write("    <description>{0} {1}</description>\n", aero_axis.Key, Char.IsLower(coeff.Substring(1,1).First()) ? "Force" : "Moment");
+                writer.Write("    <product>\n");
+                output_denormalisation(writer, coeff, aero_axis.Key);
+                writer.Write("       </product>\n");
+                writer.Write("    </function>\n");
 
-                        writer.Write("    <function name=\"aero/force/{0}\">\n", aerodat_item);
-                        writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
-                        writer.Write("    <product>\n");
-                        output_denormalisation(writer, aerodat_item, aero_axis, aero.GetExtraIndependantVariables(aero_element));
-                        writer.Write("       </product>\n");
-                        writer.Write("    </function>\n");
-                        if (!aero.IsUsed(aero_element))
-                            writer.Write("    -->\n");
-                    }
-                }
                 writer.Write("  </axis>\n");
             }
             writer.Write("</pre>\n");
         }
 
-        private static void output_denormalisation(HtmlTextWriter writer, string aerodat_item, IGrouping<string, string> aero_axis, List<string> extra)
+        private void OutputExtraIndependentVariables(HtmlTextWriter writer, string aero_element)
         {
-            writer.Write("          <property>aero/qbar-psf</property>\n");
-            writer.Write("          <property>metrics/Sw-sqft</property>\n");
-            if (aero_axis.Key == "ROLL" || aero_axis.Key == "YAW")
-            {
-                writer.Write("          <property>metrics/bw-ft</property>\n");
-            }
-            else if (aero_axis.Key == "PITCH")
-            {
-                writer.Write("          <property>metrics/cbarw-ft</property>\n");
-            }
-            writer.Write("          <property>aero/coefficients/{0}</property>\n", aerodat_item);
-            foreach (var xx in extra)
+            foreach (var xx in aero.GetExtraIndependantVariables(aero_element))
             {
                 var name = xx;
                 if (!name.Contains("/"))
@@ -146,7 +144,21 @@ namespace F14AeroPlot
 
                 writer.Write("          <property>{0}</property>\n", name);
             }
+        }
 
+        private static void output_denormalisation(HtmlTextWriter writer, string aerodat_item, string aero_axis_key)
+        {
+            writer.Write("          <property>aero/qbar-psf</property>\n");
+            writer.Write("          <property>metrics/Sw-sqft</property>\n");
+            if (aero_axis_key == "ROLL" || aero_axis_key == "YAW")
+            {
+                writer.Write("          <property>metrics/bw-ft</property>\n");
+            }
+            else if (aero_axis_key == "PITCH")
+            {
+                writer.Write("          <property>metrics/cbarw-ft</property>\n");
+            }
+            writer.Write("          <property>aero/coefficients/{0}</property>\n", aerodat_item);
         }
 
         private string GetVar(string xx)
