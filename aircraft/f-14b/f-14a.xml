@@ -126,7 +126,7 @@
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 45000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 15000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
             <max_steer unit="DEG"> 80 </max_steer>
             <brake_group> NOSE </brake_group>
@@ -142,8 +142,8 @@
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 82704 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> LEFT </brake_group>
             <retractable>1</retractable>
@@ -158,8 +158,8 @@
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 82704 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> RIGHT </brake_group>
             <retractable>1</retractable>
@@ -220,7 +220,7 @@
 
   <contact type="STRUCTURE" name="CANOPY">
     <location unit="IN">
-                <x> -210 </x>
+                <x> 210 </x>
                 <y>  0 </y>
                 <z>  0 </z>
     </location>
@@ -233,7 +233,7 @@
 
   <contact type="STRUCTURE" name="RADOME_FRONT">
     <location unit="IN">
-                <x>  -258 </x>
+                <x>  258 </x>
                 <y>  0 </y>
                 <z>  -86 </z>
     </location>
@@ -351,7 +351,7 @@
 <!--  FWD Fuselage -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 451.8 </x>
+                <x> 351.8 </x>
                 <y> 0 </y>
                 <z> 0 </z>
             </location>
@@ -361,7 +361,7 @@
 <!-- AFT Fuselage -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 451.8 </x>
+                <x> 481.8 </x>
                 <y> 0 </y>
                 <z> 0 </z>
             </location>
@@ -371,7 +371,7 @@
 <!-- Left Beam Box - Feed Group   -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 451.8 </x>
+                <x> 431.8 </x>
                 <y> 0 </y>
                 <z> 0 </z>
             </location>
@@ -381,7 +381,7 @@
 <!--  Left Sump - Feed Group    -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 451.8 </x>
+                <x> 431.8 </x>
                 <y> 0 </y>
                 <z> 0 </z>
             </location>
@@ -411,9 +411,9 @@
 <!-- Left wing    -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
+                <x> 541.8 </x>
+                <y> 300 </y>
+                <z> -52</z>
             </location>
             <capacity unit="KG">909</capacity>
             <contents unit="KG">909</contents>
@@ -421,9 +421,9 @@
 <!-- Right Wing -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
+                <x> 541.8 </x>
+                <y> -300 </y>
+                <z> -52</z>
             </location>
             <capacity unit="KG">909</capacity>
             <contents unit="KG">909</contents>
@@ -486,8 +486,8 @@
    <aerosurface_scale name="Elevator Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.15 </min>
-        <max>   0.15 </max>
+        <min>  -0.52 </min>
+        <max>   0.52 </max>
       </range>
       <output>fcs/elevator-pos-rad</output>
    </aerosurface_scale>
@@ -495,8 +495,8 @@
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.15 </min>
-        <max>   0.15 </max>
+        <min>  -0.52 </min>
+        <max>   0.52 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -504,8 +504,8 @@
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min>  -0.15 </min>
-        <max>   0.15 </max>
+        <min>  -0.52 </min>
+        <max>   0.52 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -559,8 +559,8 @@
    <aerosurface_scale name="Left Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.15 </min>
-        <max>  0.15 </max>
+        <min> -0.52 </min>
+        <max>  0.52 </max>
       </range>
       <output>fcs/left-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -568,8 +568,8 @@
    <aerosurface_scale name="Right Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.15 </min>
-        <max>  0.15 </max>
+        <min> -0.52 </min>
+        <max>  0.52 </max>
       </range>
       <output>fcs/right-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -577,8 +577,8 @@
    <aerosurface_scale name="left aileron normalization">
       <input>fcs/left-aileron-pos-rad</input>
       <domain>
-        <min> -0.15 </min>
-        <max>  0.15 </max>
+        <min> -0.52 </min>
+        <max>  0.52 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -590,8 +590,8 @@
    <aerosurface_scale name="right aileron normalization">
       <input>fcs/right-aileron-pos-rad</input>
       <domain>
-        <min> -0.15 </min>
-        <max>  0.15 </max>
+        <min> -0.52 </min>
+        <max>  0.52 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -935,7 +935,7 @@
     <function name="aero/coefficients/ClDS1">
     <description>ClDS1</description>
     <product>
-          <property>fcs/stabilizer-1p</property>
+          <property>fcs/stabilizer-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -982,7 +982,7 @@
     <sum>
           <property>aero/coefficients/ClBAS</property>
           <property>aero/coefficients/ClDS1</property>
-          <property>aero/coefficients/ClDS2</property>
+          <!--<property>aero/coefficients/ClDS2</property>-->
        </sum>
     </function>
     <function name="aero/coefficients/CdBAS">
@@ -1012,7 +1012,7 @@
     <function name="aero/coefficients/CdDS1">
     <description>CdDS1</description>
     <product>
-          <property>fcs/stabilizer-1p</property>
+          <property>fcs/stabilizer-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1059,7 +1059,6 @@
     <sum>
           <property>aero/coefficients/CdBAS</property>
           <property>aero/coefficients/CdDS1</property>
-          <property>aero/coefficients/CdDS2</property>
        </sum>
     </function>
     <function name="aero/coefficients/CyBAS">
@@ -1184,7 +1183,7 @@
     </function>
     <function name="aero/coefficients/Cy">
     <sum>
-          <property>aero/coefficients/CyBAS</property>
+          <!--<property>aero/coefficients/CyBAS</property>-->
           <property>aero/coefficients/CyP</property>
           <property>aero/coefficients/CyR</property>
           <property>aero/coefficients/CyDA</property>
