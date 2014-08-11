@@ -312,8 +312,8 @@ var fuel_update = func {
 	right_fuel_consumed = RightFuel.getValue();
 	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
 	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
-#	LeftFuel.setDoubleValue(0);
-#	RightFuel.setDoubleValue(0);
+	LeftFuel.setDoubleValue(0);
+	RightFuel.setDoubleValue(0);
 #	if ( left_outOfFuel ) {
 #		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
 #	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
@@ -674,6 +674,7 @@ var internal_restore_fuel = func() {
 	print("Restoring F-14B fuel levels");
 	var i = 0;
 	foreach (var t; Tank.list) {
+    print(" -- ",t.name," = ",t.level_lbs.getValue());
 		t.set_level(level_list[i]);
 		i += 1;
 	}
