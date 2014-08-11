@@ -7,6 +7,9 @@ var Ramp2     = props.globals.getNode("engines/AICS/ramp2", 1);
 var Ramp3     = props.globals.getNode("engines/AICS/ramp3", 1);
 var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "DOUBLE");
 var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
+var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
+var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
+
 var GearPos   = props.globals.getNode("gear/gear[0]/position-norm", 1);
 
 #----------------------------------------------------------------------------
@@ -86,6 +89,14 @@ var computeAICS = func {
 		Nozzle1Target = eng1_burner;
 		Nozzle2Target = eng2_burner;
 	}
+    if (Engine1Augmentation.getValue())
+    {  
+        Engine1Burner.setDoubleValue(1);
+    }
+    if (Engine2Augmentation.getValue())
+    {
+        Engine2Burner.setDoubleValue(1);
+    }
 }
 
 #----------------------------------------------------------------------------
