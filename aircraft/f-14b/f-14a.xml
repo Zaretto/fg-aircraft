@@ -299,10 +299,10 @@
 
     <propulsion>
         <engine file="F100-PW-229">
-            <location unit="M">
-                <x> 0 </x>
-                <y> 0 </y>
-                <z> 0 </z>
+            <location unit="IN">
+                    <x> 608 </x>
+                    <y> -80 </y>
+                    <z> -20 </z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -311,10 +311,10 @@
             </orient>
             <feed>0</feed>
             <thruster file="direct">
-                <location unit="M">
-                    <x> 0 </x>
-                    <y> 0 </y>
-                    <z> 0 </z>
+                <location unit="IN">
+                    <x> 608 </x>
+                    <y> -80 </y>
+                    <z> -20 </z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -324,10 +324,10 @@
             </thruster>
         </engine>
         <engine file="F100-PW-229">
-            <location unit="M">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
+            <location unit="IN">
+                    <x> 608 </x>
+                    <y> 80 </y>
+                    <z> -20 </z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -336,10 +336,10 @@
             </orient>
             <feed>1</feed>
             <thruster file="direct">
-                <location unit="M">
-                    <x> 451.8 </x>
-                    <y> 0 </y>
-                    <z> 0 </z>
+                <location unit="IN">
+                    <x> 608 </x>
+                    <y> 80 </y>
+                    <z> -20 </z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -486,8 +486,8 @@
    <aerosurface_scale name="Elevator Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.52 </min>
-        <max>   0.52 </max>
+        <min>  -0.33 </min>
+        <max>   0.33 </max>
       </range>
       <output>fcs/elevator-pos-rad</output>
    </aerosurface_scale>
@@ -495,8 +495,8 @@
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.52 </min>
-        <max>   0.52 </max>
+        <min>  -0.33 </min>
+        <max>   0.33 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -504,8 +504,8 @@
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min>  -0.52 </min>
-        <max>   0.52 </max>
+        <min>  -0.33 </min>
+        <max>   0.33 </max>
       </domain>
       <range>
         <min> -1 </min>
