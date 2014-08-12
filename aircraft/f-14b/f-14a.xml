@@ -603,6 +603,7 @@
   </channel>
 
   <property value="1">fcs/yaw-damper-enable</property>
+  <property value="0.383972435">fcs/wing-sweep</property>
   <channel name="Yaw">
 
    <summer name="Rudder Command Sum">
@@ -906,8 +907,59 @@
        </product>
     </function>
 -->
+    <function name="aero/coefficients/Cmach">
+    <description>General coefficients mach factor</description>
+    <product>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <independentVar lookup="column">velocities/mach</independentVar>
+            <tableData>
+	                    0.2	1.4
+                    -20	1	0.268817204
+                    -15	1	0.26744186
+                    -10	1	0.275862069
+                    -5	1	0.269230769
+                    0	1	0.333333333
+                    4	1	0.266666667
+                    8	1	0.275862069
+                    12	1	0.269230769
+                    16	1	0.272727273
+                    20	1	0.267326733
+                    24	1	0.268518519
+                    28	1	0.267241379
+                    32	1	0.268907563
+                    40	1	0.264957265
+                    45	1	0.266055046
+                    50	1	0.266666667
+            </tableData>
+          </table>
+       </product>
+    </function>
 
-
+    <function name="aero/coefficients/ClSweepFactor">
+    <description>Wing sweep factor from norm of 22 </description>
+    <product>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <independentVar lookup="column">fcs/wing-sweep</independentVar>
+            <tableData>
+                      0.383972435	0.872664626	1.186823891
+                   0	1.000000	1.000000	1.000000
+                   5	1.000000	0.791274	0.653661
+                  10	1.000000	0.829267	0.700928
+                  15	1.000000	0.953910	0.860083
+                  20	1.000000	0.960603	0.910701
+                  25	1.000000	0.958058	0.969330
+                  30	1.000000	1.027476	0.955345
+                  35	1.000000	1.088021	0.994762
+                  40	1.000000	1.083636	1.049773
+                  45	1.000000	1.066517	1.066517
+                  50	1.000000	0.910848	0.936149
+                  55	1.000000	0.921275	0.914270
+            </tableData>
+          </table>
+       </product>
+    </function>
     <function name="aero/coefficients/ClBAS">
     <description>ClBAS</description>
     <product>
@@ -1442,7 +1494,8 @@
     <description>DCMDS1</description>
     <product>
           <property>aero/coefficients/CMDS1</property>
-          <property>fcs/stabilizer-1p</property>
+          <property>fcs/elevator-pos-deg</property>
+    <!--<property>fcs/stabilizer-1p</property>-->
        </product>
     </function>
     <function name="aero/coefficients/DCMDS2">
@@ -1464,7 +1517,7 @@
           <property>aero/coefficients/DCMB0</property>
           <property>aero/coefficients/CMQ</property>
           <property>aero/coefficients/DCMDS1</property>
-          <property>aero/coefficients/DCMDS2</property>
+          <!--<property>aero/coefficients/DCMDS2</property>-->
        </sum>
     </function>
     <function name="aero/coefficients/CNBAS">
@@ -1628,6 +1681,8 @@
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>aero/coefficients/Cl</property>
+          <property>aero/coefficients/Cmach</property>
+          <property>aero/coefficients/ClSweepFactor</property>
        </product>
     </function>
   </axis>
@@ -1638,7 +1693,9 @@
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>aero/coefficients/Cd</property>
-       </product>
+          <property>aero/coefficients/Cmach</property>
+          <property>aero/coefficients/ClSweepFactor</property>
+    </product>
     </function>
   </axis>
   <axis name="SIDE">
@@ -1648,6 +1705,7 @@
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>aero/coefficients/Cy</property>
+          <property>aero/coefficients/Cmach</property>
        </product>
     </function>
   </axis>
@@ -1659,6 +1717,8 @@
           <property>metrics/Sw-sqft</property>
           <property>metrics/bw-ft</property>
           <property>aero/coefficients/CL</property>
+          <property>aero/coefficients/Cmach</property>
+          <property>aero/coefficients/ClSweepFactor</property>
        </product>
     </function>
   </axis>
@@ -1670,6 +1730,8 @@
           <property>metrics/Sw-sqft</property>
           <property>metrics/cbarw-ft</property>
           <property>aero/coefficients/CM</property>
+          <property>aero/coefficients/Cmach</property>
+          <property>aero/coefficients/ClSweepFactor</property>
        </product>
     </function>
   </axis>
@@ -1681,6 +1743,7 @@
           <property>metrics/Sw-sqft</property>
           <property>metrics/bw-ft</property>
           <property>aero/coefficients/CN</property>
+          <!--<property>aero/coefficients/Cmach</property>-->
        </product>
     </function>
   </axis>
@@ -1704,6 +1767,7 @@
     <ground_reactions> ON </ground_reactions>
     <fcs> ON </fcs>
     <propulsion> ON </propulsion>
+<property>fcs/speedbrake-pos-norm</property>
   </output>
 </fdm_config>
 <!--

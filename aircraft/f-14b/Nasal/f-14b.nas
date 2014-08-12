@@ -240,6 +240,7 @@ var timedMotions = func {
 	setprop ("engines/engine[0]/nozzle-pos-norm", Nozzle1);
 	setprop ("engines/engine[1]/nozzle-pos-norm", Nozzle2);
 	setprop ("surface-positions/wing-pos-norm", currentSweep);
+	setprop ("/fdm/jsbsim/fcs/wing-sweep", currentSweep);
 	setprop ("controls/flight/wing-sweep", WingSweep);
 
 	# Copy surfaces animations properties so they are transmited via multiplayer.
