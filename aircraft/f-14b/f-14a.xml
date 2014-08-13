@@ -169,7 +169,7 @@
   <contact type="STRUCTURE" name="LEFT_WING_TIP">
     <location unit="IN">
      <x> 540 </x>
-     <y> 720.00 </y>
+     <y> -720.00 </y>
      <z> -52 </z>
     </location>
             <static_friction> 1.2 </static_friction>
@@ -183,7 +183,7 @@
   <contact type="STRUCTURE" name="RIGHT_WING_TIP">
     <location unit="IN">
      <x> 540 </x>
-     <y> -720.00 </y>
+     <y> 720.00 </y>
      <z> -52 </z>
     </location>
             <static_friction> 1.2 </static_friction>
@@ -244,12 +244,11 @@
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
   </contact>
 
-<!--
   <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
     <location unit="IN">
                 <x> 622 </x>
                 <y> -98 </y>
-                <z>  -50 </z>
+                <z> 50 </z>
     </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.2 </dynamic_friction>
@@ -261,7 +260,7 @@
     <location unit="IN">
                 <x> 622 </x>
                 <y>  98 </y>
-                <z>   -40 </z>
+                <z>  40 </z>
     </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.2 </dynamic_friction>
@@ -269,12 +268,11 @@
             <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
   </contact>
--->
 
   <contact type="STRUCTURE" name="FRONT_BODY_LEFT">
     <location unit="IN">
                 <x> 188 </x>
-                <y>  78 </y>
+                <y> -78 </y>
                 <z> -93 </z>
     </location>
             <static_friction> 1.2 </static_friction>
@@ -286,7 +284,7 @@
   <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
     <location unit="IN">
                 <x> 218 </x>
-                <y> -98 </y>
+                <y> 98 </y>
                 <z> -90 </z>
     </location>
             <static_friction> 1.2 </static_friction>
@@ -348,129 +346,129 @@
                 </orient>
             </thruster>
         </engine>
-<!--  FWD Fuselage -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 351.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">2136</capacity>
-            <contents unit="KG">2136</contents>
-        </tank>
-<!-- AFT Fuselage -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 481.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">2000</capacity>
-            <contents unit="KG">2000</contents>
-        </tank>
-<!-- Left Beam Box - Feed Group   -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 431.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">568</capacity>
-            <contents unit="KG">568</contents>
-        </tank>
-<!--  Left Sump - Feed Group    -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 431.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">136</capacity>
-            <contents unit="KG">136</contents>
-        </tank>
-<!-- Right Beam Box - Feed Group    -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">568</capacity>
-            <contents unit="KG">568</contents>
-        </tank>
-<!-- Right Sump - Feed Group   -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">136</capacity>
-            <contents unit="KG">136</contents>
-        </tank>
-<!-- Left wing    -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 541.8 </x>
-                <y> 300 </y>
-                <z> -52</z>
-            </location>
-            <capacity unit="KG">909</capacity>
-            <contents unit="KG">909</contents>
-        </tank>
-<!-- Right Wing -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 541.8 </x>
-                <y> -300 </y>
-                <z> -52</z>
-            </location>
-            <capacity unit="KG">909</capacity>
-            <contents unit="KG">909</contents>
-        </tank>
-<!-- Left External -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">818</capacity>
-            <contents unit="KG">818</contents>
-        </tank>
-<!-- Right External -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">818</capacity>
-            <contents unit="KG">818</contents>
-        </tank>
-<!-- Left Feed line -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">5</capacity>
-            <contents unit="KG">5</contents>
-        </tank>
-<!-- Right Feed line -->
-        <tank type="FUEL">
-            <location unit="IN">
-                <x> 451.8 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-            <capacity unit="KG">5</capacity>
-            <contents unit="KG">5</contents>
-        </tank>
+      <!--  FWD Fuselage -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>360.8031496</x>
+          <y>0</y>
+          <z>-51.77165354</z>
+        </location>
+        <capacity unit="KG">2136</capacity>
+        <contents unit="KG">2136</contents>
+      </tank>
+      <!-- AFT Fuselage -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>541.1968504</x>
+          <y>0</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="KG">2000</capacity>
+        <contents unit="KG">2000</contents>
+      </tank>
+      <!-- Left Beam Box - Feed Group   -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>501.8267717</x>
+          <y>-77.95275591</y>
+          <z>-45.07874016</z>
+        </location>
+        <capacity unit="KG">568</capacity>
+        <contents unit="KG">568</contents>
+      </tank>
+      <!--  Left Sump - Feed Group    -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>501.8267717</x>
+          <y>-38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="KG">136</capacity>
+        <contents unit="KG">136</contents>
+      </tank>
+      <!-- Right Beam Box - Feed Group    -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>501.8267717</x>
+          <y>77.95275591</y>
+          <z>-45.07874016</z>
+        </location>
+        <capacity unit="KG">568</capacity>
+        <contents unit="KG">568</contents>
+      </tank>
+      <!-- Right Sump - Feed Group   -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>501.8267717</x>
+          <y>38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="KG">136</capacity>
+        <contents unit="KG">136</contents>
+      </tank>
+      <!-- Left wing    -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>528.9133858</x>
+          <y>-138.5826772</y>
+          <z>-45.07874016</z>
+        </location>
+        <capacity unit="KG">909</capacity>
+        <contents unit="KG">909</contents>
+      </tank>
+      <!-- Right Wing -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>528.9133858</x>
+          <y>138.5826772</y>
+          <z>-45.07874016</z>
+        </location>
+        <capacity unit="KG">909</capacity>
+        <contents unit="KG">909</contents>
+      </tank>
+      <!-- Left External -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>409.6614173</x>
+          <y>-55.51181102</y>
+          <z>-110.8267717</z>
+        </location>
+        <capacity unit="KG">818</capacity>
+        <contents unit="KG">818</contents>
+      </tank>
+      <!-- Right External -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>409.6614173</x>
+          <y>55.51181102</y>
+          <z>-110.8267717</z>
+        </location>
+        <capacity unit="KG">818</capacity>
+        <contents unit="KG">818</contents>
+      </tank>
+      <!-- Left Feed line -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>501.8267717</x>
+          <y>-38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="KG">5</capacity>
+        <contents unit="KG">5</contents>
+      </tank>
+      <!-- Right Feed line -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>501.8267717</x>
+          <y>38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="KG">5</capacity>
+        <contents unit="KG">5</contents>
+      </tank>
     </propulsion>
 
- <flight_control name="FCS: unnamed">
+    <flight_control name="FCS: unnamed">
 
   <channel name="Pitch">
 
