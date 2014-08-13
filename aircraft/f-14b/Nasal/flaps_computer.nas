@@ -9,7 +9,8 @@ var max_m_slat_ext = 0.41;         # Maximum maneuver slats extension.
 var lms_coef       = 0.146428571;  # Linear maneuver slats extension coeff:
 # maximum maneuver slats extension / maneuver slats high alpha threshold - maneuver slats low alpha threshold.
 
-var FlapsCmd     = props.globals.getNode("controls/flight/flapscommand", 1);
+#var FlapsCmd     = props.globals.getNode("controls/flight/flapscommand", 1);
+var FlapsCmd     = props.globals.getNode("controls/flight/flaps", 1);
 var AuxFlapsCmd  = props.globals.getNode("/controls/flight/auxFlaps", 1);
 var SlatsCmd     = props.globals.getNode("controls/flight/slats", 1);
 var MainFlapsCmd = props.globals.getNode("controls/flight/mainFlaps", 1);

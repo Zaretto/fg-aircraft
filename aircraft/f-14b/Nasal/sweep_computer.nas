@@ -38,6 +38,10 @@ var computeSweep = func {
 
 	if (AutoSweep) {
 		current_mach = getprop ("/velocities/mach");
+
+        if (current_mach == nil)
+            return;
+
 		# Flaps/sweep interlock
 		# do not move the wings until auxiliary flaps are in.
 

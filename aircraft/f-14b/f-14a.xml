@@ -486,8 +486,8 @@
    <aerosurface_scale name="Elevator Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.33 </min>
-        <max>   0.33 </max>
+        <min>  -0.526 </min>
+        <max>   0.526 </max>
       </range>
       <output>fcs/elevator-pos-rad</output>
    </aerosurface_scale>
@@ -495,8 +495,8 @@
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.33 </min>
-        <max>   0.33 </max>
+        <min>  -0.526 </min>
+        <max>   0.526 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -504,8 +504,8 @@
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min>  -0.33 </min>
-        <max>   0.33 </max>
+        <min>  -0.526 </min>
+        <max>   0.526 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -935,6 +935,34 @@
           </table>
        </product>
     </function>
+    <function name="aero/coefficients/CdMach">
+    <description>General coefficients drag mach factor </description>
+    <product>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <independentVar lookup="column">velocities/mach</independentVar>
+            <tableData>
+	                      0.2	   1.4
+                   -20	1.0    0.268817204
+                   -15  1.0    0.26744186
+                   -10  1.0    0.275862069
+                    -5  1.0    0.269230769
+                     0  1.0    0.333333333
+                     4  1.0    0.266666667
+                     8  1.0    0.275862069
+                    12  1.0    0.269230769
+                    16  1.0    0.272727273
+                    20  1.0    0.267326733
+                    24  1.0    0.268518519
+                    28  1.0    0.267241379
+                    32  1.0    0.268907563
+                    40  1.0    0.264957265
+                    45	1.0    0.266055046
+                    50	1.0    0.266666667
+            </tableData>
+          </table>
+       </product>
+    </function>
 
     <function name="aero/coefficients/ClSweepFactor">
     <description>Wing sweep factor from norm of 22 </description>
@@ -984,6 +1012,22 @@
           </table>
        </product>
     </function>
+    <function name="aero/coefficients/ClDFM">
+    <description>Delta Cl due to mean flap position</description>
+    <product>
+          <table>
+            <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
+            <independentVar lookup="column">aero/alpha-deg</independentVar>
+            <tableData>
+	                     0	  5	        10	      15	     20
+                   0  0.00000	0.00000	0.00000	0.00000	0.00000
+                  10	0.19200	0.18800	0.18400	0.15600	0.02000
+                  30	0.52000	0.52800	0.52800	0.44000	0.18400
+                  50	0.85000	0.86000	0.84000	0.66000	0.35000
+            </tableData>
+          </table>
+       </product>
+    </function>
     <function name="aero/coefficients/ClDS1">
     <description>ClDS1</description>
     <product>
@@ -1003,6 +1047,26 @@
                      45 0.00600000
                      50 0.00700000
                      55 0.00650000
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/ClUC">
+    <description>Cl increment due to gear</description>
+    <product>
+          <property>gear/gear-pos-norm</property>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                  -4	-0.16
+                   0 	-0.16
+                   4 	-0.16
+                   8 	-0.12
+                   12 -0.09
+                   14 -0.06
+                   16 -0.04
+                   18 -0.02
+                   20  0
             </tableData>
           </table>
        </product>
@@ -1035,7 +1099,30 @@
           <property>aero/coefficients/ClBAS</property>
           <property>aero/coefficients/ClDS1</property>
           <!--<property>aero/coefficients/ClDS2</property>-->
-       </sum>
+          <property>aero/coefficients/ClUC</property>
+          <property>aero/coefficients/ClDFM</property>
+          </sum>
+    </function>
+    <function name="aero/coefficients/CdUC">
+    <description>Cd increment due to gear</description>
+    <product>
+          <property>gear/gear-pos-norm</property>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                -4	0.017
+                 0	0.01
+                 4	0.005
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/Cd_speedbrake">
+       <description>Drag due to speedbrakes</description>
+         <product>
+           <property>fcs/speedbrake-pos-norm</property>
+           <value>0.0484</value> <!-- based roughly on CDDA -->
+         </product>
     </function>
     <function name="aero/coefficients/CdBAS">
     <description>CdBAS</description>
@@ -1057,6 +1144,22 @@
                  45     1.56330700 1.61255700 1.62553300 1.66403500 1.68355100 1.66403500 1.62553300 1.61255700 1.56330700 
                  50     1.74877400 1.78230900 1.81470600 1.84961900 1.89047500 1.84961900 1.81470600 1.78230900 1.74877400 
                  55     1.90570600 1.96386700 1.98249100 2.02153600 2.03465900 2.02153600 1.98249100 1.96386700 1.90570600 
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/CdDFM">
+    <description>Delta Cd due to mean flap position</description>
+    <product>
+          <table>
+            <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
+            <independentVar lookup="column">aero/alpha-deg</independentVar>
+            <tableData>
+	                  0	      5	      10	    15	    20
+                 0	0.00000	0.00000	0.00000	0.00000	0.00000
+                10	0.02760	0.03240	0.03640	0.04080	0.05480
+                30	0.08888	0.09848	0.14088	0.20408	0.31848
+                50	0.14400	0.17600	0.20600	0.21000	0.25200
             </tableData>
           </table>
        </product>
@@ -1111,6 +1214,10 @@
     <sum>
           <property>aero/coefficients/CdBAS</property>
           <property>aero/coefficients/CdDS1</property>
+          <property>aero/coefficients/CdUC</property>
+          <property>aero/coefficients/CdDFM</property>
+          <property>aero/coefficients/Cd_speedbrake</property>
+
        </sum>
     </function>
     <function name="aero/coefficients/CyBAS">
@@ -1510,6 +1617,39 @@
           <property>aero/coefficients/CMDS2</property>
        </product>
     </function>
+    <function name="aero/coefficients/CMUC">
+    <description>CM increment due to gear</description>
+    <product>
+          <property>gear/gear-pos-norm</property>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                -4	0.075
+                 0	0.065
+                 4	0.05
+                 8	0.038
+                12	0.017
+                14	0
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/CMDFM">
+    <description>CM increment due to flap mean position</description>
+    <product>
+          <table>
+            <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
+            <independentVar lookup="column">aero/alpha-deg</independentVar>
+            <tableData>
+	                         0	       5	      10	      15	      20
+                 0	 0.00000	 0.00000	 0.00000	 0.00000	 0.00000
+                10	-0.08800	-0.07760	-0.06560	-0.04400	-0.03800
+                30	-0.24240	-0.21760	-0.19360	-0.15600	-0.16400
+                50	 0.85000	 0.86000	 0.84000	 0.66000	 0.35000
+            </tableData>
+          </table>
+       </product>
+    </function>
     <function name="aero/coefficients/CM">
     <sum>
           <property>aero/coefficients/CMBAS</property>
@@ -1517,6 +1657,7 @@
           <property>aero/coefficients/DCMB0</property>
           <property>aero/coefficients/CMQ</property>
           <property>aero/coefficients/DCMDS1</property>
+          <property>aero/coefficients/CMUC</property>
           <!--<property>aero/coefficients/DCMDS2</property>-->
        </sum>
     </function>
