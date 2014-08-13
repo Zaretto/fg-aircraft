@@ -489,11 +489,27 @@
         <min>  -0.526 </min>
         <max>   0.526 </max>
       </range>
-      <output>fcs/elevator-pos-rad</output>
+      <output>fcs/elevator-pos-demand</output>
    </aerosurface_scale>
 
+<!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
+    <kinematic name="elevator position">
+      <input>fcs/elevator-pos-demand</input>
+      <traverse>
+          <setting>
+              <position>-1</position>
+              <time>1.75</time>
+          </setting>
+          <setting>
+              <position>1</position>
+              <time>0.90</time> <!-- based on 30 deg/sec -->
+          </setting>
+      </traverse>
+      <output>fcs/elevator-pos-rad</output>
+  </kinematic>
+
   <aerosurface_scale name="Stabilizer Control">
-      <input>fcs/pitch-trim-sum</input>
+      <input>fcs/elevator-pos-norm</input>
       <range>
         <min>  -0.526 </min>
         <max>   0.526 </max>
@@ -545,8 +561,8 @@
      </fcs_function>
   </channel>
 
+<!-- aileron: +/- 5deg : +/- 33 deg/sec -->
   <channel name="Roll">
-
    <summer name="Roll Trim Sum">
       <input>fcs/aileron-cmd-norm</input>
       <input>fcs/roll-trim-cmd-norm</input>
@@ -676,8 +692,9 @@
           <time>      0 </time>
        </setting>
        <setting>
+<!-- 01-F14AAD-1 says 35 degrees  -->
           <position> 30 </position>
-          <time>      3 </time>
+          <time>    3.8 </time>
        </setting>
      </traverse>
      <output>fcs/flap-pos-deg</output>
@@ -720,41 +737,11 @@
       </domain>
       <range>
         <min> 0 </min>
-        <max> 21 </max>
+        <max> 17 </max>
       </range>
       <output>fcs/slat-pos-norm-deg</output>
    </aerosurface_scale>
   </channel>
-<!--
-  <channel name="AuxiliaryFlaps">
-   <kinematic name="Auxiliary Flaps Control">
-     <traverse>
-       <setting>
-          <position>  0 </position>
-          <time>      0 </time>
-       </setting>
-       <setting>
-          <position> 40 </position>
-          <time>      3 </time>
-       </setting>
-     </traverse>
-     <output>fcs/aux-flap-pos-deg</output>
-   </kinematic>
-
-   <aerosurface_scale name="aux flap normalization">
-      <input>fcs/aux-flap-pos-deg</input>
-      <domain>
-        <min>  0 </min>
-        <max> 30 </max>
-      </domain>
-      <range>
-        <min> 0 </min>
-        <max> 1 </max>
-      </range>
-      <output>fcs/aux-flap-pos-deg</output>
-   </aerosurface_scale>
-  </channel>
--->
 
   <channel name="Landing Gear">
    <kinematic name="Gear Control">
