@@ -113,7 +113,10 @@ var aux_flap_output    = props.globals.getNode("fcs/aux-flap-pos-deg", 1);
 print("Setup aux flaps");
 aux_flap_output.setDoubleValue(0);
 
-var slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
+#var slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
+#var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-pos-norm-deg", 1);
+var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
+
 var left_elev_output   = props.globals.getNode("surface-positions/left-elevator-pos-norm", 1);
 var right_elev_output  = props.globals.getNode("surface-positions/right-elevator-pos-norm", 1);
 var elev_output   = props.globals.getNode("surface-positions/elevator-pos-norm", 1);
