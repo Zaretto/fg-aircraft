@@ -85,217 +85,217 @@
    </location>
  </metrics>
 
- <mass_balance>
-   <ixx unit="SLUG*FT2">     58950 </ixx>
-   <iyy unit="SLUG*FT2">    225600 </iyy>
-   <izz unit="SLUG*FT2">    285000 </izz>
-<!-- using GE F110 engines but aero is for F14A -->
-   <emptywt unit="LBS" >     40104 </emptywt>
-   <location name="CG" unit="IN">
-     <x> 451.80 </x>
-     <y>   0.00 </y>
-     <z0> -18.83 </z0>
-     <z> 0.00 </z>
-   </location>
-        <pointmass name="Avionics">
-            <weight unit="LBS"> 230 </weight>
-            <location name="POINTMASS" unit="IN">
-                <x> 57 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-        </pointmass>
-        <pointmass name="Avionics Rear">
-            <weight unit="LBS"> 230 </weight>
-            <location name="POINTMASS" unit="IN">
-                <x> 757 </x>
-                <y> 0 </y>
-                <z> 0 </z>
-            </location>
-        </pointmass>
- </mass_balance>
+  <mass_balance>
+    <ixx unit="SLUG*FT2">     58950 </ixx>
+    <iyy unit="SLUG*FT2">    225600 </iyy>
+    <izz unit="SLUG*FT2">    285000 </izz>
+    <!-- using GE F110 engines but aero is for F14A -->
+    <emptywt unit="LBS" >     40104 </emptywt>
+    <location name="CG" unit="IN">
+      <x> 451.80 </x>
+      <y>   0.00 </y>
+      <z0> -18.83 </z0>
+      <z> 0.00 </z>
+    </location>
+    <pointmass name="Avionics">
+      <weight unit="LBS"> 230 </weight>
+      <location name="POINTMASS" unit="IN">
+        <x> 57 </x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </location>
+    </pointmass>
+    <pointmass name="Avionics Rear">
+      <weight unit="LBS"> 230 </weight>
+      <location name="POINTMASS" unit="IN">
+        <x> 757 </x>
+        <y> 0 </y>
+        <z> 0 </z>
+      </location>
+    </pointmass>
+  </mass_balance>
 
-<!-- 0 -->
-    <ground_reactions>
-        <contact type="BOGEY" name="NOSE_LG">
-            <location unit="IN">
-                <x> 57 </x>
-                <y> 0 </y>
-                <z> -140 </z>
-            </location>
-            <static_friction> 0.8 </static_friction>
-            <dynamic_friction> 0.5 </dynamic_friction>
-            <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 15000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
-            <max_steer unit="DEG"> 80 </max_steer>
-            <brake_group> NOSE </brake_group>
-            <retractable>1</retractable>
-        </contact>
-<!-- 1 -->
-        <contact type="BOGEY" name="LEFT_MLG">
-            <location unit="IN">
-                <x> 470 </x>
-                <y> -98 </y>
-                <z> -140 </z>
-            </location>
-            <static_friction> 0.8 </static_friction>
-            <dynamic_friction> 0.5 </dynamic_friction>
-            <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
-            <max_steer unit="DEG"> 0.0 </max_steer>
-            <brake_group> LEFT </brake_group>
-            <retractable>1</retractable>
-        </contact>
-<!-- 2 -->
-        <contact type="BOGEY" name="RIGHT_MLG">
-            <location unit="IN">
-                <x> 470 </x>
-                <y> 98 </y>
-                <z> -140 </z>
-            </location>
-            <static_friction> 0.8 </static_friction>
-            <dynamic_friction> 0.5 </dynamic_friction>
-            <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
-            <max_steer unit="DEG"> 0.0 </max_steer>
-            <brake_group> RIGHT </brake_group>
-            <retractable>1</retractable>
-        </contact>
+  <!-- 0 -->
+  <ground_reactions>
+    <contact type="BOGEY" name="NOSE_LG">
+      <location unit="IN">
+        <x> 57 </x>
+        <y> 0 </y>
+        <z> -140 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 15000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
+      <max_steer unit="DEG"> 80 </max_steer>
+      <brake_group> NOSE </brake_group>
+      <retractable>1</retractable>
+    </contact>
+    <!-- 1 -->
+    <contact type="BOGEY" name="LEFT_MLG">
+      <location unit="IN">
+        <x> 470 </x>
+        <y> -98 </y>
+        <z> -140 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
+      <max_steer unit="DEG"> 0.0 </max_steer>
+      <brake_group> LEFT </brake_group>
+      <retractable>1</retractable>
+    </contact>
+    <!-- 2 -->
+    <contact type="BOGEY" name="RIGHT_MLG">
+      <location unit="IN">
+        <x> 470 </x>
+        <y> 98 </y>
+        <z> -140 </z>
+      </location>
+      <static_friction> 0.8 </static_friction>
+      <dynamic_friction> 0.5 </dynamic_friction>
+      <rolling_friction> 0.02 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
+      <max_steer unit="DEG"> 0.0 </max_steer>
+      <brake_group> RIGHT </brake_group>
+      <retractable>1</retractable>
+    </contact>
 
-<!-- 3 -->
-  <contact type="STRUCTURE" name="LEFT_WING_TIP">
-    <location unit="IN">
-     <x> 540 </x>
-     <y> -720.00 </y>
-     <z> -52 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
+    <!-- 3 -->
+    <contact type="STRUCTURE" name="LEFT_WING_TIP">
+      <location unit="IN">
+        <x> 540 </x>
+        <y> -720.00 </y>
+        <z> -52 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
 
-<!-- 4 -->
-  <contact type="STRUCTURE" name="RIGHT_WING_TIP">
-    <location unit="IN">
-     <x> 540 </x>
-     <y> 720.00 </y>
-     <z> -52 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
+    <!-- 4 -->
+    <contact type="STRUCTURE" name="RIGHT_WING_TIP">
+      <location unit="IN">
+        <x> 540 </x>
+        <y> 720.00 </y>
+        <z> -52 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
 
-  <contact type="STRUCTURE" name="REAR_BODY_LEFT">
-    <location unit="IN">
-                <x> 480</x>
-                <y> -80 </y>
-                <z> -130 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
-  <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
-    <location unit="IN">
-                <x> 534 </x>
-                <y>  98 </y>
-                <z> -120 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
+    <contact type="STRUCTURE" name="REAR_BODY_LEFT">
+      <location unit="IN">
+        <x> 480</x>
+        <y> -80 </y>
+        <z> -130 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
+      <location unit="IN">
+        <x> 534 </x>
+        <y>  98 </y>
+        <z> -120 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
 
-  <contact type="STRUCTURE" name="CANOPY">
-    <location unit="IN">
-                <x> 210 </x>
-                <y>  0 </y>
-                <z>  0 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
+    <contact type="STRUCTURE" name="CANOPY">
+      <location unit="IN">
+        <x> 210 </x>
+        <y>  0 </y>
+        <z> -10 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
 
-  <contact type="STRUCTURE" name="RADOME_FRONT">
-    <location unit="IN">
-                <x>  258 </x>
-                <y>  0 </y>
-                <z>  -86 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
+    <contact type="STRUCTURE" name="RADOME_FRONT">
+      <location unit="IN">
+        <x>  258 </x>
+        <y>  0 </y>
+        <z>  -86 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
 
-  <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
-    <location unit="IN">
-                <x> 622 </x>
-                <y> -98 </y>
-                <z> 50 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
-  <contact type="STRUCTURE" name="RIGHT_VERTICAL_TAIL">
-    <location unit="IN">
-                <x> 622 </x>
-                <y>  98 </y>
-                <z>  40 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
+    <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
+      <location unit="IN">
+        <x> 622 </x>
+        <y> -98 </y>
+        <z>  0 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="RIGHT_VERTICAL_TAIL">
+      <location unit="IN">
+        <x> 622 </x>
+        <y>  98 </y>
+        <z>   0 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
 
-  <contact type="STRUCTURE" name="FRONT_BODY_LEFT">
-    <location unit="IN">
-                <x> 188 </x>
-                <y> -78 </y>
-                <z> -93 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
-  <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
-    <location unit="IN">
-                <x> 218 </x>
-                <y> 98 </y>
-                <z> -90 </z>
-    </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.2 </dynamic_friction>
-            <rolling_friction> 1.2 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-  </contact>
-    </ground_reactions>
+    <contact type="STRUCTURE" name="FRONT_BODY_LEFT">
+      <location unit="IN">
+        <x> 188 </x>
+        <y> -78 </y>
+        <z> -93 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
+      <location unit="IN">
+        <x> 218 </x>
+        <y> 98 </y>
+        <z> -90 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+  </ground_reactions>
 
-    <propulsion>
+  <propulsion>
         <engine file="F100-PW-229">
             <location unit="IN">
                     <x> 608 </x>
