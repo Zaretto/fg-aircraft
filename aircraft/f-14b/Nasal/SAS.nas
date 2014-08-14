@@ -24,6 +24,8 @@ var AirSpeed   = props.globals.getNode("velocities/airspeed-kt");
 var SasPitchOn = props.globals.getNode("sim/model/f-14b/controls/SAS/pitch");
 var SasRollOn  = props.globals.getNode("sim/model/f-14b/controls/SAS/roll");
 var SasYawOn   = props.globals.getNode("sim/model/f-14b/controls/SAS/yaw");
+var fdm_yawdamper   = props.globals.getNode("fdm/jsbsim/fcs/yaw-damper-enable");
+
 var DeadZPitch = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-pitch");
 var DeadZRoll  = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-roll");
 # Autopilot Locks
@@ -186,6 +188,7 @@ var computeSAS = func {
 	# Yaw Channel
 	var raw_r    = RawRudder.getValue();
 	var smooth_r = raw_r;
+    fdm_yawdamper.setValue(SasYawOn.getValue());
 	if (SasYawOn.getValue()) {
 		smooth_r = last_r + ((raw_r - last_r) * r_smooth_factor);
 		last_r = smooth_r;
