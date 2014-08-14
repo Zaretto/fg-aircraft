@@ -110,7 +110,6 @@ var SweepSpeed = 0.3;
 #var main_flap_output   = props.globals.getNode("surface-positions/main-flap-pos-norm", 1);
 #var aux_flap_output    = props.globals.getNode("surface-positions/aux-flap-pos-norm", 1);
 var aux_flap_output    = props.globals.getNode("fcs/aux-flap-pos-deg", 1);
-print("Setup aux flaps");
 aux_flap_output.setDoubleValue(0);
 
 #var slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
@@ -120,6 +119,8 @@ var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
 var left_elev_output   = props.globals.getNode("surface-positions/left-elevator-pos-norm", 1);
 var right_elev_output  = props.globals.getNode("surface-positions/right-elevator-pos-norm", 1);
 var elev_output   = props.globals.getNode("surface-positions/elevator-pos-norm", 1);
+var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1);
+
 var lighting_collision = props.globals.getNode("sim/model/f-14b/lighting/anti-collision/state", 1);
 var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/position/state", 1);
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
@@ -253,8 +254,9 @@ var timedMotions = func {
 #	left_elev_generic.setDoubleValue(left_elev_output.getValue());
 #	right_elev_generic.setDoubleValue(right_elev_output.getValue());
 # JSB Sim doesn't seem to have two elevator positions.
-	left_elev_generic.setDoubleValue(elev_output.getValue());
-	right_elev_generic.setDoubleValue(elev_output.getValue());
+var elevator_deflection_due_to_aileron_deflection =  aileron.getValue() / 2.0;
+	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
+	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
 	lighting_collision_generic.setIntValue(lighting_collision.getValue());
 	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());

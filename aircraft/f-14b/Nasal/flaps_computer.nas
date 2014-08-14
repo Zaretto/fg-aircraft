@@ -17,13 +17,15 @@ var MainFlapsCmd = props.globals.getNode("controls/flight/mainFlaps", 1);
 var demandedFlaps = 0;
 
 FlapsCmd.setValue(0);
+SlatsCmd.setValue(0);
 AuxFlapsCmd.setValue(0);
-
+demandedFlags = 0;
 
 # Hijack the generic flaps command so everybody's joystick flap command works
 # for the F-14 too. 
 
 controls.flapsDown = func(s) {
+print("F14: flaps down ",s);
 	if (s == 1) {
 		lowerFlaps();
 	} elsif (s == -1) {
@@ -34,20 +36,20 @@ controls.flapsDown = func(s) {
 }
 
 var lowerFlaps = func {
-	if ( WingSweep < 0.05 and FlapsCmd.getValue() < 1 ) {
+print("F14: lower flaps");
+	if ( WingSweep < 0.05 ) {
 		FlapsCmd.setValue(1); # Landing.
         demandedFlaps = 1;
 	}
 }
 
 var raiseFlaps = func {
-	if ( FlapsCmd.getValue() > 0 ) {
+print("F14: raise flaps");
 		FlapsCmd.setValue(0); # Clean.
         demandedFlaps = 0;
 		DLCactive = false;
 		DLC_Engaged.setBoolValue(0);
 		setprop("controls/flight/DLC", 0);
-	}
 }
 
 var computeFlaps = func {
@@ -91,6 +93,7 @@ var computeFlaps = func {
     		MainFlapsCmd.setValue( m_flap_ext );
 			SlatsCmd.setValue(slats);
 			FlapsCmd.setValue(flaps);
+#print("Flaps ",m_flap_ext, " slats ",slats," flaps ",flaps);
 	}
 	else if ( demandedFlaps == 1) {
 		MainFlapsCmd.setValue(1);
