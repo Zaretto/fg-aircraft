@@ -660,6 +660,11 @@
 <!-- rudder limits +/-30deg 40 deg/sec-->
 <!-- stabilizer limits +/7deg 30 deg/sec-->
 
+   <pure_gain name="Pilot G">
+      <input>accelerations/n-pilot-z-norm</input>
+      <gain>-1</gain>
+      <output>/accelerations/pilot-gdamped</output>
+   </pure_gain>
    <scheduled_gain name="Yaw Damper Rate">
       <input>velocities/r-aero-rad_sec</input>
       <table>
