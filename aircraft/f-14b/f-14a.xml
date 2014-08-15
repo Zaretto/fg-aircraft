@@ -121,7 +121,7 @@
       <location unit="IN">
         <x> 57 </x>
         <y> 0 </y>
-        <z> -140 </z>
+         <z> -121.8 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
@@ -137,7 +137,7 @@
       <location unit="IN">
         <x> 470 </x>
         <y> -98 </y>
-        <z> -140 </z>
+        <z> -124  </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
@@ -153,7 +153,7 @@
       <location unit="IN">
         <x> 470 </x>
         <y> 98 </y>
-        <z> -140 </z>
+        <z> -124 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
@@ -169,7 +169,7 @@
     <contact type="STRUCTURE" name="LEFT_WING_TIP">
       <location unit="IN">
         <x> 540 </x>
-        <y> -720.00 </y>
+        <y> -384.00 </y>
         <z> -52 </z>
       </location>
       <static_friction> 1.2 </static_friction>
@@ -183,7 +183,7 @@
     <contact type="STRUCTURE" name="RIGHT_WING_TIP">
       <location unit="IN">
         <x> 540 </x>
-        <y> 720.00 </y>
+        <y> 384.00 </y>
         <z> -52 </z>
       </location>
       <static_friction> 1.2 </static_friction>
@@ -195,9 +195,10 @@
 
     <contact type="STRUCTURE" name="REAR_BODY_LEFT">
       <location unit="IN">
-        <x> 480</x>
-        <y> -80 </y>
-        <z> -130 </z>
+        <x> 470 </x>
+        <y>  58 </y>
+        <realz> -60 </realz>
+        <z>0</z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.2 </dynamic_friction>
@@ -207,9 +208,10 @@
     </contact>
     <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
       <location unit="IN">
-        <x> 534 </x>
-        <y>  98 </y>
-        <z> -120 </z>
+        <x> 470 </x>
+        <y> -58 </y>
+        <realz> -60 </realz>
+        <z>0</z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.2 </dynamic_friction>
@@ -231,11 +233,13 @@
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
     </contact>
 
-    <contact type="STRUCTURE" name="RADOME_FRONT">
+
+<!--
+    <contact type="STRUCTURE" name="REAR_BODY_LEFT">
       <location unit="IN">
-        <x>  258 </x>
-        <y>  0 </y>
-        <z>  -86 </z>
+        <x> 470 </x>
+        <y>  58 </y>
+        <z> -60 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.2 </dynamic_friction>
@@ -243,8 +247,42 @@
       <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
     </contact>
-
-<!--
+    <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
+      <location unit="IN">
+        <x> 470 </x>
+        <y> -58 </y>
+        <z> -60 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
+      <location unit="IN">
+        <x> 622 </x>
+        <y> -98 </y>
+        <z>  0 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="RADOME_FRONT">
+      <location unit="IN">
+        <x>  258 </x>
+        <y>  0 </y>
+        <z>  -56 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
     <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
       <location unit="IN">
         <x> 622 </x>
@@ -275,7 +313,7 @@
       <location unit="IN">
         <x> 188 </x>
         <y> -78 </y>
-        <z> -93 </z>
+        <z> -50 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.2 </dynamic_friction>
@@ -285,9 +323,9 @@
     </contact>
     <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
       <location unit="IN">
-        <x> 218 </x>
-        <y> 98 </y>
-        <z> -90 </z>
+        <x> 188 </x>
+        <y> 78 </y>
+        <z> -50 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.2 </dynamic_friction>
