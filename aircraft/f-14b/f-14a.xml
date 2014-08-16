@@ -336,11 +336,11 @@
   </ground_reactions>
 
   <propulsion>
-        <engine file="F100-PW-229">
+        <engine file="F110-GE-400">
             <location unit="IN">
                     <x> 608 </x>
                     <y> -80 </y>
-                    <z> -20 </z>
+                    <z> -15 </z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -352,7 +352,7 @@
                 <location unit="IN">
                     <x> 608 </x>
                     <y> -80 </y>
-                    <z> -20 </z>
+                    <z> -15 </z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -361,11 +361,11 @@
                 </orient>
             </thruster>
         </engine>
-        <engine file="F100-PW-229">
+        <engine file="F110-GE-400">
             <location unit="IN">
                     <x> 608 </x>
                     <y> 80 </y>
-                    <z> -20 </z>
+                    <z> -15 </z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -377,7 +377,7 @@
                 <location unit="IN">
                     <x> 608 </x>
                     <y> 80 </y>
-                    <z> -20 </z>
+                    <z> -15 </z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -524,8 +524,8 @@
    <aerosurface_scale name="Elevator Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.526 </min>
-        <max>   0.526 </max>
+        <min>  -0.403 </min>
+        <max>   0.403 </max>
       </range>
       <output>fcs/elevator-pos-demand</output>
    </aerosurface_scale>
@@ -549,8 +549,8 @@
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/elevator-pos-norm</input>
       <range>
-        <min>  -0.526 </min>
-        <max>   0.526 </max>
+        <min>  -0.403 </min>
+        <max>   0.403 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -558,8 +558,8 @@
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min>  -0.526 </min>
-        <max>   0.526 </max>
+        <min>  -0.403 </min>
+        <max>   0.403 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -613,8 +613,8 @@
    <aerosurface_scale name="Left Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.52 </min>
-        <max>  0.52 </max>
+        <min> -0.353 </min>
+        <max>  0.353 </max>
       </range>
       <output>fcs/left-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -622,8 +622,8 @@
    <aerosurface_scale name="Right Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.52 </min>
-        <max>  0.52 </max>
+        <min> -0.353 </min>
+        <max>  0.353 </max>
       </range>
       <output>fcs/right-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -631,8 +631,8 @@
    <aerosurface_scale name="left aileron normalization">
       <input>fcs/left-aileron-pos-rad</input>
       <domain>
-        <min> -0.52 </min>
-        <max>  0.52 </max>
+        <min> -0.353 </min>
+        <max>  0.353 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -644,8 +644,8 @@
    <aerosurface_scale name="right aileron normalization">
       <input>fcs/right-aileron-pos-rad</input>
       <domain>
-        <min> -0.52 </min>
-        <max>  0.52 </max>
+        <min> -0.353 </min>
+        <max>  0.353 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -995,7 +995,47 @@
 			<property>inertia/cg-x-in</property>
 		</product>
 		</function>
-        <function name="aero/function/kCLge">
+
+   <function name="propulsion/engine[0]/EGT-R">
+     <description>Engine 0 EGT Rankine</description>
+     <!-- rudimentary figures based of N2 and using values from NAVAIR 01-F14AAD-1 -->
+     <sum>
+       <property>atmosphere/T-R</property>
+       <table>
+         <independentVar>propulsion/engine[0]/n2</independentVar>
+         <tableData>
+          0	0.0
+          20	0.0
+          30	541.7
+          49	541.7
+          62	631.7
+          78	1171.7
+          95	1405.7
+          104	1684.7
+         </tableData>
+       </table>
+     </sum>
+   </function>
+   <function name="propulsion/engine[1]/EGT-R">
+     <description>Engine 0 EGT Rankine</description>
+     <sum>
+       <property>atmosphere/T-R</property>
+       <table>
+         <independentVar>propulsion/engine[1]/n2</independentVar>
+         <tableData>
+          0	0.0
+          20	0.0
+          30	541.7
+          49	541.7
+          62	631.7
+          78	1171.7
+          95	1405.7
+          104	1684.7
+         </tableData>
+       </table>
+     </sum>
+   </function>
+   <function name="aero/function/kCLge">
             <description>Change_in_lift_due_to_ground_effect</description>
             <product>
                   <table>
@@ -2149,6 +2189,8 @@
     <property>fcs/speedbrake-pos-norm</property>
     <property>fcs/slat-pos-norm-deg</property>
     <property>fcs/slat-cmd-norm</property>
+    <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
+    <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
   </output>
 </fdm_config>
 <!--

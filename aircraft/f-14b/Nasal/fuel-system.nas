@@ -176,13 +176,14 @@ var build_new_proportioners = func {
 
 
 var fuel_update = func {
-	if ( getprop("/sim/freeze/fuel") or getprop("sim/replay/time") > 0 ) { return }
 
 	fuel_time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
 	fuel_dt = fuel_time - fuel_last_time;
 	fuel_last_time = fuel_time;
 	neg_g.update();
 	calc_levels();
+
+	if ( getprop("/sim/freeze/fuel") or getprop("sim/replay/time") > 0 ) { return }
 
 	LBS_HOUR2GALS_PERIOD = LBS_HOUR2GALS_SEC * fuel_dt;
 	max_flow85000 = 85000 * LBS_HOUR2GALS_PERIOD; 
@@ -314,13 +315,13 @@ var fuel_update = func {
 	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
 	LeftFuel.setDoubleValue(0);
 	RightFuel.setDoubleValue(0);
-#	if ( left_outOfFuel ) {
-#		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
-#	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
-#	if ( right_outOfFuel ) {
-#		RightEngine.getNode("out-of-fuel").setBoolValue(1)
-#	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
-#print("LE:", LeftEngine.getNode("out-of-fuel").getValue(), ", RE ", RightEngine.getNode("out-of-fuel").getValue(), );
+	if ( left_outOfFuel ) {
+		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
+	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
+	if ( right_outOfFuel ) {
+		RightEngine.getNode("out-of-fuel").setBoolValue(1)
+	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
+print("LE:", LeftEngine.getNode("out-of-fuel").getValue(), ", RE ", RightEngine.getNode("out-of-fuel").getValue(), );
 
 	# Transfer from left sump to left proportioner (left feed line).
 	if ( Left_Proportioner.get_ullage() > 0 ) {

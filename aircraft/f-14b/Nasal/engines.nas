@@ -1,7 +1,11 @@
 var egt_norm1 = props.globals.getNode("engines/engine[0]/egt-norm", 1);
 var egt_norm2 = props.globals.getNode("engines/engine[1]/egt-norm", 1);
-var egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
-var egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
+var egt1_rankin = props.globals.getNode("engines/engine[0]/egt-degR", 1);
+var egt2_rankin = props.globals.getNode("engines/engine[1]/egt-degR", 1);
+var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
+var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
+#var egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
+#var egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
 var Ramp1     = props.globals.getNode("engines/AICS/ramp1", 1);
 var Ramp2     = props.globals.getNode("engines/AICS/ramp2", 1);
 var Ramp3     = props.globals.getNode("engines/AICS/ramp3", 1);
@@ -55,8 +59,12 @@ var computeAICS = func {
 	var eng1_burner = Engine1Burner.getValue();
 	var eng2_burner = Engine1Burner.getValue();
 
-	egt_norm1.setValue(egt1.getValue()*0.000679348);
-	egt_norm2.setValue(egt2.getValue()*0.000679348);
+    # 492 is 0 deg F in Rankin. The rankin scale starts from absolute zero.
+	egt_norm1.setValue((egt1.getValue()-492)*0.000679348);
+	egt_norm2.setValue((egt2.getValue()-492)*0.000679348);
+
+    egt1_rankin.setValue(egt1.getValue());
+    egt2_rankin.setValue(egt2.getValue());
 
 
 	if (CurrentMach < 0.45) {
