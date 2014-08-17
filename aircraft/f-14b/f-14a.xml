@@ -524,8 +524,8 @@
    <aerosurface_scale name="Elevator Control">
       <input>fcs/pitch-trim-sum</input>
       <range>
-        <min>  -0.403 </min>
-        <max>   0.403 </max>
+        <min>  -0.526 </min>
+        <max>   0.256 </max>
       </range>
       <output>fcs/elevator-pos-demand</output>
    </aerosurface_scale>
@@ -549,8 +549,8 @@
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/elevator-pos-norm</input>
       <range>
-        <min>  -0.403 </min>
-        <max>   0.403 </max>
+        <min>  -0.526 </min>
+        <max>   0.256 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -558,7 +558,7 @@
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min>  -0.403 </min>
+        <min>  -0.526 </min>
         <max>   0.403 </max>
       </domain>
       <range>
