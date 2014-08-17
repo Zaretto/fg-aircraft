@@ -10,9 +10,7 @@
 # Constants
 var MaxFlightSpoilers = 0.7;
 var SpoilersMinima = 0;
-
-
-
+var SpoilersCmd     = props.globals.getNode("fdm/jsbsim/fcs/ground-spoilers-cmd", 1);
 
 var computeSpoilers = func {
 
@@ -47,14 +45,17 @@ var computeSpoilers = func {
 			InnerLeftSpoilersTarget = wingSweepBias; 
 			InnerRightSpoilersTarget = wingSweepBias;
 			setprop ("controls/flight/yasim-spoilers", wingSweepBias);
+			SpoilersCmd.setDoubleValue(1.0);
 			return;
 		}
 	}
 
 	# If we have come this far, the ground spoilers are not armed 
 	# and consquently should not be deployed. Let's make sure this is the case
-	GroundSpoilersDeployed = false;
-
+    if (GroundSpoilersDeployed){
+	    GroundSpoilersDeployed = false;
+    	SpoilersCmd.setDoubleValue(0);
+    }
 	# Compute the contribution of Direct Lift Control on spoiler extension
 	# If wings are swept back, or the aircraft is on the ground, Direct Lift
 	# Control is deactivated
@@ -113,6 +114,7 @@ var toggleDLC = func {
 var toggleGroundSpoilers = func {
 	if (getprop ("controls/flight/ground-spoilers-armed")) {
 		setprop ("controls/flight/ground-spoilers-armed", false);
+		SpoilersCmd.setDoubleValue(0.0);
 	} else {
 		setprop ("controls/flight/ground-spoilers-armed", true);
 	}
