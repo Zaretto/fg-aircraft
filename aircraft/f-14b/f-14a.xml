@@ -711,7 +711,7 @@
         <independentVar lookup="row">velocities/ve-kts</independentVar>
          <tableData>
             30     0.00
-            60     2.007
+            60     2.00
          </tableData>
       </table>
       <gain>fcs/yaw-damper-active</gain>
@@ -1060,18 +1060,8 @@
                   </table>
             </product>
         </function>
-<!--
-    <function name="aero/force/CMxzcg">
-    <description>Pitching moment due to CG alpha lift/drag </description>
-    <product>
-          <property>aero/qbar-psf</property>
-          <property>metrics/Sw-sqft</property>
-          <property>metrics/cbarw-ft</property>
-          <property>aero/coefficients/CLDxzcg</property>
-       </product>
-    </function>
--->
-    <function name="aero/coefficients/Cmach">
+
+   <function name="aero/coefficients/Cmach">
     <description>General coefficients mach factor</description>
     <product>
           <table>
@@ -1517,6 +1507,9 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                    -15	-0.15960
+                    -10	-0.12500
+                     -5	 0.00000
                       0 0.14900000
                       5 0.26860000
                      10 0.12500000
@@ -1529,7 +1522,7 @@
                      45 0.13920000
                      50 -0.69600000
                      55 -0.38180000
-            </tableData>
+                </tableData>
           </table>
        </product>
     </function>
@@ -1541,6 +1534,10 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                    -20	 0.82000
+                    -15	 0.80000
+                    -10	 0.60000
+                    -5	 0.56840
                       0 0.56840000
                       5 0.53560000
                      10 0.49960000
@@ -1623,6 +1620,14 @@
             <independentVar lookup="column">aero/beta-deg</independentVar>
             <tableData>
                                -20        -15        -10         -5          0          5         10         15         20 
+                -45     0.06100000 0.04600000 0.03050000 0.01500000 0.00000000 -0.01500000 -0.03050000 -0.04600000 -0.06100000 
+                -35     0.04750000 0.03600000 0.02450000 0.01250000 0.00000000 -0.01250000 -0.02450000 -0.03600000 -0.04750000 
+                -30     0.04900000 0.03766667 0.02533333 0.01366667 0.00000000 -0.01366667 -0.02533333 -0.03766667 -0.04900000 
+                -20     0.05500000 0.04100000 0.02700000 0.01600000 0.00000000 -0.01600000 -0.02700000 -0.04100000 -0.05500000 
+                -15     0.04700000 0.03650000 0.02650000 0.01350000 0.00000000 -0.01350000 -0.02650000 -0.03650000 -0.04700000 
+                -10     0.03100000 0.02600000 0.02100000 0.01050000 0.00000000 -0.01050000 -0.02100000 -0.02600000 -0.03100000 
+                -5      0.02500000 0.01700000 0.01350000 0.00650000 0.00000000 -0.00650000 -0.01350000 -0.01700000 -0.02050000 
+
                  0      0.00950000 0.00800000 0.00600000 0.00300000 0.00000000 -0.00300000 -0.00600000 -0.00800000 -0.00950000 
                  5      0.02500000 0.01700000 0.01350000 0.00650000 0.00000000 -0.00650000 -0.01350000 -0.01700000 -0.02050000 
                  10     0.03100000 0.02600000 0.02100000 0.01050000 0.00000000 -0.01050000 -0.02100000 -0.02600000 -0.03100000 
@@ -1639,14 +1644,16 @@
           </table>
        </product>
     </function>
-    <function name="aero/coefficients/CRP">
-    <description>CRP</description>
+    <function name="aero/coefficients/CLP">
+    <description>CLP</description>
     <product>
           <property>aero/bi2vel</property>
           <property>velocities/p-aero-rad_sec</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                    -10	-0.4100
+                    -5	-0.4057
                       0 -0.40160000
                       5 -0.40570000
                      10 -0.20000000
@@ -1671,6 +1678,7 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                     -5	-0.0522
                       0 0.00800000
                       5 0.05220000
                      10 0.08380000
@@ -1740,7 +1748,7 @@
     <function name="aero/coefficients/CL">
     <sum>
           <property>aero/coefficients/CLBAS</property>
-          <property>aero/coefficients/CRP</property>
+          <property>aero/coefficients/CLP</property>
           <property>aero/coefficients/CLR</property>
           <property>aero/coefficients/CLDA</property>
           <property>aero/coefficients/CLDR</property>
@@ -1821,6 +1829,9 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                    -15	-25.000
+                    -10	-22.000
+                    -5	-17.000
                       0 -15.42400000
                       5 -14.12900000
                      10 -17.96700000
@@ -1975,7 +1986,7 @@
           <property>aero/coefficients/CMUC</property>
           <property>aero/coefficients/CMDFM</property>
           <property>aero/coefficients/CMBRK</property>
-          <!--<property>aero/coefficients/CMDSLM</property> included in DFM -->
+          <!--<property>aero/coefficients/CMDSLM</property> Slats are included in flaps (DFM) -->
           <!--<property>aero/coefficients/DCMDS2</property>-->
        </sum>
     </function>
@@ -1987,6 +1998,7 @@
             <independentVar lookup="column">aero/beta-deg</independentVar>
             <tableData>
                                -20        -15        -10         -5          0          5         10         15         20 
+                 -5     -0.03900000 -0.03000000 -0.02150000 -0.01000000 0.00000000 0.01000000 0.02150000 0.03000000 0.03900000 
                  0      -0.04000000 -0.03050000 -0.02150000 -0.01000000 0.00000000 0.01000000 0.02150000 0.03050000 0.04000000 
                  5      -0.03900000 -0.03000000 -0.02150000 -0.01000000 0.00000000 0.01000000 0.02150000 0.03000000 0.03900000 
                  10     -0.03600000 -0.02570000 -0.01900000 -0.00950000 0.00000000 0.00950000 0.01900000 0.02750000 0.03600000 
@@ -2035,6 +2047,7 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                     -5 -0.09470000
                       0 -0.03330000
                       5 -0.09470000
                      10 -0.10680000
@@ -2059,6 +2072,7 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
+                     -5 -0.11540000
                       0 -0.11540000
                       5 -0.12560000
                      10 -0.13800000
@@ -2234,11 +2248,3 @@
     <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
   </output>
 </fdm_config>
-<!--
-    <function name="aero/force/CMxzcg">
-    <description>Pitching moment due to CG alpha lift/drag </description>
-    <product>
-          <property>aero/force/CLxzcg</property>
-       </product>
-    </function>
--->
