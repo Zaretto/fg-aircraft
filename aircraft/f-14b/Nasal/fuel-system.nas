@@ -668,6 +668,7 @@ var internal_save_fuel = func() {
 	print("Saving F-14B fuel levels");
 	level_list = [];
 	foreach (var t; Tank.list) {
+    print(" -- ",t.name," = ",t.level_lbs.getValue());
 		append(level_list, t.get_level());
 	}
 }
