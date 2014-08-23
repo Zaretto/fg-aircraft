@@ -8,10 +8,16 @@
   <author>Richard Harrison</author>
   <filecreationdate>2014-08-02</filecreationdate>
   <version>1.0</version>
-  <description>Models an F14A with GE engines. The aerodata use from ref[1] volumes 1 and 2 is only for sweep of 22degrees, positive alpha, clean, low speed so 
-  various data have been extrapolated estimated based on best available data where I cannot find specific details for F14 other aero models that I can find (usually NASA CR-1756) 
-  are guidance or starting point for each value. The lack of positive alpha data in ref[2] caused considerable model instability during normal flight - whereas it was fine for the
-  purposes of high alpha testing. The estimation of negative alpha values follows CR-1756 trends with values based on F14 data for positive values.
+  <description>Models an F14A with GE engines. The aerodata use from
+  ref[1] volumes 1 and 2 is only for sweep of 22degrees, positive
+  alpha, clean, low speed so various data have been extrapolated
+  estimated based on best available data where I cannot find specific
+  details for F14 other aero models that I can find (usually NASA
+  CR-1756) are guidance or starting point for each value. The lack of
+  positive alpha data in ref[2] caused considerable model instability
+  during normal flight - whereas it was fine for the purposes of high
+  alpha testing. The estimation of negative alpha values follows
+  CR-1756 trends with values based on F14 data for positive values.
   </description>
     <note>Aircraft origin for measurements is the nose.</note>
     <limitation>Spoilers not modelled in ADA101648 - approximations will be used</limitation>
@@ -706,12 +712,10 @@
        <output>aero/cn-sin-82beta</output>
      </fcs_function>
 
-<!-- yaw damper only active when in range theta +/30 deg -->
+<!-- yaw damper only active when in range alpha +/10 deg -->
    <switch name="fcs/yaw-damper-active">
        <default value="0.0"/>
        <test logic="AND" value="1">
-<!--            attitude/theta-rad ge -1.0
-            attitude/theta-rad le  1.0 -->
             aero/alpha-rad ge -0.175438596491228
             aero/alpha-rad le  0.175438596491228
             fcs/yaw-damper-enable ne 0.0
@@ -2369,5 +2373,6 @@
     <property>fcs/slat-cmd-norm</property>
     <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
     <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
+    <property>velocities/mach</property>
   </output>
 </fdm_config>
