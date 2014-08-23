@@ -6,9 +6,15 @@ using System.Web;
 
 namespace F14AeroPlot
 {
+    public struct AeroElement
+    {
+        public Double[] data;
+        public string description;
+    }
     public class AeroReader
     {
-        public Dictionary<string, Double[]> aero { get; set; }
+        public static string DefPath = @"C:\Users\Richard\dev\flightgear\aircraft\f-14b\F14AeroPlot\F14AeroPlot\";
+        public Dictionary<string, AeroElement> aero { get; set; }
         private Dictionary<string, bool> used { get; set; }
         
         public Dictionary<string, string> aero_extra_ivars {get;set;}
@@ -23,7 +29,7 @@ namespace F14AeroPlot
         }
         public bool Is2d(string key)
         {
-            return aero[key].Length > 20;
+            return aero[key].data.Length > 20;
         }
         public List<string> GetExtraIndependantVariables(string key)
         {
@@ -35,11 +41,15 @@ namespace F14AeroPlot
             else
                 return v.Split(',').ToList();
         }
+        public string Description(string key)
+        {
+            return aero[key].description;
+        }
 
         internal bool HasData(string key)
         {
             var dat = aero[key];
-            foreach (var v in dat)
+            foreach (var v in dat.data)
             {
                 if (v != 0)
                     return true;
@@ -51,12 +61,12 @@ namespace F14AeroPlot
             var tab = aero[key]; int ix = 0;
             //
             // handle special case of extra computed vars.
-            if (tab.Count() == 1)
+            if (tab.data.Count() == 1)
                 return null;
 
             var rd = new Dictionary<int, double>();
             for (var alpha = 0; alpha <= 55; alpha += 5)
-                rd[alpha] = tab[ix++];
+                rd[alpha] = tab.data[ix++];
             return rd;
         }
 
@@ -82,7 +92,7 @@ namespace F14AeroPlot
                 for (var alphaIdx = 0; alphaIdx < alphaSize; alphaIdx++)
                 {
                     var alpha = alphaIdx*5;
-                    cldata[beta][alpha] = tab[betaIdx + (alphaIdx * betaSize)];
+                    cldata[beta][alpha] = tab.data[betaIdx + (alphaIdx * betaSize)];
                 }
             }
             return cldata;
@@ -99,7 +109,7 @@ namespace F14AeroPlot
 
                 for (var beta = -20; beta <= 20; beta += 5)
                 {
-                    cldata[alpha][beta] = tab[ix++];
+                    cldata[alpha][beta] = tab.data[ix++];
                 }
             }
             return cldata;
@@ -111,11 +121,13 @@ namespace F14AeroPlot
 
         public AeroReader()
         {
-            aero = new Dictionary<string, Double[]>();
+            aero = new Dictionary<string, AeroElement>();
             used = new Dictionary<string, bool>();
             bool? is_used = null;
-
+            
             var inputFilePath = @"E:\users\richard\dropbox\f14aero.txt";
+            //inputFilePath = @"F14AeroPlotf14aero.txt";
+            inputFilePath = DefPath + "f14aero.txt";
             //var s = File.OpenText(, );
             using (var s = new StreamReader(inputFilePath, System.Text.Encoding.Unicode, true))
             {
@@ -123,6 +135,7 @@ namespace F14AeroPlot
                 var data = new List<Double>();
                 var ivars= new List<string>();
                 aero_extra_ivars = new Dictionary<string,string>();
+                var description = "";
 
                 var in_data = false;
                 int lineNumber = 0;
@@ -141,6 +154,10 @@ namespace F14AeroPlot
                     {
                         ivars.Add(line.Replace("*+",""));
                     }
+                    else if (line.StartsWith("*--- "))
+                    {
+                        description += line.Replace("*--- ","");
+                    }
                     else if (line.StartsWith("*"))
                     {
                         var element = lc;
@@ -156,7 +173,12 @@ namespace F14AeroPlot
                             //}
                             //System.Console.WriteLine("");
                             element = get_ivname(element);
-                            aero[element] = data.ToArray();
+                            aero[element] = new AeroElement
+                            {
+                                data = data.ToArray(),
+                                description = description
+                            };
+                            description = "";      
                             aero_extra_ivars[element] = String.Join(",",ivars);
                             if (is_used.HasValue)
                                 used[element] = is_used.Value;

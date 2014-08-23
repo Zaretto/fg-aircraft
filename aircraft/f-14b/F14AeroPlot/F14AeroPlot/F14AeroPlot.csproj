@@ -86,7 +86,9 @@
     <Content Include="Global.asax" />
     <Content Include="JSBsim.aspx" />
     <Content Include="packages.config" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="Web.Debug.config">
@@ -98,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AeroReader.cs" />
+    <Compile Include="ChartPalette.cs" />
     <Compile Include="Plots.aspx.cs">
       <DependentUpon>Plots.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
