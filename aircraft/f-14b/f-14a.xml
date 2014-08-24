@@ -638,7 +638,7 @@
    <aerosurface_scale name="Left Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.353 </min>
+        <min> -0.524 </min>
         <max>  0.524 </max>
       </range>
       <output>fcs/left-aileron-pos-rad</output>
@@ -1093,23 +1093,23 @@
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">velocities/mach</independentVar>
             <tableData>
-	                    0.2	1.4
-                    -20	1	0.268817204
-                    -15	1	0.26744186
-                    -10	1	0.275862069
-                    -5	1	0.269230769
-                    0	1	0.333333333
-                    4	1	0.266666667
-                    8	1	0.275862069
-                    12	1	0.269230769
-                    16	1	0.272727273
-                    20	1	0.267326733
-                    24	1	0.268518519
-                    28	1	0.267241379
-                    32	1	0.268907563
-                    40	1	0.264957265
-                    45	1	0.266055046
-                    50	1	0.266666667
+              0.2   	1.4         2.0
+              -20	1	0.268817204  	0.268817204
+              -15	1	0.26744186   	0.26744186
+              -10	1	0.275862069  	0.275862069
+              -5	1	0.269230769  	0.269230769
+              0	1	0.333333333  	0.333333333
+              4	1	0.266666667  	0.266666667
+              8	1	0.275862069  	0.275862069
+              12	1	0.269230769  	0.269230769
+              16	1	0.272727273  	0.272727273
+              20	1	0.267326733  	0.267326733
+              24	1	0.268518519  	0.268518519
+              28	1	0.267241379  	0.267241379
+              32	1	0.268907563  	0.268907563
+              40	1	0.264957265  	0.264957265
+              45	1	0.266055046  	0.266055046
+              50	1	0.266666667  	0.266666667
             </tableData>
           </table>
        </product>
@@ -2345,7 +2345,8 @@
           <property>metrics/bw-ft</property>
           <property>aero/coefficients/CN</property>
           <property>aero/coefficients/Cmach</property>
-       </product>
+          <property>aero/coefficients/ClSweepFactor</property>
+    </product>
     </function>
   </axis>
 
