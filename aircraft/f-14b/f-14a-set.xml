@@ -105,6 +105,10 @@
 				<name>E</name>
 				<desc>Decrease Radar Range</desc>
 			</key>
+   <key>
+    <name>o</name>
+    <desc>toggle arrester hook</desc>
+   </key>
 			<key>
 				<name>R</name>
 				<desc>Increase Radar Range</desc>
@@ -907,6 +911,16 @@
 
 	</sim>
 
+ <fdm>
+  <jsbsim>
+   <systems>
+    <hook>
+     <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
+    </hook>
+   </systems>
+  </jsbsim>
+ </fdm>
+
 	<systems>
 		<electrical>
 			<path>Aircraft/f-14b/Systems/f-14b-electrical.xml</path>
@@ -1214,6 +1228,14 @@
 				</binding>
 			</key>
 
+    <key n="111">
+     <name>o</name>
+     <desc>Toggle arrester hook</desc>
+     <binding>
+      <command>property-toggle</command>
+      <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+     </binding>
+    </key>
 			<key n="113">
 				<name>q</name>
 				<desc>Toggle radar standby mode</desc>

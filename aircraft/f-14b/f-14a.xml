@@ -518,8 +518,11 @@
       </tank>
     </propulsion>
 
-    <flight_control name="FCS: unnamed">
+  <system file="hook"/>
 
+  <flight_control name="FCS: unnamed">
+
+  <property>fcs/hook-engage</property>
   <channel name="Pitch">
 
    <summer name="Pitch Trim Sum">
@@ -895,7 +898,26 @@
    </kinematic>
 </channel>
 
-   <channel name="extra-aero">
+    <channel name="Hook">
+
+      <kinematic name="fcs/hook-control">
+        <input>fcs/hook-engage</input>
+        <traverse>
+          <setting>
+            <position>0</position>
+            <time>0</time>
+          </setting>
+          <setting>
+            <position>1</position>
+            <time>2.5</time>
+          </setting>
+        </traverse>
+        <output>fcs/hook-pos-norm</output>
+      </kinematic>
+
+    </channel>
+
+    <channel name="extra-aero">
      <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
      <summer name="cg-x-offset-chord-in">
        <input> inertia/cg-x-in</input>
@@ -2352,8 +2374,20 @@
 
 </aerodynamics>
 
- <external_reactions>
- </external_reactions>
+  <external_reactions>
+    <force name="hook" frame="BODY">
+      <location unit="IN">
+        <x>  677.669 </x>
+        <y>    0.000 </y>
+        <z> -142.000 </z>
+      </location>
+      <direction>
+        <x>  -0.9995 </x>
+        <y>   0.0    </y>
+        <z>   0.01 </z>
+      </direction>
+    </force>
+  </external_reactions>
 
   <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
     <simulation> ON </simulation>
@@ -2375,5 +2409,10 @@
     <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
     <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
     <property>velocities/mach</property>
+    <property>systems/hook/tailhook-cmd-norm</property>
+    <property>systems/hook/hook-decel-force</property>
+    <property>forces/fbx-prop-lbs</property>
+    <property>gear/tailhook-pos-norm</property>
+
   </output>
 </fdm_config>
