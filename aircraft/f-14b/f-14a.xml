@@ -78,11 +78,6 @@
    <vtailarea unit="FT2">  118.00 </vtailarea> <!-- 59ft2 each -->
    <vtailarm  unit="FT" >   25.10 </vtailarm>
 
-   <location name="AERORP" unit="IN">
-     <x> 451.80 </x>
-     <y>   0.00 </y>
-     <z>   0.00 </z>
-   </location>
    <location name="EYEPOINT" unit="IN">
      <x> 150.60 </x>
      <y>   0.00 </y>
@@ -93,6 +88,11 @@
      <y>0</y>
      <z>0</z>
    </location>
+   <location name="AERORP" unit="IN">
+      <x> 441.80 </x>
+      <y>   0.00 </y>
+      <z>   0.00 </z>
+   </location>
  </metrics>
 
   <mass_balance>
@@ -102,27 +102,11 @@
     <!-- using GE F110 engines but aero is for F14A -->
     <emptywt unit="LBS" >     40104 </emptywt>
     <location name="CG" unit="IN">
-      <x> 451.80 </x>
+      <x> 441.80</x>
       <y>   0.00 </y>
+      <z>   0.00 </z>
       <z0> -18.83 </z0>
-      <z> 0.00 </z>
     </location>
-    <pointmass name="Avionics">
-      <weight unit="LBS"> 230 </weight>
-      <location name="POINTMASS" unit="IN">
-        <x> 57 </x>
-        <y> 0 </y>
-        <z> 0 </z>
-      </location>
-    </pointmass>
-    <pointmass name="Avionics Rear">
-      <weight unit="LBS"> 230 </weight>
-      <location name="POINTMASS" unit="IN">
-        <x> 757 </x>
-        <y> 0 </y>
-        <z> 0 </z>
-      </location>
-    </pointmass>
   </mass_balance>
 
   <!-- 0 -->
@@ -131,13 +115,14 @@
       <location unit="IN">
         <x> 57 </x>
         <y> 0 </y>
-         <z> -121.8 </z>
+        <z1> -121.8 </z1> <!--Real position, changed to be level to investigate wierd gear moments.-->
+        <z> -124 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
       <rolling_friction> 0.02 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 15000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 10000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 37250 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 17250 </damping_coeff>
       <max_steer unit="DEG"> 80 </max_steer>
       <brake_group> NOSE </brake_group>
       <retractable>1</retractable>
@@ -152,8 +137,8 @@
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
       <rolling_friction> 0.02 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 37500 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 7500 </damping_coeff>
       <max_steer unit="DEG"> 0.0 </max_steer>
       <brake_group> LEFT </brake_group>
       <retractable>1</retractable>
@@ -168,8 +153,8 @@
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
       <rolling_friction> 0.02 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 32704 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 8000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 37500 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 7500 </damping_coeff>
       <max_steer unit="DEG"> 0.0 </max_steer>
       <brake_group> RIGHT </brake_group>
       <retractable>1</retractable>
@@ -189,7 +174,7 @@
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
     </contact>
 
-    <!-- 4 -->
+     4 
     <contact type="STRUCTURE" name="RIGHT_WING_TIP">
       <location unit="IN">
         <x> 540 </x>
@@ -203,7 +188,33 @@
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
     </contact>
 
-    <contact type="STRUCTURE" name="REAR_BODY_LEFT">
+
+    <contact type="STRUCTURE" name="FRONT_BODY_LEFT">
+      <location unit="IN">
+        <x> 188 </x>
+        <y> -78 </y>
+        <z> -50 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+    <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
+      <location unit="IN">
+        <x> 188 </x>
+        <y> 78 </y>
+        <z> -50 </z>
+      </location>
+      <static_friction> 1.2 </static_friction>
+      <dynamic_friction> 1.2 </dynamic_friction>
+      <rolling_friction> 1.2 </rolling_friction>
+      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+    </contact>
+
+  <contact type="STRUCTURE" name="REAR_BODY_LEFT">
       <location unit="IN">
         <x> 470 </x>
         <y>  58 </y>
@@ -243,45 +254,7 @@
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
     </contact>
 
-
-<!--
-    <contact type="STRUCTURE" name="REAR_BODY_LEFT">
-      <location unit="IN">
-        <x> 470 </x>
-        <y>  58 </y>
-        <z> -60 </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.2 </dynamic_friction>
-      <rolling_friction> 1.2 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-    </contact>
-    <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
-      <location unit="IN">
-        <x> 470 </x>
-        <y> -58 </y>
-        <z> -60 </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.2 </dynamic_friction>
-      <rolling_friction> 1.2 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-    </contact>
-    <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
-      <location unit="IN">
-        <x> 622 </x>
-        <y> -98 </y>
-        <z>  0 </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.2 </dynamic_friction>
-      <rolling_friction> 1.2 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-    </contact>
-    <contact type="STRUCTURE" name="RADOME_FRONT">
+    <!--<contact type="STRUCTURE" name="RADOME_FRONT">
       <location unit="IN">
         <x>  258 </x>
         <y>  0 </y>
@@ -316,33 +289,7 @@
       <rolling_friction> 1.2 </rolling_friction>
       <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-    </contact>
--->
-
-    <contact type="STRUCTURE" name="FRONT_BODY_LEFT">
-      <location unit="IN">
-        <x> 188 </x>
-        <y> -78 </y>
-        <z> -50 </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.2 </dynamic_friction>
-      <rolling_friction> 1.2 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-    </contact>
-    <contact type="STRUCTURE" name="FRONT_BODY_RIGHT">
-      <location unit="IN">
-        <x> 188 </x>
-        <y> 78 </y>
-        <z> -50 </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.2 </dynamic_friction>
-      <rolling_friction> 1.2 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-    </contact>
+    </contact>-->
   </ground_reactions>
 
   <propulsion>
@@ -459,9 +406,9 @@
       <!-- Left wing    -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>528.9133858</x>
-          <y>-138.5826772</y>
-          <z>-45.07874016</z>
+          <x> 508.9133858</x>
+          <y> -38.5826772</y>
+          <z> -45.07874016</z>
         </location>
         <capacity unit="KG">909</capacity>
         <contents unit="KG">909</contents>
@@ -469,9 +416,9 @@
       <!-- Right Wing -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>528.9133858</x>
-          <y>138.5826772</y>
-          <z>-45.07874016</z>
+          <x> 508.9133858</x>
+          <y> 38.5826772</y>
+          <z> -45.07874016</z>
         </location>
         <capacity unit="KG">909</capacity>
         <contents unit="KG">909</contents>
@@ -523,6 +470,8 @@
   <flight_control name="FCS: unnamed">
 
   <property>fcs/hook-engage</property>
+  <property>systems/hook/tailhook-cmd-norm</property>
+
   <channel name="Pitch">
 
    <summer name="Pitch Trim Sum">
@@ -923,10 +872,9 @@
        <input> inertia/cg-x-in</input>
 <!-- 
               _   _
-   MAC is 16% c . c is 451.8 giving us 18.81in as offset to %MAC
-.: %MAC -451.8 + 18.8 = -414.18 (-469.98)
+   MAC is 16% c . c is 9.8ft giving us 18.81in as offset to %MAC
 -->
-       <bias> -469.98</bias>
+       <bias> -473 </bias>
        <output>inertia/cg-x-offset-chord-in</output>
      </summer>
      <pure_gain name="cg-x-chord-percent">
@@ -2397,7 +2345,6 @@
     <rates> ON </rates>
     <velocities> ON </velocities>
     <forces> ON </forces>
-    <moments> ON </moments>
     <position> ON </position>
     <coefficients> ON </coefficients>
     <ground_reactions> ON </ground_reactions>
