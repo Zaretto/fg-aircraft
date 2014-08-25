@@ -113,10 +113,10 @@
   <ground_reactions>
     <contact type="BOGEY" name="NOSE_LG">
       <location unit="IN">
-        <x> 57 </x>
+        <x> 208 </x>
         <y> 0 </y>
         <z1> -121.8 </z1> <!--Real position, changed to be level to investigate wierd gear moments.-->
-        <z> -124 </z>
+        <z> -121.4 </z>
       </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
@@ -130,7 +130,7 @@
     <!-- 1 -->
     <contact type="BOGEY" name="LEFT_MLG">
       <location unit="IN">
-        <x> 470 </x>
+        <x> 516 </x>
         <y> -98 </y>
         <z> -124  </z>
       </location>
@@ -146,7 +146,7 @@
     <!-- 2 -->
     <contact type="BOGEY" name="RIGHT_MLG">
       <location unit="IN">
-        <x> 470 </x>
+        <x> 516 </x>
         <y> 98 </y>
         <z> -124 </z>
       </location>
@@ -948,27 +948,11 @@
        <output>aero/coefficients/CMxzcg</output>
      </fcs_function>
 
-  <fcs_function name="CNxzcg">
-       <function>
-         <product>
-           <property>inertia/cg-x-mac-percent </property>
-           <sum>
-             <product>
-               <!-- chord / span 9.80/64.1 =-  -->
-               <value>0.15288611544461778471138845553822</value>
-               <property>aero/coefficients/Cy</property>
-             </product>
-           </sum>
-         </product>
-       </function>
-       <output>aero/coefficients/CNxzcg</output>
-     </fcs_function>
-
      <fcs_function name="CNycg">
        <function>
          <product>
            <property>inertia/cg-x-mac-percent </property>
-           <value>0.1533854165625</value> <!-- cbar / b -->
+           <value>0.1533854165625</value> <!-- cbar / b (chord / span 9.80/64.1)-->
            <property>aero/coefficients/Cy</property>
          </product>
        </function>
@@ -1666,7 +1650,6 @@
     <function name="aero/coefficients/Cy">
     <sum>
           <property>aero/coefficients/CyBAS</property>
-          <property>aero/coefficients/CNycg</property>
           <property>aero/coefficients/CyP</property>
           <property>aero/coefficients/CyR</property>
           <property>aero/coefficients/CyDA</property>
@@ -2238,7 +2221,7 @@
     <sum>
           <property>aero/coefficients/CNBAS</property>
           <property>aero/coefficients/DCNDS</property>
-          <property>aero/coefficients/CNxzcg</property>
+          <property>aero/coefficients/CNycg</property>
           <property>aero/coefficients/CNP</property>
           <property>aero/coefficients/CNR</property>
           <property>aero/coefficients/CNDA</property>
