@@ -18,16 +18,22 @@
        <traverse>
         <setting>
           <position> 0 </position>
-          <time>     0 </time>
+          <time>     3 </time>
         </setting>
         <setting>
           <position> 1 </position>
-          <time>     1.5 </time>
+          <time>     1 </time>
         </setting>
        </traverse>
        <output>systems/hook/tailhook-pos-norm</output>
      </kinematic>
 
+     <switch name="systems/hook/tailhook-cmd-disagreement">
+          <default value="0"/>
+          <test  logic="AND" value="1">
+                systems/hook/tailhook-cmd-norm ne systems/hook/tailhook-pos-norm
+          </test>
+    </switch>
      <switch name="systems/hook/ready">
           <default value="0"/>
           <test  logic="AND" value="1">

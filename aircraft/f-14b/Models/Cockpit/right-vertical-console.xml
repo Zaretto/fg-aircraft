@@ -9,6 +9,9 @@
 	<animation>
 		<object-name>hook-handle</object-name>
 		<type>rotate</type>
+            <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+<!-- yasim 		<property>controls/gear/tailhook</property>
+-->
 		<property>controls/gear/tailhook</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>30</dep></entry>
@@ -31,14 +34,11 @@
 		<type>select</type>
 		<object-name>hook-lamp-on</object-name>
 		<condition>
-			<less-than>
-				<property>gear/tailhook/position-norm</property>
-				<value>0.9700</value>
-			</less-than>
-			<greater-than>
-				<property>gear/tailhook/position-norm</property>
-				<value>0.0300</value>
-			</greater-than>
+<!-- whenever arresting hook position does not correspond with handle position -->
+<equals>
+				<property>fdm/jsbsim/systems/hook/tailhook-cmd-disagreement</property>
+				<value>1</value>
+</equals>
 		</condition>
 	</animation>
 
