@@ -65,6 +65,20 @@
     CD-0:          0.024
     K:             0.12
 
+Cockpit control	Stabilizer Surface	Parallel Trim
+Actuation	Mode	Motion	Authority	Rate	Authority	Rate
+Control Stick	Manual	4 Inches forward
+5.5 inches AFT	12deg TED
+33deg TEU	36deg/second	9deg TEU
+18deg TEU	1 deg/second
+AFCS	Series (SAS)	NONE	+/- 3deg	20deg/second	-	-
+	Parallel 
+(ACL Only)	4 Inches forward
+5.5 inches AFT	12deg TED
+33deg TEU	36deg/second	9deg TEU
+18deg TEU	0.1 deg/second
+Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TED maximum	36deg/second	-	-
+		+45deg maneuver flap mode	+/- 3deg	3deg/sec	-	-
 -->
 
  <metrics>
@@ -2236,6 +2250,7 @@
           <property>metrics/Sw-sqft</property>
           <property>aero/coefficients/Cl</property>
           <property>aero/coefficients/Cmach</property>
+          <property>aero/function/kCLge</property>
           <property>aero/coefficients/ClSweepFactor</property>
        </product>
     </function>
