@@ -72,6 +72,7 @@ var position_flash_init  = func {
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
 var cnpy = aircraft.door.new("canopy", 4);
 var cswitch = props.globals.getNode("sim/model/f-14b/controls/canopy/canopy-switch", 1);
+var ca_canopy_light = props.globals.getNode("sim/model/f-14b/lights/ca-lad-canopy", 1);
 var pos = props.globals.getNode("canopy/position-norm");
 
 var canopyswitch = func(v) {
@@ -85,9 +86,13 @@ var canopyswitch = func(v) {
 	}
 	if (v < 0) {
 		cswitch.setValue(1);
+        ca_canopy_light.setBoolValue(false);
 		cnpy.close();
 	} elsif (v > 0) {
 		cswitch.setValue(-1);
+        # now set the warning light and master caution; really need to do this inside a system based on the canopy locked or not.
+        ca_canopy_light.setBoolValue(true);
+        setprop("sim/model/f-14b/instrumentation/warnings/master-caution", 1);
 		cnpy.open();
 	}
 }
