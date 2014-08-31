@@ -514,7 +514,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <input>fcs/pitch-trim-sum</input>
 <!-- maybe this should take into account the trim limits from the AAP -->
       <range>
-        <min> -0.575958653 </min>
+        <min> -0.57895 </min>
         <max>  0.2105 </max>
       </range>
       <output>fcs/elevator-pos-demand</output>
@@ -564,8 +564,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/elevator-pos-norm</input>
       <range>
-        <min>  -0.575958653 </min>
-        <max>   0.20943951 </max>
+        <min>  -0.57895 </min>
+        <max>   0.21053 </max>
       </range>
       <output>fcs/stabilizer-pos-deg</output>
    </aerosurface_scale>
@@ -573,8 +573,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
-        <min>  -0.575958653 </min>
-        <max>   0.20943951 </max>
+        <min>  -0.57895 </min>
+        <max>   0.21053 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -628,8 +628,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="Left Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.19298 </min>
-        <max>  0.19298 </max>
+        <min> -0.22807 </min>
+        <max>  0.22807 </max>
       </range>
       <output>fcs/left-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -637,8 +637,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="Right Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.19298 </min>
-        <max>  0.19298 </max>
+        <min> -0.22807 </min>
+        <max>  0.22807 </max>
       </range>
       <output>fcs/right-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -646,8 +646,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="left aileron normalization">
       <input>fcs/left-aileron-pos-rad</input>
       <domain>
-        <min> -0.19298 </min>
-        <max>  0.19298 </max>
+        <min> -0.22807 </min>
+        <max>  0.22807 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -659,8 +659,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="right aileron normalization">
       <input>fcs/right-aileron-pos-rad</input>
       <domain>
-        <min> -0.19298 </min>
-        <max>  0.19298 </max>
+        <min> -0.22807 </min>
+        <max>  0.22807 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -1646,7 +1646,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CyDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
-          <value>2</value> <!-- net effect of both -->
+          <value>2.3</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1790,7 +1790,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CLDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
-          <value>2</value> <!-- net effect of both -->
+          <value>2.3</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2224,7 +2224,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CNDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
-          <value>2</value> <!-- net effect of both -->
+          <value>2.3</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
