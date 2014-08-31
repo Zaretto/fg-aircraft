@@ -198,7 +198,6 @@ var update_wpstring = func {
 # -------------------
 
 var emerg_jettison = func {
-	setprop("sim/model/f-14b/instrumentation/warnings/master-caution", 1);
 	if (S2.get_type() == "external tank") {
 		S2.set_type("-");
 		S2.set_weight_lb(0);

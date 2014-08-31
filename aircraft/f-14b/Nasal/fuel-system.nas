@@ -42,6 +42,8 @@ var r_ext_select_state = nil;
 
 var total_gals = 0;
 var total_lbs  = 0;
+var total_fuel_l = 0;
+var total_fuel_r = 0;
 var qty_sel_switch = nil;
 var g_fuel_total   = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total", 1);
 var g_fuel_WL      = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/left-wing-display", 1);
@@ -73,14 +75,16 @@ var left_shut_off = 0; # TODO: Engine fuel shutoff emergency handles
 var right_shut_off = 0;
 
 
-#var LeftEngine		= props.globals.getNode("engines").getChild("engine", 0);
-#var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
-var LeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
-var RightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
+var LeftEngine		= props.globals.getNode("engines").getChild("engine", 0);
+var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
+var JSBLeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
+var JSBRightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
 #var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
 #var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
-var LeftFuel		= LeftEngine.getNode("fuel-used-lbs", 1);
-var RightFuel		= RightEngine.getNode("fuel-used-lbs", 1);
+var LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
+var RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
+var LeftEngineRunning		= LeftEngine.getNode("running", 1);
+var RightEngineRunning		= RightEngine.getNode("running", 1);
 var left_fuel_consumed  = 0;
 var right_fuel_consumed = 0;
 LeftEngine.getNode("out-of-fuel", 1);
@@ -307,8 +311,50 @@ var fuel_update = func {
 		}
 	}
 
+	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
+	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
 
+return;
 	# Transfer from the proportioners to the engines, reset the consumed fuel, Set engines.
+#if (LeftEngineRunning.getBoolValue()){
+#	left_fuel_consumed = LeftFuel.getValue();
+#	if ( left_outOfFuel ) {
+#		LeftEngine.getNode("out-of-fuel").setBoolValue(1);
+#	}
+#    else {
+#     LeftEngine.getNode("out-of-fuel").setBoolValue(0) ;
+#    }
+#}
+#else
+#{
+#	left_fuel_consumed = 0;
+#if(!LeftEngine.getNode("out-of-fuel").getBoolValue()){
+#print("Start");
+#    setprop("engines/engine[0]/out-of-fuel",0);
+#    setprop("engines/engine[1]/out-of-fuel",0);
+#    setprop("engines/engine[0]/run",1);
+#    setprop("engines/engine[1]/run",1);
+#}
+#}
+
+#if (RightEngineRunning.getBoolValue()){
+#	right_fuel_consumed = RightFuel.getValue();
+#	if ( right_outOfFuel ) {
+#		RightEngine.getNode("out-of-fuel").setBoolValue(1)
+#	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
+#}
+#else
+#{
+#	right_fuel_consumed = 0;
+#}
+#	LeftFuel.setDoubleValue(0);
+#	RightFuel.setDoubleValue(0);
+
+
+if(JSBLeftEngine.getNode("starter") != nil){
+print("LE-start:", JSBLeftEngine.getNode("starter").getValue(), ", RE-start ", JSBRightEngine.getNode("starter").getValue(), );
+}
+# Transfer from the proportioners to the engines, reset the consumed fuel, Set engines.
 	left_fuel_consumed = LeftFuel.getValue();
 	right_fuel_consumed = RightFuel.getValue();
 	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
@@ -584,6 +630,12 @@ var calc_levels = func() {
 	Re  = Right_External.get_level_lbs();
 	g_fuel_total.setDoubleValue( total_lbs );
 	TotalFuelLbs.setValue(total_lbs);
+
+    total_fuel_l = aft + Lg + Lw + Le;
+    total_fuel_r = fwd + Rg + Rw + Re;
+ 
+
+
 	g_fus_feed_L.setDoubleValue( Lg + aft );
 	g_fus_feed_R.setDoubleValue( Rg + fwd );
 	qty_sel_switch = Qty_Sel_Switch.getValue();

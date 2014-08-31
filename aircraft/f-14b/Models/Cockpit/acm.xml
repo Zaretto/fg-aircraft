@@ -119,9 +119,8 @@
 			<repeatable>false</repeatable>
 			<interval-sec>0.1</interval-sec>
 			<binding>
-				<command>property-assign</command>
-				<property>sim/model/f-14b/instrumentation/warnings/master-caution</property>
-				<value>0</value>
+				<command>nasal</command>
+				<script>f14.master_caution_pressed()</script>
 			</binding>
 		</action>
 	</animation>
