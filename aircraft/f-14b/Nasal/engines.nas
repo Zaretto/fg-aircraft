@@ -170,7 +170,20 @@ var APC_off = func {
 	#print ("APC off()");
 }
 
+var engineControls = func {
+    if (getprop("controls/engines/engine[0]/starter",0) > 0 )
+    {
+        setprop("controls/engines/engine[0]/cutoff", Throttle == 0);
+    }
+    if (getprop("controls/engines/engine[1]/starter",0) > 0)
+    {
+        setprop("controls/engines/engine[1]/cutoff", Throttle == 0);
+    }
 
-
-
-
+    if (engine_crank_switch_pos_prop.getValue() > 0 
+            and getprop("controls/engines/engine[0]/starter",0) == 0 
+            and getprop("controls/engines/engine[1]/starter",0) == 0)
+    {
+    	engine_crank_switch_pos_prop.setIntValue(0);
+    }
+}
