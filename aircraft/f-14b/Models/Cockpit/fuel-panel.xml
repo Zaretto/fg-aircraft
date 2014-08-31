@@ -215,7 +215,65 @@
 		</axis>
 	</animation>
 
+	<!-- AntiSkid / Spoiler braking -->
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-spoiler-brake-both</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_spoiler_brake(2)</script>
+			</binding>
+		</action>
+	</animation>
 
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-spoiler-brake-off</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_spoiler_brake(0)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-spoiler-brake-spoilers</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_spoiler_brake(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<object-name>antiskid-spoiler-switch</object-name>
+		<type>rotate</type>
+		<property>controls/flight/ground-spoilers-armed</property>
+		<interpolation>
+			<entry><ind>1</ind><dep>45</dep></entry>
+			<entry><ind>0</ind><dep>0</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>  0.0036 </x-m>
+			<y-m>  0.0239 </y-m>
+			<z-m> -0.0502 </z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
 
 
 

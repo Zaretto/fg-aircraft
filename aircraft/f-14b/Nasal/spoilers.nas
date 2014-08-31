@@ -120,3 +120,17 @@ var toggleGroundSpoilers = func {
 	}
 }
 
+var set_spoiler_brake = func(v)
+{
+if (v > 0)
+{
+	setprop ("controls/flight/ground-spoilers-armed", true);
+}
+else
+{
+    setprop ("controls/flight/ground-spoilers-armed", false);
+	SpoilersCmd.setDoubleValue(0.0);
+}
+
+}
+
