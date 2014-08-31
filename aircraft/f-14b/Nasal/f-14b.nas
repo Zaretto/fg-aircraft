@@ -23,31 +23,24 @@ var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
         engine_crank_switch_pos_prop.setIntValue(0);
     }
 
-print ("Engine crank ",n);
-
     if (engine_crank_switch_pos != 0) {
-        print (" --> already switch to return to 0");
         setprop("controls/engines/engine[0]/starter",0);
         setprop("controls/engines/engine[1]/starter",0);
 		engine_crank_switch_pos_prop.setIntValue(0);
     }
 	elsif (n == 0) {
 		if (engine_crank_switch_pos == 0) {
-            print("set crank left ");
             setprop("controls/engines/engine[0]/starter",1);
 			engine_crank_switch_pos_prop.setIntValue(1);
 		} elsif (engine_crank_switch_pos == 1) {
-            print("clear crank left ");
 			engine_crank_switch_pos_prop.setIntValue(0);
             setprop("controls/engines/engine[0]/starter",0);
 		}
 	} else {
 		if (engine_crank_switch_pos == 0) {
-            print("set crank right ");
 			engine_crank_switch_pos_prop.setIntValue(2);
             setprop("controls/engines/engine[1]/starter",1);
 		} elsif (engine_crank_switch_pos == 2) {
-            print("clear crank right ");
             setprop("controls/engines/engine[1]/starter",0);
 			engine_crank_switch_pos_prop.setIntValue(0);
 		}

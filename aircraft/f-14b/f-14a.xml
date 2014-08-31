@@ -365,6 +365,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <y>0</y>
           <z>-51.77165354</z>
         </location>
+<priority>4</priority>
         <capacity unit="KG">2136</capacity>
         <contents unit="KG">2136</contents>
       </tank>
@@ -377,6 +378,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">2000</capacity>
         <contents unit="KG">2000</contents>
+<priority>4</priority>
       </tank>
       <!-- Left Beam Box - Feed Group   -->
       <tank type="FUEL">
@@ -387,6 +389,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">568</capacity>
         <contents unit="KG">568</contents>
+<priority>3</priority>
       </tank>
       <!--  Left Sump - Feed Group    -->
       <tank type="FUEL">
@@ -397,6 +400,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">136</capacity>
         <contents unit="KG">136</contents>
+<priority>5</priority>
       </tank>
       <!-- Right Beam Box - Feed Group    -->
       <tank type="FUEL">
@@ -407,6 +411,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">568</capacity>
         <contents unit="KG">568</contents>
+<priority>3</priority>
       </tank>
       <!-- Right Sump - Feed Group   -->
       <tank type="FUEL">
@@ -417,6 +422,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">136</capacity>
         <contents unit="KG">136</contents>
+<priority>5</priority>
       </tank>
       <!-- Left wing    -->
       <tank type="FUEL">
@@ -427,6 +433,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">909</capacity>
         <contents unit="KG">909</contents>
+<priority>2</priority>
       </tank>
       <!-- Right Wing -->
       <tank type="FUEL">
@@ -437,6 +444,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">909</capacity>
         <contents unit="KG">909</contents>
+<priority>2</priority>
       </tank>
       <!-- Left External -->
       <tank type="FUEL">
@@ -447,6 +455,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">818</capacity>
         <contents unit="KG">818</contents>
+<priority>1</priority>
       </tank>
       <!-- Right External -->
       <tank type="FUEL">
@@ -457,6 +466,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">818</capacity>
         <contents unit="KG">818</contents>
+<priority>1</priority>
       </tank>
       <!-- Left Feed line -->
       <tank type="FUEL">
@@ -467,6 +477,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">5</capacity>
         <contents unit="KG">5</contents>
+<priority>6</priority>
       </tank>
       <!-- Right Feed line -->
       <tank type="FUEL">
@@ -477,6 +488,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </location>
         <capacity unit="KG">5</capacity>
         <contents unit="KG">5</contents>
+<priority>6</priority>
       </tank>
     </propulsion>
 
@@ -538,6 +550,16 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <output>fcs/ground-spoilers-pos-norm</output>
   </kinematic>
 
+   <summer name="Left elevator normalization">
+      <input>fcs/elevator-pos-deg</input>
+      <input>fcs/left-aileron-pos-deg</input>
+      <output>fcs/left-elevator-pos-deg</output>
+   </summer>
+   <summer name="Right elevator normalization">
+      <input>fcs/elevator-pos-deg</input>
+      <input>-fcs/right-aileron-pos-deg</input>
+      <output>fcs/right-elevator-pos-deg</output>
+   </summer>
 
   <aerosurface_scale name="Stabilizer Control">
       <input>fcs/elevator-pos-norm</input>
@@ -606,8 +628,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="Left Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.524 </min>
-        <max>  0.524 </max>
+        <min> -0.19298 </min>
+        <max>  0.19298 </max>
       </range>
       <output>fcs/left-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -615,8 +637,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="Right Aileron Control">
       <input>fcs/roll-trim-sum</input>
       <range>
-        <min> -0.524 </min>
-        <max>  0.524 </max>
+        <min> -0.19298 </min>
+        <max>  0.19298 </max>
       </range>
       <output>fcs/right-aileron-pos-rad</output>
    </aerosurface_scale>
@@ -624,8 +646,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="left aileron normalization">
       <input>fcs/left-aileron-pos-rad</input>
       <domain>
-        <min> -0.524 </min>
-        <max>  0.524 </max>
+        <min> -0.19298 </min>
+        <max>  0.19298 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -637,8 +659,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="right aileron normalization">
       <input>fcs/right-aileron-pos-rad</input>
       <domain>
-        <min> -0.524 </min>
-        <max>  0.524 </max>
+        <min> -0.19298 </min>
+        <max>  0.19298 </max>
       </domain>
       <range>
         <min> -1 </min>
@@ -1008,6 +1030,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           62	631.7
           78	1171.7
           95	1405.7
+          99.9  1684.7
           104	1684.7
          </tableData>
        </table>
@@ -1027,6 +1050,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           62	631.7
           78	1171.7
           95	1405.7
+          99.9  1684.7
           104	1684.7
          </tableData>
        </table>
@@ -1622,6 +1646,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CyDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
+          <value>2</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -1765,6 +1790,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CLDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
+          <value>2</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2198,6 +2224,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CNDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
+          <value>2</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
