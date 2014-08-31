@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+
+	<PropertyList>
+
+	<path>engine-control.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>engine-control-panel</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- Engine crank Switch -->
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-crank-left</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.engine_crank_switch(0)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-crank-right</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.engine_crank_switch(1)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<object-name>engine-crank-switch</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/engine/engine-crank</property>
+		<interpolation>
+			<entry><ind>1</ind><dep>45</dep></entry>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>2</ind><dep>-45</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0174</x-m>
+			<y-m>-0.0240</y-m>
+			<z-m> 0.0048</z-m>
+		</center>
+		<axis>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<object-name>switch-l-ramp</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/lighting/position-wing-switch</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>-30</dep></entry>
+			<entry><ind>1</ind><dep>0</dep></entry>
+			<entry><ind>2</ind><dep>30</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0471</x-m>
+			<y-m>-0.0477</y-m>
+			<z-m> 0.0042</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+	<!-- lighting -->
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>switches</object-name>
+		<type>material</type>
+		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<!-- LoD -->
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>2</max-m>
+	</animation>
+
+</PropertyList>

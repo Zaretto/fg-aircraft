@@ -33,6 +33,12 @@ var ca_r_fuel_low  = props.globals.getNode("sim/model/f-14b/lights/ca-r-fuel-low
 
 var ca_hyd_press_light  = props.globals.getNode("sim/model/f-14b/lights/ca-hyd-press", 1);
 
+var l_eng_starter = props.globals.getNode("controls/engines/engine[0]/starter",1);
+var r_eng_starter = props.globals.getNode("controls/engines/engine[1]/starter",1);
+
+var l_eng_running = props.globals.getNode("engines/engine[0]/running",1);
+var r_eng_running = props.globals.getNode("engines/engine[0]/running",1);
+var ca_start_valve  = props.globals.getNode("sim/model/f-14b/lights/start-valve", 1);
 
 var runEMMISC = func {
 
@@ -40,6 +46,22 @@ var runEMMISC = func {
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
     var masterCaution =  masterCaution_light_set.getValue();
+
+    if ( (l_eng_starter.getBoolValue() and l_eng_running.getBoolValue()) 
+        or (r_eng_starter.getBoolValue() and r_eng_running.getBoolValue()))
+    {
+        if (!ca_start_valve.getBoolValue()){
+		    ca_start_valve.setBoolValue(1);
+            masterCaution = 1;
+        }
+    }        
+    else
+    {
+        if (ca_start_valve.getBoolValue())
+	    {
+		    ca_start_valve.setBoolValue(0);
+        }
+    }
 
 	if (oil_pressure_l.getValue() < 23 or oil_pressure_r.getValue() < 23 ){
 		if (!ca_oil_press_light.getBoolValue())

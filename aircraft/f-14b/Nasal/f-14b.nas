@@ -13,7 +13,46 @@ setprop("/sim/model/f-14b/lighting/position/enabled", 1);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
 
+var engine_crank_switch_pos_prop = props.globals.getNode("sim/model/f-14b/controls/engine/engine-crank");
+engine_crank_switch_pos_prop.setValue(0);
 
+var engine_crank_switch = func(n) {
+var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
+
+    if (engine_crank_switch_pos == nil){
+        engine_crank_switch_pos_prop.setIntValue(0);
+    }
+
+print ("Engine crank ",n);
+
+    if (engine_crank_switch_pos != 0) {
+        print (" --> already switch to return to 0");
+        setprop("controls/engines/engine[0]/starter",0);
+        setprop("controls/engines/engine[1]/starter",0);
+		engine_crank_switch_pos_prop.setIntValue(0);
+    }
+	elsif (n == 0) {
+		if (engine_crank_switch_pos == 0) {
+            print("set crank left ");
+            setprop("controls/engines/engine[0]/starter",1);
+			engine_crank_switch_pos_prop.setIntValue(1);
+		} elsif (engine_crank_switch_pos == 1) {
+            print("clear crank left ");
+			engine_crank_switch_pos_prop.setIntValue(0);
+            setprop("controls/engines/engine[0]/starter",0);
+		}
+	} else {
+		if (engine_crank_switch_pos == 0) {
+            print("set crank right ");
+			engine_crank_switch_pos_prop.setIntValue(2);
+            setprop("controls/engines/engine[1]/starter",1);
+		} elsif (engine_crank_switch_pos == 2) {
+            print("clear crank right ");
+            setprop("controls/engines/engine[1]/starter",0);
+			engine_crank_switch_pos_prop.setIntValue(0);
+		}
+	}	
+}
 
 var position_switch = func(n) {
 	var sw_pos = sw_pos_prop.getValue();
@@ -72,7 +111,6 @@ var position_flash_init  = func {
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
 var cnpy = aircraft.door.new("canopy", 4);
 var cswitch = props.globals.getNode("sim/model/f-14b/controls/canopy/canopy-switch", 1);
-var ca_canopy_light = props.globals.getNode("sim/model/f-14b/lights/ca-lad-canopy", 1);
 var pos = props.globals.getNode("canopy/position-norm");
 
 var canopyswitch = func(v) {
@@ -86,13 +124,9 @@ var canopyswitch = func(v) {
 	}
 	if (v < 0) {
 		cswitch.setValue(1);
-        ca_canopy_light.setBoolValue(false);
 		cnpy.close();
 	} elsif (v > 0) {
 		cswitch.setValue(-1);
-        # now set the warning light and master caution; really need to do this inside a system based on the canopy locked or not.
-        ca_canopy_light.setBoolValue(true);
-        setprop("sim/model/f-14b/instrumentation/warnings/master-caution", 1);
 		cnpy.open();
 	}
 }
@@ -298,7 +332,9 @@ var updateFCS = func {
 	f14.computeNWS ();
 	f14.computeAICS ();
 	f14.computeAPC ();
+    f14.engineControls();
 	f14.timedMotions ();
+    f14.electricsFrame();
 	f14.registerFCS (); # loop, once per frame.
 }
 
