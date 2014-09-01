@@ -4,21 +4,188 @@
 
 	<fx>
 		<!-- Engines -->
+    <engine-jfs-start>
+      <name>engine-start-inside</name>
+      <mode>once</mode>
+      <path>Aircraft/f-14b/Sounds/jfs-startup.wav</path>
+      <condition>
+        <and>
+          <property>/controls/engines/engine[0]/starter</property>
+          <property>/sim/current-view/internal</property>
+        </and>
+      </condition>
+      
+       <reference-dist>100</reference-dist>
+ 	  <volume>
+			<factor>0.4</factor>
+ 	  </volume>
+      <max-dist>1000</max-dist>
+   </engine-jfs-start>
+
+   <engine-jfs-running>
+      <name>engine-jfs-running-inside</name>
+      <mode>looped</mode>
+      <path>Aircraft/f-14b/Sounds/jfs-running.wav</path>
+      <delay-sec>6.3</delay-sec>
+      <condition>
+        <greater-than>
+            <property>sim/model/f-14b/controls/jfs</property>
+            <value>9</value>
+        </greater-than>
+      </condition>
+ 	  <volume>
+			<factor>0.4</factor>
+ 	  </volume>
+      <reference-dist>100</reference-dist>
+      <max-dist>500</max-dist>
+   </engine-jfs-running>
+
+   <engine-start>
+      <name>engine-start</name>
+      <path>Aircraft/f-14b/Sounds/jfs-engine-start.wav</path>
+      <condition>
+        <greater-than>
+            <property>sim/model/f-14b/controls/jfs</property>
+            <value>11</value>
+        </greater-than>
+      </condition>
+ 	  <volume>
+			<factor>0.4</factor>
+ 	  </volume>
+      <reference-dist>100</reference-dist>
+      <max-dist>1000</max-dist>
+   </engine-start>
+
+		<inside-engine-jet>
+			<name>inside-engine-jet</name>
+			<path>Aircraft/f-14b/Sounds/engine-running.wav</path>
+			<mode>looped</mode>
+			<condition>
+				<not><property>sim/current-view/internal</property></not>
+				<not>
+					<property>engines/engine[0]/out-of-fuel</property>
+				</not>
+<or>
+    			<property>engines/engine[0]/running</property>
+    			<property>engines/engine[1]/running</property>
+</or>
+			</condition>
+			<pitch>
+				<property>engines/engine[0]/n2</property>
+				<ofset>-60</ofset>
+				<factor>.01</factor>
+			</pitch>
+			<volume>
+				<factor>0.6</factor>
+    			<property>canopy/position-norm</property>
+                <min>0.2</min>
+                <max>1.0</max>
+			</volume>
+		</inside-engine-jet>
+
+		<inside-engine-jet-exhaust>
+			<name>inside-engine-jet-exhaust</name>
+			<path>Aircraft/f-14b/Sounds/engine-jet-exhaust.wav</path>
+			<mode>looped</mode>
+			<condition>
+    			<property>sim/current-view/internal</property>
+				<not><property>sim/current-view/internal</property></not>
+                <or>
+        			<property>engines/engine[0]/running</property>
+        			<property>engines/engine[1]/running</property>
+                </or>
+			</condition>
+			<orientation>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>-180.0</z>
+				<inner-angle>180.0</inner-angle>
+				<outer-angle>360.0</outer-angle>
+				<outer-gain>0.2</outer-gain>
+			</orientation>
+			<volume>
+				<property>engines/engine[0]/thrust_lb</property>
+				<factor>0.00001</factor>
+				<min>0.1</min>
+                <max>0.5</max>
+			</volume>
+		</inside-engine-jet-exhaust>
+
+		<engine-jet-whine>
+			<name>engine-jet-whine</name>
+			<path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
+			<mode>looped</mode>
+			<condition>
+                <greater-than>
+				    <property>engines/engine[0]/n2</property>
+                    <value>1</value>
+                </greater-than>
+			</condition>
+			<orientation>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>-180.0</z>
+				<inner-angle>180.0</inner-angle>
+				<outer-angle>360.0</outer-angle>
+				<outer-gain>0.2</outer-gain>
+			</orientation>
+			<pitch>
+				<property>engines/engine[0]/n2</property>
+				<ofset>0</ofset>
+				<factor>0.01</factor>
+			</pitch>
+			<volume>
+				<factor>0.7</factor>
+			</volume>
+		</engine-jet-whine>
+		<engine-jet-rumble>
+			<name>rumble</name>
+			<mode>looped</mode>
+			<path>Sounds/rumble.wav</path>
+      <condition>
+        <greater-than>
+          <property>engines/engine[0]/n2</property>
+          <value>0.4</value>
+        </greater-than>
+      </condition>
+      <volume><factor>1</factor></volume>
+			<pitch>
+				<property>engines/engine[0]/n2</property>
+				<factor>0.1</factor>
+				<min>0.5</min>
+				<max>1</max>
+			</pitch>
+		</engine-jet-rumble>
+
+
+   <jfs-engine-start-continuous>
+      <name>jfs-engine-start-continuous</name>
+      <path>Aircraft/f-14b/Sounds/jfs-engine-start-continuous.wav</path>
+      <mode>looped</mode>
+      <delay-sec>10.6</delay-sec>
+      <condition>
+        <greater-than>
+            <property>sim/model/f-14b/controls/jfs</property>
+            <value>11</value>
+        </greater-than>
+      </condition>
+ 	  <volume>
+			<factor>0.4</factor>
+ 	  </volume>
+      <reference-dist>100</reference-dist>
+      <max-dist>1000</max-dist>
+   </jfs-engine-start-continuous>
+
 		<engine-jet>
 			<name>engine-jet</name>
-			<path>Sounds/jet.wav</path>
+			<path>Aircraft/f-14b/Sounds/engine-running.wav</path>
 			<mode>looped</mode>
 			<condition>
-				<not>
-					<property>sim/current-view/internal</property>
-				</not>
-				<not>
-					<property>engines/engine[0]/out-of-fuel</property>
-				</not>
-<or>
+				<not><property>sim/current-view/internal</property></not>
+                <or>
     			<property>engines/engine[0]/running</property>
     			<property>engines/engine[1]/running</property>
-</or>
+                </or>
 			</condition>
 			<orientation>
 				<x>0.0</x>
@@ -29,31 +196,28 @@
 				<outer-gain>0.2</outer-gain>
 			</orientation>
 			<pitch>
-				<property>engines/engine[0]/n1</property>
-				<ofset>0.1</ofset>
-				<factor>.001</factor>
+				<property>engines/engine[0]/n2</property>
+				<ofset>-60</ofset>
+				<factor>.01</factor>
 			</pitch>
 			<volume>
-				<property>engines/engine[0]/thrust-lbs</property>
-				<factor>0.000025</factor>
-				<min>0.2</min>
-				<max>0.75</max>
+				<factor>0.7</factor>
 			</volume>
 		</engine-jet>
-		<engine-rumble>
-			<name>engine-rumble</name>
-			<path>Sounds/rumble.wav</path>
+
+		<engine-jet-exhaust>
+			<name>engine-jet-exhaust</name>
+			<path>Aircraft/f-14b/Sounds/engine-jet-exhaust.wav</path>
 			<mode>looped</mode>
 			<condition>
 				<not>
-					<property>engines/engine[0]/out-of-fuel</property>
+					<property>sim/current-view/internal</property>
 				</not>
 <or>
     			<property>engines/engine[0]/running</property>
     			<property>engines/engine[1]/running</property>
 </or>
 			</condition>
-			<property>engines/engine[0]/afterburner</property>
 			<orientation>
 				<x>0.0</x>
 				<y>0.0</y>
@@ -62,107 +226,14 @@
 				<outer-angle>360.0</outer-angle>
 				<outer-gain>0.2</outer-gain>
 			</orientation>
-			<pitch>
-				<property>engines/engine[0]/afterburner</property>
-				<factor>1</factor>
-				<offset>0.3</offset>
-			</pitch>
 			<volume>
-				<property>engines/engine[0]/afterburner</property>
-				<!--<factor>0.7</factor>-->
-				<factor>1.2</factor>
-				<offset>0.15</offset>
-				<!--<max>1</max>-->
-			</volume>
-		</engine-rumble>
-		<engine-whine-external>
-			<name>external-whine</name>
-			<path>Sounds/turbojet_fan.wav</path>
-			<mode>looped</mode>
-			<condition>
-				<not>
-					<property>sim/current-view/internal</property>
-				</not>
-				<not>
-					<property>engines/engine[0]/out-of-fuel</property>
-				</not>
-<or>
-    			<property>engines/engine[0]/running</property>
-    			<property>engines/engine[1]/running</property>
-</or>
-			</condition>
-			<orientation>
-				<x>0.0</x>
-				<y>0.0</y>
-				<z>1</z>
-				<inner-angle>180.0</inner-angle>
-				<outer-angle>360.0</outer-angle>
-				<outer-gain>0.5</outer-gain>
-			</orientation>
-			<pitch>
-				<property>engines/engine[0]/n1</property>
-				<ofset>0.7</ofset>
-				<factor>.003</factor>
-			</pitch>
-			<volume>
-				<property>engines/engine/n1</property>
-				<offset>1.0</offset>
-				<factor>-0.008</factor>
-				<max>0.6</max>
-			</volume>
-		</engine-whine-external>
-		<engine-whine-internal>
-			<name>internal-whine</name>
-			<path>Sounds/whine.wav</path>
-			<mode>looped</mode>
-			<condition>
-				<property>sim/current-view/internal</property>
-				<not>
-					<property>engines/engine[0]/out-of-fuel</property>
-				</not>
-<or>
-    			<property>engines/engine[0]/running</property>
-    			<property>engines/engine[1]/running</property>
-</or>
-			</condition>
-			<pitch>
-				<property>engines/engine[0]/n1</property>
-				<ofset>0.1</ofset>
-				<factor>.0016</factor>
-			</pitch>
-			<volume>
-				<property>engines/engine[0]/thrust-lbs</property>
-				<factor>0.000012</factor>
-				<min>0.2</min>
-				<max>0.7</max>
-			</volume>
-		</engine-whine-internal>
-		<engine-jet-internal>
-			<name>internal-jet</name>
-			<path>Sounds/jet.wav</path>
-			<mode>looped</mode>
-			<condition>
-				<property>sim/current-view/internal</property>
-				<not>
-					<property>engines/engine[0]/out-of-fuel</property>
-				</not>
-<or>
-    			<property>engines/engine[0]/running</property>
-    			<property>engines/engine[1]/running</property>
-</or>
-			</condition>
-			<pitch>
-				<property>engines/engine[0]/n1</property>
-				<ofset>0.1</ofset>
-				<factor>.0016</factor>
-			</pitch>
-			<volume>
-				<property>engines/engine[0]/thrust-lbs</property>
+				<property>engines/engine[0]/thrust_lb</property>
 				<factor>0.00005</factor>
-				<min>0.1</min>
-				<max>0.9</max>
+				<min>0.3</min>
+                <max>1.0</max>
 			</volume>
-		</engine-jet-internal>
+		</engine-jet-exhaust>
+
 
 		<!-- Rumble -->
 		<rumble>
@@ -402,6 +473,7 @@
 				</or>
 			</condition>
 			<volume><factor>0.4</factor></volume>
+            <max-dist>5</max-dist>
 		</pre-stall>
 
 
@@ -430,6 +502,7 @@
 				</or>
 			</condition>
 			<volume><factor>0.6</factor></volume>
+            <max-dist>5</max-dist>
 		</stall>
 
 		<!-- Weapons -->
@@ -443,6 +516,7 @@
 			<volume>
 				<property>sim/model/f-14b/systems/armament/aim9/sound-volume</property>
 			</volume>
+            <max-dist>5</max-dist>
 		</aim9-signal>
 
 		<!--ACM jettison lever -->
@@ -457,6 +531,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.30</factor></volume>
+            <max-dist>5</max-dist>
 		</acm-jett-lever-on>
 		<acm-jett-lever-off> 
 			<name>acm-jett-lever-off</name>
@@ -469,6 +544,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.37</factor></volume>
+            <max-dist>5</max-dist>
 		</acm-jett-lever-off>
 
 		<!--ACM Master Arm lever -->
@@ -483,6 +559,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.37</factor></volume>
+            <max-dist>5</max-dist>
 		</master-arm-lever-on>
 		<master-arm-lever-off> 
 			<name>master-arm-lever-off</name>
@@ -495,6 +572,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.42</factor></volume>
+            <max-dist>5</max-dist>
 		</master-arm-lever-off>
 
 		<!--ACM Master Arm switch -->
@@ -509,6 +587,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.45</factor></volume>
+            <max-dist>5</max-dist>
 		</master-arm-switch-up>
 		<master-arm-switch-center>
 			<name>master-arm-switch-center</name>
@@ -521,6 +600,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.45</factor></volume>
+            <max-dist>5</max-dist>
 		</master-arm-switch-center>
 		<master-arm-switch-down>
 			<name>master-arm-switch-down</name>
@@ -533,6 +613,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.45</factor></volume>
+            <max-dist>5</max-dist>
 		</master-arm-switch-down>
 
 		<!-- Warnings tones -->
@@ -547,6 +628,7 @@
 				</less-than>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</low-alt-warning>
 
 		<!-- Left Verical console -->
@@ -561,6 +643,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.30</factor></volume>
+            <max-dist>5</max-dist>
 		</refuel-probe-switch-2>
 		<refuel-probe-switch-1> 
 			<name>refuel-probe-switch-1</name>
@@ -573,6 +656,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.30</factor></volume>
+            <max-dist>5</max-dist>
 		</refuel-probe-switch-1>
 		<refuel-probe-switch-0> 
 			<name>refuel-probe-switch-0</name>
@@ -585,6 +669,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.50</factor></volume>
+            <max-dist>5</max-dist>
 		</refuel-probe-switch-0>
 
 		<fuel-qty-sel-switch-up>
@@ -598,6 +683,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</fuel-qty-sel-switch-up>
 		<fuel-qty-sel-switch-center> 
 			<name>fuel-qty-sel-switch-center</name>
@@ -610,6 +696,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</fuel-qty-sel-switch-center>
 		<fuel-qty-sel-switch-down> 
 			<name>fuel-qty-sel-switch-down</name>
@@ -622,6 +709,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</fuel-qty-sel-switch-down>
 
 		<!-- Master Light Panel -->
@@ -636,6 +724,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hook-bypass-switch-on>
 		<hook-bypass-switch-off> 
 			<name>hook-bypass-switch-off</name>
@@ -648,6 +737,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hook-bypass-switch-off>
 
 		<!-- Right Verical console -->
@@ -662,6 +752,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hsd-mode-switch-up>
 		<hsd-mode-switch-mid> 
 			<name>hsd-mode-switch-mid</name>
@@ -674,6 +765,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hsd-mode-switch-mid>
 		<hsd-mode-switch-down> 
 			<name>hsd-mode-switch-down</name>
@@ -686,6 +778,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hsd-mode-switch-down>
 
 		<vdi-power-switch-on> 
@@ -696,6 +789,7 @@
 					<property>sim/model/f-14b/controls/VDI/on-off</property>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</vdi-power-switch-on>
 		<vdi-power-switch-off> 
 			<name>vdi-power-switch-off</name>
@@ -707,6 +801,7 @@
 				</not>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</vdi-power-switch-off>
 
 		<hud-power-switch-on> 
@@ -717,6 +812,7 @@
 					<property>sim/hud/visibility[1]</property>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hud-power-switch-on>
 		<hud-power-switch-off> 
 			<name>hud-power-switch-off</name>
@@ -728,6 +824,7 @@
 				</not>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hud-power-switch-off>
 
 		<hsd-power-switch-on> 
@@ -738,6 +835,7 @@
 					<property>sim/model/f-14b/controls/HSD/on-off</property>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hsd-power-switch-on>
 		<hsd-power-switch-off> 
 			<name>hsd-power-switch-off</name>
@@ -749,6 +847,7 @@
 				</not>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</hsd-power-switch-off>
 
 		<!-- Left console -->
@@ -760,6 +859,7 @@
 				<property>sim/model/f-14b/controls/AFCS/engage</property>
 			</condition>
 			<volume><factor>0.35</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-main-switch-on>
 		<afcs-main-switch-off> 
 			<name>afcs-main-switch-off</name>
@@ -771,6 +871,7 @@
 				</not>
 			</condition>
 			<volume><factor>0.45</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-main-switch-off>
 		<afcs-altitude-switch-on> 
 			<name>afcs-altitude-switch-on</name>
@@ -780,6 +881,7 @@
 				<property>sim/model/f-14b/controls/AFCS/engage</property>
 			</condition>
 			<volume><factor>0.35</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-altitude-switch-on>
 		<afcs-altitude-switch-off> 
 			<name>afcs-altitude-switch-off</name>
@@ -791,6 +893,7 @@
 				</not>
 			</condition>
 			<volume><factor>0.45</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-altitude-switch-off>
 		<afcs-heading-gt-switch-up> 
 			<name>afcs-heading-gt-switch-up</name>
@@ -803,6 +906,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.35</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-heading-gt-switch-up>
 		<afcs-heading-gt-switch-off> 
 			<name>afcs-heading-gt-switch-off</name>
@@ -815,6 +919,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.45</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-heading-gt-switch-off>
 		<afcs-heading-gt-switch-down> 
 			<name>afcs-heading-gt-switch-down</name>
@@ -827,6 +932,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.35</factor></volume>
+            <max-dist>5</max-dist>
 		</afcs-heading-gt-switch-down>
 
 		<tacan-xy-switch-x> 
@@ -840,6 +946,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-xy-switch-x>
 		<tacan-xy-switch-y> 
 			<name>tacan-xy-switch-y</name>
@@ -852,6 +959,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-xy-switch-y>
 
 		<tacan-mode-knob-0> 
@@ -865,6 +973,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-mode-knob-0>
 		<tacan-mode-knob-1> 
 			<name>tacan-mode-knob-1</name>
@@ -877,6 +986,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-mode-knob-1>
 		<tacan-mode-knob-2> 
 			<name>tacan-mode-knob-2</name>
@@ -889,6 +999,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-mode-knob-2>
 		<tacan-mode-knob-3> 
 			<name>tacan-mode-knob-3</name>
@@ -901,6 +1012,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-mode-knob-3>
 		<tacan-mode-knob-4> 
 			<name>tacan-mode-knob-4</name>
@@ -913,6 +1025,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.20</factor></volume>
+            <max-dist>5</max-dist>
 		</tacan-mode-knob-4>
 
 		<an-arc-182v-load-preset> 
@@ -926,6 +1039,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.6</factor></volume>
+            <max-dist>5</max-dist>
 		</an-arc-182v-load-preset>
 		<an-arc-159v1-load-preset> 
 			<name>an-arc-159v1-load-preset</name>
@@ -938,6 +1052,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.6</factor></volume>
+            <max-dist>5</max-dist>
 		</an-arc-159v1-load-preset>
 
 		<!-- radar TWS-AUTO -->
@@ -952,6 +1067,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.2</factor></volume>
+            <max-dist>5</max-dist>
 		</tws-auto>
 
 		<!-- Stick Arm selector -->
@@ -966,6 +1082,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</stick-arm-sel-0>
 		<stick-arm-sel-1> 
 			<name>stick-arm-sel-1</name>
@@ -978,6 +1095,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</stick-arm-sel-1>
 		<stick-arm-sel-2> 
 			<name>stick-arm-sel-2</name>
@@ -990,6 +1108,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</stick-arm-sel-2>
 		<stick-arm-sel-3> 
 			<name>stick-arm-sel-3</name>
@@ -1002,6 +1121,7 @@
 				</equals>
 			</condition>
 			<volume><factor>0.25</factor></volume>
+            <max-dist>5</max-dist>
 		</stick-arm-sel-3>
 
 

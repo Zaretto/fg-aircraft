@@ -13,6 +13,17 @@ var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "
 var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
 var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
 var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
+var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
+
+var l_running_prop = props.globals.getNode("engines/engine[0]/running",1);
+var r_running_prop = props.globals.getNode("engines/engine[1]/running",1);
+var l_n1_prop = props.globals.getNode("engines/engine[0]/n1",1);
+var r_n1_prop = props.globals.getNode("engines/engine[1]/n1",1);
+var l_starter_prop = props.globals.getNode("controls/engines/engine[0]/starter");
+var r_starter_prop = props.globals.getNode("controls/engines/engine[1]/starter");
+
+var jfs_start = props.globals.getNode("sim/model/f-14b/controls/jfs",1);
+jfs_start.setValue(0);
 
 var GearPos   = props.globals.getNode("gear/gear[0]/position-norm", 1);
 
@@ -170,20 +181,80 @@ var APC_off = func {
 	#print ("APC off()");
 }
 
+#
+#
+#
 var engineControls = func {
-    if (getprop("controls/engines/engine[0]/starter",0) > 0 )
+
+#
+# 
+# JFS Startup / running noises
+# jfs_start 0 - no noise
+#           1 - shutdown
+#           10 - starting
+#           11 - running
+var l_starter = l_starter_prop.getValue();
+var r_starter = r_starter_prop.getValue();
+
+var l_running = l_running_prop.getValue();
+var r_running = r_running_prop.getValue();
+
+    if (!l_running or !r_running)
+    {
+        var r_n1 = l_n1_prop.getValue();
+        var l_n1 = r_n1_prop.getValue();
+        if (l_starter or r_starter){
+            if (jfs_start.getValue() == 0)
+            {
+                jfs_start.setValue(10);
+            }
+            if (jfs_start.getValue() == 10)
+            {
+                jfs_start.setValue(11);
+            }  
+        }
+        if ( ((l_n1 > 1 and l_n1 < 20) 
+             or  (r_n1 > 1 and r_n1 < 20))
+             and (l_starter or r_starter)
+             and jfs_start.getValue() == 11)
+        {
+#engine turning
+            jfs_start.setValue(12);
+        }
+        if ( ((l_n1 > 19 and l_n1 < 30) 
+               and (r_n1 > 19 and r_n1 < 30))
+             and (!l_starter and !r_starter)
+             and jfs_start.getValue() == 12)
+        {
+                jfs_start.setValue(1);
+        }
+    }
+    else{
+        if (l_running and r_running and jfs_start.getValue() >= 10)
+        {
+            jfs_start.setValue(1);
+        }
+        if (jfs_start.getValue() < 10)
+        {
+            jfs_start.setValue(0);
+        }
+    }
+
+    if (l_starter > 0 )
     {
         setprop("controls/engines/engine[0]/cutoff", Throttle == 0);
     }
-    if (getprop("controls/engines/engine[1]/starter",0) > 0)
+    if (r_starter)
     {
         setprop("controls/engines/engine[1]/cutoff", Throttle == 0);
     }
 
     if (engine_crank_switch_pos_prop.getValue() > 0 
-            and getprop("controls/engines/engine[0]/starter",0) == 0 
-            and getprop("controls/engines/engine[1]/starter",0) == 0)
+            and l_starter == 0 
+            and r_starter == 0)
     {
     	engine_crank_switch_pos_prop.setIntValue(0);
+        jfs_start.setValue(0);
     }
+
 }
