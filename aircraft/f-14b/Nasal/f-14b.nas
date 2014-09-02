@@ -69,7 +69,7 @@ var position_flash_init  = func {
 
 
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
-var cnpy = aircraft.door.new("canopy", 4);
+var cnpy = aircraft.door.new("canopy", 3.9);
 var cswitch = props.globals.getNode("sim/model/f-14b/controls/canopy/canopy-switch", 1);
 var pos = props.globals.getNode("canopy/position-norm");
 
