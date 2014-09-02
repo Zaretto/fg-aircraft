@@ -359,7 +359,29 @@ var toggle_cockpit_views = func() {
 }
 
 
+var quickstart = func() {
+#    setprop("controls/electric/engine[0]/generator",1);
+#    setprop("controls/electric/engine[1]/generator",1);
+#    setprop("controls/electric/engine[0]/bus-tie",1);
+#    setprop("controls/electric/engine[1]/bus-tie",1);
+#    setprop("systems/electrical/outputs/avionics",1);
+#    setprop("controls/electric/inverter-switch",1);
+    setprop("controls/engines/engine[0]/cutoff",0);
+    setprop("controls/engines/engine[1]/cutoff",0);
+    setprop("engines/engine[0]/out-of-fuel",0);
+    setprop("engines/engine[1]/out-of-fuel",0);
+    setprop("engines/engine[1]/run",1);
+    setprop("engines/engine[1]/run",1);
 
+setprop("/engines/engine[1]/cutoff",0);
+setprop("/engines/engine[0]/cutoff",0);
+
+setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
+setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
+setprop("/fdm/jsbsim/propulsion/set-running",1);
+setprop("/fdm/jsbsim/propulsion/set-running",0);
+
+}
 
 
 
