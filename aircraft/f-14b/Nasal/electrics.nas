@@ -46,6 +46,7 @@ var runEMMISC = func {
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
     var masterCaution =  masterCaution_light_set.getValue();
+var master_caution_active  = 0;
 
     if ( (l_eng_starter.getBoolValue() and l_eng_running.getBoolValue()) 
         or (r_eng_starter.getBoolValue() and r_eng_running.getBoolValue()))
@@ -54,6 +55,7 @@ var runEMMISC = func {
 		    ca_start_valve.setBoolValue(1);
             masterCaution = 1;
         }
+        master_caution_active = 1;
     }        
     else
     {
@@ -86,6 +88,7 @@ var runEMMISC = func {
                 masterCaution = 1;
             }
         }
+        master_caution_active = 1;
 	}
 	else
 	{
@@ -111,6 +114,7 @@ var runEMMISC = func {
 		    ca_bingo_light.setBoolValue(1);
             masterCaution = 1;
 		}
+        master_caution_active = 1;
 	}
 	else
 	{
@@ -126,6 +130,7 @@ var runEMMISC = func {
     	    ca_l_fuel_low.setBoolValue(1);
             masterCaution = 1;
         }
+        master_caution_active = 1;
 	}
 	else
 	{
@@ -141,6 +146,7 @@ var runEMMISC = func {
     	    ca_r_fuel_low.setBoolValue(1);
             masterCaution = 1;
         }
+        master_caution_active = 1;
 	}
 	else
 	{
@@ -155,6 +161,7 @@ var runEMMISC = func {
             ca_canopy_light.setBoolValue(1);
             masterCaution = 1;
         }
+        master_caution_active = 1;
     }
     else
     {
@@ -163,13 +170,19 @@ var runEMMISC = func {
 
     if (jettisonLeft.getValue() or jettisonRight.getValue()){
         masterCaution = 1;
+        master_caution_active = 1;
     }
-    masterCaution_light.setBoolValue(masterCaution);
-    if (masterCaution > 0){
-        masterCaution_light_set.setBoolValue(masterCaution);
+    if (!master_caution_active){
+        masterCaution_light_set.setBoolValue(0);
+        masterCaution_light.setBoolValue(0);
     }
-
-
+    else
+    {
+        if (masterCaution)
+        {
+            masterCaution_light.setBoolValue(1);
+        }
+    }
 }
 
 var master_caution_pressed = func {
