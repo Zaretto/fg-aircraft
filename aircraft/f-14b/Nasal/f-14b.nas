@@ -13,39 +13,6 @@ setprop("/sim/model/f-14b/lighting/position/enabled", 1);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
 
-var engine_crank_switch_pos_prop = props.globals.getNode("sim/model/f-14b/controls/engine/engine-crank");
-engine_crank_switch_pos_prop.setValue(0);
-
-var engine_crank_switch = func(n) {
-var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
-
-    if (engine_crank_switch_pos == nil){
-        engine_crank_switch_pos_prop.setIntValue(0);
-    }
-
-    if (engine_crank_switch_pos != 0) {
-        setprop("controls/engines/engine[0]/starter",0);
-        setprop("controls/engines/engine[1]/starter",0);
-		engine_crank_switch_pos_prop.setIntValue(0);
-    }
-	elsif (n == 0) {
-		if (engine_crank_switch_pos == 0) {
-            setprop("controls/engines/engine[0]/starter",1);
-			engine_crank_switch_pos_prop.setIntValue(1);
-		} elsif (engine_crank_switch_pos == 1) {
-			engine_crank_switch_pos_prop.setIntValue(0);
-            setprop("controls/engines/engine[0]/starter",0);
-		}
-	} else {
-		if (engine_crank_switch_pos == 0) {
-			engine_crank_switch_pos_prop.setIntValue(2);
-            setprop("controls/engines/engine[1]/starter",1);
-		} elsif (engine_crank_switch_pos == 2) {
-            setprop("controls/engines/engine[1]/starter",0);
-			engine_crank_switch_pos_prop.setIntValue(0);
-		}
-	}	
-}
 
 var position_switch = func(n) {
 	var sw_pos = sw_pos_prop.getValue();

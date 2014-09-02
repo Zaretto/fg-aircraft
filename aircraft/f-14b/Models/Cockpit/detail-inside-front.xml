@@ -5,6 +5,54 @@
 	<path>detail-inside-front.ac</path>
 
 	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>fire-handle-l</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.fire_handle(0)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>fire-handle-l</object-name>
+		<property>controls/engines/engine[0]/cutoff</property>
+		<factor>0.05</factor>
+		<axis>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>fire-handle-r</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.fire_handle(1)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>fire-handle-r</object-name>
+		<property>controls/engines/engine[1]/cutoff</property>
+		<factor>0.05</factor>
+		<axis>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
 		<type>select</type>
 		<object-name>inside-front</object-name>
 		<condition>
@@ -69,7 +117,8 @@
 	<animation> 
 		<object-name>pedals</object-name>
 		<object-name>bathtub-sides</object-name>
-		<object-name>fire-handles</object-name>
+		<object-name>fire-handle-l</object-name>
+		<object-name>fire-handle-r</object-name>
 		<type>material</type>
 		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
 		<emission>

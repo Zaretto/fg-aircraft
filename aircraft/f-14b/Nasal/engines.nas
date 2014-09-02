@@ -22,6 +22,9 @@ var r_n1_prop = props.globals.getNode("engines/engine[1]/n1",1);
 var l_starter_prop = props.globals.getNode("controls/engines/engine[0]/starter");
 var r_starter_prop = props.globals.getNode("controls/engines/engine[1]/starter");
 
+var engine_crank_switch_pos_prop = props.globals.getNode("sim/model/f-14b/controls/engine/engine-crank");
+engine_crank_switch_pos_prop.setValue(0);
+
 var jfs_start = props.globals.getNode("sim/model/f-14b/controls/jfs",1);
 jfs_start.setValue(0);
 
@@ -193,6 +196,7 @@ var engineControls = func {
 #           1 - shutdown
 #           10 - starting
 #           11 - running
+#           12 - engine turning
 var l_starter = l_starter_prop.getValue();
 var r_starter = r_starter_prop.getValue();
 
@@ -204,7 +208,7 @@ var r_running = r_running_prop.getValue();
         var r_n1 = l_n1_prop.getValue();
         var l_n1 = r_n1_prop.getValue();
         if (l_starter or r_starter){
-            if (jfs_start.getValue() == 0)
+            if (jfs_start.getValue() <= 1)
             {
                 jfs_start.setValue(10);
             }
@@ -240,21 +244,125 @@ var r_running = r_running_prop.getValue();
         }
     }
 
-    if (l_starter > 0 )
-    {
-        setprop("controls/engines/engine[0]/cutoff", Throttle == 0);
-    }
-    if (r_starter)
-    {
-        setprop("controls/engines/engine[1]/cutoff", Throttle == 0);
-    }
-
     if (engine_crank_switch_pos_prop.getValue() > 0 
             and l_starter == 0 
-            and r_starter == 0)
+            and r_starter == 0
+            and jfs_running)
     {
     	engine_crank_switch_pos_prop.setIntValue(0);
-        jfs_start.setValue(0);
     }
-
+     if (jfs_running and l_running and r_running){
+        jfs_running = 0;
+        jfs_start.setValue(1);
+    }
 }
+var jfs_set_running = func{
+
+    var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
+
+    print("Jfs set running callback");
+    if (jfs_running){
+        return;
+    }
+    jfs_start.setValue(11);
+    jfs_running = 1;
+    jfs_starting = 0;
+
+    if (engine_crank_switch_pos == 1) {
+        print("JFS: Now set starter L");
+        setprop("controls/engines/engine[0]/starter",1);
+    }
+    if (engine_crank_switch_pos == 2) {
+        print("JFS: Now set starter R");
+        setprop("controls/engines/engine[1]/starter",1);
+    }
+    settimer(f14.jfs_set_running, 999999); # turn off timer.
+}
+
+var jfs_running = 0;
+var jfs_starting = 0;
+var jfs_shutdown_timer = 0;
+
+#
+#
+# Switch / action callbacks
+
+var engine_crank_switch = func(n) {
+var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
+
+    if (engine_crank_switch_pos == nil){
+        engine_crank_switch_pos_prop.setIntValue(0);
+    }
+    if (!jfs_running){
+        if (!jfs_starting){
+            jfs_starting = 1;
+            jfs_start.setValue(10);
+        }
+		settimer(f14.jfs_set_running, 11);
+        print("Start JFS");
+	    if (n == 0) {
+			engine_crank_switch_pos_prop.setIntValue(1);
+		} 
+	    if (n == 1) {
+			engine_crank_switch_pos_prop.setIntValue(2);
+		} 
+        return;
+    }
+    if (engine_crank_switch_pos != 0) {
+        setprop("controls/engines/engine[0]/starter",0);
+        setprop("controls/engines/engine[1]/starter",0);
+		engine_crank_switch_pos_prop.setIntValue(0);
+    }
+	elsif (n == 0) {
+		if (engine_crank_switch_pos == 0) {
+            if (jfs_running){
+                setprop("controls/engines/engine[0]/starter",1);
+            }
+			engine_crank_switch_pos_prop.setIntValue(1);
+		} elsif (engine_crank_switch_pos == 1) {
+			engine_crank_switch_pos_prop.setIntValue(0);
+            setprop("controls/engines/engine[0]/starter",0);
+		}
+	} else {
+		if (engine_crank_switch_pos == 0) {
+			engine_crank_switch_pos_prop.setIntValue(2);
+            if (jfs_running){
+                setprop("controls/engines/engine[1]/starter",1);
+            }
+		} elsif (engine_crank_switch_pos == 2) {
+            setprop("controls/engines/engine[1]/starter",0);
+			engine_crank_switch_pos_prop.setIntValue(0);
+		}
+	}	
+}
+#
+# 0 = L
+# 1 = R
+# The fire handle does two things; firstly when pulled it cuts
+# off fuel. then when turned it deploys the fire extinguisher
+# - not currently modelling fire extinguishers.
+var fire_handle = func(n) {
+    if (n==0)
+    {
+        if (getprop("controls/engines/engine[0]/cutoff"))
+        {
+            setprop("controls/engines/engine[0]/cutoff", 0);
+        }
+        else
+        {
+            setprop("controls/engines/engine[0]/cutoff", 1);
+        }
+    }
+    if (n==1)
+    {
+        if (getprop("controls/engines/engine[1]/cutoff"))
+        {
+            setprop("controls/engines/engine[1]/cutoff", 0);
+        }
+        else
+        {
+            setprop("controls/engines/engine[1]/cutoff", 1);
+        }
+    }
+}
+
