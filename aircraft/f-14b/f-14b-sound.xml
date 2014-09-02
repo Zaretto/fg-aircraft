@@ -40,6 +40,24 @@
       <max-dist>500</max-dist>
    </engine-jfs-running>
 
+   <jfs-engine-start-continuous>
+      <name>jfs-engine-start-continuous</name>
+      <path>Aircraft/f-14b/Sounds/jfs-engine-start-continuous.wav</path>
+      <mode>looped</mode>
+      <delay-sec>10.6</delay-sec>
+      <condition>
+        <greater-than>
+            <property>sim/model/f-14b/controls/jfs</property>
+            <value>11</value>
+        </greater-than>
+      </condition>
+ 	  <volume>
+			<factor>0.4</factor>
+ 	  </volume>
+      <reference-dist>100</reference-dist>
+      <max-dist>1000</max-dist>
+   </jfs-engine-start-continuous>
+
    <engine-start>
       <name>engine-start</name>
       <path>Aircraft/f-14b/Sounds/jfs-engine-start.wav</path>
@@ -56,12 +74,12 @@
       <max-dist>1000</max-dist>
    </engine-start>
 
+<!--
 		<inside-engine-jet>
 			<name>inside-engine-jet</name>
 			<path>Aircraft/f-14b/Sounds/engine-running.wav</path>
 			<mode>looped</mode>
 			<condition>
-				<not><property>sim/current-view/internal</property></not>
 				<not>
 					<property>engines/engine[0]/out-of-fuel</property>
 				</not>
@@ -82,6 +100,7 @@
                 <max>1.0</max>
 			</volume>
 		</inside-engine-jet>
+
 
 		<inside-engine-jet-exhaust>
 			<name>inside-engine-jet-exhaust</name>
@@ -110,17 +129,11 @@
                 <max>0.5</max>
 			</volume>
 		</inside-engine-jet-exhaust>
-
+-->
 		<engine-jet-whine>
 			<name>engine-jet-whine</name>
 			<path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
 			<mode>looped</mode>
-			<condition>
-                <greater-than>
-				    <property>engines/engine[0]/n2</property>
-                    <value>1</value>
-                </greater-than>
-			</condition>
 			<orientation>
 				<x>0.0</x>
 				<y>0.0</y>
@@ -134,59 +147,45 @@
 				<ofset>0</ofset>
 				<factor>0.01</factor>
 			</pitch>
-			<volume>
-				<factor>0.7</factor>
-			</volume>
+            <volume>
+                <factor>0.5</factor>
+				<property>engines/engine[0]/n2</property>
+                <max>0.7</max>
+            </volume>
 		</engine-jet-whine>
 		<engine-jet-rumble>
-			<name>rumble</name>
+			<name>engine-jet-rumble</name>
 			<mode>looped</mode>
+<!-- Aircraft/f-14b/Sounds/engine-running.wav -->
 			<path>Sounds/rumble.wav</path>
-      <condition>
-        <greater-than>
-          <property>engines/engine[0]/n2</property>
-          <value>0.4</value>
-        </greater-than>
-      </condition>
-      <volume><factor>1</factor></volume>
+			<condition>
+                <greater-than>
+				    <property>engines/engine[0]/n2</property>
+                    <value>0.002</value>
+                </greater-than>
+			</condition>
+            <volume>
+                <factor>0.5</factor>
+				<property>engines/engine[0]/n2</property>
+                <max>1</max>
+            </volume>
 			<pitch>
 				<property>engines/engine[0]/n2</property>
 				<factor>0.1</factor>
-				<min>0.5</min>
+				<min>0.2</min>
 				<max>1</max>
 			</pitch>
 		</engine-jet-rumble>
 
 
-   <jfs-engine-start-continuous>
-      <name>jfs-engine-start-continuous</name>
-      <path>Aircraft/f-14b/Sounds/jfs-engine-start-continuous.wav</path>
-      <mode>looped</mode>
-      <delay-sec>10.6</delay-sec>
-      <condition>
-        <greater-than>
-            <property>sim/model/f-14b/controls/jfs</property>
-            <value>11</value>
-        </greater-than>
-      </condition>
- 	  <volume>
-			<factor>0.4</factor>
- 	  </volume>
-      <reference-dist>100</reference-dist>
-      <max-dist>1000</max-dist>
-   </jfs-engine-start-continuous>
-
 		<engine-jet>
 			<name>engine-jet</name>
 			<path>Aircraft/f-14b/Sounds/engine-running.wav</path>
 			<mode>looped</mode>
-			<condition>
-				<not><property>sim/current-view/internal</property></not>
-                <or>
-    			<property>engines/engine[0]/running</property>
-    			<property>engines/engine[1]/running</property>
-                </or>
-			</condition>
+        <greater-than>
+    		<property>engines/engine[0]/n2</property>
+            <value>1</value>
+        </greater-than>
 			<orientation>
 				<x>0.0</x>
 				<y>0.0</y>
@@ -200,9 +199,11 @@
 				<ofset>-60</ofset>
 				<factor>.01</factor>
 			</pitch>
-			<volume>
-				<factor>0.7</factor>
-			</volume>
+            <volume>
+                <factor>0.5</factor>
+				<property>engines/engine[0]/n2</property>
+                <max>0.7</max>
+            </volume>
 		</engine-jet>
 
 		<engine-jet-exhaust>
