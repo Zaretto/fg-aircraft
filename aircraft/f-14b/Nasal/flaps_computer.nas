@@ -66,34 +66,50 @@ var computeFlaps = func {
 	if ( CurrentAlt < 30000.0 ) {
 		m_slat_cutoff = 0.5 + CurrentAlt * 0.000011667; # 0.5 + CurrentAlt * 0.35 / 30000;
 	}
-	if ( demandedFlaps == 0 ) {
+	if ( demandedFlaps == 0 ) 
+    {
         var slats = 0;
         var flaps = 0;
 		AuxFlapsCmd.setValue(0);
-		if ( CurrentMach <= m_slat_cutoff and ! wow ) {
-			if ( Alpha > m_slat_lo and Alpha <= m_slat_hi ) {
+		
+        if ( CurrentMach <= m_slat_cutoff and ! wow and !getprop("controls/gear/gear-down"))
+        {
+			if ( Alpha > m_slat_lo and Alpha <= m_slat_hi )
+            {
                 slats =  ( Alpha - m_slat_lo ) * lms_coef ;
-                flaps = m_flap_ext+slats;
-			} elsif ( Alpha > m_slat_hi ) {
+                flaps = (slats*0.33);
+                if (flaps > 0.33)
+                {
+                    flaps = 0.33;
+                }
+			}
+            elsif ( Alpha > m_slat_hi )
+            {
                 slats = max_m_slat_ext;
 				SlatsCmd.setValue( max_m_slat_ext );
                 flaps = m_flap_ext;
-                flaps = m_flap_ext;
-			} else {
-                slats=0;
-				MainFlapsCmd.setValue(0);
-				FlapsCmd.setValue(0);
-				SlatsCmd.setValue(0);
-                flaps = 0;
+#                flaps = m_flap_ext + max_m_slat_ext;
 			}
-            flaps = m_flap_ext;
-		} else {
-            flaps = 0;slats=0;
+            else
+            {
+                slats=0;
+				flaps=0;
+#               MainFlapsCmd.setValue(0);
+#   			FlapsCmd.setValue(0);
+#				SlatsCmd.setValue(0);
+			}
+#            flaps = m_flap_ext;
 		}
-    		MainFlapsCmd.setValue( m_flap_ext );
-			SlatsCmd.setValue(slats);
-			FlapsCmd.setValue(flaps);
-#print("Flaps ",m_flap_ext, " slats ",slats," flaps ",flaps);
+        else
+        {
+#            m_flap_ext = 0;
+            flaps = 0;
+            slats = 0;
+		}
+  		MainFlapsCmd.setValue( flaps );
+    	SlatsCmd.setValue(slats);
+		FlapsCmd.setValue(flaps);
+print("Flaps ",m_flap_ext, " slats ",slats," flaps ",flaps);
 	}
 	else if ( demandedFlaps == 1) {
 		MainFlapsCmd.setValue(1);
