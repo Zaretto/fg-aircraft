@@ -15,10 +15,15 @@ var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation"
 var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
 var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
 
-var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n1",1);
-var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n2",1);
-var l_inlet  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-inlet",1);
-var l_efflux  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-efflux",1);
+#props.globals.getNode("sim/model/f-14b/fx/test1",1);
+#props.globals.getNode("sim/model/f-14b/fx/test2",1);
+setprop("sim/model/f-14b/gear-sound-freeze",0);
+setprop("sim/model/f-14b/engine-sound-freeze",0);
+
+#var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n1",1);
+#var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n2",1);
+#var l_inlet  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-inlet",1);
+#var l_efflux  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-efflux",1);
 
 var l_running_prop = props.globals.getNode("engines/engine[0]/running",1);
 var r_running_prop = props.globals.getNode("engines/engine[1]/running",1);

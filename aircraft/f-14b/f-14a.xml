@@ -594,6 +594,26 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     fcs/elevator-pos-rad lt -0.17453
                 </test>
    </switch>
+
+     <fcs_function name="fcs/flap-windfx-volume">
+       <function>
+         <product>
+             <property>velocities/ve-kts</property>
+             <property>fcs/flap-pos-norm</property>
+         </product>
+       </function>
+       <output>fcs/flap-windfx-volume</output>
+     </fcs_function>
+     <fcs_function name="fcs/gear-windfx-volume">
+       <function>
+         <product>
+             <property>velocities/ve-kts</property>
+             <property>fcs/gear-control</property>
+         </product>
+       </function>
+       <output>fcs/gear-windfx-volume</output>
+     </fcs_function>
+
      <fcs_function name="fcs/stabilizer-1p">
        <function>
          <product>
