@@ -15,6 +15,8 @@ var ca_bingo_light  = props.globals.getNode("sim/model/f-14b/lights/ca-bingo", 1
 var ca_canopy_light = props.globals.getNode("sim/model/f-14b/lights/ca-lad-canopy", 1);
 var canopy = props.globals.getNode("canopy/position-norm", 1);
 
+var ca_ramp_light = props.globals.getNode("sim/model/f-14b/lights/ca-ramps", 1);
+
 var masterCaution_light = props.globals.getNode("sim/model/f-14b/instrumentation/warnings/master-caution", 1);
 var masterCaution_light_set = props.globals.getNode("sim/model/f-14b/controls/master-caution-set", 1);
 masterCaution_light_set.setBoolValue(0);
@@ -64,6 +66,27 @@ var master_caution_active  = 0;
 		    ca_start_valve.setBoolValue(0);
         }
     }
+#
+# RAMPS light on when either of the following 2 conditions met:
+# 
+# 1. Gear Handle Down or Inlet Ramps Switch in stow 
+#    AND 
+#    Ramp#2 not in stow locks OR Ramp#3 not in stow locks
+#
+# 2. Hydraulic shutoff value deenergized (Mach <0.35 and/or AICS failuer)
+#    AND
+#    Ramp#1 not in stow locks OR Ramp#3 not in stow locks
+#
+## ca_ramp_light on 
+
+# INLET light:
+# Indicates AICS programmer/system failure.
+# AICS Failure:
+# 1. < M 0.5 ramps should be restrained by actuator stow locks
+# 2. > M 0.5 ramp movement is restrained by trapped hydraulic pressure and mechanical locks, depending
+#   on mach when inlet light illuminates
+# 3.> M 0.9 Ramp movement is minimized by actuator spool valves and the aerodynamic load profile
+#  in this Mach range and a RAMP light should illuminate
 
 	if (oil_pressure_l.getValue() < 23 or oil_pressure_r.getValue() < 23 ){
 		if (!ca_oil_press_light.getBoolValue())

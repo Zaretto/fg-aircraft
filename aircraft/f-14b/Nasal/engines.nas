@@ -6,9 +6,12 @@ var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
 #var egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
 #var egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
-var Ramp1     = props.globals.getNode("engines/AICS/ramp1", 1);
-var Ramp2     = props.globals.getNode("engines/AICS/ramp2", 1);
-var Ramp3     = props.globals.getNode("engines/AICS/ramp3", 1);
+var Ramp1l     = props.globals.getNode("engines/AICS/ramp1l", 1);
+var Ramp2l     = props.globals.getNode("engines/AICS/ramp2l", 1);
+var Ramp3l     = props.globals.getNode("engines/AICS/ramp3l", 1);
+var Ramp1r     = props.globals.getNode("engines/AICS/ramp1r", 1);
+var Ramp2r     = props.globals.getNode("engines/AICS/ramp2r", 1);
+var Ramp3r     = props.globals.getNode("engines/AICS/ramp3r", 1);
 var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "DOUBLE");
 var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
 var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
@@ -19,6 +22,7 @@ var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation"
 #props.globals.getNode("sim/model/f-14b/fx/test2",1);
 setprop("sim/model/f-14b/gear-sound-freeze",0);
 setprop("sim/model/f-14b/engine-sound-freeze",0);
+setprop("sim/model/f-14b/controls/switch-backup-ignition",0);
 
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n1",1);
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n2",1);
@@ -66,19 +70,30 @@ var computeAICS = func {
 		ramp3 = 1.0;
 		ramp2 = 1.0;
 	}
-	Ramp1.setValue(ramp1);
-	Ramp2.setValue(ramp2);
-	Ramp3.setValue(ramp3);
+
+    if(!getprop("sim/model/f-14b/controls/switch-l-ramp"))
+    {
+    	Ramp1l.setValue(ramp1);
+    	Ramp2l.setValue(ramp2);
+    	Ramp3l.setValue(ramp3);
+    }
+
+    if(!getprop("sim/model/f-14b/controls/switch-r-ramp"))
+    {
+    	Ramp1r.setValue(ramp1);
+    	Ramp2r.setValue(ramp2);
+    	Ramp3r.setValue(ramp3);
+    }
 }
 
-	#----------------------------------------------------------------------------
-	# Nozzle opening
-	#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+# Nozzle opening
+#----------------------------------------------------------------------------
 
-	# Constant
-	NozzleSpeed = 1.0;
+# Constant
+NozzleSpeed = 1.0;
 
-	var computeNozzles = func {
+var computeNozzles = func {
 
 	var maxSeaLevelIdlenozzle = 0;
 	var idleNozzleTarget = 0;
@@ -415,5 +430,37 @@ var fire_handle = func(n) {
             setprop("controls/engines/engine[1]/cutoff", 1);
         }
     }
+}
+
+var econt_r_ramp = func(n) {
+setprop("sim/model/f-14b/controls/switch-r-ramp", n);
+    if (n)
+    {
+    	Ramp1r.setValue(0);
+    	Ramp2r.setValue(0);
+    	Ramp3r.setValue(0);
+    }
+}
+
+var econt_throttle_mode = func(n) {
+setprop("sim/model/f-14b/controls/switch-throttle-mode", n);
+}
+
+var econt_backup_ignition_toggle = func {
+setprop("sim/model/f-14b/controls/switch-backup-ignition", 1 - getprop("sim/model/f-14b/controls/switch-backup-ignition"));
+}
+
+var econt_l_ramp = func(n) {
+setprop("sim/model/f-14b/controls/switch-l-ramp", n);
+    if (n)
+    {
+    	Ramp1l.setValue(0);
+    	Ramp2l.setValue(0);
+    	Ramp3l.setValue(0);
+    }
+}
+
+var econt_temp = func(n) {
+setprop("sim/model/f-14b/controls/switch-temp", n);
 }
 

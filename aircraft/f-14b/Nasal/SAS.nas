@@ -37,6 +37,7 @@ var RawAileron    = props.globals.getNode("controls/flight/aileron");
 var RawRudder     = props.globals.getNode("controls/flight/rudder");
 var AileronTrim   = props.globals.getNode("controls/flight/aileron-trim", 1);
 var ElevatorTrim  = props.globals.getNode("controls/flight/elevator-trim", 1);
+var RudderTrim    = props.globals.getNode("controls/flight/rudder-trim", 1);
 var Dlc           = props.globals.getNode("controls/flight/DLC", 1);
 var Flaps         = props.globals.getNode("surface-positions/aux-flap-pos-norm", 1);
 var WSweep        = props.globals.getNode("surface-positions/wing-pos-norm", 1);
@@ -74,6 +75,7 @@ var update_steering_deadZ = func {
 
 # Elevator Trim
 if ( ElevatorTrim.getValue() != nil ) { e_trim = ElevatorTrim.getValue() }
+if ( RudderTrim.getValue() != nil ) { rudder_trim = RudderTrim.getValue() }
 
 var trimUp = func {
 	e_trim += (airspeed < 120.0) ? t_increment : t_increment * 14400 / airspeed_sqr;
@@ -87,6 +89,12 @@ var trimDown = func {
 	ElevatorTrim.setValue(e_trim);
 }
 
+var econt_rudder_trim = func(n) {
+	rudder_trim += n * ((airspeed < 120.0) ? t_increment : t_increment * 14400 / airspeed_sqr);
+	if (rudder_trim > 0.33) rudder_trim = 0.33;
+	if (rudder_trim < -0.33) rudder_trim = -0.33;
+	RudderTrim.setValue(rudder_trim);
+}
 
 
 # Stability Augmentation System
