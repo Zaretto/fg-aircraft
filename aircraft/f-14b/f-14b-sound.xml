@@ -3,7 +3,8 @@
 <PropertyList>
 
 	<fx>
-		<!-- Engines -->
+
+    <!-- Engines -->
     <engine-jfs-start>
       <name>engine-jfs-start</name>
       <mode>once</mode>
@@ -22,6 +23,7 @@
  	  </volume>
       <max-dist>1000</max-dist>
    </engine-jfs-start>
+
     <engine-jfs-shutdown>
       <name>engine-jfs-shutdown</name>
       <mode>once</mode>
@@ -33,7 +35,6 @@
             <value>1</value>
         </equals>
       </condition>
-      
        <reference-dist>100</reference-dist>
  	  <volume>
 			<factor>0.4</factor>
@@ -68,7 +69,7 @@
                 <not><property>sim/model/f-14b/engine-sound-freeze</property></not>
             </condition>
 			<mode>looped</mode>
-			<pitch>
+      <pitch>
 				<property>engines/engine[0]/n1</property>
 				<ofset>1</ofset>
 				<factor>0.01</factor>
@@ -78,10 +79,19 @@
 				<property>engines/engine[0]/n2</property>
                 <max>0.4</max>
             </volume>
-            <reference-dist>300.0</reference-dist>
-            <max-dist>10000.0</max-dist>
-		</engine-jet-whine-l>
-		<engine-jet-whine-l1>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>1</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.5</outer-gain>
+      </orientation>
+      <reference-dist>300.0</reference-dist>
+      <max-dist>1500.0</max-dist>
+    </engine-jet-whine-l>
+
+    <engine-jet-whine-l1>
 			<name>engine-jet-whine-l1</name>
 			<path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
 			<mode>looped</mode>
@@ -98,11 +108,17 @@
 				<property>engines/engine[0]/n2</property>
                 <max>0.4</max>
             </volume>
-            <reference-dist>600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-            <reference-dist>300.0</reference-dist>
-            <max-dist>10000.0</max-dist>
-		</engine-jet-whine-l1>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>1</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.5</outer-gain>
+      </orientation>
+      <reference-dist>300.0</reference-dist>
+      <max-dist>1500.0</max-dist>
+    </engine-jet-whine-l1>
 
 		<engine-jet-whine-r>
 			<name>engine-jet-whine-r</name>
@@ -121,12 +137,19 @@
 				<property>engines/engine[1]/n2</property>
                 <max>0.4</max>
             </volume>
-            <reference-dist>600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-            <reference-dist>300.0</reference-dist>
-            <max-dist>10000.0</max-dist>
-		</engine-jet-whine-r>
-		<engine-jet-whine-r1>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>1</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.5</outer-gain>
+      </orientation>
+      <reference-dist>300.0</reference-dist>
+      <max-dist>1500.0</max-dist>
+    </engine-jet-whine-r>
+
+    <engine-jet-whine-r1>
 			<name>engine-jet-whine-r1</name>
 			<path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
 			<mode>looped</mode>
@@ -143,9 +166,17 @@
 				<property>engines/engine[1]/n2</property>
                 <max>0.4</max>
             </volume>
-            <reference-dist>300.0</reference-dist>
-            <max-dist>10000.0</max-dist>
-		</engine-jet-whine-r1>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>1</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.5</outer-gain>
+      </orientation>
+      <reference-dist>300.0</reference-dist>
+      <max-dist>1500.0</max-dist>
+    </engine-jet-whine-r1>
 
 		<engine-jet-rumble-l>
 			<name>engine-jet-rumble-l</name>
@@ -163,14 +194,17 @@
                 <factor>0.01</factor>
 				<property>engines/engine[0]/n2</property>
             </volume>
-            <position>
-                <x>0</x>
-                <y>-9.8</y>
-                <z>-3</z>
-            </position>
-            <reference-dist>600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-		</engine-jet-rumble-l>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>-180.0</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.2</outer-gain>
+      </orientation>
+      <reference-dist>900.0</reference-dist>
+      <max-dist>2500.0</max-dist>
+    </engine-jet-rumble-l>
 
 		<engine-jet-rumble-r>
 			<name>engine-jet-rumble-r</name>
@@ -188,14 +222,17 @@
                 <factor>0.01</factor>
 				<property>engines/engine[1]/n2</property>
             </volume>
-            <position>
-                <x>0</x>
-                <y>9.8</y>
-                <z>-3</z>
-            </position>
-            <reference-dist>1600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-		</engine-jet-rumble-r>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>-180.0</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.2</outer-gain>
+      </orientation>
+      <reference-dist>900.0</reference-dist>
+      <max-dist>2500.0</max-dist>
+    </engine-jet-rumble-r>
 
 		<engine-jet-exhaust-inside-l>
 			<name>engine-jet-exhaust-inside-l</name>
@@ -251,23 +288,23 @@
                 </or>
        			<property>engines/engine[0]/running</property>
 			</condition>
-			<orientation>
-				<x>0.0</x>
-				<y>0.0</y>
-				<z>-180.0</z>
-				<inner-angle>180.0</inner-angle>
-				<outer-angle>360.0</outer-angle>
-				<outer-gain>0.2</outer-gain>
-			</orientation>
 			<volume>
 				<property>engines/engine[0]/thrust_lb</property>
 				<factor>0.00004</factor>
 				<min>0.3</min>
                 <max>1.0</max>
 			</volume>
-            <reference-dist>1600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-		</engine-jet-exhaust-l>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>1</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.5</outer-gain>
+      </orientation>
+      <reference-dist>900.0</reference-dist>
+      <max-dist>2500.0</max-dist>
+    </engine-jet-exhaust-l>
 		<engine-jet-exhaust-r>
 			<name>engine-jet-exhaust-r</name>
 			<path>Aircraft/f-14b/Sounds/engine-jet-efflux-louder.wav</path>
@@ -282,23 +319,23 @@
                 </or>
 	   			<property>engines/engine[1]/running</property>
 			</condition>
-			<orientation>
-				<x>0.0</x>
-				<y>0.0</y>
-				<z>-180.0</z>
-				<inner-angle>180.0</inner-angle>
-				<outer-angle>360.0</outer-angle>
-				<outer-gain>0.2</outer-gain>
-			</orientation>
 			<volume>
 				<property>engines/engine[1]/thrust_lb</property>
 				<factor>0.00004</factor>
 				<min>0.3</min>
                 <max>1.0</max>
 			</volume>
-            <reference-dist>1600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-		</engine-jet-exhaust-r>
+      <orientation>
+        <x>0.0</x>
+        <y>0.0</y>
+        <z>1</z>
+        <inner-angle>180.0</inner-angle>
+        <outer-angle>360.0</outer-angle>
+        <outer-gain>0.5</outer-gain>
+      </orientation>
+      <reference-dist>900.0</reference-dist>
+      <max-dist>2500.0</max-dist>
+    </engine-jet-exhaust-r>
 
 
 		<!-- Wheel Rumble -->
@@ -319,9 +356,9 @@
 				<factor>0.005</factor>
 				<max>0.6</max>
 			</volume>
-            <reference-dist>1600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-		</rumble>
+      <reference-dist>60.0</reference-dist>
+      <max-dist>300.0</max-dist>
+    </rumble>
 
     <rumblefront>
       <!--wheel-speed-fps-->
@@ -350,53 +387,13 @@
         <factor>0.2</factor>
       </volume>
       <reference-dist>60.0</reference-dist>
-      <max-dist>6000.0</max-dist>
+      <max-dist>300.0</max-dist>
     </rumblefront>
-
-    <!--<rattle>
-      <name>rumble</name>
-      <mode>in-transit</mode>
-      <path>Aircraft/f-14b/Sounds/ground-rattle.wav</path>
-      <condition>
-        <property>sim/current-view/internal</property>
-        <or>
-          <property>gear/gear[0]/wow</property>
-          <property>gear/gear[1]/wow</property>
-          <property>gear/gear[2]/wow</property>
-        </or>
-        <not>
-          <equals>
-            <property>fdm/jsbsim/gear/unit[1]/compression-velocity-fps</property>
-            <value>0</value>
-          </equals>
-        </not>
-      </condition>-->
-      <!--<volume>
-        <abs><property>fdm/jsbsim/gear/unit[1]/compression-velocity-fps</property></abs>
-        <factor>10</factor>
-        <max>0.6</max>
-      </volume>
-      <reference-dist>1600.0</reference-dist>
-      <max-dist>6000.0</max-dist>
-    </rattle>
-    -->
 
     <flaps-wind>
       <name>flaps-wind</name>
       <mode>looped</mode>
       <path>Aircraft/f-14b/Sounds/wind-noise.wav</path>
-      <condition>
-        <!--<not>
-          <property>gear/gear[0]/wow</property>
-        </not>-->
-        <!--<not>
-          <equals>
-            <property>gear/gear[0]/position-norm</property>
-            <value>0</value>
-          </equals>
-        </not>-->
-        <property>sim/current-view/internal</property>
-      </condition>
       <volume>
         <property>fdm/jsbsim/fcs/flap-windfx-volume</property>
         <factor>0.002</factor>
@@ -408,23 +405,12 @@
       </volume>-->
       <!--<max-dist>5</max-dist>-->
     </flaps-wind>
+
     <!-- Gears -->
     <gear-0-wind>
       <name>gear-0-wind</name>
       <mode>looped</mode>
       <path>Aircraft/f-14b/Sounds/wind-noise.wav</path>
-      <condition>
-        <!--<not>
-          <property>gear/gear[0]/wow</property>
-        </not>-->
-        <!--<not>
-          <equals>
-            <property>gear/gear[0]/position-norm</property>
-            <value>0</value>
-          </equals>
-        </not>-->
-        <property>sim/current-view/internal</property>
-      </condition>
       <volume>
         <property>fdm/jsbsim/fcs/gear-windfx-volume</property>
         <factor>0.005</factor>
@@ -444,14 +430,10 @@
 			<mode>in-transit</mode>
 			<path>Sounds/gear.wav</path>
 			<property>gear/gear[0]/position-norm</property>
-			<!--<pitch>
-				<property>gear/gear[0]/position-norm</property>
-				<offset>0.2</offset>
-				<factor>0.1</factor>
-			</pitch>-->
 			<volume><factor>1.1</factor></volume>
 		</gear-0-transit>
-		<gear-0-lock>
+
+    <gear-0-lock>
 			<name>gear-0-lock</name>
 			<path>Sounds/gear-lck.wav</path>
 			<condition>
@@ -487,8 +469,8 @@
                 <y>0</y>
                 <z>0.86</z>
             </position>
-            <reference-dist>60.0</reference-dist>
-            <max-dist>6000.0</max-dist>
+            <reference-dist>200.0</reference-dist>
+            <max-dist>900.0</max-dist>
         </wind>
 
 <!-- buffet -->
@@ -518,30 +500,6 @@
       <max-dist>5</max-dist>
     </high-alpha-airflow>
 
-<!-- 
-		<wind>
-			<name>wind</name>
-			<mode>looped</mode>
-			<path>Aircraft/f-14b/Sounds/wind.wav</path>
-			<condition>
-				<equals>
-					<property>sim/current-view/view-number</property>
-					<value>0</value>
-				</equals>
-				<greater-than>
-					<property>canopy/position-norm</property>
-					<value>0</value>
-				</greater-than>
-			</condition>
-			<volume>
-				<property>velocities/airspeed-kt</property>
-				<factor>0.001</factor>
-			</volume>
-            <reference-dist>1600.0</reference-dist>
-            <max-dist>6000.0</max-dist>
-		</wind>
---> 
-
 		<!-- Air-brakes -->
 		<air-brakes>
 			<name>air-brakes</name>
@@ -557,83 +515,92 @@
 			</volume>
 		</air-brakes>
 
-
 		<!-- Squeal -->
 		<squeal>
 			<name>squeal</name>
 			<path>Sounds/squeal.wav</path>
-			<condition>
-				<property>gear/gear[0]/wow</property>
-			</condition>
-			<volume>
-				<property>velocities/speed-down-fps</property>
-				<factor>0.05</factor>
-			</volume>
-			<volume>
-				<property>velocities/groundspeed-kt</property>
-				<factor>0.01</factor>
-			</volume>
-			<volume>
-				<internal>dt_stop</internal>
-				<factor>0.05</factor>
-				<max>1.0</max>
-			</volume>
-			<pitch>
-				<property>velocities/groundspeed-kt</property>
-				<factor>0.0025</factor>
-				<offset>1.2</offset>
-			</pitch>
-		</squeal>
-		<squeal>
+      <condition>
+        <property>gear/gear[0]/tyre-smoke</property>
+      </condition>
+      <volume>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.01</factor>
+      </volume>
+      <volume>
+        <internal>dt_stop</internal>
+        <factor>0.5</factor>
+        <max>1.0</max>
+       </volume>
+      <pitch>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.0025</factor>
+        <offset>1.2</offset>
+      </pitch>
+      <position>
+        <x>2</x>
+        <y>0</y>
+        <z>-0.5</z>
+      </position>
+      <reference-dist>60.0</reference-dist>
+      <max-dist>6000.0</max-dist>
+    </squeal>
+
+    <squeal>
 			<name>squeal</name>
 			<path>Sounds/squeal.wav</path>
-			<condition>
-				<property>gear/gear[1]/wow</property>
-			</condition>
-			<volume>
-				<property>velocities/speed-down-fps</property>
-				<factor>0.05</factor>
-			</volume>
-			<volume>
-				<property>velocities/groundspeed-kt</property>
-				<factor>0.01</factor>
-			</volume>
-			<volume>
-				<internal>dt_stop</internal>
-				<factor>0.05</factor>
-				<max>1.0</max>
-			</volume>
-			<pitch>
-				<property>velocities/airspeed-kt</property>
-				<factor>0.0025</factor>
-				<offset>1.2</offset>
-			</pitch>
-		</squeal>
+      <condition>
+        <property>gear/gear[1]/tyre-smoke</property>
+      </condition>
+      <volume>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.01</factor>
+      </volume>
+      <volume>
+        <internal>dt_stop</internal>
+        <factor>0.5</factor>
+        <max>1.0</max>
+      </volume>
+      <pitch>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.0025</factor>
+        <offset>1.2</offset>
+      </pitch>
+      <position>
+        <x>6.5</x>
+        <y>-8</y>
+        <z>-0.5</z>
+      </position>
+      <reference-dist>60.0</reference-dist>
+      <max-dist>6000.0</max-dist>
+    </squeal>
 		<squeal>
-			<name>squeal</name>
-			<path>Sounds/squeal.wav</path>
-			<condition>
-				<property>gear/gear[2]/wow</property>
-			</condition>
-			<volume>
-				<property>velocities/speed-down-fps</property>
-				<factor>0.05</factor>
-			</volume>
-			<volume>
-				<property>velocities/groundspeed-kt</property>
-				<factor>0.01</factor>
-			</volume>
-			<volume>
-				<internal>dt_stop</internal>
-				<factor>0.05</factor>
-				<max>1.0</max>
-			</volume>
-			<pitch>
-				<property>velocities/groundspeed-kt</property>
-				<factor>0.0025</factor>
-				<offset>1.2</offset>
-			</pitch>
-		</squeal>
+      <name>squeal</name>
+      <path>Sounds/squeal.wav</path>
+      <condition>
+        <property>gear/gear[2]/tyre-smoke</property>
+      </condition>
+      <volume>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.01</factor>
+      </volume>
+      <volume>
+        <internal>dt_stop</internal>
+        <factor>0.5</factor>
+        <max>1.0</max>
+      </volume>
+      <pitch>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.0025</factor>
+        <offset>1.2</offset>
+      </pitch>
+      <position>
+        <x>6.5</x>
+        <y>8</y>
+        <z>-0.5</z>
+      </position>
+      <reference-dist>60.0</reference-dist>
+      <max-dist>6000.0</max-dist>
+    </squeal>
 
 		<flap-in-transit>
 			<name>flaps-in-transit</name>
