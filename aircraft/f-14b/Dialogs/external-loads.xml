@@ -48,16 +48,46 @@
 						<script>f14.toggle_ext_tank_selected()</script>
 					</binding>
 				</checkbox>
-
 			</group>
 
-			<empty>
+      <empty>
 				<pref-height>2</pref-height>
 			</empty>
 
 			<hrule/>
 
-			<group>
+      <group>
+        <layout>hbox</layout>
+        <button>
+          <legend>Airshow fuel</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(3000)</script>
+          </binding>
+        </button>
+        <button>
+          <legend>Full</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(19000)</script>
+          </binding>
+        </button>
+        <button>
+          <legend>7000</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(7000)</script>
+          </binding>
+        </button>
+        <button>
+          <legend>11000</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(11000)</script>
+          </binding>
+        </button>
+      </group>
+      <group>
 				<layout>hbox</layout>
 			
 				<group><!-- Labels -->
@@ -745,9 +775,25 @@
 				</text>
 			</group>
 
+      <group>
+        <layout>hbox</layout>
+        <layout>hbox</layout>
+        <default-padding>0</default-padding>
+        <text>
+          <label>Fuel Freeze:</label>
+        </text>
+        <checkbox>
+          <property>sim/freeze/fuel</property>
+          <live>true</live>
+          <binding>
+            <command>nasal</command>
+            <script>f14.toggle_fuel_freeze()</script>
+          </binding>
+        </checkbox>
+      </group>
 
 
-			<empty>
+      <empty>
 				<pref-height>12</pref-height>
 			</empty>
 

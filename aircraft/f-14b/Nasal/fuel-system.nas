@@ -159,17 +159,20 @@ var init_fuel_system = func {
 
 
 var build_new_tanks = func {
+var Right = 1;
+var Left = 0;
 	#tanks ("name", number, initial connection status)
-	FWD_Fuselage   = Tank.new("FWD fuselage", 0, 1);   # 4700 lbs
-	AFT_Fuselage   = Tank.new("AFT fuselage", 1, 1);   # 4400 lbs
-	Left_Beam_Box  = Tank.new("L beam box", 2, 1);  # 1250 lbs
-	Left_Sump      = Tank.new("L sump", 3, 1);      #  300 lbs
-	Right_Beam_Box = Tank.new("R beam box", 4, 1); # 1250 lbs
-	Right_Sump     = Tank.new("R sump", 5, 1);     #  300 lbs
-	Left_Wing      = Tank.new("L wing", 6, 1);      # 2000 lbs
-	Right_Wing     = Tank.new("R wing", 7, 1);     # 2000 lbs
-	Left_External  = Tank.new("L external", 8, l_ext_select_state);  # 2000 lbs
-	Right_External = Tank.new("R external", 9, r_ext_select_state); # 2000 lbs
+    # the order of these is significant for the set_fuel operation
+	Left_Sump      = Tank.new("L sump", 3, 1, Left);      #  300 lbs
+	Right_Sump     = Tank.new("R sump", 5, 1, Right);     #  300 lbs
+	FWD_Fuselage   = Tank.new("FWD fuselage", 0, 1, Left);   # 4700 lbs
+	AFT_Fuselage   = Tank.new("AFT fuselage", 1, 1, Right);   # 4400 lbs
+	Left_Beam_Box  = Tank.new("L beam box", 2, 1, Left);  # 1250 lbs
+	Right_Beam_Box = Tank.new("R beam box", 4, 1, Right); # 1250 lbs
+	Left_Wing      = Tank.new("L wing", 6, 1, Left);      # 2000 lbs
+	Right_Wing     = Tank.new("R wing", 7, 1, Right);     # 2000 lbs
+	Left_External  = Tank.newExternal("L external", 8, l_ext_select_state, Left);  # 2000 lbs
+	Right_External = Tank.newExternal("R external", 9, r_ext_select_state, Right); # 2000 lbs
 }
 
 var build_new_proportioners = func {
@@ -741,12 +744,38 @@ var internal_restore_fuel = func() {
 
 # Tank
 Tank = {
-	new : func (name, number, connect) {
+	new : func (name, number, connect, side) {
 		var obj = { parents : [Tank]};
 		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
 #		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
 #		obj.name = obj.prop.getNode("name", 1);
+        obj.side = side; # 1 is right; 0 is left.
 		obj.name = name;
+		obj.prop.getChild("name", 0, 1).setValue(name);
+		obj.capacity = obj.prop.getNode("capacity-gal_us", 1);
+		obj.ppg = obj.prop.getNode("density-ppg", 1);
+		obj.level_gal_us = obj.prop.getNode("level-gal_us", 1);
+		obj.level_gal_us.setValue(0);
+		obj.level_lbs = obj.prop.getNode("level-lbs", 1);
+		obj.level_lbs.setValue(0);
+		obj.transfering = obj.prop.getNode("transfering", 1);
+		obj.transfering.setBoolValue(0);
+		obj.selected = obj.prop.getNode("selected", 1);
+		obj.selected.setBoolValue(connect);
+		obj.ppg.setDoubleValue(6.3);
+        obj.external = 0;
+		append(Tank.list, obj);
+		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
+		return obj;
+	},
+	newExternal : func (name, number, connect, side) {
+		var obj = { parents : [Tank]};
+		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
+#		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
+#		obj.name = obj.prop.getNode("name", 1);
+        obj.side = side; # 1 is right; 0 is left.
+		obj.name = name;
+        obj.external = 1;
 		obj.prop.getChild("name", 0, 1).setValue(name);
 		obj.capacity = obj.prop.getNode("capacity-gal_us", 1);
 		obj.ppg = obj.prop.getNode("density-ppg", 1);
@@ -764,8 +793,19 @@ Tank = {
 		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
+    #
+    # the side of this tank (or the engine that this tank feeds) (0 = left, 1 = right) 
+    get_side : func {
+        return me.side;
+    },
+    is_external : func {
+        return me.external;
+    },
 	get_capacity : func {
 		return me.capacity.getValue(); 
+	},
+	get_capacity_lbs : func {
+		return me.capacity.getValue() * me.ppg.getValue(); 
 	},
 	get_level : func {
 		return me.level_gal_us.getValue();
@@ -777,6 +817,11 @@ Tank = {
 		if(gals_us < 0) gals_us = 0;
 		me.level_gal_us.setDoubleValue(gals_us);
 		me.level_lbs.setDoubleValue(gals_us * me.ppg.getValue());
+	},
+	set_level_lbs : func (lbs){
+		if(lbs < 0) lbs = 0;
+		me.level_gal_us.setDoubleValue(lbs / me.ppg.getValue());
+		me.level_lbs.setDoubleValue(lbs);
 	},
 	set_transfering : func (transfering){
 		me.transfering.setBoolValue(transfering);
@@ -797,6 +842,9 @@ Tank = {
 	},
 	get_ullage : func () {
 		return me.get_capacity() - me.get_level()
+	},
+	get_ullage_lbs : func () {
+		return (me.get_capacity() - me.get_level()) * me.ppg.getValue();
 	},
 	get_name : func () {
 		return me.name.getValue();
@@ -985,3 +1033,68 @@ Valve = {
 	list : [],
 };
 
+var toggle_fuel_freeze = func() {
+setprop("sim/freeze/fuel", 1-getprop("sim/freeze/fuel"));
+}
+
+var set_fuel = func(total) {
+var total_delta = (total - getprop("consumables/fuel/total-fuel-lbs"));
+
+var start = 0; 
+var end = size(Tank.list)-1;
+var inc = 1;
+if (total_delta < 0)
+{
+start = size(Tank.list)-1;
+end = -1;
+inc = -1;
+}
+
+print("\n set_fuel to ",total," delta ",total_delta);
+  for (var i=0; i < 2; i = i+1)
+  {
+    var delta = total_delta / 2;
+print ("\nDoing side ",i, " adjust by ",delta);
+#	foreach (var t; Tank.list)
+    for (var tank_idx=start; tank_idx != end; tank_idx = tank_idx + inc)
+    {
+      var t = Tank.list[tank_idx];
+      #
+      # only consider non external tanks; or external tanks when connected.
+print("Processing ",t.name," is ext ",t.is_external());
+      if (!t.is_external() or getprop("sim/model/f-14b/systems/external-loads/external-tanks"))
+      {
+      if (t.get_side() == i)
+      {
+        if (delta < 0)
+        {
+            var tdelta = t.get_level_lbs() + delta;
+            if (tdelta < 0)
+            {
+                delta = delta + t.get_level_lbs();
+print("Tank ",t.name," empty : new_delta ", delta);
+        		t.set_level_lbs(0);
+            }
+            else
+            {
+                if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
+        		t.set_level_lbs(tdelta);
+                print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
+                delta = delta - tdelta;
+            }
+        }
+        else
+        {
+            var tdelta = t.get_ullage_lbs();
+            if (tdelta > delta) tdelta = delta;
+#            if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
+
+            delta = delta - tdelta;
+    		t.set_level_lbs(t.get_level_lbs() + tdelta);
+print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
+        }
+      }
+      }
+    }
+  }
+}
