@@ -1,19 +1,44 @@
 #----------------------------------------------------------------------------
 # Sweep angle computer     
-# For display purposes only ! No variable sweep on YaSim
+# Original F-14B : display purposes only ! No variable sweep on YaSim
+# Richard Harrison JSBSim version (rjh@zaretto.com) has sweep angle in the 
+# aerodynamic data - based on NASA data (see f-14a.xml for references) and
+# it makes a lot of difference to the handling.
 #----------------------------------------------------------------------------
 
-#Constants
-var MachLo = 0.7;
-var MachHi = 1.4;
+
+# rjh@zaretto.com: changed the following in accordance with NAVAIR 01-F14AAD-1 Figure 2-48: p. 2-87
+#                : max sweep now 68 (was 65)
+#                : Machlo 0.41
+#	<14000 feet
+# sweep  MN
+# 20	0.448 
+# 21	0.711
+# 68	0.913
+#	>20000 feet
+# sweep  MN
+# 20	0.448
+# 21	0.632
+# 68	0.913
+#
+# main flaps max sweep is 47.5 to 50 until MN 0.913 
+# aux flaps extended limit 21 deg
+# 
+var MachLo = 0.632;
+var MachHi = 0.973;
 var MachSweepRange = MachHi - MachLo;
-var OverSweepAngle = 65.0;
+#
+var OverSweepAngle = 68.0;
 var SweepRate = 2.0;    # degrees per second
-var SweepVsMachLo = 20.0; 
+var SweepVsMachLo = 22.0;  # for simplicity we will ignore the 21degrees sweep
 var SweepVsMachHi = 60.0;
+setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
 
+var minSweep = 0.383972435;
+var maxSweep = 1.0 - minSweep;
+var mnSweepFactor = (maxSweep - minSweep) / (MachHi - MachLo);
 # Functions
-
+    
 var toggleOversweep = func {
 	if ( wow and ! OverSweep ) {
 		# Flaps/sweep interlock
@@ -36,6 +61,11 @@ var toggleOversweep = func {
 
 var computeSweep = func {
 
+    if (usingJSBSim){
+        currentSweep = getprop("/fdm/jsbsim/fcs/wing-sweep-cmd");
+        return;
+    }
+
 	if (AutoSweep) {
 		current_mach = getprop ("/velocities/mach");
 
@@ -44,17 +74,16 @@ var computeSweep = func {
 
 		# Flaps/sweep interlock
 		# do not move the wings until auxiliary flaps are in.
-
 #		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
 		if (getprop ("fcs/aux-flap-pos-deg") > 0.05) return;
 		# Sweep vs. Mach motion
 		if (current_mach <= MachLo) {
-			WingSweep = 0.0;
+			WingSweep = minSweep;
 		} elsif (current_mach < MachHi) {
-			WingSweep = (current_mach - MachLo) / MachSweepRange;
+			WingSweep = minSweep + (current_mach * mnSweepFactor); #(current_mach - MachLo) / MachSweepRange;
 		} else {
-			WingSweep = 1.0;
+			WingSweep = maxSweep;
 		}
+        setprop("/fdm/jsb-sim/fcs/wing-sweep-cmd",WingSweep);
 	}
-
 }

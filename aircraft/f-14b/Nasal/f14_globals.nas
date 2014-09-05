@@ -24,6 +24,8 @@ var Nozzle1Target = 0.0;
 var Nozzle2Target = 0.0;
 var Nozzle1 = 0.0;
 var Nozzle2 = 0.0;
+var usingJSBSim = getprop("/sim/flight-model") == "jsb";
+print ("F-14 Using jsbsim = ",usingJSBSim);
 
 #----------------------------------------------------------------------------
 # Spoilers
@@ -74,6 +76,7 @@ var CurrentIAS = 0;
 var Alpha = 0;
 var Throttle = 0;
 var e_trim = 0;
+var rudder_trim = 0;
 
 
 

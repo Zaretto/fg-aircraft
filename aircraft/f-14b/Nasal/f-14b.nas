@@ -10,6 +10,7 @@ aircraft.light.new("sim/model/f-14b/lighting/anti-collision", [0.09, 1.20], anti
 var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting/position-flash-switch");
 var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.15]);
 setprop("/sim/model/f-14b/lighting/position/enabled", 1);
+getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
 
@@ -125,7 +126,8 @@ var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/positio
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn");
 
-#var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]");
+var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]");
+var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]");
 var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]");
 var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]");
 var left_elev_generic  = props.globals.getNode("sim/multiplay/generic/float[4]");
@@ -224,17 +226,19 @@ var timedMotions = func {
 	}
 
 	# Wing Sweep
-	if (currentSweep > WingSweep) {
-		currentSweep -= SweepSpeed * deltaT;
-		if (currentSweep < WingSweep) {
-			currentSweep = WingSweep;
-		}
-	} elsif (currentSweep < WingSweep) {
-		currentSweep += SweepSpeed * deltaT;
-		if (currentSweep > WingSweep) {
-			currentSweep = WingSweep;
-		}
-	}
+    if (!usingJSBSim){
+    	if (currentSweep > WingSweep) {
+    		currentSweep -= SweepSpeed * deltaT;
+    		if (currentSweep < WingSweep) {
+    			currentSweep = WingSweep;
+    		}
+    	} elsif (currentSweep < WingSweep) {
+    		currentSweep += SweepSpeed * deltaT;
+    		if (currentSweep > WingSweep) {
+    			currentSweep = WingSweep;
+    		}
+	    }
+    }
 
 	setprop ("surface-positions/left-spoilers", CurrentLeftSpoiler);
 	setprop ("surface-positions/right-spoilers", CurrentRightSpoiler);
@@ -244,12 +248,21 @@ var timedMotions = func {
 	setprop ("engines/engine[1]/nozzle-pos-norm", Nozzle2);
 	setprop ("surface-positions/wing-pos-norm", currentSweep);
 	setprop ("/fdm/jsbsim/fcs/wing-sweep", currentSweep);
-	setprop ("controls/flight/wing-sweep", WingSweep);
 
 	# Copy surfaces animations properties so they are transmited via multiplayer.
-	#main_flap_generic.setDoubleValue(main_flap_output.getValue());
+    if (usingJSBSim)
+    {
+        if (main_flap_generic != nil)
+    	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
+    }
+    else
+    {
+    	main_flap_generic.setDoubleValue(main_flap_output.getValue());
+    	setprop ("controls/flight/wing-sweep", WingSweep);
+    }
 	#aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
 	slat_generic.setDoubleValue(slat_output.getValue());
+    wing_sweep_generic.setDoubleValue(currentSweep);
 #	left_elev_generic.setDoubleValue(left_elev_output.getValue());
 #	right_elev_generic.setDoubleValue(right_elev_output.getValue());
 # JSB Sim doesn't seem to have two elevator positions.
