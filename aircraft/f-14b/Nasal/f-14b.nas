@@ -300,7 +300,9 @@ var updateFCS = func {
 	f14.computeFlaps ();
 	f14.computeSpoilers ();
 	f14.computeNozzles ();
-	f14.computeSAS ();
+    if (!usingJSBSim){
+	    f14.computeSAS ();
+    }
 	f14.computeAdverse ();
 	f14.computeNWS ();
 	f14.computeAICS ();

@@ -101,6 +101,11 @@ var econt_rudder_trim = func(n) {
 
 # Stability Augmentation System
 var computeSAS = func {
+    if (usingJSBSim)
+    {
+        return;
+    }
+
 	var roll     = Roll.getValue();
 	var roll_rad = roll * 0.017453293;
 	airspeed     = AirSpeed.getValue();
@@ -158,11 +163,6 @@ var computeSAS = func {
 		SASroll = sas_roll; # Used by adverse.nas
 		SasRoll.setValue(sas_roll * ! o_sweep);
 
-#        if (usingJSBSim){
-#            AileronTrim.setDoubleValue(sas_roll);
-#            print (" SasRoll ",AileronTrim.getValue());
-#        }
-
 		# Pitch Channel
 		var pitch_rate = PitchRate.getValue();
 		var yaw_rate   = YawRate.getValue();
@@ -197,27 +197,29 @@ var computeSAS = func {
 		if (airspeed > p_lo_speed) p_input *= p_lo_speed_sqr / airspeed_sqr;
 		SasPitch.setValue(p_input * ! o_sweep);
 		SASpitch = p_input; # Used by adverse.nas 
-#if (usingJSBSim){
-#ElevatorTrim.setDoubleValue(e_trim + p_input);
-#print (" SasPitch ",ElevatorTrim.getValue());
-#}
-
 	}
 
-#    if (!usingJSBSim)
-#    {
-    	# Yaw Channel
-    	var raw_r    = RawRudder.getValue();
-    	var smooth_r = raw_r;
-        fdm_yawdamper.setValue(SasYawOn.getValue());
-    	if (SasYawOn.getValue()) {
+  	# Yaw Channel
+   	var raw_r    = RawRudder.getValue();
+   	var smooth_r = raw_r;
+
+   	if (SasYawOn.getValue()) {
     		smooth_r = last_r + ((raw_r - last_r) * r_smooth_factor);
 	    	last_r = smooth_r;
-    	}
-    	SasYaw.setValue(smooth_r);
-#    }
-        fdm_pitchdamper.setValue(SasPitchOn.getValue());
-        fdm_rolldamper.setValue(SasRollOn.getValue());
-
-
+    }
+   	SasYaw.setValue(smooth_r);
 }
+setlistener("sim/model/f-14b/controls/SAS/yaw", func {
+        fdm_yawdamper.setValue(SasYawOn.getValue());
+print("set yaw damper ",fdm_yawdamper.getValue());
+}, 1, 0);
+
+setlistener("sim/model/f-14b/controls/SAS/roll", func {
+        fdm_rolldamper.setValue(SasRollOn.getValue());
+print("set roll  damper ",fdm_rolldamper.getValue());
+}, 1, 0);
+
+setlistener("sim/model/f-14b/controls/SAS/pitch", func {
+        fdm_pitchdamper.setValue(SasPitchOn.getValue());
+print("set pitch damper ",fdm_pitchdamper.getValue());
+}, 1, 0);
