@@ -517,6 +517,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <summer name="Pitch Trim Sum">
       <input>fcs/elevator-cmd-norm</input>
       <input>fcs/pitch-trim-cmd-norm</input>
+      <input>fcs/pitch-damper-rate</input>
       <clipto>
         <min> -1 </min>
         <max>  1 </max>
@@ -539,11 +540,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <traverse>
           <setting>
               <position>0.294117647</position>
-              <time>3.06</time> <!-- F14AAD-1 15 deg/sec sweep rate -->
+              <time>16</time> <!-- F14AAD-1 15 deg/sec sweep rate, (68-20)/15 -->
           </setting>
           <setting>
               <position>1</position>
-              <time>3.06</time>
+              <time>16</time>
           </setting>
       </traverse>
       <output>fcs/wing-sweep-cmd</output>
@@ -677,6 +678,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <summer name="Roll Trim Sum">
       <input>fcs/aileron-cmd-norm</input>
       <input>fcs/roll-trim-cmd-norm</input>
+      <input>fcs/roll-damper-rate</input>
       <clipto>
         <min> -1 </min>
         <max>  1 </max>
@@ -730,6 +732,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   </channel>
 
   <property value="0">fcs/yaw-damper-enable</property>
+  <property value="0">fcs/pitch-damper-enable</property>
+  <property value="0">fcs/roll-damper-enable</property>
   <property value="0">fcs/external-tanks-fitted</property>
   <property value="0">fcs/aim-fitted</property>
   <property value="0">fcs/slat-cmd</property>
@@ -769,6 +773,24 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </test>
         <output>fcs/yaw-damper-active</output>
     </switch>
+   <switch name="fcs/pitch-damper-active">
+       <default value="0.0"/>
+       <test logic="AND" value="1">
+            aero/alpha-rad ge -0.175438596491228
+            aero/alpha-rad le  0.2631578947368421
+            fcs/pitch-damper-enable ne 0.0
+        </test>
+        <output>fcs/pitch-damper-active</output>
+    </switch>
+   <switch name="fcs/roll-damper-active">
+       <default value="0.0"/>
+       <test logic="AND" value="1">
+            aero/alpha-rad ge -0.175438596491228
+            aero/alpha-rad le  0.2631578947368421
+            fcs/roll-damper-enable ne 0.0
+        </test>
+        <output>fcs/roll-damper-active</output>
+    </switch>
 <!-- rudder limits +/-30deg 40 deg/sec-->
 <!-- stabilizer limits +/7deg 30 deg/sec-->
 
@@ -777,6 +799,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <gain>-1</gain>
       <output>/accelerations/pilot-gdamped</output>
    </pure_gain>
+
    <scheduled_gain name="Yaw Damper Rate">
       <input>velocities/r-aero-rad_sec</input>
       <table>
@@ -789,10 +812,39 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <gain>fcs/yaw-damper-active</gain>
    </scheduled_gain>
 
+   <scheduled_gain name="Pitch Damper Rate">
+<!-- Figure 2-57 F14AAD-1  -->
+      <input>velocities/q-aero-rad_sec</input>
+      <table>
+        <independentVar lookup="row">velocities/ve-kts</independentVar>
+         <tableData>
+            30     0.00
+            60     0.285
+         </tableData>
+      </table>
+      <gain>fcs/pitch-damper-active</gain>
+        <min> -0.2857142857142857 </min>
+        <max>  0.2857142857142857 </max>
+   </scheduled_gain>
 
-<summer name="Rudder Command Sum">
+   <scheduled_gain name="Roll Damper Rate">
+<!-- Figures 2-61, 11-1 F14AAD-1  -->
+      <input>velocities/p-aero-rad_sec</input>
+      <table>
+        <independentVar lookup="row">velocities/ve-kts</independentVar>
+         <tableData>
+            30     0.00
+            60     -0.2857142857142857
+         </tableData>
+      </table>
+      <gain>fcs/roll-damper-active</gain>
+        <min> -0.2857142857142857 </min>
+        <max>  0.2857142857142857 </max>
+   </scheduled_gain>
+
+
+  <summer name="Rudder Command Sum">
       <input>fcs/rudder-cmd-norm</input>
-      <input>fcs/yaw-trim-cmd-norm</input>
       <input>fcs/yaw-trim-cmd-norm</input>
       <clipto>
         <min> -1 </min>

@@ -25,6 +25,8 @@ var SasPitchOn = props.globals.getNode("sim/model/f-14b/controls/SAS/pitch");
 var SasRollOn  = props.globals.getNode("sim/model/f-14b/controls/SAS/roll");
 var SasYawOn   = props.globals.getNode("sim/model/f-14b/controls/SAS/yaw");
 var fdm_yawdamper   = props.globals.getNode("fdm/jsbsim/fcs/yaw-damper-enable");
+var fdm_pitchdamper   = props.globals.getNode("fdm/jsbsim/fcs/pitch-damper-enable");
+var fdm_rolldamper   = props.globals.getNode("fdm/jsbsim/fcs/roll-damper-enable");
 
 var DeadZPitch = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-pitch");
 var DeadZRoll  = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-roll");
@@ -156,6 +158,11 @@ var computeSAS = func {
 		SASroll = sas_roll; # Used by adverse.nas
 		SasRoll.setValue(sas_roll * ! o_sweep);
 
+#        if (usingJSBSim){
+#            AileronTrim.setDoubleValue(sas_roll);
+#            print (" SasRoll ",AileronTrim.getValue());
+#        }
+
 		# Pitch Channel
 		var pitch_rate = PitchRate.getValue();
 		var yaw_rate   = YawRate.getValue();
@@ -190,17 +197,27 @@ var computeSAS = func {
 		if (airspeed > p_lo_speed) p_input *= p_lo_speed_sqr / airspeed_sqr;
 		SasPitch.setValue(p_input * ! o_sweep);
 		SASpitch = p_input; # Used by adverse.nas 
+#if (usingJSBSim){
+#ElevatorTrim.setDoubleValue(e_trim + p_input);
+#print (" SasPitch ",ElevatorTrim.getValue());
+#}
 
 	}
 
-	# Yaw Channel
-	var raw_r    = RawRudder.getValue();
-	var smooth_r = raw_r;
-    fdm_yawdamper.setValue(SasYawOn.getValue());
-	if (SasYawOn.getValue()) {
-		smooth_r = last_r + ((raw_r - last_r) * r_smooth_factor);
-		last_r = smooth_r;
-	}
-	SasYaw.setValue(smooth_r);
+#    if (!usingJSBSim)
+#    {
+    	# Yaw Channel
+    	var raw_r    = RawRudder.getValue();
+    	var smooth_r = raw_r;
+        fdm_yawdamper.setValue(SasYawOn.getValue());
+    	if (SasYawOn.getValue()) {
+    		smooth_r = last_r + ((raw_r - last_r) * r_smooth_factor);
+	    	last_r = smooth_r;
+    	}
+    	SasYaw.setValue(smooth_r);
+#    }
+        fdm_pitchdamper.setValue(SasPitchOn.getValue());
+        fdm_rolldamper.setValue(SasRollOn.getValue());
+
 
 }
