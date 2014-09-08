@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="http://jsbsim.sourceforge.net/JSBSim.xsl"?>
-<fdm_config name="F14A" version="2.0" release="ALPHA"
+<fdm_config name="F14A" version="2.0" release="PRODUCTION"
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:noNamespaceSchemaLocation="http://jsbsim.sourceforge.net/JSBSim.xsd">
 
@@ -103,7 +103,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      <z>0</z>
    </location>
    <location name="AERORP" unit="IN">
-      <x> 443 </x>
+      <x> 403 </x>
       <y>   0.00 </y>
       <z>   0.00 </z>
    </location>
@@ -111,7 +111,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
   <mass_balance>
     <location name="CG" unit="IN">
-      <x> 443</x>
+      <x> 403</x>
       <y>   0.00 </y>
       <z>   0.00 </z>
       <z0> -18.83 </z0>
@@ -121,6 +121,16 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <izz unit="SLUG*FT2">    285000 </izz>
     <!-- using GE F110 engines but aero is for F14A -->
     <emptywt unit="LBS" >     40104 </emptywt>
+<!--
+    <pointmass name="Pilot">
+        <weight unit="LBS"> 20 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 200 </x>
+            <y> 0 </y>
+            <z> 0 </z>
+        </location>
+    </pointmass>
+-->
   </mass_balance>
 
   <!-- 0 -->
@@ -144,7 +154,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!-- 1 -->
     <contact type="BOGEY" name="LEFT_MLG">
       <location unit="IN">
-        <x> 480 </x>
+        <x> 460 </x>
         <y> -98 </y>
         <z> -124  </z>
       </location>
@@ -160,7 +170,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!-- 2 -->
     <contact type="BOGEY" name="RIGHT_MLG">
       <location unit="IN">
-        <x> 480 </x>
+        <x> 460 </x>
         <y> 98 </y>
         <z> -124 </z>
       </location>
@@ -374,7 +384,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!--  FWD Fuselage -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>313</x>
+          <x>368</x>
           <y>0</y>
           <z>-51.77165354</z>
         </location>
@@ -382,10 +392,18 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <capacity unit="KG">2136</capacity>
         <contents unit="KG">2136</contents>
       </tank>
+<!-- Fuel tank positions are hard to determine - so the values here are based on Figure 8-2 F14AAD-1 
+     for the fore / aft tanks - with the other tanks moved from my original estimated position
+     so that the CG remains in the range of no more than 18%. 
+     I also had to move the MLG forwards slightly from the diagram otherwise it was impossible to take off a
+     fully laden aircraft with flaps until over 210kts (which has to be wrong and as the contact point of the
+     gear isn't defined (in AFWAL-TR-80-3141) and I can only assume that those measurements are from the end of the radome
+     excluding the probe. (about 20 inches according to my diagram)
+  -->
       <!-- AFT Fuselage -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>522</x>
+          <x>438</x>
           <y>0</y>
           <z>-47.83464567</z>
         </location>
@@ -396,8 +414,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Left Beam Box - Feed Group   -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>435</x>
-          <y>-77.95275591</y>
+          <x>403</x>
+          <y>-47.95275591</y>
           <z>-45.07874016</z>
         </location>
         <capacity unit="KG">568</capacity>
@@ -407,7 +425,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!--  Left Sump - Feed Group    -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>435</x>
+          <x>415</x>
           <y>-38.58267717</y>
           <z>-47.83464567</z>
         </location>
@@ -418,8 +436,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Right Beam Box - Feed Group    -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>435</x>
-          <y>77.95275591</y>
+          <x>403</x>
+          <y>47.95275591</y>
           <z>-45.07874016</z>
         </location>
         <capacity unit="KG">568</capacity>
@@ -429,7 +447,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Right Sump - Feed Group   -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>435</x>
+          <x>415</x>
           <y>38.58267717</y>
           <z>-47.83464567</z>
         </location>
@@ -440,7 +458,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Left wing    -->
       <tank type="FUEL">
         <location unit="IN">
-          <x> 458</x>
+          <x> 405</x>
           <y> -38.5826772</y>
           <z> -27</z>
         </location>
@@ -451,7 +469,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Right Wing -->
       <tank type="FUEL">
         <location unit="IN">
-          <x> 458</x>
+          <x> 405</x>
           <y> 38.5826772</y>
           <z> -27</z>
         </location>
@@ -1022,7 +1040,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               _   _
    MAC is 16% c . c is 9.8ft giving us 18.81in as offset to %MAC
 -->
-       <bias> -451 </bias>
+       <bias> -419 </bias>
        <output>inertia/cg-x-offset-chord-in</output>
      </summer>
      <pure_gain name="cg-x-chord-percent">
@@ -1185,6 +1203,29 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
        </table>
      </sum>
    </function>
+   <function name="aero/function/KdGE">
+        <description>Ground_effect_height_factor</description>
+        <product>
+             <table>
+                 <independentVar>aero/h_b-mac-ft</independentVar>
+                 <tableData>
+                             0.00000	1.000000	
+                             2.49850	0.986620	
+                             6.43814	0.957366	
+                             10.8918	0.907110	
+                             16.3821	0.827937	
+                             26.0362	0.659274	
+                             37.1262	0.466885	
+                             55.0261	0.195169	
+                             66.8347	0.0917004	
+                             74.5889	0.0436778	
+                             80.6381	0.0115604	
+                             90.0000	0.0052045
+                 </tableData>
+             </table>
+        </product>
+   </function>
+
    <function name="aero/function/kCLge">
             <description>Change_in_lift_due_to_ground_effect</description>
             <product>
