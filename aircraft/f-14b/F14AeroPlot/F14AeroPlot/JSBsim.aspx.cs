@@ -27,7 +27,7 @@ namespace F14AeroPlot
                 var coeffs = new List<String>();
                 foreach (var aero_element in aero_axis)
                 {
-                    if (aero.HasData(aero_element))
+//                    if (aero.HasData(aero_element))
                     {
                         var aerodat_item = GetVar(aero_element);
 

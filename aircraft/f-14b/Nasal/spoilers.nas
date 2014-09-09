@@ -10,7 +10,7 @@
 # Constants
 var MaxFlightSpoilers = 0.7;
 var SpoilersMinima = 0;
-var SpoilersCmd     = props.globals.getNode("fdm/jsbsim/fcs/ground-spoilers-cmd", 1);
+var SpoilersCmd     = props.globals.getNode("fdm/jsbsim/fcs/spoilers-cmd", 1);
 
 var computeSpoilers = func {
 

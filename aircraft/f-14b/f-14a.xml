@@ -65,6 +65,10 @@
     CD-0:          0.024
     K:             0.12
 
+Notes:
+1. possibly need to consider differential spoiler deflection on roll and yaw moments
+2. DCxDS2 not included yet; this will reduce the effectiveness of the stabilizer by an amount; however the transition between DS1 & DS2 values causes instability.
+
 Cockpit control	Stabilizer Surface	Parallel Trim
 Actuation	Mode	Motion	Authority	Rate	Authority	Rate
 Control Stick	Manual	4 Inches forward
@@ -592,7 +596,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <output>fcs/elevator-pos-rad</output>
   </kinematic>
     <kinematic name="Ground Spoilers Control">
-      <input>fcs/ground-spoilers-cmd</input>
+      <input>fcs/spoilers-cmd</input>
       <traverse>
        <setting>
           <position> 0 </position>
@@ -603,7 +607,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               <time>0.22</time> <!-- 250 deg/seg -->
           </setting>
       </traverse>
-      <output>fcs/ground-spoilers-pos-norm</output>
+      <output>fcs/spoilers-pos-norm</output>
   </kinematic>
 
    <summer name="Left elevator normalization">
@@ -754,8 +758,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <property value="0">fcs/external-tanks-fitted</property>
   <property value="0">fcs/aim-fitted</property>
   <property value="0">fcs/slat-cmd</property>
-  <property value="0">fcs/ground-spoilers-cmd</property>
-  <property value="0">fcs/ground-spoilers-pos-norm</property>
+  <property value="0">fcs/spoilers-cmd</property>
+  <property value="0">fcs/spoilers-pos-norm</property>
   <channel name="Yaw">
 
 <!-- 
@@ -1427,36 +1431,37 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
-  <function name="aero/coefficients/ClDSp">
-    <description>Delta Cl due ground spoiler deflection</description>
+
+    <function name="aero/coefficients/ClDSp">
+    <description>Delta Cl due spoiler deflection</description>
     <product>
-          <property>fcs/ground-spoilers-pos-norm</property>
+          <property>fcs/spoilers-pos-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
-                -55	-0.1427369
-                -50	-0.1580945
-                -45	-0.1668984
-                -40	-0.1771812
-                -35	-0.1930109
-                -30	-0.1927053
-                -25	-0.1774422
-                -20	-0.160316
-                -15	-0.1278946
+                -55	0.0
+                -50	0.0
+                -45	0.0
+                -40	0.0
+                -35	0.0
+                -30	0.0
+                -25	0.0
+                -20	0.0
+                -15	0.0
                 -10	-0.1012943
                 -5	-0.05813407
                 0	0.00776
                 5	0.05813407
                 10	0.1012943
-                15	0.1278946
-                20	0.160316
-                25	0.1774422
-                30	0.1927053
-                35	0.1930109
-                40	0.1771812
-                45	0.1668984
-                50	0.1580945
-                55	0.1427369
+                15	0.0000000
+                20	0.0000000
+                25	0.0000000
+                30	0.0000000
+                35	0.0000000
+                40	0.0000000
+                45	0.0000000
+                50	0.0000000
+                55	0.0000000
             </tableData>
           </table>
           <!--<table>
@@ -1580,7 +1585,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <function name="aero/coefficients/CdDSp">
     <description>CD increment due to spoiler deflection</description>
     <product>
-          <property>fcs/ground-spoilers-pos-norm</property>
+          <property>fcs/spoilers-pos-norm</property>
           <value>0.14</value>
            <!--<table>
             <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
@@ -1588,8 +1593,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                  0	0.0678
                  5	0.0650
                 15	0.0714	
-                25	0.0812
-                40	0.0917
+                25	0.0000000
+                40	0.0000000
             </tableData>
           </table>-->
        </product>
@@ -1863,6 +1868,31 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
+<!--
+    <function name="aero/coefficients/CyDSP">
+    <description>Yaw increment due to spoilers</description>
+    <product>
+          <property>fcs/spoilers-pos-norm</property>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                      0 0.00000000
+                      5 0.00000000
+                     10 0.00000000
+                     15 0.00000000
+                     20 0.00000000
+                     25 0.00000000
+                     30 0.00000000
+                     35 0.00000000
+                     40 0.00000000
+                     45 0.00000000
+                     50 0.00000000
+                     55 0.00000000
+            </tableData>
+          </table>
+       </product>
+    </function>
+-->
     <function name="aero/coefficients/Cy">
     <sum>
           <property>aero/coefficients/CyBAS</property>
@@ -2224,18 +2254,18 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <function name="aero/coefficients/CMDSp">
     <description>CM increment due to spoiler deflection</description>
     <product>
-          <property>fcs/ground-spoilers-pos-norm</property>
+          <property>fcs/spoilers-pos-norm</property>
           <value>0.8</value>
             <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
-              -55	-0.12
-              -50	-0.145
-              -45	-0.145
-              -40	-0.145
-              -35	-0.145
-              -30	-0.16
-              -25	-0.16
+              -55	 0.0
+              -50	 0.0
+              -45	 0.0
+              -40	 0.0
+              -35	 0.0
+              -30	 0.0
+              -25	 0.0
               -20	-0.16
               -15	-0.155
               -10	-0.14
@@ -2244,14 +2274,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               5	-0.115
               10	-0.14
               15	-0.155
-              20	-0.16
-              25	-0.16
-              30	-0.16
-              35	-0.145
-              40	-0.145
-              45	-0.145
-              50	-0.145
-              55	-0.12
+              20	 0.0
+              25	 0.0
+              30	 0.0
+              35	 0.0
+              40	 0.0
+              45	 0.0
+              50	 0.0
+              55	 0.0
             </tableData>
           </table>
        </product>
@@ -2413,6 +2443,31 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
+<!-- 
+    <function name="aero/coefficients/CNDSP">
+    <description>Yaw momement increment due to spoiler deflection</description>
+    <product>
+          <property>fcs/spoilers-pos-norm</property>
+          <table>
+            <independentVar lookup="row">aero/alpha-deg</independentVar>
+            <tableData>
+                      0 0.00000000
+                      5 0.00000000
+                     10 0.00000000
+                     15 0.00000000
+                     20 0.00000000
+                     25 0.00000000
+                     30 0.00000000
+                     35 0.00000000
+                     40 0.00000000
+                     45 0.00000000
+                     50 0.00000000
+                     55 0.00000000
+            </tableData>
+          </table>
+       </product>
+    </function>
+-->
     <function name="aero/coefficients/CNDR">
     <description>CNDR</description>
     <product>
