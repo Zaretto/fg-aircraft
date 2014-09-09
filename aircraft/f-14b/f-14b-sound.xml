@@ -63,8 +63,73 @@
             <max-dist>3000</max-dist>
         </engine-jfs-running>
 
-        <engine-jet-whine-l>
-            <name>engine-jet-whine-l</name>
+        <engine-jet-intake-l>
+            <name>engine-jet-intake-l</name>
+            <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+            </condition>
+            <position>
+                <x>-1.0</x>
+                <y>-1.0</y>
+                <z>-0.2</z>
+            </position>
+            <orientation>
+                <x>-0.98</x>
+                <y>0.0</y>
+                <z>-0.17</z>
+                <inner-angle>60.0</inner-angle>
+                <outer-angle>200.0</outer-angle>
+                <outer-gain>0.0</outer-gain>
+            </orientation>
+            <pitch>
+                <factor>0.005</factor>
+                <property>engines/engine[0]/n2</property>
+            </pitch>
+            <volume>
+                <factor>0.01</factor>
+                <property>engines/engine[0]/n2</property>
+            </volume>
+        </engine-jet-intake-l>
+
+        <engine-jet-intake-r>
+            <name>engine-jet-intake-r</name>
+            <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+            </condition>
+            <position>
+                <x>-1.0</x>
+                <y>1.0</y>
+                <z>-0.2</z>
+            </position>
+            <orientation>
+                <x>-0.98</x>
+                <y>0.0</y>
+                <z>-0.17</z>
+                <inner-angle>60.0</inner-angle>
+                <outer-angle>200.0</outer-angle>
+                <outer-gain>0.0</outer-gain>
+            </orientation>
+            <pitch>
+                <factor>0.005</factor>
+                <property>engines/engine[1]/n2</property>
+            </pitch>
+            <volume>
+                <factor>0.01</factor>
+                <property>engines/engine[1]/n2</property>
+            </volume>
+        </engine-jet-intake-r>
+
+
+        <engine-jet-whine-n1-l>
+            <name>engine-jet-whine-n1-l</name>
             <path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
             <condition>
                 <not>
@@ -94,10 +159,10 @@
             </orientation>
             <reference-dist>800</reference-dist>
             <max-dist>3000</max-dist>
-        </engine-jet-whine-l>
+        </engine-jet-whine-n1-l>
 
-        <engine-jet-whine-l1>
-            <name>engine-jet-whine-l1</name>
+        <engine-jet-whine-n2-l1>
+            <name>engine-jet-whine-n2-l1</name>
             <path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
             <mode>looped</mode>
             <condition>
@@ -127,10 +192,10 @@
             </orientation>
             <reference-dist>800</reference-dist>
             <max-dist>3000</max-dist>
-        </engine-jet-whine-l1>
+        </engine-jet-whine-n2-l1>
 
-        <engine-jet-whine-r>
-            <name>engine-jet-whine-r</name>
+        <engine-jet-whine-n1-r>
+            <name>engine-jet-whine-n1-r</name>
             <path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
             <mode>looped</mode>
             <condition>
@@ -160,9 +225,10 @@
             </orientation>
             <reference-dist>800</reference-dist>
             <max-dist>3000</max-dist>
-        </engine-jet-whine-r>
-        <engine-jet-whine-r1>
-            <name>engine-jet-whine-r1</name>
+        </engine-jet-whine-n1-r>
+
+        <engine-jet-whine-n2-r1>
+            <name>engine-jet-whine-n2-r1</name>
             <path>Aircraft/f-14b/Sounds/jet-whine.wav</path>
             <mode>looped</mode>
             <condition>
@@ -192,28 +258,22 @@
             </orientation>
             <reference-dist>800</reference-dist>
             <max-dist>3000</max-dist>
-        </engine-jet-whine-r1>
-        <engine-jet-rumble-l>
-            <name>engine-jet-rumble-l</name>
-            <mode>looped</mode>
+        </engine-jet-whine-n2-r1>
+
+        <engine-jet-exhaust-inside-l>
+            <name>engine-jet-exhaust-inside-l</name>
             <path>Aircraft/f-14b/Sounds/engine-jet-efflux.wav</path>
+            <mode>looped</mode>
             <condition>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
-                <greater-than>
-                    <property>engines/engine[0]/n2</property>
-                    <value>0.002</value>
-                </greater-than>
+                <property>sim/current-view/internal</property>
             </condition>
             <volume>
-                <factor>0.001</factor>
+                <offset>-0.3</offset>
+                <factor>0.007</factor>
                 <property>engines/engine[0]/n2</property>
-            </volume>
-            <volume>
-                <offset>0.4</offset>
-                <factor>-0.3</factor>
-                <property>sim/current-view/internal</property>
             </volume>
             <position>
                 <x>3</x>
@@ -230,32 +290,26 @@
             </orientation>
             <reference-dist>800</reference-dist>
             <max-dist>6000</max-dist>
-        </engine-jet-rumble-l>
-        <engine-jet-rumble-r>
-            <name>engine-jet-rumble-r</name>
-            <mode>looped</mode>
+        </engine-jet-exhaust-inside-l>
+
+        <engine-jet-exhaust-inside-r>
+            <name>engine-jet-exhaust-inside-r</name>
             <path>Aircraft/f-14b/Sounds/engine-jet-efflux.wav</path>
+            <mode>looped</mode>
             <condition>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
-                <greater-than>
-                    <property>engines/engine[1]/n2</property>
-                    <value>0.002</value>
-                </greater-than>
+                <property>sim/current-view/internal</property>
             </condition>
             <volume>
-                <factor>0.001</factor>
+                <offset>-0.3</offset>
+                <factor>0.007</factor>
                 <property>engines/engine[1]/n2</property>
-            </volume>
-            <volume>
-                <offset>0.4</offset>
-                <factor>-0.3</factor>
-                <property>sim/current-view/internal</property>
             </volume>
             <position>
                 <x>3</x>
-                <y>1.0</y>
+                <y>-1.0</y>
                 <z>-0.37</z>
             </position>
             <orientation>
@@ -268,86 +322,24 @@
             </orientation>
             <reference-dist>800</reference-dist>
             <max-dist>6000</max-dist>
-        </engine-jet-rumble-r>
-        <engine-jet-intake-l>
-            <name>engine-jet-intake-l</name>
-            <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
-            <mode>looped</mode>
-            <not>
-                <property>sim/model/f-14b/engine-sound-freeze</property>
-            </not>
-            <position>
-                <x>-1.0</x>
-                <y>-1.0</y>
-                <z>-0.2</z>
-            </position>
-            <orientation>
-                <x>-0.98</x>
-                <y>0.0</y>
-                <z>-0.17</z>
-                <inner-angle>60.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
-                <outer-gain>0.0</outer-gain>
-            </orientation>
-            <pitch>
-                <factor>0.005</factor>
-                <property>engines/engine[0]/n2</property>
-            </pitch>
-            <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[0]/n2</property>
-            </volume>
-        </engine-jet-intake-l>
-        <engine-jet-intake-r>
-            <name>engine-jet-intake-r</name>
-            <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
-            <mode>looped</mode>
-            <not>
-                <property>sim/model/f-14b/engine-sound-freeze</property>
-            </not>
-            <position>
-                <x>-1.0</x>
-                <y>1.0</y>
-                <z>-0.2</z>
-            </position>
-            <orientation>
-                <x>-0.98</x>
-                <y>0.0</y>
-                <z>-0.17</z>
-                <inner-angle>60.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
-                <outer-gain>0.0</outer-gain>
-            </orientation>
-            <pitch>
-                <factor>0.005</factor>
-                <property>engines/engine[1]/n2</property>
-            </pitch>
-            <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[1]/n2</property>
-            </volume>
-        </engine-jet-intake-r>
+        </engine-jet-exhaust-inside-r>
 
         <engine-jet-exhaust-l>
             <name>engine-jet-exhaust-l</name>
-            <path>Aircraft/f-14b/Sounds/engine-jet-efflux-louder.wav</path>
+            <path>Aircraft/f-14b/Sounds/engine-jet-efflux.wav</path>
             <mode>looped</mode>
             <condition>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
-                <property>engines/engine[0]/running</property>
+                <not>
+                    <property>sim/current-view/internal</property>
+                </not>
             </condition>
             <volume>
-                <property>engines/engine[0]/thrust_lb</property>
-                <factor>0.00004</factor>
-                <min>0.3</min>
-                <max>1.0</max>
-            </volume>
-            <volume>
-                <offset>0.4</offset>
-                <factor>-0.3</factor>
-                <property>sim/current-view/internal</property>
+                <offset>-0.3</offset>
+                <factor>0.014</factor>
+                <property>engines/engine[0]/n2</property>
             </volume>
             <position>
                 <x>3</x>
@@ -365,30 +357,27 @@
             <reference-dist>800</reference-dist>
             <max-dist>6000</max-dist>
         </engine-jet-exhaust-l>
+
         <engine-jet-exhaust-r>
             <name>engine-jet-exhaust-r</name>
-            <path>Aircraft/f-14b/Sounds/engine-jet-efflux-louder.wav</path>
+            <path>Aircraft/f-14b/Sounds/engine-jet-efflux.wav</path>
             <mode>looped</mode>
             <condition>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
-                <property>engines/engine[1]/running</property>
+                <not>
+                    <property>sim/current-view/internal</property>
+                </not>
             </condition>
             <volume>
-                <property>engines/engine[1]/thrust_lb</property>
-                <factor>0.00004</factor>
-                <min>0.3</min>
-                <max>1.0</max>
-            </volume>
-            <volume>
-                <offset>0.4</offset>
-                <factor>-0.3</factor>
-                <property>sim/current-view/internal</property>
+                <offset>-0.3</offset>
+                <factor>0.014</factor>
+                <property>engines/engine[1]/n2</property>
             </volume>
             <position>
                 <x>3</x>
-                <y>1.0</y>
+                <y>-1.0</y>
                 <z>-0.37</z>
             </position>
             <orientation>
@@ -437,6 +426,7 @@
             <reference-dist>800</reference-dist>
             <max-dist>6000</max-dist>
         </engine-jet-afterburner-l>
+
         <engine-jet-afterburner-r>
             <name>engine-jet-afterburner-r</name>
             <path>Aircraft/f-14b/Sounds/engine-jet-afterburner.wav</path>
@@ -745,11 +735,11 @@
                 <or>
                     <greater-than>
                         <property>fdm/jsbsim/gear/unit[0]/slip-angle-deg</property>
-                        <value>1.5</value>
+                        <value>4.5</value>
                     </greater-than>
                     <less-than>
                         <property>fdm/jsbsim/gear/unit[0]/slip-angle-deg</property>
-                        <value>-1.5</value>
+                        <value>-4.5</value>
                     </less-than>
                 </or>
                 <greater-than>
@@ -764,7 +754,7 @@
             </position>
             <volume>
                 <type>abs</type>
-                <factor>0.004</factor>
+                <factor>0.01</factor>
                 <property>fdm/jsbsim/gear/unit[0]/slip-angle-deg</property>
             </volume>
             <reference-dist>150</reference-dist>
