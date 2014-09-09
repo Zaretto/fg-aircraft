@@ -23,6 +23,7 @@
             <max-dist>3000</max-dist>
         </engine-jfs-start>
         <engine-jfs-shutdown>
+
             <name>engine-jfs-shutdown</name>
             <mode>once</mode>
             <path>Aircraft/f-14b/Sounds/jfs-shutdown.wav</path>
@@ -42,6 +43,7 @@
             <reference-dist>800</reference-dist>
             <max-dist>3000</max-dist>
         </engine-jfs-shutdown>
+
         <engine-jfs-running>
             <name>engine-jfs-running-inside</name>
             <mode>looped</mode>
@@ -68,9 +70,6 @@
             <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
             <mode>looped</mode>
             <condition>
-                <not>
-                    <property>sim/model/f-14b/engine-sound-freeze</property>
-                </not>
             </condition>
             <position>
                 <x>-1.0</x>
@@ -86,12 +85,14 @@
                 <outer-gain>0.0</outer-gain>
             </orientation>
             <pitch>
-                <factor>0.005</factor>
-                <property>engines/engine[0]/n2</property>
+                <factor>0.01</factor>
+                <property>engines/engine[0]/n1</property>
+<min>0.3</min>
+<max>0.74</max>
             </pitch>
             <volume>
                 <factor>0.01</factor>
-                <property>engines/engine[0]/n2</property>
+                <property>engines/engine[0]/n1</property>
             </volume>
         </engine-jet-intake-l>
 
@@ -100,9 +101,6 @@
             <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
             <mode>looped</mode>
             <condition>
-                <not>
-                    <property>sim/model/f-14b/engine-sound-freeze</property>
-                </not>
             </condition>
             <position>
                 <x>-1.0</x>
@@ -118,12 +116,14 @@
                 <outer-gain>0.0</outer-gain>
             </orientation>
             <pitch>
-                <factor>0.005</factor>
-                <property>engines/engine[1]/n2</property>
+                <factor>0.01</factor>
+                <property>engines/engine[1]/n1</property>
+<min>0.3</min>
+<max>0.74</max>
             </pitch>
             <volume>
                 <factor>0.01</factor>
-                <property>engines/engine[1]/n2</property>
+                <property>engines/engine[1]/n1</property>
             </volume>
         </engine-jet-intake-r>
 
@@ -271,9 +271,9 @@
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
-                <offset>-0.3</offset>
-                <factor>0.007</factor>
-                <property>engines/engine[0]/n2</property>
+                <offset>-1.0</offset>
+                <factor>0.5</factor>
+                <property>engines/engine[0]/epr</property>
             </volume>
             <position>
                 <x>3</x>
@@ -303,9 +303,9 @@
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
-                <offset>-0.3</offset>
-                <factor>0.007</factor>
-                <property>engines/engine[1]/n2</property>
+                <offset>-1.0</offset>
+                <factor>0.5</factor>
+                <property>engines/engine[1]/epr</property>
             </volume>
             <position>
                 <x>3</x>
@@ -330,16 +330,15 @@
             <mode>looped</mode>
             <condition>
                 <not>
-                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                    <property>sim/current-view/internal</property>
                 </not>
                 <not>
-                    <property>sim/current-view/internal</property>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
             </condition>
             <volume>
-                <offset>-0.3</offset>
-                <factor>0.014</factor>
-                <property>engines/engine[0]/n2</property>
+                <offset>-1.0</offset>
+                <property>engines/engine[0]/epr</property>
             </volume>
             <position>
                 <x>3</x>
@@ -371,9 +370,8 @@
                 </not>
             </condition>
             <volume>
-                <offset>-0.3</offset>
-                <factor>0.014</factor>
-                <property>engines/engine[1]/n2</property>
+                <offset>-1.0</offset>
+                <property>engines/engine[1]/epr</property>
             </volume>
             <position>
                 <x>3</x>
@@ -393,7 +391,7 @@
         </engine-jet-exhaust-r>
 
         <engine-jet-afterburner-l>
-            <name>engine-jet-afterburner-l</name>
+           <name>engine-jet-afterburner-l</name>
             <path>Aircraft/f-14b/Sounds/engine-jet-afterburner.wav</path>
             <mode>looped</mode>
             <condition>
@@ -407,12 +405,13 @@
                 <factor>0.5</factor>
             </volume>
             <volume>
+                <offset>0.4</offset>
                 <factor>-0.2</factor>
                 <property>sim/current-view/internal</property>
             </volume>
             <position>
                 <x>3</x>
-                <y>-1.0</y>
+                <y>1.0</y>
                 <z>-0.37</z>
             </position>
             <orientation>
