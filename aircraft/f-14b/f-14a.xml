@@ -139,13 +139,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <location unit="IN">
         <x> 208 </x>
         <y> 0 </y>
-        <z1> -121.8 </z1> <!--Real position, changed to be level to investigate wierd gear moments.-->
-       <z> -121.8 </z>
+        <z> -121.8 </z>
        </location>
       <static_friction> 0.8 </static_friction>
       <dynamic_friction> 0.5 </dynamic_friction>
       <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 17250 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 27250 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 7250 </damping_coeff>
       <max_steer unit="DEG"> 80 </max_steer>
       <brake_group> NOSE </brake_group>
@@ -381,17 +380,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </orient>
             </thruster>
         </engine>
-      <!--  FWD Fuselage -->
-      <tank type="FUEL">
-        <location unit="IN">
-          <x>368</x>
-          <y>0</y>
-          <z>-51.77165354</z>
-        </location>
-<priority>4</priority>
-        <capacity unit="KG">2136</capacity>
-        <contents unit="KG">2136</contents>
-      </tank>
 <!-- Fuel tank positions are hard to determine - so the values here are based on Figure 8-2 F14AAD-1 
      for the fore / aft tanks - with the other tanks moved from my original estimated position
      so that the CG remains in the range of no more than 18%. 
@@ -400,10 +388,21 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      gear isn't defined (in AFWAL-TR-80-3141) and I can only assume that those measurements are from the end of the radome
      excluding the probe. (about 20 inches according to my diagram)
   -->
+      <!--  FWD Fuselage -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>332</x>
+          <y>0</y>
+          <z>-51.77165354</z>
+        </location>
+<priority>4</priority>
+        <capacity unit="KG">2136</capacity>
+        <contents unit="KG">2136</contents>
+      </tank>
       <!-- AFT Fuselage -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>438</x>
+          <x>482</x>
           <y>0</y>
           <z>-47.83464567</z>
         </location>
@@ -414,7 +413,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Left Beam Box - Feed Group   -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>403</x>
+          <x>396</x>
           <y>-47.95275591</y>
           <z>-45.07874016</z>
         </location>
@@ -425,7 +424,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!--  Left Sump - Feed Group    -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>415</x>
+          <x>396</x>
           <y>-38.58267717</y>
           <z>-47.83464567</z>
         </location>
@@ -436,7 +435,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Right Beam Box - Feed Group    -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>403</x>
+          <x>396</x>
           <y>47.95275591</y>
           <z>-45.07874016</z>
         </location>
@@ -447,7 +446,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <!-- Right Sump - Feed Group   -->
       <tank type="FUEL">
         <location unit="IN">
-          <x>415</x>
+          <x>396</x>
           <y>38.58267717</y>
           <z>-47.83464567</z>
         </location>
