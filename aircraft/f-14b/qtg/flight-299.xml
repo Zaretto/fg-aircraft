@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sf.net/JSBSimScript.xsl"?>
+<runscript xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://jsbsim.sf.net/JSBSimScript.xsd"
+    name="F-14 Aircaft 2 Flight #199">
+  <description>F-14 Aircaft 2 Flight No. 199</description>
+  <use aircraft="f-14a" initialize="qtg/flight-299-reset"/>
+<!-- dt="0.00833333" -->
+  <run start="0.0" end="60" dt="0.033333">
+    <event name="Set engines running">
+      <condition> simulation/sim-time-sec le 0.1 </condition>
+      <set name="propulsion/engine[0]/set-running" value="1"/>
+      <set name="propulsion/engine[1]/set-running" value="1"/>
+      <set name="gear/gear-cmd-norm" value="0"/>
+      <set name="gear/gear-pos-norm" value="0"/>
+      <set name="fcs/flap-cmd-norm" value="0"/>
+      <set name="attitude/theta-rad" value="0.3"/>
+
+<set name="propulsion/tank[6]/contents-lbs" value="0"/><!-- left wing -->
+<set name="propulsion/tank[7]/contents-lbs" value="0"/> <!-- right wing -->
+<set name="propulsion/tank[0]/contents-lbs" value="120"/> <!-- FWD -->
+<set name="propulsion/tank[1]/contents-lbs" value="1320"/> <!-- AFT -->
+<set name="propulsion/tank[2]/contents-lbs" value="0"/> <!-- left beam -->
+<set name="propulsion/tank[4]/contents-lbs" value="0"/> <!-- right beam -->
+<set name="propulsion/tank[3]/contents-lbs" value="299"/> <!-- left sump -->
+<set name="propulsion/tank[5]/contents-lbs" value="299"/> <!-- right sump -->
+<set name="propulsion/tank[8]/contents-lbs" value="0"/> <!-- left external  -->
+<set name="propulsion/tank[9]/contents-lbs" value="0"/> <!--  right external -->
+<set name="propulsion/tank[10]/contents-lbs" value="10"/> <!-- left feed -->
+<set name="propulsion/tank[11]/contents-lbs" value="10"/> <!-- right feed -->
+
+
+<set name="fcs/throttle-cmd-norm[0]"  value="0"/>
+<set name="fcs/throttle-cmd-norm[1]"  value="0"/>
+<set name="fcs/yaw-damper-enable" value="0"/> 
+      <notify>
+        <property>inertia/cg-x-mac-percent</property>
+</notify>
+    </event>
+
+<!-- ELEVATOR from trace
+0	5
+4.5	5
+10	5
+15	7
+19	10
+23	15
+26	20
+27	21
+28  20.5
+30	30
+31	35
+33	30
+-->
+    <event name="init second control surface setting">
+      <condition> simulation/sim-time-sec le 1 </condition>
+      <set name="fcs/pitch-trim-cmd-norm"  value="-0.07142857142857142" />
+      <notify/>
+    </event>
+    <event name="Trim">
+      <condition> simulation/sim-time-sec le 0.1 </condition>
+      <set name="simulation/do_simple_trim" value="0"/>
+      <notify>
+        <property>propulsion/engine[0]/n2</property>
+        <property>propulsion/engine[1]/n2</property>
+        <property>propulsion/engine[0]/thrust-lbs</property>
+        <property>propulsion/engine[1]/thrust-lbs</property>
+        <property>velocities/vc-kts</property>
+        <property>velocities/vc-fps</property>
+        <property>velocities/vt-fps</property>
+        <property>attitude/phi-rad</property>
+        <property>attitude/theta-rad</property>
+        <property>attitude/psi-rad</property>
+        <property>inertia/cg-x-mac-percent</property>
+      </notify>
+    </event>
+-->
+    <event name="init second control surface setting">
+      <condition> simulation/sim-time-sec le 1 </condition>
+<set name="fcs/elevator-cmd-norm" value="-0.53"/>
+<set name="fcs/throttle-cmd-norm[0]"  value="0"/>
+<set name="fcs/throttle-cmd-norm[1]"  value="0"/>
+      <notify>
+        <property>propulsion/engine[0]/n2</property>
+        <property>propulsion/engine[1]/n2</property>
+        <property>propulsion/engine[0]/thrust-lbs</property>
+        <property>propulsion/engine[1]/thrust-lbs</property>
+        <property>velocities/vc-kts</property>
+        <property>velocities/vc-fps</property>
+        <property>velocities/vt-fps</property>
+        <property>attitude/phi-rad</property>
+        <property>attitude/theta-rad</property>
+        <property>attitude/psi-rad</property>
+        <property>inertia/cg-x-mac-percent</property>
+      </notify>
+    </event>
+
+    <event name="init second control surface setting">
+      <condition> simulation/sim-time-sec ge 2 </condition>
+<set name="fcs/elevator-cmd-norm" value="-0.51"/>
+      <notify>
+        <property>propulsion/engine[0]/n2</property>
+        <property>propulsion/engine[1]/n2</property>
+        <property>propulsion/engine[0]/thrust-lbs</property>
+        <property>propulsion/engine[1]/thrust-lbs</property>
+        <property>velocities/vc-kts</property>
+        <property>velocities/vc-fps</property>
+        <property>velocities/vt-fps</property>
+        <property>attitude/phi-rad</property>
+        <property>attitude/theta-rad</property>
+        <property>attitude/psi-rad</property>
+        <property>inertia/cg-x-mac-percent</property>
+      </notify>
+    </event>
+
+
+
+    <event name="Report">
+      <condition> simulation/sim-time-sec ge 10 </condition>
+      <notify>
+        <property>propulsion/engine[0]/n2</property>
+        <property>propulsion/engine[1]/n2</property>
+        <property>propulsion/engine[0]/thrust-lbs</property>
+        <property>propulsion/engine[1]/thrust-lbs</property>
+        <property>velocities/vc-kts</property>
+        <property>velocities/vc-fps</property>
+        <property>velocities/vt-fps</property>
+        <property>attitude/phi-rad</property>
+        <property>attitude/theta-rad</property>
+        <property>attitude/psi-rad</property>
+        <property>inertia/cg-x-mac-percent</property>
+      </notify>
+    </event>
+    <event name="Report">
+      <condition> simulation/sim-time-sec ge 20 </condition>
+      <notify>
+        <property>propulsion/engine[0]/n2</property>
+        <property>propulsion/engine[1]/n2</property>
+        <property>propulsion/engine[0]/thrust-lbs</property>
+        <property>propulsion/engine[1]/thrust-lbs</property>
+        <property>velocities/vc-kts</property>
+        <property>velocities/vc-fps</property>
+        <property>velocities/vt-fps</property>
+        <property>attitude/phi-rad</property>
+        <property>attitude/theta-rad</property>
+        <property>attitude/psi-rad</property>
+      </notify>
+    </event>
+    <event name="Report">
+      <condition> simulation/sim-time-sec ge 30 </condition>
+      <notify>
+        <property>propulsion/engine[0]/n2</property>
+        <property>propulsion/engine[1]/n2</property>
+        <property>propulsion/engine[0]/thrust-lbs</property>
+        <property>propulsion/engine[1]/thrust-lbs</property>
+        <property>velocities/vc-kts</property>
+        <property>velocities/vc-fps</property>
+        <property>velocities/vt-fps</property>
+        <property>attitude/phi-rad</property>
+        <property>attitude/theta-rad</property>
+        <property>attitude/psi-rad</property>
+      </notify>
+    </event>
+
+<!--
+    <event name="adjust1">
+      <condition> simulation/sim-time-sec lt 1 </condition>
+     <set name="fcs/elevator-cmd-norm" value="-0.06"/>
+      <notify>
+        <property>aero/alpha-deg</property>
+        <property>fcs/elevator-pos-deg</property>
+        <property>velocities/mach</property>
+        </notify>
+    </event>
+    <event name="adjust2">
+      <condition> simulation/sim-time-sec ge 5 </condition>
+     <set name="fcs/elevator-cmd-norm" value="-0.142" tc='0.001' action='FG_STEP'/>
+      <notify>
+        <property>aero/alpha-deg</property>
+        <property>fcs/elevator-pos-deg</property>
+        <property>velocities/mach</property>
+        </notify>
+    </event>
+    <event name="adjust3">
+      <condition> simulation/sim-time-sec >= 10 </condition>
+     <set name="fcs/elevator-cmd-norm" value="-0.182" tc='0.001' action='FG_RAMP'/>
+      <notify>
+        <property>aero/alpha-deg</property>
+        <property>fcs/elevator-pos-deg</property>
+        <property>velocities/mach</property>
+        </notify>
+    </event>
+-->
+  </run>
+</runscript>
