@@ -88,11 +88,24 @@ var master_caution_active  = 0;
 # 3.> M 0.9 Ramp movement is minimized by actuator spool valves and the aerodynamic load profile
 #  in this Mach range and a RAMP light should illuminate
 
+    if(getprop("fdm/jsbsim/systems/hydraulics/combined-system-psi") < 2100 or 
+       getprop("fdm/jsbsim/systems/hydraulics/flight-system-psi") < 2100)
+    {
+		if (!ca_hyd_press_light.getBoolValue())
+		{
+		    ca_hyd_press_light.setBoolValue(1);
+            masterCaution = 1;
+		}
+    }
+    else
+    {
+        ca_hyd_press_light.setBoolValue(0);
+    }
+
 	if (oil_pressure_l.getValue() < 23 or oil_pressure_r.getValue() < 23 ){
 		if (!ca_oil_press_light.getBoolValue())
 		{
 		    ca_oil_press_light.setBoolValue(1);
-            ca_hyd_press_light.setBoolValue(1);
             masterCaution = 1;
 		}
         if(oil_pressure_l.getValue() < 23){
@@ -118,7 +131,6 @@ var master_caution_active  = 0;
 		if (ca_oil_press_light.getBoolValue())
 		{
 		    ca_oil_press_light.setBoolValue(0);
-            ca_hyd_press_light.setBoolValue(0);
 		}
     }
     if(oil_pressure_l.getValue() > 23){
