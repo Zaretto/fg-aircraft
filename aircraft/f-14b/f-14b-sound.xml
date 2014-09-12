@@ -70,6 +70,9 @@
             <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
             <mode>looped</mode>
             <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
             </condition>
             <position>
                 <x>-1.0</x>
@@ -101,6 +104,9 @@
             <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>
             <mode>looped</mode>
             <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
             </condition>
             <position>
                 <x>-1.0</x>
@@ -271,8 +277,7 @@
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
-                <offset>-1.0</offset>
-                <factor>0.5</factor>
+                <offset>-0.9</offset>
                 <property>engines/engine[0]/epr</property>
             </volume>
             <position>
@@ -303,8 +308,8 @@
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
-                <offset>-1.0</offset>
-                <factor>0.5</factor>
+                <offset>-0.9</offset>
+                <property>engines/engine[0]/epr</property>
                 <property>engines/engine[1]/epr</property>
             </volume>
             <position>
@@ -751,6 +756,9 @@
                 <y>1.0</y>
                 <z>-0.6</z>
             </position>
+            <pitch>
+                <factor>0.01</factor>
+            </pitch>
             <volume>
                 <type>abs</type>
                 <factor>0.01</factor>
