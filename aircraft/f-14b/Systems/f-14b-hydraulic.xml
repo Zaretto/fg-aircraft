@@ -14,7 +14,9 @@
   <property value="3022">systems/hydraulics/normal-pressure</property>
   <property value="2100">systems/hydraulics/bidi-activation</property>
   <property value="2500">systems/hydraulics/bidi-normal-pressure</property>
-  <property value="500">systems/hydraulics/bidi-cutoff-min-pressure</property>
+<!-- the min pressure is really for when no hydraulic fluid and the pressure has been at that level
+     for more than 10 seconds, so for now we will not model this as there is no way for fluid to be depleted -->
+  <property value="-500">systems/hydraulics/bidi-cutoff-min-pressure</property>
   <property value="25">systems/hydraulics/reservoir-quantity</property>
   <property value="0">emerg-flyt-hyd-switch</property>
   <property value="2100">systems/hydraulics/emerg-pump-auto-activation</property>
@@ -23,12 +25,13 @@
   <property value="0">systems/hydraulics/flight-system-pump-failed</property>
   <property value="0">systems/hydraulics/combined-system-pump-failed</property>
   <property value="0">systems/hydraulics/emerg-flyt-hyd-switch</property>
+  <property value="1">systems/hydraulics/hyd-transfer-pump-switch</property>
 
   <channel name="flight">
     <switch name="systems/hydraulics/flight-system-pressure">
           <default value="0"/>
           <test  logic="AND" value="1">
-                systems/hydraulics/flight-system-psi ge 2100
+                systems/hydraulics/flight-system-psi ge 1800
           </test>
     </switch>
 
@@ -54,6 +57,7 @@
     <switch name="systems/hydraulics/bidi-combined-to-flight-system-factor">
           <default value="0"/>
           <test  logic="AND" value="0.83">
+                systems/hydraulics/hyd-transfer-pump-switch ne 0
                 systems/hydraulics/combined-system-psi ge systems/hydraulics/bidi-activation
                 systems/hydraulics/flight-system-pump-psi le systems/hydraulics/bidi-activation
                 systems/hydraulics/flight-system-psi ge systems/hydraulics/bidi-cutoff-min-pressure
@@ -101,10 +105,11 @@
       </clipto>
     </summer>
 
-     <summer name="systems/hydraulics/flight-system-psi">
+    <summer name="systems/hydraulics/flight-system-psi">
         <input>systems/hydraulics/emerg-transfer-to-flight-system-psi</input>
         <input>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</input>
         <input>systems/hydraulics/flight-system-pump-psi</input>
+        <input>-systems/hydraulics/flight-system-bleed</input>
      </summer>
   </channel>
 
@@ -138,6 +143,7 @@
     <switch name="systems/hydraulics/bidi-flight-to-combined-system-factor">
           <default value="0"/>
           <test  logic="AND" value="0.83">
+                systems/hydraulics/hyd-transfer-pump-switch ne 0
                 systems/hydraulics/flight-system-psi ge systems/hydraulics/bidi-activation
                 systems/hydraulics/combined-system-pump-psi le systems/hydraulics/bidi-activation
                 systems/hydraulics/flight-system-psi ge systems/hydraulics/bidi-cutoff-min-pressure
@@ -169,11 +175,43 @@
       </clipto>
     </summer>
 
+
      <summer name="systems/hydraulics/combined-system-psi">
         <input>systems/hydraulics/emerg-transfer-to-combined-system-psi</input>
         <input>systems/hydraulics/bidi-transfer-flight-to-combined-system-psi</input>
         <input>systems/hydraulics/combined-system-pump-psi</input>
      </summer>
   </channel>
+
+  <channel name="bleed">
+    <summer name="systems/hydraulics/elevator-bleed">
+        <input>-fcs/elevator-cmd-norm</input>
+        <input>-fcs/elevator-normalization</input>
+    </summer>
+
+    <summer name="systems/hydraulics/flight-system-bleed-basic">
+        <input>systems/hydraulics/elevator-bleed</input>
+    </summer>
+
+<!-- the basic bleed load is different depending on which pump is supplying the flow; the emergency
+     pump has less power and we model this simply by a factor that is the correlation between the flow
+     and the pressure - based on the emergency pump psi
+-->
+     <scheduled_gain name="systems/hydraulics/flight-system-bleed">
+      <input>systems/hydraulics/flight-system-bleed-basic</input>
+      <table>
+        <independentVar lookup="row">systems/hydraulics/emerg-pump-low-speed-psi</independentVar>
+         <tableData>
+            0      30
+          2001     100
+         </tableData>
+      </table>
+      <clipto>
+        <min> 0 </min>
+        <max>300</max>
+      </clipto>
+     </scheduled_gain>
+
+</channel>
 
 </system>

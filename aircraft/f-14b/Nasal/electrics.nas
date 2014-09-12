@@ -231,3 +231,21 @@ var electricsFrame = func {
     runEMMISC();
 }
 
+#
+#
+# hyd transfer switch - this will activate the bidi pump. 
+setlistener("sim/model/f-14b/controls/hyds/hyd-transfer-pump-switch", func {
+    var v = getprop("sim/model/f-14b/controls/hyds/hyd-transfer-pump-switch");
+    if(usingJSBSim and v != nil)
+    {
+        if (v)
+        {
+            setprop("fdm/jsbsim/systems/hydraulics/hyd-transfer-pump-switch", 0);
+        }
+        else
+        {
+            setprop("fdm/jsbsim/systems/hydraulics/hyd-transfer-pump-switch", 1);
+        }
+    }
+}, 1, 0);
+
