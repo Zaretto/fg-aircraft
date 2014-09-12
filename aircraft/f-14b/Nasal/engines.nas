@@ -4,8 +4,11 @@ var egt1_rankin = props.globals.getNode("engines/engine[0]/egt-degR", 1);
 var egt2_rankin = props.globals.getNode("engines/engine[1]/egt-degR", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
-#var egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
-#var egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
+
+if (!usingJSBSim){
+egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
+egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
+}
 var Ramp1l     = props.globals.getNode("engines/AICS/ramp1l", 1);
 var Ramp2l     = props.globals.getNode("engines/AICS/ramp2l", 1);
 var Ramp3l     = props.globals.getNode("engines/AICS/ramp3l", 1);
@@ -99,7 +102,7 @@ var computeNozzles = func {
 	var idleNozzleTarget = 0;
 
 	var eng1_burner = Engine1Burner.getValue();
-	var eng2_burner = Engine1Burner.getValue();
+	var eng2_burner = Engine2Burner.getValue();
 
     # 492 is 0 deg F in Rankin. The rankin scale starts from absolute zero.
 	egt_norm1.setValue((egt1.getValue()-492)*0.000679348);
@@ -135,18 +138,12 @@ var computeNozzles = func {
 		Nozzle1Target = idleNozzleTarget;
 		Nozzle2Target = idleNozzleTarget;
 	} else {
-	# throttle idle
+    	# throttle not at idle so the nozzle will be open only when augmentation is active.
 		Nozzle1Target = eng1_burner;
 		Nozzle2Target = eng2_burner;
 	}
-    if (Engine1Augmentation.getValue())
-    {  
-        Engine1Burner.setDoubleValue(1);
-    }
-    if (Engine2Augmentation.getValue())
-    {
-        Engine2Burner.setDoubleValue(1);
-    }
+    Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
+    Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
 }
 
 #----------------------------------------------------------------------------
