@@ -720,6 +720,8 @@
 				<string n="1" type="string">xxx</string>    <!-- instruments -->
 				<!-- <string n="2" type="string">50</string>      free -->
 			</generic>
+            <!-- set default aircaft model to us; I find it hard to see the glider. -->
+            <default-model>Aircraft/f-14b/Models/f14.ac</default-model>
 		</multiplay>
 
 		<rendering>
@@ -768,7 +770,7 @@
 					<item n="3">
 						<label>Toggle Heat Blur</label>
 						<binding>
-							<command>toggle</command>
+							<command>property-toggle</command>
 							<property>sim/model/f-14b/fx/heat-blur-on</property>
 						</binding>
 					</item>
@@ -1014,7 +1016,7 @@
 		</flight>
 		<gear>
 			<!-- Start with the Parking Brake on -->
-			<brake-parking type="double">1.0</brake-parking>
+<!--			<brake-parking type="double">1.0</brake-parking> -->
 		</gear>
 	</controls>
 
