@@ -468,6 +468,69 @@
         </engine-jet-afterburner-r>
 
         <!-- Wheel Rumble -->
+
+        <fuselage-scrape>
+            <name>fuselage-scrape</name>
+            <mode>looped</mode>
+            <path>Aircraft/f-14b/Sounds/fuselage-strike.wav</path>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/gear-sound-freeze</property>
+                </not>
+                <or>
+                    <property>fdm/jsbsim/contact/unit[3]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[4]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[5]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[6]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[7]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[8]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[9]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[10]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[11]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[12]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[13]/WOW</property>
+                </or>
+                <greater-than>
+                    <property>velocities/groundspeed-kt</property>
+                    <value>8</value>
+                </greater-than>
+            </condition>
+            <volume>
+                <property>velocities/groundspeed-kt</property>
+                <factor>0.005</factor>
+                <min>0.3</min>
+            </volume>
+            <reference-dist>220.0</reference-dist>
+            <max-dist>300.0</max-dist>
+        </fuselage-scrape>
+        <fuselage-strike>
+            <name>fuselage-strike</name>
+            <path>Aircraft/f-14b/Sounds/fuselage-strike.wav</path>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/gear-sound-freeze</property>
+                </not>
+                <or>
+                    <property>fdm/jsbsim/contact/unit[3]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[4]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[5]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[6]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[7]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[8]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[9]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[10]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[11]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[12]/WOW</property>
+                    <property>fdm/jsbsim/contact/unit[13]/WOW</property>
+                </or>
+                <greater-than>
+                    <property>velocities/groundspeed-kt</property>
+                    <value>1</value>
+                </greater-than>
+            </condition>
+            <reference-dist>220.0</reference-dist>
+            <max-dist>300.0</max-dist>
+        </fuselage-strike>
         <rumble>
             <name>rumble</name>
             <mode>looped</mode>
