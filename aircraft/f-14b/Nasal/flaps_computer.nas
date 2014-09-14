@@ -22,6 +22,39 @@ SlatsCmd.setValue(0);
 AuxFlapsCmd.setValue(0);
 demandedFlags = 0;
 
+var weAppliedSpeedBrake = 99;
+var weAppliedWheelBrake = 99;
+
+controls.applyBrakes = func(v, which = 0)  {
+    if (wow)
+    {
+        if (!v and weAppliedSpeedBrake != 99)
+        {
+            setprop("controls/flight/speedbrake", 0);
+            weAppliedSpeedBrake=99;
+            print("F14: dual purpose brakes release release airbrake brakes ",v,which);
+            return;
+        }
+        if (which <= 0) { interpolate("/controls/gear/brake-left", v, controls.fullBrakeTime); }
+        if (which >= 0) { interpolate("/controls/gear/brake-right", v, controls.fullBrakeTime); }
+        weAppliedWheelBrake = which;
+        print("F14: wheelbrakes ",v,":",which);
+    }
+    else
+    {
+        if (!v and weAppliedWheelBrake != 99)
+        {
+            if (weAppliedWheelBrake <= 0) { interpolate("/controls/gear/brake-left", 0, controls.fullBrakeTime); }
+            if (weAppliedWheelBrake >= 0) { interpolate("/controls/gear/brake-right", 0, controls.fullBrakeTime); }
+            weAppliedWheelBrake=99;
+            print("F14: dual purpose brakes release release wheel brakes ",v,which);
+            return;
+        }
+        weAppliedSpeedBrake=which;
+        print("F14: airbrakes  down ",v,which);
+        setprop("controls/flight/speedbrake", v);
+    }
+}
 # Hijack the generic flaps command so everybody's joystick flap command works
 # for the F-14 too. 
 
