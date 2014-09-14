@@ -85,8 +85,6 @@ var LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
 var RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
 var LeftEngineRunning		= LeftEngine.getNode("running", 1);
 var RightEngineRunning		= RightEngine.getNode("running", 1);
-var left_fuel_consumed  = 0;
-var right_fuel_consumed = 0;
 LeftEngine.getNode("out-of-fuel", 1);
 RightEngine.getNode("out-of-fuel", 1);
 
@@ -190,7 +188,6 @@ var fuel_update = func {
 	neg_g.update();
 	calc_levels();
 
-return;
 	if ( getprop("/sim/freeze/fuel") or getprop("sim/replay/time") > 0 ) { return }
 
 	LBS_HOUR2GALS_PERIOD = LBS_HOUR2GALS_SEC * fuel_dt;
@@ -315,49 +312,14 @@ return;
 		}
 	}
 
+    if (!f14.usingJSBSim)
+    {
+
+var left_fuel_consumed  = 0;
+var right_fuel_consumed = 0;
 	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
 	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
 
-return;
-	# Transfer from the proportioners to the engines, reset the consumed fuel, Set engines.
-#if (LeftEngineRunning.getBoolValue()){
-#	left_fuel_consumed = LeftFuel.getValue();
-#	if ( left_outOfFuel ) {
-#		LeftEngine.getNode("out-of-fuel").setBoolValue(1);
-#	}
-#    else {
-#     LeftEngine.getNode("out-of-fuel").setBoolValue(0) ;
-#    }
-#}
-#else
-#{
-#	left_fuel_consumed = 0;
-#if(!LeftEngine.getNode("out-of-fuel").getBoolValue()){
-#print("Start");
-#    setprop("engines/engine[0]/out-of-fuel",0);
-#    setprop("engines/engine[1]/out-of-fuel",0);
-#    setprop("engines/engine[0]/run",1);
-#    setprop("engines/engine[1]/run",1);
-#}
-#}
-
-#if (RightEngineRunning.getBoolValue()){
-#	right_fuel_consumed = RightFuel.getValue();
-#	if ( right_outOfFuel ) {
-#		RightEngine.getNode("out-of-fuel").setBoolValue(1)
-#	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
-#}
-#else
-#{
-#	right_fuel_consumed = 0;
-#}
-#	LeftFuel.setDoubleValue(0);
-#	RightFuel.setDoubleValue(0);
-
-
-if(JSBLeftEngine.getNode("starter") != nil){
-print("LE-start:", JSBLeftEngine.getNode("starter").getValue(), ", RE-start ", JSBRightEngine.getNode("starter").getValue(), );
-}
 # Transfer from the proportioners to the engines, reset the consumed fuel, Set engines.
 	left_fuel_consumed = LeftFuel.getValue();
 	right_fuel_consumed = RightFuel.getValue();
@@ -365,14 +327,15 @@ print("LE-start:", JSBLeftEngine.getNode("starter").getValue(), ", RE-start ", J
 	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
 	LeftFuel.setDoubleValue(0);
 	RightFuel.setDoubleValue(0);
+
 	if ( left_outOfFuel ) {
 		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
 	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
 	if ( right_outOfFuel ) {
 		RightEngine.getNode("out-of-fuel").setBoolValue(1)
 	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
-print("LE:", LeftEngine.getNode("out-of-fuel").getValue(), ", RE ", RightEngine.getNode("out-of-fuel").getValue(), );
 
+    }
 	# Transfer from left sump to left proportioner (left feed line).
 	if ( Left_Proportioner.get_ullage() > 0 ) {
 		left_sump_level = Left_Sump.get_level();
@@ -407,10 +370,6 @@ print("LE:", LeftEngine.getNode("out-of-fuel").getValue(), ", RE ", RightEngine.
 		Right_Beam_Box.set_level( right_beam_box_level - amount_right_beam_box);
 		Right_Sump.set_level(Right_Sump.get_level()    + amount_right_beam_box);
 	}
-
-
-
-
 
 	# Transfer from Left External to Left Beam Box. max 45000 pph at 25 psi regulated bleed air.
 	# Overflow to AFT_Fuselage.
