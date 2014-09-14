@@ -210,16 +210,13 @@ var computeSAS = func {
    	SasYaw.setValue(smooth_r);
 }
 setlistener("sim/model/f-14b/controls/SAS/yaw", func {
-        fdm_yawdamper.setValue(SasYawOn.getValue());
-print("set yaw damper ",fdm_yawdamper.getValue());
+    if(usingJSBSim)        fdm_yawdamper.setValue(SasYawOn.getValue());
 }, 1, 0);
 
 setlistener("sim/model/f-14b/controls/SAS/roll", func {
-        fdm_rolldamper.setValue(SasRollOn.getValue());
-print("set roll  damper ",fdm_rolldamper.getValue());
+    if(usingJSBSim)        fdm_rolldamper.setValue(SasRollOn.getValue());
 }, 1, 0);
 
 setlistener("sim/model/f-14b/controls/SAS/pitch", func {
-        fdm_pitchdamper.setValue(SasPitchOn.getValue());
-print("set pitch damper ",fdm_pitchdamper.getValue());
+    if(usingJSBSim)        fdm_pitchdamper.setValue(SasPitchOn.getValue());
 }, 1, 0);

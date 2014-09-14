@@ -32,7 +32,8 @@ var OverSweepAngle = 68.0;
 var SweepRate = 2.0;    # degrees per second
 var SweepVsMachLo = 22.0;  # for simplicity we will ignore the 21degrees sweep
 var SweepVsMachHi = 60.0;
-setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
+
+if (usingJSBSim) setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
 
 var minSweep = 0.383972435;
 var maxSweep = 1.0 - minSweep;
@@ -43,8 +44,15 @@ var toggleOversweep = func {
 	if ( wow and ! OverSweep ) {
 		# Flaps/sweep interlock
 		#do not move the wings until auxiliary flaps are in.
-		if (getprop ("fcs/aux-flap-pos-deg") > 0.05) return;
-#		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
+        if (usingJSBSim)
+        {
+            if (getprop ("fcs/aux-flap-pos-deg") > 0.05) return;
+        }
+        else
+        {
+    		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
+        }
+
 		OverSweep = true;
 		AutoSweep = false;
 		WingSweep = 1.2;
@@ -61,6 +69,7 @@ var toggleOversweep = func {
 
 var computeSweep = func {
 
+# The JSBSim model includes sweep computer inside the fdm.
     if (usingJSBSim){
         currentSweep = getprop("/fdm/jsbsim/fcs/wing-sweep-cmd");
         return;
@@ -74,8 +83,9 @@ var computeSweep = func {
 
 		# Flaps/sweep interlock
 		# do not move the wings until auxiliary flaps are in.
-#		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
-		if (getprop ("fcs/aux-flap-pos-deg") > 0.05) return;
+
+		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
+
 		# Sweep vs. Mach motion
 		if (current_mach <= MachLo) {
 			WingSweep = minSweep;

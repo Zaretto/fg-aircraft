@@ -107,14 +107,19 @@ var SweepSpeed = 0.3;
 
 
 # Properties used for multiplayer syncronization.
-#var main_flap_output   = props.globals.getNode("surface-positions/main-flap-pos-norm", 1);
-#var aux_flap_output    = props.globals.getNode("surface-positions/aux-flap-pos-norm", 1);
-var aux_flap_output    = props.globals.getNode("fcs/aux-flap-pos-deg", 1);
+var main_flap_output   = props.globals.getNode("surface-positions/main-flap-pos-norm", 1);
+var aux_flap_output    = props.globals.getNode("surface-positions/aux-flap-pos-norm", 1);
+var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
+
+if (usingJSBSim){
+    aux_flap_output    = props.globals.getNode("fcs/aux-flap-pos-deg", 1);
+}
+else
+{
+    slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
+}
 aux_flap_output.setDoubleValue(0);
 
-#var slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
-#var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-pos-norm-deg", 1);
-var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
 
 var left_elev_output   = props.globals.getNode("surface-positions/left-elevator-pos-norm", 1);
 var right_elev_output  = props.globals.getNode("surface-positions/right-elevator-pos-norm", 1);
@@ -254,21 +259,22 @@ var timedMotions = func {
     {
         if (main_flap_generic != nil)
     	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
+
+        # the F14 model I'm using has a combined aileron deflection so split this for animation purposes.
+        var elevator_deflection_due_to_aileron_deflection =  aileron.getValue() / 2.0;
+    	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
+    	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
     }
     else
     {
     	main_flap_generic.setDoubleValue(main_flap_output.getValue());
     	setprop ("controls/flight/wing-sweep", WingSweep);
+        aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
+    	left_elev_generic.setDoubleValue(left_elev_output.getValue());
+    	right_elev_generic.setDoubleValue(right_elev_output.getValue());
     }
-	#aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
 	slat_generic.setDoubleValue(slat_output.getValue());
     wing_sweep_generic.setDoubleValue(currentSweep);
-#	left_elev_generic.setDoubleValue(left_elev_output.getValue());
-#	right_elev_generic.setDoubleValue(right_elev_output.getValue());
-# JSB Sim doesn't seem to have two elevator positions.
-var elevator_deflection_due_to_aileron_deflection =  aileron.getValue() / 2.0;
-	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
-	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
 	lighting_collision_generic.setIntValue(lighting_collision.getValue());
 	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
