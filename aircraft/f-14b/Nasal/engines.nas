@@ -146,69 +146,6 @@ var computeNozzles = func {
     Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
 }
 
-#----------------------------------------------------------------------------
-# APC - Approach Power Compensator
-#----------------------------------------------------------------------------
-# target:        - sim/model/f-14b/instrumentation/aoa-indexer/target-deg (11,3 deg AoA)
-# engaged by:    - Throttle Mode Lever
-#                - keystroke "a" (toggle)
-# disengaged by: - Throttle Mode Lever
-#                - keystroke "a" (toggle)
-#                - WoW
-#                - throttle levers at ~ idle or MIL
-#                - autopilot emer disengage padle (TODO)
-
-var APCengaged = props.globals.getNode("sim/model/f-14b/systems/apc/engaged");
-var engaded = 0;
-var gear_down = props.globals.getNode("controls/gear/gear-down");
-var disengaged_light = props.globals.getNode("sim/model/f-14b/systems/apc/self-disengaged-light");
-var throttle_0 = props.globals.getNode("controls/engines/engine[0]/throttle");
-var throttle_1 = props.globals.getNode("controls/engines/engine[1]/throttle");
-
-var computeAPC = func {
-	var t0 = throttle_0.getValue();
-	var t1 = throttle_1.getValue();
-	if (APCengaged.getBoolValue()) {
-		# TODO override throttles
-		if ( wow or !gear_down.getBoolValue()
-		or t0 > 0.76 or t0 < 0.08
-		or t1 > 0.76 or t1 < 0.08 ) {
-			APC_off()
-		}
-	} else {
-		# TODO duplicate throttles
-	}
-}
-
-var toggleAPC = func {
-	engaged = APCengaged.getBoolValue();
-	if ( ! engaged ){
-		APC_on();
-	} else {
-		APC_off();
-	}
-}
-
-var APC_on = func {
-	if ( ! wow and gear_down.getBoolValue()) {
-		APCengaged.setBoolValue(1);
-		disengaged_light.setBoolValue(0);
-		setprop ("autopilot/locks/aoa", "APC");
-		setprop ("autopilot/locks/speed", "APC");
-		#print ("APC on()");
-	}
-}
-
-var APC_off = func {
-	setprop ("autopilot/internal/target-speed", 0.0);
-	APCengaged.setBoolValue(0);
-	disengaged_light.setBoolValue(1);
-	settimer(func { disengaged_light.setBoolValue(0); }, 10);
-	setprop ("autopilot/locks/aoa", "");
-	setprop ("autopilot/locks/speed", "");
-	#print ("APC off()");
-}
-
 #
 #
 #
@@ -258,7 +195,8 @@ var r_running = r_running_prop.getValue();
                 jfs_start.setValue(1);
         }
     }
-    else{
+    else
+    {
         if (l_running and r_running and jfs_start.getValue() >= 10)
         {
             jfs_start.setValue(1);
@@ -276,10 +214,10 @@ var r_running = r_running_prop.getValue();
     {
     	engine_crank_switch_pos_prop.setIntValue(0);
     }
-     if (jfs_running and l_running and r_running){
-        jfs_running = 0;
-        jfs_start.setValue(1);
-    }
+#     if (jfs_running and l_running and r_running){
+#        jfs_running = 0;
+#        jfs_start.setValue(1);
+#    }
 }
 var jfs_set_running = func{
 
@@ -303,6 +241,7 @@ var jfs_set_running = func{
     }
     startupTimer.stop();
 }
+
 var jfs_invoke_shutdown = func{
 
     print("Jfs invoke shutdown  callback");
@@ -320,6 +259,7 @@ var jfs_invoke_shutdown = func{
         jfs_starting = 0;
     }
 #    settimer(f14., 999999); # turn off timer.
+    print("Jfs invoke shutdown cancel callback");
 shutdownTimer.stop();
 }
 
@@ -328,9 +268,9 @@ var jfs_starting = 0;
 var jfs_shutdown_timer = 0;
 
 var shutdownTimer = maketimer(6, jfs_invoke_shutdown);
-shutdownTimer.singleShot=1;
+#shutdownTimer.singleShot=1;
 var startupTimer = maketimer(11, jfs_set_running);
-startupTimer.singleShot=1;
+#startupTimer.singleShot=1;
 var jfsShutdownTime = 5; # time after crank switch set to centre that the JFS will turn off.
 var jfsStartupTime = 10; # amount of time it takes JFS to be ready - before the start will be able to turn the engine (i.e. how long before starter_cmd is set)
 
@@ -361,6 +301,7 @@ var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
             return;
         }
     }
+
     if (!jfs_running){
         if (!jfs_starting){
             jfs_starting = 1;
@@ -376,6 +317,7 @@ var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 		} 
         return;
     }
+
 	if (n == 0) {
 		if (engine_crank_switch_pos == 0) {
             if (jfs_running){
@@ -398,12 +340,14 @@ var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 		}
 	}	
 }
+
 #
 # 0 = L
 # 1 = R
 # The fire handle does two things; firstly when pulled it cuts
 # off fuel. then when turned it deploys the fire extinguisher
-# - not currently modelling fire extinguishers.
+# - not currently modelling fire extinguishers. We need the cutoff
+#   for the engine start to work.
 var fire_handle = func(n) {
     if (n==0)
     {
@@ -429,8 +373,10 @@ var fire_handle = func(n) {
     }
 }
 
+#
+# engine controls panel - R RAMP switch
 var econt_r_ramp = func(n) {
-setprop("sim/model/f-14b/controls/switch-r-ramp", n);
+    setprop("sim/model/f-14b/controls/switch-r-ramp", n);
     if (n)
     {
     	Ramp1r.setValue(0);
@@ -439,16 +385,12 @@ setprop("sim/model/f-14b/controls/switch-r-ramp", n);
     }
 }
 
-var econt_throttle_mode = func(n) {
-setprop("sim/model/f-14b/controls/switch-throttle-mode", n);
-}
-
-var econt_backup_ignition_toggle = func {
-setprop("sim/model/f-14b/controls/switch-backup-ignition", 1 - getprop("sim/model/f-14b/controls/switch-backup-ignition"));
-}
-
+#
+# engine controls panel - L RAMP switch
 var econt_l_ramp = func(n) {
-setprop("sim/model/f-14b/controls/switch-l-ramp", n);
+
+    setprop("sim/model/f-14b/controls/switch-l-ramp", n);
+
     if (n)
     {
     	Ramp1l.setValue(0);
@@ -457,7 +399,29 @@ setprop("sim/model/f-14b/controls/switch-l-ramp", n);
     }
 }
 
+#
+# engine controls panel - throttle mode
+var econt_throttle_mode = func(n) {
+    setprop("sim/model/f-14b/controls/switch-throttle-mode", n);
+    if(n == 1) # Auto - APC
+    {
+        APC_on();
+    }
+    else
+    {
+    APC_off();
+    }
+}
+
+#
+# engine controls panel - backup ignition
+var econt_backup_ignition_toggle = func {
+    setprop("sim/model/f-14b/controls/switch-backup-ignition", 1 - getprop("sim/model/f-14b/controls/switch-backup-ignition"));
+}
+
+#
+# engine controls panel - temperature switch
 var econt_temp = func(n) {
-setprop("sim/model/f-14b/controls/switch-temp", n);
+    setprop("sim/model/f-14b/controls/switch-temp", n);
 }
 

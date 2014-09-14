@@ -300,6 +300,9 @@ var alt_drag_factor = 25000;
 var alt_drag_factor2 = 20000;
 
 controls.stepSpoilers = func(s) {
+
+    if (f14.usingJSBSim) return;  # in the FDM
+
 	var sb = SpeedBrake.getValue();
 	if ( s == 1 ) {
 		sb += sb_i;
@@ -313,6 +316,9 @@ controls.stepSpoilers = func(s) {
 }
 
 var compute_drag = func {
+
+    if (f14.usingJSBSim) return;  # in the FDM
+
 	var gearpos = GearPos.getValue();
 	var ab = AB.getValue(); # Prevent supercruise when no afterburners
 	var gear_drag = 0;

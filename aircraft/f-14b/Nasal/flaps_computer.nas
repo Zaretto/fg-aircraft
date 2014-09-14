@@ -50,6 +50,12 @@ controls.applyBrakes = func(v, which = 0)  {
             print("F14: dual purpose brakes release release wheel brakes ",v,which);
             return;
         }
+
+    	if (v and (throttle_0.getValue() >= 0.98 or throttle_1.getValue() >= 0.98))
+        {
+            # do not extend speed brakes when throttle at MIL or greater.
+            return;
+        }
         weAppliedSpeedBrake=which;
         print("F14: airbrakes  down ",v,which);
         setprop("controls/flight/speedbrake", v);
