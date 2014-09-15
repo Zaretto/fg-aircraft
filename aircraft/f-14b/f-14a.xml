@@ -160,7 +160,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <rolling_friction> 0.02 </rolling_friction>
       <spring_coeff unit="LBS/FT"> 47500 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
-      <max_steer unit="DEG"> 80 </max_steer>
+      <max_steer unit="DEG"> 89 </max_steer>
       <brake_group> NOSE </brake_group>
       <retractable>1</retractable>
     </contact>
@@ -1184,13 +1184,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    -->
  <aerodynamics>
 
-		<function name="calculations/pitch-weights-delta/mass-center-m">
-		<product>
-			<value>0.0254</value><!--To convert from inches to meters -->
-			<property>inertia/cg-x-in</property>
-		</product>
-		</function>
-
    <function name="fcs/wing-sweep-dmd">
      <description>Wing autosweep</description>
     <!-- based on what I can figure out from NAVAIR 01-F14AAD-1 Figure 2-48: p. 2-87 
@@ -1201,10 +1194,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
          <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
          <tableData>
                     0                   5              50
-            0.00 		0.294117647   0.294117647   0.294117647
-            0.448	  0.294117647	  0.294117647	  0.294117647
-            0.711		0.308823529	  0.294117647	  0.294117647
-            0.913   1	            0.294117647   0.294117647
+            0.00 	0.294117647   0.294117647	 0.294117647
+            0.448	0.294117647	  0.294117647	 0.294117647
+            0.711	0.308823529	  0.294117647	 0.294117647
+            0.913   1	          0.294117647	 0.294117647
          </tableData>
        </table>
      </sum>

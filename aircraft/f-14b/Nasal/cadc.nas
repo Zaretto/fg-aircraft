@@ -43,6 +43,7 @@ var computeAPC = func {
 		# Yasim model doesn't support anything except the logic for the lights.
         # JSBSim has APC as FDM system
 		if ( wow 
+# gear check disabled for testing
 #           or !gear_down.getBoolValue() 
             or !getprop("engines/engine[0]/running")
             or !getprop("engines/engine[1]/running")
@@ -65,7 +66,10 @@ var toggleAPC = func {
 }
 
 var APC_on = func {
-	if ( ! wow and gear_down.getBoolValue()) {
+	if ( ! wow 
+        # and gear_down.getBoolValue()
+        )
+    {
 		APCengaged.setBoolValue(1);
 		disengaged_light.setBoolValue(0);
 		setprop ("autopilot/locks/aoa", "APC");
@@ -73,6 +77,8 @@ var APC_on = func {
         if(usingJSBSim){
     		setprop ("fdm/jsbsim/systems/apc/active",1);
     		setprop ("fdm/jsbsim/systems/apc/target-vc-kts",getprop("fdm/jsbsim/velocities/vc-kts"));
+    		setprop ("fdm/jsbsim/systems/apc/divergence-pid/initial-integrator-value",getprop("fdm/jsbsim/fcs/throttle-cmd-norm[1]") /  getprop("fdm/jsbsim/systems/apc/throttle-gain"));
+
         }
         setprop("sim/model/f-14b/controls/switch-throttle-mode", 1);
 
