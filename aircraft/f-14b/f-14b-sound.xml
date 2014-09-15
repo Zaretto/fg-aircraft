@@ -309,7 +309,6 @@
             </condition>
             <volume>
                 <offset>-0.9</offset>
-                <property>engines/engine[0]/epr</property>
                 <property>engines/engine[1]/epr</property>
             </volume>
             <position>
@@ -553,22 +552,24 @@
             <reference-dist>60.0</reference-dist>
             <max-dist>300.0</max-dist>
         </rumble>
-        <rumblefront>
+        <rattle-front>
             <!--wheel-speed-fps-->
             <name>nose wheel rumble</name>
             <mode>in-transit</mode>
             <path>Aircraft/f-14b/Sounds/ground-rattle.wav</path>
-            <property>fdm/jsbsim/gear/unit[1]/compression-velocity-fps</property>
+            <property>fdm/jsbsim/gear/unit[0]/compression-velocity-fps</property>
             <condition>
                 <not>
                     <property>sim/model/f-14b/gear-sound-freeze</property>
                 </not>
                 <property>gear/gear[0]/wow</property>
                 <property>sim/current-view/internal</property>
+<!--
                 <greater-than>
-                    <property>fdm/jsbsim/gear/unit[1]/compression-velocity-fps</property>
-                    <value>0.2</value>
+                    <property>fdm/jsbsim/gear/unit[0]/compression-velocity-fps</property>
+                    <value>0.02</value>
                 </greater-than>
+-->
             </condition>
             <position>
                 <x>-22</x>
@@ -576,12 +577,13 @@
                 <z>-5</z>
             </position>
             <volume>
-                <property>fdm/jsbsim/gear/unit[1]/wheel-speed-fps</property>
-                <factor>0.2</factor>
+                <property>fdm/jsbsim/gear/unit[0]/compression-velocity-fps</property>
+                <factor>10</factor>
             </volume>
             <reference-dist>60.0</reference-dist>
             <max-dist>300.0</max-dist>
-        </rumblefront>
+        </rattle-front>
+
         <flaps-wind>
             <name>flaps-wind</name>
             <mode>looped</mode>
@@ -719,10 +721,10 @@
                     <property>gear/gear[0]/wow</property>
                     <value>1</value>
                 </equals>
-                <!--<greater-than>
-            <property>velocities/airspeed-kt</property>
-            <value>100</value>
-          </greater-than>-->
+                <greater-than>
+                    <property>velocities/groundspeed-kt</property>
+                  <value>60</value>
+                </greater-than>
             </condition>
             <position>
                 <x>-1.2</x>
