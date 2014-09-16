@@ -67,7 +67,6 @@
 
 Notes:
 1. possibly need to consider differential spoiler deflection on roll and yaw moments
-2. DCxDS2 not included yet; this will reduce the effectiveness of the stabilizer by an amount; however the transition between DS1 & DS2 values causes instability.
 
 Cockpit control	Stabilizer Surface	Parallel Trim
 Actuation	Mode	Motion	Authority	Rate	Authority	Rate
@@ -86,8 +85,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 -->
 
  <system file="f-14b-hydraulic"/>
+ <system file="f-14-afcs"/>
  <system file="f-14b-apc"/>
-  <system file="hook"/>
+ <system file="hook"/>
 
  <metrics>
    <wingarea  unit="FT2">   565 </wingarea>
@@ -207,7 +207,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
     </contact>
 
@@ -221,7 +221,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
 
@@ -236,7 +236,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
 
@@ -250,7 +250,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
 
@@ -264,7 +264,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
     <!--  8 -->
@@ -277,8 +277,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+      <spring_coeff unit="LBS/FT"> 5100 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5100 </damping_coeff>
     </contact>
 
     <!--  9 -->
@@ -291,7 +291,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
 
@@ -305,8 +305,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+      <spring_coeff unit="LBS/FT"> 5100 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5100 </damping_coeff>
     </contact>
 
     <!--  11 -->
@@ -319,8 +319,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+      <spring_coeff unit="LBS/FT"> 5100 </spring_coeff>
+      <damping_coeff unit="LBS/FT/SEC"> 5100 </damping_coeff>
     </contact>
     <!-- 12 -->
   <contact type="STRUCTURE" name="REAR_BODY_LEFT">
@@ -332,7 +332,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 8000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
 
@@ -346,7 +346,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
       <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+      <spring_coeff unit="LBS/FT"> 8000 </spring_coeff>
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
   </ground_reactions>
@@ -566,6 +566,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <input>fcs/elevator-cmd-norm</input>
       <input>fcs/pitch-trim-cmd-norm</input>
       <input>fcs/pitch-damper-rate</input>
+      <input>systems/afcs/elevator-cmd-delta</input>
       <clipto>
         <min> -1 </min>
         <max>  1 </max>
@@ -675,19 +676,24 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       </range>
       <output>fcs/elevator-pos-norm</output>
    </aerosurface_scale>
-    <switch name="fcs/stabilizer-1p-factor">
+
+   <switch name="fcs/stabilizer-1p-factor">
                 <default value="0"/>
                 <test logic="AND" value="1">
                     fcs/elevator-pos-rad ge -0.17453
                 </test>
    </switch>
-    <switch name="fcs/stabilizer-2p-factor">
+   <switch name="fcs/stabilizer-2p-factor">
                 <default value="0.0"/>
-                <test logic="AND" value="10">
+                <test logic="AND" value="1">
                     fcs/elevator-pos-rad lt -0.17453
                 </test>
    </switch>
 
+
+  </channel>
+
+  <channel name="SoundFX">
      <fcs_function name="fcs/flap-windfx-volume">
        <function>
          <product>
@@ -705,25 +711,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
          </product>
        </function>
        <output>fcs/gear-windfx-volume</output>
-     </fcs_function>
-
-     <fcs_function name="fcs/stabilizer-1p">
-       <function>
-         <product>
-             <property>fcs/stabilizer-1p-factor</property>
-             <property>fcs/elevator-pos-deg</property>
-         </product>
-       </function>
-       <output>fcs/stabilizer-1p</output>
-     </fcs_function>
-     <fcs_function name="fcs/stabilizer-2p">
-       <function>
-         <product>
-             <property>fcs/stabilizer-2p-factor</property>
-             <property>fcs/elevator-pos-deg</property>
-         </product>
-       </function>
-       <output>fcs/stabilizer-2p</output>
      </fcs_function>
   </channel>
 
@@ -1517,26 +1504,46 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
        </product>
     </function>
 
-  <function name="aero/coefficients/ClDS1">
-    <description>ClDS1</description>
-    <product>
-          <property>fcs/stabilizer-pos-deg</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                   -55  0.0065000
-                   -50  0.0070000
-                   -45  0.0060000
-                   -40  0.0045000
-                   -35  0.0115000
-                   -30  0.0130000
-                   -25  0.0145000
-                   -20  0.0165000
-                   -15  0.0150000
-                   -10  0.0135000
-                    -5  0.0125000
-                      0 0.01650000
-                      5 0.01250000
+     <function name="aero/coefficients/ClUC">
+         <description>Cl increment due to gear</description>
+         <product>
+             <property>gear/gear-pos-norm</property>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                     -10	 -0.00
+                     0 	 -0.12
+                     8 	 -0.10
+                     12    -0.04
+                     14    -0.02
+                     16    -0.01
+                     18    -0.00
+                 </tableData>
+             </table>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/ClDS1">
+         <description>ClDS1</description>
+         <product>
+             <property>fcs/stabilizer-pos-deg</property>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                     -65  0.0065000
+                     -55  0.0065000
+                     -50  0.0070000
+                     -45  0.0060000
+                     -40  0.0045000
+                     -35  0.0115000
+                     -30  0.0130000
+                     -25  0.0145000
+                     -20  0.0165000
+                     -15  0.0150000
+                     -10  0.0135000
+                     -5  0.0125000
+                     0 0.01650000
+                     5 0.01250000
                      10 0.01350000
                      15 0.01500000
                      20 0.01650000
@@ -1547,66 +1554,80 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                      45 0.00600000
                      50 0.00700000
                      55 0.00650000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/ClUC">
-    <description>Cl increment due to gear</description>
-    <product>
-          <property>gear/gear-pos-norm</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                  -4	-0.16
-                   0 	-0.16
-                   4 	-0.16
-                   8 	-0.12
-                   12 -0.09
-                   14 -0.06
-                   16 -0.04
-                   18 -0.02
-                   20  0
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/ClDS2">
-    <description>ClDS2</description>
-    <product>
-          <property>fcs/stabilizer-2p</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
+                 </tableData>
+             </table>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/ClDS2">
+         <description>ClDS2</description>
+         <product>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                     -60  -0.00550000
+                     -55  -0.00550000
+                     -50  -0.00800000
+                     -45  -0.01100000
+                     -40  -0.01200000
+                     -30  0.01250000
+                     -10  -0.01150000
                      -5 -0.00350000
-                      0  0.00650000
-                      5  0.00950000
-                     10 0.01150000
-                     15 0.01250000
-                     20 0.01200000
-                     25 0.01250000
-                     30 0.01250000
-                     35 0.01350000
-                     40 0.01200000
-                     45 0.01100000
-                     50 0.00800000
-                     55 0.00550000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/Cl">
-    <sum>
-          <property>aero/coefficients/ClBAS</property>
-          <property>aero/coefficients/ClDS1</property>
-          <!--<property>aero/coefficients/ClDS2</property>-->
-          <property>aero/coefficients/ClUC</property>
-          <property>aero/coefficients/ClDFM</property>
-          <property>aero/coefficients/ClDSLM</property>
-          <property>aero/coefficients/ClDSp</property>
-    </sum>
-    </function>
-    <function name="aero/coefficients/CdUC">
+                     0  0.00650000
+                     5  0.00950000
+                     10  0.01150000
+                     15  0.01250000
+                     20  0.01200000
+                     25  0.01250000
+                     30  0.01250000
+                     35  0.01350000
+                     40  0.01200000
+                     45  0.01100000
+                     50  0.00800000
+                     55  0.00550000
+                 </tableData>
+             </table>
+         </product>
+     </function>
+     <function name="aero/coefficients/DClDS1">
+         <description>DClDS1</description>
+         <product>
+             <property>fcs/stabilizer-1p-factor</property>
+             <property>aero/coefficients/ClDS1</property>
+             <property>fcs/elevator-pos-deg</property>
+         </product>
+     </function>
+     <function name="aero/coefficients/DClDS2">
+         <description>DClDS2</description>
+         <product>
+             <property>fcs/stabilizer-2p-factor</property>
+             <sum>
+                 <product>
+                     <value>-10</value>
+                     <property>aero/coefficients/ClDS1</property>
+                 </product>
+                 <product>
+                     <sum>
+                         <value>10</value>
+                         <property>fcs/elevator-pos-deg</property>
+                     </sum>
+                     <property>aero/coefficients/ClDS2</property>
+                 </product>
+             </sum>
+         </product>
+     </function>
+     <function name="aero/coefficients/Cl">
+         <sum>
+             <property>aero/coefficients/ClBAS</property>
+             <property>aero/coefficients/DClDS1</property>
+             <property>aero/coefficients/DClDS2</property>
+             <property>aero/coefficients/ClUC</property>
+             <property>aero/coefficients/ClDFM</property>
+             <property>aero/coefficients/ClDSLM</property>
+             <property>aero/coefficients/ClDSp</property>
+         </sum>
+     </function>
+     <function name="aero/coefficients/CdUC">
     <description>Cd increment due to gear</description>
     <product>
           <property>gear/gear-pos-norm</property>
@@ -1722,15 +1743,17 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
-    <function name="aero/coefficients/CdDS1">
-    <description>CdDS1</description>
-    <product>
-          <property>fcs/stabilizer-pos-deg</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                     -55 0.01400000
-                     -10 0.00180000
+
+     <function name="aero/coefficients/CdDS1">
+         <description>CdDS1</description>
+         <product>
+             <property>fcs/stabilizer-pos-deg</property>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                    -65  0.01400000
+                    -55  0.01400000
+                    -10  0.00180000
                      -5 -0.00030000
                       0 -0.00120000
                       5 0.00030000
@@ -1744,17 +1767,22 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                      45 0.00900000
                      50 0.01250000
                      55 0.01400000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/CdDS2">
-    <description>CdDS2</description>
-    <product>
-          <property>fcs/stabilizer-2p</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
+                 </tableData>
+             </table>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/CdDS2">
+         <description>CdDS2</description>
+         <product>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                     -65 0.00900000
+                     -55 0.00900000
+                     -30 0.00600000
+                     -10 -0.00100000
+                     -5 -0.00030000
                       0 -0.00330000
                       5 -0.00250000
                      10 -0.00100000
@@ -1767,50 +1795,83 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                      45 0.01100000
                      50 0.01050000
                      55 0.00900000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/Cd">
-    <sum>
-          <property>aero/coefficients/CdBAS</property>
-          <property>aero/coefficients/CdDS1</property>
-          <property>aero/coefficients/CdUC</property>
-          <property>aero/coefficients/CdDFM</property>
-          <property>aero/coefficients/CdDSLM</property>
-          <property>aero/coefficients/CdDBRK</property>
-          <property>aero/coefficients/CdTNK</property>
-          <property>aero/coefficients/CdDSp</property>
-       </sum>
-    </function>
-    <function name="aero/coefficients/CyBAS">
-    <description>CyBAS</description>
-    <product>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">aero/beta-deg</independentVar>
-            <tableData>
-                               -20        -15        -10         -5          0          5         10         15         20 
-                -20     0.20490000 0.15870000 0.10830000 0.05500000 0.00000000 -0.05500000 -0.10830000 -0.15870000 -0.20490000 
-                -11     0.20490000 0.15870000 0.10830000 0.05500000 0.00000000 -0.05500000 -0.10830000 -0.15870000 -0.20490000 
-                -10     0.28855000 0.20370000 0.14100000 0.06940000 0.00000000 -0.06940000 -0.14100000 -0.20370000 -0.28855000 
-                 0      0.29415000 0.21760000 0.14620000 0.06380000 0.00000000 -0.06380000 -0.14620000 -0.21760000 -0.29415000 
-                 5      0.30055000 0.22180000 0.14645000 0.07015000 0.00000000 -0.07015000 -0.14645000 -0.22180000 -0.30055000 
-                 10     0.28855000 0.20370000 0.14100000 0.06940000 0.00000000 -0.06940000 -0.14100000 -0.20370000 -0.28855000 
-                 15     0.24630000 0.16780000 0.11240000 0.05945000 0.00000000 -0.05945000 -0.11240000 -0.16780000 -0.24630000 
-                 20     0.20490000 0.15870000 0.10830000 0.05500000 0.00000000 -0.05500000 -0.10830000 -0.15870000 -0.20490000 
-                 25     0.18955000 0.15275000 0.11775000 0.06045000 0.00000000 -0.06045000 -0.11775000 -0.15275000 -0.18955000 
-                 30     0.21465000 0.17815000 0.13310000 0.07580000 0.00000000 -0.07580000 -0.13310000 -0.17815000 -0.21465000 
-                 35     0.23860000 0.18665000 0.14605000 0.07135000 0.00000000 -0.07135000 -0.14605000 -0.18665000 -0.23860000 
-                 40     0.25660000 0.20260000 0.14505000 0.07680000 0.00000000 -0.07680000 -0.14505000 -0.20260000 -0.25660000 
-                 45     0.26760000 0.22235000 0.16075000 0.09275000 0.00000000 -0.09275000 -0.16075000 -0.22235000 -0.26760000 
-                 50     0.27370000 0.22075000 0.15150000 0.07865000 0.00000000 -0.07865000 -0.15150000 -0.22075000 -0.27370000 
-                 55     0.24915000 0.19150000 0.13150000 0.07155000 0.00000000 -0.07155000 -0.13150000 -0.19150000 -0.24915000 
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/CyP">
+                 </tableData>
+             </table>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/DCdDS1">
+         <description>DCdDS1</description>
+         <product>
+             <property>fcs/stabilizer-1p-factor</property>
+             <property>aero/coefficients/CdDS1</property>
+             <property>fcs/elevator-pos-deg</property>
+         </product>
+     </function>
+     
+     <function name="aero/coefficients/DCdDS2">
+         <description>DCdDS2</description>
+         <product>
+             <property>fcs/stabilizer-2p-factor</property>
+             <sum>
+                 <product>
+                     <value>-10</value>
+                     <property>aero/coefficients/CdDS1</property>
+                 </product>
+                 <product>
+                     <sum>
+                         <value>10</value>
+                         <property>fcs/elevator-pos-deg</property>
+                     </sum>
+                     <property>aero/coefficients/CdDS2</property>
+                 </product>
+             </sum>
+         </product>
+     </function>
+     
+     <function name="aero/coefficients/Cd">
+         <sum>
+             <property>aero/coefficients/CdBAS</property>
+             <property>aero/coefficients/DCdDS1</property>
+             <property>aero/coefficients/DCdDS2</property>
+             <property>aero/coefficients/CdUC</property>
+             <property>aero/coefficients/CdDFM</property>
+             <property>aero/coefficients/CdDSLM</property>
+             <property>aero/coefficients/CdDBRK</property>
+             <property>aero/coefficients/CdTNK</property>
+             <property>aero/coefficients/CdDSp</property>
+         </sum>
+     </function>
+
+
+     <function name="aero/coefficients/CyBAS">
+         <description>CyBAS</description>
+         <product>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <independentVar lookup="column">aero/beta-deg</independentVar>
+                 <tableData>
+                     -20        -15        -10         -5          0          5         10         15         20
+                     -20     0.20490000 0.15870000 0.10830000 0.05500000 0.00000000 -0.05500000 -0.10830000 -0.15870000 -0.20490000
+                     -11     0.20490000 0.15870000 0.10830000 0.05500000 0.00000000 -0.05500000 -0.10830000 -0.15870000 -0.20490000
+                     -10     0.28855000 0.20370000 0.14100000 0.06940000 0.00000000 -0.06940000 -0.14100000 -0.20370000 -0.28855000
+                     0      0.29415000 0.21760000 0.14620000 0.06380000 0.00000000 -0.06380000 -0.14620000 -0.21760000 -0.29415000
+                     5      0.30055000 0.22180000 0.14645000 0.07015000 0.00000000 -0.07015000 -0.14645000 -0.22180000 -0.30055000
+                     10     0.28855000 0.20370000 0.14100000 0.06940000 0.00000000 -0.06940000 -0.14100000 -0.20370000 -0.28855000
+                     15     0.24630000 0.16780000 0.11240000 0.05945000 0.00000000 -0.05945000 -0.11240000 -0.16780000 -0.24630000
+                     20     0.20490000 0.15870000 0.10830000 0.05500000 0.00000000 -0.05500000 -0.10830000 -0.15870000 -0.20490000
+                     25     0.18955000 0.15275000 0.11775000 0.06045000 0.00000000 -0.06045000 -0.11775000 -0.15275000 -0.18955000
+                     30     0.21465000 0.17815000 0.13310000 0.07580000 0.00000000 -0.07580000 -0.13310000 -0.17815000 -0.21465000
+                     35     0.23860000 0.18665000 0.14605000 0.07135000 0.00000000 -0.07135000 -0.14605000 -0.18665000 -0.23860000
+                     40     0.25660000 0.20260000 0.14505000 0.07680000 0.00000000 -0.07680000 -0.14505000 -0.20260000 -0.25660000
+                     45     0.26760000 0.22235000 0.16075000 0.09275000 0.00000000 -0.09275000 -0.16075000 -0.22235000 -0.26760000
+                     50     0.27370000 0.22075000 0.15150000 0.07865000 0.00000000 -0.07865000 -0.15150000 -0.22075000 -0.27370000
+                     55     0.24915000 0.19150000 0.13150000 0.07155000 0.00000000 -0.07155000 -0.13150000 -0.19150000 -0.24915000
+                 </tableData>
+             </table>
+         </product>
+     </function>
+     <function name="aero/coefficients/CyP">
     <description>CyP</description>
     <product>
           <property>aero/bi2vel</property>
@@ -2125,7 +2186,111 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
-    <function name="aero/coefficients/DCMAIM">
+
+     <function name="aero/coefficients/CMDS1">
+         <description>CMDS1</description>
+         <product>
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                     -55  -0.0120000
+                     -50  -0.0145000
+                     -45  -0.0145000
+                     -40  -0.0145000
+                     -35  -0.0145000
+                     -30  -0.0160000
+                     -25  -0.0160000
+                     -20  -0.0160000
+                     -15  -0.0155000
+                     -10  -0.0140000
+                     -5  -0.0115000
+                     0 -0.00900000
+                     5 -0.01150000
+                     10 -0.01400000
+                     15 -0.01550000
+                     20 -0.01600000
+                     25 -0.01600000
+                     30 -0.01600000
+                     35 -0.01450000
+                     40 -0.01450000
+                     45 -0.01450000
+                     50 -0.01450000
+                     55 -0.01200000
+                 </tableData>
+             </table>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/CMDS2">
+         <description>CMDS2</description>
+         <product>
+             <!-- stabilizer-1p will be 1 or -10 (-10 when applicable)
+           the original equation was -10*CMDS1 +(stab-deg + 10) CMDS2
+           -->
+             <table>
+                 <independentVar lookup="row">aero/alpha-deg</independentVar>
+                 <tableData>
+                     -55  0.00000000
+                     -50  0.00050000
+                     -45  0.00600000
+                     -40  0.00400000
+                     -35 -0.00100000
+                     -30 -0.00750000
+                     -25 -0.01330000
+                     -20 -0.01700000
+                     -15 -0.01900000
+                     -10 -0.01900000
+                      -5 -0.01850000
+                       0 -0.01950000
+                       5 -0.01850000
+                      10 -0.01900000
+                      15 -0.01900000
+                      20 -0.01700000
+                      25 -0.01330000
+                      30 -0.00750000
+                      35 -0.00100000
+                      40  0.00400000
+                      45  0.00600000
+                      50  0.00050000
+                      55  0.00000000
+                 </tableData>
+             </table>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/DCMDS1">
+         <description>DCMDS1</description>
+         <product>
+             <property>fcs/stabilizer-1p-factor</property>
+             <property>aero/coefficients/CMDS1</property>
+             <property>fcs/elevator-pos-deg</property>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/DCMDS2">
+         <description>DCMDS2</description>
+         <product>
+             <property>fcs/stabilizer-2p-factor</property>
+             <!-- stabilizer-1p will be 1 or -10 (-10 when applicable)
+           the original equation was -10*CMDS1 +(stab-deg + 10) CMDS2
+           -->
+             <sum>
+                 <product>
+                     <value>-10</value>
+                     <property>aero/coefficients/CMDS1</property>
+                 </product>
+                 <product>
+                     <sum>
+                         <value>10</value>
+                         <property>fcs/elevator-pos-deg</property>
+                     </sum>
+                     <property>aero/coefficients/CMDS2</property>
+                 </product>
+             </sum>
+         </product>
+     </function>
+
+     <function name="aero/coefficients/DCMAIM">
     <description>Pitch moment increment due to aim missiles</description>
     <product>
           <property>fcs/aim-fitted</property>
@@ -2190,84 +2355,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
-    <function name="aero/coefficients/CMDS1">
-    <description>CMDS1</description>
-    <product>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                     -55  -0.0120000
-                     -50  -0.0145000
-                     -45  -0.0145000
-                     -40  -0.0145000
-                     -35  -0.0145000
-                     -30  -0.0160000
-                     -25  -0.0160000
-                     -20  -0.0160000
-                     -15  -0.0155000
-                     -10  -0.0140000
-                      -5  -0.0115000
-                      0 -0.00900000
-                      5 -0.01150000
-                     10 -0.01400000
-                     15 -0.01550000
-                     20 -0.01600000
-                     25 -0.01600000
-                     30 -0.01600000
-                     35 -0.01450000
-                     40 -0.01450000
-                     45 -0.01450000
-                     50 -0.01450000
-                     55 -0.01200000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/CMDS2">
-    <description>CMDS2</description>
-    <product>
-      <!-- stabilizer-1p will be 1 or -10 (-10 when applicable)
-           the original equation was -10*CMDS1 +(stab-deg + 10) CMDS2
-           -->
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <tableData>
-                      0 -0.01950000
-                      5 -0.01850000
-                     10 -0.01900000
-                     15 -0.01900000
-                     20 -0.01700000
-                     25 -0.01330000
-                     30 -0.00750000
-                     35 -0.00100000
-                     40 0.00400000
-                     45 0.00600000
-                     50 0.00050000
-                     55 0.00000000
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/DCMDS1">
-    <description>DCMDS1</description>
-    <product>
-          <property>aero/coefficients/CMDS1</property>
-          <property>fcs/elevator-pos-deg</property>
-    <!--<property>fcs/stabilizer-1p</property>-->
-       </product>
-    </function>
-    <function name="aero/coefficients/DCMDS2">
-    <description>DCMDS2</description>
-    <product>
-      <!-- stabilizer-1p will be 1 or -10 (-10 when applicable)
-           the original equation was -10*CMDS1 +(stab-deg + 10) CMDS2
-           -->
-          <value>-10</value>
-          <property>aero/coefficients/CMDS1</property>
-          <property>fcs/stabilizer-2p</property>
-          <property>aero/coefficients/CMDS2</property>
-       </product>
-    </function>
     <function name="aero/coefficients/CMBRK">
        <description>CM increment due speedbrakes</description>
          <product>
@@ -2294,12 +2381,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
-                -4	0.065
-                 0	0.055
-                 4	0.04
-                 8	0.028
-                12	0.017
-                14	0
+                -4	-0.065
+                 0	-0.055
+                 4	-0.04
+                 8	-0.028
+                12	-0.017
+                14	-0
             </tableData>
           </table>
        </product>
@@ -2355,21 +2442,22 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </table>
        </product>
     </function>
-    <function name="aero/coefficients/CM">
-    <sum>
-          <property>aero/coefficients/CMBAS</property>
-          <property>aero/coefficients/CMxzcg</property>
-          <property>aero/coefficients/DCMB0</property>
-          <property>aero/coefficients/CMQ</property>
-          <property>aero/coefficients/DCMDS1</property>
-          <property>aero/coefficients/CMUC</property>
-          <property>aero/coefficients/CMDFM</property>
-          <property>aero/coefficients/CMBRK</property>
-          <!--<property>aero/coefficients/CMDSLM</property> Slats are included in flaps (DFM) -->
-          <!--<property>aero/coefficients/DCMDS2</property>-->
-          <property>aero/coefficients/CMDSp</property>
-       </sum>
-    </function>
+     <function name="aero/coefficients/CM">
+         <sum>
+             <property>aero/coefficients/CMBAS</property>
+             <property>aero/coefficients/CMxzcg</property>
+             <property>aero/coefficients/DCMB0</property>
+             <property>aero/coefficients/CMQ</property>
+             <property>aero/coefficients/DCMDS1</property>
+             <property>aero/coefficients/DCMDS2</property>
+             <property>aero/coefficients/CMUC</property>
+             <property>aero/coefficients/CMDFM</property>
+             <property>aero/coefficients/CMBRK</property>
+             <!--<property>aero/coefficients/CMDSLM</property> Slats are included in flaps (DFM) -->
+             <property>aero/coefficients/CMDSp</property>
+         </sum>
+     </function>
+
     <function name="aero/coefficients/CNBAS">
     <description>CNBAS</description>
     <product>
