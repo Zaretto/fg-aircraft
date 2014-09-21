@@ -12,12 +12,13 @@
   ref[1] volumes 1 and 2 is only for sweep of 22degrees, positive
   alpha, clean, low speed so various data have been extrapolated
   estimated based on best available data where I cannot find specific
-  details for F14 other aero models that I can find (usually NASA
-  CR-1756) are guidance or starting point for each value. The lack of
-  positive alpha data in ref[2] caused considerable model instability
-  during normal flight - whereas it was fine for the purposes of high
-  alpha testing. The estimation of negative alpha values follows
+  details for F14 other aero models that I can find (often using NASA
+  CR-1756 as guidance for general trends) are guidance or starting point for each value.
+  The estimation of negative alpha values follows
   CR-1756 trends with values based on F14 data for positive values.
+
+  Engine Thrust are based on NASA-TM-104326 tables 4-6 adjusted for altitude and with
+  augmentation figures based on that of the mil thrust.
   </description>
     <note>Aircraft origin for measurements is the nose.</note>
     <limitation>Spoilers not modelled in ADA101648 - approximations will be used</limitation>
@@ -39,7 +40,38 @@
         title="DYNAMIC STABILITY DERIVATIVES AT ANGLES OF ATTACK FROM -5deg TO 90deg FOR A VARIABLE-SWEEP FIGHTER CONFIGURATION WITH TWIN VERTICAL TAILS"
         date="1972"
     />
- </fileheader>
+    <reference
+        refID="NASA-TP-3253"
+        author="Gary E. Erickson and Lawrence W. Rogers"
+        title="Effects of Forebody Strakes an Mach number on overall aerodynamic characterisitcs of configuration with 55degree cropped delta wing"
+        date="November 1992"
+    />
+    <reference
+        refID="NASA-TM-84643"
+        author="M. Leroy Spearman"
+        title="Effects of Wing and tail location on the aerodynamic characteristics of an airplane for mach numbers from 0.25 to 4.63"
+        date="March 1983"
+    />
+    <reference
+        refID="NASA-aaia-2000-0900"
+    />
+    <reference
+        refID="NASA-TM-104326"
+        title="Flight and Static Exhaust Flow  Properties of an F110-GE-129  Engine in an F-16XL Airplane  During Acoustic Tests"
+        author="Jon K. Holzman, Lannie D. Webb, and Frank W. Burcham, JR."
+        date="November 1996"
+    />
+    <reference
+        refID="NASA-TM-102409"
+        author="Colin K. Drummond and Peter J. Ouzts"
+        title="Real-Time Simulation of an F 110/STOVL Turbofan Engine"
+        date="October 16-17, 1989"
+    />
+    <reference
+        refID="http://www.ssdl.gatech.edu/papers/mastersProjects/MillerJ-8900.pdf"
+    />
+
+     </fileheader>
 
 <!--
   File:     f14a.xml
@@ -128,7 +160,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <iyy unit="SLUG*FT2">    225600 </iyy>
     <izz unit="SLUG*FT2">    285000 </izz>
     <!-- using GE F110 engines but aero is for F14A -->
-    <emptywt unit="LBS" >     22104 </emptywt>
+
+    <emptywt unit="LBS" >     42104 </emptywt>
+    <!-- <emptywt unit="LBS" >     22104 </emptywt>
     <pointmass name="Front mass">
         <weight unit="LBS"> 10020 </weight>
         <location name="POINTMASS" unit="IN">
@@ -145,6 +179,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <z> 0 </z>
         </location>
     </pointmass>
+-->
   </mass_balance>
 
   <!-- 0 -->
@@ -559,7 +594,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
   <property>fcs/hook-engage</property>
   <property>systems/hook/tailhook-cmd-norm</property>
-
+  <!--<property>Factor1</property>-->
   <channel name="Pitch">
 
    <summer name="Pitch Trim Sum">
@@ -573,24 +608,24 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       </clipto>
    </summer>
 
-<switch name="fcs/pitch-trim-actuator"> 
-  <default value="fcs/pitch-trim-sum"/> 
-  <test value="fcs/pitch-trim-actuator"> 
-    systems/hydraulics/flight-system-pressure ne 1
-  </test> 
-</switch> 
-   <aerosurface_scale name="Elevator Control">
-      <input>fcs/pitch-trim-actuator</input>
-<!-- maybe this should take into account the trim limits from the AAP -->
-      <range>
-        <min> -0.57895 </min>
-        <max>  0.2105 </max>
-      </range>
-      <output>fcs/elevator-pos-demand</output>
-   </aerosurface_scale>
+      <switch name="fcs/pitch-trim-actuator">
+          <default value="fcs/pitch-trim-sum"/>
+          <test value="fcs/pitch-trim-actuator">
+              systems/hydraulics/flight-system-pressure ne 1
+          </test>
+      </switch>
+      <aerosurface_scale name="Elevator Control">
+          <input>fcs/pitch-trim-actuator</input>
+          <!-- maybe this should take into account the trim limits from the AAP -->
+          <range>
+              <min> -0.57895 </min>
+              <max>  0.2105 </max>
+          </range>
+          <output>fcs/elevator-pos-demand</output>
+      </aerosurface_scale>
 
 
-   <kinematic name="Sweep Position">
+      <kinematic name="Sweep Position">
       <input>fcs/wing-sweep-dmd</input>
       <traverse>
           <setting>
@@ -628,7 +663,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </setting>
       </traverse>
       <output>fcs/elevator-pos-rad</output>
-  </kinematic>
+    </kinematic>
+
     <kinematic name="Ground Spoilers Control">
       <input>fcs/spoilers-cmd</input>
       <traverse>
@@ -726,20 +762,20 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       </clipto>
    </summer>
 
-<switch name="fcs/roll-trim-actuator"> 
-  <default value="fcs/roll-trim-sum"/> 
-  <test value="fcs/roll-trim-actuator"> 
-    systems/hydraulics/flight-system-pressure ne 1
-  </test> 
-</switch> 
-   <aerosurface_scale name="Left Aileron Control">
-      <input>fcs/roll-trim-actuator</input>
-      <range>
+    <switch name="fcs/roll-trim-actuator"> 
+        <default value="fcs/roll-trim-sum"/> 
+        <test value="fcs/roll-trim-actuator"> 
+        systems/hydraulics/flight-system-pressure ne 1
+        </test> 
+    </switch> 
+    <aerosurface_scale name="Left Aileron Control">
+        <input>fcs/roll-trim-actuator</input>
+        <range>
         <min> -0.22807 </min>
         <max>  0.22807 </max>
-      </range>
-      <output>fcs/left-aileron-pos-rad</output>
-   </aerosurface_scale>
+        </range>
+        <output>fcs/left-aileron-pos-rad</output>
+    </aerosurface_scale>
 
    <aerosurface_scale name="Right Aileron Control">
       <input>fcs/roll-trim-actuator</input>
@@ -1279,29 +1315,30 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </function>
 
    <function name="aero/coefficients/Cmach">
-    <description>General coefficients mach factor</description>
+<!--    <description>Mach factor (all except drag) (NASA-TM-84643 Figure 3)</description> -->
+    <description>Mach factor (all except drag) (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
     <product>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">velocities/mach</independentVar>
             <tableData>
-              0.2   	1.4         2.0
-              -20	1	0.268817204  	0.268817204
-              -15	1	0.26744186   	0.26744186
-              -10	1	0.275862069  	0.275862069
-              -5	1	0.269230769  	0.269230769
-              0	1	0.333333333  	0.333333333
-              4	1	0.266666667  	0.266666667
-              8	1	0.275862069  	0.275862069
-              12	1	0.269230769  	0.269230769
-              16	1	0.272727273  	0.272727273
-              20	1	0.267326733  	0.267326733
-              24	1	0.268518519  	0.268518519
-              28	1	0.267241379  	0.267241379
-              32	1	0.268907563  	0.268907563
-              40	1	0.264957265  	0.264957265
-              45	1	0.266055046  	0.266055046
-              50	1	0.266666667  	0.266666667
+                    0.2        0.4         0.6         0.9         1.1         1.3         1.5         1.8         2.1         2.6         3.0
+                -20	1	0.78924356	0.96610485	1.23950808	1.41632259	1.34327421	1.13294356	0.93062904	0.76851372	0.58968226	0.51614275
+                -15	1	0.78520556	0.96116198	1.23316641	1.40907629	1.33640164	1.12714710	0.92586768	0.76458179	0.58666528	0.51350202
+                -10	1	0.80992718	0.99142346	1.27199174	1.45344001	1.37847726	1.16263449	0.95501794	0.78865408	0.60513601	0.52966925
+                -5	1	0.79045778	0.96759116	1.24141501	1.41850155	1.34534078	1.13468655	0.93206078	0.76969605	0.59058947	0.51693681
+                 0	1	0.97866200	1.19797000	1.53699000	1.75624000	1.66566000	1.40485000	1.15398000	0.95295700	0.73120600	0.64001700
+                 4	1	0.78292961	0.95837601	1.22959201	1.40499202	1.33252801	1.12388001	0.92318401	0.76236561	0.58496481	0.51201361
+                 8	1	0.80992718	0.99142346	1.27199174	1.45344001	1.37847726	1.16263449	0.95501794	0.78865408	0.60513601	0.52966925
+                12	1	0.79045778	0.96759116	1.24141501	1.41850155	1.34534078	1.13468655	0.93206078	0.76969605	0.59058947	0.51693681
+                16	1	0.80072346	0.98015728	1.25753729	1.43692365	1.36281274	1.14942274	0.94416546	0.77969210	0.59825946	0.52365028
+                20	1	0.78486755	0.96074823	1.23263556	1.40846972	1.33582635	1.12666189	0.92546912	0.76425265	0.58641274	0.51328097
+                24	1	0.78836662	0.96503140	1.23813085	1.41474891	1.34178168	1.13168474	0.92959501	0.76765981	0.58902706	0.51556926
+                28	1	0.78461696	0.96044147	1.23224199	1.40802001	1.33539984	1.12630217	0.92517363	0.76400864	0.58622551	0.51311708
+                32	1	0.78950885	0.96642959	1.23992472	1.41679867	1.34372573	1.13332438	0.93094186	0.76877204	0.58988048	0.51631624
+                40	1	0.77791083	0.95223257	1.22171001	1.39598566	1.32398617	1.11667565	0.91726616	0.75747865	0.58121503	0.50873147
+                45	1	0.78113390	0.95617790	1.22677185	1.40176956	1.32947176	1.12130231	0.92106662	0.76061706	0.58362314	0.51083926
+                50	1	0.78292961	0.95837601	1.22959201	1.40499202	1.33252801	1.12388001	0.92318401	0.76236561	0.58496481	0.51201361
             </tableData>
           </table>
        </product>
@@ -1325,34 +1362,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     1.1 	0.0079
                     1.2 	0.0080
                     2   	0.0081
-            </tableData>
-          </table>
-       </product>
-    </function>
-    <function name="aero/coefficients/CdMach">
-    <description>General coefficients drag mach factor </description>
-    <product>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">velocities/mach</independentVar>
-            <tableData>
-	                      0.2	   1.4
-                   -20	1.0    0.268817204
-                   -15  1.0    0.26744186
-                   -10  1.0    0.275862069
-                    -5  1.0    0.269230769
-                     0  1.0    0.333333333
-                     4  1.0    0.266666667
-                     8  1.0    0.275862069
-                    12  1.0    0.269230769
-                    16  1.0    0.272727273
-                    20  1.0    0.267326733
-                    24  1.0    0.268518519
-                    28  1.0    0.267241379
-                    32  1.0    0.268907563
-                    40  1.0    0.264957265
-                    45	1.0    0.266055046
-                    50	1.0    0.266666667
             </tableData>
           </table>
        </product>
@@ -1383,7 +1392,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
        </product>
     </function>
     <function name="aero/coefficients/ClBAS">
-    <description>ClBAS</description>
+    <description>Cl BASIC AFWAL-TR-80-3141 PartIII - Figure 36 </description>
     <product>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -1524,7 +1533,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      </function>
 
      <function name="aero/coefficients/ClDS1">
-         <description>ClDS1</description>
+         <description>ClDS1 AFWAL-TR-80-3141 PartIII - Figure 38</description>
          <product>
              <property>fcs/stabilizer-pos-deg</property>
              <table>
@@ -1560,7 +1569,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      </function>
 
      <function name="aero/coefficients/ClDS2">
-         <description>ClDS2</description>
+         <description>ClDS2 AFWAL-TR-80-3141 PartIII - Figure 396</description>
          <product>
              <table>
                  <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -1678,9 +1687,57 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
            </table>
          </product>
     </function>
-    <function name="aero/coefficients/CdBAS">
+   <function name="aero/coefficients/CdMach">
+    <description>Drag factor due to mach (NASA-TP-2580 Figure 16)</description>
+    <product>
+          <table>
+            <independentVar lookup="row">velocities/mach</independentVar>
+            <tableData>
+                <!-- This follows the basic shape to provide a factor that has been tuned to match known performance characteristics and may well be wrong 
+                     based on tp2580 but tuned to meet F14-AAD-1
+                 -->
+                0.203	1.04054
+                0.242	1.040400
+                0.277	1.029970
+                0.316	1.029840
+                0.355	1.019400
+                0.434	1.019130
+                0.469	1.049940
+                0.539	1.132170
+                0.824	1.481700
+                0.859	1.522820
+                0.891	1.563950
+                0.930	1.977422
+                0.965	2.535102
+                0.985	3.069953
+                1.000	3.118112
+                1.035	2.395562
+                1.070	2.167347
+                1.105	1.240484
+                1.145	1.247532
+                1.184	1.254586
+                1.219	1.247358
+                1.258	1.232972
+                1.293	1.211454
+                1.328	1.182799
+                1.367	1.161267
+                1.402	1.132611
+                1.438	1.096804
+                1.473	1.068142
+                1.508	1.039479
+                1.810	0.303540
+                2.400	0.500000
+                2.500	0.800000
+                2.600	0.900000
+            </tableData>
+          </table>
+       </product>
+    </function>
+
+     <function name="aero/coefficients/CdBAS">
     <description>CdBAS</description>
     <product>
+          <property>aero/coefficients/CdMach</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2381,12 +2438,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
-                -4	-0.065
-                 0	-0.055
-                 4	-0.04
-                 8	-0.028
-                12	-0.017
-                14	-0
+                -10	 0.00000
+                -4	-0.01250
+                 0	-0.02750
+                 4	-0.02000
+                 8	-0.01400
+                12	-0.00850
+                14	 0.00000
             </tableData>
           </table>
        </product>
@@ -2666,7 +2724,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <property>aero/qbar-psf</property>
           <property>metrics/Sw-sqft</property>
           <property>aero/coefficients/Cd</property>
-          <property>aero/coefficients/Cmach</property>
+<!--          <property>aero/coefficients/Cmach</property> -->
           <property>aero/coefficients/ClSweepFactor</property>
     </product>
     </function>
