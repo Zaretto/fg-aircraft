@@ -593,7 +593,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <flight_control name="FCS F14">
 
   <property>fcs/hook-engage</property>
+  <property>fcs/wing-sweep-pilot-dmd</property>
   <property>systems/hook/tailhook-cmd-norm</property>
+  <property>fcs/wing-sweep-auto</property>
+
   <!--<property>Factor1</property>-->
   <channel name="Pitch">
 
@@ -623,8 +626,24 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </range>
           <output>fcs/elevator-pos-demand</output>
       </aerosurface_scale>
+<!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
+     we limit the sweep to the computed wing-sweep-cadc-pos -->
+        <switch name="fcs/wing-sweep-dmd">
+            <default value="fcs/wing-sweep-cadc-dmd"/>
 
+            <!--<test value="fcs/wing-sweep-pilot-dmd">
+                fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
+                fcs/wing-sweep-auto ne 1
+                fcs/flap-pos-norm ge 0.5
+                fcs/wing-sweep-pilot-dmd le 0.34
+            </test>-->
+            <test value="fcs/wing-sweep-pilot-dmd">
+                fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
+                fcs/wing-sweep-auto ne 1
+            </test>
+        </switch>
 
+                
       <kinematic name="Sweep Position">
       <input>fcs/wing-sweep-dmd</input>
       <traverse>
@@ -643,7 +662,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="Sweep Control">
       <input>fcs/wing-sweep-cmd</input>
       <range>
-        <min> 22 </min>
+        <min> 20 </min>
         <max> 68 </max>
       </range>
       <output>fcs/wing-sweep-pos-deg</output>
@@ -1207,7 +1226,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    -->
  <aerodynamics>
 
-   <function name="fcs/wing-sweep-dmd">
+   <function name="fcs/wing-sweep-cadc-dmd">
      <description>Wing autosweep</description>
     <!-- based on what I can figure out from NAVAIR 01-F14AAD-1 Figure 2-48: p. 2-87 
          using a 2d lookup table so we have no sweep when flaps are out -->
@@ -2820,6 +2839,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <property>systems/hook/hook-decel-force</property>
     <property>forces/fbx-prop-lbs</property>
     <property>gear/tailhook-pos-norm</property>
+    <property>fcs/wing-sweep-cadc-dmd</property>
     <property>fcs/wing-sweep-dmd</property>
     <property>fcs/wing-sweep-cmd</property>
 

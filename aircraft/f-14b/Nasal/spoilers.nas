@@ -23,11 +23,15 @@ var computeSpoilers = func {
 
 	# Compute a bias to reduce spoilers extension from full extension at sweep = 20deg
 	# to no extension past 56 deg
-	if (WingSweep > 0.8) {
+	if (WingSweep >= 0.8235294117647059) {
 		wingSweepBias = 0;
-	} else {
-		wingSweepBias = 1.0 - (WingSweep * 1.25); 
+	} else 	if (WingSweep < 0.29411) {
+		wingSweepBias = 1.0; 
 	}
+    else
+    {
+		wingSweepBias = 1.0 - ((WingSweep-0.29411) * 1.25); 
+    }
 
 	# Ground spoiler activation  
 	if ((groundSpoilersArmed and !wow) or (wow and !GroundSpoilersLatchedClosed and groundSpoilersArmed)) {
@@ -38,14 +42,15 @@ var computeSpoilers = func {
 
 	if (groundSpoilersArmed and ! GroundSpoilersLatchedClosed and Throttle < ThrottleIdle ) { 
 		# if weight on wheels or ground spoilers deployed (in case of hard bounce)
-		if (GroundSpoilersDeployed or wow) {
+		if (GroundSpoilersDeployed or wow)
+        {
 			GroundSpoilersDeployed = true;
 			LeftSpoilersTarget = wingSweepBias;
 			RightSpoilersTarget = wingSweepBias;
 			InnerLeftSpoilersTarget = wingSweepBias; 
 			InnerRightSpoilersTarget = wingSweepBias;
 			setprop ("controls/flight/yasim-spoilers", wingSweepBias);
-			SpoilersCmd.setDoubleValue(1.0);
+			SpoilersCmd.setDoubleValue(wingSweepBias);
 			return;
 		}
 	}
@@ -59,7 +64,7 @@ var computeSpoilers = func {
 	# Compute the contribution of Direct Lift Control on spoiler extension
 	# If wings are swept back, or the aircraft is on the ground, Direct Lift
 	# Control is deactivated
-	if (WingSweep > 0.05) {
+	if (WingSweep > 0.34) {
 		DLC = 0; # TODO: add a condition on weight on wheels
 	} else {
 		DLC = getprop("controls/flight/DLC")

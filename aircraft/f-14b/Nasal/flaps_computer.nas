@@ -15,7 +15,7 @@ var AuxFlapsCmd  = props.globals.getNode("/controls/flight/auxFlaps", 1);
 var SlatsCmd     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd", 1);
 var MainFlapsCmd = props.globals.getNode("controls/flight/mainFlaps", 1);
 var demandedFlaps = 0;
-setprop("/fdm/jsbsim/fcs/wing-sweep-cmd",0.308823529);
+
 
 FlapsCmd.setValue(0);
 SlatsCmd.setValue(0);
@@ -76,7 +76,7 @@ print("F14: flaps down ",s);
 }
 
 var lowerFlaps = func {
-	if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.308823529) # only flaps with < 21 deg
+	if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.3235294117647059) # only flaps with <= 22 deg
     {
         print("F14: lower flaps");
 		FlapsCmd.setValue(1); # Landing.
@@ -113,7 +113,7 @@ var computeFlaps = func {
         var flaps = 0;
 		AuxFlapsCmd.setValue(0);
 		
-        if ( CurrentMach <= m_slat_cutoff and ! wow and !getprop("controls/gear/gear-down"))
+        if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.3235294117647059 and CurrentMach <= m_slat_cutoff and ! wow and !getprop("controls/gear/gear-down"))
         {
 			if ( Alpha > m_slat_lo and Alpha <= m_slat_hi )
             {

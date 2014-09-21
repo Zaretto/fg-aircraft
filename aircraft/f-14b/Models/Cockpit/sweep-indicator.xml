@@ -15,32 +15,13 @@
 		</condition>
 	</animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>program-tape</object-name>
-		<property>velocities/mach</property>
-		<interpolation>
-			<entry><ind>0</ind><dep>0</dep></entry>
-			<entry><ind>0.5</ind><dep>0</dep></entry>
-			<entry><ind>0.75</ind><dep>0.025</dep></entry>
-			<entry><ind>0.875</ind><dep>0.425</dep></entry>
-			<entry><ind>0.95</ind><dep>0.490</dep></entry>
-			<entry><ind>2.4</ind><dep>0.490</dep></entry>
-		</interpolation>
-		<factor>0.5</factor>
-		<offset>1</offset>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-		</axis>
-	</animation>
-
+<!-- left; actual position -->
 	<animation>
 		<type>translate</type>
 		<object-name>index-actual-pos</object-name>
 		<property>surface-positions/wing-pos-norm</property>
 		<interpolation>
-			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>0.2941176470588235</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>0.0527</dep></entry>
 		</interpolation>
 		<axis>
@@ -50,15 +31,34 @@
 		</axis>
 	</animation>
 
+<!-- middle; commanded position -->
 	<animation>
 		<type>translate</type>
 		<object-name>index-commanded-pos</object-name>
 		<property>controls/flight/wing-sweep</property>
-		<factor>0.0527</factor>
+		<interpolation>
+			<entry><ind>0.2941176470588235</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>0.0527</dep></entry>
+		</interpolation>
 		<axis>
 			<x>0</x>
 			<y>0</y>
 			<z>-1</z>
+		</axis>
+	</animation>
+
+<!-- right; cadc auto position -->
+	<animation>
+		<type>textranslate</type>
+		<object-name>program-tape</object-name>
+		<property>controls/flight/wing-sweep-cadc-dmd</property>
+		<interpolation>
+			<entry><ind>0.2941176470588235</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>0.490</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
 		</axis>
 	</animation>
 
@@ -76,6 +76,7 @@
 			<property>sim/model/f-14b/systems/wing-sweep/mode/auto</property>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<object-name>man</object-name>
@@ -83,6 +84,7 @@
 			<property>sim/model/f-14b/systems/wing-sweep/mode/man</property>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<object-name>emer</object-name>
@@ -90,12 +92,101 @@
 			<property>sim/model/f-14b/systems/wing-sweep/mode/emer</property>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<object-name>over</object-name>
 		<condition>
 			<property>sim/model/f-14b/systems/wing-sweep/mode/over</property>
 		</condition>
+	</animation>
+
+<!-- actions -->
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>instrument</object-name>
+		<action>
+			<button>3</button>
+              <repeatable type="bool">true</repeatable>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.move_wing_sweep(-1)</script>
+              </binding>
+		</action>
+		<action>
+			<button>4</button>
+              <repeatable type="bool">true</repeatable>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.move_wing_sweep(1)</script>
+              </binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>false</visible>
+		<object-name>button-off</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_sweep(2)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>false</visible>
+		<object-name>button-auto</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_sweep(0)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>false</visible>
+		<object-name>button-man</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_sweep(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>false</visible>
+		<object-name>button-emer</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_sweep(3)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>false</visible>
+		<object-name>button-over</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.set_sweep(4)</script>
+			</binding>
+		</action>
 	</animation>
 
 	<!--lighting -->

@@ -202,41 +202,56 @@
 				<name>Ctrl-v</name>
 				<desc>Back to Pilot's View or toggle Pilot's and RIO View.</desc>
 			</key>
+			<key>
+				<name>&gt;</name>
+				<desc>Wing Sweep increase.</desc>
+			</key>
+			<key>
+				<name>&lt;</name>
+				<desc>Wing Sweep decrease.</desc>
+			</key>
+			<key>
+				<name>=</name>
+				<desc>Wing Sweep auto mode.</desc>
+			</key>
+			<key>
+				<name>Ctrl-v</name>
+				<desc>Back to Pilot's View or toggle Pilot's and RIO View.</desc>
+			</key>
 			<line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
 			<line>__________________________________________________</line>
-            <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles)</line>
-            <line>              at 20% RPM push in cut off for R engine. Repeat procedure for L engine, you can use quickstart from the menu once you have fuel loaded.</line>
-			<line>Take off with flaps: 100% rpm, rotation @ 150Kts. Do not exceed 10 degrees of pitch</line>
-			<line>Take off without flaps: 100% rpm, rotation @ 190Kts. Do not exceed 10 degrees of pitch</line>
+            <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
+            <line>              Repeat procedure for L engine, you can use quickstart from the menu once you have fuel loaded.</line>
+			<line>Take off: MILthrust, rotate at 130-160Kts depending on configuration. Do not exceed 10 degrees of pitch</line>
 			<line>__________________________________________________</line>
 			<line>Autopilot:</line>
             <line>SAS: Pitch, Roll, Yaw damping controlled by AFCS STAB AUG switches underneath engine controls</line>
             <line>     Yaw damper must be on over Mach 0.8; Roll damper usually off when maneouvering. All dampers only active at AOA less than +/- 15 deg</line>
-			<line>The main mode is Attitude Hold Mode (Ctrl-t). Other Modes need this main mode activated before being selected. Switching off Attitude</line>
-			<line>Mode disables all other modes. When in Attitude Mode, the autopilot disengages whenever a certain pressure is put on the stick and it</line>
-			<line>reengages when the stick is back in the center position (Try hiting 5 on the numeric keyboard). Attitude Hold Mode will hold pitch</line>
-			<line>attitudes up to +/- 30° and bank angles up to +/- 60°. It shall be switched off for acrobatics and inverted flight...  and it is still</line>
-			<line>on beta test.</line>
+			<line>Main AFCS mode is Attitude Hold Mode (Ctrl-t). Other Modes need this main mode activated before being selected. Switching off Attitude Mode disables all other modes. </line>
+			<line>When in Attitude Mode, the autopilot disengages whenever a certain pressure is put on the stick and it reengages when the stick is back in the center position. Attitude Hold Mode will hold pitch</line>
+			<line>attitudes up to +/- 30&#x2103; and bank angles up to +/- 60&#x2103;;</line>
 			<line></line>
-			<line>Altitude Mode:</line>
-			<line>Once in Attitude Mode, you can select Altitude Mode by hitting Ctrl-a, then the AP REF indicator (left of the VDI) will illuminate, when</line>
-			<line>at the desired altitude (using normal stick control) engage by hitting * (star symbol). The autopilot will then maintain your altitude.</line>
-			<line>WARNING: at high speeds, it is imperative to stabilize the aircraft prior to engage Altitude Mode.</line>
+			<line>Altitude Mode (keyboard CTRL-A):</line>
+			<line>     Once in Attitude Mode the AP REF indicator (left of the VDI) illuminates engage at desired altitude keybaord  *. The autopilot will then maintain your altitude.</line>
 			<line></line>
 			<line>Heading Mode:</line>
-			<line>Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h. After manoeuvering the aircraft to the desired reference heading,</line>
-			<line>release the control stick at a bank angle of less than +/- 5°. The autopilot will then hold the aircraft on the desired Heading.</line>
+			<line>     Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h. After manoeuvering the aircraft to the desired reference heading,</line>
+			<line>     release the control stick at a bank angle of less than +/- 5°. The autopilot will then hold the aircraft on the desired Heading.</line>
 			<line></line>
-			<line>Autopilot need SAS channels to be engaged (which is the default). SAS Pitch and Roll channels may be disengaged by actuating switches</line>
-			<line>located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
-			<line>catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
+			<line>     Autopilot need SAS channels to be engaged (which is the default). SAS Pitch and Roll channels may be disengaged by actuating switches</line>
+			<line>     located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
+			<line>     catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
 			<line>__________________________________________________</line>
-			<line>Landing Automatic Power Control (APC) Operation:</line>
-			<line>The APC is a closed loop system that automaticaly regulates basic engine thrust to maintain the aircraft at an optimum approach angle of</line>
-			<line>attack for landing. Prior to engage APC, gear handle must be down with weight off wheels, and the throttles must be set between 98% and</line>
-			<line>68% rpm (as shown on the panel gauges). Type "a" to toggle the APC on/off. APC is also disengaged by setting the throttles to MIL (98% rpm)</line>
-			<line>or iddle (68% rpm) or raising the landig gear handle or when weight on wheels.</line> 
-			<line>When disengaged the AUTO THROT caution light (on the left side of the HUD) illuminates for 10 seconds.</line>
+			<line>Automatic Power Control (APC) (keyboard "a" toggle):</line>
+			<line>     APC regulates engine thrust to maintain thean optimum approach angle of attack for landing. </line>
+			<line>     To engage APC, gear must be down, in air, throttles between 98% and 68% rpm (as shown on the panel gauges)</line>
+			<line>     Abnormal disengagement will cause the AUTO THROT caution light on the left side of the HUD to illuminate for 10 seconds.</line>
+			<line>__________________________________________________</line>
+			<line>Wing sweep</line>
+<line>     Wing sweep can be control automatically or manually with the CADC. When using manual control the auto control be</line>
+<line>     reactivated when CADC values require more sweep than is demanded by the pilot. Keys: "&gt;" "&lt;" manual sweep; '=' for</line>
+<line>     auto mode. The mode can be selected by clicking on the indicator on the gauge and position by using the mouse wheel over</line>
+<line>     the indicator</line>
 			<line>__________________________________________________</line>
 			<line>VHF: Located on the RIO's left console, 3 bands: 30-88 Mhz, 108-174 Mhz, 225-400 Mhz. Modes TR and TR-G set COMM1. Mode DF sets NAV1,</line>
 			<line>that is Direction Finder displayed with the single needle in both BDHIs. You have Comm *or* DF. Storing frequencies (up to 20 channels) a- PRESET</line>
@@ -1137,11 +1152,35 @@
 				<binding>
 					<command>nasal</command>
 					<script>
-					var wow = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
-					if (! wow) {
+					if (! f14.wow) {
 						f14_afcs.afcs_engage_selected_mode()
 					}
 					</script>
+				</binding>
+			</key>
+
+			<key n="60">
+				<name>&lt;</name>
+				<desc>Decrease Sweep</desc>
+				<binding>
+					<command>nasal</command>
+					<script>f14.move_wing_sweep(-1)</script>
+				</binding>
+			</key>
+			<key n="61">
+				<name>=</name>
+				<desc>Wing Sweep Automatic</desc>
+				<binding>
+					<command>nasal</command>
+					<script>f14.set_sweep(0)</script>
+				</binding>
+			</key>
+			<key n="62">
+				<name>&gt;</name>
+				<desc>Increase Sweep</desc>
+				<binding>
+					<command>nasal</command>
+					<script>f14.move_wing_sweep(1)</script>
 				</binding>
 			</key>
 

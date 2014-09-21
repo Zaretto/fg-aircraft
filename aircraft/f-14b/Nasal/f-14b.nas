@@ -13,6 +13,7 @@ setprop("/sim/model/f-14b/lighting/position/enabled", 1);
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
+setprop("fdm/jsbsim/Factor1",1);
 
 
 var position_switch = func(n) {
