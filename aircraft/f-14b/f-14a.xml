@@ -1122,101 +1122,137 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
     </channel>
 
-    <channel name="extra-aero">
-     <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
-     <summer name="cg-x-offset-chord-in">
-       <input> inertia/cg-x-in</input>
-<!-- 
-              _   _
-   MAC is 16% c . c is 9.8ft giving us 18.81in as offset to %MAC
+      <channel name="extra-aero">
+
+          <fcs_function name="aero/cp-offset-wing-sweep">
+              <function>
+                  <description>Centre of pressure due to mach and wingsweep angle</description>
+                  <!-- MAC is 16% cbar . cbar is 9.8ft giving us 18.81in as offset to %MAC -->
+                  <sum>
+                      <table>
+                          <independentVar lookup="row">velocities/mach</independentVar>
+                          <independentVar lookup="column">fcs/wing-sweep-cmd</independentVar>
+                          <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
+                          <tableData>
+                                    0.294117647       1.0
+                              0.00    -419           -429.1
+                              2.40    -421           -429.6
+                          </tableData>
+                      </table>
+                  </sum>
+              </function>
+          </fcs_function>
+
+          <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
+          <summer name="cg-x-offset-chord-in">
+              <input> inertia/cg-x-in</input>
+              <input> aero/cp-offset-wing-sweep</input>
+              <output>inertia/cg-x-offset-chord-in</output>
+          </summer>
+
+<!-- Ref[1] uses the traditional (see NASA CR-1756) way of building up the yaw/pitch moments in that there is a base value
+     (CLBAS, CYBAS, CNBAS) that is balanced by the offset of the centre of pressure (AERORP) from the CG; So what I've done is to 
+     set AeroRP to be equal to CG so that I can use this buildup method as using AERORP does work but subjectively feels a little too stable; 
+     Where it really shows though is in the departures. At high alpha, the AEROP way causes the disappaerance of the dutch roll and 
+     uncommanded roll caused by aileron deflection (the F-14 rolls the opposite way to the deflection in this situation) - 
+     with the aerorp way what I get instead is just the yaw rate increasing with no roll.
+
+    Doing it using the building in ref[1] gets much closer results to the pilots manual - e.g. for high alpha there is a dutch roll which can develop into what looks
+    like an uncommanded roll in the opposite direction - except that in fact caused by yaw - but the induced roll rate masks the yaw rate "eyeballs out yaw" according to the manual.
+    If uncorrected within a "short period" (5-15 seconds) it can develop into an unrecoverable flat spin with around 10 degrees pitch down.
 -->
-       <bias> -419 </bias>
-       <output>inertia/cg-x-offset-chord-in</output>
-     </summer>
-     <pure_gain name="cg-x-chord-percent">
-       <input>inertia/cg-x-offset-chord-in</input>
-       <gain> 0.01</gain>
-       <clipto>
-         <min> -1 </min>
-         <max> 1 </max>
-       </clipto>
-       <output> inertia/cg-x-mac-percent </output>
-     </pure_gain>
-     <fcs_function name="aero-cos-alpha">
-       <function>
-         <product>
-           <cos>
-             <property>aero/alpha-rad</property>
-           </cos>
-         </product>
-       </function>
-       <output>aero/cos-alpha</output>
-     </fcs_function>
 
-     <fcs_function name="cbarq-2vo">
-       <function>
-         <quotient>
-           <sum>
-            <property>metrics/cbarw-ft</property>
-            <property>velocities/q-aero-rad_sec</property>
-           </sum>
-<!-- over -->
-          <product>
-             <value>2</value>
-             <property>ic/vt-fps</property>
-           </product>
-         </quotient>
-       </function>
-       <clipto>
-         <min> -0.01 </min>
-         <max>  0.01 </max>
-       </clipto>
-       <output>aero/cbarq-2vo</output>
-     </fcs_function>
+        <pure_gain name="cg-x-chord-percent">
+            <description>Percent offset of the CoP from the CG</description>
+              <input>inertia/cg-x-offset-chord-in</input>
+              <gain> 0.01</gain>
+              <clipto>
+                  <min> -1 </min>
+                  <max> 1 </max>
+              </clipto>
+              <output> inertia/cg-x-mac-percent </output>
+          </pure_gain>
 
-<fcs_function name="aero-sin-alpha">
-       <function>
-         <product>
-           <sin>
-             <property>aero/alpha-rad</property>
-           </sin>
-         </product>
-       </function>
-       <output>aero/sin-alpha</output>
-     </fcs_function>
+          <fcs_function name="cbarq-2vo">
+              <description>For denormalization</description>
+              <function>
+                  <quotient>
+                      <sum>
+                          <property>metrics/cbarw-ft</property>
+                          <property>velocities/q-aero-rad_sec</property>
+                      </sum>
+                      <!-- over -->
+                      <product>
+                          <value>2</value>
+                          <property>ic/vt-fps</property>
+                      </product>
+                  </quotient>
+              </function>
+              <clipto>
+                  <min> -0.01 </min>
+                  <max>  0.01 </max>
+              </clipto>
+              <output>aero/cbarq-2vo</output>
+          </fcs_function>
 
-     <fcs_function name="CLxzcg">
-       <function>
-         <product>
-           <property>inertia/cg-x-mac-percent </property>
-           <sum>
-             <product>
-               <property>aero/cos-alpha</property>
-               <property>aero/coefficients/Cl</property>
-             </product>
-             <product>
-               <property>aero/sin-alpha</property>
-               <property>aero/coefficients/Cd</property>
-             </product>
-           </sum>
-         </product>
-       </function>
-       <output>aero/coefficients/CMxzcg</output>
-     </fcs_function>
 
-     <fcs_function name="CNycg">
-       <function>
-         <product>
-           <property>inertia/cg-x-mac-percent </property>
-           <value>0.1533854165625</value> <!-- cbar / b (chord / span 9.80/64.1)-->
-           <property>aero/coefficients/Cy</property>
-         </product>
-       </function>
-       <output>aero/coefficients/CNycg</output>
-     </fcs_function>
+        <fcs_function name="aero-cos-alpha">
+              <function>
+                  <product>
+                      <cos>
+                          <property>aero/alpha-rad</property>
+                      </cos>
+                  </product>
+              </function>
+              <output>aero/cos-alpha</output>
+          </fcs_function>
 
-   </channel>
- </flight_control>
+       <fcs_function name="aero-sin-alpha">
+              <function>
+                  <product>
+                      <sin>
+                          <property>aero/alpha-rad</property>
+                      </sin>
+                  </product>
+              </function>
+              <output>aero/sin-alpha</output>
+          </fcs_function>
+
+          <fcs_function name="CLxzcg">
+              <description>Roll X Cg factor</description>
+              <function>
+                  <product>
+                      <property>inertia/cg-x-mac-percent </property>
+                      <sum>
+                          <product>
+                              <property>aero/cos-alpha</property>
+                              <property>aero/coefficients/Cl</property>
+                          </product>
+                          <product>
+                              <property>aero/sin-alpha</property>
+                              <property>aero/coefficients/Cd</property>
+                          </product>
+                      </sum>
+                  </product>
+              </function>
+              <output>aero/coefficients/CMxzcg</output>
+          </fcs_function>
+
+          <fcs_function name="CNycg">
+              <description>Yaw Y Cg factor</description>
+              <function>
+                  <product>
+                      <property>inertia/cg-x-mac-percent </property>
+                      <value>0.1533854165625</value>
+                      <!-- cbar / b (chord / span 9.80/64.1)-->
+                      <property>aero/coefficients/Cy</property>
+                  </product>
+              </function>
+              <output>aero/coefficients/CNycg</output>
+          </fcs_function>
+
+      </channel>
+  </flight_control>
 
 <!--The roll(L) and yaw(N) moments are due to aerodynamics only, while
    the pitch(Z), includes a thrust term. These are given by.

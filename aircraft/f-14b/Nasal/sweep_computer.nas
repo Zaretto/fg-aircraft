@@ -133,6 +133,7 @@ var computeSweep = func {
 
 # The JSBSim model includes sweep computer inside the fdm.
     if (usingJSBSim){
+    	if ( getprop("sim/replay/time") > 0 ) { return }
         currentSweep = getprop("/fdm/jsbsim/fcs/wing-sweep-cmd");
         var cadc_sweep = getprop("fdm/jsbsim/fcs/wing-sweep-cadc-dmd");
         WingSweep = currentSweep;
