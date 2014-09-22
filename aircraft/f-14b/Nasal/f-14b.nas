@@ -10,6 +10,8 @@ aircraft.light.new("sim/model/f-14b/lighting/anti-collision", [0.09, 1.20], anti
 var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting/position-flash-switch");
 var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.15]);
 setprop("/sim/model/f-14b/lighting/position/enabled", 1);
+getprop("sim/model/f-14b/fx/smoke",1);
+
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
