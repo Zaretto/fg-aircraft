@@ -45,12 +45,24 @@ var computeSpoilers = func {
 		if (GroundSpoilersDeployed or wow)
         {
 			GroundSpoilersDeployed = true;
-			LeftSpoilersTarget = wingSweepBias;
-			RightSpoilersTarget = wingSweepBias;
-			InnerLeftSpoilersTarget = wingSweepBias; 
-			InnerRightSpoilersTarget = wingSweepBias;
-			setprop ("controls/flight/yasim-spoilers", wingSweepBias);
-			SpoilersCmd.setDoubleValue(wingSweepBias);
+            if (usingJSBSim)
+            {
+                # until we have the ground spoiler logic in the fdm this will have to do.
+                CurrentLeftSpoiler = wingSweepBias;
+                CurrentInnerLeftSpoiler = wingSweepBias;
+                CurrentInnerRightSpoiler = wingSweepBias;
+                CurrentRightSpoiler = wingSweepBias;
+    			SpoilersCmd.setDoubleValue(wingSweepBias);
+            }
+            else
+            {
+    			LeftSpoilersTarget = wingSweepBias;
+    			RightSpoilersTarget = wingSweepBias;
+    			InnerLeftSpoilersTarget = wingSweepBias; 
+    			InnerRightSpoilersTarget = wingSweepBias;
+    			setprop ("controls/flight/yasim-spoilers", wingSweepBias);
+    			SpoilersCmd.setDoubleValue(wingSweepBias);
+            }
 			return;
 		}
 	}
@@ -77,27 +89,36 @@ var computeSpoilers = func {
 		if ( fc == 1 ) { # Flaps out.
 			SpoilersMinima = -0.073;
 		}
-		LeftSpoilersTarget = rollCommand * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
-		RightSpoilersTarget = (-rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
-		if (DLCactive) {
-			InnerLeftSpoilersTarget = (DLC + rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
-			InnerRightSpoilersTarget = (DLC - rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
-		} else {
-			InnerLeftSpoilersTarget = LeftSpoilersTarget;
-			InnerRightSpoilersTarget = RightSpoilersTarget;
-		}
-		# clip the values to in-flight maxima
-		if (LeftSpoilersTarget < SpoilersMinima) LeftSpoilersTarget = SpoilersMinima;
-		if (RightSpoilersTarget < SpoilersMinima) RightSpoilersTarget = SpoilersMinima;
-		if (LeftSpoilersTarget > MaxFlightSpoilers) LeftSpoilersTarget = MaxFlightSpoilers;
-		if (RightSpoilersTarget > MaxFlightSpoilers) RightSpoilersTarget = MaxFlightSpoilers;
-		if (InnerLeftSpoilersTarget < SpoilersMinima) InnerLeftSpoilersTarget = SpoilersMinima;
-		if (InnerRightSpoilersTarget < SpoilersMinima) InnerRightSpoilersTarget = SpoilersMinima;
-		if (InnerLeftSpoilersTarget > MaxFlightSpoilers) InnerLeftSpoilersTarget = MaxFlightSpoilers;
-		if (InnerRightSpoilersTarget > MaxFlightSpoilers) InnerRightSpoilersTarget = MaxFlightSpoilers;
+        if (usingJSBSim)
+        {
+            CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-differential-pos");
+            CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-differential-pos");
+            CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-differential-pos");
+            CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-differential-pos");
+        }
+        else
+        {
+    		LeftSpoilersTarget = rollCommand * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
+	    	RightSpoilersTarget = (-rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
+		    if (DLCactive) {
+    			InnerLeftSpoilersTarget = (DLC + rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
+    			InnerRightSpoilersTarget = (DLC - rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
+    		} else {
+    			InnerLeftSpoilersTarget = LeftSpoilersTarget;
+    			InnerRightSpoilersTarget = RightSpoilersTarget;
+    		}
+	    	# clip the values to in-flight maxima
+    		if (LeftSpoilersTarget < SpoilersMinima) LeftSpoilersTarget = SpoilersMinima;
+    		if (RightSpoilersTarget < SpoilersMinima) RightSpoilersTarget = SpoilersMinima;
+	    	if (LeftSpoilersTarget > MaxFlightSpoilers) LeftSpoilersTarget = MaxFlightSpoilers;
+		    if (RightSpoilersTarget > MaxFlightSpoilers) RightSpoilersTarget = MaxFlightSpoilers;
+		    if (InnerLeftSpoilersTarget < SpoilersMinima) InnerLeftSpoilersTarget = SpoilersMinima;
+    		if (InnerRightSpoilersTarget < SpoilersMinima) InnerRightSpoilersTarget = SpoilersMinima;
+	    	if (InnerLeftSpoilersTarget > MaxFlightSpoilers) InnerLeftSpoilersTarget = MaxFlightSpoilers;
+    		if (InnerRightSpoilersTarget > MaxFlightSpoilers) InnerRightSpoilersTarget = MaxFlightSpoilers;
 
-		setprop ("controls/flight/yasim-spoilers", (InnerRightSpoilersTarget + InnerLeftSpoilersTarget) / 2.0);
-
+    		setprop ("controls/flight/yasim-spoilers", (InnerRightSpoilersTarget + InnerLeftSpoilersTarget) / 2.0);
+        }
 	}
 }
 

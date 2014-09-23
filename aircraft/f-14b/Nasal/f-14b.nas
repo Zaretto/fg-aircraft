@@ -158,55 +158,57 @@ var timedMotions = func {
 
 	if (deltaT == nil) deltaT = 0.0;
 
-	# Outboard Spoilers
-	if (CurrentLeftSpoiler > LeftSpoilersTarget ) {
-		CurrentLeftSpoiler -= SpoilerSpeed * deltaT;
-		if (CurrentLeftSpoiler < LeftSpoilersTarget) {
-			CurrentLeftSpoiler = LeftSpoilersTarget;
-		}
-	} elsif (CurrentLeftSpoiler < LeftSpoilersTarget) {
-		CurrentLeftSpoiler += SpoilerSpeed * deltaT;
-		if (CurrentLeftSpoiler > LeftSpoilersTarget) {
-			CurrentLeftSpoiler = LeftSpoilersTarget;
-		}
-	}
-
-	if (CurrentRightSpoiler > RightSpoilersTarget ) {
-		CurrentRightSpoiler -= SpoilerSpeed * deltaT;
-		if (CurrentRightSpoiler < RightSpoilersTarget) {
-			CurrentRightSpoiler = RightSpoilersTarget;
-		}
-	} elsif (CurrentRightSpoiler < RightSpoilersTarget) {
-		CurrentRightSpoiler += SpoilerSpeed * deltaT;
-		if (CurrentRightSpoiler > RightSpoilersTarget) {
-			CurrentRightSpoiler = RightSpoilersTarget;
-		}
-	}
-
-	# Inboard Spoilers
-	if (CurrentInnerLeftSpoiler > InnerLeftSpoilersTarget ) {
-		CurrentInnerLeftSpoiler -= SpoilerSpeed * deltaT;
-		if (CurrentInnerLeftSpoiler < InnerLeftSpoilersTarget) {
-			CurrentInnerLeftSpoiler = InnerLeftSpoilersTarget;
-		}
-	} elsif (CurrentInnerLeftSpoiler < InnerLeftSpoilersTarget) {
-		CurrentInnerLeftSpoiler += SpoilerSpeed * deltaT;
-		if (CurrentInnerLeftSpoiler > InnerLeftSpoilersTarget) {
-			CurrentInnerLeftSpoiler = InnerLeftSpoilersTarget;
-		}
-	}
-
-	if (CurrentInnerRightSpoiler > InnerRightSpoilersTarget ) {
-		CurrentInnerRightSpoiler -= SpoilerSpeed * deltaT;
-		if (CurrentInnerRightSpoiler < InnerRightSpoilersTarget) {
-			CurrentInnerRightSpoiler = InnerRightSpoilersTarget;
-		}
-	} elsif (CurrentInnerRightSpoiler < InnerRightSpoilersTarget) {
-		CurrentInnerRightSpoiler += SpoilerSpeed * deltaT;
-		if (CurrentInnerRightSpoiler > InnerRightSpoilersTarget) {
-			CurrentInnerRightSpoiler = InnerRightSpoilersTarget;
-		}
-	}
+    if (!usingJSBSim){
+    	# Outboard Spoilers
+    	if (CurrentLeftSpoiler > LeftSpoilersTarget ) {
+    		CurrentLeftSpoiler -= SpoilerSpeed * deltaT;
+    		if (CurrentLeftSpoiler < LeftSpoilersTarget) {
+    			CurrentLeftSpoiler = LeftSpoilersTarget;
+    		}
+    	} elsif (CurrentLeftSpoiler < LeftSpoilersTarget) {
+    		CurrentLeftSpoiler += SpoilerSpeed * deltaT;
+    		if (CurrentLeftSpoiler > LeftSpoilersTarget) {
+    			CurrentLeftSpoiler = LeftSpoilersTarget;
+    		}
+    	}
+    
+    	if (CurrentRightSpoiler > RightSpoilersTarget ) {
+    		CurrentRightSpoiler -= SpoilerSpeed * deltaT;
+    		if (CurrentRightSpoiler < RightSpoilersTarget) {
+    			CurrentRightSpoiler = RightSpoilersTarget;
+    		}
+    	} elsif (CurrentRightSpoiler < RightSpoilersTarget) {
+    		CurrentRightSpoiler += SpoilerSpeed * deltaT;
+    		if (CurrentRightSpoiler > RightSpoilersTarget) {
+    			CurrentRightSpoiler = RightSpoilersTarget;
+    		}
+    	}
+    
+    	# Inboard Spoilers
+    	if (CurrentInnerLeftSpoiler > InnerLeftSpoilersTarget ) {
+    		CurrentInnerLeftSpoiler -= SpoilerSpeed * deltaT;
+    		if (CurrentInnerLeftSpoiler < InnerLeftSpoilersTarget) {
+    			CurrentInnerLeftSpoiler = InnerLeftSpoilersTarget;
+    		}
+    	} elsif (CurrentInnerLeftSpoiler < InnerLeftSpoilersTarget) {
+    		CurrentInnerLeftSpoiler += SpoilerSpeed * deltaT;
+    		if (CurrentInnerLeftSpoiler > InnerLeftSpoilersTarget) {
+    			CurrentInnerLeftSpoiler = InnerLeftSpoilersTarget;
+    		}
+    	}
+    
+    	if (CurrentInnerRightSpoiler > InnerRightSpoilersTarget ) {
+    		CurrentInnerRightSpoiler -= SpoilerSpeed * deltaT;
+    		if (CurrentInnerRightSpoiler < InnerRightSpoilersTarget) {
+    			CurrentInnerRightSpoiler = InnerRightSpoilersTarget;
+    		}
+    	} elsif (CurrentInnerRightSpoiler < InnerRightSpoilersTarget) {
+    		CurrentInnerRightSpoiler += SpoilerSpeed * deltaT;
+    		if (CurrentInnerRightSpoiler > InnerRightSpoilersTarget) {
+    			CurrentInnerRightSpoiler = InnerRightSpoilersTarget;
+    		}
+    	}
+    }
 
 	# Engine nozzles
 	if (Nozzle1 > Nozzle1Target) {
