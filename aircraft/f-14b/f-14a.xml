@@ -710,15 +710,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <output>fcs/right-elevator-pos-deg</output>
    </summer>
 
-  <aerosurface_scale name="Stabilizer Control">
-      <input>fcs/elevator-pos-norm</input>
-      <range>
-        <min>  -0.57895 </min>
-        <max>   0.21053 </max>
-      </range>
-      <output>fcs/stabilizer-pos-deg</output>
-   </aerosurface_scale>
-
    <aerosurface_scale name="elevator normalization">
       <input>fcs/elevator-pos-rad</input>
       <domain>
@@ -1143,6 +1134,23 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               </function>
           </fcs_function>
 
+          <fcs_function name="aero/cadc-control-effectivity-factor">
+              <function>
+                  <description>High speeds CADC control effectivity limitation of rudder and stabilator</description>
+                  <sum>
+                      <table>
+                          <independentVar lookup="row">velocities/mach</independentVar>
+                          <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
+                          <tableData>
+                              0.00  1.0
+                              1.00  0.75
+                              2.40  0.5
+                          </tableData>
+                      </table>
+                  </sum>
+              </function>
+          </fcs_function>
+
           <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
           <summer name="cg-x-offset-chord-in">
               <input> inertia/cg-x-in</input>
@@ -1423,7 +1431,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </function>
 
     <function name="aero/coefficients/ClSweepFactor">
-    <description>Wing sweep factor from norm of 22 </description>
+    <description>Wing sweep factor from norm of 22 (NASA-TM-D-6909)</description>
     <product>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -1590,7 +1598,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      <function name="aero/coefficients/ClDS1">
          <description>ClDS1 AFWAL-TR-80-3141 PartIII - Figure 38</description>
          <product>
-             <property>fcs/stabilizer-pos-deg</property>
              <table>
                  <independentVar lookup="row">aero/alpha-deg</independentVar>
                  <tableData>
@@ -1659,6 +1666,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
              <property>fcs/stabilizer-1p-factor</property>
              <property>aero/coefficients/ClDS1</property>
              <property>fcs/elevator-pos-deg</property>
+             <property>aero/cadc-control-effectivity-factor</property>
          </product>
      </function>
      <function name="aero/coefficients/DClDS2">
@@ -1675,6 +1683,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                          <value>10</value>
                          <property>fcs/elevator-pos-deg</property>
                      </sum>
+                     <property>aero/cadc-control-effectivity-factor</property>
                      <property>aero/coefficients/ClDS2</property>
                  </product>
              </sum>
@@ -1859,7 +1868,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      <function name="aero/coefficients/CdDS1">
          <description>CdDS1</description>
          <product>
-             <property>fcs/stabilizer-pos-deg</property>
              <table>
                  <independentVar lookup="row">aero/alpha-deg</independentVar>
                  <tableData>
@@ -1918,6 +1926,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
              <property>fcs/stabilizer-1p-factor</property>
              <property>aero/coefficients/CdDS1</property>
              <property>fcs/elevator-pos-deg</property>
+             <property>aero/cadc-control-effectivity-factor</property>
          </product>
      </function>
      
@@ -1935,6 +1944,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                          <value>10</value>
                          <property>fcs/elevator-pos-deg</property>
                      </sum>
+                     <property>aero/cadc-control-effectivity-factor</property>
                      <property>aero/coefficients/CdDS2</property>
                  </product>
              </sum>
@@ -2044,7 +2054,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CyDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
-          <value>2.3</value> <!-- net effect of both -->
+          <property>aero/cadc-control-effectivity-factor</property>
+          <value>2.003</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -2069,6 +2080,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CyDR</description>
     <product>
           <property>fcs/rudder-pos-deg</property>
+          <property>aero/cadc-control-effectivity-factor</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2213,7 +2225,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CLDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
-          <value>2.3</value> <!-- net effect of both -->
+          <property>aero/cadc-control-effectivity-factor</property>
+          <value>2.003</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2239,6 +2252,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CLDR</description>
     <product>
           <property>fcs/rudder-pos-deg</property>
+          <property>aero/cadc-control-effectivity-factor</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2376,6 +2390,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
              <property>fcs/stabilizer-1p-factor</property>
              <property>aero/coefficients/CMDS1</property>
              <property>fcs/elevator-pos-deg</property>
+             <property>aero/cadc-control-effectivity-factor</property>
          </product>
      </function>
 
@@ -2397,6 +2412,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                          <property>fcs/elevator-pos-deg</property>
                      </sum>
                      <property>aero/coefficients/CMDS2</property>
+                     <property>aero/cadc-control-effectivity-factor</property>
                  </product>
              </sum>
          </product>
@@ -2600,7 +2616,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <function name="aero/coefficients/DCNDS">
     <description>DCNDS</description>
     <product>
-          <property>fcs/stabilizer-pos-deg</property>
+          <property>fcs/elevator-pos-deg</property>
+          <property>aero/cadc-control-effectivity-factor</property>
           <property>aero/cn-sin-82beta</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -2677,7 +2694,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CNDA</description>
     <product>
           <property>fcs/left-aileron-pos-deg</property>
-          <value>2.3</value> <!-- net effect of both -->
+          <property>aero/cadc-control-effectivity-factor</property>
+          <value>2.003</value> <!-- net effect of both -->
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
@@ -2726,6 +2744,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <description>CNDR</description>
     <product>
           <property>fcs/rudder-pos-deg</property>
+          <property>aero/cadc-control-effectivity-factor</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
