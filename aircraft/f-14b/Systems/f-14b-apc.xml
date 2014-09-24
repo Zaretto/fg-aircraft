@@ -13,8 +13,8 @@
     <property>ap/throttle-cmd-norm</property>
 
     <property value="1.2"> systems/apc/pid-kp </property>
-    <property value="0.098142"> systems/apc/pid-ki </property>
-    <property value="0.0000631"> systems/apc/pid-kd </property>
+    <property value="0.002"> systems/apc/pid-ki </property>
+    <property value="0.0034"> systems/apc/pid-kd </property>
     <property value="0.3"> systems/apc/throttle-gain </property>
 
     <property value="23.12"> systems/apc/lag-constant </property>
@@ -79,7 +79,7 @@
             <gain> systems/apc/throttle-gain </gain>
             <clipto>
                 <min> -1</min>
-                <max> 0.95</max>
+a                <max> 0.97</max>
             </clipto>
             <output>systems/apc/throttle-cmd-delta</output>
         </pure_gain>
