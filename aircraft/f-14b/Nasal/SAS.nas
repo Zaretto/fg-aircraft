@@ -26,7 +26,7 @@ var SasRollOn  = props.globals.getNode("sim/model/f-14b/controls/SAS/roll");
 var SasYawOn   = props.globals.getNode("sim/model/f-14b/controls/SAS/yaw");
 var fdm_yawdamper   = props.globals.getNode("fdm/jsbsim/fcs/yaw-damper-enable");
 var fdm_pitchdamper   = props.globals.getNode("fdm/jsbsim/fcs/pitch-damper-enable");
-var fdm_rolldamper   = props.globals.getNode("fdm/jsbsim/fcs/roll-damper-enable");
+var fdm_roll_sas   = props.globals.getNode("fdm/jsbsim/fcs/roll-sas-enable");
 
 var DeadZPitch = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-pitch");
 var DeadZRoll  = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-roll");
@@ -214,7 +214,7 @@ setlistener("sim/model/f-14b/controls/SAS/yaw", func {
 }, 1, 0);
 
 setlistener("sim/model/f-14b/controls/SAS/roll", func {
-    if(usingJSBSim)        fdm_rolldamper.setValue(SasRollOn.getValue());
+    if(usingJSBSim)        fdm_roll_sas.setValue(SasRollOn.getValue());
 }, 1, 0);
 
 setlistener("sim/model/f-14b/controls/SAS/pitch", func {

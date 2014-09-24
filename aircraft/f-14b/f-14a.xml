@@ -647,8 +647,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Differential spoiler due to stick deflection</description>
             <default value="0"/>
 
-            <test value="fcs/aileron-cmd-norm">
+            <test value="fcs/roll-trim-actuator">
                 fcs/wing-sweep-cmd le 0.9117647058823529
+                aero/alpha-rad ge -0.175438596491228
+                aero/alpha-rad le  0.175438596491228
             </test>
         </switch>
 
@@ -828,7 +830,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <summer name="Roll Trim Sum">
       <input>fcs/aileron-cmd-norm</input>
       <input>fcs/roll-trim-cmd-norm</input>
-      <input>fcs/roll-damper-rate</input>
+      <input>fcs/roll-rate-limiter</input>
       <clipto>
         <min> -1 </min>
         <max>  1 </max>
@@ -889,7 +891,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
   <property value="0">fcs/yaw-damper-enable</property>
   <property value="0">fcs/pitch-damper-enable</property>
-  <property value="0">fcs/roll-damper-enable</property>
+  <property value="0">fcs/roll-sas-enable</property>
   <property value="0">fcs/external-tanks-fitted</property>
   <property value="0">fcs/aim-fitted</property>
   <property value="0">fcs/slat-cmd</property>
@@ -938,14 +940,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </test>
         <output>fcs/pitch-damper-active</output>
     </switch>
-   <switch name="fcs/roll-damper-active">
+   <switch name="fcs/roll-sas-active">
        <default value="0.0"/>
        <test logic="AND" value="1">
             aero/alpha-rad ge -0.175438596491228
             aero/alpha-rad le  0.2631578947368421
-            fcs/roll-damper-enable ne 0.0
+            fcs/roll-sas-enable ne 0.0
         </test>
-        <output>fcs/roll-damper-active</output>
+        <output>fcs/roll-sas-active</output>
     </switch>
 <!-- rudder limits +/-30deg 40 deg/sec-->
 <!-- stabilizer limits +/7deg 30 deg/sec-->
@@ -983,19 +985,18 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <max>  0.2857142857142857 </max>
    </scheduled_gain>
 
-   <scheduled_gain name="Roll Damper Rate">
-<!-- Figures 2-61, 11-1 F14AAD-1  -->
-      <input>velocities/p-aero-rad_sec</input>
+   <scheduled_gain name="fcs/roll-rate-limiter">
+      <input>fcs/aileron-cmd-norm</input>
       <table>
-        <independentVar lookup="row">velocities/ve-kts</independentVar>
+        <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
          <tableData>
-            30     0.00
-            60     -0.2857142857142857
+            -6.2    -1.0
+            -1.4     0.0
+             1.4     0.0
+             6.2    -1.0
          </tableData>
       </table>
-      <gain>fcs/roll-damper-active</gain>
-        <min> -0.2857142857142857 </min>
-        <max>  0.2857142857142857 </max>
+      <gain>fcs/roll-sas-active</gain>
    </scheduled_gain>
 
 
@@ -2310,40 +2311,36 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
        </product>
     </function>
 
-    <function name="aero/coefficients/CLDSpR">
-    <description>Delta CL due differential right spoiler deflection</description>
 <!-- AFWAL-TR-80-3141 part III: p55; no effect from spoilers above 10degrees alpha -->
+    <function name="aero/coefficients/CLDSp">
+    <description>Delta CL due differential spoiler deflection</description>
     <product>
-          <property>fcs/spoiler-right-differential-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">fcs/wing-sweep-cmd</independentVar>
             <tableData>
                       0.28         0.4          0.911
                 -55	  0.00000000   0.0000000   0.0000000
-                -15	  0.00179000   0.0011900   0.0002864
-                  0	  0.00079000   0.0007100   0.0002864
+                -15	  0.00179000   0.0017100   0.0002864
+                  0	  0.00129000   0.0012100   0.0002864
                  10	  0.00000000   0.0000000   0.0000000
             </tableData>
           </table>
        </product>
     </function>
-<!-- Ref 1: Section 14.2.7 - maximum roll rate with of one spoiler 25 deg/sec wing sweep 22 degrees; 4 deg/sec roll rate with wings at 62degrees (200 kts/20,000 ft) -->
+    <function name="aero/coefficients/CLDSpR">
+    <description>Delta CL due differential right spoiler deflection</description>
+       <product>
+          <property>fcs/spoiler-right-differential-pos-deg</property>
+          <property>aero/coefficients/CLDSp</property>
+       </product>
+    </function>
     <function name="aero/coefficients/CLDSpL">
     <description>Delta CL due differential left spoiler deflection</description>
     <product>
-           <property>fcs/spoiler-left-differential-pos-deg</property>
-          <table>
-            <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">fcs/wing-sweep-cmd</independentVar>
-            <tableData>
-                      0.28         0.4          0.911
-                -55	  0.00000000   0.0000000   0.0000000
-                -15	 -0.00179000  -0.0011900  -0.0002864
-                  0	 -0.00079000  -0.0007100  -0.0002864
-                 10	  0.00000000   0.0000000   0.0000000
-            </tableData>
-          </table>
+          <property>fcs/spoiler-left-differential-pos-deg</property>
+          <value>-1</value>
+          <property>aero/coefficients/CLDSp</property>
        </product>
     </function>
 
