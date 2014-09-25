@@ -97,6 +97,8 @@
                 <factor>0.01</factor>
                 <property>engines/engine[0]/n1</property>
             </volume>
+            <reference-dist>400</reference-dist>
+            <max-dist>3000</max-dist>
         </engine-jet-intake-l>
 
         <engine-jet-intake-r>
@@ -117,8 +119,8 @@
                 <x>-0.98</x>
                 <y>0.0</y>
                 <z>-0.17</z>
-                <inner-angle>60.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
+                <inner-angle>120.0</inner-angle>
+                <outer-angle>180.0</outer-angle>
                 <outer-gain>0.0</outer-gain>
             </orientation>
             <pitch>
@@ -131,6 +133,8 @@
                 <factor>0.01</factor>
                 <property>engines/engine[1]/n1</property>
             </volume>
+            <reference-dist>400</reference-dist>
+            <max-dist>3000</max-dist>
         </engine-jet-intake-r>
 
 
@@ -163,7 +167,7 @@
                 <y>-1.0</y>
                 <z>0.0</z>
             </orientation>
-            <reference-dist>800</reference-dist>
+            <reference-dist>400</reference-dist>
             <max-dist>3000</max-dist>
         </engine-jet-whine-n1-l>
 
@@ -196,7 +200,7 @@
                 <y>-1.0</y>
                 <z>0.0</z>
             </orientation>
-            <reference-dist>800</reference-dist>
+            <reference-dist>400</reference-dist>
             <max-dist>3000</max-dist>
         </engine-jet-whine-n2-l1>
 
@@ -229,7 +233,7 @@
                 <y>1.0</y>
                 <z>0.0</z>
             </orientation>
-            <reference-dist>800</reference-dist>
+            <reference-dist>400</reference-dist>
             <max-dist>3000</max-dist>
         </engine-jet-whine-n1-r>
 
@@ -262,7 +266,7 @@
                 <y>1.0</y>
                 <z>0.0</z>
             </orientation>
-            <reference-dist>800</reference-dist>
+            <reference-dist>400</reference-dist>
             <max-dist>3000</max-dist>
         </engine-jet-whine-n2-r1>
 
@@ -328,9 +332,84 @@
             <max-dist>6000</max-dist>
         </engine-jet-exhaust-inside-r>
 
-        <engine-jet-exhaust-l>
+        <engine-jet-efflux-velocity-blast-l>
+            <name>engine-jet-efflux-velocity-blast-l</name>
+            <path>Aircraft/f-14b/Sounds/jet-efflux-2.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <not>
+                    <property>sim/current-view/internal</property>
+                </not>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+<greater-than>
+	<property>engines/engine[0]/thrust_lb</property>
+    <value>200</value>
+</greater-than>
+            </condition>
+            <volume>
+                <offset>-1.0</offset>
+                <property>engines/engine[0]/epr</property>
+            </volume>
+            <position>
+                <x>3</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+                <inner-angle>200.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.2</outer-gain>
+            </orientation>
+            <reference-dist>800</reference-dist>
+            <max-dist>6000</max-dist>
+        </engine-jet-efflux-velocity-blast-l>
+
+        <engine-jet-efflux-velocity-blast-r>
+            <name>engine-jet-efflux-velocity-blast-r</name>
+            <path>Aircraft/f-14b/Sounds/jet-efflux-2.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+                <not>
+                    <property>sim/current-view/internal</property>
+                </not>
+<greater-than>
+	<property>engines/engine[1]/thrust_lb</property>
+    <value>200</value>
+</greater-than>
+
+            </condition>
+            <volume>
+                <offset>-1.0</offset>
+                <property>engines/engine[1]/epr</property>
+            </volume>
+            <position>
+                <x>3</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+                <inner-angle>200.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.2</outer-gain>
+            </orientation>
+            <reference-dist>800</reference-dist>
+            <max-dist>6000</max-dist>
+        </engine-jet-efflux-velocity-blast-r>
+
+       <engine-jet-exhaust-l>
             <name>engine-jet-exhaust-l</name>
-            <path>Aircraft/f-14b/Sounds/engine-jet-efflux.wav</path>
+            <path>Aircraft/f-14b/Sounds/jet-efflux-2.wav</path>
             <mode>looped</mode>
             <condition>
                 <not>
@@ -363,7 +442,7 @@
 
         <engine-jet-exhaust-r>
             <name>engine-jet-exhaust-r</name>
-            <path>Aircraft/f-14b/Sounds/engine-jet-efflux.wav</path>
+            <path>Aircraft/f-14b/Sounds/jet-efflux-2.wav</path>
             <mode>looped</mode>
             <condition>
                 <not>
