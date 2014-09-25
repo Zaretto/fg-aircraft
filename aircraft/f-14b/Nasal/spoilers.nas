@@ -44,18 +44,9 @@ var computeSpoilers = func {
 		# if weight on wheels or ground spoilers deployed (in case of hard bounce)
 		if (GroundSpoilersDeployed or wow)
         {
-			GroundSpoilersDeployed = true;
-            if (usingJSBSim)
+            if (!usingJSBSim)
             {
-                # until we have the ground spoiler logic in the fdm this will have to do.
-                CurrentLeftSpoiler = wingSweepBias;
-                CurrentInnerLeftSpoiler = wingSweepBias;
-                CurrentInnerRightSpoiler = wingSweepBias;
-                CurrentRightSpoiler = wingSweepBias;
-    			SpoilersCmd.setDoubleValue(wingSweepBias);
-            }
-            else
-            {
+    			GroundSpoilersDeployed = true;
     			LeftSpoilersTarget = wingSweepBias;
     			RightSpoilersTarget = wingSweepBias;
     			InnerLeftSpoilersTarget = wingSweepBias; 
@@ -91,10 +82,10 @@ var computeSpoilers = func {
 		}
         if (usingJSBSim)
         {
-            CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-differential-pos");
-            CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-differential-pos");
-            CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-differential-pos");
-            CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-differential-pos");
+            CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
+            CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
+            CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
+            CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
         }
         else
         {
@@ -141,22 +132,25 @@ var toggleGroundSpoilers = func {
 	if (getprop ("controls/flight/ground-spoilers-armed")) {
 		setprop ("controls/flight/ground-spoilers-armed", false);
 		SpoilersCmd.setDoubleValue(0.0);
+        if(usingJSBSim) 	setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",0);
 	} else {
 		setprop ("controls/flight/ground-spoilers-armed", true);
+        if(usingJSBSim) 	setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",1);
 	}
 }
 
 var set_spoiler_brake = func(v)
 {
-if (v > 0)
-{
-	setprop ("controls/flight/ground-spoilers-armed", true);
-}
-else
-{
-    setprop ("controls/flight/ground-spoilers-armed", false);
-	SpoilersCmd.setDoubleValue(0.0);
-}
-
+    if (v > 0)
+    {
+    	setprop ("controls/flight/ground-spoilers-armed", true);
+        if(usingJSBSim) 	setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",1);
+    }
+    else
+    {
+        setprop ("controls/flight/ground-spoilers-armed", false);
+        if(usingJSBSim) 	setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",0);
+    	SpoilersCmd.setDoubleValue(0.0);
+    }
 }
 
