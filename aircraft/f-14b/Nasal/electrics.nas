@@ -14,6 +14,7 @@ var ca_bingo_light  = props.globals.getNode("sim/model/f-14b/lights/ca-bingo", 1
 
 var ca_canopy_light = props.globals.getNode("sim/model/f-14b/lights/ca-lad-canopy", 1);
 var canopy = props.globals.getNode("canopy/position-norm", 1);
+canopy.setValue(0);
 
 var ca_ramp_light = props.globals.getNode("sim/model/f-14b/lights/ca-ramps", 1);
 
