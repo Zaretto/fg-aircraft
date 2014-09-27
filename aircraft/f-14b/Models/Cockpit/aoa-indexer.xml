@@ -25,16 +25,15 @@
 				<and>
 					<less-than>
 						<property>gear/tailhook/position-norm</property>
-						<value>1</value>
+						<value>0.4</value>
 					</less-than>
 					<property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
 				</and>
-				<equals>
+				<greater-than>
 					<property>gear/tailhook/position-norm</property>
-					<value>1</value>
-				</equals>
+					<value>0.5</value>
+				</greater-than>
 			</or>
-
 		</condition>
 	</animation>
 
@@ -58,21 +57,21 @@
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
 			</equals>
-			<or>
-				<property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-				<and>
-					<less-than>
-						<property>gear/tailhook/position-norm</property>
-						<value>1</value>
-					</less-than>
-					<property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-				</and>
-				<equals>
-					<property>gear/tailhook/position-norm</property>
-					<value>1</value>
-				</equals>
-			</or>
-		</condition>
+            <or>
+                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                <and>
+                    <less-than>
+                        <property>gear/tailhook/position-norm</property>
+                        <value>0.4</value>
+                    </less-than>
+                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                </and>
+                <greater-than>
+                    <property>gear/tailhook/position-norm</property>
+                    <value>0.5</value>
+                </greater-than>
+            </or>
+        </condition>
 	</animation>
 
 	<animation>
@@ -95,21 +94,21 @@
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
 			</equals>
-			<or>
-				<property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-				<and>
-					<less-than>
-						<property>gear/tailhook/position-norm</property>
-						<value>1</value>
-					</less-than>
-					<property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-				</and>
-				<equals>
-					<property>gear/tailhook/position-norm</property>
-					<value>1</value>
-				</equals>
-			</or>
-		</condition>
+            <or>
+                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                <and>
+                    <less-than>
+                        <property>gear/tailhook/position-norm</property>
+                        <value>0.4</value>
+                    </less-than>
+                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                </and>
+                <greater-than>
+                    <property>gear/tailhook/position-norm</property>
+                    <value>0.5</value>
+                </greater-than>
+            </or>
+        </condition>
 	</animation>
 
 	<animation>
@@ -132,21 +131,21 @@
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
 			</equals>
-			<or>
-				<property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-				<and>
-					<less-than>
-						<property>gear/tailhook/position-norm</property>
-						<value>1</value>
-					</less-than>
-					<property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-				</and>
-				<equals>
-					<property>gear/tailhook/position-norm</property>
-					<value>1</value>
-				</equals>
-			</or>
-		</condition>
+            <or>
+                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                <and>
+                    <less-than>
+                        <property>gear/tailhook/position-norm</property>
+                        <value>0.4</value>
+                    </less-than>
+                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                </and>
+                <greater-than>
+                    <property>gear/tailhook/position-norm</property>
+                    <value>0.5</value>
+                </greater-than>
+            </or>
+        </condition>
 	</animation>
 
 	<animation>
@@ -165,21 +164,21 @@
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
 			</equals>
-			<or>
-				<property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-				<and>
-					<less-than>
-						<property>gear/tailhook/position-norm</property>
-						<value>1</value>
-					</less-than>
-					<property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-				</and>
-				<equals>
-					<property>gear/tailhook/position-norm</property>
-					<value>1</value>
-				</equals>
-			</or>
-		</condition>
+            <or>
+                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                <and>
+                    <less-than>
+                        <property>gear/tailhook/position-norm</property>
+                        <value>0.4</value>
+                    </less-than>
+                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                </and>
+                <greater-than>
+                    <property>gear/tailhook/position-norm</property>
+                    <value>0.5</value>
+                </greater-than>
+            </or>
+        </condition>
 	</animation>
 
 <!-- Warning Lights -->
@@ -264,10 +263,6 @@
 			<property>sim/model/f-14b/systems/apc/self-disengaged-light</property>
 		</condition>
 	</animation>
-
-
-
-
 
 	<!-- lighting -->
 	<!-- rembrandt change: keep the legacy emission so we can also keep controls/lighting/index-norm -->
