@@ -14,8 +14,6 @@
 
         <event name="Initial setup">
             <condition> simulation/sim-time-sec le 0.1 </condition>
-            <set name="propulsion/engine[0]/set-running" value="1"/>
-            <set name="propulsion/engine[1]/set-running" value="1"/>
             <set name="gear/gear-cmd-norm" value="0"/>
             <set name="gear/gear-pos-norm" value="0"/>
             <set name="fcs/flap-cmd-norm" value="0"/>
@@ -48,11 +46,6 @@
             <set name="fcs/throttle-cmd-norm[0]"  value="0"/>
             <set name="fcs/throttle-cmd-norm[1]"  value="0"/>
             <set name="fcs/yaw-damper-enable" value="0"/>
-            <notify>
-                <property>inertia/cg-x-mac-percent</property>
-                <property>propulsion/engine[0]/n2</property>
-                <property>propulsion/engine[1]/n2</property>
-            </notify>
         </event>
     <event name="Idle Throttle">
       <condition>simulation/sim-time-sec  lt  1.0</condition>

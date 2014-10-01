@@ -9,14 +9,45 @@
 <system name="JT8D">
 
     <property value="1.2"> systems/jt9d/engine[0]/epr-lag </property>
+    <property value="19800"> systems/jt9d/engine[0]/c-milthrust-lb </property>
+<!--    <property value="16800"> systems/jt9d/engine[0]/c-milthrust-lb </property> -->
+    <property value="27080"> systems/jt9d/engine[0]/c-maxthrust-lb </property>
+    <property value="0.745"> systems/jt9d/engine[0]/c-tsfc </property>
+    <property value="2.01">  systems/jt9d/engine[0]/c-atsfc </property>
+    <property value="0.85">  systems/jt9d/engine[0]/c-bypassratio </property>
+    <property>propulsion/engine[0]/set-running </property>
+    <property>forces/fbx-prop-lbs    </property>
+    <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
+    <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
+
+    <property>propulsion/engine[1]/set-running </property>
+    <property>propulsion/engine[0]/n1 </property>
+    <property>propulsion/engine[1]/n1 </property>
+    <property>propulsion/engine[0]/n2 </property>
+    <property>propulsion/engine[1]/n2 </property>
+
+    <property>/engines/engine[0]/afterburner</property>
+    <property>/engines/engine[1]/afterburner</property>
+    <property>/engines/engine[0]/augmentation</property>
+    <property>/engines/engine[1]/augmentation</property>
+
+    <property value="1">/engines/engine[0]/running </property>
+    <property value="1">/engines/engine[1]/running </property>
+
+    <property> fcs/throttle-cmd-norm[0]</property>
+    <property> fcs/throttle-cmd-norm[1]</property>
+    <property> fcs/throttle-pos-norm[0]</property>
+    <property> fcs/throttle-pos-norm[1]</property>
 
     <channel name="Engine1">
-        <fcs_function name="systems/jt9d/engine[0]/epr-dmd">
+        <fcs_function name="systems/jt9d/engine[0]/epr-base">
             <function>
                 <description>PLA to EPR  Figure 12.1-4 CR-1756</description>
                 <product>
                     <table>
-                        <independentVar lookup="row">fcs/throttle-cmd-norm[0] </independentVar>
+                        <!--                        <independentVar lookup="row">fcs/throttle-cmd-norm[0] </independentVar> -->
+                        <independentVar lookup="row">/controls/engines/engine[1]/throttle</independentVar>
+
                         <independentVar lookup="column">atmosphere/T-R</independentVar>
                         <tableData>
                             394.67	459.67	518.67	579.67
@@ -36,6 +67,40 @@
             </function>
         </fcs_function>
 
+
+        <fcs_function name="systems/jt9d/engine[0]/epr-mach">
+            <function>
+                <description>PLA~EPR Mach number effect figure 12.1-5 CR-1756</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <independentVar lookup="column">aero/h_b-mac-ft</independentVar>
+                        <tableData>
+                            0	15000	36065
+                            0.0	-0.000000	-0.000000	-0.000000
+                            0.1	-0.019076	-0.000000	-0.000000
+                            0.2	-0.042277	-0.006561	-0.005187
+                            0.3	-0.076465	-0.039377	-0.038005
+                            0.4	-0.127136	-0.084554	-0.066695
+                            0.6	-0.188796	-0.140721	-0.100886
+                            0.7	-0.258698	-0.202380	-0.140568
+                            0.8	-0.335469	-0.266787	-0.178875
+                            0.9	-0.413614	-0.343558	-0.229547
+                            1.0	-0.497251	-0.434064	-0.291207
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/jt9d/engine[0]/epr-dmd">
+            <function>
+                <sum>
+                    <property>systems/jt9d/engine[0]/epr-base</property>
+                    <property>systems/jt9d/engine[0]/epr-mach</property>
+                </sum>
+            </function>
+        </fcs_function>
 
         <lag_filter name="systems/jt9d/engine[0]/epr">
             <input> systems/jt9d/engine[0]/epr-dmd </input>
@@ -76,7 +141,7 @@
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
 
-                                    0	0.1	0.3	0.4	0.5	0.6	0.7	0.8	0.9	1
+                            0	0.1	0.3	0.4	0.5	0.6	0.7	0.8	0.9	1
                             0.64	-425	-409	-118	36	3	213	349	429	469	539
                             0.70	-275	-259	4	148	145	327	444	523	605	687
                             0.80	-11	5	217	344	393	527	610	687	732	765
@@ -126,7 +191,7 @@
             </function>
         </fcs_function>
 
-        <fcs_function name="systems/jt9d/engine[0]/fn-lb">
+        <fcs_function name="systems/jt9d/engine[0]/fn-factor">
             <function>
                 <description>EPR ~ Installed generalized net thrust Figures 12.2-3, 12.2-4</description>
                 <product>
@@ -135,22 +200,93 @@
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
                             0	0.1	0.2	0.3	0.4	0.5	0.6	0.7	0.8	0.9	1
-                            0.7	0	0	0	0	0	0	0	0	0	0	3444
-                            0.8	0	0	0	0	0	0	0	0	3216	5761	9105
-                            0.9	0	0	0	0	0	2418	6497	9145	11738	14175	16603
-                            1.0	0	1046	2732	4274	6282	8517	11599	13830	16469	18807	20820
-                            1.1	14034	12999	12478	12638	13835	15729	17871	19736	22064	24154	26289
-                            1.2	24453	21510	19891	19901	20138	21489	22943	24886	26862	28699	30613
-                            1.3	32938	29125	26926	26360	25920	26567	27624	29306	31064	33029	35027
-                            1.4	39874	35892	33217	31573	31012	30744	31602	33058	34900	36808	39160
-                            1.5	46187	41604	38552	36535	35555	34911	35470	36687	38634	40774	43495
-                            1.6	51661	46510	43097	41038	39466	38666	39067	40194	42496	44875	47980
-                            1.7	57396	51226	47634	45119	42905	42262	42054	43539	45840	49172	52678
-                            1.8	59994	53363	49690	46968	44435	43891	43407	44871	47355	51119	54807
+                            0.7	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.057
+                            0.8	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.054	0.096	0.152
+                            0.9	0.000	0.000	0.000	0.000	0.000	0.040	0.108	0.152	0.196	0.236	0.277
+                            1.0	0.000	0.017	0.046	0.071	0.105	0.142	0.193	0.231	0.274	0.313	0.347
+                            1.1	0.234	0.217	0.208	0.211	0.231	0.262	0.298	0.329	0.368	0.403	0.438
+                            1.2	0.408	0.358	0.332	0.332	0.336	0.358	0.382	0.415	0.448	0.478	0.510
+                            1.3	0.549	0.485	0.449	0.439	0.432	0.443	0.460	0.488	0.518	0.550	0.584
+                            1.4	0.665	0.598	0.554	0.526	0.517	0.512	0.527	0.551	0.582	0.613	0.653
+                            1.5	0.770	0.693	0.643	0.609	0.593	0.582	0.591	0.611	0.644	0.680	0.725
+                            1.6	0.861	0.775	0.718	0.684	0.658	0.644	0.651	0.670	0.708	0.748	0.800
+                            1.7	0.957	0.854	0.794	0.752	0.715	0.704	0.701	0.726	0.764	0.820	0.878
+                            1.8	1.000	0.889	0.828	0.783	0.741	0.732	0.723	0.748	0.789	0.852	0.913
                         </tableData>
                     </table>
                 </product>
             </function>
         </fcs_function>
+        <pure_gain name="systems/jt9d/engine[0]/fn-lb">
+            <input>systems/jt9d/engine[0]/fn-factor</input>
+            <gain>systems/jt9d/engine[0]/c-milthrust-lb</gain>
+            <output>systems/jt9d/engine[0]/fn-lb</output>
+        </pure_gain>
+        <pure_gain name="propulsion/engine[0]/n1">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <gain>1</gain>
+        </pure_gain>
+        <pure_gain name="propulsion/engine[0]/n2">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <gain>1</gain>
+        </pure_gain>
+        <pure_gain name="propulsion/engine[1]/n1">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <gain>1</gain>
+            <output>propulsion/engine[1]/n1</output>
+        </pure_gain>
+        <pure_gain name="propulsion/engine[1]/n2">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <output>propulsion/engine[1]/n2</output>
+            <gain>1</gain>
+        </pure_gain>
+        <pure_gain name="/engines/engine[0]/n1">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <output>/engines/engine[0]/n1</output>
+            <gain>1</gain>
+        </pure_gain>
+        <pure_gain name="/engines/engine[0]/n2">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <output>/engines/engine[0]/n2</output>
+            <gain>1.4</gain>
+      <clipto>
+        <min> 0 </min>
+        <max>100</max>
+      </clipto>
+        </pure_gain>
+        <pure_gain name="/engines/engine[1]/n1">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <output>/engines/engine[1]/n1</output>
+            <gain>1</gain>
+        </pure_gain>
+        <pure_gain name="/engines/engine[1]/n2">
+            <input>systems/jt9d/engine[0]/n1</input>
+            <output>/engines/engine[1]/n2</output>
+            <gain>1.4</gain>
+      <clipto>
+        <min> 0 </min>
+        <max>100</max>
+      </clipto>
+        </pure_gain>
+
+        <pure_gain name="propulsion/engine[0]/EGT-R">
+            <input>systems/jt9d/engine[0]/egt-r</input>
+            <output>propulsion/engine[0]/EGT-R</output>
+            <gain>1</gain>
+        </pure_gain>
+        <pure_gain name="propulsion/engine[1]/EGT-R">
+            <input>systems/jt9d/engine[0]/egt-r</input>
+            <output>propulsion/engine[1]/EGT-R</output>
+            <gain>1</gain>
+        </pure_gain>
+
+        <summer name="external_reactions/F110-GE-400-1/magnitude">
+            <input>-systems/jt9d/engine[0]/fn-lb</input>
+            <output>external_reactions/F110-GE-400-1/magnitude</output>
+        </summer>
+        <summer name="external_reactions/F110-GE-400-2/magnitude">
+            <input>-systems/jt9d/engine[0]/fn-lb</input>
+            <output>external_reactions/F110-GE-400-2/magnitude</output>
+        </summer>
     </channel>
 </system>
