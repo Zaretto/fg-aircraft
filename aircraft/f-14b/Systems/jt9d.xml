@@ -8,27 +8,27 @@
 
 <system name="JT8D">
 
-    <property value="1.2"> systems/jt9d/engine[0]/c-epr-lag </property>
-    <property value="0.8"> systems/jt9d/engine[0]/c-ff-lag </property>
-    <property value="0.1"> systems/jt9d/engine[0]/c-egt-lag </property>
-    <property value="16800"> systems/jt9d/engine[0]/c-milthrust-lb </property>
-    <property value="27080"> systems/jt9d/engine[0]/c-maxthrust-lb </property>
-    <property value="1.8119"> systems/jt9d/engine[0]/c-augthrust-factor </property>
-    <property value="0.745"> systems/jt9d/engine[0]/c-tsfc </property>
-    <property value="2.01">  systems/jt9d/engine[0]/c-atsfc </property>
-    <property value="1.265">  systems/jt9d/engine[0]/c-atsfc-delta </property>
-    <property value="0.85">  systems/jt9d/engine[0]/c-bypassratio </property>
-    <property value="0.0035">  systems/jt9d/engine[0]/c-augmentation-to-egt </property>
+    <property value="0.8">    systems/jt9d/engine[0]/c-ff-lag </property>
+    <property value="0.1">    systems/jt9d/engine[0]/c-egt-lag </property>
+    <property value="16800">  systems/jt9d/engine[0]/c-milthrust-lb </property>
+    <property value="27080">  systems/jt9d/engine[0]/c-maxthrust-lb </property>
+    <property value="1.650">  systems/jt9d/engine[0]/c-augthrust-factor </property>
+    <property value="0.688">  systems/jt9d/engine[0]/c-tsfc </property>
+    <property value="2.104">  systems/jt9d/engine[0]/c-atsfc </property>
+    <property value="1.416">  systems/jt9d/engine[0]/c-atsfc-delta </property>
+    <property value="0.85">   systems/jt9d/engine[0]/c-bypassratio </property>
+    <property value="0.0035"> systems/jt9d/engine[0]/c-augmentation-to-egt </property>
+    <property value="0.01"> systems/jt9d/engine[0]/c-oil-temperature-lag </property>
+    <property value="0"> systems/jt9d/engine[0]/oil-temperature-R </property>
 
-    <property>/engines/engine[0]/oil-pressure-psi</property>
-    <property>/engines/engine[1]/oil-pressure-psi</property>
+    <property value="1">propulsion/engine[0]/set-running </property>
+    <property value="1">propulsion/engine[1]/set-running </property>
 
-    <property>propulsion/engine[0]/set-running </property>
     <property>forces/fbx-prop-lbs    </property>
     <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
     <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
 
-    <property>propulsion/engine[1]/set-running </property>
+    <!-- 3500 ft; 0.1785610616 TLAe- 4734 lb - mach 0.8  -->
     <property>propulsion/engine[0]/n1 </property>
     <property>propulsion/engine[1]/n1 </property>
     <property>propulsion/engine[0]/n2 </property>
@@ -38,27 +38,48 @@
 
     <property>/engines/engine[0]/afterburner</property>
     <property>/engines/engine[1]/afterburner</property>
+    <!--
     <property>/engines/engine[0]/augmentation</property>
     <property>/engines/engine[1]/augmentation</property>
+
+    <property>/engines/engine[0]/oil-pressure-psi</property>
+    <property>/engines/engine[1]/oil-pressure-psi</property>
+
     <property>/controls/engines/engine[0]/throttle</property>
     <property>/controls/engines/engine[1]/throttle</property>
 
     <property value="1">/engines/engine[0]/running </property>
     <property value="1">/engines/engine[1]/running </property>
-
     <property> fcs/throttle-cmd-norm[0]</property>
     <property> fcs/throttle-cmd-norm[1]</property>
     <property> fcs/throttle-pos-norm[0]</property>
     <property> fcs/throttle-pos-norm[1]</property>
 
+-->
+
     <channel name="Engine1">
+
+        <switch name="fcs/throttle-cmd-norm[0]">
+            <default value="/controls/engines/engine[0]/throttle" />
+        </switch>
+        <switch name="fcs/throttle-cmd-norm[1]">
+            <default value="/controls/engines/engine[1]/throttle" />
+        </switch>
+
+        <switch name="fcs/throttle-pos-norm[0]">
+            <default value="fcs/throttle-cmd-norm[0]" />
+        </switch>
+        <switch name="fcs/throttle-pos-norm[1]">
+            <default value="fcs/throttle-cmd-norm[1]" />
+        </switch>
+
         <fcs_function name="systems/jt9d/engine[0]/epr-base">
             <function>
                 <description>PLA to EPR  Figure 12.1-4 CR-1756</description>
                 <product>
                     <table>
-                        <!--                        <independentVar lookup="row">fcs/throttle-cmd-norm[0] </independentVar> -->
-                        <independentVar lookup="row">/controls/engines/engine[0]/throttle</independentVar>
+                        <!--                        <independentVar lookup="row">fcs/throttle-pos-norm[0] </independentVar> -->
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
 
                         <independentVar lookup="column">atmosphere/T-R</independentVar>
                         <tableData>
@@ -72,6 +93,7 @@
                             0.67	1.56682	1.42128	1.29208	1.19109
                             0.74	1.56682	1.47425	1.34800	1.22921
                             0.87	1.56682	1.57723	1.44950	1.33068
+                            0.95	1.56682	1.57723	1.54804	1.44851 <!-- FOR 95% AB -->
                             1.00	1.56682	1.57723	1.54804	1.44851
                         </tableData>
                     </table>
@@ -122,14 +144,37 @@
             </function>
         </fcs_function>
 
+        <summer name="systems/jt9d/engine[0]/epr-delta">
+            <input>systems/jt9d/engine[0]/epr</input>
+            <input>-systems/jt9d/engine[0]/epr-dmd</input>
+        </summer>
+
+        <fcs_function name="systems/jt9d/engine[0]/epr-t1">
+            <function>
+                <description>EPR ~ Transients</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">systems/jt9d/engine[0]/epr-delta</independentVar>
+                        <tableData>
+                            -1      4
+                            -0.05   1
+                            0      0
+                            0.05   1
+                            1      3
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
         <lag_filter name="systems/jt9d/engine[0]/epr">
             <input> systems/jt9d/engine[0]/epr-dmd </input>
-            <c1> systems/jt9d/engine[0]/c-epr-lag </c1>
+            <c1> systems/jt9d/engine[0]/epr-t1 </c1>
         </lag_filter>
 
         <lag_filter name="systems/jt9d/engine[0]/epr-internal">
             <input> systems/jt9d/engine[0]/epr-base </input>
-            <c1> systems/jt9d/engine[0]/c-epr-lag </c1>
+            <c1> systems/jt9d/engine[0]/epr-t1 </c1>
         </lag_filter>
 
         <fcs_function name="systems/jt9d/engine[0]/n1">
@@ -140,7 +185,7 @@
                         <independentVar lookup="row">systems/jt9d/engine[0]/epr-internal</independentVar>
                         <independentVar lookup="column">systems/jt9d/engine[0]/inlet-mach</independentVar>
                         <tableData>
-                            0.0        0.1     0.2     0.3     0.4     0.5     0.6     0.7     0.8         0.9      1.00
+                            0.0     0.1     0.2     0.3     0.4     0.5     0.6     0.7     0.8     0.9      1.00
                             0.75        0.00    0.00    0.00    0.00    0.00    2.89    14.92   33.52   49.67   59.08   65.61
                             0.80        0.00    0.00    0.00    0.00    3.41    18.78   33.84   50.14   60.04   66.72   71.22
                             0.90        0.00    0.00    0.00    18.62   35.93   49.68   60.39   67.78   72.96   76.02   78.71
@@ -197,23 +242,46 @@
             </function>
         </fcs_function>
 
-        <fcs_function name="systems/jt9d/engine[0]/nozzle-cmd-norm">
+        <fcs_function name="systems/jt9d/engine[0]/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Figure 8, NASA-TM-104326 </description>
                 <product>
                     <table>
-                        <!--                        <independentVar lookup="row">fcs/throttle-cmd-norm[0] </independentVar> -->
-                        <independentVar lookup="row">/controls/engines/engine[0]/throttle</independentVar>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
-                            0.0 	1.0000
+                            0.0 	0.518071998
+                            <!--
                             0.10	0.26
-                            0.97	0.26
+                            0.95	0.26
+                            0.96	1.0000
                             1.00	1.0000
+-->
+                            0.19	0.518071998
+                            0.25	0.407803505
+                            0.32	0.278669299
+                            0.40	0.260002095
+                            0.54	0.260448348
+                            0.61	0.254352699
+                            0.68	0.251395488
+                            0.73	0.245250081
+                            0.85	0.242475141
                         </tableData>
                     </table>
                 </product>
             </function>
         </fcs_function>
+
+        <switch name="systems/jt9d/engine[0]/nozzle-cmd-norm">
+            <default value="systems/jt9d/engine[0]/nozzle-dmd-norm"/>
+            <test value="1.0">
+                fcs/throttle-pos-norm[0] ge 0.95
+            </test>
+            <test value="1.0">
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+                fcs/throttle-pos-norm[0] lt 0.05
+            </test>
+        </switch>
         <kinematic name="systems/jt9d/engine[0]/nozzle-pos-norm">
             <input>systems/jt9d/engine[0]/nozzle-cmd-norm</input>
             <traverse>
@@ -223,7 +291,7 @@
                 </setting>
                 <setting>
                     <position>1</position>
-                    <time>1</time>
+                    <time>0.4</time>
                 </setting>
             </traverse>
         </kinematic>
@@ -233,10 +301,10 @@
                 <description>Augmentation factors</description>
                 <product>
                     <table>
-                        <independentVar lookup="row">/controls/engines/engine[0]/throttle</independentVar>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
                             0	 0
-                            0.98 0.00
+                            0.96 0.00
                             1.00 1.00
                         </tableData>
                     </table>
@@ -247,7 +315,7 @@
         <switch name="systems/jt9d/engine[0]/augmentation">
             <default value="0.0"/>
             <test value="systems/jt9d/engine[0]/augmentation-pos">
-                /controls/engines/engine[0]/throttle ge 0.98
+                systems/jt9d/engine[0]/augmentation-pos ne 0
                 systems/jt9d/engine[0]/nozzle-pos-norm eq 1
                 systems/jt9d/engine[0]/n2 ge 97
             </test>
@@ -293,16 +361,36 @@
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
                             0   	0.1 	0.2	    0.3	    0.4	    0.5	    0.6	    0.7	    0.8	    0.9	    1
-                            0.705	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.069
-                            0.790	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.064	0.115	0.182
-                            0.920	0.000	0.000	0.000	0.000	0.000	0.048	0.130	0.183	0.235	0.283	0.332
-                            1.000	0.000	0.021	0.055	0.085	0.126	0.170	0.232	0.277	0.329	0.376	0.416
-                            1.104	0.281	0.260	0.250	0.253	0.277	0.315	0.357	0.395	0.441	0.483	0.526
-                            1.204	0.489	0.430	0.398	0.398	0.403	0.430	0.459	0.498	0.537	0.574	0.612
-                            1.306	0.659	0.583	0.539	0.527	0.518	0.531	0.552	0.586	0.621	0.661	0.701
-                            1.401	0.797	0.718	0.664	0.631	0.620	0.615	0.632	0.661	0.698	0.736	0.783
-                            1.501	0.924	0.832	0.771	0.731	0.711	0.698	0.709	0.734	0.773	0.815	0.870
-                            1.577	0.998	0.899	0.833	0.789	0.768	0.754	0.766	0.792	0.834	0.881	0.940
+                            0.705	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.074
+                            0.790	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.069	0.124	0.196
+                            0.920	0.000	0.000	0.000	0.000	0.000	0.052	0.140	0.197	0.252	0.305	0.357
+                            1.000	0.000	0.022	0.059	0.092	0.135	0.183	0.249	0.297	0.354	0.404	0.448
+                            1.104	0.302	0.280	0.268	0.272	0.298	0.338	0.384	0.424	0.474	0.519	0.565
+                            1.204	0.526	0.463	0.428	0.428	0.433	0.462	0.493	0.535	0.578	0.617	0.658
+                            1.306	0.708	0.626	0.579	0.567	0.557	0.571	0.594	0.630	0.668	0.710	0.753
+                            1.401	0.858	0.772	0.714	0.679	0.667	0.661	0.680	0.711	0.751	0.792	0.842
+                            1.501	0.993	0.895	0.829	0.786	0.765	0.751	0.763	0.789	0.831	0.877	0.935
+                            1.577	1.073	0.966	0.895	0.849	0.826	0.811	0.824	0.852	0.897	0.947	1.010
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/jt9d/engine[0]/oil-temperature-delta-R-dmd">
+            <function>
+                <description>Oil temperature increment from ambient based on N1</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">position/h-sl-ft</independentVar>
+                        <independentVar lookup="column">systems/jt9d/engine[0]/n1</independentVar>
+                        <tableData>
+                            0  	20	60	90	110	120
+                            0	27	175	185	211	229	229
+                            5000	9	191	191	211	229	229
+                            20000	-45	236	198	203	223	223
+                            30000	-79	248	207	203	223	223
+                            45000	-102	270	234	221	234	234
                         </tableData>
                     </table>
                 </product>
@@ -383,6 +471,25 @@
             <output>systems/jt9d/engine[0]/ff-total-pph</output>
         </summer>
 
+        <summer name="systems/jt9d/engine[0]/ff-total-pph">
+            <input>systems/jt9d/engine[0]/ff-turbine-pph</input>
+            <input>systems/jt9d/engine[0]/ff-augmentation-pph</input>
+            <output>systems/jt9d/engine[0]/ff-total-pph</output>
+        </summer>
+
+        <lag_filter name="systems/jt9d/engine[0]/oil-temperature-R-delta">
+            <input>systems/jt9d/engine[0]/oil-temperature-delta-R-dmd</input>
+            <c1> systems/jt9d/engine[0]/c-oil-temperature-lag </c1>
+            <output>systems/jt9d/engine[0]/oil-temperature-R-delta</output>
+        </lag_filter>
+
+        <summer name="systems/jt9d/engine[0]/oil-temperature-R">
+            <input>systems/jt9d/engine[0]/oil-temperature-R-delta</input>
+            <input>atmosphere/T-R</input>
+            <output>systems/jt9d/engine[0]/oil-temperature-R</output>
+        </summer>
+
+
         <lag_filter name="/engines/engine[0]/fuel-flow_pph">
             <input>systems/jt9d/engine[0]/ff-total-pph</input>
             <output>/engines/engine[0]/fuel-flow_pph</output>
@@ -394,63 +501,71 @@
             <c1> systems/jt9d/engine[0]/c-ff-lag </c1>
         </lag_filter>
 
+        <switch name="systems/jt9d/engine[0]/nozzle-cmd-norm">
+            <default value="0.26"/>
+            <test value="1.0">
+                fcs/throttle-pos-norm[0] ge 0.95
+            </test>
+            <test value="1.0">
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+                fcs/throttle-pos-norm[0] lt 0.05
+            </test>
+        </switch>
 
-        <pure_gain name="/engines/engine[0]/augmentation">
-            <input>systems/jt9d/engine[0]/augmentation</input>
-            <gain>1</gain>
-        </pure_gain>
+        <switch name="/engines/engine[0]/augmentation">
+            <test value="systems/jt9d/engine[0]/augmentation">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
-        <pure_gain name="/engines/engine[1]/augmentation">
-            <input>systems/jt9d/engine[0]/augmentation</input>
-            <gain>1</gain>
-        </pure_gain>
+        <switch name="/engines/engine[1]/augmentation">
+            <test value="systems/jt9d/engine[0]/augmentation">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
-        <pure_gain name="propulsion/engine[0]/n1">
-            <input>systems/jt9d/engine[0]/n1</input>
-            <gain>1</gain>
-        </pure_gain>
-        <pure_gain name="propulsion/engine[1]/n1">
-            <input>systems/jt9d/engine[0]/n1</input>
-            <gain>1</gain>
-            <output>propulsion/engine[1]/n1</output>
-        </pure_gain>
+        <switch name="propulsion/engine[0]/n1">
+            <test value="systems/jt9d/engine[0]/n1">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
-        <pure_gain name="propulsion/engine[1]/n2">
-            <input>systems/jt9d/engine[0]/n2</input>
-            <output>propulsion/engine[1]/n2</output>
-            <gain>1</gain>
-        </pure_gain>
+        <switch name="propulsion/engine[1]/n1">
+            <test value="systems/jt9d/engine[0]/n1">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
-        <pure_gain name="/engines/engine[0]/n1">
-            <input>systems/jt9d/engine[0]/n1</input>
-            <output>/engines/engine[0]/n1</output>
-            <gain>1</gain>
-        </pure_gain>
+        <switch name="propulsion/engine[1]/n2">
+            <test value="systems/jt9d/engine[0]/n2">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
-        <pure_gain name="/engines/engine[0]/n2">
-            <input>systems/jt9d/engine[0]/n2</input>
-            <output>/engines/engine[0]/n2</output>
-            <gain>1</gain>
-            <clipto>
-                <min> 0 </min>
-                <max>100</max>
-            </clipto>
-        </pure_gain>
+        <switch name="/engines/engine[0]/n1">
+            <test value="systems/jt9d/engine[0]/n1">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
-        <pure_gain name="/engines/engine[1]/n1">
-            <input>systems/jt9d/engine[0]/n1</input>
-            <output>/engines/engine[1]/n1</output>
-            <gain>1</gain>
-        </pure_gain>
-        <pure_gain name="/engines/engine[1]/n2">
-            <input>systems/jt9d/engine[0]/n2</input>
-            <output>/engines/engine[1]/n2</output>
-            <gain>1</gain>
-            <clipto>
-                <min> 0 </min>
-                <max>100</max>
-            </clipto>
-        </pure_gain>
+        <switch name="/engines/engine[0]/n2">
+            <test value="systems/jt9d/engine[0]/n2">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="/engines/engine[1]/n1">
+            <test value="systems/jt9d/engine[0]/n1">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="/engines/engine[1]/n2">
+            <test value="systems/jt9d/engine[0]/n2">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
         <lag_filter name="propulsion/engine[0]/EGT-R">
             <input>systems/jt9d/engine[0]/egt-r</input>
@@ -463,25 +578,35 @@
             <c1> systems/jt9d/engine[0]/c-egt-lag </c1>
         </lag_filter>
 
-        <pure_gain name="/engines/engine[0]/oil-pressure-psi">
+        <pure_gain name="systems/jt9d/engine[0]/oil-pressure-psi">
             <input>systems/jt9d/engine[0]/n2</input>
             <output>/engines/engine[0]/oil-pressure-psi</output>
             <gain>0.53</gain>
         </pure_gain>
-        <pure_gain name="/engines/engine[1]/oil-pressure-psi">
-            <input>systems/jt9d/engine[0]/n2</input>
-            <output>/engines/engine[1]/oil-pressure-psi</output>
-            <gain>0.53</gain>
-        </pure_gain>
 
-        <pure_gain name="propulsion/engine[0]/nozzle-pos-norm">
-            <input>systems/jt9d/engine[0]/nozzle-pos-norm</input>
-            <output>propulsion/engine[0]/nozzle-pos-norm</output>
-        </pure_gain>
-        <pure_gain name="propulsion/engine[1]/nozzle-pos-norm">
-            <input>systems/jt9d/engine[0]/nozzle-pos-norm</input>
-            <output>propulsion/engine[1]/nozzle-pos-norm</output>
-        </pure_gain>
+        <switch name="/engines/engine[0]/oil-pressure-psi">
+            <test value="systems/jt9d/engine[0]/n2">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="/engines/engine[1]/oil-pressure-psi">
+            <test value="systems/jt9d/engine[0]/n2">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/nozzle-pos-norm">
+            <test value="systems/jt9d/engine[0]/nozzle-pos-norm">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/nozzle-pos-norm">
+            <test value="systems/jt9d/engine[0]/nozzle-pos-norm">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
 
         <summer name="external_reactions/F110-GE-400-1/magnitude">
             <input>-systems/jt9d/engine[0]/fn-lb</input>
