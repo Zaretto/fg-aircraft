@@ -17,6 +17,8 @@
     <property value="0">systems/afcs/target-altitude-ft</property>
     <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/manuv-slat-extension-manual</property>
+    <property value="0.9">systems/cadc/manuv-flap-extension-calc-lag</property>
+    <property value="1.3">systems/cadc/manuv-flap-extension-washout-lag</property>
 
     <channel name="MANOUEVRE">
 
@@ -26,7 +28,7 @@
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93  -->
                 <sum>
                     <table>
-                        <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                        <independentVar lookup="row">position/h-sl-ft</independentVar>
                         <tableData>
                             0	0.5105
                             5000	0.5610
@@ -49,7 +51,7 @@
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93  -->
                 <sum>
                     <table>
-                        <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                        <independentVar lookup="row">position/h-sl-ft</independentVar>
                         <tableData>
                             0	0.5806
                             5000	0.6296
@@ -126,13 +128,11 @@
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                            0.00000	0.50000	0.60000	0.70000	0.80000	0.90000	1.00000
+                                0.00000	0.50000	0.60000	0.70000	0.80000	0.90000	1.00000
                             0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                             5	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                            10	0.07000	0.07000	0.07000	0.07000	0.07000	0.00000	0.00000
-                            15	0.14000	0.14000	0.14000	0.14000	0.14000	0.00000	0.00000
-                            20	0.20000	0.20000	0.20000	0.20000	0.20000	0.00000	0.00000
-                            25	0.28571	0.28571	0.28571	0.28571	0.28571	0.00000	0.00000
+                            6	0.07000	0.07000	0.07000	0.07000	0.07000	0.00000	0.00000
+                            7	0.28571	0.28571	0.28571	0.28571	0.28571	0.00000	0.00000
                             30	0.28571	0.28571	0.28571	0.28571	0.28571	0.00000	0.00000
                             35	0.28571	0.28571	0.28571	0.28571	0.28571	0.00000	0.00000
                             40	0.28571	0.28571	0.28571	0.28571	0.28571	0.00000	0.00000
@@ -144,6 +144,7 @@
                 </product>
             </function>
         </fcs_function>
+
         <fcs_function name="systems/cadc/manuv-slat-extension-calc">
             <function>
                 <description>NAVAIR 01-F14AAD-1 S 2.21.2.4 p. 2-92 </description>
@@ -152,19 +153,13 @@
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                            0.000000	0.500000	0.800000	0.900000	1.000000
-                            0	0.000000	0.000000	0.000000	0.000000	0.000000
-                            5	0.076471	0.076471	0.076471	0.000000	0.000000
-                            10	0.135294	0.135294	0.135294	0.000000	0.000000
-                            15	0.429412	0.429412	0.429412	0.000000	0.000000
-                            20	0.429412	0.429412	0.429412	0.000000	0.000000
-                            25	0.429412	0.429412	0.429412	0.000000	0.000000
-                            30	0.429412	0.429412	0.429412	0.000000	0.000000
-                            35	0.429412	0.429412	0.429412	0.000000	0.000000
-                            40	0.429412	0.429412	0.429412	0.000000	0.000000
-                            45	0.429412	0.429412	0.429412	0.000000	0.000000
-                            50	0.429412	0.429412	0.429412	0.000000	0.000000
-                            55	0.429412	0.429412	0.429412	0.000000	0.000000
+                                0.000000	0.45         0.500000	0.800000	0.900000	1.000000
+                            0	0.000000	0.000000    0.000000	0.000000	0.000000	0.000000
+                            8	0.000000   	0.000000    0.076471	0.076471	0.000000	0.000000
+                            20	0.105294	0.105294    0.135294	0.135294	0.000000	0.000000
+                            21	0.429412	0.429412    0.429412	0.429412	0.000000	0.000000
+                            25	0.429412	0.429412    0.429412	0.429412	0.000000	0.000000
+                            55	0.429412	0.429412    0.429412	0.429412	0.000000	0.000000
                         </tableData>
                     </table>
                 </product>
@@ -216,10 +211,15 @@
         </switch>
 
         <switch name="systems/cadc/manuv-flap-extension-cmd">
-            <default value="0.0"/>
+            <default value="0"/>
             <test value="systems/cadc/manuv-flap-extension-calc">
                 systems/cadc/manuv-active ne 0
+                systems/cadc/manuv-flap-extension-calc ge systems/cadc/manuv-flap-extension-cmd
             </test>
+            <test value="systems/cadc/manuv-flap-extension-cmd">
+                systems/cadc/manuv-active ne 0
+            </test>
+
         </switch>
 
         <switch name="systems/cadc/manuv-slat-extension-cmd">
@@ -253,7 +253,7 @@
 
         <summer name="systems/afcs/altitude-hold-divergence">
             <input> systems/afcs/target-altitude-ft </input>
-            <input> -position/h-agl-ft </input>
+            <input> -position/h-sl-ft </input>
         </summer>
 
 
