@@ -5,10 +5,12 @@ var egt2_rankin = props.globals.getNode("engines/engine[1]/egt-degR", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
 
-if (!usingJSBSim){
-egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
-egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
+if (!usingJSBSim)
+{
+    egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
+    egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
 }
+
 var Ramp1l     = props.globals.getNode("engines/AICS/ramp1l", 1);
 var Ramp2l     = props.globals.getNode("engines/AICS/ramp2l", 1);
 var Ramp3l     = props.globals.getNode("engines/AICS/ramp3l", 1);
@@ -26,6 +28,9 @@ var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation"
 setprop("sim/model/f-14b/gear-sound-freeze",0);
 setprop("sim/model/f-14b/engine-sound-freeze",0);
 setprop("sim/model/f-14b/controls/switch-backup-ignition",0);
+
+setprop("/fdm/jsbsim/propulsion/engine[0]/nozzle-pos-norm",1);
+setprop("/fdm/jsbsim/propulsion/engine[1]/nozzle-pos-norm",1);
 
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n1",1);
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f-14b/fx/engine/l-engine-pitch-n2",1);
@@ -98,9 +103,6 @@ NozzleSpeed = 1.0;
 
 var computeNozzles = func {
 
-	var maxSeaLevelIdlenozzle = 0;
-	var idleNozzleTarget = 0;
-
 	var eng1_burner = Engine1Burner.getValue();
 	var eng2_burner = Engine2Burner.getValue();
 
@@ -111,37 +113,51 @@ var computeNozzles = func {
     egt1_rankin.setValue(egt1.getValue());
     egt2_rankin.setValue(egt2.getValue());
 
+    if (usingJSBSim)
+    {
+#        Nozzle1 = getprop("/fdm/jsbsim/propulsion/engine[0]/nozzle-pos-norm",0);
+#        Nozzle2 = getprop("/fdm/jsbsim/propulsion/engine[1]/nozzle-pos-norm",1);
+#        if (Nozzle1 == nil) Nozzle1 = 0.26;
+#        if (Nozzle2 == nil) Nozzle2 = 0.26;
+#    print ("Nozzles ",Nozzle1," ",Nozzle2);
+    }
+    else
+    {
+        var maxSeaLevelIdlenozzle = 0;
+        var idleNozzleTarget = 0;
 
-	if (CurrentMach < 0.45) {
-		maxSeaLevelIdlenozzle = 1;
-	} elsif (CurrentMach >= 0.45 and CurrentMach < 0.8) {
-		maxSeaLevelIdlenozzle = (0.8 - CurrentMach) / 0.35;
-	}
 
-	if (Throttle < ThrottleIdle) {
-		var gear_pos = GearPos.getValue();
-		if (gear_pos == 1.0) {
-		#gear down
-			if (wow) {
-				idleNozzleTarget = 1;
-			} else {
-				idleNozzleTarget = 0.26;
-			}
-		} else {
-		# gear not down
-			if (CurrentAlt <= 30000) {
-				idleNozzleTarget = 1 + (0.15 - maxSeaLevelIdlenozzle) * CurrentAlt / 30000.0;
-			} else {
-				idleNozzleTarget = 0.15;
-			}
-		}
-		Nozzle1Target = idleNozzleTarget;
-		Nozzle2Target = idleNozzleTarget;
-	} else {
-    	# throttle not at idle so the nozzle will be open only when augmentation is active.
-		Nozzle1Target = eng1_burner;
-		Nozzle2Target = eng2_burner;
-	}
+        if (CurrentMach < 0.45) {
+            maxSeaLevelIdlenozzle = 1;
+        } elsif (CurrentMach >= 0.45 and CurrentMach < 0.8) {
+            maxSeaLevelIdlenozzle = (0.8 - CurrentMach) / 0.35;
+        }
+
+        if (Throttle < ThrottleIdle) {
+            var gear_pos = GearPos.getValue();
+            if (gear_pos == 1.0) {
+#gear down
+                if (wow) {
+                    idleNozzleTarget = 1;
+                } else {
+                    idleNozzleTarget = 0.26;
+                }
+            } else {
+# gear not down
+                if (CurrentAlt <= 30000) {
+                    idleNozzleTarget = 1 + (0.15 - maxSeaLevelIdlenozzle) * CurrentAlt / 30000.0;
+                } else {
+                    idleNozzleTarget = 0.15;
+                }
+            }
+            Nozzle1Target = idleNozzleTarget;
+            Nozzle2Target = idleNozzleTarget;
+        } else {
+# throttle not at idle so the nozzle will be open only when augmentation is active.
+            Nozzle1Target = eng1_burner;
+            Nozzle2Target = eng2_burner;
+        }
+    }
     Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
     Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
 }

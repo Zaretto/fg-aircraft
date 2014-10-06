@@ -208,35 +208,33 @@ var timedMotions = func {
     			CurrentInnerRightSpoiler = InnerRightSpoilersTarget;
     		}
     	}
-    }
 
-	# Engine nozzles
-	if (Nozzle1 > Nozzle1Target) {
-		Nozzle1 -= NozzleSpeed * deltaT;
-		if (Nozzle1 < Nozzle1Target) {
-			Nozzle1 = Nozzle1Target;
-		}
-	} elsif (Nozzle1 < Nozzle1Target) {
-		Nozzle1 += NozzleSpeed * deltaT;
-		if (Nozzle1 > Nozzle1Target) {
-			Nozzle1 = Nozzle1Target;
-		}
-	}
+# Engine nozzles
+        if (Nozzle1 > Nozzle1Target) {
+            Nozzle1 -= NozzleSpeed * deltaT;
+            if (Nozzle1 < Nozzle1Target) {
+                Nozzle1 = Nozzle1Target;
+            }
+        } elsif (Nozzle1 < Nozzle1Target) {
+            Nozzle1 += NozzleSpeed * deltaT;
+            if (Nozzle1 > Nozzle1Target) {
+                Nozzle1 = Nozzle1Target;
+            }
+        }
 
-	if (Nozzle2 > Nozzle2Target) {
-		Nozzle2 -= NozzleSpeed * deltaT;
-		if (Nozzle2 < Nozzle2Target) {
-			Nozzle2 = Nozzle2Target;
-		}
-	} elsif (Nozzle2 < Nozzle2Target) {
-		Nozzle2 += NozzleSpeed * deltaT;
-		if (Nozzle2 > Nozzle2Target) {
-			Nozzle2 = Nozzle2Target;
-		}
-	}
+        if (Nozzle2 > Nozzle2Target) {
+            Nozzle2 -= NozzleSpeed * deltaT;
+            if (Nozzle2 < Nozzle2Target) {
+                Nozzle2 = Nozzle2Target;
+            }
+        } elsif (Nozzle2 < Nozzle2Target) {
+            Nozzle2 += NozzleSpeed * deltaT;
+            if (Nozzle2 > Nozzle2Target) {
+                Nozzle2 = Nozzle2Target;
+            }
+        }
+# Wing Sweep
 
-	# Wing Sweep
-    if (!usingJSBSim){
     	if (currentSweep > WingSweep) {
     		currentSweep -= SweepSpeed * deltaT;
     		if (currentSweep < WingSweep) {
@@ -254,8 +252,9 @@ var timedMotions = func {
 	setprop ("surface-positions/right-spoilers", CurrentRightSpoiler);
 	setprop ("surface-positions/inner-left-spoilers", CurrentInnerLeftSpoiler);
 	setprop ("surface-positions/inner-right-spoilers", CurrentInnerRightSpoiler);
-	setprop ("engines/engine[0]/nozzle-pos-norm", Nozzle1);
-	setprop ("engines/engine[1]/nozzle-pos-norm", Nozzle2);
+#    print ("Nozzles ",Nozzle1," ",Nozzle2);
+#	setprop ("engines/engine[0]/nozzle-pos-norm", Nozzle1);
+#	setprop ("engines/engine[1]/nozzle-pos-norm", Nozzle2);
 	setprop ("surface-positions/wing-pos-norm", currentSweep);
 	setprop ("/fdm/jsbsim/fcs/wing-sweep", currentSweep);
 
@@ -265,7 +264,7 @@ var timedMotions = func {
         if (main_flap_generic != nil)
     	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
 
-        # the F14 model I'm using has a combined aileron deflection so split this for animation purposes.
+        # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var elevator_deflection_due_to_aileron_deflection =  aileron.getValue() / 2.0;
     	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
     	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);

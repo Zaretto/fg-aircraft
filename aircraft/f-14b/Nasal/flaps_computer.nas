@@ -26,6 +26,7 @@ var weAppliedSpeedBrake = 99;
 var weAppliedWheelBrake = 99;
 
 controls.applyBrakes = func(v, which = 0)  {
+
     if (wow)
     {
         if (!v and weAppliedSpeedBrake != 99)
@@ -65,7 +66,6 @@ controls.applyBrakes = func(v, which = 0)  {
 # for the F-14 too. 
 
 controls.flapsDown = func(s) {
-print("F14: flaps down ",s);
 	if (s == 1) {
 		lowerFlaps();
 	} elsif (s == -1) {
@@ -85,7 +85,6 @@ var lowerFlaps = func {
 }
 
 var raiseFlaps = func {
-print("F14: raise flaps");
 		FlapsCmd.setValue(0); # Clean.
         demandedFlaps = 0;
 		DLCactive = false;
@@ -131,33 +130,39 @@ var computeFlaps = func {
                     slats = max_m_slat_ext;
     				SlatsCmd.setValue( max_m_slat_ext );
                     flaps = m_flap_ext;
-    #                flaps = m_flap_ext + max_m_slat_ext;
+#flaps = m_flap_ext + max_m_slat_ext;
     			}
                 else
                 {
                     slats=0;
     				flaps=0;
-    #               MainFlapsCmd.setValue(0);
-    #   			FlapsCmd.setValue(0);
-    #				SlatsCmd.setValue(0);
+#MainFlapsCmd.setValue(0);
+#FlapsCmd.setValue(0);
+#SlatsCmd.setValue(0);
     			}
-    #            flaps = m_flap_ext;
+#flaps = m_flap_ext;
     		}
            else
            {
-#            m_flap_ext = 0;
+#m_flap_ext = 0;
                flaps = 0;
                slats = 0;
     		}
+        }
+        else
+        {
+           flaps = 0;
+           slats = 0;
+  		}
   		MainFlapsCmd.setValue( flaps );
     	SlatsCmd.setValue(slats);
 		FlapsCmd.setValue(flaps);
-#print("Flaps ",m_flap_ext, " slats ",slats," flaps ",flaps);
-        }
 	}
-	else if ( demandedFlaps == 1) {
-		MainFlapsCmd.setValue(1);
-		AuxFlapsCmd.setValue(1);
-		SlatsCmd.setValue(1);
-	}
+	else 	if ( demandedFlaps == 1 ) 
+    {
+  		MainFlapsCmd.setValue(1);
+   		AuxFlapsCmd.setValue(1);
+   		SlatsCmd.setValue(1);
+    }
+    demandedFlaps=-99;
 }

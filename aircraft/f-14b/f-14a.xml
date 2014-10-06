@@ -1453,13 +1453,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
 
 <!-- rudimentary figures based of N2 and using values from NAVAIR 01-F14AAD-1 -->
-<!--
    <function name="propulsion/engine[0]/EGT-R">
      <description>Engine 0 EGT Rankine</description>
      <sum>
        <property>atmosphere/T-R</property>
        <table>
-         <independentVar>systems/jt9d/engine[0]/n1</independentVar>
+         <independentVar>propulsion/engine[0]/n1</independentVar>
          <tableData>
           0	0.0
           20	0.0
@@ -1479,7 +1478,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      <sum>
        <property>atmosphere/T-R</property>
        <table>
-         <independentVar>systems/jt9d/engine[0]/n1</independentVar>
+         <independentVar>propulsion/engine[1]/n1</independentVar>
          <tableData>
           0	0.0
           20	0.0
@@ -1494,7 +1493,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
        </table>
      </sum>
    </function>
--->
+
    <function name="aero/function/KdGE">
         <description>Ground_effect_height_factor</description>
         <product>
