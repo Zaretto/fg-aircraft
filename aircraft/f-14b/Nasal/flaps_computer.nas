@@ -32,9 +32,8 @@ controls.applyBrakes = func(v, which = 0)  {
         if (!v and weAppliedSpeedBrake != 99)
         {
             setprop("controls/flight/speedbrake", 0);
-            weAppliedSpeedBrake=99;
+            weAppliedSpeedBrake=0;
             print("F14: dual purpose brakes release release airbrake brakes ",v,which);
-            return;
         }
         if (which <= 0) { interpolate("/controls/gear/brake-left", v, controls.fullBrakeTime); }
         if (which >= 0) { interpolate("/controls/gear/brake-right", v, controls.fullBrakeTime); }
@@ -47,9 +46,8 @@ controls.applyBrakes = func(v, which = 0)  {
         {
             if (weAppliedWheelBrake <= 0) { interpolate("/controls/gear/brake-left", 0, controls.fullBrakeTime); }
             if (weAppliedWheelBrake >= 0) { interpolate("/controls/gear/brake-right", 0, controls.fullBrakeTime); }
-            weAppliedWheelBrake=99;
+            weAppliedWheelBrake=0;
             print("F14: dual purpose brakes release release wheel brakes ",v,which);
-            return;
         }
 
     	if (v and (throttle_0.getValue() >= 0.98 or throttle_1.getValue() >= 0.98))
