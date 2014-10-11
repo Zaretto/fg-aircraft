@@ -185,6 +185,8 @@ var r_running = r_running_prop.getValue();
     {
         var r_n1 = l_n1_prop.getValue();
         var l_n1 = r_n1_prop.getValue();
+if (!(l_running or r_running))
+{
         if (l_starter or r_starter){
             if (jfs_start.getValue() <= 1)
             {
@@ -194,26 +196,27 @@ var r_running = r_running_prop.getValue();
             {
                 jfs_start.setValue(11);
             }  
+}
         }
-        if ( ((l_n1 > 1 and l_n1 < 20) 
-             or  (r_n1 > 1 and r_n1 < 20))
-             and (l_starter or r_starter)
-             and jfs_start.getValue() == 11)
-        {
+#        if ( ((l_n1 > 1 and l_n1 < 20) 
+#             or  (r_n1 > 1 and r_n1 < 20))
+#             and (l_starter or r_starter)
+#             and jfs_start.getValue() == 11)
+#        {
 #engine turning
-            jfs_start.setValue(12);
-        }
-        if ( ((l_n1 > 19 and l_n1 < 30) 
-               and (r_n1 > 19 and r_n1 < 30))
-             and (!l_starter and !r_starter)
-             and jfs_start.getValue() == 12)
-        {
-                jfs_start.setValue(1);
-        }
+#            jfs_start.setValue(12);
+#        }
+#        if ( ((l_n1 > 19 and l_n1 < 30) 
+#               and (r_n1 > 19 and r_n1 < 30))
+#             and (!l_starter and !r_starter)
+#             and jfs_start.getValue() == 12)
+#        {
+#                jfs_start.setValue(1);
+#        }
     }
     else
     {
-        if (l_running and r_running and jfs_start.getValue() >= 10)
+        if (l_running or r_running and jfs_start.getValue() >= 10)
         {
             jfs_start.setValue(1);
         }
@@ -223,10 +226,11 @@ var r_running = r_running_prop.getValue();
         }
     }
 
+var bleed_air_available = jfs_running or l_running or r_running;
     if (engine_crank_switch_pos_prop.getValue() > 0 
             and l_starter == 0 
             and r_starter == 0
-            and jfs_running)
+            and bleed_air_available)
     {
     	engine_crank_switch_pos_prop.setIntValue(0);
     }
@@ -264,11 +268,20 @@ var jfs_invoke_shutdown = func{
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
     # do nothing whilst not running or when the switch is still set.
-    if(!jfs_running or engine_crank_switch_pos)
+var l_running = l_running_prop.getValue();
+var r_running = r_running_prop.getValue();
+#
+# If neither engine running then need JFS
+    if (!l_running and !r_running)
     {
-        return;
+        if(!jfs_running or engine_crank_switch_pos)
+        {
+            return;
+        }
     }
-
+else
+{
+}
     if (jfs_running){
         jfs_start.setValue(1);
         jfs_running = 0;
@@ -318,25 +331,35 @@ var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
         }
     }
 
-    if (!jfs_running){
-        if (!jfs_starting){
-            jfs_starting = 1;
-            jfs_start.setValue(10);
-            startupTimer.restart(jfsStartupTime);
-            print("Start JFS");
+var l_running = l_running_prop.getValue();
+var r_running = r_running_prop.getValue();
+#
+# If neither engine running then need JFS
+    if (!(l_running or r_running))
+    {
+        if (!jfs_running)
+        {
+            if (!jfs_starting)
+            {
+                jfs_starting = 1;
+                jfs_start.setValue(10);
+                startupTimer.restart(jfsStartupTime);
+                print("Start JFS");
+            }
+            if (n == 0) {
+                engine_crank_switch_pos_prop.setIntValue(1);
+            } 
+            if (n == 1) {
+                engine_crank_switch_pos_prop.setIntValue(2);
+            } 
+            return;
         }
-	    if (n == 0) {
-			engine_crank_switch_pos_prop.setIntValue(1);
-		} 
-	    if (n == 1) {
-			engine_crank_switch_pos_prop.setIntValue(2);
-		} 
-        return;
     }
 
+var bleed_air_available = jfs_running or l_running or r_running;
 	if (n == 0) {
 		if (engine_crank_switch_pos == 0) {
-            if (jfs_running){
+            if (bleed_air_available){
                 setprop("controls/engines/engine[0]/starter",1);
             }
 			engine_crank_switch_pos_prop.setIntValue(1);
@@ -347,7 +370,7 @@ var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 	} else {
 		if (engine_crank_switch_pos == 0) {
 			engine_crank_switch_pos_prop.setIntValue(2);
-            if (jfs_running){
+            if (bleed_air_available){
                 setprop("controls/engines/engine[1]/starter",1);
             }
 		} elsif (engine_crank_switch_pos == 2) {
