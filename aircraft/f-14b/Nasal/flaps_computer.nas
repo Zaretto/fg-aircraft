@@ -72,21 +72,31 @@ controls.flapsDown = func(s) {
 		return;
 	}
 }
+var flapDemandIncrement = 0.1;
 
 var lowerFlaps = func {
 	if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.3235294117647059) # only flaps with <= 22 deg
     {
-        print("F14: lower flaps");
-		FlapsCmd.setValue(1); # Landing.
-        demandedFlaps = 1;
+if (FlapsCmd.getValue() < 0.5)
+        demandedFlaps = 0.5;
+else if (demandedFlags < 1) demandedFlaps = FlapsCmd.getValue() + flapDemandIncrement;
+
+if (demandedFlags >= 1.0) demandedFlaps = 1.0;
+
+		FlapsCmd.setValue(demandedFlaps); # Landing.
+        print("F14: lower flaps ",demandedFlaps);
 	}
 }
 
 var raiseFlaps = func {
-		FlapsCmd.setValue(0); # Clean.
-        demandedFlaps = 0;
+if (FlapsCmd.getValue() > 0.5)
+        demandedFlaps = FlapsCmd.getValue() - flapDemandIncrement;
+else
+		demandedFlaps = 0; # Clean.
+		FlapsCmd.setValue(demandedFlaps); 
 		DLCactive = false;
 		DLC_Engaged.setBoolValue(0);
+        print("F14: raise flaps ",demandedFlaps);
 		setprop("controls/flight/DLC", 0);
 }
 
@@ -156,7 +166,7 @@ var computeFlaps = func {
     	SlatsCmd.setValue(slats);
 		FlapsCmd.setValue(flaps);
 	}
-	else 	if ( demandedFlaps == 1 ) 
+	else 	if ( demandedFlaps >= 0.5 ) 
     {
   		MainFlapsCmd.setValue(1);
    		AuxFlapsCmd.setValue(1);
