@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+        Description: F14 electrics system
+        Notes: Generator on each engine (via CSD) with emergency hydruaulic generator
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 p2-68 to p2-76
+Main generators drop off at 55% N2. 
+Emergency generator drop off at 11-12% RPM.
+Engine ignition not available below 10%
+Emergency generator 1kva or kVa essential AC and Buses No1 and No2. and AFCS
+Bidi pump operating and pressure between 2000 and 1100 psi emerg will drop to 1kBVa mode and power only the essential AC and Dc No. 1 buses. If pressure subsequently increases the emergency generator must be cycle off/reset to norm
+Figure 14-5.
+
+    -->
+
+<system name="electrics">
+
+  <property value="0">systems/electrics/emerg-generator-status</property>
+
+  <channel name="left-generator">
+
+    <switch name="systems/electrics/generator1-kva">
+          <default value="0"/>
+          <test  logic="AND" value="43">
+            propulsion/engine[0]/n2 ge 55
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/generator1-online">
+          <default value="0"/>
+          <test  logic="AND" value="1">
+            systems/electrics/generator1-kva ne 0
+          </test>
+    </switch>
+    </channel>
+
+</system>
