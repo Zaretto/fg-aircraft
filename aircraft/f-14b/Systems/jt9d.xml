@@ -8,7 +8,7 @@
 
 <system name="JT8D">
 
-    <property value="0.8">    systems/jt9d/engine[0]/c-ff-lag </property>
+    <property value="0.9">    systems/jt9d/engine[0]/c-ff-lag </property>
     <property value="0.1">    systems/jt9d/engine[0]/c-egt-lag </property>
     <property value="16800">  systems/jt9d/engine[0]/c-milthrust-lb </property>
     <property value="27080">  systems/jt9d/engine[0]/c-maxthrust-lb </property>
@@ -38,8 +38,13 @@
     <property>propulsion/engine[0]/nozzle-pos-norm </property>
     <property>propulsion/engine[1]/nozzle-pos-norm </property>
 
+    <property value="0">/controls/engines/engine[0]/cutoff</property>
+    <property value="0">/controls/engines/engine[1]/cutoff</property>
+
     <property>/engines/engine[0]/afterburner</property>
     <property>/engines/engine[1]/afterburner</property>
+    <property value="1">/engines/engine[0]/running </property>
+    <property value="1">/engines/engine[1]/running </property>
     <!--
     <property>/engines/engine[0]/augmentation</property>
     <property>/engines/engine[1]/augmentation</property>
@@ -50,8 +55,6 @@
     <property>/controls/engines/engine[0]/throttle</property>
     <property>/controls/engines/engine[1]/throttle</property>
 
-    <property value="1">/engines/engine[0]/running </property>
-    <property value="1">/engines/engine[1]/running </property>
     <property> fcs/throttle-cmd-norm[0]</property>
     <property> fcs/throttle-cmd-norm[1]</property>
     <property> fcs/throttle-pos-norm[0]</property>
@@ -204,9 +207,9 @@
 25  0.16
 33  0.3
 40  0.5
-60  0.9
-70 1.6
-100 1.9
+60  1.7
+70 2.0
+100 3
                         </tableData>
                     </table>
                 </product>
