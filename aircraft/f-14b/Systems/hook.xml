@@ -13,8 +13,22 @@
 
   <channel name="Hook">
 
+      <switch name="systems/hook/tailhook-dmd-norm">
+          <default value="0"/>
+           <test value="systems/hook/tailhook-dmd-norm">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
+          <test value="systems/hook/tailhook-cmd-norm">
+              systems/hydraulics/combined-system-pressure ne 0
+          </test>
+          <clipto>
+              <min> 0 </min>
+              <max>  1 </max>
+          </clipto>
+          <output>systems/hook/tailhook-cmd-norm</output>
+      </switch>
      <kinematic name="systems/hook/tailhook-control">
-       <input>systems/hook/tailhook-cmd-norm</input>
+       <input>systems/hook/tailhook-dmd-norm</input>
        <traverse>
         <setting>
           <position> 0 </position>
