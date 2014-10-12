@@ -44,6 +44,9 @@ var r_eng_running = props.globals.getNode("engines/engine[0]/running",1);
 var ca_start_valve  = props.globals.getNode("sim/model/f-14b/lights/start-valve", 1);
 setprop("sim/model/f-14b/controls/hud/on-off",1);
 
+var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/f-14b/Dialogs/ground-services.xml");
+
+
 if(!usingJSBSim)
 {
     setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
@@ -137,17 +140,15 @@ var runEMMISC = func {
             masterCaution = 1;
 		}
         if(oil_pressure_l.getValue() < 23){
-    		if (!ca_l_gen_light.getBoolValue())
+    		if (!ca_l_fuel_press_light.getBoolValue())
             {
-        	    ca_l_gen_light.setBoolValue(1);
                 ca_l_fuel_press_light.setBoolValue(1);
                 masterCaution = 1;
             }
         }
         if(oil_pressure_r.getValue() < 23){
-    		if (!ca_r_gen_light.getBoolValue())
+    		if (!ca_r_fuel_press_light.getBoolValue())
             {
-        	    ca_r_gen_light.setBoolValue(1);
                 ca_r_fuel_press_light.setBoolValue(1);
                 masterCaution = 1;
             }

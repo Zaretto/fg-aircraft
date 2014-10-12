@@ -162,41 +162,38 @@ var computeNozzles = func {
     Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
 }
 
-#
-#
-#
-var engineControls = func {
-
-#
-# 
 # JFS Startup / running noises
 # jfs_start 0 - no noise
 #           1 - shutdown
 #           10 - starting
 #           11 - running
 #           12 - engine turning
-var l_starter = l_starter_prop.getValue();
-var r_starter = r_starter_prop.getValue();
+var engineControls = func {
 
-var l_running = l_running_prop.getValue();
-var r_running = r_running_prop.getValue();
+    var l_starter = l_starter_prop.getValue();
+    var r_starter = r_starter_prop.getValue();
+
+    var l_running = l_running_prop.getValue();
+    var r_running = r_running_prop.getValue();
 
     if (!l_running or !r_running)
     {
         var r_n1 = l_n1_prop.getValue();
         var l_n1 = r_n1_prop.getValue();
-if (!(l_running or r_running))
-{
-        if (l_starter or r_starter){
-            if (jfs_start.getValue() <= 1)
-            {
-                jfs_start.setValue(10);
+        #
+        # need to use JFS when no external air.
+        if (!(l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air")))
+        {
+            if (l_starter or r_starter){
+                if (jfs_start.getValue() <= 1)
+                {
+                    jfs_start.setValue(10);
+                }
+                if (jfs_start.getValue() == 10)
+                {
+                    jfs_start.setValue(11);
+                }  
             }
-            if (jfs_start.getValue() == 10)
-            {
-                jfs_start.setValue(11);
-            }  
-}
         }
 #        if ( ((l_n1 > 1 and l_n1 < 20) 
 #             or  (r_n1 > 1 and r_n1 < 20))
@@ -226,7 +223,8 @@ if (!(l_running or r_running))
         }
     }
 
-var bleed_air_available = jfs_running or l_running or r_running;
+    var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
+
     if (engine_crank_switch_pos_prop.getValue() > 0 
             and l_starter == 0 
             and r_starter == 0
@@ -239,6 +237,10 @@ var bleed_air_available = jfs_running or l_running or r_running;
 #        jfs_start.setValue(1);
 #    }
 }
+
+#
+#
+# callback to manage the start after JFS has come online
 var jfs_set_running = func{
 
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
@@ -262,14 +264,18 @@ var jfs_set_running = func{
     startupTimer.stop();
 }
 
+#
+#
+# Manage the automatic shutdown of JFS
 var jfs_invoke_shutdown = func{
 
     print("Jfs invoke shutdown  callback");
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
     # do nothing whilst not running or when the switch is still set.
-var l_running = l_running_prop.getValue();
-var r_running = r_running_prop.getValue();
+    var l_running = l_running_prop.getValue();
+    var r_running = r_running_prop.getValue();
+
 #
 # If neither engine running then need JFS
     if (!l_running and !r_running)
@@ -279,9 +285,9 @@ var r_running = r_running_prop.getValue();
             return;
         }
     }
-else
-{
-}
+    else
+    {
+    }
     if (jfs_running){
         jfs_start.setValue(1);
         jfs_running = 0;
@@ -289,7 +295,7 @@ else
     }
 #    settimer(f14., 999999); # turn off timer.
     print("Jfs invoke shutdown cancel callback");
-shutdownTimer.stop();
+    shutdownTimer.stop();
 }
 
 var jfs_running = 0;
@@ -308,7 +314,7 @@ var jfsStartupTime = 10; # amount of time it takes JFS to be ready - before the 
 # Switch / action callbacks
 
 var engine_crank_switch = func(n) {
-var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
+    var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
     if (engine_crank_switch_pos == nil){
         engine_crank_switch_pos_prop.setIntValue(0);
@@ -335,7 +341,7 @@ var l_running = l_running_prop.getValue();
 var r_running = r_running_prop.getValue();
 #
 # If neither engine running then need JFS
-    if (!(l_running or r_running))
+    if (!(l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air")))
     {
         if (!jfs_running)
         {
@@ -356,7 +362,7 @@ var r_running = r_running_prop.getValue();
         }
     }
 
-var bleed_air_available = jfs_running or l_running or r_running;
+var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
 	if (n == 0) {
 		if (engine_crank_switch_pos == 0) {
             if (bleed_air_available){
