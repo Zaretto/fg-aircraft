@@ -207,28 +207,44 @@
 		<object-name>ant-trk-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/ant-trk-light</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/ant-trk-light</property>
 		</condition>
 	</animation>
 	<animation> 
 		<object-name>rd-rot-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/rd-rot-light</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/rd-rot-light</property>
 		</condition>
 	</animation>
 	<animation> 
 		<object-name>jat-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/jat-light</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/jat-light</property>
 		</condition>
 	</animation>
 	<animation> 
 		<object-name>irot-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/irot-light</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/irot-light</property>
 		</condition>
 	</animation>
 
@@ -242,21 +258,33 @@
 		<object-name>spl-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-spl</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-spl</property>
 		</condition>
 	</animation>
 	<animation> 
 		<object-name>alt-dhf-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-alt-dhf</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-alt-dhf</property>
 		</condition>
 	</animation>
 	<animation> 
 		<object-name>trs-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-trs</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/ccm-mode-trs</property>
 		</condition>
 	</animation>
 
@@ -265,9 +293,13 @@
 	<!-- Display push buttons -->
 	<animation> 
 		<object-name>rdr-light-on</object-name>
-		<type>select</type>
-		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
+        <type>select</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
 		</condition>
 	</animation>
 	<animation>
@@ -295,7 +327,11 @@
 		<object-name>iff-light-on</object-name>
 		<type>select</type>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-iff</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/display-iff</property>
 		</condition>
 	</animation>
 
@@ -304,7 +340,11 @@
 		<type>select</type>
 		<object-name>pd-stt-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pd-stt</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pd-stt</property>
 		</condition>
 	</animation>
 	<!-- <animation>
@@ -326,7 +366,11 @@
 		<type>select</type>
 		<object-name>pulse-stt-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-stt</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-stt</property>
 		</condition>
 	</animation>
 	<!-- <animation>
@@ -348,7 +392,11 @@
 		<type>select</type>
 		<object-name>pd-srch-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pd-srch</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pd-srch</property>
 		</condition>
 	</animation>
 	<!-- <animation>
@@ -370,7 +418,11 @@
 		<type>select</type>
 		<object-name>rws-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/rws</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/rws</property>
 		</condition>
 	</animation>
 	<!-- <animation>
@@ -392,7 +444,11 @@
 		<type>select</type>
 		<object-name>tws-auto-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto</property>
 		</condition>
 	</animation>
 	<animation>
@@ -414,7 +470,11 @@
 		<type>select</type>
 		<object-name>tws-man-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-man</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-man</property>
 		</condition>
 	</animation>
 	<!-- <animation>
@@ -436,7 +496,11 @@
 		<type>select</type>
 		<object-name>pulse-srch-light-on</object-name>
 		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch</property>
 		</condition>
 	</animation>
 	<animation>

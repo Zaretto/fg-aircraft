@@ -20,7 +20,7 @@
 			</equals>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -6577,6 +6577,10 @@
 	<animation>
 		<object-name>tid</object-name>
 		<type>material</type>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <value>0</value>
+                </greater-than>
 		<emission>
 			<factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
 			<red>0.0</red>

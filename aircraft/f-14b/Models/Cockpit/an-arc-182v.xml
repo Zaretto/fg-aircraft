@@ -76,7 +76,11 @@
 		<object-name>digits</object-name>
 		<type>select</type>
 		<condition>
-			<not>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
 				<equals>
 					<property>sim/model/f-14b/instrumentation/an-arc-182v/mode</property>
 					<value>0</value>
@@ -112,7 +116,11 @@
 		<object-name>digits-preset</object-name>
 		<type>select</type>
 		<condition>
-			<not>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
 				<equals>
 					<property>sim/model/f-14b/instrumentation/an-arc-182v/mode</property>
 					<value>0</value>

@@ -96,8 +96,12 @@
 		<object-name>digits</object-name>
 		<type>select</type>
 		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<not>
-				<or>
+                <or>
 					<equals>
 						<property>sim/model/f-14b/instrumentation/an-arc-159v1/mode</property>
 						<value>0</value>

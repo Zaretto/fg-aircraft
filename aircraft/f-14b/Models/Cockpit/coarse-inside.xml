@@ -33,6 +33,12 @@
 	<animation>
 		<object-name>video-screens</object-name>
 		<type>material</type>
+		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+		</condition>
 		<emission>
 			<factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
 			<red>0.0</red>
@@ -43,6 +49,12 @@
 	<animation>
 		<object-name>panel</object-name>
 		<type>material</type>
+		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+		</condition>
 		<emission>
 			<factor-prop>controls/lighting/instruments-norm</factor-prop>
 			<red>0.55</red>

@@ -49,11 +49,11 @@
 		<type>select</type>
 		<object-name>screen-bkg-off</object-name>
 		<condition>
+            <less-than>
+              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>1</value>
+            </less-than>
 			<not>
-               <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                  <value>0</value>
-                </greater-than>
 				<property>sim/model/f-14b/controls/TID/on-off</property>
 			</not>
 		</condition>

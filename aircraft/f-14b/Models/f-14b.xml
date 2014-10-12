@@ -442,6 +442,12 @@
 	<animation>
 		<object-name>Slimmers</object-name>
 		<type>material</type>
+		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+		</condition>
 		<emission>
 			<factor-prop>sim/multiplay/generic/int[1]</factor-prop>
 				<red>0.091</red>

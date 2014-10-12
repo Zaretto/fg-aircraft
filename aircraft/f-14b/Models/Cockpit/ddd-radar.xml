@@ -12,7 +12,7 @@
 		<object-name>ddd</object-name>
 		<condition>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 			<or>
@@ -80,7 +80,7 @@
 		<condition>
 			<property>sim/model/f-14b/controls/radar-awg-9/on-off</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -89,11 +89,11 @@
 		<type>select</type>
 		<object-name>screen-bkg-off</object-name>
 		<condition>
+            <less-than>
+              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>1</value>
+            </less-than>
 			<not>
-               <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                  <value>0</value>
-                </greater-than>
 				<property>sim/model/f-14b/controls/radar-awg-9/on-off</property>
 			</not>
 		</condition>
@@ -105,7 +105,7 @@
 		<condition>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -166,6 +166,10 @@
 		<type>select</type>
 		<object-name>tid</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
 			<equals>
 				<property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
 				<value>0</value>
@@ -1941,6 +1945,10 @@
 	<animation>
 		<object-name>screen-bkg</object-name>
 		<type>material</type>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <value>0</value>
+                </greater-than>
 		<emission>
 			<factor-prop>sim/model/f-14b/controls/radar-awg-9/brightness</factor-prop>
 			<red>0.0</red>

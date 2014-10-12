@@ -16,7 +16,13 @@
 
 	<animation>
 		<type>select</type>
-		<condition><property>sim/rendering/rembrandt/enabled</property></condition>
+		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/rendering/rembrandt/enabled</property>
+        </condition>
 		<object-name>RBT-coll_halo_TR</object-name>
 		<object-name>RBT-coll_halo_TL</object-name>
 		<object-name>RBT-coll_halo_WL</object-name>
@@ -38,6 +44,10 @@
 		<object-name>coll_halo_CP</object-name>
 		<object-name>RBT-coll_halo_CP</object-name><!-- rembrandt halo -->
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/multiplay/generic/int[3]</property>
 		</condition>
 	</animation> 
@@ -94,6 +104,10 @@
 		<object-name>coll_halo_TR</object-name>
 		<object-name>RBT-coll_halo_TR</object-name><!-- rembrandt halo -->
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/multiplay/generic/int[3]</property>
 		</condition>
 	</animation> 
@@ -153,6 +167,10 @@
 		<object-name>coll_halo_TL</object-name>
 		<object-name>RBT-coll_halo_TL</object-name><!-- rembrandt halo -->
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/multiplay/generic/int[3]</property>
 		</condition>
 	</animation> 
@@ -209,6 +227,10 @@
 		<object-name>pos_halo_WL</object-name>
 		<object-name>RBT-coll_halo_WL</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/multiplay/generic/int[4]</property><!--flasher -->
 			<not>
 				<property>sim/multiplay/generic/int[5]</property><!--wing torn -->
@@ -299,6 +321,10 @@
 		<object-name>pos_halo_WR</object-name>
 		<object-name>RBT-coll_halo_WR</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/multiplay/generic/int[4]</property><!--flasher -->
 			<not>
 				<property>sim/multiplay/generic/int[5]</property><!--wing torn -->
@@ -385,6 +411,10 @@
 		<object-name>pos_halo_Tail</object-name>
 		<object-name>RBT-pos_halo_Tail</object-name><!-- rembrandt halo -->
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/multiplay/generic/int[4]</property><!--flasher -->
 		</condition>
 	</animation>
@@ -446,6 +476,10 @@
 		<type>select</type>
 		<object-name>taxi-lights</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>controls/lighting/taxi-light</property>
 		</condition>
 	</animation>

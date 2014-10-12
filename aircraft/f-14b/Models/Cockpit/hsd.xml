@@ -45,7 +45,11 @@
 		<type>select</type>
 		<object-name>video</object-name>
 		<condition>
-			<equals>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
 				<property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
 				<value>1</value>
 			</equals>
@@ -55,7 +59,11 @@
 	<animation>
 		<type>select</type>
 		<object-name>screen-bkg</object-name>
-		<condition>
+        <greater-than>
+            <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+            <value>0</value>
+        </greater-than>
+        <condition>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
 		</condition>
 	</animation>
@@ -63,6 +71,10 @@
 		<type>select</type>
 		<object-name>screen-bkg-off</object-name>
 		<condition>
+            <less-than>
+              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>1</value>
+            </less-than>
 			<not>
 				<property>sim/model/f-14b/controls/HSD/on-off</property>
 			</not>
@@ -243,7 +255,13 @@
 	<animation>
 		<object-name>screen-bkg</object-name>
 		<type>material</type>
-		<emission>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <emission>
 			<factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
 			<red>0.0</red>
 			<green>0.9</green>
@@ -253,7 +271,13 @@
 
 	<animation>
 		<object-name>video</object-name>
-		<type>material</type>
+        <condition>
+            <greater-than>
+            <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+            <value>0</value>
+            </greater-than>
+        </condition>
+        <type>material</type>
 		<emission>
 			<factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
 			<red>0.0</red>
