@@ -437,6 +437,10 @@
 		<type>select</type>
 		<object-name>ap-ref</object-name>
 		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
 			<property>sim/model/f-14b/controls/AFCS/altitude-enable</property>
 		</condition>
 	</animation>
