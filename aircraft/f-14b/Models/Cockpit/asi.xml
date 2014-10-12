@@ -19,6 +19,12 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>face</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+        </condition>
 		<property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>0</dep></entry>
@@ -206,7 +212,13 @@
 	<animation>
 		<object-name>mount</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+            <not><property>sim/rendering/rembrandt/enabled</property></not>
+        </condition>
 		<emission>
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.55</red>
@@ -217,7 +229,12 @@
 	<animation>
 		<object-name>knob</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+<not><property>sim/rendering/rembrandt/enabled</property></not></condition>
 		<emission>
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.55</red>
@@ -229,7 +246,12 @@
 	<animation>
 		<object-name>face</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+            <not><property>sim/rendering/rembrandt/enabled</property></not></condition>
 		<emission>
 			<factor-prop>controls/lighting/instruments-norm</factor-prop>
 			<red>0.55</red>
@@ -241,7 +263,12 @@
 	<animation>
 		<object-name>mach-scale</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+<not><property>sim/rendering/rembrandt/enabled</property></not></condition>
 		<emission>
 			<factor-prop>controls/lighting/instruments-norm</factor-prop>
 			<red>0.55</red>
@@ -253,7 +280,11 @@
 	<animation>
 		<object-name>bkg</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<condition>			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+<not><property>sim/rendering/rembrandt/enabled</property></not></condition>
 		<emission>
 			<factor-prop>controls/lighting/instruments-norm</factor-prop>
 			<red>0.55</red>
@@ -265,7 +296,11 @@
 	<animation>
 		<object-name>safe-speed-bug</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
+		<condition>			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+<not><property>sim/rendering/rembrandt/enabled</property></not></condition>
 		<emission>
 			<factor-prop>controls/lighting/instruments-norm</factor-prop>
 			<red>0.55</red>

@@ -40,12 +40,16 @@
 		<type>select</type>
 		<object-name>hud</object-name>
 		<condition>
+				<greater-than>
+					<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+					<value>0</value>
+				</greater-than>
 			<equals>
 				<property>sim/current-view/name</property>
 				<value>Cockpit View</value>
 			</equals>
-			<property>sim/hud/visibility[1]</property>
-		</condition>
+			<property>sim/model/f-14b/controls/hud/on-off</property>
+        </condition>
 	</animation>
 
 	<!-- Diamond -->

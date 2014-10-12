@@ -44,6 +44,10 @@
 		<type>select</type>
 		<object-name>display</object-name>
 		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
 			<property>sim/model/f-14b/controls/VDI/on-off</property>
 		</condition>
 	</animation>
@@ -51,10 +55,16 @@
 		<type>select</type>
 		<object-name>screen-bkg-off</object-name>
 		<condition>
-			<not>
-				<property>sim/model/f-14b/controls/VDI/on-off</property>
-			</not>
-		</condition>
+            <or>
+                <less-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                    <value>75</value>
+                </less-than>
+                <not>
+                    <property>sim/model/f-14b/controls/VDI/on-off</property>
+                </not>
+            </or>
+        </condition>
 	</animation>
 
 	<!-- sky -->
@@ -295,6 +305,10 @@
 		<type>select</type>
 		<object-name>reduce-speed</object-name>
 		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<or>
 				<greater-than>
 					<property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
@@ -317,6 +331,10 @@
 		<type>select</type>
 		<object-name>alt-low</object-name>
 		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<less-than>
 				<property>orientation/roll-deg</property>
 				<value>45</value>
@@ -613,8 +631,16 @@
 	<animation>
 		<object-name>casing</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.55</red>
 			<green>0.24</green>

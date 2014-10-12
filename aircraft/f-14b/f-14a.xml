@@ -637,6 +637,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <switch name="fcs/wing-sweep-dmd">
             <default value="fcs/wing-sweep-cadc-dmd"/>
 
+          <test value="fcs/wing-sweep-dmd">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
             <!--<test value="fcs/wing-sweep-pilot-dmd">
                 fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
                 fcs/wing-sweep-auto ne 1
@@ -1134,24 +1137,45 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
   <channel name="Flaps">
 
-  <summer name="fcs/flap-total-dmd">
-      <input>systems/cadc/manuv-flap-extension-cmd</input>
-      <input>fcs/flap-cmd-norm</input>
-      <clipto>
-        <min> 0 </min>
-        <max>  1 </max>
-      </clipto>
-     <output>fcs/flap-total-dmd</output>
-   </summer>
+      <switch name="fcs/flap-total-dmd">
+          <default value="0"/>
+          <test value="fcs/flap-total-dmd">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
+          <test value="fcs/flap-cmd-norm">
+              fcs/flap-cmd-norm ne 0
+              systems/hydraulics/combined-system-pressure ne 0
+          </test>
+          <test value="systems/cadc/manuv-flap-extension-cmd">
+              systems/cadc/manuv-flap-extension-cmd ne 0
+              systems/hydraulics/combined-system-pressure ne 0
+          </test>
+          <clipto>
+              <min> 0 </min>
+              <max>  1 </max>
+          </clipto>
+          <output>fcs/flap-total-dmd</output>
+      </switch>
 
- <summer name="fcs/slat-total-dmd">
-      <input>systems/cadc/manuv-slat-extension-cmd</input>
-      <input>fcs/slat-cmd</input>
-      <clipto>
-        <min> 0 </min>
-        <max>  1 </max>
-      </clipto>
-   </summer>
+      <switch name="fcs/slat-total-dmd">
+          <default value="0"/>
+          <test value="fcs/slat-total-dmd">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
+          <test value="fcs/slat-cmd">
+              fcs/slat-cmd ne 0
+              systems/hydraulics/combined-system-pressure ne 0
+          </test>
+          <test value="systems/cadc/manuv-slat-extension-cmd">
+              systems/cadc/manuv-slat-extension-cmd ne 0
+              systems/hydraulics/combined-system-pressure ne 0
+          </test>
+          <clipto>
+              <min> 0 </min>
+              <max>  1 </max>
+          </clipto>
+          <output>fcs/slat-total-dmd</output>
+      </switch>
 
 
    <kinematic name="Flaps Control">
@@ -1223,9 +1247,28 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    </aerosurface_scale>
   </channel>
 
+
   <channel name="Landing Gear">
+      <switch name="gear/gear-dmd-norm">
+          <default value="1"/>
+          <test value="1">
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+          </test>
+          <test value="gear/gear-dmd-norm">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
+          <test value="gear/gear-cmd-norm">
+              systems/hydraulics/combined-system-pressure ne 0
+          </test>
+          <clipto>
+              <min> 0 </min>
+              <max>  1 </max>
+          </clipto>
+          <output>gear/gear-dmd-norm</output>
+      </switch>
    <kinematic name="Gear Control">
-     <input>gear/gear-cmd-norm</input>
+     <input>gear/gear-dmd-norm</input>
      <traverse>
        <setting>
           <position> 0 </position>

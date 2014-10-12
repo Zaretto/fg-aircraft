@@ -11,6 +11,10 @@
 		<type>select</type>
 		<object-name>ddd</object-name>
 		<condition>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 			<or>
 				<equals>
 					<property>sim/current-view/name</property>
@@ -75,6 +79,10 @@
 		<object-name>screen-bkg</object-name>
 		<condition>
 			<property>sim/model/f-14b/controls/radar-awg-9/on-off</property>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 		</condition>
 	</animation>
 	<animation>
@@ -82,6 +90,10 @@
 		<object-name>screen-bkg-off</object-name>
 		<condition>
 			<not>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 				<property>sim/model/f-14b/controls/radar-awg-9/on-off</property>
 			</not>
 		</condition>
@@ -92,6 +104,10 @@
 		<object-name>radar-sweep</object-name>
 		<condition>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 		</condition>
 	</animation>
 	<animation>

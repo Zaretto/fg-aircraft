@@ -187,7 +187,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>power-hud-switch</object-name>
-		<property>sim/hud/visibility[1]</property>
+		<property>sim/model/f-14b/controls/hud/on-off</property>
 		<factor>33</factor>
 		<center>
 			<x-m>-0.0</x-m>
@@ -221,8 +221,16 @@
 	<animation>
 		<object-name>hook-lamp-off</object-name> 
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.07</red>
 			<green>0.03</green>
@@ -232,20 +240,36 @@
 	<animation>
 		<object-name>hook-lamp-on</object-name> 
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission>
-			<factor-prop>sim/model/f-14b/systems/utilities/numeral-1</factor-prop>
-			<red>0.8</red>
-			<green>0.8</green>
-			<blue>0.8</blue>
-		</emission>
-	</animation>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>sim/model/f-14b/systems/utilities/numeral-1</factor-prop>
+            <red>0.8</red>
+            <green>0.8</green>
+            <blue>0.8</blue>
+        </emission>
+    </animation>
 
-	<animation> 
-		<object-name>mounts</object-name>
-		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission> 
+    <animation>
+        <object-name>mounts</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.55</red>
 			<green>0.24</green>
@@ -255,8 +279,16 @@
 	<animation> 
 		<object-name>switches-and-buttons</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission> 
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.55</red>
 			<green>0.24</green>
@@ -266,8 +298,16 @@
 	<animation> 
 		<object-name>rounds-drums</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission> 
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.71</red>
 			<green>0.31</green>

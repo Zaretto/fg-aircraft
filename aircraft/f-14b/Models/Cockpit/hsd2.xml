@@ -56,6 +56,10 @@
 				<property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
 			</not>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 		</condition>
 	</animation>
 	<animation>
@@ -63,6 +67,10 @@
 		<object-name>screen-bkg</object-name>
 		<condition>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 		</condition>
 	</animation>
 	<animation>
@@ -70,6 +78,10 @@
 		<object-name>screen-bkg-off</object-name>
 		<condition>
 			<not>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 				<property>sim/model/f-14b/controls/HSD/on-off</property>
 			</not>
 		</condition>
@@ -82,6 +94,10 @@
 		<object-name>compass-rose</object-name>
 		<condition>
 			<not>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <value>0</value>
+                </greater-than>
 				<property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
 			</not>
 		</condition>
@@ -278,8 +294,16 @@
 	<animation>
 		<object-name>mount</object-name>
 		<type>material</type>
-		<condition><not><property>sim/rendering/rembrandt/enabled</property></not></condition>
-		<emission>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
 			<factor-prop>controls/lighting/panel-norm</factor-prop>
 			<red>0.44</red>
 			<green>0.192</green>

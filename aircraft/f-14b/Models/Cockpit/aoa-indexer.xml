@@ -8,10 +8,10 @@
 		<type>select</type>
 		<object-name>aoa-too-slow</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<greater-than>
 				<property>orientation/alpha-deg</property>
 			<property>sim/model/f-14b/instrumentation/aoa-indexer/too-slow-deg</property>
@@ -41,10 +41,10 @@
 		<type>select</type>
 		<object-name>aoa-slow</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<less-than>
 				<property>orientation/alpha-deg</property>
 				<property>sim/model/f-14b/instrumentation/aoa-indexer/too-slow-deg</property>
@@ -78,10 +78,10 @@
 		<type>select</type>
 		<object-name>aoa-on-speed</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<less-than>
 				<property>orientation/alpha-deg</property>
 				<property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg</property>
@@ -115,10 +115,10 @@
 		<type>select</type>
 		<object-name>aoa-fast</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<less-than>
 				<property>orientation/alpha-deg</property>
 				<property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg</property>
@@ -152,10 +152,10 @@
 		<type>select</type>
 		<object-name>aoa-too-fast</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<less-than>
 				<property>orientation/alpha-deg</property>
 				<property>sim/model/f-14b/instrumentation/aoa-indexer/too-fast-deg</property>
@@ -186,10 +186,10 @@
 		<type>select</type>
 		<object-name>wheels-lit</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<or>
 				<less-than>
 					<property>gear/gear[0]/position-norm</property>
@@ -220,10 +220,10 @@
 		<type>select</type>
 		<object-name>acls-lit</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<property>sim/model/f-14b/instrumentation/acls/engaged</property>
 		</condition>
 	</animation>
@@ -232,10 +232,10 @@
 		<type>select</type>
 		<object-name>brakes-lit</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<property>controls/gear/brake-parking</property>
 		</condition>
 	</animation>
@@ -244,10 +244,10 @@
 		<type>select</type>
 		<object-name>nws-lit</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<property>sim/model/f-14b/instrumentation/gears/nose-wheel-steering-warnlight</property>
 		</condition>
 	</animation>
@@ -256,10 +256,10 @@
 		<type>select</type>
 		<object-name>throt-lit</object-name>
 		<condition>
-			<!--<greater-than>
-				<property>systems/electrical/outputs/aoa-indexer</property>
-				<value>23</value>
-			</greater-than>-->
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<property>sim/model/f-14b/systems/apc/self-disengaged-light</property>
 		</condition>
 	</animation>

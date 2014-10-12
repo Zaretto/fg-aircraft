@@ -20,6 +20,10 @@
 					<value>Back-seat View</value>
 				</equals>
 			</or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 		</condition>
 	</animation>
 
@@ -248,6 +252,10 @@
 		<type>select</type>
 		<object-name>stand-by</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>instrumentation/radar/radar-standby</property>
 		</condition>
 	</animation>
@@ -255,6 +263,10 @@
 		<type>select</type>
 		<object-name>pulse-srch</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch</property>
 		</condition>
 	</animation>
@@ -262,6 +274,10 @@
 		<type>select</type>
 		<object-name>tws-auto</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto</property>
 		</condition>
 	</animation>
@@ -269,6 +285,10 @@
 		<type>select</type>
 		<object-name>az-field-120</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<equals>
 				<property>instrumentation/radar/az-field</property>
 				<value>120</value>
@@ -279,6 +299,10 @@
 		<type>select</type>
 		<object-name>az-field-60</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<equals>
 				<property>instrumentation/radar/az-field</property>
 				<value>60</value>
@@ -6588,6 +6612,12 @@
 	<animation>
 		<object-name>tid</object-name>
 		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
 		<emission>
 			<factor-prop>sim/model/f-14b/controls/TID/brightness</factor-prop>
 			<red>0.0</red>

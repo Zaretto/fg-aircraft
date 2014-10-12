@@ -42,6 +42,23 @@ var r_eng_starter = props.globals.getNode("controls/engines/engine[1]/starter",1
 var l_eng_running = props.globals.getNode("engines/engine[0]/running",1);
 var r_eng_running = props.globals.getNode("engines/engine[0]/running",1);
 var ca_start_valve  = props.globals.getNode("sim/model/f-14b/lights/start-valve", 1);
+setprop("sim/model/f-14b/controls/hud/on-off",1);
+
+if(!usingJSBSim)
+{
+    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
+    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",75); 
+    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",75);
+    setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",75);
+    setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",28);
+    setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",28);
+    setprop("/fdm/jsbsim/systems/electrics/dc-main-bus1",28);
+    setprop("/fdm/jsbsim/systems/electrics/egenerator-kva",0);
+    setprop("/fdm/jsbsim/systems/electrics/emerg-generator-status",0);
+    setprop("/fdm/jsbsim/systems/electrics/lgenerator-kva",75);
+    setprop("/fdm/jsbsim/systems/electrics/rgenerator-kva",75);
+    setprop("/fdm/jsbsim/systems/electrics/transrect-online",2);
+}
 
 var runEMMISC = func {
 
@@ -49,7 +66,7 @@ var runEMMISC = func {
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
     var masterCaution =  masterCaution_light_set.getValue();
-var master_caution_active  = 0;
+    var master_caution_active  = 0;
 
     if ( (l_eng_starter.getBoolValue() and l_eng_running.getBoolValue()) 
         or (r_eng_starter.getBoolValue() and r_eng_running.getBoolValue()))
@@ -67,6 +84,16 @@ var master_caution_active  = 0;
 		    ca_start_valve.setBoolValue(0);
         }
     }
+
+    if(getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") < 70)
+    {
+        setprop("sim/hud/visibility[1]",0);
+    }
+    else
+    {
+        setprop("sim/hud/visibility[1]",getprop("sim/model/f-14b/controls/hud/on-off"));
+    }
+
 #
 # RAMPS light on when either of the following 2 conditions met:
 # 
@@ -109,7 +136,7 @@ var master_caution_active  = 0;
 		    ca_oil_press_light.setBoolValue(1);
             masterCaution = 1;
 		}
-        if(oil_pressure_l.getValue() < 23){
+        if(getprop("/fdm/jsbsim/systems/electrics/lgenerator-kva") < 70){
     		if (!ca_l_gen_light.getBoolValue())
             {
         	    ca_l_gen_light.setBoolValue(1);
@@ -117,7 +144,7 @@ var master_caution_active  = 0;
                 masterCaution = 1;
             }
         }
-        if(oil_pressure_r.getValue() < 23){
+        if(getprop("/fdm/jsbsim/systems/electrics/rgenerator-kva") < 70){
     		if (!ca_r_gen_light.getBoolValue())
             {
         	    ca_r_gen_light.setBoolValue(1);
@@ -134,12 +161,12 @@ var master_caution_active  = 0;
 		    ca_oil_press_light.setBoolValue(0);
 		}
     }
-    if(oil_pressure_l.getValue() > 23){
+    if(getprop("/fdm/jsbsim/systems/electrics/lgenerator-kva") > 0){
  	    ca_l_gen_light.setBoolValue(0);
         ca_l_fuel_press_light.setBoolValue(0);
     }
 
-    if(oil_pressure_r.getValue() > 23){
+    if(getprop("/fdm/jsbsim/systems/electrics/rgenerator-kva") > 0){
  	    ca_r_gen_light.setBoolValue(0);
         ca_r_fuel_press_light.setBoolValue(0);
 	}
