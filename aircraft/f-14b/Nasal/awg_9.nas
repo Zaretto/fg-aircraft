@@ -69,6 +69,7 @@ var u_ecm_type_num    = 0;
 
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
+    if(our_ac_name == "f-14a") our_ac_name = "f-14b"; # RJH: We are an F14a - but internally we are an F14-B for compatibility with existing model so need to change the aircraft name here otherwise radar won't work
 	my_radarcorr = radardist.my_maxrange( our_ac_name ); # in kilometers
 	if (our_ac_name == "f-14b-bs") { we_are_bs = 1; }
 	}
@@ -80,6 +81,7 @@ var rdr_loop = func() {
 	if ( display_rdr ) {
 		az_scan();
 		our_radar_stanby = RadarStandby.getValue();
+#print ("Display radar ",our_radar_stanby, we_are_bs);
 		if ( we_are_bs == 0) {
 			RadarStandbyMP.setIntValue(our_radar_stanby); # Tell over MP if
 			# our radar is scaning or is in stanby. Don't if we are a back-seater.
@@ -141,6 +143,7 @@ var az_scan = func() {
 					var u_rng = u.get_range();
 					if (u_rng < range_radar2  and u.not_acting == 0 ) {
 						u.get_deviation(our_true_heading);
+#print("dev ",u.deviation, " azf:", l_az_fld, " r:azf", r_az_fld);
 						if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld ) {
 							append(tgts_list, u);
 						} else {
@@ -180,9 +183,10 @@ var az_scan = func() {
 			u.get_heading();
 			var horizon = u.get_horizon( our_alt );
 			var u_rng = u.get_range();
-				#var nom = u.Callsign.getValue();
-				#print(nom, " ", u_rng, " ", radardist.radis(u.string, my_radarcorr));
+				var nom = u.Callsign.getValue();
+#				print(nom, " ", u_rng, " horizon ",horizon, " our alt ",our_alt, " mrc ",my_radarcorr);
 			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr)) {
+#				print(" --> ",nom, " ", u_rng, " ", radardist.radis(u.string, my_radarcorr));
 				# Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
 				u.set_relative_bearing( ddd_screen_width / az_fld * u.deviation );
 				var factor_range_radar = 0.0657 / range_radar2; # 0.0657m : length of the distance range on the DDD screen.
