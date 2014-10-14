@@ -21,7 +21,6 @@ var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "
 var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
 var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
 var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
-var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
 
 #props.globals.getNode("sim/model/f-14b/fx/test1",1);
 #props.globals.getNode("sim/model/f-14b/fx/test2",1);
@@ -46,6 +45,7 @@ var r_starter_prop = props.globals.getNode("controls/engines/engine[1]/starter")
 
 var engine_crank_switch_pos_prop = props.globals.getNode("sim/model/f-14b/controls/engine/engine-crank");
 engine_crank_switch_pos_prop.setValue(0);
+var engine_start_initiated = 0;
 
 var jfs_start = props.globals.getNode("sim/model/f-14b/controls/jfs",1);
 jfs_start.setValue(0);
@@ -158,8 +158,11 @@ var computeNozzles = func {
             Nozzle2Target = eng2_burner;
         }
     }
-    Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
-    Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
+    if (usingJSBSim)
+    {
+        Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
+        Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
+    }
 }
 
 # JFS Startup / running noises
@@ -169,6 +172,8 @@ var computeNozzles = func {
 #           11 - running
 #           12 - engine turning
 var engineControls = func {
+
+    if (!engine_start_initiated) return;
 
     var l_starter = l_starter_prop.getValue();
     var r_starter = r_starter_prop.getValue();
@@ -228,14 +233,12 @@ var engineControls = func {
     if (engine_crank_switch_pos_prop.getValue() > 0 
             and l_starter == 0 
             and r_starter == 0
+            and engine_start_initiated
             and bleed_air_available)
     {
+        engine_start_initiated = 0;
     	engine_crank_switch_pos_prop.setIntValue(0);
     }
-#     if (jfs_running and l_running and r_running){
-#        jfs_running = 0;
-#        jfs_start.setValue(1);
-#    }
 }
 
 #
@@ -245,8 +248,9 @@ var jfs_set_running = func{
 
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
-    print("Jfs set running callback");
-    if (jfs_running){
+#    print("Jfs set running callback");
+    if (jfs_running)
+    {
         return;
     }
     jfs_start.setValue(11);
@@ -254,11 +258,11 @@ var jfs_set_running = func{
     jfs_starting = 0;
 
     if (engine_crank_switch_pos == 1) {
-        print("JFS: Now set starter L");
+#        print("JFS: Now set starter L");
         setprop("controls/engines/engine[0]/starter",1);
     }
     if (engine_crank_switch_pos == 2) {
-        print("JFS: Now set starter R");
+#        print("JFS: Now set starter R");
         setprop("controls/engines/engine[1]/starter",1);
     }
     startupTimer.stop();
@@ -269,7 +273,7 @@ var jfs_set_running = func{
 # Manage the automatic shutdown of JFS
 var jfs_invoke_shutdown = func{
 
-    print("Jfs invoke shutdown  callback");
+#    print("Jfs invoke shutdown  callback");
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
     # do nothing whilst not running or when the switch is still set.
@@ -285,15 +289,12 @@ var jfs_invoke_shutdown = func{
             return;
         }
     }
-    else
+    if (jfs_running)
     {
-    }
-    if (jfs_running){
         jfs_start.setValue(1);
         jfs_running = 0;
         jfs_starting = 0;
     }
-#    settimer(f14., 999999); # turn off timer.
     print("Jfs invoke shutdown cancel callback");
     shutdownTimer.stop();
 }
@@ -303,10 +304,9 @@ var jfs_starting = 0;
 var jfs_shutdown_timer = 0;
 
 var shutdownTimer = maketimer(6, jfs_invoke_shutdown);
-#shutdownTimer.singleShot=1;
 var startupTimer = maketimer(11, jfs_set_running);
 #startupTimer.singleShot=1;
-var jfsShutdownTime = 5; # time after crank switch set to centre that the JFS will turn off.
+var jfsShutdownTime = 55; # time after crank switch set to centre that the JFS will turn off.
 var jfsStartupTime = 10; # amount of time it takes JFS to be ready - before the start will be able to turn the engine (i.e. how long before starter_cmd is set)
 
 #
@@ -316,14 +316,14 @@ var jfsStartupTime = 10; # amount of time it takes JFS to be ready - before the 
 var engine_crank_switch = func(n) {
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
-    if (engine_crank_switch_pos == nil){
+    var l_running = l_running_prop.getValue();
+    var r_running = r_running_prop.getValue();
+
+
+    if (engine_crank_switch_pos == nil)
+    {
         engine_crank_switch_pos_prop.setIntValue(0);
     }
-#
-#
-# reset the timer.
-    shutdownTimer.restart(jfsShutdownTime);
-
     if (engine_crank_switch_pos != 0) {
         setprop("controls/engines/engine[0]/starter",0);
         setprop("controls/engines/engine[1]/starter",0);
@@ -333,15 +333,40 @@ var engine_crank_switch = func(n) {
             jfs_starting = 0;
             jfs_running = 1; # not really but just to get the sounds right.
             startupTimer.stop();
-            return;
+            engine_start_initiated = 0;
         }
+        return;
     }
 
-var l_running = l_running_prop.getValue();
-var r_running = r_running_prop.getValue();
 #
-# If neither engine running then need JFS
-    if (!(l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air")))
+# if both running then just set the switch
+    if (l_running and r_running)
+    {
+        if(n==0) 
+            engine_crank_switch_pos_prop.setIntValue(1);
+
+        if(n==1) 
+            engine_crank_switch_pos_prop.setIntValue(2);
+
+        shutdownTimer.stop();
+        startupTimer.stop();
+        engine_start_initiated = 0;
+        return;
+    }
+
+#
+#
+# reset the timer.
+    shutdownTimer.restart(jfsShutdownTime);
+
+#
+# If no source of bleed air (external or other engine running) then fire up JFS
+
+    var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
+
+    engine_start_initiated = 1;
+
+    if (!bleed_air_available)
     {
         if (!jfs_running)
         {
@@ -362,7 +387,6 @@ var r_running = r_running_prop.getValue();
         }
     }
 
-var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
 	if (n == 0) {
 		if (engine_crank_switch_pos == 0) {
             if (bleed_air_available){
@@ -373,7 +397,9 @@ var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm
 			engine_crank_switch_pos_prop.setIntValue(0);
             setprop("controls/engines/engine[0]/starter",0);
 		}
-	} else {
+	}
+    else 
+    {
 		if (engine_crank_switch_pos == 0) {
 			engine_crank_switch_pos_prop.setIntValue(2);
             if (bleed_air_available){

@@ -40,15 +40,17 @@ var l_eng_starter = props.globals.getNode("controls/engines/engine[0]/starter",1
 var r_eng_starter = props.globals.getNode("controls/engines/engine[1]/starter",1);
 
 var l_eng_running = props.globals.getNode("engines/engine[0]/running",1);
-var r_eng_running = props.globals.getNode("engines/engine[0]/running",1);
-var ca_start_valve  = props.globals.getNode("sim/model/f-14b/lights/start-valve", 1);
+var r_eng_running = props.globals.getNode("engines/engine[1]/running",1);
+var ca_start_valve  = props.globals.getNode("sim/model/f-14b/lights/ca-start-valve", 1);
 setprop("sim/model/f-14b/controls/hud/on-off",1);
 
 var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/f-14b/Dialogs/ground-services.xml");
 
-
 if(!usingJSBSim)
 {
+    #
+    #
+    # Set the electrics for yasim (basic electrical model)
     setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
     setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",75); 
     setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",75);
@@ -70,11 +72,13 @@ var runEMMISC = func {
 
     var masterCaution =  masterCaution_light_set.getValue();
     var master_caution_active  = 0;
+    var engine_crank_switch_pos = getprop("sim/model/f-14b/controls/engine/engine-crank");
 
-    if ( (l_eng_starter.getBoolValue() and l_eng_running.getBoolValue()) 
-        or (r_eng_starter.getBoolValue() and r_eng_running.getBoolValue()))
+    if ( ((engine_crank_switch_pos == 1 or l_eng_starter.getBoolValue()) and l_eng_running.getBoolValue()) 
+        or ((engine_crank_switch_pos == 2 or r_eng_starter.getBoolValue()) and r_eng_running.getBoolValue()))
     {
-        if (!ca_start_valve.getBoolValue()){
+        if (!ca_start_valve.getBoolValue())
+        {
 		    ca_start_valve.setBoolValue(1);
             masterCaution = 1;
         }
@@ -127,32 +131,20 @@ var runEMMISC = func {
 		    ca_hyd_press_light.setBoolValue(1);
             masterCaution = 1;
 		}
+        master_caution_active = 1;
     }
     else
     {
         ca_hyd_press_light.setBoolValue(0);
     }
 
-	if (oil_pressure_l.getValue() < 23 or oil_pressure_r.getValue() < 23 ){
+	if (oil_pressure_l.getValue() < 23 or oil_pressure_r.getValue() < 23 )
+    {
 		if (!ca_oil_press_light.getBoolValue())
 		{
 		    ca_oil_press_light.setBoolValue(1);
             masterCaution = 1;
 		}
-        if(oil_pressure_l.getValue() < 23){
-    		if (!ca_l_fuel_press_light.getBoolValue())
-            {
-                ca_l_fuel_press_light.setBoolValue(1);
-                masterCaution = 1;
-            }
-        }
-        if(oil_pressure_r.getValue() < 23){
-    		if (!ca_r_fuel_press_light.getBoolValue())
-            {
-                ca_r_fuel_press_light.setBoolValue(1);
-                masterCaution = 1;
-            }
-        }
         master_caution_active = 1;
 	}
 	else
@@ -162,13 +154,39 @@ var runEMMISC = func {
 		    ca_oil_press_light.setBoolValue(0);
 		}
     }
-    if(oil_pressure_l.getValue() > 23){
-        ca_l_fuel_press_light.setBoolValue(0);
-    }
 
-    if(oil_pressure_r.getValue() > 23){
-        ca_r_fuel_press_light.setBoolValue(0);
-	}
+    if(oil_pressure_l.getValue() < 23)
+    {
+        if (!ca_l_fuel_press_light.getBoolValue())
+        {
+            ca_l_fuel_press_light.setBoolValue(1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if(ca_l_fuel_press_light.getBoolValue())
+        {
+            ca_l_fuel_press_light.setBoolValue(0);
+        }
+    }
+    if(oil_pressure_r.getValue() < 23)
+    {
+        if (!ca_r_fuel_press_light.getBoolValue())
+        {
+            ca_r_fuel_press_light.setBoolValue(1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if(ca_r_fuel_press_light.getBoolValue())
+        {
+            ca_r_fuel_press_light.setBoolValue(0);
+        }
+    }
 
     if(getprop("/fdm/jsbsim/systems/electrics/lgenerator-kva") < 50)
     {
@@ -201,15 +219,11 @@ var runEMMISC = func {
         if (ca_r_gen_light.getBoolValue())
         {
             ca_r_gen_light.setBoolValue(0);
-            masterCaution = 1;
         }
     }
 
-    if(getprop("/fdm/jsbsim/systems/electrics/rgenerator-kva") > 0){
- 	    ca_r_gen_light.setBoolValue(0);
-	}
-
-	if (total_lbs < bingo.getValue()){
+	if (total_lbs < bingo.getValue())
+    {
 		if (!ca_bingo_light.getBoolValue())
 		{
 		    ca_bingo_light.setBoolValue(1);
@@ -225,7 +239,8 @@ var runEMMISC = func {
 		}
 	}
 
-	if (total_fuel_l < 1000){
+	if (total_fuel_l < 1000)
+    {
 		if (!ca_l_fuel_low.getBoolValue())
 		{
     	    ca_l_fuel_low.setBoolValue(1);
@@ -241,7 +256,8 @@ var runEMMISC = func {
 		}
 	}
 
-	if (total_fuel_r < 1000){
+	if (total_fuel_r < 1000)
+    {
 		if (!ca_r_fuel_low.getBoolValue())
 		{
     	    ca_r_fuel_low.setBoolValue(1);
@@ -256,6 +272,7 @@ var runEMMISC = func {
 		    ca_r_fuel_low.setBoolValue(0);
 		}
 	}
+
 	if (getprop("/fdm/jsbsim/systems/electrics/transrect-online") < 2)
     {
         if (!getprop("sim/model/f-14b/lights/ca-trans-rect"))
@@ -273,7 +290,8 @@ var runEMMISC = func {
         }
     }
 
-    if (canopy.getValue() > 0){
+    if (canopy.getValue() > 0)
+    {
 		if (!ca_canopy_light.getBoolValue()){
             ca_canopy_light.setBoolValue(1);
             masterCaution = 1;
@@ -288,6 +306,8 @@ var runEMMISC = func {
     if (jettisonLeft.getValue() or jettisonRight.getValue()){
         masterCaution = 1;
         master_caution_active = 1;
+        jettisonRight.setValue(0);
+        jettisonLeft.setValue(0);
     }
     if (!master_caution_active){
         masterCaution_light_set.setBoolValue(0);

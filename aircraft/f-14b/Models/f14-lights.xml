@@ -8,7 +8,13 @@
 
 	<animation>
 		<type>select</type>
-		<condition><property>sim/rendering/rembrandt/enabled</property></condition>
+		<condition>
+            <property>sim/rendering/rembrandt/enabled</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
 		<object-name>lgt-pilot-console-R</object-name>
 		<object-name>lgt-pilot-front-up-C</object-name>
 		<object-name>lgt-pilot-front-knee-L</object-name>
@@ -24,6 +30,10 @@
 		<type>select</type>
 		<object-name>cockpit-lights</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<or>
 				<equals>
 					<property>sim/current-view/name</property>
