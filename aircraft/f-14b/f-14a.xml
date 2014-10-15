@@ -205,7 +205,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!-- 1 -->
     <contact type="BOGEY" name="LEFT_MLG">
       <location unit="IN">
-        <x> 421 </x>
+        <x> 431 </x>
         <y> -98 </y>
         <z> -130  </z>
       </location>
@@ -221,7 +221,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!-- 2 -->
     <contact type="BOGEY" name="RIGHT_MLG">
       <location unit="IN">
-        <x> 421 </x>
+        <x> 431 </x>
         <y> 98 </y>
         <z> -130 </z>
       </location>
@@ -281,7 +281,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!--  6 same pos as landing gear for ease of understanding -->
   <contact type="STRUCTURE" name="MID_BODY_LEFT">
       <location unit="IN">
-        <x> 421 </x>
+        <x> 432 </x>
         <y> -98 </y>
         <z> -110  </z>
       </location>
@@ -295,7 +295,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!--  7 same pos as landing gear for ease of understanding  -->
     <contact type="STRUCTURE" name="MID_BODY_RIGHT">
       <location unit="IN">
-        <x> 421 </x>
+        <x> 432 </x>
         <y>  98 </y>
         <z> -110  </z>
       </location>
@@ -363,9 +363,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!-- 12 -->
   <contact type="STRUCTURE" name="REAR_BODY_LEFT">
       <location unit="IN">
-        <x> 521 </x>
+        <x> 713 </x>
         <y>  58 </y>
-        <z> -97 </z>
+        <z> -45 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
@@ -377,9 +377,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <!--  13 -->
     <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
       <location unit="IN">
-        <x> 521 </x>
+        <x> 713 </x>
         <y> -58 </y>
-        <z> -97 </z>
+        <z> -45 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
@@ -862,6 +862,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               <test value="1">
                   velocities/vc-kts le 80
                   systems/hydraulics/combined-system-pressure ne 0
+                  gear/unit[1]/WOW ne 0
+                  gear/unit[2]/WOW ne 0
               </test>
               <output>systems/NWS/engaged</output>
           </switch>
@@ -1358,9 +1360,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                                     0.294117647       1.0
 <!--                              0.00    -419           -429.1
                               2.40    -421           -429.6
--->
                               0.00    -409           -419.1
                               2.40    -411           -419.6
+-->
+                              0.00    -419           -429.1
+                              2.40    -421           -429.6
                           </tableData>
                       </table>
                   </sum>
@@ -1802,11 +1806,11 @@ Post tuning session1:
                  <independentVar lookup="row">aero/alpha-deg</independentVar>
                  <tableData>
                      -10	 -0.00
-                     0 	 -0.012
-                     8 	 -0.010
-                     12    -0.004
-                     14    -0.002
-                     16    -0.001
+                     0 	 -0.0012
+                     8 	 -0.0010
+                     12    -0.0004
+                     14    -0.0002
+                     16    -0.0001
                      18    -0.000
                  </tableData>
              </table>
@@ -2774,11 +2778,10 @@ Post tuning session1:
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <tableData>
                 -10	 0.00000
-                -4	-0.01250
+                -4	 0.00000
                  0	-0.01750
                  4	-0.01000
-                 8	-0.00400
-                12	-0.00250
+                 8	-0.00250
                 14	 0.00000
             </tableData>
           </table>
