@@ -43,6 +43,9 @@ var l_eng_running = props.globals.getNode("engines/engine[0]/running",1);
 var r_eng_running = props.globals.getNode("engines/engine[1]/running",1);
 var ca_start_valve  = props.globals.getNode("sim/model/f-14b/lights/ca-start-valve", 1);
 setprop("sim/model/f-14b/controls/hud/on-off",1);
+setprop("sim/model/f-14b/controls/electrics/emerg-gen-switch",1);
+setprop("sim/model/f-14b/controls/electrics/l-gen-switch",1);
+setprop("sim/model/f-14b/controls/electrics/r-gen-switch",1);
 
 var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/f-14b/Dialogs/ground-services.xml");
 
@@ -347,6 +350,59 @@ setlistener("sim/model/f-14b/controls/hyds/hyd-transfer-pump-switch", func {
         else
         {
             setprop("fdm/jsbsim/systems/hydraulics/hyd-transfer-pump-switch", 1);
+        }
+    }
+}, 1, 0);
+
+#
+#
+# master gen panel 
+setlistener("sim/model/f-14b/controls/electrics/l-gen-switch", func {
+    var v = getprop("sim/model/f-14b/controls/electrics/l-gen-switch");
+    if(usingJSBSim and v != nil)
+    {
+        if (v)
+        {
+            setprop("fdm/jsbsim/systems/electrics/lgenerator-status", 1);
+        }
+        else
+        {
+            setprop("fdm/jsbsim/systems/electrics/lgenerator-status", 0);
+        }
+    }
+}, 1, 0);
+
+setlistener("sim/model/f-14b/controls/electrics/r-gen-switch", func {
+    var v = getprop("sim/model/f-14b/controls/electrics/r-gen-switch");
+    if(usingJSBSim and v != nil)
+    {
+        if (v)
+        {
+            setprop("fdm/jsbsim/systems/electrics/rgenerator-status", 1);
+        }
+        else
+        {
+            setprop("fdm/jsbsim/systems/electrics/rgenerator-status", 0);
+        }
+    }
+}, 1, 0);
+
+setlistener("sim/model/f-14b/controls/electrics/emerg-gen-switch", func {
+    var guard = getprop("sim/model/f-14b/controls/electrics/emerg-gen-guard-lever");
+    if (!guard)
+    {
+        setprop("sim/model/f-14b/controls/electrics/emerg-gen-switch",1);
+    }
+    var v = getprop("sim/model/f-14b/controls/electrics/emerg-gen-switch");
+    if(usingJSBSim and v != nil)
+    {
+        if (v)
+        {
+            setprop("fdm/jsbsim/systems/electrics/emerg-generator-status", 1);
+        }
+        else
+        {
+            setprop("fdm/jsbsim/systems/electrics/emerg-generator-status", 0);
         }
     }
 }, 1, 0);

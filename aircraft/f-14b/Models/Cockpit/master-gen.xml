@@ -1,0 +1,138 @@
+<PropertyList>
+
+	<path>master-gen.ac</path>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>emerg-gen-guard-lever</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/emerg-gen-guard-lever</property>
+			</binding>
+			<binding>
+    			<command>property-assign</command>
+				<property>sim/model/f-14b/controls/electrics/emerg-gen-switch</property>
+				<value>1</value>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>l-gen-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/l-gen-switch</property>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>r-gen-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/r-gen-switch</property>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<condition>
+    		<property>sim/model/f-14b/controls/electrics/emerg-gen-guard-lever</property>
+		</condition>
+
+		<object-name>emerg-gen-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/emerg-gen-switch</property>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>l-gen-switch</object-name>
+		<property>sim/model/f-14b/controls/electrics/l-gen-switch</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0271</x-m>
+			<y-m>-0.0154</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>r-gen-switch</object-name>
+		<property>sim/model/f-14b/controls/electrics/r-gen-switch</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0271</x-m>
+			<y-m>-0.0154</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>emerg-gen-switch</object-name>
+		<property>sim/model/f-14b/controls/electrics/emerg-gen-switch</property>
+		<factor>60</factor>
+		<center>
+			<x-m>-0.0271</x-m>
+			<y-m>-0.0154</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>emerg-gen-guard-lever</object-name>
+		<property>sim/model/f-14b/controls/electrics/emerg-gen-guard-lever</property>
+		<factor>120</factor>
+		<center>
+			<x-m>-0.0417</x-m>
+			<y-m>-0.0148</y-m>
+			<z-m> 0.0113</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>-1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+</PropertyList>
