@@ -192,8 +192,12 @@ aircraft.data.add(	bingo,
 
 
 # Accelerometer ###########
-#var g_curr  = props.globals.getNode("accelerations/pilot-g", 1);
-var g_curr  = props.globals.getNode("accelerations/pilot-gdamped", 1);
+var g_curr  = props.globals.getNode("accelerations/pilot-g", 1);
+
+if (f14.usingJSBSim)
+{
+    g_curr  = props.globals.getNode("accelerations/pilot-gdamped", 1);
+}
 
 var g_max   = props.globals.getNode("sim/model/f-14b/instrumentation/g-meter/g-max", 1);
 var g_min   = props.globals.getNode("sim/model/f-14b/instrumentation/g-meter/g-min", 1);
@@ -449,6 +453,35 @@ var main_loop = func {
 	settimer(main_loop, UPDATE_PERIOD);
 }
 
+var common_init = func {
+    if(f14.usingJSBSim)
+    {
+        if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
+        {
+            print("Starting with gear down as below 500 ft");
+            setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
+            setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
+            setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+            setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+            setprop("/controls/gear/brake-parking",1);
+        }
+        if (getprop("/sim/presets/carrier") != "") # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
+        {
+            print("Special init for Carrier cat launch");
+            setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
+            setprop("gear/launchbar/position-norm",1);
+            setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
+        }
+var parkpos = getprop("/sim/presets/parkpos");
+        if (getprop("/sim/presets/carrier") != "" and parkpos != nil and size(parkpos) > 4 and substr(parkpos,0,4) == "cat-")
+        {
+            print ("Special init for cat-");
+
+#    setprop("/fdm/jsbsim/position/h-sl-ft",10+getprop("/fdm/jsbsim/position/h-sl-ft"));
+#        setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
+        }
+    }
+}
 
 # Init ####################
 var init = func {
@@ -470,6 +503,15 @@ var init = func {
 	foreach (var f_tc; TcFreqs.getChildren()) {
 		aircraft.data.add(f_tc);
 	}
+
+    common_init();
+    if (getprop("/sim/presets/carrier") != "" and getprop("/fdm/jsbsim/position/h-agl-ft") < 100)
+#and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
+{
+    print ("Special launch init for cat-");
+       setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
+       setprop("orientation/pitch-deg",0);
+}
 	# launch
 	if ( ! main_loop_launched ) {
 		settimer(main_loop, 0.5);
@@ -479,15 +521,24 @@ var init = func {
 }
 
 setlistener("sim/signals/fdm-initialized", init);
+setprop("/sim/alt", 9.418674826);
+setprop("/sim/init-delay", 0.9);
 
 setlistener("sim/signals/reinit", func (reinit) {
+        print("Reint ",reinit);
 	if (reinit.getValue()) {
 		f14.internal_save_fuel();
+        setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
 	} else {
+
 		settimer(func { f14.internal_restore_fuel() }, 0.6);
+		settimer(func { common_init() }, getprop("/sim/init-delay"));
+#		settimer(func { setprop("/fdm/jsbsim/position/h-agl-ft",getprop("sim/alt")); }, );
+#    setprop("/position/altitude-agl-ft", getprop("sim/alt"));
+#        setprop("/fdm/jsbsim/position/h-agl-ft",getprop("sim/alt"));
+
 	}
 });
-
 # Miscelaneous definitions and tools ############
 
 # warning lights medium speed flasher

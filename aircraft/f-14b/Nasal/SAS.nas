@@ -24,9 +24,9 @@ var AirSpeed   = props.globals.getNode("velocities/airspeed-kt");
 var SasPitchOn = props.globals.getNode("sim/model/f-14b/controls/SAS/pitch");
 var SasRollOn  = props.globals.getNode("sim/model/f-14b/controls/SAS/roll");
 var SasYawOn   = props.globals.getNode("sim/model/f-14b/controls/SAS/yaw");
-var fdm_yawdamper   = props.globals.getNode("fdm/jsbsim/fcs/yaw-damper-enable");
-var fdm_pitchdamper   = props.globals.getNode("fdm/jsbsim/fcs/pitch-damper-enable");
-var fdm_roll_sas   = props.globals.getNode("fdm/jsbsim/fcs/roll-sas-enable");
+var fdm_yawdamper   = props.globals.getNode("fdm/jsbsim/fcs/yaw-damper-enable",1);
+var fdm_pitchdamper   = props.globals.getNode("fdm/jsbsim/fcs/pitch-damper-enable",1);
+var fdm_roll_sas   = props.globals.getNode("fdm/jsbsim/fcs/roll-sas-enable",1);
 
 var DeadZPitch = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-pitch");
 var DeadZRoll  = props.globals.getNode("sim/model/f-14b/controls/AFCS/dead-zone-roll");
@@ -197,17 +197,18 @@ var computeSAS = func {
 		if (airspeed > p_lo_speed) p_input *= p_lo_speed_sqr / airspeed_sqr;
 		SasPitch.setValue(p_input * ! o_sweep);
 		SASpitch = p_input; # Used by adverse.nas 
+
 	}
 
   	# Yaw Channel
    	var raw_r    = RawRudder.getValue();
    	var smooth_r = raw_r;
-
    	if (SasYawOn.getValue()) {
     		smooth_r = last_r + ((raw_r - last_r) * r_smooth_factor);
 	    	last_r = smooth_r;
     }
    	SasYaw.setValue(smooth_r);
+
 }
 setlistener("sim/model/f-14b/controls/SAS/yaw", func {
     if(usingJSBSim)        fdm_yawdamper.setValue(SasYawOn.getValue());

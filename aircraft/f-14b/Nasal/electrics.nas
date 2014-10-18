@@ -293,6 +293,23 @@ var runEMMISC = func {
         }
     }
 
+	if (getprop("gear/launchbar/position-norm") and (getprop("controls/engines/engine[0]/throttle") < 0.95 or getprop("controls/engines/engine[1]/throttle") < 0.95 ))
+    {
+        if (!getprop("sim/model/f-14b/lights/ca-launch-bar"))
+        {
+            setprop("sim/model/f-14b/lights/ca-launch-bar",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f-14b/lights/ca-launch-bar"))
+        {
+            setprop("sim/model/f-14b/lights/ca-launch-bar",0);
+        }
+    }
+
     if (canopy.getValue() > 0)
     {
 		if (!ca_canopy_light.getBoolValue()){

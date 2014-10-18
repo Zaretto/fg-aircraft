@@ -115,7 +115,8 @@ var aux_flap_output    = props.globals.getNode("surface-positions/aux-flap-pos-n
 var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
 
 if (usingJSBSim){
-    aux_flap_output    = props.globals.getNode("fcs/aux-flap-pos-deg", 1);
+    aux_flap_output    = props.globals.getNode("/fdm/jsbsim/fcs/aux-flap-pos-norm", 1);
+    aux_flap_output.setDoubleValue(0);
 }
 else
 {
@@ -134,19 +135,19 @@ var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/positio
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn");
 
-var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]");
-var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]");
-var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]");
-var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]");
-var left_elev_generic  = props.globals.getNode("sim/multiplay/generic/float[4]");
-var right_elev_generic = props.globals.getNode("sim/multiplay/generic/float[5]");
-var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]");
+var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
+var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
+var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
+var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]",1);
+var left_elev_generic  = props.globals.getNode("sim/multiplay/generic/float[4]",1);
+var right_elev_generic = props.globals.getNode("sim/multiplay/generic/float[5]",1);
+var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1);
 # sim/multiplay/generic/int[1] used by formation slimmers.
 # sim/multiplay/generic/int[2] used by radar standby.
-var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]");
-var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]");
-var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]");
-var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]");
+var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
+var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
+var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
+var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
 
@@ -262,7 +263,14 @@ var timedMotions = func {
     if (usingJSBSim)
     {
         if (main_flap_generic != nil)
+        {    
     	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
+        } 
+
+        if (aux_flap_generic != nil)
+        {
+            aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
+        }
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var elevator_deflection_due_to_aileron_deflection =  aileron.getValue() / 2.0;

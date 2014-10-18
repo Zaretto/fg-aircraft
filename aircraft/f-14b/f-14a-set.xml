@@ -26,11 +26,13 @@
         <aero>f-14a</aero>
 		<fuel-fraction>0.1</fuel-fraction>
 
+<!--
 		<systems>
 			<autopilot>
 				<path>Aircraft/f-14b/f-14b-AFCS.xml</path>
 			</autopilot>
 		</systems>
+-->
 
 		<flight-recorder>
 			<replay-config type="int">0</replay-config>
@@ -963,11 +965,13 @@
  </fdm>
 
 	<systems>
-		<electrical>
-			<path>Aircraft/f-14b/Systems/f-14b-electrical.xml</path>
-		</electrical>
 		<refuel>
 			<type>probe</type>
+			<serviceable type="bool">true</serviceable>
+			<max-fuel-transfer-lbs-min>3230</max-fuel-transfer-lbs-min>	<!-- 475 gallons/min @ 6.8 lbs/gallon AVCAT density -->
+			<offset-x-m>-7.2</offset-x-m>
+			<offset-y-m>1.05</offset-y-m>
+			<offset-z-m>0.04</offset-z-m>
 		</refuel>
 	</systems>
 
@@ -1060,9 +1064,47 @@
 	</engines>
 
 	<input>
-		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml">
+<!--		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml"> -->
+		<keyboard n="0" >
 			<multikey include="Systems/instruments-multikey.xml"/>
 
+ <!-- map keys for launch-bar -->
+ <key n="76">
+   <name>L</name>
+   <desc>Launch-bar engage.</desc>
+<binding>
+					<command>nasal</command>
+					<script>
+if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+{
+print("Disengage launchbar");
+setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+setprop("/controls/gear/brake-parking",1);
+}
+else
+{
+print("Engage launchbar");
+setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
+setprop("/controls/gear/brake-parking",0);
+}
+					</script>
+				</binding>
+ </key>
+ <!-- map keys for catapult launch -->
+ <key n="67">
+   <name>C</name>
+   <desc>Catapult Launch Command.</desc>
+<binding>
+					<command>nasal</command>
+					<script>
+print("Catapult launch");
+setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
+setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+					</script>
+				</binding>
+ </key>
 			<key n="1">
 				<name>CTRL-a</name>
 				<desc>Toggle autopilot altitude mode.</desc>
@@ -1384,6 +1426,9 @@
 	</instrumentation>
 
 	<nasal>
+		<aar>
+			<file>Aircraft/Generic/aar.nas</file>
+		</aar>
 		<radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
 		</radardist>

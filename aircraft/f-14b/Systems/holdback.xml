@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+
+<system name="holdback">
+
+    <property value="0">systems/holdback/holdback-cmd</property>
+
+    <channel name="Holdback_Launchbar">
+
+        <summer name="systems/holdback/total_thrust">
+            <input>propulsion/engine/thrust-lbs</input>
+            <input>propulsion/engine[1]/thrust-lbs</input>
+        </summer>
+
+        <switch name="systems/holdback/launchbar-engaged">
+            <default value="0"/>
+            <test  logic="AND" value="1">
+                systems/holdback/holdback-cmd == 1
+                systems/catapult/cat-launch-cmd eq 0
+                gear/unit[0]/WOW ne 0
+            </test>
+            <test  logic="AND" value="1">
+                systems/catapult/cat-launch-cmd ne 0
+            </test>
+            <output>systems/holdback/launchbar-engaged</output>
+        </switch>
+
+        <switch name="systems/holdback/nws-braking">
+            <default value="0"/>
+            <test  logic="AND" value="1">
+                systems/holdback/launchbar-engaged == 1
+                systems/catapult/cat-launch-cmd eq 0
+            </test>
+            <output>fcs/center-brake-cmd-norm</output>
+        </switch>
+
+        <switch name="systems/holdback/kneel">
+            <default value="0"/>
+            <test  logic="AND" value="0">
+                systems/holdback/launchbar-engaged == 1
+                systems/catapult/cat-launch-cmd eq 0
+            </test>
+        </switch>
+
+        <switch name="systems/holdback/switch">
+            <default value="0"/>
+            <test  logic="AND" value="systems/holdback/total_thrust">
+                systems/holdback/holdback-cmd == 1
+            </test>
+            <output>external_reactions/holdback/magnitude</output>
+        </switch>
+
+    </channel>
+
+</system>

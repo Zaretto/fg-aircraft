@@ -19,6 +19,12 @@
 
   Engine Thrust are based on NASA-TM-104326 tables 4-6 adjusted for altitude and with
   augmentation figures based on that of the mil thrust.
+  
+     The flaps and auxiliary flaps coefficients are modelled based on tuning to meet F-14AAD-1 as no data 
+     is currently available.
+     The proportions assigned are relative to their surface area (as measured roughly 64% main, 36% aux) - 
+     the values assigned are 0.7 and 0.3 based on this and applies to ClDFM, CdDFM and CMDFM
+
   </description>
     <note>Aircraft origin for measurements is the nose.</note>
     <limitation>Spoilers not modelled in ADA101648 - approximations will be used</limitation>
@@ -86,7 +92,7 @@
     retractable?:  yes
     # engines:     2
     engine type:   turbine
-    engine layout: middle fuselage
+Notes:    engine layout: middle fuselage
     yaw damper?    yes
   Outputs:
     wing loading:  1364.22 lb/sq-ft
@@ -97,7 +103,7 @@
     CD-0:          0.024
     K:             0.12
 
-Notes:
+
 1. possibly need to consider differential spoiler deflection on yaw moments
 
 Cockpit control	Stabilizer Surface	Parallel Trim
@@ -123,6 +129,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
  <system file="f-14b-cadc"/>
  <system file="f-14b-apc"/>
  <system file="hook"/>
+ <system file="catapult"/>
+ <system file="holdback"/>
 
  <metrics>
    <wingarea  unit="FT2">   565 </wingarea>
@@ -136,14 +144,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <vtailarm  unit="FT" >   25.10 </vtailarm>
 
    <location name="EYEPOINT" unit="IN">
-     <x> 150.60 </x>
+     <x> 197 </x>
      <y>   0.00 </y>
-     <z>  38.00 </z>
+     <z>  -3.94 </z>
 </location>
    <location name="VRP" unit="IN">
-     <x>0</x>
-     <y>0</y>
-     <z>0</z>
+     <x>  0</x>
+     <y>  0</y>
+     <z>  0 </z>
    </location>
    <location name="AERORP" unit="IN">
       <x> 403 </x>
@@ -156,8 +164,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <location name="CG" unit="IN">
       <x> 403</x>
       <y>   0.00 </y>
-      <z>   0.00 </z>
-      <z0> -18.83 </z0>
+      <z>   -4.00 </z>
     </location>
     <ixx unit="SLUG*FT2">     58950 </ixx>
     <iyy unit="SLUG*FT2">    225600 </iyy>
@@ -240,7 +247,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <location unit="IN">
         <x> 349 </x>
         <y> -368.00 </y>
-        <z> -22 </z>
+        <z> 0 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
@@ -254,7 +261,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <location unit="IN">
         <x> 349 </x>
         <y> 368.00 </y>
-        <z> -22 </z>
+        <z> 0 </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
@@ -279,11 +286,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </contact>
 
     <!--  6 same pos as landing gear for ease of understanding -->
-  <contact type="STRUCTURE" name="MID_BODY_LEFT">
+  <contact type="STRUCTURE" name="MID_BODY">
       <location unit="IN">
-        <x> 432 </x>
-        <y> -98 </y>
-        <z> -110  </z>
+        <x> 431 </x>
+        <y> 0 </y>
+        <z> -100  </z>
       </location>
       <static_friction> 1.2 </static_friction>
       <dynamic_friction> 1.212 </dynamic_friction>
@@ -292,19 +299,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
     </contact>
 
-    <!--  7 same pos as landing gear for ease of understanding  -->
-    <contact type="STRUCTURE" name="MID_BODY_RIGHT">
-      <location unit="IN">
-        <x> 432 </x>
-        <y>  98 </y>
-        <z> -110  </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.212 </dynamic_friction>
-      <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-    </contact>
     <!--  8 -->
     <contact type="STRUCTURE" name="CANOPY">
       <location unit="IN">
@@ -604,6 +598,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <property>fcs/flap-cmd-sum</property>
 
   <property value="1">Factor1</property>
+  <property value="1.8">FactorCl</property>
+  <property value="0.1">FactorCd</property>
+  <property value="1">FactorCM</property>
+  <property value="1.3">FactorClA</property>
+  <property value="0.1">FactorCdA</property>
+  <property value="1">FactorCMA</property>
   <channel name="Pitch">
 
    <summer name="Pitch Trim Sum">
@@ -632,11 +632,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           </range>
           <output>fcs/elevator-pos-demand</output>
       </aerosurface_scale>
-<!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
+
+    <!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
      we limit the sweep to the computed wing-sweep-cadc-pos -->
         <switch name="fcs/wing-sweep-dmd">
             <default value="fcs/wing-sweep-cadc-dmd"/>
 
+          <test value="fcs/wing-sweep-dmd">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
           <test value="fcs/wing-sweep-dmd">
               systems/hydraulics/combined-system-pressure ne 1
           </test>
@@ -650,6 +654,32 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
                 fcs/wing-sweep-auto ne 1
             </test>
+        </switch>
+
+        <switch name="fcs/wing-sweep-dmd-flap-limit">
+            <default value="0.2941176470588235"/>
+            <test value="0.3088235294117647">
+                fcs/aux-flap-pos-deg ne 0
+                fcs/wing-sweep-dmd ge 0.3088235294117647
+                fcs/wing-sweep-dmd lt 0.3235294117647059
+            </test>
+            <test value="0.3235294117647059">
+                fcs/aux-flap-pos-deg ne 0
+                fcs/wing-sweep-dmd ge 0.3235294117647059
+                fcs/wing-sweep-dmd lt 0.3382352941176471
+            </test>
+            <test value="fcs/wing-sweep-dmd">
+                fcs/flap-pos-deg ne 0
+                fcs/wing-sweep-dmd le 0.7352941176470588
+            </test>
+            <test value=".7352941176470588">
+                fcs/flap-pos-deg ne 0
+                fcs/wing-sweep-dmd gt 0.7352941176470588
+            </test>
+            <test value="fcs/wing-sweep-dmd">
+                fcs/flap-pos-deg eq 0
+            </test>
+            <output>fcs/wing-sweep-dmd-flap-limit</output>
         </switch>
 
         <switch name="fcs/spoiler-differential-cmd">
@@ -773,7 +803,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    </aerosurface_scale>
 
       <kinematic name="Sweep Position">
-      <input>fcs/wing-sweep-dmd</input>
+      <input>fcs/wing-sweep-dmd-flap-limit</input>
       <traverse>
           <setting>
               <position>0.294117647</position>
@@ -864,6 +894,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                   systems/hydraulics/combined-system-pressure ne 0
                   gear/unit[1]/WOW ne 0
                   gear/unit[2]/WOW ne 0
+                  systems/holdback/launchbar-engaged eq 0
               </test>
               <output>systems/NWS/engaged</output>
           </switch>
@@ -1147,16 +1178,35 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <test value="fcs/flap-cmd-norm">
               fcs/flap-cmd-norm ne 0
               systems/hydraulics/combined-system-pressure ne 0
+              fcs/wing-sweep-pos-deg le 50
           </test>
           <test value="systems/cadc/manuv-flap-extension-cmd">
               systems/cadc/manuv-flap-extension-cmd ne 0
               systems/hydraulics/combined-system-pressure ne 0
+              fcs/wing-sweep-pos-deg le 50
           </test>
           <clipto>
               <min> 0 </min>
               <max>  1 </max>
           </clipto>
           <output>fcs/flap-total-dmd</output>
+      </switch>
+
+      <switch name="fcs/aux-flap-total-dmd">
+          <default value="0"/>
+          <test value="fcs/aux-flap-total-dmd">
+              systems/hydraulics/combined-system-pressure ne 1
+          </test>
+          <test value="fcs/flap-cmd-norm">
+              fcs/flap-cmd-norm ne 0
+              systems/hydraulics/combined-system-pressure ne 0
+              fcs/wing-sweep-pos-deg le 22
+          </test>
+          <clipto>
+              <min> 0 </min>
+              <max>  1 </max>
+          </clipto>
+          <output>fcs/aux-flap-total-dmd</output>
       </switch>
 
       <switch name="fcs/slat-total-dmd">
@@ -1167,10 +1217,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <test value="fcs/slat-cmd">
               fcs/slat-cmd ne 0
               systems/hydraulics/combined-system-pressure ne 0
+              fcs/wing-sweep-pos-deg le 50
           </test>
           <test value="systems/cadc/manuv-slat-extension-cmd">
               systems/cadc/manuv-slat-extension-cmd ne 0
               systems/hydraulics/combined-system-pressure ne 0
+              fcs/wing-sweep-pos-deg le 50
           </test>
           <clipto>
               <min> 0 </min>
@@ -1204,6 +1256,30 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      </traverse>
      <output>fcs/flap-pos-deg</output>
    </kinematic>
+   <kinematic name="Flaps Control">
+         <input>fcs/aux-flap-total-dmd</input>
+     <traverse>
+       <setting>
+          <position>  0 </position>
+          <time>      0 </time>
+       </setting>
+       <setting>
+          <position> 10 </position>
+          <time>    0.4 </time>
+       </setting>
+       <setting>
+<!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
+          <position> 25 </position>
+          <time>    1.0 </time>
+       </setting>
+       <setting>
+<!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
+          <position> 35 </position>
+          <time>    1.5 </time>
+       </setting>
+     </traverse>
+     <output>fcs/aux-flap-pos-deg</output>
+   </kinematic>
 
    <aerosurface_scale name="flap normalization">
       <input>fcs/flap-pos-deg</input>
@@ -1217,7 +1293,21 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       </range>
       <output>fcs/flap-pos-norm</output>
    </aerosurface_scale>
-  </channel>
+
+   <aerosurface_scale name="aux flap normalization">
+      <input>fcs/aux-flap-pos-deg</input>
+      <domain>
+        <min>  0 </min>
+        <max> 35 </max>
+      </domain>
+      <range>
+        <min> 0 </min>
+        <max> 1 </max>
+      </range>
+      <output>fcs/aux-flap-pos-norm</output>
+   </aerosurface_scale>
+
+      </channel>
 
   <channel name="Slats">
    <kinematic name="Slats Control">
@@ -1520,7 +1610,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             0.00 	0.294117647   0.294117647	 0.294117647
             0.448	0.294117647	  0.294117647	 0.294117647
             0.711	0.308823529	  0.294117647	 0.294117647
-            0.913   1	          0.294117647	 0.294117647
+            0.913   1	          0.735294117	 0.735294117
          </tableData>
        </table>
      </sum>
@@ -1743,7 +1833,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <function name="aero/coefficients/ClDFM">
     <description>Delta Cl due to mean flap position</description>
     <product>
-        <property>Factor1</property>
+        <property>FactorCl</property>
           <table>
             <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
             <independentVar lookup="column">aero/alpha-deg</independentVar>
@@ -1756,11 +1846,29 @@ Post tuning session1:
 * From pre-tuning: 10	-0.18800	0.19200	 0.18800	0.18400 	0.15600	0.02000
 
 -->
-	-20	-5	0	5	10	15	50
-0	0	0	0	0	0	0	0
-10	-0.02	-0.188	0.192	0.188	0.184	0.156	0.02
-35	-0.184	-0.528	0.52	0.528	0.528	0.44	0.184
-50	-0.35	-0.86	0.85	0.86	0.84	0.66	0.35
+                             -20	      -5	      0	      5	     10	     15	     50	  
+                     0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                    10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
+                    35	-0.05520	-0.15840	0.15600	0.15840	0.15840	0.13200	0.05520
+                    50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
+            </tableData>
+          </table>
+       </product>
+    </function>
+
+    <function name="aero/coefficients/ClDAFM">
+    <description>Delta Cl due to mean aux flap position</description>
+    <product>
+        <property>FactorClA</property>
+          <table>
+            <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
+            <independentVar lookup="column">aero/alpha-deg</independentVar>
+            <tableData>
+                             -20	      -5	      0	      5	     10	     15	     50
+                     0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                    10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
+                    35	-0.05520	-0.15840	0.15600	0.15840	0.15840	0.13200	0.05520
+                    50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
             </tableData>
           </table>
        </product>
@@ -1918,6 +2026,7 @@ Post tuning session1:
              <property>aero/coefficients/DClDS2</property>
              <property>aero/coefficients/ClUC</property>
              <property>aero/coefficients/ClDFM</property>
+             <property>aero/coefficients/ClDAFM</property>
              <property>aero/coefficients/DClSLM</property>
 <!--             <property>aero/coefficients/ClDSp</property> -->
          </sum>
@@ -2061,14 +2170,33 @@ Post tuning session1:
     <description>Delta Cd due to mean flap position</description>
     <product>
           <table>
+        <property>FactorCd</property>
             <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
             <independentVar lookup="column">aero/alpha-deg</independentVar>
             <tableData>
-	-30	-25	-20	-15	-10	-5	0	5	10	15	20	25	30	35	45	50
-10	0.155826	0.131382	0.102701	0.085635	0.071042	0.057131	0.033120	0.057131	0.071042	0.085635	0.102701	0.131382	0.155826	0.163510	0.150487	0.134684
-25	0.389566	0.328455	0.256752	0.214086	0.177604	0.142827	0.082800	0.142827	0.177604	0.214086	0.256752	0.328455	0.389566	0.408776	0.376218	0.336710
-35	0.612175	0.492682	0.369198	0.325327	0.279092	0.215121	0.122400	0.215122	0.279092	0.325327	0.369198	0.492682	0.612175	0.681293	0.677192	0.673420
-50	0.868176	0.681544	0.509756	0.440766	0.402049	0.310339	0.172800	0.310339	0.402049	0.440766	0.509756	0.681544	0.868176	0.994688	1.023313	1.060637
+                        -30	    -25	    -20	    -15	    -10	     -5	      0	      5	     10	     15	     20	     25	     30	    35	    45	    50
+                10	0.10908	0.09197	0.07189	0.05994	0.04973	0.03999	0.02318	0.03999	0.04973	0.05994	0.07189	0.09197	0.10908	0.11446	0.10534	0.09428
+                25	0.27270	0.22992	0.17973	0.14986	0.12432	0.09998	0.05796	0.09998	0.12432	0.14986	0.17973	0.22992	0.27270	0.28614	0.26335	0.23570
+                35	0.42852	0.34488	0.25844	0.22773	0.19536	0.15058	0.08568	0.15059	0.19536	0.22773	0.25844	0.34488	0.42852	0.47691	0.47403	0.47139
+                50	0.60772	0.47708	0.35683	0.30854	0.28143	0.21724	0.12096	0.21724	0.28143	0.30854	0.35683	0.47708	0.60772	0.69628	0.71632	0.74245
+            </tableData>
+          </table>
+       </product>
+    </function>
+
+    <function name="aero/coefficients/CdDAFM">
+    <description>Delta Cd due to mean flap position</description>
+    <product>
+          <table>
+        <property>FactorCdA</property>
+            <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
+            <independentVar lookup="column">aero/alpha-deg</independentVar>
+            <tableData>
+                        -30	    -25	    -20	    -15	    -10	     -5	      0	      5	     10	     15	     20	     25	     30	    35	    45	    50
+              10	0.04675	0.03941	0.03081	0.02569	0.02131	0.01714	0.00994	0.01714	0.02131	0.02569	0.03081	0.03941	0.04675	0.04905	0.04515	0.04041
+              25	0.11687	0.09854	0.07703	0.06423	0.05328	0.04285	0.02484	0.04285	0.05328	0.06423	0.07703	0.09854	0.11687	0.12263	0.11287	0.10101
+              35	0.18365	0.14780	0.11076	0.09760	0.08373	0.06454	0.03672	0.06454	0.08373	0.09760	0.11076	0.14780	0.18365	0.20439	0.20316	0.20203
+              50	0.26045	0.20446	0.15293	0.13223	0.12061	0.09310	0.05184	0.09310	0.12061	0.13223	0.15293	0.20446	0.26045	0.29841	0.30699	0.31819
             </tableData>
           </table>
        </product>
@@ -2167,6 +2295,7 @@ Post tuning session1:
              <property>aero/coefficients/DCdDS2</property>
              <property>aero/coefficients/CdUC</property>
              <property>aero/coefficients/CdDFM</property>
+             <property>aero/coefficients/CdDAFM</property>
              <property>aero/coefficients/CdDSLM</property>
              <property>aero/coefficients/CdDBRK</property>
              <property>aero/coefficients/CdTNK</property>
@@ -2816,12 +2945,30 @@ Post tuning session1:
           <table>
             <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
             <independentVar lookup="column">aero/alpha-deg</independentVar>
+        <property>FactorCM</property>
             <tableData>
-	                         0	       5	      10	      15	      20  60
-                 0	 0.00000	 0.00000	 0.00000	 0.00000	 0.00000   0.00000
-                 5  +0.01320	+0.01964	+0.0254 	+0.02660	+0.01140	+0.01140
-                15  +0.01520	+0.02164	+0.03484	+0.02660	+0.01140	+0.01140
-                40	+0.02112	+0.02262	+0.01574	+0.01056	 0.00000	 0.00000
+	                       0	       5	     10 	      15	     20	         60
+                 0	 0.00000	 0.00000	0.00000 	 0.00000	0.00000 	0.00000
+                 5   0.01320	 0.00396	0.00589 	 0.00762	0.00798 	0.00342
+                15   0.01520	 0.00456	0.00649 	 0.01045	0.00798 	0.00342
+                40	 0.00634	 0.00679	0.00472 	 0.00317	0.00000 	0.00000
+            </tableData>
+          </table>
+       </product>
+    </function>
+    <function name="aero/coefficients/CMDAFM">
+    <description>CM increment due to flap mean position</description>
+    <product>
+          <table>
+        <property>FactorCMA</property>
+            <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
+            <independentVar lookup="column">aero/alpha-deg</independentVar>
+            <tableData>
+	                       0	       5	     10 	      15	     20	         60
+                 0	 0.00000	0.00000 	0.00000 	0.00000 	0.00000 	0.00000
+                 5   0.01320	0.00924 	0.01375 	0.01778 	0.01862 	0.00798
+                15   0.01520	0.01064 	0.01515 	0.02439 	0.01862 	0.00798
+                40	 0.01478	0.01583 	0.01102 	0.00739 	0.00000 	0.00000
                <!--40	-0.24240	-0.21760	-0.19360	-0.15600	-0.16400-->
             </tableData>
           </table>
@@ -2837,6 +2984,7 @@ Post tuning session1:
              <property>aero/coefficients/DCMDS2</property>
              <property>aero/coefficients/CMUC</property>
              <property>aero/coefficients/CMDFM</property>
+             <property>aero/coefficients/CMDAFM</property>
              <property>aero/coefficients/CMBRK</property>
              <!--<property>aero/coefficients/CMDSLM</property> Slats are included in flaps (DFM) -->
              <property>aero/coefficients/CMDSp</property>
@@ -3114,6 +3262,32 @@ Post tuning session1:
 </aerodynamics>
 
   <external_reactions>
+    <force name="catapult" frame="LOCAL">
+      <location unit="IN">
+        <x> -260.0 </x>
+        <y>    0.0 </y>
+        <z>    0.0 </z>
+      </location>
+      <direction>
+        <x>   -0.9612617 </x>
+        <y>   -0.2756374 </y>
+        <z>    0.0 </z>
+      </direction>
+    </force>
+    
+    <force name="holdback" frame="BODY">
+      <location unit="IN">
+        <x> -250.0 </x>
+        <y>    0.0 </y>
+        <z>  -30.0 </z>
+      </location>
+      <direction>
+        <x>   -1.0 </x>
+        <y>    0.0 </y>
+        <z>    0.0 </z>
+      </direction>
+    </force>
+    
     <force name="hook" frame="BODY">
       <location unit="IN">
         <x>  677.669 </x>

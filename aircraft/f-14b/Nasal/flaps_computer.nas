@@ -75,6 +75,19 @@ controls.flapsDown = func(s) {
 var flapDemandIncrement = 0.1;
 
 var lowerFlaps = func {
+	if (usingJSBSim)
+    {
+if (FlapsCmd.getValue() < 0.5)
+        demandedFlaps = 0.5;
+else if (demandedFlags < 1) demandedFlaps = FlapsCmd.getValue() + flapDemandIncrement;
+
+if (demandedFlags >= 1.0) demandedFlaps = 1.0;
+
+		FlapsCmd.setValue(demandedFlaps); # Landing.
+        print("F14: lower flaps ",demandedFlaps);
+}
+else
+{
 	if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.3235294117647059) # only flaps with <= 22 deg
     {
 if (FlapsCmd.getValue() < 0.5)
@@ -86,6 +99,7 @@ if (demandedFlags >= 1.0) demandedFlaps = 1.0;
 		FlapsCmd.setValue(demandedFlaps); # Landing.
         print("F14: lower flaps ",demandedFlaps);
 	}
+}
 }
 
 var raiseFlaps = func {

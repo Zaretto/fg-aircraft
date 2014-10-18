@@ -77,12 +77,15 @@ var right_shut_off = 0;
 
 var LeftEngine		= props.globals.getNode("engines").getChild("engine", 0);
 var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
+var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
+var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
+if (usingJSBSim)
+{
 var JSBLeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
 var JSBRightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
-#var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
-#var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
-var LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
-var RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
+LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
+RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
+}
 var LeftEngineRunning		= LeftEngine.getNode("running", 1);
 var RightEngineRunning		= RightEngine.getNode("running", 1);
 LeftEngine.getNode("out-of-fuel", 1);
@@ -315,27 +318,37 @@ var fuel_update = func {
     if (!f14.usingJSBSim)
     {
 
-var left_fuel_consumed  = 0;
-var right_fuel_consumed = 0;
-	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
-	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
+        var left_fuel_consumed  = 0;
+        var right_fuel_consumed = 0;
+        left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
+        right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
 
 # Transfer from the proportioners to the engines, reset the consumed fuel, Set engines.
-	left_fuel_consumed = LeftFuel.getValue();
-	right_fuel_consumed = RightFuel.getValue();
-	left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
-	right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
-	LeftFuel.setDoubleValue(0);
-	RightFuel.setDoubleValue(0);
+        left_fuel_consumed = LeftFuel.getValue();
+        right_fuel_consumed = RightFuel.getValue();
+        left_outOfFuel = Left_Proportioner.update(left_fuel_consumed);
+        right_outOfFuel = Right_Proportioner.update(right_fuel_consumed);
+        LeftFuel.setDoubleValue(0);
+        RightFuel.setDoubleValue(0);
 
-	if ( left_outOfFuel ) {
-		LeftEngine.getNode("out-of-fuel").setBoolValue(1)
-	} else { LeftEngine.getNode("out-of-fuel").setBoolValue(0) }
-	if ( right_outOfFuel ) {
-		RightEngine.getNode("out-of-fuel").setBoolValue(1)
-	} else { RightEngine.getNode("out-of-fuel").setBoolValue(0) }
-
+        if ( left_outOfFuel )
+        {
+            LeftEngine.getNode("out-of-fuel").setBoolValue(1);
+        }
+        else
+        {
+            LeftEngine.getNode("out-of-fuel").setBoolValue(0);
+        }
+        if ( right_outOfFuel ) 
+        {
+            RightEngine.getNode("out-of-fuel").setBoolValue(1);
+        } 
+        else
+        { 
+            RightEngine.getNode("out-of-fuel").setBoolValue(0) ;
+        }
     }
+
 	# Transfer from left sump to left proportioner (left feed line).
 	if ( Left_Proportioner.get_ullage() > 0 ) {
 		left_sump_level = Left_Sump.get_level();
