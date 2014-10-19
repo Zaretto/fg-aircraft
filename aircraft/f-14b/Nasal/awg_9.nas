@@ -183,7 +183,7 @@ var az_scan = func() {
 			u.get_heading();
 			var horizon = u.get_horizon( our_alt );
 			var u_rng = u.get_range();
-				var nom = u.Callsign.getValue();
+#				var nom = u.Callsign.getValue();
 #				print(nom, " ", u_rng, " horizon ",horizon, " our alt ",our_alt, " mrc ",my_radarcorr);
 			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr)) {
 #				print(" --> ",nom, " ", u_rng, " ", radardist.radis(u.string, my_radarcorr));
@@ -212,7 +212,12 @@ var az_scan = func() {
 	}	
 	swp_deg_last = swp_deg;
 	swp_dir_last = swp_dir;
-	cnt += f14_instruments.UPDATE_PERIOD
+
+#    if (f14_instruments != nil)
+#        cnt += f14_instruments.UPDATE_PERIOD;
+#    else
+        cnt += 0.05;
+
 }
 
 

@@ -43,6 +43,7 @@ var fixAirframe = func {
 var computeWingBend = func {
 	# Tears one wing if ultimate limits are exceeded.
 	var av_currentG = getprop ("sim/model/f-14b/instrumentation/g-meter/g-max-mooving-average");   
+    if (av_currentG == nil) return;
 	if (av_currentG >= UltimateMaxG or av_currentG <= UltimateMinG) {
 		if (!RightWingTorn and !LeftWingTorn) {
 			whichWingToTear = rand();
@@ -58,6 +59,9 @@ var computeWingBend = func {
 	}
 	#effects of normal acceleration
 	var currentG = getprop ("accelerations/pilot-gdamped");   
+    
+    if (currentG == nil) return;
+
 	if (currentG >= MaxGreached) MaxGreached = av_currentG;
 	if (currentG <= MinGreached) MinGreached = av_currentG;
 	if (MaxGreached > MaxG and MaxGreached < UltimateMaxG) {
