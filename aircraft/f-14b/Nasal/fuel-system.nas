@@ -1028,7 +1028,7 @@ print("\n set_fuel to ",total," delta ",total_delta);
     var delta = total_delta / 2;
 print ("\nDoing side ",i, " adjust by ",delta);
 #	foreach (var t; Tank.list)
-    for (var tank_idx=start; tank_idx != end; tank_idx = tank_idx + inc)
+    for (var tank_idx=start; tank_idx != end+1; tank_idx = tank_idx + inc)
     {
       var t = Tank.list[tank_idx];
       #
