@@ -162,6 +162,15 @@ var toggle_ext_tank_selected = func() {
 	update_wpstring();
 }
 
+var init_set_stores_mass = func {
+    if (usingJSBSim)
+    {
+    	foreach (var S; Station.list) {
+        print("Ext: ",S.index);
+        }
+    }
+}
+
 var update_wpstring = func {
 	var b_wpstring = "";
 	foreach (var S; Station.list) {
@@ -254,8 +263,21 @@ Station = {
 		obj.index = number;
 		obj.type = obj.prop.getNode("type", 1);
 		obj.display = obj.prop.initNode("display", 0, "INT");
+if(usingJSBSim)
+{
+# the jsb external loads from 0-9 match the indexes used here incremented by 1 as the first element
+# in jsb sim doesn't have [0]
+var propname = sprintf( "fdm/jsbsim/inertia/pointmass-weight-lbs[%d]",number);
+
+print ("Index ",weight_number," prop ",propname);
+#		obj.weight = props.globals.getNode(propname , 1);
+		obj.weight_lb = props.globals.getNode(propname , 1);
+}
+else
+{
 		obj.weight = props.globals.getNode("sim").getChild ("weight", weight_number , 1);
 		obj.weight_lb = obj.weight.getNode("weight-lb");
+}
 		obj.bcode = 0;
 		obj.selected = obj.prop.getNode("selected");
 

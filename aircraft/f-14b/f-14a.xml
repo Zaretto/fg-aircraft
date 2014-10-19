@@ -170,8 +170,93 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <iyy unit="SLUG*FT2">    225600 </iyy>
     <izz unit="SLUG*FT2">    285000 </izz>
     <!-- using GE F110 engines but aero is for F14A -->
-
+<!-- left to right; 01 pylons, 2 left tank, 3456 centre rails, 7 right tank, 89 right  pylons -->
     <emptywt unit="LBS" >     42104 </emptywt>
+    <pointmass name="Left Pylon0">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 403 </x>
+            <y> -100 </y>
+            <z> -13 </z>
+        </location>
+    </pointmass>
+    <pointmass name="Left Pylon1">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 403 </x>
+            <y> -95 </y>
+            <z> -10 </z>
+        </location>
+    </pointmass>
+    <pointmass name="Left External Tank2">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+          <x>416</x>
+          <y>-55</y>
+          <z>-110</z>
+        </location>
+    </pointmass>
+    
+    <pointmass name="Centre Left Front3">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 339 </x>
+            <y> -5 </y>
+            <z> -3 </z>
+        </location>
+    </pointmass>
+
+    <pointmass name="Centre Left Rear4">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 520 </x>
+            <y> -5 </y>
+            <z> -3 </z>
+        </location>
+    </pointmass>
+    <pointmass name="Centre Right Front5">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 339 </x>
+            <y>   5 </y>
+            <z>  -3 </z>
+        </location>
+    </pointmass>
+
+    <pointmass name="Centre Right Rear6">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 520 </x>
+            <y>   5 </y>
+            <z>  -3 </z>
+        </location>
+    </pointmass>
+
+    <pointmass name="Right External Tank7">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+          <x>416</x>
+          <y> 55</y>
+          <z>-110</z>
+        </location>
+    </pointmass>
+
+    <pointmass name="Right Pylon8">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 403 </x>
+            <y> 100 </y>
+            <z> -13 </z>
+        </location>
+    </pointmass>
+    <pointmass name="Right Pylon9">
+        <weight unit="LBS"> 0 </weight>
+        <location name="POINTMASS" unit="IN">
+            <x> 403 </x>
+            <y> 95 </y>
+            <z> -10 </z>
+        </location>
+    </pointmass>
     <!-- <emptywt unit="LBS" >     22104 </emptywt>
     <pointmass name="Front mass">
         <weight unit="LBS"> 10020 </weight>
@@ -597,7 +682,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <property>fcs/spoiler-ground-brake-armed</property>
   <property>fcs/flap-cmd-sum</property>
 
-  <property value="1">Factor1</property>
+  <property value="0.631">Factor1</property>
   <property value="1.8">FactorCl</property>
   <property value="0.1">FactorCd</property>
   <property value="1">FactorCM</property>
@@ -2088,6 +2173,7 @@ Post tuning session1:
    <function name="aero/coefficients/CdMach">
     <description>Drag factor due to mach (NASA-TP-2580 Figure 16)</description>
     <product>
+          <property>Factor1</property>
           <table>
             <independentVar lookup="row">velocities/mach</independentVar>
             <tableData>
@@ -2119,7 +2205,6 @@ Post tuning session1:
      <function name="aero/coefficients/CdBAS">
     <description>CdBAS</description>
     <product>
-          <property>aero/coefficients/CdMach</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2289,18 +2374,21 @@ Post tuning session1:
      </function>
      
      <function name="aero/coefficients/Cd">
-         <sum>
-             <property>aero/coefficients/CdBAS</property>
-             <property>aero/coefficients/DCdDS1</property>
-             <property>aero/coefficients/DCdDS2</property>
-             <property>aero/coefficients/CdUC</property>
-             <property>aero/coefficients/CdDFM</property>
-             <property>aero/coefficients/CdDAFM</property>
-             <property>aero/coefficients/CdDSLM</property>
-             <property>aero/coefficients/CdDBRK</property>
-             <property>aero/coefficients/CdTNK</property>
-             <property>aero/coefficients/CdDSp</property>
-         </sum>
+         <product>
+             <property>aero/coefficients/CdMach</property>
+             <sum>
+                 <property>aero/coefficients/CdBAS</property>
+                 <property>aero/coefficients/DCdDS1</property>
+                 <property>aero/coefficients/DCdDS2</property>
+                 <property>aero/coefficients/CdUC</property>
+                 <property>aero/coefficients/CdDFM</property>
+                 <property>aero/coefficients/CdDAFM</property>
+                 <property>aero/coefficients/CdDSLM</property>
+                 <property>aero/coefficients/CdDBRK</property>
+                 <property>aero/coefficients/CdTNK</property>
+                 <property>aero/coefficients/CdDSp</property>
+             </sum>
+         </product>
      </function>
 
 
