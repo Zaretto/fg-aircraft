@@ -463,16 +463,23 @@ var common_init = func {
             setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
             setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
             setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-            setprop("/controls/gear/brake-parking",1);
+            if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
+            {
+                setprop("/controls/gear/brake-parking",1);
+                print("--> Set parking brake as below 50 ft");
+            }
         }
-        if (getprop("/sim/presets/carrier") != "") # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
+
+        var carrier = getprop("/sim/presets/carrier");
+        if (carrier != nil and carrier != "" ) # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
         {
             print("Special init for Carrier cat launch");
             setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
             setprop("gear/launchbar/position-norm",1);
             setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
         }
-var parkpos = getprop("/sim/presets/parkpos");
+
+        var parkpos = getprop("/sim/presets/parkpos");
         if (getprop("/sim/presets/carrier") != "" and parkpos != nil and size(parkpos) > 4 and substr(parkpos,0,4) == "cat-")
         {
             print ("Special init for cat-");
@@ -505,7 +512,8 @@ var init = func {
 	}
 
     common_init();
-    if (getprop("/sim/presets/carrier") != "" and getprop("/fdm/jsbsim/position/h-agl-ft") < 100)
+var carrier = getprop("/sim/presets/carrier");
+    if (carrier != nil and carrier != "" and getprop("/fdm/jsbsim/position/h-agl-ft") < 100)
 #and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
 {
     print ("Special launch init for cat-");
