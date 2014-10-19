@@ -12,7 +12,6 @@ var main_ap_engaged = props.globals.getNode("sim/model/f-14b/controls/AFCS/engag
 
 # State
 var alt_enable      = props.globals.getNode("sim/model/f-14b/controls/AFCS/altitude-enable");
-	
 # References
 var press_alt_ft = props.globals.getNode("instrumentation/altimeter/pressure-alt-ft");
 var pitch_deg    = props.globals.getNode("orientation/pitch-deg");
@@ -21,6 +20,7 @@ var hdg_bug     = props.globals.getNode("orientation/heading-magnetic-deg");
 
 # Settings
 var target_alt   = props.globals.getNode("autopilot/settings/target-altitude-ft", 1);
+
 var target_pitch  = props.globals.getNode("autopilot/settings/target-pitch-deg", 1);
 var target_roll  = props.globals.getNode("autopilot/settings/target-roll-deg", 1);
 var target_hdg   = props.globals.getNode("autopilot/settings/heading-bug-deg", 1);
@@ -28,7 +28,12 @@ var target_hdg   = props.globals.getNode("autopilot/settings/heading-bug-deg", 1
 # Locks
 var ap_alt_lock  = props.globals.getNode("autopilot/locks/altitude");
 var ap_hdg_lock  = props.globals.getNode("autopilot/locks/heading");
-
+if (f14.usingJSBSim)
+{
+print("JSB Sim afcs alt hold active");
+target_alt   = props.globals.getNode("fdm/jsbsim/systems/afcs/target-altitude-ft", 1);
+ap_alt_lock  = props.globals.getNode("fdm/jsbsim/systems/afcs/altitude-hold-active",1);
+}
 # Locks Flag (used by SAS.nas to override Autopilot when Control Stick Steering).
 # 0 = off, 1 = enabled, 2 = temporarly overriden  
 var ap_lock_att          = 0; 
@@ -113,9 +118,16 @@ var afcs_altitude_engage_toggle = func() {
 		alt_switch.setBoolValue(0);
 		alt_enable.setBoolValue(0);
 		afcs_altitude_disengage();
+print("Alt disengage");
 	} else {
 		alt_switch.setBoolValue(1);
 		alt_enable.setBoolValue(1);
+print("Alt engage");
+if (f14.usingJSBSim)
+{
+target_alt.setValue(press_alt_ft.getValue());
+ap_alt_lock.setValue(1);
+}
 	}
 }
 
@@ -136,7 +148,16 @@ var afcs_attitude_engage = func() {
 	if ( pdeg < -30 ) { pdeg = -30 }
 	if ( pdeg > 30 ) { pdeg = 30 }
 	target_pitch.setValue(pdeg);
-	ap_alt_lock.setValue("pitch-hold");
+
+    if (!f14.usingJSBSim)
+	    ap_alt_lock.setValue("pitch-hold");
+else
+{
+target_alt.setValue(press_alt_ft.getValue());
+print("Alt lock engage[1]");
+ap_alt_lock.setValue(1);
+
+}
 
 	var rdeg = roll_deg.getValue();
 	if ( hdg_gt_switch.getBoolValue()) {	
@@ -171,12 +192,21 @@ var afcs_heading_engage = func() {
 var afcs_engage_selected_mode = func() {
 	# Two steps modes.
 	# Altitude, Ground Track, Vec PCD / ACL
+print ("afcs_engage_Selected_mode");
 	if ( main_ap_engaged.getBoolValue()) {
 		# This is Altitude step #2
 		if (alt_enable.getBoolValue()) {
 			target_alt.setValue(press_alt_ft.getValue());
+if (f14.usingJSBSim)
+{
+print("Alt lock engage");
+			ap_alt_lock.setValue(1);
+}
+else
+{
 			ap_alt_lock.setValue("altitude-hold");
 			alt_enable.setBoolValue(0);
+}
 		}
 		# Here other selectable modes.
 	}
