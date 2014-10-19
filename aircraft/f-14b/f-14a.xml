@@ -682,7 +682,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <property>fcs/spoiler-ground-brake-armed</property>
   <property>fcs/flap-cmd-sum</property>
 
-  <property value="0.631">Factor1</property>
+  <property value="1.0">Factor1</property>
   <property value="1.8">FactorCl</property>
   <property value="0.1">FactorCd</property>
   <property value="1">FactorCM</property>
@@ -2180,8 +2180,9 @@ Post tuning session1:
                 <!-- This follows the basic shape to provide a factor that has been tuned to match known performance characteristics and may well be wrong 
                      based on tp2580 but tuned to meet F14-AAD-1
                  -->
-0.20	1.000000000
-0.40	0.972775014
+<!-- these are the values from the table; but they don't seem to give the right performance figures; so either this or engines are producing figures that are too low/high
+0.2	1
+0.4	0.972775014
 0.59	0.913789386
 0.79	0.913031141
 0.84	0.891651926
@@ -2189,14 +2190,32 @@ Post tuning session1:
 0.91	0.939045513
 0.98	1.791818684
 0.99	1.934660033
-1.00	1.525247835
+1	1.525247835
 1.03	1.554031693
-1.20	1.557481113
+1.2	1.557481113
 1.25	1.530799705
-2.00	1.379712548
+2	1.379712548
 2.17	1.336705362
 2.47	1.330274553
 2.72	1.292251704
+-->
+0.20	1.000000
+                            0.40	0.972775
+                            0.59	0.913789
+                            0.79	0.913031
+                            0.84	0.891652
+                            0.89	0.896773
+                            0.91	0.939046
+                            0.98	1.343864
+                            0.99	1.450995
+                            1.00	1.143936
+                            1.03	1.165524
+                            1.20	1.168111
+                            1.25	1.148100
+                            2.00	1.034784
+                            2.17	1.002529
+                            2.47	0.997706
+                            2.72	0.969189
             </tableData>
           </table>
        </product>
