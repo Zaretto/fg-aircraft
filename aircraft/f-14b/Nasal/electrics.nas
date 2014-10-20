@@ -424,3 +424,16 @@ setlistener("sim/model/f-14b/controls/electrics/emerg-gen-switch", func {
     }
 }, 1, 0);
 
+setlistener("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch", func {
+    var guard = getprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-guard-lever");
+    var v = getprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch");
+
+    if (!guard)
+    {
+        setprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch",0);
+    }
+    if(usingJSBSim and v != nil)
+    {
+        setprop("fdm/jsbsim/systems/hydraulics/emerg-flyt-hyd-switch", v);
+    }
+}, 1, 0);
