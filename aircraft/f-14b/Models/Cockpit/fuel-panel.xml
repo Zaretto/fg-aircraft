@@ -197,6 +197,113 @@
 		</axis>
 	</animation>
 
+	<animation> 
+		<type>select</type>
+		<object-name>left-spoilers-off</object-name>
+		<condition>
+			<equals>
+				<property>surface-positions/left-spoilers</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>right-spoilers-off</object-name>
+		<condition>
+			<equals>
+				<property>surface-positions/right-spoilers</property>
+				<value>0</value>
+			</equals>
+		</condition>
+	</animation>
+
+<!-- left spoilers -->
+	<animation> 
+		<type>select</type>
+		<object-name>sp-L-ext-down</object-name>
+		<condition>
+			<less-than>
+				<property>surface-positions/left-spoilers</property>
+				<value>0</value>
+			</less-than>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-L-ext-up</object-name>
+		<condition>
+			<greater-than>
+				<property>surface-positions/left-spoilers</property>
+				<value>0</value>
+			</greater-than>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-L-int-down</object-name>
+		<condition>
+			<less-than>
+				<property>surface-positions/inner-left-spoilers</property>
+				<value>0</value>
+			</less-than>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-L-int-up</object-name>
+		<condition>
+			<greater-than>
+				<property>surface-positions/inner-left-spoilers</property>
+				<value>0</value>
+			</greater-than>
+		</condition>
+	</animation>
+<!-- right spoilers -->
+	<animation> 
+		<type>select</type>
+		<object-name>sp-R-ext-down</object-name>
+		<condition>
+			<less-than>
+				<property>surface-positions/right-spoilers</property>
+				<value>0</value>
+			</less-than>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-R-ext-up</object-name>
+		<condition>
+			<greater-than>
+				<property>surface-positions/right-spoilers</property>
+				<value>0</value>
+			</greater-than>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-R-int-down</object-name>
+		<condition>
+			<less-than>
+				<property>surface-positions/inner-right-spoilers</property>
+				<value>0</value>
+			</less-than>
+		</condition>
+	</animation>
+	<animation> 
+		<type>select</type>
+		<object-name>sp-R-int-up</object-name>
+		<condition>
+			<greater-than>
+				<property>surface-positions/inner-right-spoilers</property>
+				<value>0</value>
+			</greater-than>
+		</condition>
+	</animation>
+
+
+
+
 	<!---->
 	<animation>
 		<type>rotate</type>

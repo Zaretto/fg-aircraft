@@ -17,6 +17,17 @@ var computeSpoilers = func {
 	# disable if we are in replay mode
 	if ( getprop("sim/replay/time") > 0 ) { return }
 
+    #
+    # all spoiler handling in the FDM when using JSBSim
+    if (usingJSBSim)
+    {
+        CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
+        CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
+        CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
+        CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
+        return;
+    }
+
 	var rollCommand = - getprop("controls/flight/aileron");
 	var DLC = 0.0;
 	var groundSpoilersArmed = getprop("controls/flight/ground-spoilers-armed");
@@ -44,8 +55,6 @@ var computeSpoilers = func {
 		# if weight on wheels or ground spoilers deployed (in case of hard bounce)
 		if (GroundSpoilersDeployed or wow)
         {
-            if (!usingJSBSim)
-            {
     			GroundSpoilersDeployed = true;
     			LeftSpoilersTarget = wingSweepBias;
     			RightSpoilersTarget = wingSweepBias;
@@ -53,7 +62,6 @@ var computeSpoilers = func {
     			InnerRightSpoilersTarget = wingSweepBias;
     			setprop ("controls/flight/yasim-spoilers", wingSweepBias);
     			SpoilersCmd.setDoubleValue(wingSweepBias);
-            }
 			return;
 		}
 	}
@@ -80,15 +88,6 @@ var computeSpoilers = func {
 		if ( fc == 1 ) { # Flaps out.
 			SpoilersMinima = -0.073;
 		}
-        if (usingJSBSim)
-        {
-            CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
-            CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
-            CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
-            CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
-        }
-        else
-        {
     		LeftSpoilersTarget = rollCommand * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
 	    	RightSpoilersTarget = (-rollCommand) * wingSweepBias * MaxFlightSpoilers + SpoilersMinima;
 		    if (DLCactive) {
@@ -109,7 +108,6 @@ var computeSpoilers = func {
     		if (InnerRightSpoilersTarget > MaxFlightSpoilers) InnerRightSpoilersTarget = MaxFlightSpoilers;
 
     		setprop ("controls/flight/yasim-spoilers", (InnerRightSpoilersTarget + InnerLeftSpoilersTarget) / 2.0);
-        }
 	}
 }
 

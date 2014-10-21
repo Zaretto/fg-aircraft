@@ -689,34 +689,39 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <property value="1.3">FactorClA</property>
   <property value="0.1">FactorCdA</property>
   <property value="1">FactorCMA</property>
-  <channel name="Pitch">
+<channel name="Wing Sweep">
+   <aerosurface_scale name="Sweep Control">
+      <input>fcs/wing-sweep-cmd</input>
+      <range>
+        <min> 20 </min>
+        <max> 68 </max>
+      </range>
+      <output>fcs/wing-sweep-pos-deg</output>
+   </aerosurface_scale>
 
-   <summer name="Pitch Trim Sum">
-      <input>fcs/elevator-cmd-norm</input>
-      <input>fcs/pitch-trim-cmd-norm</input>
-      <input>fcs/pitch-damper-rate</input>
-      <input>systems/afcs/elevator-cmd-delta</input>
-      <clipto>
-        <min> -1 </min>
-        <max>  1 </max>
-      </clipto>
-   </summer>
+      <kinematic name="Sweep Position">
+      <input>fcs/wing-sweep-dmd-flap-limit</input>
+      <traverse>
+          <setting>
+              <position>0.294117647</position>
+              <time>16</time> <!-- F14AAD-1 15 deg/sec sweep rate, (68-20)/15 -->
+          </setting>
+          <setting>
+              <position>1</position>
+              <time>16</time>
+          </setting>
+      </traverse>
+      <output>fcs/wing-sweep-cmd</output>
+   </kinematic>
 
-      <switch name="fcs/pitch-trim-actuator">
-          <default value="fcs/pitch-trim-sum"/>
-          <test value="fcs/pitch-trim-actuator">
-              systems/hydraulics/flight-system-pressure ne 1
-          </test>
-      </switch>
-      <aerosurface_scale name="Elevator Control">
-          <input>fcs/pitch-trim-actuator</input>
-          <!-- maybe this should take into account the trim limits from the AAP -->
-          <range>
-              <min> -0.57895 </min>
-              <max>  0.2105 </max>
-          </range>
-          <output>fcs/elevator-pos-demand</output>
-      </aerosurface_scale>
+   <aerosurface_scale name="Sweep Control">
+      <input>fcs/wing-sweep-cmd</input>
+      <range>
+        <min> 20 </min>
+        <max> 68 </max>
+      </range>
+      <output>fcs/wing-sweep-pos-deg</output>
+   </aerosurface_scale>
 
     <!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
      we limit the sweep to the computed wing-sweep-cadc-pos -->
@@ -726,15 +731,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <test value="fcs/wing-sweep-dmd">
               systems/hydraulics/combined-system-pressure ne 1
           </test>
-          <test value="fcs/wing-sweep-dmd">
-              systems/hydraulics/combined-system-pressure ne 1
-          </test>
-            <!--<test value="fcs/wing-sweep-pilot-dmd">
-                fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
-                fcs/wing-sweep-auto ne 1
-                fcs/flap-pos-norm ge 0.5
-                fcs/wing-sweep-pilot-dmd le 0.34
-            </test>-->
             <test value="fcs/wing-sweep-pilot-dmd">
                 fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
                 fcs/wing-sweep-auto ne 1
@@ -767,6 +763,55 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <output>fcs/wing-sweep-dmd-flap-limit</output>
         </switch>
 
+</channel>
+
+  <channel name="Pitch">
+
+   <summer name="Pitch Trim Sum">
+      <input>fcs/elevator-cmd-norm</input>
+      <input>fcs/pitch-trim-cmd-norm</input>
+      <input>fcs/pitch-damper-rate</input>
+      <input>systems/afcs/elevator-cmd-delta</input>
+      <clipto>
+        <min> -1 </min>
+        <max>  1 </max>
+      </clipto>
+   </summer>
+
+      <switch name="position/aircraft-on-ground">
+          <description>Aircraft on ground</description>
+          <default value="0"/>
+          <test value="1" logic="OR">
+              gear/unit[0]/WOW ne 0
+              gear/unit[1]/WOW ne 0
+              gear/unit[2]/WOW ne 0
+          </test>
+      </switch>
+
+      <!-- spoilers -4deg when flaps deployed more than 25 deg -->
+      <switch name="fcs/spoilers-zeropos">
+          <default value="0"/>
+          <test value="-0.081">
+              fcs/flap-pos-norm ge 0.7142857142857143
+          </test>
+      </switch>
+
+      <switch name="fcs/pitch-trim-actuator">
+          <default value="fcs/pitch-trim-sum"/>
+          <test value="fcs/pitch-trim-actuator">
+              systems/hydraulics/flight-system-pressure ne 1
+          </test>
+      </switch>
+      <aerosurface_scale name="Elevator Control">
+          <input>fcs/pitch-trim-actuator</input>
+          <!-- maybe this should take into account the trim limits from the AAP -->
+          <range>
+              <min> -0.57895 </min>
+              <max>  0.2105 </max>
+          </range>
+          <output>fcs/elevator-pos-demand</output>
+      </aerosurface_scale>
+
         <switch name="fcs/spoiler-differential-cmd">
             <description>Differential spoiler due to stick deflection</description>
             <default value="0"/>
@@ -786,13 +831,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </test>
 
             <test value="1">
-                fcs/wing-sweep-pos-deg lt 55
-                fcs/spoiler-ground-brake-armed ne 0
+                systems/hydraulics/combined-system-pressure ne 0
+                fcs/wing-sweep-pos-deg lt 55.0
+                fcs/spoiler-ground-brake-armed ne 0.0
                 fcs/throttle-cmd-norm[0] le 0.15
                 fcs/throttle-cmd-norm[1] le 0.15
-                gear/unit[1]/WOW ne 0
-                gear/unit[2]/WOW ne 0
-                systems/hydraulics/combined-system-pressure ne 0
+                position/aircraft-on-ground ne 0
             </test>
         </switch>
 
@@ -812,7 +856,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 
         <switch name="fcs/spoiler-left-cmd">
             <description>Left wing spoiler deflection</description>
-            <default value="0"/>
+            <default value="fcs/spoilers-zeropos"/>
 
             <test value="1">
                 fcs/spoiler-ground-brake-deployed eq 1
@@ -826,7 +870,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
       <input>fcs/spoiler-left-cmd</input>
         <traverse>
           <setting>
-              <position>0</position>
+              <position>-0.0818181818181819</position>
               <time>0.22</time> <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
           </setting>
           <setting>
@@ -838,7 +882,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <switch name="fcs/spoiler-right-cmd">
             <description>Right  wing spoiler deflection</description>
-            <default value="0"/>
+            <default value="fcs/spoilers-zeropos"/>
 
             <test value="1">
                 fcs/spoiler-ground-brake-deployed eq 1
@@ -853,7 +897,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
          <input>fcs/spoiler-right-cmd</input>
          <traverse>
           <setting>
-              <position>0</position>
+              <position>-0.0818181818181819</position>
               <time>0.22</time> <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
           </setting>
           <setting>
@@ -866,49 +910,16 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <aerosurface_scale name="fcs/spoiler-left-pos-deg">
       <input>fcs/spoiler-left-pos</input>
       <range>
-        <min> 0 </min>
+        <min> -5 </min>
         <max> 55 </max>
       </range>
    </aerosurface_scale>
    <aerosurface_scale name="fcs/spoiler-right-pos-deg">
       <input>fcs/spoiler-right-pos</input>
       <range>
-        <min> 0 </min>
+        <min> -5 </min>
         <max> 55 </max>
       </range>
-   </aerosurface_scale>
-
-   <aerosurface_scale name="Sweep Control">
-      <input>fcs/wing-sweep-cmd</input>
-      <range>
-        <min> 20 </min>
-        <max> 68 </max>
-      </range>
-      <output>fcs/wing-sweep-pos-deg</output>
-   </aerosurface_scale>
-
-      <kinematic name="Sweep Position">
-      <input>fcs/wing-sweep-dmd-flap-limit</input>
-      <traverse>
-          <setting>
-              <position>0.294117647</position>
-              <time>16</time> <!-- F14AAD-1 15 deg/sec sweep rate, (68-20)/15 -->
-          </setting>
-          <setting>
-              <position>1</position>
-              <time>16</time>
-          </setting>
-      </traverse>
-      <output>fcs/wing-sweep-cmd</output>
-   </kinematic>
-
-   <aerosurface_scale name="Sweep Control">
-      <input>fcs/wing-sweep-cmd</input>
-      <range>
-        <min> 20 </min>
-        <max> 68 </max>
-      </range>
-      <output>fcs/wing-sweep-pos-deg</output>
    </aerosurface_scale>
 
 <!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
@@ -964,8 +975,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     fcs/elevator-pos-rad lt -0.17453
                 </test>
    </switch>
-
-
   </channel>
 
   <property>systems/NWS/engaged</property>
@@ -977,8 +986,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               <test value="1">
                   velocities/vc-kts le 80
                   systems/hydraulics/combined-system-pressure ne 0
-                  gear/unit[1]/WOW ne 0
-                  gear/unit[2]/WOW ne 0
+                  position/aircraft-on-ground ne 0
                   systems/holdback/launchbar-engaged eq 0
               </test>
               <output>systems/NWS/engaged</output>
@@ -1299,6 +1307,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <test value="fcs/slat-total-dmd">
               systems/hydraulics/combined-system-pressure ne 1
           </test>
+
+          <test value="1">
+              fcs/flap-total-dmd ge 0.5
+              systems/hydraulics/combined-system-pressure ne 0
+              fcs/wing-sweep-pos-deg le 50
+          </test>
+
           <test value="fcs/slat-cmd">
               fcs/slat-cmd ne 0
               systems/hydraulics/combined-system-pressure ne 0
@@ -1428,9 +1443,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <channel name="Landing Gear">
       <switch name="gear/gear-dmd-norm">
           <default value="1"/>
-          <test value="1">
-                gear/unit[1]/WOW ne 0
-                gear/unit[2]/WOW ne 0
+          <test value="1"> <!-- always force gear down when on ground - to prevent inadvertant retraction -->
+                position/aircraft-on-ground ne 0
           </test>
           <test value="gear/gear-dmd-norm">
               systems/hydraulics/combined-system-pressure ne 1

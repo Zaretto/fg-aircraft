@@ -60,7 +60,7 @@ controls.applyBrakes = func(v, which = 0)  {
         setprop("controls/flight/speedbrake", v);
     }
 }
-# Hijack the generic flaps command so everybody's joystick flap command works
+# Hijack the generic flaps command so joystick flap command works
 # for the F-14 too. 
 
 controls.flapsDown = func(s) {
@@ -75,48 +75,76 @@ controls.flapsDown = func(s) {
 var flapDemandIncrement = 0.1;
 
 var lowerFlaps = func {
+    var flaps_cmd = FlapsCmd.getValue();
 	if (usingJSBSim)
     {
-if (FlapsCmd.getValue() < 0.5)
-        demandedFlaps = 0.5;
-else if (demandedFlags < 1) demandedFlaps = FlapsCmd.getValue() + flapDemandIncrement;
 
-if (demandedFlags >= 1.0) demandedFlaps = 1.0;
+		if (flaps_cmd < 0.5)
+        {
+			demandedFlaps = 0.5;
+        }
+		else if (demandedFlags < 1)
+        {
+            demandedFlaps = flaps_cmd + flapDemandIncrement;
+        }
 
-		FlapsCmd.setValue(demandedFlaps); # Landing.
-        print("F14: lower flaps ",demandedFlaps);
-}
-else
-{
-	if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.3235294117647059) # only flaps with <= 22 deg
+		if (demandedFlags >= 0.98)
+        {
+			demandedFlaps = 1.0;
+        }
+
+        FlapsCmd.setValue(demandedFlaps);
+        setprop("controls/flight/flapscommand", demandedFlaps);
+    }
+    else
     {
-if (FlapsCmd.getValue() < 0.5)
-        demandedFlaps = 0.5;
-else if (demandedFlags < 1) demandedFlaps = FlapsCmd.getValue() + flapDemandIncrement;
+        if (getprop("/fdm/jsbsim/fcs/wing-sweep-cmd") <= 0.3235294117647059) # only flaps with <= 22 deg
+        {
+            if (flaps_cmd < 0.5)
+            {
+                demandedFlaps = 0.5;
+            }
+            else if (demandedFlags < 1) 
+            {
+                demandedFlaps = flaps_cmd + flapDemandIncrement;
+            }
 
-if (demandedFlags >= 1.0) demandedFlaps = 1.0;
+            if (demandedFlags >= 1.0)
+            {
+                demandedFlaps = 1.0;
+            }
 
-		FlapsCmd.setValue(demandedFlaps); # Landing.
-        print("F14: lower flaps ",demandedFlaps);
-	}
-}
+            FlapsCmd.setValue(demandedFlaps); # Landing.
+        }
+    }
+    print("F14: lower flaps ",demandedFlaps);
 }
 
 var raiseFlaps = func {
-if (FlapsCmd.getValue() > 0.5)
-        demandedFlaps = FlapsCmd.getValue() - flapDemandIncrement;
-else
+    var flaps_cmd = FlapsCmd.getValue();
+
+    if (flaps_cmd > 0.5)
+        demandedFlaps = flaps_cmd - flapDemandIncrement;
+    else
 		demandedFlaps = 0; # Clean.
-		FlapsCmd.setValue(demandedFlaps); 
-		DLCactive = false;
-		DLC_Engaged.setBoolValue(0);
-        print("F14: raise flaps ",demandedFlaps);
-		setprop("controls/flight/DLC", 0);
+
+    FlapsCmd.setValue(demandedFlaps); 
+    DLCactive = false;
+    DLC_Engaged.setBoolValue(0);
+
+    print("F14: raise flaps ",demandedFlaps);
+
+    if(usingJSBSim)
+        setprop("controls/flight/flapscommand", demandedFlaps);
+
+    setprop("controls/flight/DLC", 0);
 }
 
 var computeFlaps = func {
 
-	# disable if we are in replay mode
+    if (usingJSBSim) return;
+
+# disable if we are in replay mode
 	if ( getprop("sim/replay/time") > 0 ) { return }
 
 	if (CurrentMach == nil) { CurrentMach = 0 } 
@@ -164,17 +192,17 @@ var computeFlaps = func {
     			}
 #flaps = m_flap_ext;
     		}
-           else
-           {
+            else
+            {
 #m_flap_ext = 0;
-               flaps = 0;
-               slats = 0;
+                flaps = 0;
+                slats = 0;
     		}
         }
         else
         {
-           flaps = 0;
-           slats = 0;
+            flaps = 0;
+            slats = 0;
   		}
   		MainFlapsCmd.setValue( flaps );
     	SlatsCmd.setValue(slats);
