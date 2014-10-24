@@ -133,9 +133,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
  <system file="holdback"/>
 
  <metrics>
-   <wingarea  unit="FT2">   565 </wingarea>
-   <wingspan  unit="FT" >   64.00 </wingspan>
-   <wing_incidence>          2.00 </wing_incidence>
+   <wingarea       unit="FT2">   565 </wingarea>
+   <wingspan       unit="FT" >    64 </wingspan>
+   <wing_incidence unit="DEG">     2 </wing_incidence>
 
    <chord     unit="FT" >    9.8166666666666666666666666666667 </chord>
    <htailarea unit="FT2">  140.00 </htailarea>
@@ -154,7 +154,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
      <z>  0 </z>
    </location>
    <location name="AERORP" unit="IN">
-      <x> 403 </x>
+      <x> 419 </x>
       <y>   0.00 </y>
       <z>   0.00 </z>
    </location>
@@ -1594,26 +1594,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
           <summer name="cg-x-offset-chord-in">
               <input> inertia/cg-x-in</input>
-              <input> aero/cp-offset-wing-sweep</input>
+              <input> -metrics/aero-rp-x-in</input>
               <output>inertia/cg-x-offset-chord-in</output>
           </summer>
-
-<!-- Ref[1] uses the traditional (see NASA CR-1756) way of building up the yaw/pitch moments in that there is a base value
-     (CLBAS, CYBAS, CNBAS) that is balanced by the offset of the centre of pressure (AERORP) from the CG; So what I've done is to 
-     set AeroRP to be equal to CG so that I can use this buildup method as using AERORP does work but subjectively feels a little too stable; 
-     Where it really shows though is in the departures. At high alpha, the AEROP way causes the disappaerance of the dutch roll and 
-     uncommanded roll caused by aileron deflection (the F-14 rolls the opposite way to the deflection in this situation) - 
-     with the aerorp way what I get instead is just the yaw rate increasing with no roll.
-
-    Doing it using the building in ref[1] gets much closer results to the pilots manual - e.g. for high alpha there is a dutch roll which can develop into what looks
-    like an uncommanded roll in the opposite direction - except that in fact caused by yaw - but the induced roll rate masks the yaw rate "eyeballs out yaw" according to the manual.
-    If uncorrected within a "short period" (5-15 seconds) it can develop into an unrecoverable flat spin with around 10 degrees pitch down.
--->
 
         <pure_gain name="cg-x-chord-percent">
             <description>Percent offset of the CoP from the CG</description>
               <input>inertia/cg-x-offset-chord-in</input>
-              <gain> 0.01</gain>
+              <gain> -0.01</gain>
               <clipto>
                   <min> -1 </min>
                   <max> 1 </max>
@@ -1666,38 +1654,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
               <output>aero/sin-alpha</output>
           </fcs_function>
 
-          <fcs_function name="CLxzcg">
-              <description>Roll X Cg factor</description>
-              <function>
-                  <product>
-                      <property>inertia/cg-x-mac-percent </property>
-                      <sum>
-                          <product>
-                              <property>aero/cos-alpha</property>
-                              <property>aero/coefficients/Cl</property>
-                          </product>
-                          <product>
-                              <property>aero/sin-alpha</property>
-                              <property>aero/coefficients/Cd</property>
-                          </product>
-                      </sum>
-                  </product>
-              </function>
-              <output>aero/coefficients/CMxzcg</output>
-          </fcs_function>
-
-          <fcs_function name="CNycg">
-              <description>Yaw Y Cg factor</description>
-              <function>
-                  <product>
-                      <property>inertia/cg-x-mac-percent </property>
-                      <value>0.1533854165625</value>
-                      <!-- cbar / b (chord / span 9.80/64.1)-->
-                      <property>aero/coefficients/Cy</property>
-                  </product>
-              </function>
-              <output>aero/coefficients/CNycg</output>
-          </fcs_function>
 
       </channel>
   </flight_control>
@@ -3112,7 +3068,6 @@ Post tuning session1:
      <function name="aero/coefficients/CM">
          <sum>
              <property>aero/coefficients/CMBAS</property>
-             <property>aero/coefficients/CMxzcg</property>
              <property>aero/coefficients/DCMB0</property>
              <property>aero/coefficients/CMQ</property>
              <property>aero/coefficients/DCMDS1</property>
@@ -3312,7 +3267,6 @@ Post tuning session1:
     <sum>
           <property>aero/coefficients/CNBAS</property>
           <property>aero/coefficients/DCNDS</property>
-          <property>aero/coefficients/CNycg</property>
           <property>aero/coefficients/CNP</property>
           <property>aero/coefficients/CNR</property>
           <property>aero/coefficients/CNDA</property>
