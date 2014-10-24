@@ -950,14 +950,14 @@ Neg_g = {
 		obj.prop = props.globals.getNode("controls/fuel/neg-g",1);
 		obj.switch = switch;
 		obj.prop.setBoolValue(switch);
-		obj.acceleration = props.globals.getNode("accelerations/pilot-gdamped", 1);
+#		obj.acceleration = props.globals.getNode("accelerations/pilot-gdamped", 1);
 		obj.check = props.globals.getNode("controls/fuel/recuperator-check", 1);
 		return obj;
 	},
 	update : func() {
-		var acc = me.acceleration.getValue();
+#		var acc = me.acceleration.getValue();
 		var check = me.check.getValue();
-		if (acc < 0 or check ) {
+		if (currentG < 0 or check ) {
 			me.prop.setBoolValue(1);
 		} else {
 			me.prop.setBoolValue(0);

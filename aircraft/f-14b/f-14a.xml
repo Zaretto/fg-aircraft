@@ -371,20 +371,32 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </contact>
 
     <!--  6 same pos as landing gear for ease of understanding -->
-  <contact type="STRUCTURE" name="MID_BODY">
-      <location unit="IN">
-        <x> 431 </x>
-        <y> 0 </y>
-        <z> -100  </z>
-      </location>
-      <static_friction> 1.2 </static_friction>
-      <dynamic_friction> 1.212 </dynamic_friction>
-      <rolling_friction> 1.413 </rolling_friction>
-      <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
-      <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-    </contact>
+      <contact type="STRUCTURE" name="MID_BODY_LEFT">
+          <location unit="IN">
+              <x> 431 </x>
+              <y> -88 </y>
+              <z> -80  </z>
+          </location>
+          <static_friction> 1.2 </static_friction>
+          <dynamic_friction> 1.212 </dynamic_friction>
+          <rolling_friction> 1.413 </rolling_friction>
+          <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
+          <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+      </contact>
+      <contact type="STRUCTURE" name="MID_BODY_RIGHT">
+          <location unit="IN">
+              <x> 431 </x>
+              <y>  88 </y>
+              <z> -80  </z>
+          </location>
+          <static_friction> 1.2 </static_friction>
+          <dynamic_friction> 1.212 </dynamic_friction>
+          <rolling_friction> 1.413 </rolling_friction>
+          <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
+          <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+      </contact>
 
-    <!--  8 -->
+      <!--  8 -->
     <contact type="STRUCTURE" name="CANOPY">
       <location unit="IN">
         <x> 214 </x>
@@ -681,6 +693,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
   <property>fcs/wing-sweep-auto</property>
   <property>fcs/spoiler-ground-brake-armed</property>
   <property>fcs/flap-cmd-sum</property>
+  <property>fcs/roll-trim-sas-cmd-norm</property>
 
   <property value="1.0">Factor1</property>
   <property value="1.8">FactorCl</property>
@@ -1034,6 +1047,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
    <summer name="Roll Trim Sum">
       <input>fcs/aileron-cmd-norm</input>
       <input>fcs/roll-trim-cmd-norm</input>
+      <input>fcs/roll-trim-sas-cmd-norm</input>
       <input>fcs/roll-rate-limiter</input>
       <clipto>
         <min> -1 </min>
@@ -3054,7 +3068,7 @@ Post tuning session1:
               -35	 0.0
               -30	 0.0
               -15	 0.0
-              0	    -0.0000818
+              0	     -0.000001636 <!-- based on 0.1 of 0aoa CMDS1 at 55deg deflection-->
               10	 0.0
             </tableData>
           </table>

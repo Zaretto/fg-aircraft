@@ -9,18 +9,18 @@ var computeNWS = func {
     {
         NWS_light = getprop("fdm/jsbsim/systems/NWS/engaged");
         setprop("controls/flight/NWS", getprop("fdm/jsbsim/fcs/steer-pos-deg")/85.0);
-if(getprop("/fdm/jsbsim/systems/holdback/launchbar-engaged"))
-{
-        setprop("gear/launchbar/position-norm",1);
-        setprop("gear/launchbar/state","Engaged");
-        setprop("models/carrier/controls/jbd",1);
-}
-else
-{
-        setprop("gear/launchbar/position-norm",0);
-        setprop("gear/launchbar/state","Disengaged");
-        setprop("models/carrier/controls/jbd",0);
-}
+        if(getprop("/fdm/jsbsim/systems/holdback/launchbar-engaged"))
+        {
+            setprop("gear/launchbar/position-norm",1);
+            setprop("gear/launchbar/state","Engaged");
+            setprop("models/carrier/controls/jbd",1);
+        }
+        else
+        {
+            setprop("gear/launchbar/position-norm",0);
+            setprop("gear/launchbar/state","Disengaged");
+            setprop("models/carrier/controls/jbd",0);
+        }
 
     }
     else
@@ -34,6 +34,10 @@ else
     			NWS = rudderInput * (NWScutoffSpeed - gs) / NWScutoffSpeed;
     			NWS_light = 1;
     		}
+            else
+            {
+                NWS_light = 0;
+            }
     	}
         setprop("controls/flight/NWS", NWS);
     }

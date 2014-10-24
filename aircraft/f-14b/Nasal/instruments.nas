@@ -191,13 +191,6 @@ aircraft.data.add(	bingo,
 
 
 
-# Accelerometer ###########
-var g_curr  = props.globals.getNode("accelerations/pilot-g", 1);
-
-if (f14.usingJSBSim)
-{
-    g_curr  = props.globals.getNode("accelerations/pilot-gdamped", 1);
-}
 
 var g_max   = props.globals.getNode("sim/model/f-14b/instrumentation/g-meter/g-max", 1);
 var g_min   = props.globals.getNode("sim/model/f-14b/instrumentation/g-meter/g-min", 1);
@@ -209,7 +202,7 @@ var g_mva_vec     = [0,0,0,0,0];
 var g_min_max = func {
 	# Records g min, g max and 0.5 sec averaged max values. g_min_max(). Has to be
 	# fired every 0.1 sec.
-	var curr = g_curr.getValue();
+	var curr = f14.currentG;
 	var max = g_max.getValue();
 	var min = g_min.getValue();
 	if ( curr >= max ) {
@@ -456,9 +449,16 @@ var main_loop = func {
 var common_init = func {
     if(f14.usingJSBSim)
     {
+print("Setting replay medium res to 50hz");
+setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
+setprop("/controls/flight/SAS-roll",0);
+setprop("sim/model/f-14b/controls/AFCS/altitude",0);
+setprop("sim/model/f-14b/controls/AFCS/heading-gt",0);
+setprop("sim/model/f-14b/controls/AFCS/engage",0);
         if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
         {
             print("Starting with gear down as below 500 ft");
+            setprop("/controls/gear/gear-down", 1);
             setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
             setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
             setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
@@ -468,6 +468,16 @@ var common_init = func {
                 setprop("/controls/gear/brake-parking",1);
                 print("--> Set parking brake as below 50 ft");
             }
+        }
+        else 
+        {
+            print("Starting with gear up as above 500 ft");
+            setprop("/controls/gear/gear-down", 0);
+            setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
+            setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
+            setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+            setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+            setprop("/controls/gear/brake-parking",0);
         }
 
         var carrier = getprop("/sim/presets/carrier");
@@ -533,19 +543,15 @@ setprop("/sim/alt", 9.418674826);
 setprop("/sim/init-delay", 0.9);
 
 setlistener("sim/signals/reinit", func (reinit) {
-        print("Reint ",reinit);
-	if (reinit.getValue()) {
-		f14.internal_save_fuel();
+    print("Reint ",reinit);
+    if (reinit.getValue()) {
+        f14.internal_save_fuel();
         setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
-	} else {
+    } else {
 
-		settimer(func { f14.internal_restore_fuel() }, 0.6);
-		settimer(func { common_init() }, getprop("/sim/init-delay"));
-#		settimer(func { setprop("/fdm/jsbsim/position/h-agl-ft",getprop("sim/alt")); }, );
-#    setprop("/position/altitude-agl-ft", getprop("sim/alt"));
-#        setprop("/fdm/jsbsim/position/h-agl-ft",getprop("sim/alt"));
-
-	}
+        settimer(func { f14.internal_restore_fuel() }, 0.6);
+        settimer(func { common_init() }, getprop("/sim/init-delay"));
+    }
 });
 # Miscelaneous definitions and tools ############
 

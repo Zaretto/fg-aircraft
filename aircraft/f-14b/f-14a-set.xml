@@ -4,9 +4,9 @@
 
 	<sim>
 		
-		<description>Grumman F-14A GE </description>
+		<description>Grumman F-14B GE JSBSim</description>
 		<author>Richard Harrison, Enrique Laso - Alexis Bory</author>
-		<status>early production</status>
+		<status>production</status>
 
 		<tags>
 		    <tag>fighter</tag>
@@ -17,7 +17,7 @@
         </tags>
 		<rating>
 			<FDM type="int">5</FDM>
-			<systems type="int">3</systems>
+			<systems type="int">5</systems>
 			<cockpit type="int">5</cockpit>
 			<model type="int">5</model>
 		</rating>
@@ -26,13 +26,11 @@
         <aero>f-14a</aero>
 		<fuel-fraction>0.1</fuel-fraction>
 
-<!--
 		<systems>
 			<autopilot>
 				<path>Aircraft/f-14b/f-14b-AFCS.xml</path>
 			</autopilot>
 		</systems>
--->
 
 		<flight-recorder>
 			<replay-config type="int">0</replay-config>
@@ -93,7 +91,7 @@
 		</sound>
 
 		<help>
-			<title>Grumman F-14A</title>
+			<title>Grumman F-14B</title>
 			<key>
 				<name>Home</name>
 				<desc>Increase elevator trim</desc>
@@ -301,25 +299,35 @@
 		<model>
 			<path>Aircraft/f-14b/Models/f-14b.xml</path>
 			<livery>
-				<file type="string">checkmates</file>
+			<name type="string">nasa</name>
 				<index type="int">0</index>
+			<texture>Liveries/side1.nasa.png</texture>
 			</livery>
+
 			<livery-side2>
-				<file type="string">checkmates</file>
+			<name type="string">nasa</name>
 				<index type="int">0</index>
+			<texture>Liveries/side2.nasa.png</texture>
 			</livery-side2>
+
 			<livery-topbottom1>
-				<file type="string">checkmates</file>
+			<name type="string">nasa</name>
 				<index type="int">0</index>
+			<texture>Liveries/topbottom1.nasa.png</texture>
 			</livery-topbottom1>
+
 			<livery-topbottom2>
-				<file type="string">checkmates</file>
+			<name type="string">nasa</name>
 				<index type="int">0</index>
+			<texture>Liveries/topbottom2.nasa.png</texture>
 			</livery-topbottom2>
+
 			<livery-patch>
-				<file type="string">checkmates</file>
+			<name type="string">nasa</name>
 				<index type="int">0</index>
+			<texture>Liveries/patch.nasa.png</texture>
 			</livery-patch>
+
 			<f-14b>
 				<controls>
 					<AFCS>
@@ -902,7 +910,7 @@
 				<y-offset-m archive="y">0.43</y-offset-m>
 				<z-offset-m archive="y">-3.58</z-offset-m>
 				<pitch-offset-deg>-23</pitch-offset-deg>
-				<default-field-of-view-deg>55</default-field-of-view-deg>
+				<default-field-of-view-deg>90</default-field-of-view-deg>
 				<limits>
 					<enabled type="bool">true</enabled>
 					<left>

@@ -127,6 +127,11 @@
 						<max>360</max>
 						<wrap>true</wrap>
 					</binding>
+					<binding>
+						<command>nasal</command>
+						<script>setprop("autopilot/settings/heading-bug-deg", getprop("instrumentation/nav[1]/radials/selected-deg"));</script>
+					</binding>
+
 				</action>
 
 				<action>
@@ -151,6 +156,10 @@
 						<min>0</min>
 						<max>360</max>
 						<wrap>true</wrap>
+					</binding>
+					<binding>
+						<command>nasal</command>
+						<script>setprop("autopilot/settings/heading-bug-deg", getprop("instrumentation/nav[1]/radials/selected-deg"));</script>
 					</binding>
 				</action>
 
@@ -178,6 +187,10 @@
 						<max>360</max>
 						<wrap>true</wrap>
 					</binding>
+					<binding>
+						<command>nasal</command>
+						<script>setprop("autopilot/settings/heading-bug-deg", getprop("instrumentation/nav[1]/radials/selected-deg"));</script>
+					</binding>
 				</action>
 				<action>
 					<name>course-cw-fast</name>
@@ -202,13 +215,11 @@
 						<max>360</max>
 						<wrap>true</wrap>
 					</binding>
+					<binding>
+						<command>nasal</command>
+						<script>setprop("autopilot/settings/heading-bug-deg", getprop("instrumentation/nav[1]/radials/selected-deg"));</script>
+					</binding>
 				</action>
-
-
-
-
-
-
 
 			</actions>
 		</instrument>

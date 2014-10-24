@@ -66,6 +66,10 @@ if(!usingJSBSim)
     setprop("/fdm/jsbsim/systems/electrics/lgenerator-kva",75);
     setprop("/fdm/jsbsim/systems/electrics/rgenerator-kva",75);
     setprop("/fdm/jsbsim/systems/electrics/transrect-online",2);
+    setprop("fdm/jsbsim/systems/hydraulics/combined-system-psi",2398);
+    setprop("fdm/jsbsim/systems/hydraulics/flight-system-psi",2396);
+    setprop("engines/engine[0]/oil-pressure-psi", 28);
+    setprop("engines/engine[1]/oil-pressure-psi", 28);
 }
 
 var runEMMISC = func {

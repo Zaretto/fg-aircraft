@@ -5,12 +5,6 @@ var egt2_rankin = props.globals.getNode("engines/engine[1]/egt-degR", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
 
-if (!usingJSBSim)
-{
-    egt1      = props.globals.getNode("engines/engine[0]/egt-degf", 1);
-    egt2      = props.globals.getNode("engines/engine[1]/egt-degf", 1);
-}
-
 var Ramp1l     = props.globals.getNode("engines/AICS/ramp1l", 1);
 var Ramp2l     = props.globals.getNode("engines/AICS/ramp2l", 1);
 var Ramp3l     = props.globals.getNode("engines/AICS/ramp3l", 1);
@@ -21,6 +15,16 @@ var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "
 var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
 var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
 var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
+
+if(!usingJSBSim)
+{
+    egt1 = props.globals.getNode("engines/engine[0]/egt-degf", 1);
+    egt2 = props.globals.getNode("engines/engine[1]/egt-degf", 1);
+    setprop("controls/engines/engine[0]/cutoff", 0);
+    setprop("controls/engines/engine[1]/cutoff", 0);
+    Engine1Augmentation = Engine1Burner;
+    Engine2Augmentation = Engine2Burner;
+}
 
 #props.globals.getNode("sim/model/f-14b/fx/test1",1);
 #props.globals.getNode("sim/model/f-14b/fx/test2",1);
@@ -120,6 +124,8 @@ var computeNozzles = func {
 #        if (Nozzle1 == nil) Nozzle1 = 0.26;
 #        if (Nozzle2 == nil) Nozzle2 = 0.26;
 #    print ("Nozzles ",Nozzle1," ",Nozzle2);
+        Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
+        Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
     }
     else
     {
@@ -157,11 +163,6 @@ var computeNozzles = func {
             Nozzle1Target = eng1_burner;
             Nozzle2Target = eng2_burner;
         }
-    }
-    if (usingJSBSim)
-    {
-        Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
-        Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
     }
 }
 

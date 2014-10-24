@@ -28,8 +28,11 @@ var ext_loads_init = func() {
 	S7 = Station.new(7, 6);
 	S8 = Station.new(8, 7);
 	S9 = Station.new(9, 7);
-# Disable the menu item "Equipment > Fuel & Payload" so we use our own gui: "Tomcat Controls > Fuel & Stores".
-	gui.menuEnable("fuel-and-payload", false);
+# Remap the menu item "Equipment > Fuel & Payload" to the F-14B dialog
+# This is also on "Tomcat Controls > Fuel & Stores".
+#	gui.menuEnable("fuel-and-payload", false);
+    gui.menuBind("fuel-and-payload", "f14.ext_loads_dlg.open()");
+    gui.menuEnable("fuel-and-payload", 1);
 	foreach (var S; Station.list) {
 		S.set_type(S.get_type()); # initialize bcode.
 	}
@@ -263,21 +266,20 @@ Station = {
 		obj.index = number;
 		obj.type = obj.prop.getNode("type", 1);
 		obj.display = obj.prop.initNode("display", 0, "INT");
-if(usingJSBSim)
-{
-# the jsb external loads from 0-9 match the indexes used here incremented by 1 as the first element
-# in jsb sim doesn't have [0]
-var propname = sprintf( "fdm/jsbsim/inertia/pointmass-weight-lbs[%d]",number);
 
-print ("Index ",weight_number," prop ",propname);
-#		obj.weight = props.globals.getNode(propname , 1);
-		obj.weight_lb = props.globals.getNode(propname , 1);
-}
-else
-{
-		obj.weight = props.globals.getNode("sim").getChild ("weight", weight_number , 1);
-		obj.weight_lb = obj.weight.getNode("weight-lb");
-}
+        if(usingJSBSim)
+        {
+            # the jsb external loads from 0-9 match the indexes used here incremented by 1 as the first element
+            # in jsb sim doesn't have [0]
+            var propname = sprintf( "fdm/jsbsim/inertia/pointmass-weight-lbs[%d]",number);
+
+    		obj.weight_lb = props.globals.getNode(propname , 1);
+        }
+        else
+        {
+		    obj.weight = props.globals.getNode("sim").getChild ("weight", weight_number , 1);
+    		obj.weight_lb = obj.weight.getNode("weight-lb");
+        }
 		obj.bcode = 0;
 		obj.selected = obj.prop.getNode("selected");
 

@@ -10,7 +10,7 @@ aircraft.light.new("sim/model/f-14b/lighting/anti-collision", [0.09, 1.20], anti
 var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting/position-flash-switch");
 var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.15]);
 setprop("/sim/model/f-14b/lighting/position/enabled", 1);
-getprop("sim/model/f-14b/fx/smoke",1);
+setprop("sim/model/f-14b/fx/smoke",0);
 
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
@@ -112,11 +112,12 @@ var SweepSpeed = 0.3;
 # Properties used for multiplayer syncronization.
 var main_flap_output   = props.globals.getNode("surface-positions/main-flap-pos-norm", 1);
 var aux_flap_output    = props.globals.getNode("surface-positions/aux-flap-pos-norm", 1);
-var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
+var slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
 
 if (usingJSBSim){
     aux_flap_output    = props.globals.getNode("/fdm/jsbsim/fcs/aux-flap-pos-norm", 1);
     aux_flap_output.setDoubleValue(0);
+var slat_output     = props.globals.getNode("/fdm/jsbsim/fcs/slat-cmd-norm", 1);
 }
 else
 {
@@ -234,8 +235,8 @@ var timedMotions = func {
                 Nozzle2 = Nozzle2Target;
             }
         }
-# Wing Sweep
 
+# Wing Sweep
     	if (currentSweep > WingSweep) {
     		currentSweep -= SweepSpeed * deltaT;
     		if (currentSweep < WingSweep) {
@@ -253,9 +254,6 @@ var timedMotions = func {
 	setprop ("surface-positions/right-spoilers", CurrentRightSpoiler);
 	setprop ("surface-positions/inner-left-spoilers", CurrentInnerLeftSpoiler);
 	setprop ("surface-positions/inner-right-spoilers", CurrentInnerRightSpoiler);
-#    print ("Nozzles ",Nozzle1," ",Nozzle2);
-#	setprop ("engines/engine[0]/nozzle-pos-norm", Nozzle1);
-#	setprop ("engines/engine[1]/nozzle-pos-norm", Nozzle2);
 	setprop ("surface-positions/wing-pos-norm", currentSweep);
 	setprop ("/fdm/jsbsim/fcs/wing-sweep", currentSweep);
 
@@ -273,15 +271,23 @@ var timedMotions = func {
         }
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
-        var elevator_deflection_due_to_aileron_deflection =  aileron.getValue() / 2.0;
+        var current_aileron = aileron.getValue();
+if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
+{
+#print("Outside dead zone ",current_aileron," roll ",getprop("autopilot/settings/target-roll-deg"));
+setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
+}
+        var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
     	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
     	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
+
     }
     else
     {
-    	main_flap_generic.setDoubleValue(main_flap_output.getValue());
-    	setprop ("controls/flight/wing-sweep", WingSweep);
-        aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
+    	setprop ("engines/engine[0]/nozzle-pos-norm", Nozzle1);
+    	setprop ("engines/engine[1]/nozzle-pos-norm", Nozzle2);
+    	aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
+    	slat_generic.setDoubleValue(slat_output.getValue());
     	left_elev_generic.setDoubleValue(left_elev_output.getValue());
     	right_elev_generic.setDoubleValue(right_elev_output.getValue());
     }
@@ -299,7 +305,8 @@ var timedMotions = func {
 # FCS update
 #----------------------------------------------------------------------------
 var wow = 1;
-
+setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
+setprop("/controls/flight/SAS-roll",0);
 var registerFCS = func {settimer (updateFCS, 0);}
 
 var updateFCS = func {
@@ -312,6 +319,34 @@ var updateFCS = func {
 	Throttle = getprop ("/controls/engines/engine/throttle");
 	e_trim = getprop ("/controls/flight/elevator-trim");
 	deltaT = getprop ("sim/time/delta-sec");
+
+    if(usingJSBSim)
+    {
+        currentG = getprop ("accelerations/pilot-gdamped");
+        # use interpolate to make it take 1.2seconds to affect the demand
+        var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
+        var roll_mode = getprop("autopilot/locks/heading");
+        if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" )
+            setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
+        else
+        {
+var roll = getprop("orientation/roll-deg");
+            if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
+            else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
+
+#print("AFCS ",roll," DMD ",dmd_afcs_roll, " SAS=", getprop("/controls/flight/SAS-roll"), " cur=",getprop("fdm/jsbsim/fcs/roll-trim-cmd-norm"));
+            if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
+            if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
+
+            interpolate("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",dmd_afcs_roll,0.1);
+        }
+    }
+    else
+    {
+        currentG = getprop ("accelerations/pilot-g");
+		setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
+		setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
+    }
 
 	#update functions
 	f14.computeSweep ();

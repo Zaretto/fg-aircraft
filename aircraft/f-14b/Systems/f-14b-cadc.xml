@@ -9,7 +9,7 @@
 <system name="CADC">
 
     <property value="0.006"> systems/afcs/altitude-hold-pid-kp </property>
-    <property value="0.00028"> systems/afcs/altitude-hold-pid-ki </property>
+    <property value="0.0000028"> systems/afcs/altitude-hold-pid-ki </property>
     <property value="0.0025"> systems/afcs/altitude-hold-pid-kd </property>
     <property value="1.2"> systems/afcs/altitude-hold-elevator-gain </property>
 
@@ -19,6 +19,9 @@
     <property value="0">systems/cadc/manuv-slat-extension-manual</property>
     <property value="0.9">systems/cadc/manuv-flap-extension-calc-lag</property>
     <property value="1.3">systems/cadc/manuv-flap-extension-washout-lag</property>
+
+    <property value="0">systems/afcs/heading-hold-active</property>
+    <property value="0">systems/afcs/SAS-roll-demand</property>
 
     <channel name="MANOUEVRE">
 
@@ -238,11 +241,10 @@
     </channel>
 
     <channel name="AFCS">
-
         <!-- ensure within operating envelope -->
+
         <switch name="systems/afcs/altitude-hold-trigger">
             <default value="0.0"/>
-
             <test value="1.0">
                 <and>
                     propulsion/engine[0]/set-running == 0
@@ -250,7 +252,6 @@
                     systems/afcs/altitude-hold-active ne 0
                 </and>
             </test>
-
         </switch>
 
         <summer name="systems/afcs/altitude-hold-divergence">
@@ -266,6 +267,7 @@
                 systems/afcs/altitude-hold-divergence lt 20
                 systems/afcs/altitude-hold-divergence gt -20
             </test>
+
             <test value="-systems/afcs/altitude-hold-lag-constant">
                 systems/afcs/altitude-hold-divergence gt 10
                 systems/afcs/altitude-hold-divergence lt systems/afcs/altitude-hold-alt-diff-feet
@@ -288,86 +290,12 @@
 
 
         </switch>
+
         <summer name="systems/afcs/altitude-hold-alt-diff-feet1">
             <input>systems/afcs/altitude-hold-alt-diff-feet</input>
             <input>systems/afcs/altitude-hold-alt-diff-delta</input>
             <output>systems/afcs/altitude-hold-alt-diff-feet</output>
         </summer>
-        <!--
-        <integrator name="systems/afcs/altitude-hold-alt-diff-feet">
-            <input> systems/afcs/altitude-hold-divergence </input>
-            <c1> systems/afcs/altitude-hold-lag-constant </c1>
-            <clipto>
-                <min> -2000</min>
-                <max>  2000</max>
-            </clipto>
-        </integrator>
-    <kinematic name="systems/afcs/altitude-hold-alt-diff-feet">
-            <input> systems/afcs/altitude-hold-divergence </input>
-            <traverse>
-            <setting>
-                <position>-2000</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>-1800</position>
-                <time>10</time>
-            </setting>
-            <setting>
-                <position>-1600</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>-1400</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>-1000</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>-600</position>
-                <time>1</time>
-            </setting>
-            <setting>
-                <position>-200</position>
-                <time>1</time>
-            </setting>
-            <setting>
-                <position>-100</position>
-                <time>0</time>
-            </setting>
-            <setting>
-                <position>0</position>
-                <time>0</time>
-            </setting>
-            <setting>
-                <position>100</position>
-                <time>0</time>
-            </setting>
-            <setting>
-                <position>200</position>
-                <time>1</time>
-            </setting>
-            <setting>
-                <position>800</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>1400</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>1800</position>
-                <time>2</time>
-            </setting>
-            <setting>
-                <position>2000</position>
-                <time>1</time>
-            </setting>
-            </traverse>
-        </kinematic>
--->
 
         <pure_gain name="systems/afcs/altitude-hold-vsi-dmd-fps">
             <input> systems/afcs/altitude-hold-alt-diff-feet </input>
@@ -379,7 +307,6 @@
             <input> systems/afcs/altitude-hold-vsi-dmd-fps </input>
             <input> -velocities/h-dot-fps  </input>
         </summer>
-
 
         <switch name="systems/afcs/altitude-hold-dmd-vsi">
             <default value="0.0"/>
@@ -396,12 +323,13 @@
             <trigger> systems/afcs/altitude-hold-trigger </trigger>
         </pid>
 
+<!--
         <pure_gain name="systems/afcs/altitude-hold-divergence-pid-contents">
             <input> systems/afcs/altitude-hold-divergence-pid </input>
             <gain> 1.0 </gain>
             <output>systems/afcs/altitude-hold-divergence-pid-contents</output>
         </pure_gain>
-
+-->
         <pure_gain name="systems/afcs/elevator-cmd-out">
             <input> systems/afcs/altitude-hold-divergence-pid </input>
             <gain> -systems/afcs/altitude-hold-elevator-gain </gain>

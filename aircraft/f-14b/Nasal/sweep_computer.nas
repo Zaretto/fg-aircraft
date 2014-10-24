@@ -35,7 +35,8 @@ var SweepVsMachHi = 60.0;
 var currentSweepMode = 0; # 0=auto,1=man,2=off,3=emer,4=over
 if (usingJSBSim) setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
 
-var minSweep = 0.383972435;
+var minSweep = 0.2941176470588235;
+var maxSweepAuxFlaps = 0.3235294117647059;
 var maxSweep = 1.0 - minSweep;
 var mnSweepFactor = (maxSweep - minSweep) / (MachHi - MachLo);
 # Functions
@@ -152,25 +153,23 @@ var computeSweep = func {
 #
 #    setprop("controls/flight/wing-sweep-cadc-dmd",getprop("fdm/jsbsim/fcs/wing-sweep-cadc-dmd"));
 
-	if (AutoSweep) {
-		current_mach = getprop ("/velocities/mach");
+    current_mach = getprop ("/velocities/mach");
 
-        if (current_mach == nil)
-            return;
+    if (current_mach == nil)
+        return;
 
-		# Flaps/sweep interlock
-		# do not move the wings until auxiliary flaps are in.
+# Flaps/sweep interlock
+# do not move the wings until auxiliary flaps are in.
 
-		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
+    if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
 
-		# Sweep vs. Mach motion
-		if (current_mach <= MachLo) {
-			WingSweep = minSweep;
-		} elsif (current_mach < MachHi) {
-			WingSweep = minSweep + (current_mach * mnSweepFactor); #(current_mach - MachLo) / MachSweepRange;
-		} else {
-			WingSweep = maxSweep;
-		}
-        setprop("/fdm/jsb-sim/fcs/wing-sweep-cmd",WingSweep);
-	}
+# Sweep vs. Mach motion
+    if (current_mach <= MachLo) {
+        WingSweep = minSweep;
+    } elsif (current_mach < MachHi) {
+        WingSweep = minSweep + (current_mach * mnSweepFactor); #(current_mach - MachLo) / MachSweepRange;
+    } else {
+        WingSweep = maxSweep;
+    }
+    setprop("/fdm/jsbsim/fcs/wing-sweep-cmd",WingSweep);
 }
