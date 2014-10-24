@@ -1,6 +1,77 @@
 Grumman F-14B Tomcat
 
-Authors:
+Author contributions:
+
+Richard Harrison (rjh@zaretto.com; see http://zaretto.com/f-14)
+ - JSBSim FDM
+ - Full hi-fidelity aerodynamics model based on AFWAL-TR-80-3141 and pilots's manual F14-AAD-1
+   * Wing sweep (including manual sweep). Sweep interlocks are correctly modelled so when deploying
+     flaps aux flaps can only be used below 22deg of sweep; otherwise up to 50degrees the main flaps can 
+     be deployed. At wing sweep of more than 55 degrees no flaps are available.
+   * Accurate stalls, spins, and other departures.
+   * CADC Maneuvering flaps / slats (again modelled on best available aero data)
+   * Differential spoilers accurately modelled - so at high alpha or high wing sweep roll rate is reduced 
+     (spoilers only effective up to around 10degress AOA; and less than 55deg wing sweep)
+ - Sound modelling:
+   * Engines modelled as components so they spool down; fixed the sound orientation so a flyby sounds more realistic
+   * High alpha buffer
+   * Wind noise
+   * Gear wind noise
+   * Flaps and airbrake wind noise
+   * Ground bumps and ratlles
+   * Scrape / fuselage contact
+ - Engine start/JFS
+ - CADC model (JSBSim)
+ - JSBSim autopilot and APC (DLC not implemented)
+ - Electrics system model  (Mainly for JSBsim)
+ - Hydraulics systems (Mainly for JSBsim)
+ - Cockpit changes:
+   * Master warn panel
+   * Hydraulic pressure gauge
+   * Oil pressure gauge
+   * Engine control panel
+   * Hyds transfer panel
+   * Master generator control panel
+   * ARA 63 panel
+   * Master test panel
+ - Revised NASA livery
+ - New splashscreen and other artworks
+ - F110 engine model uses more accurate performance data for altitude and is reasonably accurate
+ - Contrails from the wings at high alpha subject to atmospheric conditions.
+ - Elevator / Rudder and spoiler gauges work.
+ - AFCS tuning; the altitude hold is implemented in the CADC model; the normal autopilot is
+   used for heading and throttles.
+ - Added smoke generator (ground services dialog)
+ 
+
+Notes: 
+
+The JSBSim aerodynamics model uses all of the data in the
+AFWAL-TR-80-3141 report and is accurate for low speed clean
+configurations. I have modelled the high speed and flaps etc. based on
+other reports so these may not match the aircraft precisely.
+
+Because of the more realistic model the aeroplane is harder to fly than those
+with simpler aerodynamic models (e.g. High-G turns you need to watch the AOA to ensure
+that you don't stall the wings or the ailerons/stabilators)
+
+The hydraulics and electrics require either engine systems or external
+power. So if you lose engines at low speed (insufficient airflow to
+keep the turbines spinning) then you will also lose electrics and
+hyrdaulics and thus flight controls
+
+An engine start can be performed by pulling the cut off values (yellow
+stripy each side of the glarepanel) and selecting crank (with or
+without external air). Once the engine N2 reaches above 18% the
+hyrdaulics will have sufficient pressure to power the backup
+electrical generator and the cockpit should light up.
+
+As all of the simulation models are in JSBSim (rather than Nasal) it
+runs much faster and gives a much more fluid and realistic response.
+
+The brakes control binding for joysticks will function as either ground or airbrakes appropriately.
+
+-------------------------------------------------------------
 
 Enrique Laslo,
 - Aircraft 3D, FDM, AFCS code, textures, effects.
@@ -24,6 +95,7 @@ Shift-F  Raise flaps.
 k        Increase air brakes.
 j        Decrease air brakes.
 Ctrl-b   Toggle air brakes.
+< and >  Manual sweep control. 
 
 Radar shortcuts:
 Shift-E  Decrease Radar Range Display.
@@ -184,7 +256,7 @@ When disengaged the AUTO THROT caution light, (on the left side of the
 HUD) illuminates for 10 seconds.
 
 
-Landing Direct Lift Control, (DLC) Operation
+Landing Direct Lift Control, (DLC) Operation (Not JSBSim model)
 
 During landing approaches, the spoilers and horizontal stabilizers can
 be controled simultaneously to provide glidepath correction without
@@ -193,10 +265,10 @@ changing powersetting or angle of attack.
 
 Ground Spoilers Operation
 
-Ground spoilers (that is elevons used as air-brake ) provide aditionnal
+Ground spoilers (that is all spoilers used as air-brake ) provide aditionnal
 drag immediatly after touch down. Before landing, arm the ground
 spoilers by hiting Ctrl-s. After the aircraft hit the runway pull the
-throttle to idle, then the spoilers(elevons) get fully deployed. Hit
+throttle to idle, then the spoilers get fully deployed. Hit
 Ctrl-s again to disengage the ground spoilers.
 
  
