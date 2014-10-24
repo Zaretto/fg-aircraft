@@ -522,20 +522,21 @@ var init = func {
 	}
 
     common_init();
-var carrier = getprop("/sim/presets/carrier");
-    if (carrier != nil and carrier != "" and getprop("/fdm/jsbsim/position/h-agl-ft") < 100)
-#and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
-{
-    print ("Special launch init for cat-");
-       setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
-       setprop("orientation/pitch-deg",0);
-}
-	# launch
-	if ( ! main_loop_launched ) {
-		settimer(main_loop, 0.5);
-		settimer(f14.external_load_loop, 3);
-		main_loop_launched = 1;
-	}
+    if (f14.usingJSBSim)
+    {
+        var carrier = getprop("/sim/presets/carrier");
+        if (carrier != nil and carrier != "" and getprop("/fdm/jsbsim/position/h-agl-ft") < 100) 
+        {
+            print ("Special launch init for cat-");
+            setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
+            setprop("orientation/pitch-deg",0);
+        }
+    }
+    if ( ! main_loop_launched ) {
+        settimer(main_loop, 0.5);
+        settimer(f14.external_load_loop, 3);
+        main_loop_launched = 1;
+    }
 }
 
 setlistener("sim/signals/fdm-initialized", init);
