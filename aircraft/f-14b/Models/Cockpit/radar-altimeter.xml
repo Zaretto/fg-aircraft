@@ -46,6 +46,12 @@
 	<animation>
 		<name>needle</name>
 		<type>rotate</type>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
+        </condition>
 		<object-name>needle</object-name>
 		<property>position/altitude-agl-ft</property>
 		<min>0</min>
@@ -87,7 +93,7 @@
 			<or>
                 <less-than>
                     <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
+                    <value>1</value>
                 </less-than>
 				<less-than>
 					<property>orientation/roll-deg</property>
