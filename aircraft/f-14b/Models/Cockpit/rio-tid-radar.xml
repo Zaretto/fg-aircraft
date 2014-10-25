@@ -21,7 +21,7 @@
 				</equals>
 			</or>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
 		</condition>
@@ -252,10 +252,10 @@
 		<type>select</type>
 		<object-name>stand-by</object-name>
 		<condition>
-            <greater-than>
+            <less-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
+                <value>1</value>
+            </less-than>
 			<property>instrumentation/radar/radar-standby</property>
 		</condition>
 	</animation>

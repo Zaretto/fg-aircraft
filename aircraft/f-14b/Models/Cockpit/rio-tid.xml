@@ -38,17 +38,20 @@
 		<type>select</type>
 		<object-name>screen-bkg</object-name>
 		<condition>
+<or>
 			<property>sim/model/f-14b/controls/TID/on-off</property>
-               <greater-than>
+               <less-than>
                   <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                   <value>0</value>
-                </greater-than>
+                </less-than>
+</or>
 		</condition>
 	</animation>
 	<animation>
 		<type>select</type>
 		<object-name>screen-bkg-off</object-name>
 		<condition>
+<or>
             <less-than>
               <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>1</value>
@@ -56,6 +59,7 @@
 			<not>
 				<property>sim/model/f-14b/controls/TID/on-off</property>
 			</not>
+</or>
 		</condition>
 	</animation>
 
