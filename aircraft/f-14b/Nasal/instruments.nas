@@ -386,6 +386,12 @@ instruments_data_export = func {
 	foreach( s ; l_s ) {
 		str = str ~ s ~ ";";
 	}
+#
+# aircraft powered - for the back seater this is a yes/no
+if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
+str = str ~ "1" ~ ";";
+else
+str = str ~ "0" ~ ";";
 
 	InstrString.setValue(str);
 

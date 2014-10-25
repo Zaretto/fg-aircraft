@@ -249,7 +249,13 @@
 		<type>select</type>
 		<object-name>stand-by</object-name>
 		<condition>
+<or>
 			<property>instrumentation/radar/radar-standby</property>
+            <less-than>
+              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>1</value>
+            </less-than>
+</or>
 		</condition>
 	</animation>
 	<animation>
