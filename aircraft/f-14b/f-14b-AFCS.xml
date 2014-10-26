@@ -81,8 +81,8 @@
 		</output>
 		<config>
 			<Kp>-2</Kp>
-			<u_min>-30.0</u_min> <!-- limit to bank as alt-hold works better -->
-			<u_max> 30.0</u_max>
+			<u_min>-44.5</u_min> <!-- limit to bank as alt-hold works better -->
+			<u_max> 44.5</u_max>
 		</config>
 	</pi-simple-controller>
 
@@ -92,6 +92,78 @@
 		<enable>
 			<prop>autopilot/locks/heading</prop>
 			<value>dg-heading-hold</value>
+		</enable>
+		<input>
+			<prop>orientation/roll-deg</prop>
+		</input>
+		<reference>
+			<prop>autopilot/internal/target-roll-deg</prop>
+		</reference>
+		<output>
+			<prop>/controls/flight/SAS-roll</prop>
+		</output>
+		<config>
+			<Kp>0.015</Kp>
+			<beta>1</beta>
+			<Ti>10</Ti>
+			<Td>0.00000000001</Td>
+			<u_min>-0.3</u_min>
+			<u_max>0.3</u_max>
+		</config>
+	</pid-controller>
+
+<!-- route manager -->
+    <filter>
+        <name>Route waypoint error normalizer</name>
+        <debug>false</debug>
+        <enable>
+            <property>autopilot/route-manager/active</property>
+        </enable>
+        <type>gain</type>
+        <input>
+            <property>autopilot/route-manager/wp/true-bearing-deg</property>
+            <offset>
+                <property>orientation/heading-deg</property>
+                <scale>-1.0</scale>
+            </offset>
+        </input>
+        <output>autopilot/internal/waypoint-bearing-error-deg</output>
+        <period>
+            <min>-180</min>
+            <max>180</max>
+        </period>
+        <gain>1.0</gain>
+    </filter>
+
+	<pi-simple-controller>
+		<name>Heading Route</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/heading</prop>
+			<value>true-heading-hold</value>
+		</enable>
+        <input>
+            <property>autopilot/internal/waypoint-bearing-error-deg</property>
+        </input>
+		<reference>
+			<value>0.0</value>
+		</reference>
+		<output>
+			<prop>autopilot/internal/target-roll-deg</prop>
+		</output>
+		<config>
+			<Kp>-2</Kp>
+			<u_min>-44.5</u_min> <!-- limit to bank as alt-hold works better -->
+			<u_max> 44.5</u_max>
+		</config>
+	</pi-simple-controller>
+
+	<pid-controller>
+		<name>Heading Route Stage #2</name>
+		<debug>false</debug>
+		<enable>
+			<prop>autopilot/locks/heading</prop>
+			<value>true-heading-hold</value>
 		</enable>
 		<input>
 			<prop>orientation/roll-deg</prop>

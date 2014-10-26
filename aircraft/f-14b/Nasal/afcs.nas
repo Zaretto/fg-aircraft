@@ -140,6 +140,7 @@ var afcs_altitude_engage_toggle = func() {
         if (f14.usingJSBSim)
         {
             target_alt.setValue(press_alt_ft.getValue());
+setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
 #            ap_alt_lock.setValue(1);
         }
 	}
@@ -168,6 +169,7 @@ var afcs_attitude_engage = func() {
 else
 {
 target_alt.setValue(press_alt_ft.getValue());
+setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
 print("Alt lock engage[1]");
 ap_alt_lock.setValue(1);
 
@@ -175,11 +177,17 @@ ap_alt_lock.setValue(1);
 
 	var rdeg = roll_deg.getValue();
 	if ( hdg_gt_switch.getBoolValue()) {	
-#		if ( rdeg < 5 and rdeg > -5 ) {
-#			target_hdg.setValue(hdg_bug.getValue());
+if (hdg_gt_switch.getValue() > 0)
+{
 		target_hdg.setValue(course_demand.getValue());
 			ap_hdg_lock.setValue("dg-heading-hold");
-#		}
+}
+else
+{
+	target_hdg.setValue(course_demand.getValue());
+	ap_hdg_lock.setValue("true-heading-hold");
+}
+print("hdg ",ap_hdg_lock.getValue());
 	} else {
 		if ( rdeg < -60 ) { rdeg = -60 }
 		if ( rdeg > 60 ) { rdeg = 60 }
@@ -201,8 +209,17 @@ var afcs_heading_engage = func() {
 	var rdeg = roll_deg.getValue();
 
 	if ( hdg_gt_switch.getBoolValue()) {	
+if (hdg_gt_switch.getValue() > 0)
+{
 		target_hdg.setValue(course_demand.getValue());
 			ap_hdg_lock.setValue("dg-heading-hold");
+}
+else
+{
+	target_hdg.setValue(course_demand.getValue());
+	ap_hdg_lock.setValue("true-heading-hold");
+}
+
 	} else {
 		if ( rdeg < -60 ) { rdeg = -60 }
 		if ( rdeg > 60 ) { rdeg = 60 }
@@ -221,6 +238,7 @@ var afcs_engage_selected_mode = func() {
 		# This is Altitude step #2
 		if (alt_enable.getBoolValue()) {
 			target_alt.setValue(press_alt_ft.getValue());
+setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
             if (f14.usingJSBSim)
             {
                 print("Alt lock engage");
@@ -242,7 +260,9 @@ afcs_groundtrack_engage = func() {
 		return;
 	}
     target_hdg.setValue(course_demand.getValue());
-	ap_hdg_lock.setValue("dg-heading-hold");
+	target_hdg.setValue(course_demand.getValue());
+	ap_hdg_lock.setValue("true-heading-hold");
+#	ap_hdg_lock.setValue("dg-heading-hold");
 }
 
 var afcs_disengage = func() {

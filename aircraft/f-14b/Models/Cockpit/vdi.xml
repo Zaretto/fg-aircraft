@@ -377,10 +377,16 @@
 		<type>select</type>
 		<object-name>ap-heading</object-name>
 		<condition>
+<or>
 			<equals>
 				<property>sim/model/f-14b/controls/AFCS/heading-gt</property>
 				<value>1</value>
 			</equals>
+			<equals>
+				<property>sim/model/f-14b/controls/AFCS/heading-gt</property>
+				<value>-1</value>
+			</equals>
+</or>
 		</condition>
 	</animation>
 
@@ -410,7 +416,7 @@
 		<condition>
 			<equals>
 				<property>autopilot/locks/heading</property>
-				<value>dg-heading-hold</value>
+				<value>true-heading-hold</value>
 			</equals>
 		</condition>
 	</animation>

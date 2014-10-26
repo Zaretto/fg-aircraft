@@ -308,6 +308,7 @@ var wow = 1;
 setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("/controls/flight/SAS-roll",0);
 var registerFCS = func {settimer (updateFCS, 0);}
+var current_leg = 0;
 
 var updateFCS = func {
 	#Fectch most commonly used values
@@ -326,11 +327,11 @@ var updateFCS = func {
         # use interpolate to make it take 1.2seconds to affect the demand
         var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
         var roll_mode = getprop("autopilot/locks/heading");
-        if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" )
+        if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
             setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
         else
         {
-var roll = getprop("orientation/roll-deg");
+            var roll = getprop("orientation/roll-deg");
             if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
             else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
 
@@ -338,6 +339,45 @@ var roll = getprop("orientation/roll-deg");
             if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
             if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
 
+            if(roll_mode == "true-heading-hold" )
+            {
+                if(getprop("autopilot/route-manager/active"))
+                {
+                    if (getprop("autopilot/route-manager/wp/dist") < 1)
+                    {
+                        var leg = getprop("autopilot/route-manager/current-wp");
+                        if(current_leg != leg)
+                        {
+                            current_leg = leg;
+                            leg = leg +1;
+                            var cmd = "@JUMP "~leg;
+                            print ("Next waypoint ",leg," ",cmd);
+                            setprop("autopilot/route-manager/input",cmd);
+                        }
+                        else
+                            print("within range but still on ",leg," : ",current_leg);
+                    }
+#                    if (leg < getprop("autopilot/route-manager/route/num"))
+#                    {
+#                        var legi = "autopilot/route-manager/route/wp["~leg~"]/altitude-ft";
+#                        var demalt = getprop(legi);
+#                        if (demalt > 0)
+#                        {
+#                            if (demalt > getprop("position/ground-elev-ft"))
+#                                setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
+#                            if (demalt <= getprop("position/ground-elev-ft"))
+#                                setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",getprop("position/ground-elev-ft") + demalt);
+#                        }
+#                        else
+#                            setprop("autopilot/settings/target-altitude-ft", getprop("fdm/jsbsim/systems/afcs/altitude-hold-ft"));
+#                       print(legi," = ",demalt, ": ",getprop("/fdm/jsbsim/systems/afcs/target-altitude-ft"));
+#                    }
+                }
+                else
+                {
+                    current_leg = 0;
+                }
+            }
             interpolate("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",dmd_afcs_roll,0.1);
         }
     }
