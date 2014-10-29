@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PropertyList>
     <fx>
+        <avionics-hum>
+            <name>Avionics 400hz</name>
+            <path>/Sounds/avionics-400Hz.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                    <value>0</value>
+                </greater-than>
+                <property>sim/current-view/internal</property>
+            </condition>
+            <volume>
+                <factor>0.05</factor>
+            </volume>
+        </avionics-hum>
+
         <!-- Engines -->
         <engine-jfs-start>
             <name>engine-jfs-start</name>
