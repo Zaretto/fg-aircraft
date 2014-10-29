@@ -272,11 +272,11 @@ var timedMotions = func {
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var current_aileron = aileron.getValue();
-if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
-{
+        if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
+        {
 #print("Outside dead zone ",current_aileron," roll ",getprop("autopilot/settings/target-roll-deg"));
-setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
-}
+            setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
+        }
         var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
     	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
     	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
@@ -308,7 +308,6 @@ var wow = 1;
 setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("/controls/flight/SAS-roll",0);
 var registerFCS = func {settimer (updateFCS, 0);}
-var current_leg = 0;
 
 var updateFCS = func {
 	#Fectch most commonly used values
@@ -325,8 +324,10 @@ var updateFCS = func {
     {
         currentG = getprop ("accelerations/pilot-gdamped");
         # use interpolate to make it take 1.2seconds to affect the demand
+
         var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
         var roll_mode = getprop("autopilot/locks/heading");
+
         if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
             setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
         else
@@ -339,45 +340,6 @@ var updateFCS = func {
             if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
             if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
 
-            if(roll_mode == "true-heading-hold" )
-            {
-                if(getprop("autopilot/route-manager/active"))
-                {
-                    if (getprop("autopilot/route-manager/wp/dist") < 1)
-                    {
-                        var leg = getprop("autopilot/route-manager/current-wp");
-                        if(current_leg != leg)
-                        {
-                            current_leg = leg;
-                            leg = leg +1;
-                            var cmd = "@JUMP "~leg;
-                            print ("Next waypoint ",leg," ",cmd);
-                            setprop("autopilot/route-manager/input",cmd);
-                        }
-                        else
-                            print("within range but still on ",leg," : ",current_leg);
-                    }
-#                    if (leg < getprop("autopilot/route-manager/route/num"))
-#                    {
-#                        var legi = "autopilot/route-manager/route/wp["~leg~"]/altitude-ft";
-#                        var demalt = getprop(legi);
-#                        if (demalt > 0)
-#                        {
-#                            if (demalt > getprop("position/ground-elev-ft"))
-#                                setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
-#                            if (demalt <= getprop("position/ground-elev-ft"))
-#                                setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",getprop("position/ground-elev-ft") + demalt);
-#                        }
-#                        else
-#                            setprop("autopilot/settings/target-altitude-ft", getprop("fdm/jsbsim/systems/afcs/altitude-hold-ft"));
-#                       print(legi," = ",demalt, ": ",getprop("/fdm/jsbsim/systems/afcs/target-altitude-ft"));
-#                    }
-                }
-                else
-                {
-                    current_leg = 0;
-                }
-            }
             interpolate("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",dmd_afcs_roll,0.1);
         }
     }
