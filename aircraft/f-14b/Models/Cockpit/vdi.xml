@@ -190,6 +190,69 @@
 		</axis>
 	</animation>
 
+    <animation>
+        <type>select</type>
+        <object-name>gspointer</object-name>
+        <condition>
+            <property>instrumentation/nav/gs-in-range</property>
+            <and>
+                <not><property>sim/model/f-14b/controls/electrics/ara-63-power-off</property></not>
+                <greater-than>
+                    <property>instrumentation/nav/gs-needle-deflection-norm</property>
+                    <value>-0.976</value>
+                </greater-than>
+                <less-than>
+                    <property>instrumentation/nav/gs-needle-deflection-norm</property>
+                    <value>0.976</value>
+                </less-than>
+            </and>
+        </condition>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>gspointer</object-name>
+        <object-name>coarseGSPointer</object-name>
+        <property>instrumentation/nav/gs-needle-deflection-norm</property>
+        <factor>0.04</factor>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>locpointer</object-name>
+        <condition>
+            <and>
+                <not><property>sim/model/f-14b/controls/electrics/ara-63-power-off</property></not>
+                <greater-than>
+                    <property>instrumentation/nav/signal-quality-norm</property>
+                    <value>0.99</value>
+                </greater-than>
+                <less-than>
+                    <property>instrumentation/nav/heading-needle-deflection-norm</property>
+                    <value>0.92</value>
+                </less-than>
+                <greater-than>
+                    <property>instrumentation/nav/heading-needle-deflection-norm</property>
+                    <value>-0.92</value>
+                </greater-than>
+            </and>
+       </condition>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>locpointer</object-name>
+        <property>instrumentation/nav/heading-needle-deflection-norm</property>
+        <factor>-0.04</factor>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 	
 	<!-- heading tape -->	
 	<animation>
@@ -377,10 +440,16 @@
 		<type>select</type>
 		<object-name>ap-heading</object-name>
 		<condition>
+<or>
 			<equals>
 				<property>sim/model/f-14b/controls/AFCS/heading-gt</property>
 				<value>1</value>
 			</equals>
+			<equals>
+				<property>sim/model/f-14b/controls/AFCS/heading-gt</property>
+				<value>-1</value>
+			</equals>
+</or>
 		</condition>
 	</animation>
 
@@ -410,7 +479,7 @@
 		<condition>
 			<equals>
 				<property>autopilot/locks/heading</property>
-				<value>dg-heading-hold</value>
+				<value>true-heading-hold</value>
 			</equals>
 		</condition>
 	</animation>

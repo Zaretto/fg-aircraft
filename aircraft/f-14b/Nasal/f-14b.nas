@@ -272,11 +272,11 @@ var timedMotions = func {
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var current_aileron = aileron.getValue();
-if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
-{
+        if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
+        {
 #print("Outside dead zone ",current_aileron," roll ",getprop("autopilot/settings/target-roll-deg"));
-setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
-}
+            setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
+        }
         var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
     	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
     	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
@@ -324,13 +324,15 @@ var updateFCS = func {
     {
         currentG = getprop ("accelerations/pilot-gdamped");
         # use interpolate to make it take 1.2seconds to affect the demand
+
         var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
         var roll_mode = getprop("autopilot/locks/heading");
-        if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" )
+
+        if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
             setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
         else
         {
-var roll = getprop("orientation/roll-deg");
+            var roll = getprop("orientation/roll-deg");
             if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
             else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
 
