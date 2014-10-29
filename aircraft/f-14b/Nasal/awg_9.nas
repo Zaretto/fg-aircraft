@@ -10,6 +10,7 @@ var HudTgt            = props.globals.getNode("sim/model/f-14b/instrumentation/r
 var HudTgtTDev        = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-deviation", 1);
 var HudTgtTDeg        = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle", 1);
 var HudTgtClosureRate = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/closure-rate", 1);
+var HudTgtDistance = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/distance", 1);
 var AzField           = props.globals.getNode("instrumentation/radar/az-field", 1);
 var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range");
 var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby");
@@ -183,8 +184,10 @@ var az_scan = func() {
 			u.get_heading();
 			var horizon = u.get_horizon( our_alt );
 			var u_rng = u.get_range();
-#				var nom = u.Callsign.getValue();
-#				print(nom, " ", u_rng, " horizon ",horizon, " our alt ",our_alt, " mrc ",my_radarcorr);
+				var nom = u.Callsign.getValue();
+#var ac = radardist.get_aircraft_name(u);
+#				print(nom, " ", u.type," ",u.AcType," ", u_rng, " horizon ",horizon, " our alt ",our_alt, " mrc ",my_radarcorr);
+
 			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr)) {
 #				print(" --> ",nom, " ", u_rng, " ", radardist.radis(u.string, my_radarcorr));
 				# Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
@@ -252,8 +255,24 @@ var hud_nearest_tgt = func() {
 			HudTgtTDeg.setValue(combined_dev_deg);
 			HudTgtTDev.setValue(combined_dev_length);
 			HudTgtHDisplay.setBoolValue(1);
+HudTgtDistance.setValue(nearest_u.get_range());
 			var u_target = nearest_u.type ~ "[" ~ nearest_u.index ~ "]";
-			HudTgt.setValue(u_target);
+#if (nom != nil)
+#			HudTgt.setValue(nom);
+#else
+var callsign = nearest_u.Callsign.getValue();
+var model = "";
+if (nearest_u.Model != nil)
+model = nearest_u.Model.getValue();
+var target_id = "";
+if(callsign != nil)
+			target_id = callsign;
+else
+			target_id = u_target;
+if (model != nil and model != "")
+target_id = target_id ~ " " ~ model;
+#print(nearest_u.Callsign.getValue()," ",nearest_u.get_range());
+HudTgt.setValue(target_id);
 			return;
 		}
 	}
@@ -421,9 +440,12 @@ var Target = {
 		obj.type = c.getName();
 		obj.Valid = c.getNode("valid");
 		obj.Callsign = c.getNode("callsign");
+        obj.Model = c.getNode("model-short");
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
+#		obj.Callsign = getprop(obj.string~"/callsign");
+#print("callsign ",obj.Callsign.getValue());
 		
 		# Remote back-seaters shall not emit and shall be invisible. FIXME: This is going to be handled by radardist ASAP.
 		obj.not_acting = 0;

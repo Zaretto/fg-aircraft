@@ -51,6 +51,44 @@
 			<property>sim/model/f-14b/controls/hud/on-off</property>
         </condition>
 	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>ac-reticle</object-name>
+		<condition>
+				<greater-than>
+					<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+					<value>0</value>
+				</greater-than>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+			<property>sim/model/f-14b/controls/hud/on-off</property>
+<or>
+            <equals>
+                <property>/controls/gear/gear-down</property>
+                <value>true</value>
+            </equals>
+                        <less-than>
+                            <property>orientation/alpha-deg</property>
+                            <value>-3.7</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/alpha-deg</property>
+                            <value>10</value>
+                        </greater-than>
+                        <less-than>
+                            <property>orientation/side-slip-deg</property>
+                            <value>-7</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/side-slip-deg</property>
+                            <value>7</value>
+                        </greater-than>
+</or>
+
+        </condition>
+	</animation>
 
 	<!-- Diamond -->
 	<animation>
@@ -323,12 +361,14 @@
 		<type>select</type>
 		<object-name>closure-rate</object-name>
 		<condition>
+<!--
 			<not>
 				<equals>
 					<property>sim/model/f-14b/controls/armament/stick-selector</property>
 					<value>0</value>
 				</equals>
 			</not>
+-->
 			<property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
 		</condition>
 	</animation>
@@ -342,6 +382,81 @@
 		<axis><z>1</z></axis>
 	</animation>
 
+
+<!-- flight director bars -->
+    <animation>
+        <type>select</type>
+        <object-name>gspointer</object-name>
+        <condition>
+            <property>instrumentation/nav/gs-in-range</property>
+            <property>sim/hud/extended-mode</property>
+			<or>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
+			</or>
+            <and>
+                <not><property>sim/model/f-14b/controls/electrics/ara-63-power-off</property></not>
+                <greater-than>
+                    <property>instrumentation/nav/gs-needle-deflection-norm</property>
+                    <value>-0.976</value>
+                </greater-than>
+                <less-than>
+                    <property>instrumentation/nav/gs-needle-deflection-norm</property>
+                    <value>0.976</value>
+                </less-than>
+            </and>
+        </condition>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>gspointer</object-name>
+        <object-name>coarseGSPointer</object-name>
+        <property>instrumentation/nav/gs-needle-deflection-norm</property>
+        <factor>0.04</factor>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>locpointer</object-name>
+        <condition>
+            <and>
+                <property>sim/hud/extended-mode</property>
+    			<or>
+	    			<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
+		    		<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
+			    </or>
+                <not><property>sim/model/f-14b/controls/electrics/ara-63-power-off</property></not>
+                <greater-than>
+                    <property>instrumentation/nav/signal-quality-norm</property>
+                    <value>0.99</value>
+                </greater-than>
+                <less-than>
+                    <property>instrumentation/nav/heading-needle-deflection-norm</property>
+                    <value>0.92</value>
+                </less-than>
+                <greater-than>
+                    <property>instrumentation/nav/heading-needle-deflection-norm</property>
+                    <value>-0.92</value>
+                </greater-than>
+            </and>
+       </condition>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>locpointer</object-name>
+        <property>instrumentation/nav/heading-needle-deflection-norm</property>
+        <factor>-0.04</factor>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
 	<!-- Tacan -->
 	<animation>
