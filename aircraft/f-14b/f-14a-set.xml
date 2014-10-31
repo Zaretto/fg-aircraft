@@ -517,12 +517,16 @@
 						<!--<selected-channel type="int">1</selected-channel>-->
 					</an-arc-159v1>
 					<aoa-indexer>
-						<!-- target = 11.3 deg AoA -->
-						<too-slow-deg>13.7</too-slow-deg>	<!-- target +2.4 deg -->
-						<slow-deg>12.1</slow-deg>			<!-- target +0.8 deg -->
-						<target-deg>11.3</target-deg>		<!-- target -->
-						<fast-deg>10.5</fast-deg>			<!-- target -0.8 deg -->
-						<too-fast-deg>8.9</too-fast-deg>	<!-- target -2.4 deg -->
+						<!-- target = 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
+                        <!-- F-14AAD-1 Figure 2-124; Angle-of-Attack Displays -->
+
+						<fast-deg-end>12.6</fast-deg-end>			
+						<optimum-deg-end>13.9</optimum-deg-end>		
+						<optimum-deg-start>11.9</optimum-deg-start>
+						<slow-deg-start>13.7</slow-deg-start>
+
+                        <target-deg>11.9</target-deg>		<!-- target (AFCS)-->
+
 					</aoa-indexer>
 					<acls>
 						<engaged type="bool">false</engaged>

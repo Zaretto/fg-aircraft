@@ -441,3 +441,35 @@ setlistener("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch", func {
         setprop("fdm/jsbsim/systems/hydraulics/emerg-flyt-hyd-switch", v);
     }
 }, 1, 0);
+
+#
+# master test panel selection switch 
+var master_test_select_switch = func(n) {
+var curval = getprop("sim/model/f-14b/controls/electrics/master-test-switch");
+if (curval == nil)
+curval = 0;
+
+curval = curval + n;
+if (curval < 0) curval = 10;
+if (curval > 10) curval = 0;
+
+    setprop("sim/model/f-14b/controls/electrics/master-test-switch", curval);
+if (curval == 0)
+{
+setprop("sim/model/f-14b/lights/master-test-nogo",0);
+setprop("sim/model/f-14b/lights/master-test-go",0);
+setprop("sim/model/f-14b/lights/master-test-lights",0);
+}
+else if (curval == 10)
+{
+setprop("sim/model/f-14b/lights/master-test-lights",1);
+setprop("sim/model/f-14b/lights/master-test-nogo",0);
+setprop("sim/model/f-14b/lights/master-test-go",1);
+}
+else
+{
+setprop("sim/model/f-14b/lights/master-test-lights",0);
+setprop("sim/model/f-14b/lights/master-test-nogo",1);
+setprop("sim/model/f-14b/lights/master-test-go",0);
+}
+}

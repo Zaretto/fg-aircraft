@@ -3,6 +3,49 @@
 	<path>master-test-panel.ac</path>
 
 	<animation>
+		<type>select</type>
+		<object-name>light-nogo</object-name>
+		<condition>
+               <property>sim/model/f-14b/lights/master-test-nogo</property>
+				<greater-than>
+					<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+					<value>0</value>
+				</greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<object-name>light-nogo</object-name>
+		<type>material</type>
+		<emission> 
+			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>light-go</object-name>
+		<condition>
+               <property>sim/model/f-14b/lights/master-test-go</property>
+				<greater-than>
+					<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+					<value>0</value>
+				</greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<object-name>light-go</object-name>
+		<type>material</type>
+		<emission> 
+			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+			<red>1</red>
+			<green>1</green>
+			<blue>1</blue>
+		</emission>
+	</animation>
+
+	<animation>
 		<type>pick</type>
 		<visible>true</visible>
 		<object-name>emerg-flt-hyd-guard-lever</object-name>
@@ -29,8 +72,16 @@
 			<button>0</button>
 			<repeatable>false</repeatable>
 			<binding>
-				<command>property-toggle</command>
-				<property>sim/model/f-14b/controls/electrics/master-test-switch</property>
+				<command>nasal</command>
+				<script>f14.master_test_select_switch(1)</script>
+			</binding>
+		</action>
+		<action>
+			<button>1</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>nasal</command>
+				<script>f14.master_test_select_switch(-1)</script>
 			</binding>
 		</action>
 	</animation>
@@ -50,6 +101,7 @@
 			</binding>
 		</action>
 	</animation>
+
 	<animation>
 		<type>pick</type>
 		<visible>false</visible>
@@ -85,7 +137,20 @@
 		<type>rotate</type>
 		<object-name>master-test-switch</object-name>
 		<property>sim/model/f-14b/controls/electrics/master-test-switch</property>
-		<factor>-50</factor>
+		<interpolation>
+<entry><ind>	0	</ind><dep>	0	</dep></entry>
+<entry><ind>	1	</ind><dep>	50	</dep></entry>
+<entry><ind>	2	</ind><dep>	69	</dep></entry>
+<entry><ind>	3	</ind><dep>	88	</dep></entry>
+<entry><ind>	4	</ind><dep>	107	</dep></entry>
+<entry><ind>	5	</ind><dep>	126	</dep></entry>
+<entry><ind>	6	</ind><dep>	225	</dep></entry>
+<entry><ind>	7	</ind><dep>	244	</dep></entry>
+<entry><ind>	8	</ind><dep>	263	</dep></entry>
+<entry><ind>	9	</ind><dep>	282	</dep></entry>
+<entry><ind>	10	</ind><dep>	301	</dep></entry>
+
+		</interpolation>
 		<center>
 			<x-m>-0.0057</x-m>
 			<y-m>-0.0142</y-m>
@@ -137,4 +202,43 @@
 		</axis>
 	</animation>
 
+	<!-- lighting -->
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>switches</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
 </PropertyList>
