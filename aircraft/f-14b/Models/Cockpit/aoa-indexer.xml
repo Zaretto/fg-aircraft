@@ -6,16 +6,19 @@
 
 	<animation>
 		<type>select</type>
-		<object-name>aoa-too-slow</object-name>
+		<object-name>aoa-slow</object-name>
 		<condition>
 			<greater-than>
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
-			<greater-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>
+<and>
+			<greater-than-equals>
 				<property>orientation/alpha-deg</property>
-			<property>sim/model/f-14b/instrumentation/aoa-indexer/too-slow-deg</property>
-			</greater-than>
+   			    <property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg-start</property>
+			</greater-than-equals>
 			<equals>
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
@@ -34,62 +37,32 @@
 					<value>0.5</value>
 				</greater-than>
 			</or>
+</and>
+</or>
 		</condition>
 	</animation>
 
 	<animation>
 		<type>select</type>
-		<object-name>aoa-slow</object-name>
+		<object-name>aoa-optimum</object-name>
 		<condition>
 			<greater-than>
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
-			<less-than>
-				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/too-slow-deg</property>
-			</less-than>
-			<greater-than>
-				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg</property>
-			</greater-than>
-			<equals>
-				<property>gear/gear[0]/position-norm</property>
-				<value>1</value>
-			</equals>
-            <or>
-                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-                <and>
-                    <less-than>
-                        <property>gear/tailhook/position-norm</property>
-                        <value>0.4</value>
-                    </less-than>
-                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-                </and>
-                <greater-than>
-                    <property>gear/tailhook/position-norm</property>
-                    <value>0.5</value>
-                </greater-than>
-            </or>
-        </condition>
-	</animation>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>
+<and>
 
-	<animation>
-		<type>select</type>
-		<object-name>aoa-on-speed</object-name>
-		<condition>
-			<greater-than>
-				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-				<value>0</value>
-			</greater-than>
-			<less-than>
+			<greater-than-equals>
 				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg</property>
-			</less-than>
-			<greater-than>
+   			    <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-start</property>
+			</greater-than-equals>
+			<less-than-equals>
 				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg</property>
-			</greater-than>
+   			    <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-end</property>
+			</less-than-equals>
+
 			<equals>
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
@@ -108,6 +81,8 @@
                     <value>0.5</value>
                 </greater-than>
             </or>
+</and>
+</or>
         </condition>
 	</animation>
 
@@ -119,14 +94,13 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
-			<less-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>
+<and>
+			<less-than-equals>
 				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg</property>
-			</less-than>
-			<greater-than>
-				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/too-fast-deg</property>
-			</greater-than>
+				<property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg-end</property>
+			</less-than-equals>
 			<equals>
 				<property>gear/gear[0]/position-norm</property>
 				<value>1</value>
@@ -145,41 +119,11 @@
                     <value>0.5</value>
                 </greater-than>
             </or>
+</and>
+</or>
         </condition>
 	</animation>
 
-	<animation>
-		<type>select</type>
-		<object-name>aoa-too-fast</object-name>
-		<condition>
-			<greater-than>
-				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-				<value>0</value>
-			</greater-than>
-			<less-than>
-				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/too-fast-deg</property>
-			</less-than>
-			<equals>
-				<property>gear/gear[0]/position-norm</property>
-				<value>1</value>
-			</equals>
-            <or>
-                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-                <and>
-                    <less-than>
-                        <property>gear/tailhook/position-norm</property>
-                        <value>0.4</value>
-                    </less-than>
-                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-                </and>
-                <greater-than>
-                    <property>gear/tailhook/position-norm</property>
-                    <value>0.5</value>
-                </greater-than>
-            </or>
-        </condition>
-	</animation>
 
 <!-- Warning Lights -->
 	<animation>
@@ -190,6 +134,9 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>-->
+<and>
 			<or>
 				<less-than>
 					<property>gear/gear[0]/position-norm</property>
@@ -213,6 +160,8 @@
 				<value>0.85</value>
 			</less-than>
 			<property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+</and>
+</or>
 		</condition>
 	</animation>
 
@@ -224,7 +173,10 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>-->
 			<property>sim/model/f-14b/instrumentation/acls/engaged</property>
+</or>
 		</condition>
 	</animation>
 
@@ -236,7 +188,10 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
-			<property>controls/gear/brake-parking</property>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+	    		<property>controls/gear/brake-parking</property>
+            </or>
 		</condition>
 	</animation>
 
@@ -248,7 +203,10 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
-			<property>sim/model/f-14b/instrumentation/gears/nose-wheel-steering-warnlight</property>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+	    		<property>sim/model/f-14b/instrumentation/gears/nose-wheel-steering-warnlight</property>
+            </or>
 		</condition>
 	</animation>
 
@@ -260,22 +218,15 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>-->
 			<property>sim/model/f-14b/systems/apc/self-disengaged-light</property>
+</or>
 		</condition>
 	</animation>
 
 	<!-- lighting -->
 	<!-- rembrandt change: keep the legacy emission so we can also keep controls/lighting/index-norm -->
-	<animation>
-		<object-name>aoa-too-slow</object-name>
-		<type>material</type>
-		<emission> 
-			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
-			<red>0.8</red>
-			<green>0.8</green>
-			<blue>0.8</blue>
-		</emission>
-	</animation>
 	<animation>
 		<object-name>aoa-slow</object-name>
 		<type>material</type>
@@ -287,7 +238,7 @@
 		</emission>
 	</animation>
 	<animation>
-		<object-name>aoa-on-speed</object-name>
+		<object-name>aoa-optimum</object-name>
 		<type>material</type>
 		<emission> 
 			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
@@ -298,16 +249,6 @@
 	</animation>
 	<animation>
 		<object-name>aoa-fast</object-name>
-		<type>material</type>
-		<emission> 
-			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
-			<red>0.8</red>
-			<green>0.8</green>
-			<blue>0.8</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>aoa-too-fast</object-name>
 		<type>material</type>
 		<emission> 
 			<factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>

@@ -190,6 +190,7 @@
 		</axis>
 	</animation>
 
+<!-- flight director bars -->
     <animation>
         <type>select</type>
         <object-name>gspointer</object-name>
@@ -372,6 +373,13 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
+<or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+<and>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+				<value>0</value>
+			</greater-than>
 			<or>
 				<greater-than>
 					<property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
@@ -388,6 +396,8 @@
 					</greater-than>
 				</and>
 			</or>
+				</and>
+			</or>
 		</condition>
 	</animation>
 	<animation>
@@ -398,6 +408,9 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 				<value>0</value>
 			</greater-than>
+<or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+<and>
 			<less-than>
 				<property>orientation/roll-deg</property>
 				<value>45</value>
@@ -418,6 +431,148 @@
 				<property>position/altitude-agl-ft</property>
 				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
 			</less-than>
+</and>
+</or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-wave-off</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-reduce-speed</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-adj-ac</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-landing-chk</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-acl-ready</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-ap-cplr</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-cmd-control</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-10-seconds</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-tilt</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>select</type>
+		<object-name>light-voice</object-name>
+		<condition>
+			<greater-than>
+				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+				<value>0</value>
+			</greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+            </or>
 		</condition>
 	</animation>
 
@@ -510,7 +665,10 @@
 				<property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
 				<value>0</value>
 			</greater-than>
+<or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
 			<property>sim/model/f-14b/controls/AFCS/altitude-enable</property>
+</or>
 		</condition>
 	</animation>
 

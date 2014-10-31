@@ -918,6 +918,23 @@
         <format>%s</format>
         <halign>left</halign>
     </label>
+
+    <label>
+        <name>LaunchBar</name>
+		<condition>
+            <property>sim/hud/extended-mode</property>
+            <property>sim/model/f-14b/lights/ca-launch-bar</property>
+            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+			<or>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
+				<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
+			</or>
+        </condition>
+        <x>-30</x>
+        <y>-75</y>
+        <format>LAUNCH POWER</format>
+        <halign>left</halign>
+    </label>
     <label>
         <name>Target Distance</name>
 		<condition>

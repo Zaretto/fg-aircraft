@@ -10,8 +10,19 @@
 		<type>select</type>
 		<object-name>type1-lit</object-name>
 		<condition>
+<and>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>-->
+<and>
 			<property>instrumentation/ecm/on-off</property>
 			<property>instrumentation/ecm/alert-type1</property>
+</and>
+</or>
+</and>
 		</condition>
 	</animation>
 
@@ -19,8 +30,23 @@
 		<type>select</type>
 		<object-name>type2-lit</object-name>
 		<condition>
+<and>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+<or>
+<property>sim/model/f-14b/lights/master-test-lights</property>-->
+<and>
 			<property>instrumentation/ecm/on-off</property>
 			<property>instrumentation/ecm/alert-type2</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+</and>
+</or>
+</and>
 		</condition>
 	</animation>
 
