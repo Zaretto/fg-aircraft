@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sf.net/JSBSimScript.xsl"?>
+<runscript xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://jsbsim.sf.net/JSBSimScript.xsd"
+    name="F-14 Hydraulic system test test">
+    <description>F-14 Hydraulic system test F14-AAD-1 p2-68 to p2-76</description>
+    <!--
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 p2-68 to p2-76
+    -->
+    <use aircraft="f-14a" initialize="qtg/hyds-reset"/>
+
+    <run start="0.0" end="40" dt="0.033333">
+
+        <event name="Initial setup">
+            <condition> simulation/sim-time-sec le 0.1 </condition>
+            <set name="propulsion/engine[0]/set-running" value="1"/>
+            <set name="propulsion/engine[1]/set-running" value="1"/>
+            <set name="gear/gear-cmd-norm" value="0"/>
+            <set name="gear/gear-pos-norm" value="0"/>
+            <set name="fcs/flap-cmd-norm" value="0"/>
+
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+
+            <set name="propulsion/tank[0]/contents-lbs" value="1220"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="1320"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+            <set name="propulsion/tank[3]/contents-lbs" value="0"/>
+            <!-- left sump -->
+            <set name="propulsion/tank[5]/contents-lbs" value="0"/>
+            <!-- right sump -->
+            <set name="propulsion/tank[8]/contents-lbs" value="0"/>
+            <!-- left external  -->
+            <set name="propulsion/tank[9]/contents-lbs" value="0"/>
+            <!--  right external -->
+            <set name="propulsion/tank[10]/contents-lbs" value="0"/>
+            <!-- left feed -->
+            <set name="propulsion/tank[11]/contents-lbs" value="0"/>
+            <!-- right feed -->
+            <set name="fcs/throttle-cmd-norm[0]"  value="0"/>
+            <set name="fcs/throttle-cmd-norm[1]"  value="0"/>
+            <set name="fcs/yaw-damper-enable" value="0"/>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+            </notify>
+        </event>
+
+        <event name="Hyds pressure">
+            <condition> simulation/sim-time-sec ge 1 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</property>
+                <property>systems/hydraulics/bidi-combined-available-psi</property>
+                <property>systems/hydraulics/bidi-combined-to-flight-system-factor</property>
+
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+            </notify>
+        </event>
+
+        <event name="Fail left pump ">
+            <condition> simulation/sim-time-sec ge 1 </condition>
+            <set name="systems/hydraulics/combined-system-pump-failed" value="1"/>
+            <notify>
+            </notify>
+        </event>
+
+        <event name="Hyds with failed combined pump">
+            <condition> simulation/sim-time-sec ge 1.2 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+            </notify>
+        </event>
+
+        <event name="Fail right pump ">
+            <condition> simulation/sim-time-sec ge 2 </condition>
+            <set name="systems/hydraulics/flight-system-pump-failed" value="1"/>
+            <notify>
+            </notify>
+        </event>
+
+        <event name="Hyds with failed combined and flight pump">
+            <condition> simulation/sim-time-sec ge 2.2 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+            </notify>
+        </event>
+
+        <event name="Restore pump failures">
+            <condition> simulation/sim-time-sec ge 3.9 </condition>
+            <set name="systems/hydraulics/combined-system-pump-failed" value="0"/>
+            <set name="systems/hydraulics/flight-system-pump-failed" value="0"/>
+            <notify>
+            </notify>
+        </event>
+        <event name="Shutdown right engine ">
+            <condition> simulation/sim-time-sec ge 4 </condition>
+            <set name="propulsion/tank[0]/contents-lbs" value="0"/>
+<notify>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+</notify>
+        </event>
+
+        <event name="Hyds with flight system bidi (right engine off)">
+            <condition> simulation/sim-time-sec ge 5 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-psi</property>
+                <property>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</property>
+                <property>systems/hydraulics/bidi-combined-available-psi</property>
+                <property>systems/hydraulics/bidi-combined-to-flight-system-factor</property>
+                <property>systems/hydraulics/emerg-pump-low-speed-psi</property>
+                <property>systems/hydraulics/emerg-transfer-to-flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+            </notify>
+        </event>
+
+        <event name="Hyds with flight system bidi (right engine off)">
+            <condition> simulation/sim-time-sec ge 15 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-psi</property>
+                <property>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</property>
+                <property>systems/hydraulics/bidi-combined-available-psi</property>
+                <property>systems/hydraulics/bidi-combined-to-flight-system-factor</property>
+                <property>systems/hydraulics/emerg-pump-low-speed-psi</property>
+                <property>systems/hydraulics/emerg-transfer-to-flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+            </notify>
+        </event>
+
+        <event name="Shutdown left  engine ">
+            <condition> simulation/sim-time-sec ge 20 </condition>
+            <set name="propulsion/active_engine" value="0"/>
+            <set name="propulsion/cutoff_cmd" value="1"/>
+        </event>
+
+        <event name="Hyds with flight system emerg  (both engines off)">
+            <condition> simulation/sim-time-sec ge 25 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-psi</property>
+                <property>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</property>
+                <property>systems/hydraulics/bidi-combined-available-psi</property>
+                <property>systems/hydraulics/bidi-combined-to-flight-system-factor</property>
+                <property>systems/hydraulics/emerg-pump-low-speed-psi</property>
+                <property>systems/hydraulics/emerg-transfer-to-flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+                <property>systems/hydraulics/flight-system-bleed-basic</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+            </notify>
+        </event>
+
+        <event name="Fail emerg pump ">
+            <condition> simulation/sim-time-sec ge 26 </condition>
+            <set name="systems/hydraulics/emerg-system-pump-failed" value="1"/>
+            <notify>
+            </notify>
+        </event>
+        <event name="Hyds with failed flight system emerg  (both engines off)">
+            <condition> simulation/sim-time-sec ge 27 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-psi</property>
+                <property>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</property>
+                <property>systems/hydraulics/bidi-combined-available-psi</property>
+                <property>systems/hydraulics/bidi-combined-to-flight-system-factor</property>
+                <property>systems/hydraulics/emerg-pump-low-speed-psi</property>
+                <property>systems/hydraulics/emerg-transfer-to-flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+            </notify>
+        </event>
+        <event name="start right engine ">
+            <condition> simulation/sim-time-sec ge 28 </condition>
+            <set name="systems/hydraulics/emerg-system-pump-failed" value="0"/>
+            <set name="propulsion/tank[0]/contents-lbs" value="1220"/>
+            <set name="propulsion/active_engine" value="1"/>
+            <set name="propulsion/cutoff_cmd" value="1"/>
+            <set name="propulsion/set-running" value="1"/>
+            <notify>
+            </notify>
+        </event>
+        <event name="start right engine ">
+            <condition> simulation/sim-time-sec ge 28.1 </condition>
+            <set name="propulsion/starter_cmd" value="1"/>
+            <set name="propulsion/active_engine" value="1"/>
+            <set name="propulsion/cutoff_cmd" value="0"/>
+            <set name="propulsion/active_engine" value="1"/>
+            <set name="propulsion/set-running" value="1"/>
+            <notify>
+            </notify>
+        </event>
+        <event name="Hyds with no left engine ">
+            <condition> simulation/sim-time-sec ge 38 </condition>
+            <notify>
+                <property>systems/hydraulics/flight-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-psi</property>
+                <property>systems/hydraulics/bidi-flight-to-combined-system-factor</property>
+                <property>systems/hydraulics/bidi-transfer-flight-to-combined-system-psi</property>
+                <property>systems/hydraulics/bidi-flight-available-psi</property>
+                <property>systems/hydraulics/emerg-pump-low-speed-psi</property>
+                <property>systems/hydraulics/emerg-transfer-to-flight-system-psi</property>
+                <property>systems/hydraulics/combined-system-pump-psi</property>
+                <property>systems/hydraulics/flight-system-bleed</property>
+                <property>propulsion/engine[0]/n2</property>
+                <property>propulsion/engine[1]/n2</property>
+            </notify>
+        </event>
+    </run>
+</runscript>

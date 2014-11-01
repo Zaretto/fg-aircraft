@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+    <name>ground-services</name>
+    <layout>vbox</layout>
+    <default-padding>0</default-padding>
+    <modal>false</modal>
+    <width>450</width>
+    <valign>top</valign>
+
+    <group>
+        <layout>hbox</layout>
+        <default-padding>0</default-padding>
+
+        <group>
+            <layout>vbox</layout>
+            <default-padding>1</default-padding>
+
+            <empty>
+                <pref-height>2</pref-height>
+            </empty>
+
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>External Electrical Power Connected</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/systems/electrics/ground-power</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-power</property>
+                    </binding>
+                </checkbox>
+            </group>
+
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>External Air Connected</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Smoke generator</label>
+                </text>
+
+                <checkbox>
+                    <property>sim/model/f-14b/fx/smoke</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>/sim/model/f-14b/fx/smoke</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Extended HUD</label>
+                </text>
+
+                <checkbox>
+                    <property>sim/hud/extended-mode</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>sim/hud/extended-mode</property>
+                    </binding>
+                </checkbox>
+            </group>
+        </group>
+
+
+    </group>
+    <group>
+        <layout>hbox</layout>
+        <empty>
+            <stretch>true</stretch>
+        </empty>
+
+        <button>
+            <legend>Close</legend>
+            <default>true</default>
+            <key>Esc</key>
+            <binding>
+                <command>dialog-close</command>
+            </binding>
+        </button>
+    </group>
+        </PropertyList>

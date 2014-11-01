@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+
+
+
+<PropertyList>
+	<path>engine-gauges.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>engine-gauges</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- RPM tapes -->
+	<animation>
+		<type>textranslate</type>
+		<object-name>L-rpm-tape</object-name>
+		<property>engines/engine[0]/n2</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>30</ind><dep>-0.060</dep></entry>
+			<entry><ind>45</ind><dep>-0.080</dep></entry>
+			<entry><ind>60</ind><dep>-0.180</dep></entry>
+			<entry><ind>80</ind><dep>-0.250</dep></entry>
+			<entry><ind>90</ind><dep>-0.335</dep></entry>
+			<entry><ind>100</ind><dep>-0.425</dep></entry>
+			<entry><ind>110</ind><dep>-0.501</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>R-rpm-tape</object-name>
+		<property>engines/engine[1]/n2</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>30</ind><dep>-0.060</dep></entry>
+			<entry><ind>45</ind><dep>-0.080</dep></entry>
+			<entry><ind>60</ind><dep>-0.180</dep></entry>
+			<entry><ind>80</ind><dep>-0.250</dep></entry>
+			<entry><ind>90</ind><dep>-0.335</dep></entry>
+			<entry><ind>100</ind><dep>-0.425</dep></entry>
+			<entry><ind>110</ind><dep>-0.501</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+		</axis>
+	</animation>
+
+  <!-- EGT tapes, egt in degrees Rankin -->
+	<animation>
+		<type>textranslate</type>
+		<object-name>L-egt-tape</object-name>
+		<property>engines/engine[0]/egt-degR</property>
+		<interpolation>
+			<entry><ind>  390</ind><dep>-0.01</dep></entry>
+			<entry><ind>  400</ind><dep>-0.02</dep></entry>
+			<entry><ind> 1258</ind><dep>-0.072</dep></entry>
+			<entry><ind> 2412</ind><dep>-0.498</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>textranslate</type>
+		<object-name>R-egt-tape</object-name>
+		<property>engines/engine[1]/egt-degR</property>
+		<interpolation>
+			<entry><ind>  390</ind><dep>-0.01</dep></entry>
+			<entry><ind>  400</ind><dep>-0.02</dep></entry>
+			<entry><ind> 1258</ind><dep>-0.072</dep></entry>
+			<entry><ind> 2412</ind><dep>-0.498</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+		</axis>
+	</animation>
+
+
+	<!-- Fuel Flow tapes -->
+	<animation>
+		<type>textranslate</type>
+		<object-name>L-ff-tape</object-name>
+		<property>engines/engine[0]/fuel-flow_pph</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>5000</ind><dep>-0.27</dep></entry>
+			<entry><ind>7000</ind><dep>-0.3</dep></entry>
+			<entry><ind>17000</ind><dep>-0.498</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+		</axis>
+	</animation>
+	<animation>
+		<type>textranslate</type>
+		<object-name>R-ff-tape</object-name>
+		<property>engines/engine[1]/fuel-flow_pph</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>5000</ind><dep>-0.27</dep></entry>
+			<entry><ind>7000</ind><dep>-0.3</dep></entry>
+			<entry><ind>17000</ind><dep>-0.498</dep></entry>
+		</interpolation>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+		</axis>
+	</animation>
+
+
+<!-- lighting -->
+
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>instrument</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+
+<PropertyList>
+
+	<path>pilot.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>Pilot</object-name>
+		<condition>
+			<not>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Cockpit View</value>
+				</equals>
+			</not>
+		</condition>
+	</animation>
+
+	<animation>
+		<type>material</type>
+		<object-name>patch</object-name>
+		<object-name>helmet</object-name>
+		<property-base>sim/model/livery-patch</property-base>
+		<texture-prop>texture</texture-prop>
+		<texture>patch.checkmates.png</texture>
+	</animation>
+
+</PropertyList>

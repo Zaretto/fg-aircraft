@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<!--Horizontal Situation Display F-14B -->
+
+<PropertyList>
+	<path>hsd-mount.ac</path>
+
+
+	<!-- don't show it when external view -->
+	<animation>
+		<type>select</type>
+		<object-name>hsd-mount</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<effect>
+		<inherits-from>Effects/model-transparent</inherits-from>
+		<object-name>screen-bkg</object-name>
+	</effect>
+
+	<!-- mode selection -->
+	<animation>
+		<type>select</type>
+		<object-name>screen-bkg</object-name>
+		<condition>
+			<property>sim/model/f-14b/controls/HSD/on-off</property>
+               <greater-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <value>0</value>
+                </greater-than>
+		</condition>
+	</animation>
+	<animation>
+		<type>select</type>
+		<object-name>screen-bkg-off</object-name>
+		<condition>
+<or>
+               <less-than>
+                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <value>1</value>
+                </less-than>
+			<not>
+				<property>sim/model/f-14b/controls/HSD/on-off</property>
+			</not>
+</or>
+
+		</condition>
+	</animation>
+
+
+
+	<!-- lighting -->
+	<animation>
+		<object-name>screen-bkg</object-name>
+		<type>material</type>
+		<emission>
+			<factor-prop>sim/model/f-14b/controls/VDI/contrast</factor-prop>
+			<red>0.0</red>
+			<green>0.7</green>
+			<blue>0.0</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.44</red>
+			<green>0.192</green>
+			<blue>0.08</blue>
+		</emission>
+	</animation>
+
+
+</PropertyList>

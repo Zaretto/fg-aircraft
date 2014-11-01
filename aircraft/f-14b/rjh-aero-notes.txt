@@ -1,0 +1,20 @@
+
+F14 Aero notes: (rjh@zaretto.com)
+
+Estimated
+* All negative alpha values have been estimated; generally using NASA CR-1756 747-100 (Boeing D6039643 VolII) and data from F15 (flightgear Erik Hofman) been used as a guide and to calculate typical coefficient increments where no data is available; so for flaps I've taken the 747 coefficient increments; scaled them accordingly (for flap angle and a slight tuning factor) to get values that I think are applicable for an F14. Also 
+* Flap increments
+* Gear increments
+* Speedbrake.
+* Stores coefficients
+* Sweep is calculated as a factor based on values in NASA TN-D6909
+* Slats based on (Cl,Cd,CM)  - based loosely on adg.stanford.edu/aa241/highlift/clmaxest.html with some tuning and guesstimation
+* Mach number affects are applied as a simple factor (based on Cl value differences) and applied to all forces/moments. This doesn't accurately model the transonic region and probably isn't accurate for each invdividual coefficient group but until I find some more data it is all I've got to work with.
+* Ground spoilers use estimated and tuned values.
+
+Things that are definitely missing;
+* PQR Cross coupling (CNP, CNR etc) effects does not take into account flap deflection
+* Spoilers; the original F14b model has visual representation of these moving due to aileron deflection - I'm not sure if this is correct or how it is modelled in terms of the data that I have from the original report so I will leave in-air deflection of spoilers with no aerodynamic effect on the assumption that it is already in the coefficients.
+
+
+

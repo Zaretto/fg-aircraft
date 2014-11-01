@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE PropertyList SYSTEM "panel.dtd">
+
+<PropertyList>
+	<name>hotspot-pilot-main-panel-up-R</name>
+	<background>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</background>
+	<w>1024</w>
+	<h>768</h>
+	<y-offset>0</y-offset>
+
+	<instruments>
+		<instrument>
+			<name>hotspot-pilot-main-panel-up-R</name>
+			<w>1024</w>
+			<h>768</h>
+			<w-base>1024</w-base>
+			<h-base>1024</h-base>
+			<x>512</x>
+			<y>384</y>
+			<layers>
+				<layer>
+					<name>background</name>
+					<texture>
+						<path>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</path>
+						<!--<path>Aircraft/f-14b/Models/Cockpit/hotspotgrid.rgb</path>-->
+						<x1>0.0</x1>
+						<y1>0.0</y1>
+						<x2>1.0</x2>
+						<y2>1.0</y2>
+					</texture>
+				</layer>
+			</layers>
+			<actions>
+
+			<!-- g-meter resset -->
+			<action>
+				<name>cmd-on-off-switch-up</name>
+				<button>0</button>
+				<x>-205</x>
+				<y>20</y>
+				<w>70</w>
+				<h>70</h>
+				<repeatable type="bool">true</repeatable>
+				<binding> 
+					<command>property-assign</command>
+					<property>sim/model/f-14b/instrumentation/g-meter/g-max</property>
+					<value>1</value>
+				</binding>
+				<binding> 
+					<command>property-assign</command>
+					<property>sim/model/f-14b/instrumentation/g-meter/g-min</property>
+					<value>1</value>
+				</binding>
+			</action>
+
+			</actions>
+		</instrument>
+	</instruments>
+</PropertyList>

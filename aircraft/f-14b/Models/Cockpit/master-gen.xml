@@ -1,0 +1,182 @@
+<PropertyList>
+
+	<path>master-gen.ac</path>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>emerg-gen-guard-lever</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/emerg-gen-guard-lever</property>
+			</binding>
+			<binding>
+    			<command>property-assign</command>
+				<property>sim/model/f-14b/controls/electrics/emerg-gen-switch</property>
+				<value>1</value>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>l-gen-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/l-gen-switch</property>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>r-gen-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/r-gen-switch</property>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<condition>
+    		<property>sim/model/f-14b/controls/electrics/emerg-gen-guard-lever</property>
+		</condition>
+
+		<object-name>emerg-gen-switch</object-name>
+		<action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<binding>
+				<command>property-toggle</command>
+				<property>sim/model/f-14b/controls/electrics/emerg-gen-switch</property>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>l-gen-switch</object-name>
+		<property>sim/model/f-14b/controls/electrics/l-gen-switch</property>
+		<factor>-50</factor>
+		<center>
+			<x-m>-0.0204</x-m>
+			<y-m>-0.0434</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>r-gen-switch</object-name>
+		<property>sim/model/f-14b/controls/electrics/r-gen-switch</property>
+		<factor>-50</factor>
+		<center>
+			<x-m>-0.0204</x-m>
+			<y-m>-0.0049</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>emerg-gen-switch</object-name>
+		<property>sim/model/f-14b/controls/electrics/emerg-gen-switch</property>
+		<interpolation>
+			<entry><ind>1</ind><dep>0</dep></entry>
+			<entry><ind>0</ind><dep>50</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0258</x-m>
+			<y-m> 0.0615</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>emerg-gen-guard-lever</object-name>
+		<property>sim/model/f-14b/controls/electrics/emerg-gen-guard-lever</property>
+		<factor>90</factor>
+		<center>
+			<x-m>-0.0042</x-m>
+			<y-m> 0.0618</y-m>
+			<z-m> 0.0045</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<!-- lighting -->
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>switches</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+</PropertyList>

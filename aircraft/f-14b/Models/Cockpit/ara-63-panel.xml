@@ -1,0 +1,110 @@
+<PropertyList>
+<!--
+    AN/ARA-63 Control panel.
+    This is the airborne portion of AACS and MRAALS all-weather aircraft approach guidance systems. 
+    ref: http://www.kratosepd.com/~/media/ep/datasheets/kratos-lancaster%20landing%20systems/an_ara-63d.pdf) 
+    -->
+    <path>ara-63-panel.ac</path>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>power-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/electrics/ara-63-power-off</property>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>power-switch</object-name>
+        <property>sim/model/f-14b/controls/electrics/ara-63-power-off</property>
+        <factor>40</factor>
+        <center>
+            <x-m>-0.0186</x-m>
+            <y-m> 0.0465</y-m>
+            <z-m> 0.0045</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>rotate</type>
+        <object-name>channel-switch</object-name>
+        <property>sim/model/f-14b/controls/electrics/ara-63-channel</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>50</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>-50</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-0.0229</x-m>
+            <y-m>-0.0170</y-m>
+            <z-m> 0.0106</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+	<!-- lighting -->
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>switches</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+</PropertyList>
