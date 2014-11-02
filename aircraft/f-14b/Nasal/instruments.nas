@@ -3,7 +3,7 @@ var main_loop_launched = 0; # Used to avoid to start the main loop twice.
 
 
 # TACAN: nav[1]
-var nav1_back = 0;
+var nav1_as_selected = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );; # the selected frequency if overriden from the tacan
 
 var Tc               = props.globals.getNode("instrumentation/tacan");
 var Vtc              = props.globals.getNode("instrumentation/nav[1]");
@@ -45,15 +45,110 @@ var local_mag_deviation = func {
 
 
 # Set nav[1] so we can use radials from a TACAN station.
+
 var nav1_freq_update = func {
 	if ( tc_mode != 0 and tc_mode != 4 ) {
 		var tacan_freq = getprop( "instrumentation/tacan/frequencies/selected-mhz" );
-		var nav1_freq = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );
-		var nav1_back = nav1_freq;
+        nav1_as_selected = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );
 		setprop("instrumentation/nav[1]/frequencies/selected-mhz", tacan_freq);
 	} else {
-		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_back);
+		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_as_selected);
 	}
+}
+var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+
+#
+# ARA 63 (Military ILS type of system). This is a bit hardwired to
+# work with the tuned carrier based on the TACAN channel which isn't
+# right - but it is good enough.
+var ara_63_update = func {
+    if (f14.carrier_ara_63_position != nil)
+    {
+        var our_pos = geo.aircraft_position();
+        range = our_pos.distance_to(f14.carrier_ara_63_position);
+        var bearing_to = our_pos.course_to(f14.carrier_ara_63_position);
+        var deviation = TrueHdg.getValue() - bearing_to;
+
+#        print("ARA63: range ",range, " to ",bearing_to, " deviation ",deviation);
+        if(getprop("/instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < range)
+        {
+# Use the standard civilian ILS as it is closer.
+            setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
+            setprop("sim/model/f-14b/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
+            setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
+            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
+            setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
+            setprop("sim/model/f-14b/lights/acl-ready-light", 0);
+            setprop("sim/model/f-14b/lights/ap-cplr-light",0);
+            return;
+        }
+        else if (range < 37000 and abs(deviation) < 30) # 20nm range F14-AAD-1 17.3.2
+        {
+            var deck_height=20 - 0.31722; # meters
+
+            var gs_height = ((range*FD_TAN3DEG)) + deck_height;
+            var gs_deviation = (gs_height - our_pos.alt()) / 42.0; 
+
+            if (gs_deviation > 1) gs_deviation = 1;
+            else if (gs_deviation < -1) gs_deviation = -1;
+
+            setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 1);
+            setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",gs_deviation);
+            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",deviation/20);
+            setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",1);
+            setprop("sim/model/f-14b/instrumentation/nav/gs-distance", range);
+
+            var u_fps = getprop("/velocities/uBody-fps");
+            var eta = range / (u_fps / 3.281);
+
+#            print (" range ",range," bearing to ",deviation," eta ",eta," gsheight ", gs_height, "gsdev ",gs_deviation);
+
+            if(eta <= 10 and range < 800 and range > 150)
+            {
+                setprop("sim/model/f-14b/lights/light-10-seconds",1);
+            }
+            else
+                setprop("sim/model/f-14b/lights/light-10-seconds",0);
+
+            # Set these lights on when in range and within altitude.
+            # the lights come on but it is unspecified when they go off.
+            # Ref: F-14AAD-1 Figure 17-4, p17-11 (pdf p685)
+            if (range < 11000) 
+            {
+                if (our_pos.alt() > 350 and our_pos.alt() < 400 and abs(deviation) < 10)
+                {
+                    setprop("sim/model/f-14b/lights/acl-ready-light", 1);
+                    setprop("sim/model/f-14b/lights/ap-cplr-light",1);
+                }
+            }
+            else
+            {
+                setprop("sim/model/f-14b/lights/acl-ready-light", 0);
+                setprop("sim/model/f-14b/lights/ap-cplr-light",0);
+            }
+        }
+        else
+        {
+            setprop("sim/model/f-14b/lights/light-10-seconds",0);
+            setprop("sim/model/f-14b/lights/acl-ready-light", 0);
+            setprop("sim/model/f-14b/lights/ap-cplr-light",0);
+            setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 0);
+            setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",1);
+            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",1);
+            setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",0);
+            setprop("sim/model/f-14b/instrumentation/nav/gs-distance", 0);
+        }
+        return;
+    }
+#
+# Use the standard civilian ILS
+    setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
+    setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
+    setprop("sim/model/f-14b/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
+    setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
+    setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
+    setprop("sim/model/f-14b/lights/acl-ready-light", 0);
+    setprop("sim/model/f-14b/lights/ap-cplr-light",0);
 }
 
 var tacan_update = func {
@@ -419,6 +514,7 @@ var main_loop = func {
 		# done each 0.1 sec, cnt even.
 		inc_ticker();
 		tacan_update();
+ara_63_update();
 		f14_hud.update_hud();
 		g_min_max();
 		f14_chronograph.update_chrono();

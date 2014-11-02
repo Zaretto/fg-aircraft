@@ -67,6 +67,7 @@ var u_ecm_signal      = 0;
 var u_ecm_signal_norm = 0;
 var u_radar_standby   = 0;
 var u_ecm_type_num    = 0;
+var FD_TAN3DEG = 0.052407779283; # tan(3)
 
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
@@ -130,10 +131,34 @@ var az_scan = func() {
 			# FIXME: At that time a multiplayer node may have been deleted while still
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
+
 			if (!c.getNode("valid", 1).getValue()) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
+
+            #
+            # ARA 63 (Carrier ILS) support.
+            # if this node has a tacan channel and we are
+            # tuned to it then get the position as it will be
+            # used in the ARA 63 calculations for glideslope and localizer.
+
+            var tchan = c.getNode("navaids/tacan/channel-ID");
+            if (tchan != nil)
+            {
+                tchan = tchan.getValue();
+                if (tchan == getprop("/instrumentation/tacan/display/channel"))
+                {
+                    # Tuned into this carrier (node) so use the offset.
+                    # Get the position of the glideslope; this is offset from the carrier.
+                    var x = c.getNode("position/global-x").getValue() - 23.52769294753671;
+                    var y = c.getNode("position/global-y").getValue() - 17.39392268843949;
+                    var z = c.getNode("position/global-z").getValue() - 35.23308822372928;
+
+                    f14.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
+                }
+            }
+
 			if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) {
 				var u = Target.new(c);
 				u_ecm_signal      = 0;
@@ -142,9 +167,10 @@ var az_scan = func() {
 				u_ecm_type_num    = 0;
 				if ( u.Range != nil ) {
 					var u_rng = u.get_range();
-					if (u_rng < range_radar2  and u.not_acting == 0 ) {
+					if (u_rng < range_radar2  and u.not_acting == 0 )
+                    {
 						u.get_deviation(our_true_heading);
-#print("dev ",u.deviation, " azf:", l_az_fld, " r:azf", r_az_fld);
+
 						if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld ) {
 							append(tgts_list, u);
 						} else {
@@ -177,34 +203,41 @@ var az_scan = func() {
 	foreach( u; tgts_list ) {
 		var u_display = 0;
 		var u_fading = u.get_fading() - fading_speed;
+
+
 		if ( u_fading < 0 ) { u_fading = 0 }
+
 		if (( swp_dir and swp_deg_last < u.deviation and u.deviation <= swp_deg )
-			or ( ! swp_dir and swp_deg <= u.deviation and u.deviation < swp_deg_last )) {
+			or ( ! swp_dir and swp_deg <= u.deviation and u.deviation < swp_deg_last ))
+        {
 			u.get_bearing();
 			u.get_heading();
 			var horizon = u.get_horizon( our_alt );
 			var u_rng = u.get_range();
-				var nom = u.Callsign.getValue();
-#var ac = radardist.get_aircraft_name(u);
-#				print(nom, " ", u.type," ",u.AcType," ", u_rng, " horizon ",horizon, " our alt ",our_alt, " mrc ",my_radarcorr);
 
-			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr)) {
-#				print(" --> ",nom, " ", u_rng, " ", radardist.radis(u.string, my_radarcorr));
+			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr))
+            {
+
 				# Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
 				u.set_relative_bearing( ddd_screen_width / az_fld * u.deviation );
 				var factor_range_radar = 0.0657 / range_radar2; # 0.0657m : length of the distance range on the DDD screen.
 				u.set_ddd_draw_range_nm( factor_range_radar * u_rng );
 				u_fading = 1;
 				u_display = 1;
+
 				# Compute mp position in our TID display. (PPI like display, normaly targets are displayed only when locked.)
 				factor_range_radar = 0.15 / range_radar2; # 0.15m : length of the radius range on the TID screen.
 				u.set_tid_draw_range_nm( factor_range_radar * u_rng );
+
 				# Compute first digit of mp altitude rounded to nearest thousand. (labels).
 				u.set_rounded_alt( rounding1000( u.get_altitude() ) / 1000 );
+
 				# Compute closure rate in Kts.
 				u.get_closure_rate();
+
 				# Check if u = nearest echo.
-				if ( tmp_nearest_rng == nil or u_rng < tmp_nearest_rng) {
+				if ( tmp_nearest_rng == nil or u_rng < tmp_nearest_rng)
+                {
 					tmp_nearest_u = u;
 					tmp_nearest_rng = u_rng;
 				}
@@ -248,31 +281,35 @@ var hud_nearest_tgt = func() {
 			} else {
 				Diamond_Blinker.cont();
 			}
+
 			# Clamp closure rate from -200 to +1,000 Kts.
 			var cr = nearest_u.ClosureRate.getValue();
+
 			if (cr < -200) { cr = 200 } elsif (cr > 1000) { cr = 1000 }
+
 			HudTgtClosureRate.setValue(cr);
 			HudTgtTDeg.setValue(combined_dev_deg);
 			HudTgtTDev.setValue(combined_dev_length);
 			HudTgtHDisplay.setBoolValue(1);
-HudTgtDistance.setValue(nearest_u.get_range());
+            HudTgtDistance.setValue(nearest_u.get_range());
+
 			var u_target = nearest_u.type ~ "[" ~ nearest_u.index ~ "]";
-#if (nom != nil)
-#			HudTgt.setValue(nom);
-#else
-var callsign = nearest_u.Callsign.getValue();
-var model = "";
-if (nearest_u.Model != nil)
-model = nearest_u.Model.getValue();
-var target_id = "";
-if(callsign != nil)
-			target_id = callsign;
-else
-			target_id = u_target;
-if (model != nil and model != "")
-target_id = target_id ~ " " ~ model;
-#print(nearest_u.Callsign.getValue()," ",nearest_u.get_range());
-HudTgt.setValue(target_id);
+
+            var callsign = nearest_u.Callsign.getValue();
+            var model = "";
+
+            if (nearest_u.Model != nil)
+                model = nearest_u.Model.getValue();
+
+            var target_id = "";
+            if(callsign != nil)
+                target_id = callsign;
+            else
+                target_id = u_target;
+            if (model != nil and model != "")
+                target_id = target_id ~ " " ~ model;
+
+            HudTgt.setValue(target_id);
 			return;
 		}
 	}
