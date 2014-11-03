@@ -127,6 +127,8 @@ var az_scan = func() {
 
 		tgts_list = [];
 		var raw_list = Mp.getChildren();
+        var carrier_located = 0;
+
 		foreach( var c; raw_list ) {
 			# FIXME: At that time a multiplayer node may have been deleted while still
 			# existing as a displayable target in the radar targets nodes.
@@ -151,11 +153,34 @@ var az_scan = func() {
                 {
                     # Tuned into this carrier (node) so use the offset.
                     # Get the position of the glideslope; this is offset from the carrier.
-                    var x = c.getNode("position/global-x").getValue() - 23.52769294753671;
-                    var y = c.getNode("position/global-y").getValue() - 17.39392268843949;
-                    var z = c.getNode("position/global-z").getValue() - 35.23308822372928;
+
+
+
+
+                    var x = c.getNode("position/global-x").getValue() + 136.8405162137933;
+                    var y = c.getNode("position/global-y").getValue() + 68.03873590473086;
+                    var z = c.getNode("position/global-z").getValue() + 206.9255831753835;
+#                    var x = c.getNode("position/global-x").getValue();
+#                    var y = c.getNode("position/global-y").getValue();
+#                    var z = c.getNode("position/global-z").getValue();
+#                    var x = c.getNode("position/global-x").getValue() - 23.52769294753671;
+#                    var y = c.getNode("position/global-y").getValue() - 17.39392268843949;
+#                    var z = c.getNode("position/global-z").getValue() - 35.23308822372928;
 
                     f14.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
+                    var carrier_heading = c.getNode("orientation/true-heading-deg");
+                    if (carrier_heading != nil)
+                    {
+                        # relative offset of the course to the tdz
+                        # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
+                        f14.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
+                    }
+                    else
+                    {
+                        f14.carrier_ara_63_heading = 0;
+                        print("Carrier heading invalid");
+                    }
+                    carrier_located = 1;
                 }
             }
 
@@ -188,7 +213,10 @@ var az_scan = func() {
 				}
 			}
 		}
-
+        #
+        # we do this after the loop to keep the old value valid whilst figuring out the new one.
+        if (!carrier_located) 
+            f14.carrier_ara_63_heading = nil;
 
 		# Summarize ECM alerts.
 		if ( ecm_alert1 == 0 and ecm_alert1_last == 0 ) { EcmAlert1.setBoolValue(0) }

@@ -67,9 +67,9 @@ var ara_63_update = func {
         var our_pos = geo.aircraft_position();
         range = our_pos.distance_to(f14.carrier_ara_63_position);
         var bearing_to = our_pos.course_to(f14.carrier_ara_63_position);
-        var deviation = TrueHdg.getValue() - bearing_to;
+        var deviation = bearing_to - f14.carrier_ara_63_heading;
+        deviation = deviation *0.1;
 
-#        print("ARA63: range ",range, " to ",bearing_to, " deviation ",deviation);
         if(getprop("/instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < range)
         {
 # Use the standard civilian ILS as it is closer.
@@ -80,6 +80,8 @@ var ara_63_update = func {
             setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
             setprop("sim/model/f-14b/lights/acl-ready-light", 0);
             setprop("sim/model/f-14b/lights/ap-cplr-light",0);
+            setprop("sim/model/f-14b/lights/light-wave-off",0);
+            setprop("sim/model/f-14b/lights/light-10-seconds",0);
             return;
         }
         else if (range < 37000 and abs(deviation) < 30) # 20nm range F14-AAD-1 17.3.2
@@ -94,7 +96,10 @@ var ara_63_update = func {
 
             setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 1);
             setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",gs_deviation);
-            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",deviation/20);
+# VOR_FULL_ARC = 20.0
+# 17.3.2 localizer width 6 deg
+# factor = 3.33
+            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",deviation);
             setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",1);
             setprop("sim/model/f-14b/instrumentation/nav/gs-distance", range);
 
@@ -106,10 +111,21 @@ var ara_63_update = func {
             if(eta <= 10 and range < 800 and range > 150)
             {
                 setprop("sim/model/f-14b/lights/light-10-seconds",1);
+                if(math.abs(deviation) > 0.2 or math.abs(gs_deviation) > 0.2)
+                {
+                    setprop("sim/model/f-14b/lights/light-wave-off",1);
+                }
+                else
+                {
+                    setprop("sim/model/f-14b/lights/light-wave-off",0);
+                }
+
             }
             else
+            {
                 setprop("sim/model/f-14b/lights/light-10-seconds",0);
-
+                setprop("sim/model/f-14b/lights/light-wave-off",0);
+            }
             # Set these lights on when in range and within altitude.
             # the lights come on but it is unspecified when they go off.
             # Ref: F-14AAD-1 Figure 17-4, p17-11 (pdf p685)
@@ -125,11 +141,14 @@ var ara_63_update = func {
             {
                 setprop("sim/model/f-14b/lights/acl-ready-light", 0);
                 setprop("sim/model/f-14b/lights/ap-cplr-light",0);
+                setprop("sim/model/f-14b/lights/light-10-seconds",0);
+                setprop("sim/model/f-14b/lights/light-wave-off",0);
             }
         }
         else
         {
             setprop("sim/model/f-14b/lights/light-10-seconds",0);
+            setprop("sim/model/f-14b/lights/light-wave-off",0);
             setprop("sim/model/f-14b/lights/acl-ready-light", 0);
             setprop("sim/model/f-14b/lights/ap-cplr-light",0);
             setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 0);
