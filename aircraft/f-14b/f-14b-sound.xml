@@ -510,11 +510,80 @@
             <max-dist>9000</max-dist>
         </engine-jet-exhaust-r>
 
+        <engine-jet-afterburner-inside-l>
+           <name>engine-jet-afterburner-inside-l</name>
+            <path>Aircraft/f-14b/Sounds/engine-jet-afterburner-inside.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <property>sim/current-view/internal</property>
+                <property>engines/engine[0]/augmentation</property>
+                <property>engines/engine[0]/running</property>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+            </condition>
+            <volume>
+                <property>engines/engine[0]/augmentation</property>
+                <factor>0.8</factor>
+            </volume>
+            <position>
+                <x>3</x>
+                <y>1.0</y>
+                <z>-0.37</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+                <inner-angle>90.0</inner-angle>
+                <outer-angle>200.0</outer-angle>
+                <outer-gain>0.15</outer-gain>
+            </orientation>
+            <reference-dist>900</reference-dist>
+            <max-dist>6000</max-dist>
+        </engine-jet-afterburner-inside-l>
+
+        <engine-jet-afterburner-inside-r>
+            <name>engine-jet-afterburner-inside-r</name>
+            <path>Aircraft/f-14b/Sounds/engine-jet-afterburner-inside.wav</path>
+            <mode>looped</mode>
+            <condition>
+                <property>sim/current-view/internal</property>
+                <property>engines/engine[1]/augmentation</property>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+                <property>engines/engine[1]/running</property>
+            </condition>
+            <volume>
+                <property>engines/engine[1]/augmentation</property>
+                <factor>0.8</factor>
+            </volume>
+            <position>
+                <x>3</x>
+                <y>1.0</y>
+                <z>-0.37</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+                <inner-angle>90.0</inner-angle>
+                <outer-angle>200.0</outer-angle>
+                <outer-gain>0.15</outer-gain>
+            </orientation>
+            <reference-dist>900</reference-dist>
+            <max-dist>9000</max-dist>
+        </engine-jet-afterburner-inside-r>
+
         <engine-jet-afterburner-l>
            <name>engine-jet-afterburner-l</name>
             <path>Aircraft/f-14b/Sounds/engine-jet-afterburner.wav</path>
             <mode>looped</mode>
             <condition>
+                <not>
+                    <property>sim/current-view/internal</property>
+                </not>
                 <property>engines/engine[0]/augmentation</property>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
@@ -554,6 +623,9 @@
             <path>Aircraft/f-14b/Sounds/engine-jet-afterburner.wav</path>
             <mode>looped</mode>
             <condition>
+                <not>
+                    <property>sim/current-view/internal</property>
+                </not>
                 <property>engines/engine[1]/augmentation</property>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>

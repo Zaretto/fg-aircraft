@@ -214,7 +214,7 @@
             <property>sim/hud/extended-mode</property>
 		</condition>
         <x>-70</x>
-        <y>30</y>
+        <y>33</y>
         <width>140</width>
         <height>-7</height>
         <input>
@@ -253,7 +253,7 @@
             <property>sim/hud/extended-mode</property>
 		</condition>
         <x>-9</x>
-        <y>11</y>
+        <y>15</y>
         <width>18</width>
         <height>10</height>
         <input>
@@ -499,6 +499,48 @@
         <box>true</box>
     </label>
 
+    <!--Waypoint -->
+    <label>
+        <name>Waypoint</name>
+        <condition>
+            <property>sim/hud/extended-mode</property>
+            <property>/autopilot/route-manager/active</property>
+            <or>
+                <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
+            </or>
+        </condition>
+        <input>
+            <property>autopilot/route-manager/wp/id</property>
+        </input>
+        <x>20</x>
+        <y>8</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>WPT %s</format>
+        <box>false</box>
+    </label>
+    <label>
+        <name>Waypoint Dist</name>
+        <condition>
+            <property>sim/hud/extended-mode</property>
+            <property>/autopilot/route-manager/active</property>
+            <or>
+                <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
+            </or>
+        </condition>
+        <input>
+            <property>autopilot/route-manager/wp/dist</property>
+        </input>
+        <x>32</x>
+        <y>2</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%7.1f</format>
+        <box>false</box>
+    </label>
+
     <!--Altitude, bottom (aa)-->
     <label>
         <name>Altitude, top (aa)</name>
@@ -512,7 +554,7 @@
         </input>
         <x>50</x>
         <y>-95</y>
-        <width>24</width>
+        <width>26</width>
         <height>10</height>
         <halign>left</halign>
         <format>%5.0f0</format>
@@ -567,7 +609,7 @@
         <width>24</width>
         <height>10</height>
         <halign>left</halign>
-        <format>%5.0f0</format>
+        <format>%4.0f0</format>
         <box>true</box>
         <enable-pointer>false</enable-pointer>
     </label>
@@ -925,10 +967,12 @@
             <property>sim/hud/extended-mode</property>
             <property>sim/model/f-14b/lights/ca-launch-bar</property>
             <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+<!--
 			<or>
 				<property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
 				<property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
 			</or>
+-->
         </condition>
         <x>-30</x>
         <y>-75</y>
@@ -980,13 +1024,30 @@
                 <value>0.1</value>
             </greater-than>
         </condition>
-        <x>-20</x>
+        <x>26</x>
         <y>-125</y>
         <format>H</format>
         <halign>left</halign>
     </label>
 
 
+    <label>
+        <name>Tacan Range</name>
+		<condition>
+            <property>sim/hud/extended-mode</property>
+            <not-equals>
+                <property>instrumentation/tacan/indicated-distance-nm</property>
+                <value>0</value>
+            </not-equals>
+        </condition>
+        <input>
+            <property>instrumentation/tacan/indicated-distance-nm</property>
+        </input>
+        <x>23</x>
+        <y>-90</y>
+        <format>TCN %3.1f</format>
+        <halign>left</halign>
+    </label>
 
     <!-- F-14 specific information -->
 
