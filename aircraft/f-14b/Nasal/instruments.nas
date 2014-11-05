@@ -62,7 +62,7 @@ var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
 # work with the tuned carrier based on the TACAN channel which isn't
 # right - but it is good enough.
 var ara_63_update = func {
-    if (f14.carrier_ara_63_position != nil)
+    if (f14.carrier_ara_63_position != nil and f14.carrier_ara_63_heading != nil)
     {
         var our_pos = geo.aircraft_position();
         range = our_pos.distance_to(f14.carrier_ara_63_position);
@@ -82,11 +82,12 @@ var ara_63_update = func {
             setprop("sim/model/f-14b/lights/ap-cplr-light",0);
             setprop("sim/model/f-14b/lights/light-wave-off",0);
             setprop("sim/model/f-14b/lights/light-10-seconds",0);
+            setprop("sim/model/f-14b/lights/landing-chk-light", 0);
             return;
         }
-        else if (range < 37000 and abs(deviation) < 30) # 20nm range F14-AAD-1 17.3.2
+        else if (range < 37000 and abs(deviation) < 3) # 20nm range F14-AAD-1 17.3.2
         {
-            var deck_height=20 - 0.31722; # meters
+            var deck_height=20; # the height of the MRC is included in the offset of the position + 2.93218; # 20 meters + height from MRC.
 
             var gs_height = ((range*FD_TAN3DEG)) + deck_height;
             var gs_deviation = (gs_height - our_pos.alt()) / 42.0; 
@@ -131,14 +132,23 @@ var ara_63_update = func {
             # Ref: F-14AAD-1 Figure 17-4, p17-11 (pdf p685)
             if (range < 11000) 
             {
-                if (our_pos.alt() > 350 and our_pos.alt() < 400 and abs(deviation) < 10)
+                if (our_pos.alt() > 300 and our_pos.alt() < 425 and abs(deviation) < 1 )
                 {
                     setprop("sim/model/f-14b/lights/acl-ready-light", 1);
                     setprop("sim/model/f-14b/lights/ap-cplr-light",1);
                 }
+                if (range > 8000)  # extinguish at roughly 4.5nm from fix.
+                {
+                    setprop("sim/model/f-14b/lights/landing-chk-light", 1);
+                }
+                else
+                {
+                    setprop("sim/model/f-14b/lights/landing-chk-light", 0);
+                }
             }
             else
             {
+                setprop("sim/model/f-14b/lights/landing-chk-light", 0);
                 setprop("sim/model/f-14b/lights/acl-ready-light", 0);
                 setprop("sim/model/f-14b/lights/ap-cplr-light",0);
                 setprop("sim/model/f-14b/lights/light-10-seconds",0);
@@ -147,6 +157,7 @@ var ara_63_update = func {
         }
         else
         {
+            setprop("sim/model/f-14b/lights/landing-chk-light", 0);
             setprop("sim/model/f-14b/lights/light-10-seconds",0);
             setprop("sim/model/f-14b/lights/light-wave-off",0);
             setprop("sim/model/f-14b/lights/acl-ready-light", 0);

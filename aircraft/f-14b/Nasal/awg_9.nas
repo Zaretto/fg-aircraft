@@ -152,27 +152,22 @@ var az_scan = func() {
                 if (tchan == getprop("/instrumentation/tacan/display/channel"))
                 {
                     # Tuned into this carrier (node) so use the offset.
-                    # Get the position of the glideslope; this is offset from the carrier.
-
-
-
-
-                    var x = c.getNode("position/global-x").getValue() + 136.8405162137933;
-                    var y = c.getNode("position/global-y").getValue() + 68.03873590473086;
-                    var z = c.getNode("position/global-z").getValue() + 206.9255831753835;
-#                    var x = c.getNode("position/global-x").getValue();
-#                    var y = c.getNode("position/global-y").getValue();
-#                    var z = c.getNode("position/global-z").getValue();
-#                    var x = c.getNode("position/global-x").getValue() - 23.52769294753671;
-#                    var y = c.getNode("position/global-y").getValue() - 17.39392268843949;
-#                    var z = c.getNode("position/global-z").getValue() - 35.23308822372928;
+                    # Get the position of the glideslope; this is offset from the carrier position by
+                    # a smidgen. This is measured and is a point slightly in front of the TDZ where the
+                    # deck is marked with previous tyre marks (which seems as good a place as any to 
+                    # aim for).
+                    var x = c.getNode("position/global-x").getValue() + 88.7713542;
+                    var y = c.getNode("position/global-y").getValue() + 18.74631309;
+                    var z = c.getNode("position/global-z").getValue() + 115.6574875;
 
                     f14.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
+
                     var carrier_heading = c.getNode("orientation/true-heading-deg");
                     if (carrier_heading != nil)
                     {
                         # relative offset of the course to the tdz
                         # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
+                        # (i.e. this value is from tuning rather than calculation)
                         f14.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
                     }
                     else
