@@ -403,6 +403,20 @@ var quickstart = func() {
 #    setprop("controls/electric/engine[1]/bus-tie",1);
 #    setprop("systems/electrical/outputs/avionics",1);
 #    setprop("controls/electric/inverter-switch",1);
+    if(total_lbs < 400)
+        set_fuel(5500);
+
+    setprop("sim/model/f-14b/controls/hud/on-off",1);
+    setprop("sim/model/f-14b/controls/VDI/on-off",1);
+    setprop("sim/model/f-14b/controls/HSD/on-off",1);
+
+    setprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/emerg-gen-guard-lever",0);
+	setprop("sim/model/f-14b/controls/electrics/emerg-gen-switch",1);
+    setprop("sim/model/f-14b/controls/electrics/l-gen-switch",1);
+    setprop("sim/model/f-14b/controls/electrics/master-test-switch",0);
+	setprop("sim/model/f-14b/controls/electrics/r-gen-switch",1);
+
     setprop("controls/engines/engine[0]/cutoff",0);
     setprop("controls/engines/engine[1]/cutoff",0);
     setprop("engines/engine[0]/out-of-fuel",0);

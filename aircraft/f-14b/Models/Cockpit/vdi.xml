@@ -195,15 +195,15 @@
         <type>select</type>
         <object-name>gspointer</object-name>
         <condition>
-            <property>instrumentation/nav/gs-in-range</property>
+            <property>sim/model/f-14b/instrumentation/nav/gs-in-range</property>
             <and>
                 <not><property>sim/model/f-14b/controls/electrics/ara-63-power-off</property></not>
                 <greater-than>
-                    <property>instrumentation/nav/gs-needle-deflection-norm</property>
+                    <property>sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm</property>
                     <value>-0.976</value>
                 </greater-than>
                 <less-than>
-                    <property>instrumentation/nav/gs-needle-deflection-norm</property>
+                    <property>sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm</property>
                     <value>0.976</value>
                 </less-than>
             </and>
@@ -213,7 +213,7 @@
         <type>translate</type>
         <object-name>gspointer</object-name>
         <object-name>coarseGSPointer</object-name>
-        <property>instrumentation/nav/gs-needle-deflection-norm</property>
+        <property>sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm</property>
         <factor>0.04</factor>
         <axis>
             <x>0</x>
@@ -229,15 +229,15 @@
             <and>
                 <not><property>sim/model/f-14b/controls/electrics/ara-63-power-off</property></not>
                 <greater-than>
-                    <property>instrumentation/nav/signal-quality-norm</property>
+                    <property>sim/model/f-14b/instrumentation/nav/signal-quality-norm</property>
                     <value>0.99</value>
                 </greater-than>
                 <less-than>
-                    <property>instrumentation/nav/heading-needle-deflection-norm</property>
+                    <property>sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm</property>
                     <value>0.92</value>
                 </less-than>
                 <greater-than>
-                    <property>instrumentation/nav/heading-needle-deflection-norm</property>
+                    <property>sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm</property>
                     <value>-0.92</value>
                 </greater-than>
             </and>
@@ -246,7 +246,7 @@
     <animation>
         <type>translate</type>
         <object-name>locpointer</object-name>
-        <property>instrumentation/nav/heading-needle-deflection-norm</property>
+        <property>sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm</property>
         <factor>-0.04</factor>
         <axis>
             <x>0</x>
@@ -446,6 +446,7 @@
 			</greater-than>
             <or>
                 <property>sim/model/f-14b/lights/master-test-lights</property>
+                <property>sim/model/f-14b/lights/light-wave-off</property>
             </or>
 		</condition>
 	</animation>
@@ -487,6 +488,7 @@
 				<value>0</value>
 			</greater-than>
             <or>
+                <property>sim/model/f-14b/lights/landing-chk-light</property>
                 <property>sim/model/f-14b/lights/master-test-lights</property>
             </or>
 		</condition>
@@ -501,6 +503,7 @@
 				<value>0</value>
 			</greater-than>
             <or>
+                <property>sim/model/f-14b/lights/acl-ready-light</property>
                 <property>sim/model/f-14b/lights/master-test-lights</property>
             </or>
 		</condition>
@@ -516,6 +519,7 @@
 			</greater-than>
             <or>
                 <property>sim/model/f-14b/lights/master-test-lights</property>
+                <property>sim/model/f-14b/lights/ap-cplr-light</property>
             </or>
 		</condition>
 	</animation>
@@ -544,6 +548,7 @@
 			</greater-than>
             <or>
                 <property>sim/model/f-14b/lights/master-test-lights</property>
+                <property>sim/model/f-14b/lights/light-10-seconds</property>
             </or>
 		</condition>
 	</animation>

@@ -1115,9 +1115,15 @@ setprop("/controls/gear/brake-parking",0);
 <binding>
 					<command>nasal</command>
 					<script>
+if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+{
 print("Catapult launch");
 setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
 setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+}
+else
+{
+}
 					</script>
 				</binding>
  </key>
