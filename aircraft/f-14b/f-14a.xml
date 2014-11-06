@@ -145,8 +145,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <z>  -3.94 </z>
         </location>
         <location name="VRP" unit="IN">
-            <x>  0</x>
-            <y>  0</y>
+            <x>  390</x>
+            <y>  0 </y>
             <z>  0 </z>
         </location>
         <location name="AERORP" unit="IN">
@@ -266,7 +266,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 47500 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 42500 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
             <max_steer unit="DEG"> 89 </max_steer>
             <brake_group> NOSE </brake_group>
@@ -282,8 +282,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 97500 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 6000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 42500 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> LEFT </brake_group>
             <retractable>1</retractable>
@@ -298,8 +298,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
             <rolling_friction> 0.02 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 97500 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 6000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 42500 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
             <max_steer unit="DEG"> 0.0 </max_steer>
             <brake_group> RIGHT </brake_group>
             <retractable>1</retractable>
@@ -315,8 +315,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
         <!--  4 -->
@@ -329,7 +329,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
@@ -597,7 +597,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- Left wing    -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 405</x>
+                <x> 402</x>
                 <y> -38.5826772</y>
                 <z> -27</z>
             </location>
@@ -608,7 +608,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- Right Wing -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 405</x>
+                <x> 402</x>
                 <y> 38.5826772</y>
                 <z> -27</z>
             </location>
@@ -619,7 +619,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- Left External -->
         <tank type="FUEL">
             <location unit="IN">
-                <x>416</x>
+                <x>403</x>
                 <y>-55.51181102</y>
                 <z>-110.8267717</z>
             </location>
@@ -630,7 +630,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- Right External -->
         <tank type="FUEL">
             <location unit="IN">
-                <x>416.6614173</x>
+                <x>403</x>
                 <y>55.51181102</y>
                 <z>-110.8267717</z>
             </location>
@@ -984,7 +984,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <switch name="systems/NWS/engaged">
                 <default value="0"/>
                 <test value="1">
-                    velocities/vc-kts le 80
+                    gear/unit[0]/wheel-speed-fps le 135
                     systems/hydraulics/combined-system-pressure ne 0
                     position/aircraft-on-ground ne 0
                     systems/holdback/launchbar-engaged eq 0
@@ -2081,9 +2081,9 @@ Post tuning session1:
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
                         -10 0
-                        -5	0.017
-                        0	0.01
-                        5	0.005
+                        -5	0.00017
+                        0	0.00001
+                        5	0.00005
                         10  0
                     </tableData>
                 </table>
@@ -3316,24 +3316,24 @@ Post tuning session1:
     </aerodynamics>
 
     <external_reactions>
-        <force name="catapult" frame="LOCAL">
+        <force name="catapult" frame="BODY">
             <location unit="IN">
-                <x> -260.0 </x>
-                <y>    0.0 </y>
-                <z>    0.0 </z>
+                <x> 667 </x>
+                <y>   0 </y>
+                <z>   0 </z>
             </location>
             <direction>
-                <x>   -0.9612617 </x>
-                <y>   -0.2756374 </y>
-                <z>    0.0 </z>
+                <x>   1 </x>
+                <y>   0 </y>
+                <z>   0 </z>
             </direction>
         </force>
 
         <force name="holdback" frame="BODY">
             <location unit="IN">
-                <x> -250.0 </x>
-                <y>    0.0 </y>
-                <z>  -30.0 </z>
+                <x> 667 </x>
+                <y>   0 </y>
+                <z>   0 </z>
             </location>
             <direction>
                 <x>   -1.0 </x>
@@ -3344,9 +3344,9 @@ Post tuning session1:
 
         <force name="hook" frame="BODY">
             <location unit="IN">
-                <x>  677.669 </x>
-                <y>    0.000 </y>
-                <z> -142.000 </z>
+                <x>  300 </x>
+                <y>    0 </y>
+                <z>    0 </z>
             </location>
             <direction>
                 <x>  -0.9995 </x>

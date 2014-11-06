@@ -168,6 +168,7 @@ var az_scan = func() {
                         # relative offset of the course to the tdz
                         # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
                         # (i.e. this value is from tuning rather than calculation)
+                        f14.carrier_heading = carrier_heading.getValue();
                         f14.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
                     }
                     else
