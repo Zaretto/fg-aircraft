@@ -16,6 +16,7 @@ getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
 setprop("fdm/jsbsim/Factor1",1);
+setprop("sim/fdm/surface/override-level", 0);
 
 
 var position_switch = func(n) {
@@ -150,6 +151,14 @@ var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/in
 var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
 var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
+
+
+#
+#
+# ARA-63 (Carrier Landing System) support
+var carrier_ara_63_position = nil;
+var carrier_heading = nil;
+var carrier_ara_63_heading = nil;
 
 
 
