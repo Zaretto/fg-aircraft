@@ -995,13 +995,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <scheduled_gain name="fcs/scheduled-steer-pos-deg">
                 <input>fcs/steer-cmd-norm</input>
                 <table>
-                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
                     <independentVar lookup="column">systems/NWS/engaged</independentVar>
                     <tableData>
-                        0   1
-                        0  0   85
-                        40  0   15
-                        80  0   0
+                            0   1
+                        0   0   87
+                        80  0   15
+                        135 0   0
                     </tableData>
                 </table>
                 <output>fcs/steer-pos-deg</output>
