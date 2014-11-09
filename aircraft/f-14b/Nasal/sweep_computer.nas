@@ -133,9 +133,15 @@ var toggleOversweep = func {
 var computeSweep = func {
 
 # The JSBSim model includes sweep computer inside the fdm.
-    if (usingJSBSim){
+    if (usingJSBSim)
+    {
     	if ( getprop("sim/replay/time") > 0 ) { return }
-        currentSweep = getprop("/fdm/jsbsim/fcs/wing-sweep-cmd");
+
+        if (currentSweepMode != 4)
+            currentSweep = getprop("/fdm/jsbsim/fcs/wing-sweep-cmd");
+        else
+            currentSweep = 1.2;
+
         var cadc_sweep = getprop("fdm/jsbsim/fcs/wing-sweep-cadc-dmd");
         WingSweep = currentSweep;
         if(currentSweepMode == 1){

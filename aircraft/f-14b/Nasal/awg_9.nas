@@ -146,7 +146,7 @@ var az_scan = func() {
             # used in the ARA 63 calculations for glideslope and localizer.
 
             var tchan = c.getNode("navaids/tacan/channel-ID");
-            if (tchan != nil)
+            if (tchan != nil and !we_are_bs)
             {
                 tchan = tchan.getValue();
                 if (tchan == getprop("/instrumentation/tacan/display/channel"))
@@ -211,7 +211,7 @@ var az_scan = func() {
 		}
         #
         # we do this after the loop to keep the old value valid whilst figuring out the new one.
-        if (!carrier_located) 
+        if (!carrier_located and !we_are_bs) 
             f14.carrier_ara_63_heading = nil;
 
 		# Summarize ECM alerts.

@@ -66,6 +66,9 @@
 				<signal><type>float</type><property type="string">sim/multiplay/generic/float[4]</property></signal>
 				<!-- Stabilisator R -->
 				<signal><type>float</type><property type="string">sim/multiplay/generic/float[5]</property></signal>
+				<signal><type>float</type><property type="string">engines/engine[0]/afterburner</property></signal>
+				<signal><type>float</type><property type="string">engines/engine[1]/afterburner</property></signal>
+
 			</config>
 		</flight-recorder>
 
@@ -991,6 +994,15 @@
 		</refuel>
 	</systems>
 
+    <limits>
+        <mass-and-balance>
+            <!-- Reference: https://en.wikipedia.org/wiki/Grumman_F-14_Tomcat#Specifications_.28F-14D.29 -->
+            <maximum-takeoff-mass-lbs>74350</maximum-takeoff-mass-lbs>
+        </mass-and-balance>
+
+        <max-gear-extension-speed>270</max-gear-extension-speed>
+    </limits>
+
 	<consumables>
 		<fuel>
 			<tank n="0">
@@ -1451,6 +1463,9 @@ else
 		<aar>
 			<file>Aircraft/Generic/aar.nas</file>
 		</aar>
+        <limits>
+			<file>Aircraft/Generic/limits.nas</file>
+        </limits>
 		<radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
 		</radardist>

@@ -147,7 +147,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <location name="VRP" unit="IN">
             <x>  390</x>
             <y>  0 </y>
-            <z>  0 </z>
+            <z>  -15 </z>
         </location>
         <location name="AERORP" unit="IN">
             <x> 419 </x>
@@ -261,7 +261,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 197 </x>
                 <y> 0 </y>
-                <z> -130 </z>
+                <z> -145 </z>
             </location>
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
@@ -277,7 +277,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 431 </x>
                 <y> -98 </y>
-                <z> -130  </z>
+                <z> -145  </z>
             </location>
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
@@ -293,7 +293,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 431 </x>
                 <y> 98 </y>
-                <z> -130 </z>
+                <z> -145 </z>
             </location>
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
@@ -305,32 +305,36 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <retractable>1</retractable>
         </contact>
 
+        <!-- the wings are based on the oversweep position (in terms of y) which should be 368 inches
+             but I'm using 300 inches to allow for movement on carriers. It's a comprimise as I can't find
+             a method to change the contact point based on sweep position and this is the least worst method
+        -->
         <!-- 3 -->
         <contact type="STRUCTURE" name="LEFT_WING_TIP">
             <location unit="IN">
-                <x> 349 </x>
-                <y> -368.00 </y>
-                <z> 0 </z>
+                <x>  349 </x>
+                <y> -300 </y>
+                <z> -15 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
         <!--  4 -->
         <contact type="STRUCTURE" name="RIGHT_WING_TIP">
             <location unit="IN">
                 <x> 349 </x>
-                <y> 368.00 </y>
-                <z> 0 </z>
+                <y> 300 </y>
+                <z> -15 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
 
@@ -344,7 +348,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
@@ -358,7 +362,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
         <contact type="STRUCTURE" name="MID_BODY_RIGHT">
@@ -370,7 +374,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
@@ -379,19 +383,19 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 214 </x>
                 <y>  0 </y>
-                <z> 95 </z>
+                <z> 10 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 5100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 5100 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
         <!--  9 -->
         <contact type="STRUCTURE" name="RADOME_FRONT">
             <location unit="IN">
-                <x>  -20 </x>
+                <x>  20 </x>
                 <y>  0 </y>
                 <z>  -44 </z>
             </location>
@@ -405,41 +409,41 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!--  10 -->
         <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
             <location unit="IN">
-                <x> 517 </x>
+                <x> 744 </x>
                 <y> -98 </y>
-                <z> 110 </z>
+                <z> 60 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 5100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 5100 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
         <!--  11 -->
         <contact type="STRUCTURE" name="RIGHT_VERTICAL_TAIL">
             <location unit="IN">
-                <x> 517 </x>
+                <x> 744 </x>
                 <y>  98 </y>
-                <z> 110 </z>
+                <z> 60 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 5100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 5100 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
         <!-- 12 -->
         <contact type="STRUCTURE" name="REAR_BODY_LEFT">
             <location unit="IN">
                 <x> 713 </x>
-                <y>  58 </y>
-                <z> -45 </z>
+                <y> -58 </y>
+                <z> -70 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 8000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
 
@@ -447,13 +451,26 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
             <location unit="IN">
                 <x> 713 </x>
-                <y> -58 </y>
-                <z> -45 </z>
+                <y>  58 </y>
+                <z> -70 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 8000 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+        </contact>
+
+        <contact type="STRUCTURE" name="NOSE_CONE">
+            <location unit="IN">
+                <x>  0 </x>
+                <y>  0 </y>
+                <z>  -15 </z>
+            </location>
+            <static_friction> 1.2 </static_friction>
+            <dynamic_friction> 1.212 </dynamic_friction>
+            <rolling_friction> 1.413 </rolling_friction>
+            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>
     </ground_reactions>
@@ -674,12 +691,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property>fcs/roll-trim-sas-cmd-norm</property>
 
         <property value="1.0">Factor1</property>
-        <property value="1.8">FactorCl</property>
-        <property value="0.1">FactorCd</property>
-        <property value="1">FactorCM</property>
-        <property value="1.3">FactorClA</property>
-        <property value="0.1">FactorCdA</property>
-        <property value="1">FactorCMA</property>
 
         <channel name="Wing Sweep">
             <aerosurface_scale name="Sweep Control">
@@ -995,13 +1006,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <scheduled_gain name="fcs/scheduled-steer-pos-deg">
                 <input>fcs/steer-cmd-norm</input>
                 <table>
-                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
                     <independentVar lookup="column">systems/NWS/engaged</independentVar>
                     <tableData>
-                        0   1
-                        0  0   85
-                        40  0   15
-                        80  0   0
+                            0   1
+                        0   0   87
+                        80  0   15
+                        135 0   0
                     </tableData>
                 </table>
                 <output>fcs/steer-pos-deg</output>
@@ -1870,24 +1881,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/ClDFM">
             <description>Delta Cl due to mean flap position</description>
             <product>
-                <property>FactorCl</property>
                 <table>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                        <!--
-Post tuning session1:
-                      10	-0.13160	0.23440	0.23160	0.22880	0.20920	0.01400
-                       30	-0.36960	0.36400	0.36960	0.36960	0.30800	0.12880
-
-* From pre-tuning: 10	-0.18800	0.19200	 0.18800	0.18400 	0.15600	0.02000
-
--->
-                             -20	      -5	      0	      5	     10	     15	     50
-                        0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                        10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
-                        35	-0.05520	-0.15840	0.15600	0.15840	0.15840	0.13200	0.05520
-                        50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
+                            	-20     	  -5	      0 	  5 	 10 	 15 	 50
+                          0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                         10	-0.01400	-0.13160	0.13440	0.13160	0.12880	0.10920	0.01400
+                         35	-0.09016	-0.25872	0.25480	0.25872	0.25872	0.21560	0.22540
+                         50	-0.24500	-0.60200	0.59500	0.60200	0.58800	0.46200	0.24500
                     </tableData>
                 </table>
             </product>
@@ -1896,16 +1898,15 @@ Post tuning session1:
         <function name="aero/coefficients/ClDAFM">
             <description>Delta Cl due to mean aux flap position</description>
             <product>
-                <property>FactorClA</property>
                 <table>
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                               -20	      -5	      0	      5	     10	     15	     50
-                        0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                        10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
-                        35	-0.05520	-0.15840	0.15600	0.15840	0.15840	0.13200	0.05520
-                        50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
+                                   	 -20     	  -5	      0 	  5 	 10 	 15 	 50
+                            0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                           10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
+                           35	-0.03864	-0.11088	0.10920	0.11088	0.11088	0.09240	0.09660
+                           50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
                     </tableData>
                 </table>
             </product>
@@ -2232,15 +2233,13 @@ Post tuning session1:
             <description>Delta Cd due to mean flap position</description>
             <product>
                 <table>
-                    <property>FactorCd</property>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                               -30	    -25	    -20	    -15	    -10	     -5	      0	      5	     10	     15	     20	     25	     30	    35	    45	    50
-                        10	0.10908	0.09197	0.07189	0.05994	0.04973	0.03999	0.02318	0.03999	0.04973	0.05994	0.07189	0.09197	0.10908	0.11446	0.10534	0.09428
-                        25	0.27270	0.22992	0.17973	0.14986	0.12432	0.09998	0.05796	0.09998	0.12432	0.14986	0.17973	0.22992	0.27270	0.28614	0.26335	0.23570
-                        35	0.42852	0.34488	0.25844	0.22773	0.19536	0.15058	0.08568	0.15059	0.19536	0.22773	0.25844	0.34488	0.42852	0.47691	0.47403	0.47139
-                        50	0.60772	0.47708	0.35683	0.30854	0.28143	0.21724	0.12096	0.21724	0.28143	0.30854	0.35683	0.47708	0.60772	0.69628	0.71632	0.74245
+                            	-20 	 -5 	  0 	  5 	 10 	 15 	 50
+                       0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                      10	0.01400	0.02268	0.01932	0.02268	0.02548	0.02856	0.09590
+                      35	0.09016	0.06894	0.06222	0.06894	0.09862	0.14286	0.55734
                     </tableData>
                 </table>
             </product>
@@ -2250,15 +2249,13 @@ Post tuning session1:
             <description>Delta Cd due to mean flap position</description>
             <product>
                 <table>
-                    <property>FactorCdA</property>
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                               -30	    -25	    -20	    -15	    -10	     -5	      0	      5	     10	     15	     20	     25	     30	    35	    45	    50
-                        10	0.04675	0.03941	0.03081	0.02569	0.02131	0.01714	0.00994	0.01714	0.02131	0.02569	0.03081	0.03941	0.04675	0.04905	0.04515	0.04041
-                        25	0.11687	0.09854	0.07703	0.06423	0.05328	0.04285	0.02484	0.04285	0.05328	0.06423	0.07703	0.09854	0.11687	0.12263	0.11287	0.10101
-                        35	0.18365	0.14780	0.11076	0.09760	0.08373	0.06454	0.03672	0.06454	0.08373	0.09760	0.11076	0.14780	0.18365	0.20439	0.20316	0.20203
-                        50	0.26045	0.20446	0.15293	0.13223	0.12061	0.09310	0.05184	0.09310	0.12061	0.13223	0.15293	0.20446	0.26045	0.29841	0.30699	0.31819
+                            	-20 	 -5 	  0 	  5 	 10 	 15 	 50
+                       0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                      10	0.00600	0.00972	0.00828	0.00972	0.01092	0.01224	0.04110
+                      35	0.03864	0.02954	0.02666	0.02954	0.04226	0.06122	0.23886
                     </tableData>
                 </table>
             </product>
@@ -3001,7 +2998,6 @@ Post tuning session1:
                 <table>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
-                    <property>FactorCM</property>
                     <tableData>
                                0	       5	     10 	      15	     20	         60
                         0	 0.00000	 0.00000	0.00000 	 0.00000	0.00000 	0.00000
@@ -3016,7 +3012,6 @@ Post tuning session1:
             <description>CM increment due to flap mean position</description>
             <product>
                 <table>
-                    <property>FactorCMA</property>
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
