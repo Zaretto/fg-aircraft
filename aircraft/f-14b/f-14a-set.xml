@@ -991,6 +991,15 @@
 		</refuel>
 	</systems>
 
+    <limits>
+        <mass-and-balance>
+            <!-- Reference: https://en.wikipedia.org/wiki/Grumman_F-14_Tomcat#Specifications_.28F-14D.29 -->
+            <maximum-takeoff-mass-lbs>74350</maximum-takeoff-mass-lbs>
+        </mass-and-balance>
+
+        <max-gear-extension-speed>270</max-gear-extension-speed>
+    </limits>
+
 	<consumables>
 		<fuel>
 			<tank n="0">
@@ -1451,6 +1460,9 @@ else
 		<aar>
 			<file>Aircraft/Generic/aar.nas</file>
 		</aar>
+        <limits>
+			<file>Aircraft/Generic/limits.nas</file>
+        </limits>
 		<radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
 		</radardist>
