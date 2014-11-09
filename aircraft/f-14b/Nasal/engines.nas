@@ -119,13 +119,16 @@ var computeNozzles = func {
 
     if (usingJSBSim)
     {
-#        Nozzle1 = getprop("/fdm/jsbsim/propulsion/engine[0]/nozzle-pos-norm",0);
-#        Nozzle2 = getprop("/fdm/jsbsim/propulsion/engine[1]/nozzle-pos-norm",1);
-#        if (Nozzle1 == nil) Nozzle1 = 0.26;
-#        if (Nozzle2 == nil) Nozzle2 = 0.26;
-#    print ("Nozzles ",Nozzle1," ",Nozzle2);
-        Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
-        Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
+    	if ( getprop("sim/replay/time") > 0 ) 
+        { 
+            setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
+            setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
+        }
+        else
+        {
+            Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
+            Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
+        }
     }
     else
     {
