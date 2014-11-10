@@ -424,7 +424,16 @@ var alt_drag_factor2 = 20000;
 
 controls.stepSpoilers = func(s) {
 
-    if (f14.usingJSBSim) return;  # in the FDM
+    if (f14.usingJSBSim){
+        var curval = getprop("controls/flight/speedbrake");
+
+        if (s < 0 and curval > 0)
+            setprop("controls/flight/speedbrake", curval+s/5);
+        else if (s > 0 and curval < 1)
+            setprop("controls/flight/speedbrake", curval+s/5);
+
+        return; 
+    }
 
 	var sb = SpeedBrake.getValue();
 	if ( s == 1 ) {
@@ -539,6 +548,16 @@ var main_loop = func {
 	burner +=1;
 	if ( burner == 3 ) { burner = 0 }
 	BurnerN.setValue(burner);
+
+	if (f14.usingJSBSim)
+    {
+	    if ( getprop("sim/replay/time") > 0 ) 
+            setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+        else
+    		setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+    }
+	else
+		setprop ("/orientation/alpha-indicated-deg", getprop("/orientation/alpha-deg"));
 
 	if ( ( a ) == int( a )) {
 		# done each 0.1 sec, cnt even.

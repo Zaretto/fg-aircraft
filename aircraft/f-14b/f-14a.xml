@@ -1550,7 +1550,18 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </channel>
 
         <channel name="extra-aero">
-
+            <fcs_function name="aero/alpha-indicated-deg">
+                <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
+                <function>
+                    <product>
+                        <sum>
+                            <property> aero/alpha-deg </property>
+                            <value> -0.797 </value>
+                        </sum>
+                        <value>1.231223836</value>
+                    </product>
+                </function>
+            </fcs_function>
             <fcs_function name="aero/cp-offset-wing-sweep">
                 <function>
                     <description>Centre of pressure due to mach and wingsweep angle</description>

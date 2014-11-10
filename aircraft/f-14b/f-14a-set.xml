@@ -30,6 +30,9 @@
 			<autopilot>
 				<path>Aircraft/f-14b/f-14b-AFCS.xml</path>
 			</autopilot>
+            <autopilot>
+                <path>Aircraft/f-14b/Systems/canopy.xml</path>
+            </autopilot>
 		</systems>
 
 		<flight-recorder>
@@ -68,7 +71,8 @@
 				<signal><type>float</type><property type="string">sim/multiplay/generic/float[5]</property></signal>
 				<signal><type>float</type><property type="string">engines/engine[0]/afterburner</property></signal>
 				<signal><type>float</type><property type="string">engines/engine[1]/afterburner</property></signal>
-
+                <!-- Canopy -->
+                <signal><type>float</type><property type="string">canopy/position-norm</property></signal>
 			</config>
 		</flight-recorder>
 
@@ -523,12 +527,12 @@
 						<!-- target = 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
                         <!-- F-14AAD-1 Figure 2-124; Angle-of-Attack Displays -->
 
-						<fast-deg-end>12.6</fast-deg-end>			
-						<optimum-deg-end>13.9</optimum-deg-end>		
-						<optimum-deg-start>11.9</optimum-deg-start>
-						<slow-deg-start>13.7</slow-deg-start>
+						<fast-deg-end>14.5</fast-deg-end>			
+						<optimum-deg-end>15.5</optimum-deg-end>		
+						<optimum-deg-start>14.5</optimum-deg-start>
+						<slow-deg-start>15.5</slow-deg-start>
 
-                        <target-deg>11.9</target-deg>		<!-- target (AFCS)-->
+                        <target-deg>15</target-deg>		<!-- target (AFCS)-->
 
 					</aoa-indexer>
 					<acls>

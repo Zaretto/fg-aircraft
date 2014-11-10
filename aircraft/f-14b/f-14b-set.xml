@@ -22,6 +22,9 @@
 			<autopilot>
 				<path>Aircraft/f-14b/f-14b-AFCS.xml</path>
 			</autopilot>
+            <autopilot>
+                <path>Aircraft/f-14b/Systems/canopy.xml</path>
+            </autopilot>
 		</systems>
 
 		<flight-recorder>
@@ -58,6 +61,8 @@
 				<signal><type>float</type><property type="string">sim/multiplay/generic/float[4]</property></signal>
 				<!-- Stabilisator R -->
 				<signal><type>float</type><property type="string">sim/multiplay/generic/float[5]</property></signal>
+                <!-- Canopy -->
+                <signal><type>float</type><property type="string">canopy/position-norm</property></signal>
 			</config>
 		</flight-recorder>
 

@@ -16,8 +16,8 @@
 <property>sim/model/f-14b/lights/master-test-lights</property>
 <and>
 			<greater-than-equals>
-				<property>orientation/alpha-deg</property>
-   			    <property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg-start</property>
+                <property>orientation/alpha-indicated-deg</property>
+                <property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg-start</property>
 			</greater-than-equals>
 			<equals>
 				<property>gear/gear[0]/position-norm</property>
@@ -55,12 +55,12 @@
 <and>
 
 			<greater-than-equals>
-				<property>orientation/alpha-deg</property>
-   			    <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-start</property>
+                <property>orientation/alpha-indicated-deg</property>
+                <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-start</property>
 			</greater-than-equals>
 			<less-than-equals>
-				<property>orientation/alpha-deg</property>
-   			    <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-end</property>
+                <property>orientation/alpha-indicated-deg</property>
+                <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-end</property>
 			</less-than-equals>
 
 			<equals>
@@ -98,8 +98,8 @@
 <property>sim/model/f-14b/lights/master-test-lights</property>
 <and>
 			<less-than-equals>
-				<property>orientation/alpha-deg</property>
-				<property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg-end</property>
+                <property>orientation/alpha-indicated-deg</property>
+                <property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg-end</property>
 			</less-than-equals>
 			<equals>
 				<property>gear/gear[0]/position-norm</property>
