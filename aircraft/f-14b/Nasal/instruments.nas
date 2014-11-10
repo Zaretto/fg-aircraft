@@ -424,7 +424,16 @@ var alt_drag_factor2 = 20000;
 
 controls.stepSpoilers = func(s) {
 
-    if (f14.usingJSBSim) return;  # in the FDM
+    if (f14.usingJSBSim){
+        var curval = getprop("controls/flight/speedbrake");
+
+        if (s < 0 and curval > 0)
+            setprop("controls/flight/speedbrake", curval+s/5);
+        else if (s > 0 and curval < 1)
+            setprop("controls/flight/speedbrake", curval+s/5);
+
+        return; 
+    }
 
 	var sb = SpeedBrake.getValue();
 	if ( s == 1 ) {
