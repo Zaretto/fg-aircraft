@@ -549,6 +549,16 @@ var main_loop = func {
 	if ( burner == 3 ) { burner = 0 }
 	BurnerN.setValue(burner);
 
+	if (f14.usingJSBSim)
+    {
+	    if ( getprop("sim/replay/time") > 0 ) 
+            setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+        else
+    		setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+    }
+	else
+		setprop ("/orientation/alpha-indicated-deg", getprop("/orientation/alpha-deg"));
+
 	if ( ( a ) == int( a )) {
 		# done each 0.1 sec, cnt even.
 		inc_ticker();
