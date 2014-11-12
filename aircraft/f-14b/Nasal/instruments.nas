@@ -520,12 +520,12 @@ instruments_data_export = func {
 	foreach( s ; l_s ) {
 		str = str ~ s ~ ";";
 	}
-#
-# aircraft powered - for the back seater this is a yes/no
-if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
-str = str ~ "1" ~ ";";
-else
-str = str ~ "0" ~ ";";
+    #
+    # aircraft powered - for the back seater this is a yes/no
+    if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
+        str = str ~ "1" ~ ";";
+    else
+        str = str ~ "0" ~ ";";
 
 	InstrString.setValue(str);
 
@@ -652,7 +652,7 @@ if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
         var lat = getprop("/position/latitude-deg");
         var lon = getprop("/position/longitude-deg");
         var info = geodinfo(lat, lon);
-        debug.dump(info);
+#        debug.dump(info);
         if (info[1] == nil)
         {
 # seems to be that we could be on a carrier
