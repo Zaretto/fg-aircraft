@@ -79,13 +79,15 @@ var LeftEngine		= props.globals.getNode("engines").getChild("engine", 0);
 var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
 var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
 var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
+
 if (usingJSBSim)
 {
-var JSBLeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
-var JSBRightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
-LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
-RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
+    var JSBLeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
+    var JSBRightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
+    LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
+    RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
 }
+
 var LeftEngineRunning		= LeftEngine.getNode("running", 1);
 var RightEngineRunning		= RightEngine.getNode("running", 1);
 LeftEngine.getNode("out-of-fuel", 1);
@@ -125,7 +127,7 @@ var amount_fwd_fuselage       = 0;
 
 var init_fuel_system = func {
 
-	print("Initializing F-14B fuel system");
+#	print("Initializing F-14B fuel system");
 
 	L_Ext_Select_State = props.globals.getNode("consumables/fuel/tank[8]/selected");
 	R_Ext_Select_State = props.globals.getNode("consumables/fuel/tank[9]/selected");
@@ -693,7 +695,7 @@ var refuel_probe_switch_cycle = func() {
 var level_list = [];
 
 var internal_save_fuel = func() {
-	print("Saving F-14B fuel levels");
+#	print("Saving F-14B fuel levels");
 	level_list = [];
 	foreach (var t; Tank.list) {
     print(" -- ",t.name," = ",t.level_lbs.getValue());
@@ -701,10 +703,10 @@ var internal_save_fuel = func() {
 	}
 }
 var internal_restore_fuel = func() {
-	print("Restoring F-14B fuel levels");
+#	print("Restoring F-14B fuel levels");
 	var i = 0;
 	foreach (var t; Tank.list) {
-    print(" -- ",t.name," = ",t.level_lbs.getValue());
+#    print(" -- ",t.name," = ",t.level_lbs.getValue());
 		t.set_level(level_list[i]);
 		i += 1;
 	}
@@ -737,7 +739,7 @@ Tank = {
 		obj.ppg.setDoubleValue(6.3);
         obj.external = 0;
 		append(Tank.list, obj);
-		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
+#		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
 	newExternal : func (name, number, connect, side) {
@@ -762,7 +764,7 @@ Tank = {
 		obj.ppg.setDoubleValue(6.3);
 
 		append(Tank.list, obj);
-		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
+#		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
     #
@@ -852,7 +854,7 @@ Prop = {
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
 		obj.ppg.setDoubleValue(6.3);
 		append(Prop.list, obj);
-print("Name ",name,running,obj.level_lbs, obj.get_capacity());
+#print("Name ",name,running,obj.level_lbs, obj.get_capacity());
 		return obj;
 	},
 	
@@ -1006,67 +1008,67 @@ Valve = {
 };
 
 var toggle_fuel_freeze = func() {
-setprop("sim/freeze/fuel", 1-getprop("sim/freeze/fuel"));
+    setprop("sim/freeze/fuel", 1-getprop("sim/freeze/fuel"));
 }
 
 var set_fuel = func(total) {
-var total_delta = (total - getprop("consumables/fuel/total-fuel-lbs"));
+    var total_delta = (total - getprop("consumables/fuel/total-fuel-lbs"));
 
-var start = 0; 
-var end = size(Tank.list)-1;
-var inc = 1;
-if (total_delta < 0)
-{
-start = size(Tank.list)-1;
-end = -1;
-inc = -1;
-}
-
-print("\n set_fuel to ",total," delta ",total_delta);
-  for (var i=0; i < 2; i = i+1)
-  {
-    var delta = total_delta / 2;
-print ("\nDoing side ",i, " adjust by ",delta);
-#	foreach (var t; Tank.list)
-    for (var tank_idx=start; tank_idx != end+1; tank_idx = tank_idx + inc)
+    var start = 0; 
+    var end = size(Tank.list)-1;
+    var inc = 1;
+    if (total_delta < 0)
     {
-      var t = Tank.list[tank_idx];
-      #
-      # only consider non external tanks; or external tanks when connected.
-print("Processing ",t.name," is ext ",t.is_external());
-      if (!t.is_external() or getprop("sim/model/f-14b/systems/external-loads/external-tanks"))
-      {
-      if (t.get_side() == i)
-      {
-        if (delta < 0)
+        start = size(Tank.list)-1;
+        end = -1;
+        inc = -1;
+    }
+
+    print("\n set_fuel to ",total," delta ",total_delta);
+    for (var i=0; i < 2; i = i+1)
+    {
+        var delta = total_delta / 2;
+        print ("\nDoing side ",i, " adjust by ",delta);
+#	foreach (var t; Tank.list)
+        for (var tank_idx=start; tank_idx != end+1; tank_idx = tank_idx + inc)
         {
-            var tdelta = t.get_level_lbs() + delta;
-            if (tdelta < 0)
+            var t = Tank.list[tank_idx];
+            #
+# only consider non external tanks; or external tanks when connected.
+            print("Processing ",t.name," is ext ",t.is_external());
+            if (!t.is_external() or getprop("sim/model/f-14b/systems/external-loads/external-tanks"))
             {
-                delta = delta + t.get_level_lbs();
-print("Tank ",t.name," empty : new_delta ", delta);
-        		t.set_level_lbs(0);
-            }
-            else
-            {
-                if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
-        		t.set_level_lbs(tdelta);
-                print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
-                delta = delta - tdelta;
-            }
-        }
-        else
-        {
-            var tdelta = t.get_ullage_lbs();
-            if (tdelta > delta) tdelta = delta;
+                if (t.get_side() == i)
+                {
+                    if (delta < 0)
+                    {
+                        var tdelta = t.get_level_lbs() + delta;
+                        if (tdelta < 0)
+                        {
+                            delta = delta + t.get_level_lbs();
+                            print("Tank ",t.name," empty : new_delta ", delta);
+                            t.set_level_lbs(0);
+                        }
+                        else
+                        {
+                            if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
+                            t.set_level_lbs(tdelta);
+                            print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
+                            delta = delta - tdelta;
+                        }
+                    }
+                    else
+                    {
+                        var tdelta = t.get_ullage_lbs();
+                        if (tdelta > delta) tdelta = delta;
 #            if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
 
-            delta = delta - tdelta;
-    		t.set_level_lbs(t.get_level_lbs() + tdelta);
-print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
+                        delta = delta - tdelta;
+                        t.set_level_lbs(t.get_level_lbs() + tdelta);
+                        print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
+                    }
+                }
+            }
         }
-      }
-      }
     }
-  }
 }
