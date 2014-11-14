@@ -18,6 +18,8 @@ var position_intens = 0;
 setprop("fdm/jsbsim/Factor1",1);
 setprop("sim/fdm/surface/override-level", 0);
 
+aircraft.tyresmoke_system.new(0, 1, 2);
+aircraft.rain.init();
 
 var position_switch = func(n) {
 	var sw_pos = sw_pos_prop.getValue();
@@ -319,6 +321,8 @@ setprop("/controls/flight/SAS-roll",0);
 var registerFCS = func {settimer (updateFCS, 0);}
 
 var updateFCS = func {
+	 aircraft.rain.update();
+
 	#Fectch most commonly used values
 	CurrentIAS = getprop ("/velocities/airspeed-kt");
 	CurrentMach = getprop ("/velocities/mach");
