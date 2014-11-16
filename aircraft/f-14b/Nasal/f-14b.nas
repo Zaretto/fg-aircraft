@@ -362,6 +362,9 @@ var updateFCS = func {
         currentG = getprop ("accelerations/pilot-g");
 		setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
 		setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
+        setprop("engines/engine[0]/fuel-flow_pph",getprop("engines/engine[0]/fuel-flow-gph")*1.46551724137931);
+        setprop("engines/engine[1]/fuel-flow_pph",getprop("engines/engine[1]/fuel-flow-gph")*1.46551724137931);
+
     }
 
 	#update functions
