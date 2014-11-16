@@ -653,7 +653,7 @@ if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
         var lon = getprop("/position/longitude-deg");
         var info = geodinfo(lat, lon);
 #        debug.dump(info);
-        if (info[1] == nil)
+        if (info != nil and info[1] == nil)
         {
 # seems to be that we could be on a carrier
 
