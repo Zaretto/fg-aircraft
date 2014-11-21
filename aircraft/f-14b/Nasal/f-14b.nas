@@ -1,6 +1,7 @@
 # Utilities #########
 
 # Lighting 
+#setprop("sim/model/path","data/Aircraft/f-14b/F-14B.xml");
 
 # Collision lights flasher
 var anti_collision_switch = props.globals.getNode("sim/model/f-14b/controls/lighting/anti-collision-switch");
@@ -11,6 +12,8 @@ var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting
 var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.15]);
 setprop("/sim/model/f-14b/lighting/position/enabled", 1);
 setprop("sim/model/f-14b/fx/smoke",0);
+
+var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
 
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
@@ -152,6 +155,7 @@ var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/in
 var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
 var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
 var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
+var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
 
@@ -308,6 +312,7 @@ var timedMotions = func {
 	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
 	right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
+	lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
 }
 
 
