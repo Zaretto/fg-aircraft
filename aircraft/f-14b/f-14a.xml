@@ -304,12 +304,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <brake_group> RIGHT </brake_group>
             <retractable>1</retractable>
         </contact>
-
-        <!-- the wings are based on the oversweep position (in terms of y) which should be 368 inches
-             but I'm using 300 inches to allow for movement on carriers. It's a comprimise as I can't find
-             a method to change the contact point based on sweep position and this is the least worst method
-        -->
-        <!-- 3 -->
+       <!-- 3 -->
        <contact type="STRUCTURE" name="LEFT_WING_TIP">
             <location unit="IN">
                 <x> 472 </x>
@@ -319,11 +314,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
-        <!--  4 -->
+          <!--4--> 
         <contact type="STRUCTURE" name="RIGHT_WING_TIP">
             <location unit="IN">
                 <x> 472 </x>
@@ -333,7 +328,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
@@ -341,41 +336,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!--  5 -->
         <contact type="STRUCTURE" name="FRONT_BODY">
             <location unit="IN">
-                <x> 120 </x>
+                <x> 110 </x>
                 <y> 0 </y>
-                <z> -37 </z>
+                <z> -47 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-        </contact>
-
-        <!--  6 same pos as landing gear for ease of understanding -->
-        <contact type="STRUCTURE" name="MID_BODY_LEFT">
-            <location unit="IN">
-                <x> 431 </x>
-                <y> -88 </y>
-                <z> -43  </z>
-            </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.212 </dynamic_friction>
-            <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-        </contact>
-        <contact type="STRUCTURE" name="MID_BODY_RIGHT">
-            <location unit="IN">
-                <x> 431 </x>
-                <y>  88 </y>
-                <z> -43  </z>
-            </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.212 </dynamic_friction>
-            <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  8 -->
@@ -388,23 +357,23 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  9 -->
-        <contact type="STRUCTURE" name="RADOME_FRONT">
+        <!--<contact type="STRUCTURE" name="RADOME_FRONT">
             <location unit="IN">
                 <x>  20 </x>
                 <y>  0 </y>
-                <z>  -8 </z>
+                <z>  -18 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
+           <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-        </contact>
+        </contact>-->
 
         <!--  10 -->
         <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
@@ -416,8 +385,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  11 -->
@@ -430,8 +399,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
         <!-- 12 -->
         <contact type="STRUCTURE" name="REAR_BODY_LEFT">
@@ -443,8 +412,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  13 -->
@@ -457,10 +426,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
-
+<!-- 14 -->
         <contact type="STRUCTURE" name="NOSE_CONE">
             <location unit="IN">
                 <x>  0 </x>
@@ -470,11 +439,39 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
     </ground_reactions>
-
+<!--<strut_force>
+    <function>
+        <sum>
+            <product>
+                <value>-1</value>
+                <property>inertia/weight-lbs</property>
+                <property> contact/unit[5]/compression-ft </property>
+            </product>
+        </sum>
+    </function>
+    <ifthen>
+        <ge>
+            <property> contact/unit[5]/compression-velocity-fps </property>
+            <value> 0.0 </value>
+        </ge>
+        <product>
+            <value> -24000. </value>
+            <property> contact/unit[5]/compression-velocity-fps </property>
+        </product>
+        <product>
+            <value> 0. </value>
+            <property> contact/unit[5]/compression-velocity-fps </property>
+        </product>
+    </ifthen>
+    <clipto>
+        <min>-inertia/weight-lbs</min>
+        <max>inertia/weight-lbs</max>
+    </clipto>
+</strut_force>-->
     <propulsion>
         <engine file="F110-GE-400">
             <location unit="IN">
@@ -2147,10 +2144,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                         0.80	0.02472
                         0.84	0.02772
                         0.90	0.02520
-                        0.94	0.03374
-                        0.98	0.04515
-                        0.99	0.04875
-                        1.00	0.04997
+                        0.94	0.05736
+                        0.98	0.07676
+                        0.99	0.08288
+                        1.00	0.08495
                         1.03	0.05483
                         1.20	0.05102
                         1.25	0.04822
