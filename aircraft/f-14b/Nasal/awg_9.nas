@@ -158,7 +158,6 @@ var az_scan = func() {
                     # aim for).
                     if (c.getNode("position/global-x") != nil)
                     {
-
                         var x = c.getNode("position/global-x").getValue() + 88.7713542;
                         var y = c.getNode("position/global-y").getValue() + 18.74631309;
                         var z = c.getNode("position/global-z").getValue() + 115.6574875;
@@ -180,11 +179,13 @@ var az_scan = func() {
                             print("Carrier heading invalid");
                         }
                         carrier_located = 1;
+                        f14.tuned_carrier_name = c.getNode("name").getValue();
+                        setprop("sim/model/f-14b/tuned-carrier",f14.tuned_carrier_name);
                     }
                     else
                     {
+                        # tuned tacan isn't carrier.
                         f14.carrier_ara_63_heading = 0;
-                        print("Carrier heading invalid");
                     }
                 }
             }

@@ -162,6 +162,7 @@ var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/i
 #
 #
 # ARA-63 (Carrier Landing System) support
+var tuned_carrier_name=getprop("/sim/presets/carrier");
 var carrier_ara_63_position = nil;
 var carrier_heading = nil;
 var carrier_ara_63_heading = nil;
