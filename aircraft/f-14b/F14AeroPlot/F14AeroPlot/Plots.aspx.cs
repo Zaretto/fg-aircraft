@@ -29,14 +29,21 @@ namespace F14AeroPlot
             //    }
             //}
             HtmlTextWriter writer = new HtmlTextWriter(Page.Response.Output);
-            writer.Write("<h1>{0}</h1>",aero.Title);
+            writer.Write(@"<!DOCTYPE html>
+<html lang='en'>
+<head profile='http://www.w3.org/1999/xhtml/vocab'>
+  <title>{0}</title>
+
+<link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css' rel='stylesheet'>
+  </head><body>",aero.Title);
+            writer.Write("<h1>{0}</h1>", aero.Title);
             int PlotLineThickness = 2;
             foreach (var aero_element in aero.Data)
             {
                 writer.Write("\n");
                 //                if (aero.HasData(aero_element))
-//                writer.Write("<p style='page-break-before'>\n", aero_element.Key);
-//                writer.Write("<span>{0}</span><div>\n", aero_element.Value.Title);
+                //                writer.Write("<p style='page-break-before'>\n", aero_element.Key);
+                //                writer.Write("<span>{0}</span><div>\n", aero_element.Value.Title);
                 {
                     if (aero_element.Value.IndependentVars.Count == 3)
                     {
@@ -62,7 +69,7 @@ namespace F14AeroPlot
                                     aero_element.Value.IndependentVars[0],
                                                                         aero_element.Value.IndependentVars[1],
 aero_element.Value.IndependentVars[2],
-                                    table.Key), 
+                                    table.Key),
                                     Docking.Top, new System.Drawing.Font("Trebuchet MS", 14, System.Drawing.FontStyle.Bold), System.Drawing.Color.FromArgb(26, 59, 105));
                             chart.Titles.Add(t);
                             var computeval = aero_element.Value.GetComputeValue(aero);
@@ -100,7 +107,7 @@ aero_element.Value.IndependentVars[2],
                                     var q = vv.Value;
                                     chart.Series[ck].Points.AddXY(vv.iv1, vv.Value);
                                 }
-                            
+
                             }
                             // Render chart control
                             chart.Page = this;
@@ -109,7 +116,7 @@ aero_element.Value.IndependentVars[2],
                     }
                     else if (aero_element.Value.IndependentVars.Count == 2)
                     {
-                        string base_name = String.Format(ChartFileNamePrefix+"_{0}_alpha.png", aero_element.Key);
+                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key);
 
                         var aero_data_element = aero_element.Value.data.GroupBy(xx => xx.iv2).Select(xx => new { Key = xx.Key, Values = xx });
                         System.Web.UI.DataVisualization.Charting.Chart chart = new System.Web.UI.DataVisualization.Charting.Chart();
@@ -126,7 +133,7 @@ aero_element.Value.IndependentVars[2],
                         if (!String.IsNullOrEmpty(aero_element.Value.Title))
                             chart.Titles.Add(new Title(String.Format("{0}", aero_element.Value.Title), Docking.Top, new System.Drawing.Font("Trebuchet MS", 14, System.Drawing.FontStyle.Bold), System.Drawing.Color.FromArgb(26, 59, 105)));
                         Title t = new Title(String.Format("{0}({1},{2})", aero_element.Key, aero_element.Value.IndependentVars[0], aero_element.Value.IndependentVars[1]), Docking.Top, new System.Drawing.Font("Trebuchet MS", 14, System.Drawing.FontStyle.Bold), System.Drawing.Color.FromArgb(26, 59, 105));
-//                        Title t = new Title(String.Format("{0} (β,α)", aero_element), Docking.Top, new System.Drawing.Font("Trebuchet MS", 14, System.Drawing.FontStyle.Bold), System.Drawing.Color.FromArgb(26, 59, 105));
+                        //                        Title t = new Title(String.Format("{0} (β,α)", aero_element), Docking.Top, new System.Drawing.Font("Trebuchet MS", 14, System.Drawing.FontStyle.Bold), System.Drawing.Color.FromArgb(26, 59, 105));
                         chart.Titles.Add(t);
                         var computeval = aero_element.Value.GetComputeValue(aero);
                         if (!String.IsNullOrEmpty(computeval) && computeval != aero_element.Value.Variable)
@@ -153,7 +160,7 @@ aero_element.Value.IndependentVars[2],
                             foreach (var vv in alpha.Values)
                             {
                                 var q = vv.Value;
-                                chart.Series[ck].Points.AddXY(vv.iv1,vv.Value);
+                                chart.Series[ck].Points.AddXY(vv.iv1, vv.Value);
                             }
                         }
                         chart.Legends.Add("Legend1");
@@ -169,7 +176,7 @@ aero_element.Value.IndependentVars[2],
                     }
                     else if (aero_element.Value.IndependentVars.Count == 1)
                     {
-                        string base_name = String.Format(ChartFileNamePrefix+"_{0}_alpha.png", aero_element.Key);
+                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key);
 
                         var aero_data_element = aero_element.Value.data.Select(xx => new { Key = xx.iv1, Value = xx.Value });
                         if (aero_data_element != null)
@@ -213,15 +220,29 @@ aero_element.Value.IndependentVars[2],
                         }
                     }
                 }
-//                writer.Write("</div></p>");
+                //                writer.Write("</div></p>");
             }
             var compute = aero.GetCompute();
             foreach (var axis in compute)
             {
-                writer.Write("<h3>{0}</h3>", axis.Key);
-                writer.Write("<p>{0}</>", axis.Value);
+                writer.Write("<h3>{0} Coefficient Buildup</h3>", axis.Key[0]+axis.Key.Substring(1).ToLower());
+                writer.Write("<p>{0}</p>", axis.Value);
             }
-
+            if (aero.References.Any())
+            {
+                writer.Write("<hrule/><h2>References</h3>");
+                writer.Write("<ol>");
+                foreach (var re in aero.References)
+                {
+                    writer.Write("<li>");
+                    writer.Write("{0}: {1}, {2}, {3}", re.Author, re.Title, re.Id, re.Date);
+                    if (!String.IsNullOrEmpty(re.Url))
+                        writer.Write(": <a href='{0}'>{0}</a>", re.Url);
+                    writer.Write("</li>");
+                }
+                writer.Write("</ol>");
+            }
+            writer.Write("</body></html>");
         }
 
         private void AddImageToHTML(HtmlTextWriter writer, string base_name, string aero_element, System.Web.UI.DataVisualization.Charting.Chart chart)
@@ -230,12 +251,12 @@ aero_element.Value.IndependentVars[2],
             chart.SaveImage(AeroReader.DefPath + base_name);
 
             //chart.RenderControl(writer);
-            writer.Write("<img style='display:inline-block;width:{0}mm;height:{1}mm;border-width:0px' src='{2}' alt='{3}'/>\n", 
-                ChartWidth/5 ,ChartHeight/5,
+            writer.Write("<img style='display:inline-block;width:{0}mm;height:{1}mm;border-width:0px' src='{2}' alt='{3}'/>\n",
+                ChartWidth / 5, ChartHeight / 5,
                 base_name, aero_element);
-//            writer.Write("<img style='display:inline-block;height:7cm;width:5cm;border-width:0px' src='{0}' alt='{1}'/>\n", base_name, aero.Description(aero_element));
+            //            writer.Write("<img style='display:inline-block;height:7cm;width:5cm;border-width:0px' src='{0}' alt='{1}'/>\n", base_name, aero.Description(aero_element));
         }
 
         public string ChartFileNamePrefix = "f15_aero";
     }
-    }
+}
