@@ -94,10 +94,10 @@ namespace F14AeroPlot
             get
             {
                 if (!String.IsNullOrEmpty(description)) return description;
-                return string.Join(" ",IndependentVars);
+                return string.Join(" ", IndependentVars);
             }
         }
-        public bool Is2d { get { return IndependentVars.Count == 2;}}
+        public bool Is2d { get { return IndependentVars.Count == 2; } }
 
         public string Title { get; set; }
         public List<String> Factors = new List<string>();
@@ -223,7 +223,7 @@ namespace F14AeroPlot
         public string Lookup(string coeff)
         {
             if (Constants.ContainsKey(coeff))
-                return Constants[coeff].ToString()+String.Format(" <!-- {0} -->",coeff);
+                return Constants[coeff].ToString() + String.Format(" <!-- {0} -->", coeff);
             if (Variables.ContainsKey(coeff))
                 coeff = Variables[coeff];
             if (Aliases.ContainsKey(coeff))
@@ -274,9 +274,12 @@ namespace F14AeroPlot
         internal double? LookupValue(string name)
         {
             double v;
-            if (Double.TryParse(name.Trim().Substring(0, 1), out v))
+            if (Char.IsDigit(name.Trim()[0]))
             {
-                return Double.Parse(name);
+                if (Double.TryParse(name.TruncateAt(" "), out v))
+                    return v;
+                else
+                    return null;
             }
             return null;
         }
@@ -292,13 +295,14 @@ namespace F14AeroPlot
             aerodata.Aliases.Add("DTALD", "fcs/differential-elevator-pos-deg"); // -ve is left.
             aerodata.Aliases.Add("DDA", "fcs/aileron-pos-deg");
             aerodata.Aliases.Add("DRUDD", "fcs/rudder-pos-deg");
- 
+            aerodata.Aliases.Add("BETA", "aero/beta-deg");
+
             aerodata.References.Add(new ReferenceDocument
             {
                 Id = "RJH-ZARETTO-2014-12-F-15-Aero",
                 Author = "Richard Harrison",
                 Date = "December, 2014",
-                Title = "F15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%",
+                Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%",
                 Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/rjh-zaretto-f-15-aerodynamic-data.pdf",
 
             });
@@ -310,66 +314,73 @@ namespace F14AeroPlot
                 Title = "INVESTIGATION OF THE HIGH ANGLE OF ATTACK DYNAMICS OF THE F-15B USING BIFURCATION ANALYSIS",
                 Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/ADA230462.pdf",
             });
-            aerodata.Title = "F15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%";
+            aerodata.Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%";
             var EPA43 = aerodata.Add("CNDR MULTIPLIER CLDR, CYDR DUE TO SPEEDBRAKE", "EPA43", "alpha", "speedbrake");
-            var EPA02S = aerodata.Add("BETA MULTIPLIER TABLE (S)", "EPA02S", "beta");
-            var EPA02L = aerodata.Add("BETA MULTIPLIER TABLE (L)", "EPA02L", "beta");
+            //var EPA02S = aerodata.Add("BETA MULTIPLIER TABLE (S)", "EPA02S", "beta");
+            //var EPA02L = aerodata.Add("BETA MULTIPLIER TABLE (L)", "EPA02L", "beta");
 
-            var CFZ = aerodata.Add("BASIC LIFT", "CFZB", "alpha");
-            var CFZDE = aerodata.Add("LIFT INCREMENT DUE TO ELEVATOR DEFLECTION", "CFZDE", "elevator");
-            var CFX = aerodata.Add("BASIC DRAG", "CFXB", "alpha");
-            var CFXDE = aerodata.Add("DRAG INCREMENT DUE TO ELEVATOR DEFLECTION", "CFXDE", "elevator");
+            var CFZ = aerodata.Add("BASIC LIFT", "CFZB", "alpha", "elevator");
+//            var CFZDE = aerodata.Add("LIFT INCREMENT DUE TO ELEVATOR DEFLECTION", "CFZDE", "elevator");
+            var CFX = aerodata.Add("BASIC DRAG", "CFXB", "alpha", "elevator");
+//            var CFXDE = aerodata.Add("DRAG INCREMENT DUE TO ELEVATOR DEFLECTION", "CFXDE", "elevator");
+            //System.Console.WriteLine("CFDE ");
+            //for (var DELE = -40; DELE <= 40; DELE += 5)
+            //{
+            //    var DELESR = DELE / DTOR;
+            //    CFZDE.Add(DELE, (0.40781955 * DELESR) + (0.10114579 * (DELESR * DELESR)));
+            //    CFXDE.Add(DELE, (0.20978902 * DELESR) + (0.30604211 * (DELESR * DELESR)) + 0.09833617);
+            //}
 
             var CFYB = aerodata.Add("BASIC SIDE FORCE", "CFYB", "alpha", "beta", "elevator");
-            CFYB.AddFactor("EPA02L");
-            
+            //            CFYB.AddFactor("EPA02L");
+
             var CFYP = aerodata.Add("SIDE FORCE DUE TO ROLL RATE (CYP)", "CFYP", "alpha");
-            CFYP.AddFactor("PB,P");
-            
+            CFYP.AddFactor("PB");
+
             var CFYR = aerodata.Add("SIDE FORCE DUE TO YAW RATE (CYR)", "CFYR", "alpha");
-            CFYR.AddFactor("RB,R");
-            
+            CFYR.AddFactor("RB");
+
             var CYDAD = aerodata.Add("SIDE FORCE DUE TO AILERON DEFLECTION", "CYDAD", "alpha");
             CYDAD.AddFactor("DDA");
-            
+
             var CYDRD = aerodata.Add("SIDE FORCE DUE TO RUDDER DEFLECTION", "CYDRD", "alpha", "rudder");
             CYDRD.AddFactor("DRUDD,DRFLX5,EPA43");
 
             var CYDTD = aerodata.Add("SIDE FORCE DUE TO DIFFERETIAL TAIL DEFLECTION - CYDTD", "CYDTD", "alpha", "elevator");
             CYDTD.AddFactor("DTFLX5,0.3,DTALD");
-            
+
             var CYRB = aerodata.Add("ASYMMETRIC CY AT HIGH ALPHA", "CYRB", "alpha", "beta");
             // CLM
             var CML1 = aerodata.Add("BASIC ROLLING MOMENT - CL(BETA)", "CML1", "alpha", "beta");
-            CML1.AddFactor("EPA02S");
-            
+            //            CML1.AddFactor("EPA02S");
+
             var CMLP = aerodata.Add("ROLL DAMPING DERIVATIVE - CLP", "CMLP", "alpha");
-            CMLP.AddFactor("PB,P");
-            
+            CMLP.AddFactor("PB");
+
             var CMLR = aerodata.Add("ROLLING MOMENT DUE TO YAW RATE - CLR", "CMLR", "alpha");
-            CMLR.AddFactor("RB,R");
-            
+            CMLR.AddFactor("RB");
+
             var CLDAD = aerodata.Add("ROLLING MOMENT DUE TO AILERON DEFLECTION (CLDA)", "CMLDAD", "alpha");
             CLDAD.AddFactor("DDA");
-            
+
             var CLDRD = aerodata.Add("ROLLING MOMENT DUE TO RUDDER DEFLECTION -(CLD)", "CMLDRD", "alpha", "rudder");
             CLDRD.AddFactor("DRUDD,DRFLX1,EPA43");
 
             var CLDTD = aerodata.Add("ROLLING MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION - CLDD", "CMLDTD", "alpha", "elevator");
             CLDTD.AddFactor("DTFLX1,0.3,DTALD");
-            
+
             var DCLB = aerodata.Add("DELTA CLB DUE TO 2-PLACE CANOPY", "CMLDCLB", "alpha");
             DCLB.AddFactor("BETA");
 
             // CMM
             var CMM1 = aerodata.Add("BASIC PITCHING MOMENT - CM", "CMM1", "alpha", "elevator");
-            
+
             var CMMQ = aerodata.Add("PITCH DAMPING DERIVATIVE - CMQ", "CMMQ", "alpha");
-            CMMQ.AddFactor("QB,Q");
+            CMMQ.AddFactor("QB");
             //
             var CMN1 = aerodata.Add("BASIC YAWING MOMENT - CN (BETA)", "CMN1", "alpha", "beta", "elevator");
-            CMN1.AddFactor("EPA02S");
-            
+            //CMN1.AddFactor("EPA02S");
+
             var CNDRDr = aerodata.Add("YAWING MOMENT DUE TO RUDDER DEFLECTION -CNDR", "CMNDRDr", "alpha", "beta");
             CNDRDr.AddFactor("DRUDD,DRFLX3,EPA43");
 
@@ -377,14 +388,14 @@ namespace F14AeroPlot
             //CNDRDe.AddFactor("DELEDD,DRFLX3,EPA43");
 
             var CMNP = aerodata.Add("YAWING MOMENT DUE TO ROLL RATE - CNP", "CMNP", "alpha");
-            CMNP.AddFactor("PB,P");
+            CMNP.AddFactor("PB");
 
             var CMNR = aerodata.Add("YAW DAMPING DERIVATIVE - CMNR", "CMNR", "alpha");
-            CMNR.AddFactor("RB,R");
-            
+            CMNR.AddFactor("RB");
+
             var CNDTD = aerodata.Add("YAWING MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION - CNDDT", "CMNDTD", "alpha", "elevator");
             CNDTD.AddFactor("DTFLX3,DTALD");
-//            var CNDAD = aerodata.Add("", "CNDAD", "alpha", "aileron");
+            //            var CNDAD = aerodata.Add("", "CNDAD", "alpha", "aileron");
             var CNDAD = aerodata.Add("YAWING MOMENT DUE TO AILERON DEFLECTION -CNDA", "CMNDAD", "alpha");
             CNDAD.AddFactor("DDA");
 
@@ -399,8 +410,8 @@ namespace F14AeroPlot
             aerodata.AddConstant("DRFLX5", 0.89);
             //aerodata.AddVariable("DELEDD", "0.3*DDA");
 
-            aerodata.Compute("LIFT", new[] { CFZ,CFZDE });
-            aerodata.Compute("DRAG", new[] { CFX,CFXDE });
+            aerodata.Compute("LIFT", new[] { CFZ, /* CFZDE */ });
+            aerodata.Compute("DRAG", new[] { CFX, /* CFXDE */ });
             aerodata.Compute("SIDE", new[] { CFYB, CYDAD, CYDRD, CYDTD, CFYP, CFYR });
             aerodata.Compute("ROLL", new[] { CML1, CLDAD, CLDRD, CLDTD, CMLP, CMLR, DCLB });
             aerodata.Compute("ROLL", "(DLNB*BETA)");
@@ -416,36 +427,10 @@ namespace F14AeroPlot
             for (var alpha = -15; alpha <= 60; alpha = inc(alpha))
             {
                 var RAL = alpha / DTOR;
-                var CFZ1 = -0.00369376 + (3.78028702 * RAL) + (0.6921459 * RAL * RAL)
-                            - (5.0005867 * (Math.Pow(RAL, 3))) + (1.94478199 * (Math.Pow(RAL, 4)));
-
-                CFZ.Add(alpha, CFZ1);
-                var CL = CFZ1 / 57.29578;
-                var CFX1 = 0.01806821 + (0.01556573 * CL) + (498.96208868 * CL * CL)
-                - (14451.56518396 * (Math.Pow(CL, 3))) + (2132344.6184755 * (Math.Pow(CL, 4)));
-                // TRANSITIONING FROM  LOW AOA DRAG TABLE TO HIGH AOA DRAG TABLE
-                var CFX2 = 0.0267297 - (0.10646919 * RAL) + (5.39836337 * RAL * RAL) -
-                (5.0086893 * Math.Pow(RAL, 3)) + (1.34148193 * Math.Pow(RAL, 4))
-                ;
-                {
-                    var A1 = 20.0 / DEGRAD;
-                    var A2 = 30.0 / DEGRAD;
-                    var A12 = A1 + A2;
-                    var BA = 2.0 / (-Math.Pow(A1, 3) + 3.0 * A1 * A2 * (A1 - A2) + Math.Pow(A2, 3));
-                    var BB = -3.0 * BA * (A1 + A2) / 2.0;
-                    var BC = 3 * BA * A1 * A2;
-                    var BD = BA * A2 * A2 * (A2 - 3.0 * A1) / 2.0;
-                    var F1 = BA * Math.Pow(RAL, 3) + BB * RAL * RAL + BC * RAL + BD;
-                    var F2 = -BA * Math.Pow(RAL, 3) + (3.0 * A12 * BA + BB) * Math.Pow(RAL, 2) - (BC + 2 * A12 * BB + 3 * Math.Pow(A12, 2) * BA) * RAL + BD + A12 * BC + A12 * A12 * BB + Math.Pow(A12, 3) * BA;
-                    //var F2=-BA*(A2*A2)*(A2-3*A12*BA+BB)*(RAL*RAL)-(BC+2*A12*BB+3*A12*A12*BA)*RAL+
-                    //BD+A12*BC+A12*A12*BB+Math.Pow(A12,3)*BA;
-                    if (RAL < A1) CFX.Add(alpha, CFX1);
-                    else if (RAL > A2) CFX.Add(alpha, CFX2);
-                    else CFX.Add(alpha, CFX1 * F1 + CFX2 * F2);
-                }
 
                 for (var beta1 = -20; beta1 <= 20; beta1 = incbeta(beta1))
                 {
+
                     //var RARUD=0.0;
                     var RBETA = beta1 / DTOR;
                     var RABET = Math.Abs(beta1) / DTOR;
@@ -454,14 +439,14 @@ namespace F14AeroPlot
                         var DELESR = DELESD / DTOR;
                         //var DTFLX5 = 0.975;
                         //var DRFLX5 = 0.89; 
-                        CFYB.Add(alpha, beta1, DELESD, -0.05060386 - (0.12342073 * RAL) + (1.04501136 * RAL * RAL)
+                        CFYB.Add(alpha, beta1, DELESD, GetEPA02L(beta1) * (-0.05060386 - (0.12342073 * RAL) + (1.04501136 * RAL * RAL)
                         - (0.17239516 * Math.Pow(RAL, 3)) - (2.90979277 * Math.Pow(RAL, 4))
                         + (3.06782935 * Math.Pow(RAL, 5)) - (0.58422116 * Math.Pow(RAL, 6))
                         - (0.06578812 * RAL * RABET) - (0.71521988 * RABET) - (0.00000475273
                         * (RABET * RABET)) - (0.04856168 * RAL * DELESR) - (0.05943607 * RABET * DELESR) +
-                        (0.02018534 * DELESR));
+                        (0.02018534 * DELESR)));
 
-                        CMN1.Add(alpha, beta1, DELESD, 0.01441512 + (0.02242944 * RAL) - (0.30472558 * Math.Pow(RAL, 2))
+                        CMN1.Add(alpha, beta1, DELESD, GetEPA02S(beta1) * (0.01441512 + (0.02242944 * RAL) - (0.30472558 * Math.Pow(RAL, 2))
                         + (0.14475549 * Math.Pow(RAL, 3))
                         + (0.93140112 * Math.Pow(RAL, 4)) - (1.52168677 * Math.Pow(RAL, 5)) +
                         (0.90743413 * Math.Pow(RAL, 6)) - (0.16510989 * Math.Pow(RAL, 7))
@@ -475,7 +460,7 @@ namespace F14AeroPlot
                         + (0.07225609 * RABET) - (0.08567087 * Math.Pow(RABET, 2))
                         + (0.01184674 * Math.Pow(RABET, 3))
                         - (0.00519152 * RAL * DELESR) + (0.03865177 * RABET * DELESR)
-                        + (0.00062918 * DELESR));
+                        + (0.00062918 * DELESR)));
                     }
                     {
                         var DELESR = 1;
@@ -518,9 +503,43 @@ namespace F14AeroPlot
                             CNRB.Add(alpha, beta1, AN * FN * GN);
                     }
                 }
+                // END of beta IV terms
+
+                // Terms (alpha,elevator)
                 for (double DELESD = -30.0; DELESD <= 30; DELESD += 5)
                 {
                     var DELESR = DELESD / DTOR;
+
+                var CFZ1 = -0.00369376 + (3.78028702 * RAL) + (0.6921459 * RAL * RAL)
+                            - (5.0005867 * (Math.Pow(RAL, 3))) + (1.94478199 * (Math.Pow(RAL, 4))
+                            + (0.40781955 * DELESR) + (0.10114579 * (DELESR * DELESR))
+                            );
+
+                CFZ.Add(alpha, DELESD, CFZ1);
+                var CL = CFZ1 / 57.29578;
+                var CFX1 = 0.01806821 + (0.01556573 * CL) + (498.96208868 * CL * CL)
+                - (14451.56518396 * (Math.Pow(CL, 3))) + (2132344.6184755 * (Math.Pow(CL, 4)));
+                // TRANSITIONING FROM  LOW AOA DRAG TABLE TO HIGH AOA DRAG TABLE
+                var CFX2 = 0.0267297 - (0.10646919 * RAL) + (5.39836337 * RAL * RAL) -
+                            (5.0086893 * Math.Pow(RAL, 3)) + (1.34148193 * Math.Pow(RAL, 4)
+                            + (0.20978902 * DELESR) + (0.30604211 * (DELESR * DELESR)) + 0.09833617);
+                {
+                    var A1 = 20.0 / DEGRAD;
+                    var A2 = 30.0 / DEGRAD;
+                    var A12 = A1 + A2;
+                    var BA = 2.0 / (-Math.Pow(A1, 3) + 3.0 * A1 * A2 * (A1 - A2) + Math.Pow(A2, 3));
+                    var BB = -3.0 * BA * (A1 + A2) / 2.0;
+                    var BC = 3 * BA * A1 * A2;
+                    var BD = BA * A2 * A2 * (A2 - 3.0 * A1) / 2.0;
+                    var F1 = BA * Math.Pow(RAL, 3) + BB * RAL * RAL + BC * RAL + BD;
+                    var F2 = -BA * Math.Pow(RAL, 3) + (3.0 * A12 * BA + BB) * Math.Pow(RAL, 2) - (BC + 2 * A12 * BB + 3 * Math.Pow(A12, 2) * BA) * RAL + BD + A12 * BC + A12 * A12 * BB + Math.Pow(A12, 3) * BA;
+                    //var F2=-BA*(A2*A2)*(A2-3*A12*BA+BB)*(RAL*RAL)-(BC+2*A12*BB+3*A12*A12*BA)*RAL+
+                    //BD+A12*BC+A12*A12*BB+Math.Pow(A12,3)*BA;
+                    if (RAL < A1) CFX.Add(alpha, DELESD, CFX1);
+                    else if (RAL > A2) CFX.Add(alpha, DELESD, CFX2);
+                    else CFX.Add(alpha, DELESD, CFX1 * F1 + CFX2 * F2);
+                }
+
 
                     CMM1.Add(alpha, DELESD, 0.00501496 - (0.080491 * RAL) - (1.03486675 * RAL * RAL)
                                    - (0.68580677 * Math.Pow(RAL, 3)) + (6.46858488 * Math.Pow(RAL, 4))
@@ -710,8 +729,8 @@ namespace F14AeroPlot
                 CLDAD.Add(alpha, 0.005762 + (0.0003847 * RAL) - (0.00502091 * RAL * RAL)
                 + (0.00161407 * Math.Pow(RAL, 3)) + (0.02268829 * Math.Pow(RAL, 4))
                 - (0.03935269 * Math.Pow(RAL, 5)) + (0.02472827 * Math.Pow(RAL, 6))
-                - (0.00543345 * Math.Pow(RAL, 7)) 
-//                + (0.0000007520348 * DELESR * RAL) + (0.000000390773 * DELESR)
+                - (0.00543345 * Math.Pow(RAL, 7))
+                    //                + (0.0000007520348 * DELESR * RAL) + (0.000000390773 * DELESR)
                 );
 
                 for (var beta1 = -20; beta1 <= 20; beta1 += 5)
@@ -748,15 +767,15 @@ namespace F14AeroPlot
                 }
                 for (var beta1 = -20; beta1 <= 20; beta1 += 5)
                 {
-                    var RABET = beta1 / DTOR;
+                    var RABET = Math.Abs(beta1) / DTOR;
                     //  ROLLING  MOMENT
-                    var DTFLX1 = 0.9750;
-                    var DRFLX1 = 0.85;
-                    CML1.Add(alpha, beta1, -0.00238235 - (0.046126235 * RAL) + (0.10553168 * RAL * RAL)
+                    //var DTFLX1 = 0.9750;
+                    //var DRFLX1 = 0.85;
+                    CML1.Add(alpha, beta1, GetEPA02S(beta1) * (-0.00238235 - (0.046126235 * RAL) + (0.10553168 * RAL * RAL)
                     + (0.10541585 * Math.Pow(RAL, 3)) - (0.40254765 * Math.Pow(RAL, 4))
                     + (0.32530491 * Math.Pow(RAL, 5)) - (0.08496121 * Math.Pow(RAL, 6))
                     + (0.00112288 * Math.Pow(RAL, 7)) - (0.05940477 * RABET * RAL) -
-                    (0.07356236 * RABET) - (0.00550119 * RABET * RABET) + (0.00326191 * Math.Pow(RABET, 3)));
+                    (0.07356236 * RABET) - (0.00550119 * RABET * RABET) + (0.00326191 * Math.Pow(RABET, 3))));
                 }
                 if (RAL < 0.29671)
                     CMLP.Add(alpha, -0.24963201 - (0.03106297 * RAL) + (0.12430631 * RAL * RAL)
@@ -844,48 +863,65 @@ namespace F14AeroPlot
                 CNDAD.Add(alpha, 0.00008228887 - (0.00014015 * RAL) - (0.0013493 * RAL * RAL) +
                 (0.00020487 * Math.Pow(RAL, 3)) + (0.00561241 * Math.Pow(RAL, 4))
                 - (0.00634392 * Math.Pow(RAL, 5))
-                + (0.00193323 * Math.Pow(RAL, 6)) 
-                //- (2.05815E-17 * (RAL * DAILA)) + (3.794816E-17 * +Math.Pow(DAILA, 3))
+                + (0.00193323 * Math.Pow(RAL, 6))
+                    //- (2.05815E-17 * (RAL * DAILA)) + (3.794816E-17 * +Math.Pow(DAILA, 3))
                 );
             }
 
 
-            // EPA02  IS  A MULTIPLIER THAT  ADJUSTS  (CFY1,CML1,CMN1) 
-            // BY  CHANGING THAT COEFICIENT  SIGN  DEPEDENT  ON  THE  SIGN
-            // OF  THE  SIDESLIP  ANGLE  (BETA).  IF  BETA  IS  NEGTIVE  THEN
-            // EPAO2=-1.0.  IF BETA IS POSITIVE THEN EA02=1.0.  SINCE TH!S
-            // FUNCTION  IS  DISCONTINUOUS  AT  THE  ORIGIN  A  CUBIC  SPLINE  HAS
-            //  BEEN EMPLOYED REPRESENT THIS  FUNCTION  
-            for (var beta = -20; beta <= 20; beta += 1)
-            {
-                if (beta < -1.0)
-                    EPA02S.Add(beta, -1);
-                else if (beta >= -1.0 && beta <= 1)
-                    EPA02S.Add(beta, -1.0 + (1.5 * Math.Pow(beta + 1, 2)) -
-                     (0.5 * Math.Pow(beta + 1, 3.0)));
-                else if (beta > 1)
-                    EPA02S.Add(beta, 1);
+            //// EPA02  IS  A MULTIPLIER THAT  ADJUSTS  (CFY1,CML1,CMN1) 
+            //// BY  CHANGING THAT COEFICIENT  SIGN  DEPEDENT  ON  THE  SIGN
+            //// OF  THE  SIDESLIP  ANGLE  (BETA).  IF  BETA  IS  NEGTIVE  THEN
+            //// EPAO2=-1.0.  IF BETA IS POSITIVE THEN EA02=1.0.  SINCE TH!S
+            //// FUNCTION  IS  DISCONTINUOUS  AT  THE  ORIGIN  A  CUBIC  SPLINE  HAS
+            ////  BEEN EMPLOYED REPRESENT THIS  FUNCTION  
+            //for (var beta = -20; beta <= 20; beta += 1)
+            //{
+            //    if (beta < -1.0)
+            //        EPA02S.Add(beta, -1);
+            //    else if (beta >= -1.0 && beta <= 1)
+            //        EPA02S.Add(beta, -1.0 + (1.5 * Math.Pow(beta + 1, 2)) -
+            //         (0.5 * Math.Pow(beta + 1, 3.0)));
+            //    else if (beta > 1)
+            //        EPA02S.Add(beta, 1);
 
-                if (beta < -5.0)
-                    EPA02L.Add(beta, -1);
-                if (beta >= -5.0 && beta <= 5)
-                    EPA02L.Add(beta,
-                    -1 + (0.06 * (Math.Pow(beta + 5, 2))) -
-                    (0.0040 * (Math.Pow(beta + 5, 3))));
-                if (beta > 5)
-                    EPA02L.Add(beta, 1);
+            //    if (beta < -5.0)
+            //        EPA02L.Add(beta, -1);
+            //    if (beta >= -5.0 && beta <= 5)
+            //        EPA02L.Add(beta,
+            //        -1 + (0.06 * (Math.Pow(beta + 5, 2))) -
+            //        (0.0040 * (Math.Pow(beta + 5, 3))));
+            //    if (beta > 5)
+            //        EPA02L.Add(beta, 1);
 
-            }
+            //}
 
 
-            System.Console.WriteLine("CFDE ");
-            for (var DELE = -40; DELE <= 40; DELE += 5)
-            {
-                var DELESR = DELE / DTOR;
-                CFZDE.Add(DELE, (0.40781955 * DELESR) + (0.10114579 * (DELESR * DELESR)));
-                CFXDE.Add(DELE, (0.20978902 * DELESR) + (0.30604211 * (DELESR * DELESR)) + 0.09833617);
-            }
-            return aerodata;
+             return aerodata;
+        }
+
+        private static double GetEPA02S(int beta1)
+        {
+            double EPA02S = 0;
+            if (beta1 < -1.0)
+                EPA02S = -1;
+            else if (beta1 >= -1.0 && beta1 <= 1)
+                EPA02S = -1.0 + (1.5 * Math.Pow(beta1 + 1, 2)) - (0.5 * Math.Pow(beta1 + 1, 3.0));
+            else if (beta1 > 1)
+                EPA02S = 1;
+            return EPA02S;
+        }
+
+        private static double GetEPA02L(int beta1)
+        {
+            double EPA02L = 0;
+            if (beta1 < -5.0)
+                EPA02L = -1;
+            else if (beta1 >= -5.0 && beta1 <= 5)
+                EPA02L = -1 + (0.06 * (Math.Pow(beta1 + 5, 2))) - (0.0040 * (Math.Pow(beta1 + 5, 3)));
+            else if (beta1 > 5)
+                EPA02L = 1;
+            return EPA02L;
         }
 
         private static int inc(int alpha)
@@ -896,7 +932,7 @@ namespace F14AeroPlot
         }
         private static int incbeta(int beta)
         {
-            if (beta < -10) return beta +10;
+            if (beta < -10) return beta + 10;
             if (beta > 10) return beta + 10;
             return beta + 5;
         }
