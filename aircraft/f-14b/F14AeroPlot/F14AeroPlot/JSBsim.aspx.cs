@@ -27,7 +27,7 @@ namespace F14AeroPlot
                 //            writer.Write("<?xml-stylesheet type=\"text/xsl\" href=\"http://www.zaretto.com/sites/zaretto.com/files/JSBSim.xsl\"?>");
                 writer.Write("<?xml-stylesheet type=\"text/xsl\" href=\"/JSBSim.xsl\"?>");
 
-                writer.Write("<fdm_config name=\"f15\" version=\"2.0\" release=\"PRODUCTION\"\n");
+                writer.Write("<fdm_config name=\"f-15\" version=\"2.0\" release=\"PRODUCTION\"\n");
                 writer.Write("   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
                 writer.Write("   xsi:noNamespaceSchemaLocation=\"http://jsbsim.sourceforge.net/JSBSim.xsd\">\n");
                 writer.Write("\n");
@@ -36,7 +36,7 @@ namespace F14AeroPlot
                 writer.Write("        <filecreationdate>{0}</filecreationdate>", DateTime.Now.ToString("yyyy-MM-dd"));
                 writer.Write("        <version>1.0</version>\n");
                 writer.Write("        <description>\n");
-                writer.Write("            Models an F15\n");
+                writer.Write("            Models an F-15\n");
                 writer.Write("        </description>\n");
                 writer.Write("        <note>Aircraft origin for measurements is the nose.</note>\n");
                 writer.Write("        <note></note>\n");
@@ -57,7 +57,6 @@ namespace F14AeroPlot
 //            writer.Write("<pre>\n");
             foreach (var aero_axis in aero.Data.GroupBy(xx => xx.Value.Axis).OrderBy(xx=>xx.Key))
             {
-                var coeffs = new List<String>();
                 foreach (var aero_element_item in aero_axis.OrderBy(x=>x.Value.Variable))
                 {
                     var aero_element = aero_element_item.Value;
@@ -69,8 +68,6 @@ namespace F14AeroPlot
 
                         if (!aero.IsUsed(aero_element))
                             writer.Write("    <!--\n");
-                        else
-                            coeffs.Add(aerodat_item.Variable);
 
                         if (aero.Is3d(aero_element))
                         {
@@ -195,22 +192,21 @@ namespace F14AeroPlot
                     }
                 }
 
-                if (!String.IsNullOrEmpty(aero_axis.Key) && coeffs.Any())
-                {
-                    writer.Write("    <function name=\"aero/coefficients/C{0}\">\n", aero_axis.Key);
-                    //writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
-                    writer.Write("      <sum>\n");
-                    foreach (var coeff in coeffs)
-                    {
-                        writer.Write("          <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff));
-                    }
-                    writer.Write("       </sum>\n");
-                    writer.Write("    </function>\n");
-                }
-
             }
             foreach (var aero_axis in aero.Data.Where(xx=>!string.IsNullOrEmpty(xx.Value.Axis)).GroupBy(xx => xx.Value.Axis))
             {
+                    if (!String.IsNullOrEmpty(aero_axis.Key) )
+                    {
+                        writer.Write("    <function name=\"aero/coefficients/C{0}\">\n", aero_axis.Key);
+                        //writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
+                        writer.Write("      <sum>\n");
+                        foreach (var coeff in aero_axis)
+                        {
+                            writer.Write("          <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
+                        }
+                        writer.Write("       </sum>\n");
+                        writer.Write("    </function>\n");
+                    }
                 writer.Write("  <axis name=\"{0}\">\n", aero_axis.Key);
                 writer.Write("    <function name=\"aero/force/{0}\">\n", aero_axis.Key);
                 //writer.Write("    <description>{0} {1}</description>\n", aero_axis.Key, Char.IsLower(coeff.Substring(1,1).First()) ? "Force" : "Moment");
@@ -250,14 +246,16 @@ namespace F14AeroPlot
             foreach (var xx in aero_element.Factors)
             {
                 var name = aero.Lookup(xx);
-                var v = aero.LookupValue(xx);
+                var v = aero.LookupValue(name);
                 if (v.HasValue)
                 {
-                    writer.Write("          <value>{0}</value>\n", v);
+                    // use the lookup value to find out if it is numeric; but lookup will add an xml comment for constants
+                    // so output with the original name, rather than v
+                    writer.Write("          <value>{0}</value>\n", name);
                 }
                 else
                 {
-                    if (!name.Contains("/"))
+                    if (!name.Contains("/") && !Char.IsDigit(name[0]))
                         name = "aero/coefficients/" + name;
 
                     writer.Write("          <property>{0}</property>\n", name);
