@@ -1623,20 +1623,20 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <description>For denormalization</description>
                 <function>
                     <quotient>
-                        <sum>
+                        <product>
                             <property>metrics/cbarw-ft</property>
                             <property>velocities/q-aero-rad_sec</property>
-                        </sum>
+                        </product>
                         <!-- over -->
                         <product>
                             <value>2</value>
-                            <property>ic/vt-fps</property>
+                            <property>velocities/vt-fps</property>
                         </product>
                     </quotient>
                 </function>
                 <clipto>
-                    <min> -0.01 </min>
-                    <max>  0.01 </max>
+                    <min> -2.01 </min>
+                    <max>  2.01 </max>
                 </clipto>
                 <output>aero/cbarq-2vo</output>
             </fcs_function>
@@ -2904,7 +2904,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>CMQ</description>
             <product>
                 <property>aero/cbarq-2vo</property>
-                <property>velocities/q-aero-rad_sec</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
