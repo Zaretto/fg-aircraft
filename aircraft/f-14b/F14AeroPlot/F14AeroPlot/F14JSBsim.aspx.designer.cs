@@ -10,6 +10,6 @@
 namespace F14AeroPlot {
     
     
-    public partial class F15_PlotPage {
+    public partial class JSBsimF14 {
     }
 }

@@ -80,7 +80,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="F14JSBsim.aspx" />
+    <Content Include="F14Plots.aspx" />
     <Content Include="f14aero.txt" />
+    <Content Include="JSBSim.xsl" />
     <Content Include="Plots.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -101,6 +104,21 @@
   <ItemGroup>
     <Compile Include="AeroReader.cs" />
     <Compile Include="ChartPalette.cs" />
+    <Compile Include="F14JSBsim.aspx.cs">
+      <DependentUpon>F14JSBsim.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="F14JSBsim.aspx.designer.cs">
+      <DependentUpon>F14JSBsim.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="F14Plots.aspx.cs">
+      <DependentUpon>F14Plots.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="F14Plots.aspx.designer.cs">
+      <DependentUpon>F14Plots.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="F15Aero.cs" />
     <Compile Include="Plots.aspx.cs">
       <DependentUpon>Plots.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
