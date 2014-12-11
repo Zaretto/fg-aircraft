@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+ <path>flame.ac</path>
+
+  <offsets>
+  <z-m>5.95</z-m> 
+  <pitch-deg>90</pitch-deg>
+  </offsets>
+  
+
+
+<effect>
+ <inherits-from>Effects/model-transparent</inherits-from>
+<object-name>FlameModel</object-name>
+</effect>
+  
+  <animation>
+	<type>select</type>
+    <object-name>FlameModel</object-name>
+		<condition>
+		 <greater-than>
+				<property>/controls/engines/engine/throttle</property>
+				<value>0.8</value>
+         </greater-than>				
+		</condition>
+</animation>
+  
+  
+
+  
+  <animation>
+	<type>translate</type>
+	<object-name>FlameModel</object-name>
+	<factor>0.0</factor>
+	<offset-m>5.94</offset-m>
+	<axis>
+		<x>1.0</x>
+		<y>0</y>
+		<z>0</z>
+	</axis>
+</animation>
+
+<animation>
+  <type>rotate</type>
+  <object-name>FlameModel</object-name>
+  <property>/f-20/rotate-flame</property>
+  <factor>90.0</factor>
+  <center>
+   <x-m>0</x-m>
+   <y-m>0</y-m>
+   <z-m>0</z-m>
+  </center>
+  <axis>
+   <x>0.0</x>
+   <y>1.0</y>
+   <z>0.0</z>
+  </axis>
+ </animation>
+ 
+
+
+ <animation>
+  <type>billboard</type>
+  <object-name>FlameModel</object-name>
+  <spherical type="bool">false</spherical>
+ </animation>
+ 
+ 
+ <animation>
+	<type>translate</type>
+	<object-name>FlameModel</object-name>
+	<factor>0.0</factor>
+	<offset-m>0.0</offset-m>
+	<axis>
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>1.0</z>
+	</axis>
+</animation>  
+
+  <animation>
+	<type>scale</type>
+	<object-name>FlameModel</object-name>
+	<property>/f-20/nozzle-pos-norm</property>    
+  <x-min>1.0</x-min>
+  <y-min>1.0</y-min>
+  <z-min>0.5</z-min>    
+	<x-factor>1.3</x-factor>
+	<y-factor>1.3</y-factor>
+	<z-factor>1.0</z-factor>
+</animation>
+
+  <animation>
+	<type>scale</type>
+	<object-name>FlameModel</object-name>
+	<property>/controls/engines/engine/throttle</property>    
+  <x-min>1.0</x-min>
+  <y-min>1.0</y-min>
+  <z-min>0.5</z-min>    
+	<x-factor>1.0</x-factor>
+	<y-factor>1.0</y-factor>
+	<z-factor>1.5</z-factor>
+</animation>
+
+<animation>
+	<type>translate</type>
+	<object-name>FlameModel</object-name>
+	<factor>0.0</factor>
+	<offset-m>0.0</offset-m>
+	<axis>
+		<x>0.0</x>
+		<y>0.0</y>
+		<z>1.0</z>
+	</axis>
+</animation>  
+
+ 
+ 	<animation>
+		<type>textranslate</type>
+		<object-name>FlameModel</object-name>
+		<property>/f-20/flame-number</property>
+		<factor>-0.107421875</factor>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+  
+</PropertyList>

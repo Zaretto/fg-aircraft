@@ -1,0 +1,444 @@
+<?xml version="1.0"?>
+
+	<PropertyList>
+
+	<path>engine-control.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>engine-control-panel</object-name>
+		<condition>
+			<equals>
+				<property>sim/current-view/name</property>
+				<value>Cockpit View</value>
+			</equals>
+		</condition>
+	</animation>
+
+	<!-- Engine crank Switch -->
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-crank-left</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.engine_crank_switch(0)</script>
+			</binding>
+		</action>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-crank-right</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.engine_crank_switch(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-r-ramp-auto</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_r_ramp(0)</script>
+			</binding>
+		</action>
+	</animation>
+
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-r-ramp-stow</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_r_ramp(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-throttle-mode-man</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_throttle_mode(2)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-backup-ignition-toggle</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_backup_ignition_toggle()</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-throttle-mode-boost</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_throttle_mode(0)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-throttle-mode-auto</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_throttle_mode(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-l-ramp-auto</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_l_ramp(0)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-l-ramp-stow</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_l_ramp(1)</script>
+			</binding>
+		</action>
+	</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-temp-norm</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_temp(0)</script>
+			</binding>
+		</action>
+		</animation>
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-temp-cold</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_temp(1)</script>
+			</binding>
+		</action>
+		</animation>
+
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-temp-hot</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_temp(2)</script>
+			</binding>
+		</action>
+		</animation>
+
+
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-rudder-right</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_rudder_trim(1)</script>
+			</binding>
+		</action>
+		<action>
+			<button>3</button>
+              <repeatable type="bool">true</repeatable>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.econt_rudder_trim(-1)</script>
+              </binding>
+		</action>
+		<action>
+			<button>4</button>
+              <repeatable type="bool">true</repeatable>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.econt_rudder_trim(1)</script>
+              </binding>
+		</action>
+	</animation>
+
+
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-rudder-left</object-name>
+		<action>
+			<button>0</button>
+			<binding>
+				<command>nasal</command>
+				<script>f14.econt_rudder_trim(-1)</script>
+			</binding>
+   		</action>
+		<action>
+			<button>3</button>
+              <repeatable type="bool">true</repeatable>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.econt_rudder_trim(-1)</script>
+              </binding>
+		</action>
+		<action>
+			<button>4</button>
+              <repeatable type="bool">true</repeatable>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.econt_rudder_trim(1)</script>
+              </binding>
+		</action>
+	</animation>
+
+
+
+	<animation>
+		<object-name>engine-crank-switch</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/engine/engine-crank</property>
+		<interpolation>
+			<entry><ind>1</ind><dep>45</dep></entry>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>2</ind><dep>-45</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0174</x-m>
+			<y-m>-0.0240</y-m>
+			<z-m> 0.0048</z-m>
+		</center>
+		<axis>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	<animation>
+		<object-name>switch-l-ramp</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/switch-l-ramp</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>40</dep></entry>
+			<entry><ind>1</ind><dep>-40</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0471</x-m>
+			<y-m>-0.0477</y-m>
+			<z-m> 0.0042</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<object-name>switch-r-ramp</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/switch-r-ramp</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>40</dep></entry>
+			<entry><ind>1</ind><dep>-40</dep></entry>
+		</interpolation>
+		<center>
+			<x-m>-0.0572</x-m>
+			<y-m>-0.0026</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<object-name>switch-temp</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/switch-temp</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>10</dep></entry>
+			<entry><ind>1</ind><dep>40</dep></entry>
+			<entry><ind>2</ind><dep>-30</dep></entry>
+		</interpolation>
+		<center>
+			<x-m> 0.0293</x-m>
+			<y-m> 0.0093</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<object-name>switch-throttle-mode</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/switch-throttle-mode</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>1</ind><dep>-30</dep></entry>
+			<entry><ind>2</ind><dep>30</dep></entry>
+		</interpolation>
+		<center>
+			<x-m> 0.0350</x-m>
+			<y-m>-0.0323</y-m>
+			<z-m> 0.0038</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<object-name>switch-rudder-trim</object-name>
+		<type>rotate</type>
+		<property>controls/flight/rudder-trim</property>
+		<interpolation>
+			<entry><ind>0.33</ind><dep>-30</dep></entry>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>-0.33</ind><dep>30</dep></entry>
+		</interpolation>
+		<center>
+			<x-m> 0.0672</x-m>
+			<y-m> 0.0110</y-m>
+			<z-m> 0.0035</z-m>
+		</center>
+		<axis>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+	<animation>
+		<object-name>switch-backup-ignition</object-name>
+		<type>rotate</type>
+		<property>sim/model/f-14b/controls/switch-backup-ignition</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>-30</dep></entry>
+			<entry><ind>1</ind><dep>30</dep></entry>
+		</interpolation>
+		<center>
+			<x-m> 0.0729</x-m>
+			<y-m>-0.0408</y-m>
+			<z-m> 0.0037</z-m>
+		</center>
+		<axis>
+			<x>0</x>
+			<y>1</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+
+	<!-- lighting -->
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+	<animation>
+		<object-name>switches</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+	<!-- LoD -->
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>7</max-m>
+	</animation>
+
+</PropertyList>

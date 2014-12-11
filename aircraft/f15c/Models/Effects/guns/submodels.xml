@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Weapons Documentation:
+
+   http://en.wikipedia.org/wiki/McDonnell_Douglas_F-15_Eagle 
+   Guns: 1X 20 mm (0.787 in) M61 Vulcan 6-barreled gatling cannon, 940 rounds
+    
+    http://en.wikipedia.org/wiki/M61_Vulcan 
+  
+    102 g = .2249 lb
+    6000 per minute = 100 per second.  #won't work in FG due to FR issues
+    20 mm diameter = approx .0135 EDA (effective diameter, in sq ft)
+    muzzle velocity = 1030 - 1050 mps      , = 3380 fps
+    Numbers below have been tweaked form this to make it actually work decently at
+    500-600 MPH on the F-15.
+    
+    The M-61 20mm cannon below doesn't exactly implement this (if you do the rounds start piling backwards to you at about 500-600MPH).  I don't know if this 
+    is how it works in reality or FG's submodels just need some work, but 
+    either way I've tweaked them so that they actually shoot forward, mostly
+    through 1000 MPH or so.
+   
+   Missiles:
+   AIM-7 Sparrow
+   AIM-120 AMRAAM
+   AIM-9 Sidewinder
+
+   Other:
+   up to 3X 600 US gallons (2,300 L) external drop tanks for ferry flight or   
+   extended range/loitering time.
+   MXU-648 Cargo/Travel Pod - to carry personal belongings, and small pieces of 
+   maintenance equipment.
+   
+   http://air-attack.com/page/46/F-15-Eagle.html
+   The F-15 can carry up to 16,000 pounds of bombs, fuel tanks, and missiles .
+The underwing pylons can each accommodate a multiple ejector rack, which can carry six 500-pound bombs. The bomb racks can be installed on the underwing pylons and still the F-15 can be equipped with the normal carriage of Sidewinder missiles. 
+Air-to-ground stores can also be carried on the underfuselage centerline. A typical load consists of 18 500-pound bombs, carried 6 each on underwing and centerline ejector racks.
+The F-15A/B/C/D can carry and deliver laser-guided bombs such as the GBU-10E/B Paveway II or the GBU-12D/B Paveway II. However, it does not have the capability of guiding these weapons by itself, and must rely on laser designators carried by other aircraft or by personnel on the ground.
+
+All measurements below are in English measurements (feet/pounds), per the FG wiki documentation.
+
+  -->
+<PropertyList>
+
+ <submodel>
+    <name>M-61 20 mm cannon</name>
+    <model>Aircraft/F-15C/Models/Effects/guns/apibullet-tracer.xml</model>
+    <trigger>controls/armament/trigger</trigger>
+    <speed>3380.0</speed>
+    <repeat>true</repeat>
+    <delay>0.05</delay>
+    <count>-1</count>
+    <x-offset>  -1.364 </x-offset>   
+    <y-offset>  3.5</y-offset>   
+    <z-offset> 0.35</z-offset>   
+    <yaw-offset> 0.0 </yaw-offset>
+    <pitch-offset> 0.0 </pitch-offset>
+    <life>5.0</life>
+    <wind>false</wind>
+    <weight>0.2249</weight>
+    <cd>0.075</cd>
+    <eda>0.01051198</eda> 
+    <collision>true</collision>
+    <collision-report>sim/ai/aircraft/collision/gun</collision-report>
+    <impact>true</impact>
+    <impact-report>sim/ai/aircraft/impact/bullet</impact-report>
+    <!-- submodel-path>Aircraft/F-15C/Models/Effects/guns/bullet-submodel.xml</submodel-path -->
+  </submodel>
+
+  
+  
+	<submodel>
+	  <name>AIM9</name>
+		<model>Aircraft/F-15C/Models/weapons/AIM9.xml</model>
+		<trigger>controls/armament/trigger1</trigger>		
+		<speed>1350</speed>
+		<repeat>true</repeat>
+		<delay>1</delay>
+		<count>-1</count>
+		<x-offset>0</x-offset>
+		<z-offset>-4</z-offset>
+		<yaw-offset>0</yaw-offset>
+		<pitch-offset>0</pitch-offset>
+		<cd>0</cd>
+		<weight>20.8</weight>
+		<eda>0.000001</eda>
+		<life>25</life>
+		<buoyancy>32.5</buoyancy>
+		<aero-stabilised>true</aero-stabilised>
+		<collision>true</collision>
+		<impact>true</impact>
+		<impact-report>ai/models/model-impact</impact-report>
+		<animation>
+			<enable-hot type="bool">false</enable-hot>
+			  <attach>world</attach>
+
+  <placer>
+   <type>point</type>
+  </placer>
+		</animation>
+	</submodel>
+	
+ <!-- flares -->
+ 
+ <!-- Countermeasures -->
+
+  <submodel>
+    <name>flares</name>
+    <model>Aircraft/F-15C/Models/Stores/Countermeasures/flare.xml</model>
+    <trigger>ai/submodels/submodel/flare-release</trigger>
+    <speed>10</speed>
+    <repeat>true</repeat>
+    <delay>0.2</delay>
+    <count>50</count>
+    <x-offset>-2.0</x-offset>
+    <y-offset>2.8</y-offset>
+    <z-offset>-5</z-offset>
+    <yaw-offset>150.0</yaw-offset>
+	<pitch-offset>-70</pitch-offset> 
+    <life>5</life>
+    <buoyancy>8</buoyancy>
+    <eda>1.0</eda>
+  </submodel>
+  
+ <submodel>
+    <name>flares</name>
+    <model>Aircraft/F-15C/Models/Stores/Countermeasures/flare.xml</model>
+    <trigger>ai/submodels/submodel/flare-release</trigger>
+    <speed>10</speed>
+    <repeat>true</repeat>
+    <delay>0.2</delay>
+    <count>50</count>
+    <x-offset>-2.0</x-offset>
+    <y-offset>-2.8</y-offset>
+    <z-offset>-5</z-offset>
+    <yaw-offset>210</yaw-offset>
+	<pitch-offset>-70</pitch-offset> 
+    <life>5</life>
+    <buoyancy>8</buoyancy>
+    <eda>1.0</eda>
+  </submodel>
+
+</PropertyList>
+

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+ <path>RPlume.ac</path>
+
+<condition>
+      <property>sim/multiplay/generic/int[14]</property>
+    </condition>
+
+ <animation>
+  <type>noshadow</type>
+  <object-name>flameR</object-name>
+ </animation>
+
+ <animation>
+  <type>select</type>
+  <object-name>flameR</object-name>
+  <condition>
+   <property>/engines/engine[1]/augmentation</property>
+  </condition>
+ </animation>
+
+<animation>
+  <type>select</type>
+  <object-name>InnerR</object-name>
+  <condition>
+   <property>/engines/engine[1]/augmentation</property>
+  </condition>
+ </animation>
+
+	<animation>
+		<type>spin</type>
+		<object-name>InnerR</object-name>
+<property>/engines/engine[1]/n1</property>
+		<factor>10.0</factor>
+		<axis>
+			<x1-m>6.86</x1-m>
+			<y1-m>0.28</y1-m>
+			<z1-m>0.19</z1-m>
+			<x2-m>6.13</x2-m>
+    			<y2-m>0.28</y2-m>
+    			<z2-m>0.19</z2-m>
+		</axis>
+	</animation>
+
+ <!-- *** LoD *** -->
+ <animation>
+  <type>range</type>
+  <min-m>0</min-m>
+  <max-m>50000</max-m>
+ </animation>
+
+</PropertyList>

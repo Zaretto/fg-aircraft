@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+  <path>flammes.ac</path>
+  <offsets>
+    <x-m> 0.0 </x-m>
+    <y-m> 0.0 </y-m>
+    <z-m> 0.0 </z-m>
+    <roll-deg>    0.000 </roll-deg>
+    <pitch-deg>   0.000 </pitch-deg>
+    <heading-deg> 0.000 </heading-deg>
+  </offsets>
+
+  <animation>
+    <!-- Objets transparents -->
+    <object-name>flamme1</object-name>
+    <object-name>flamme2</object-name>
+    <object-name>flamme3</object-name>
+    <object-name>brule</object-name>
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>flamme1</object-name>
+    <object-name>flamme1</object-name>
+    <object-name>flamme2</object-name>
+    <object-name>brule</object-name>
+  </animation>
+
+  <!-- Rotation des fleammes des réacteurs -->
+  <animation>
+    <type>spin</type>
+    <object-name>flamme1</object-name>
+    <object-name>flamme2</object-name>
+    <object-name>flamme3</object-name>
+    <property>controls/engines/engine[0]/throttle</property>
+    <factor> 100 </factor>
+    <center>
+      <x-m> 0.000 </x-m>
+      <y-m> 0.000 </y-m>
+      <z-m> 0.000 </z-m>
+    </center>
+    <axis>
+      <x> 1.000 </x>
+      <y> 0.000 </y>
+      <z> 0.000 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>flamme1</object-name>
+    <condition>
+      <greater-than>
+        <property>controls/engines/engine[0]/throttle</property>
+        <value>0.8</value>
+      </greater-than>
+      <less-than>
+        <property>controls/engines/engine[0]/throttle</property>
+        <value>0.9</value>
+      </less-than>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>flamme2</object-name>
+    <condition>
+      <greater-than>
+        <property>controls/engines/engine[0]/throttle</property>
+        <value>0.9</value>
+      </greater-than>
+      <less-than>
+        <property>controls/engines/engine[0]/throttle</property>
+        <value>1</value>
+      </less-than>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>flamme3</object-name>
+    <condition>
+      <equals>
+        <property>controls/engines/engine[0]/throttle</property>
+        <value>1</value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>brule</object-name>
+    <condition>
+      <greater-than>
+        <property>controls/engines/engine[0]/throttle</property>
+        <value>0.7</value>
+      </greater-than>
+    </condition>
+  </animation>
+
+</PropertyList>

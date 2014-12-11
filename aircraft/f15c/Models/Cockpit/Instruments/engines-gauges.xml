@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+
+<PropertyList> 
+<path>engines-gauges.ac</path>
+
+    <animation>
+        <type>scale</type>
+        <x-offset>0.64</x-offset>
+        <y-offset>0.64</y-offset>
+        <z-offset>0.64</z-offset>
+    </animation>
+
+	<!-- temp -->
+	<animation>
+		<name>temp-l</name>
+		<type>rotate</type>
+		<object-name>needle-temp-l</object-name>
+		<property>engines/engine[0]/egt-norm</property>
+        <factor>235</factor>
+		<center>
+            <x-m> 0.0059</x-m>
+            <y-m>-0.0478</y-m>
+            <z-m>-0.0055</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<name>temp-r</name>
+		<type>rotate</type>
+		<object-name>needle-temp-r</object-name>
+		<property>engines/engine[1]/egt-norm</property>
+        <factor>235</factor>
+		<center>
+            <x-m> 0.0059</x-m>
+            <y-m> 0.0068</y-m>
+            <z-m>-0.0055</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<!-- fan percent -->
+	<animation>
+		<name>fan-percent-l</name>
+		<type>rotate</type>
+		<object-name>needle-fan-l</object-name>
+		<property>engines/engine[0]/n1</property>
+        <factor>2.25</factor>
+        <center>
+            <x-m> 0.0059</x-m>
+            <y-m>-0.0470</y-m>
+            <z-m> 0.0522</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<name>fan-percent-r</name>
+		<type>rotate</type>
+		<object-name>needle-fan-r</object-name>
+        <property>engines/engine[1]/n1</property>
+        <factor>2.25</factor>
+		<center>
+            <x-m> 0.0059</x-m>
+            <y-m> 0.0066</y-m>
+            <z-m> 0.0522</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+	
+	<!-- fuel flow -->
+	<animation>
+		<name>fuel-flow-ppm-l</name>
+		<type>rotate</type>
+		<object-name>needle-fuel-l</object-name>
+		<property>engines/engine[0]/fuel-flow_pph</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>0</dep></entry>
+			<entry><ind>100000</ind><dep>235</dep></entry>
+		</interpolation>
+		<center>
+            <x-m> 0.0062</x-m>
+            <y-m>-0.0781</y-m>
+            <z-m>-0.0672</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<name>fuel-flow-ppm-r</name>
+		<type>rotate</type>
+		<object-name>needle-fuel-r</object-name>
+		<property>engines/engine[1]/fuel-flow_pph</property>
+		<interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>100000</ind>
+                <dep>235</dep>
+            </entry>
+        </interpolation>
+		<center>
+            <x-m> 0.0062</x-m>
+            <y-m>-0.0237</y-m>
+            <z-m>-0.0670</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+
+
+
+	<!-- oil pressure -->
+	<animation>
+		<name>oil-pressure-psi-l</name>
+		<type>rotate</type>
+		<object-name>needle-oil-l</object-name>
+		<property>engines/engine[0]/oil-pressure-psi</property>
+		<interpolation>
+			<entry><ind>0.0000</ind><dep>0</dep></entry>
+			<entry><ind>100</ind><dep>320</dep></entry>
+		</interpolation>
+		<center>
+            <x-m> 0.0059</x-m>
+            <y-m> 0.0538</y-m>
+            <z-m>-0.0044</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<name>oil-pressure-psi-r</name>
+		<type>rotate</type>
+		<object-name>needle-oil-r</object-name>
+        <property>engines/engine[1]/oil-pressure-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0.0000</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>320</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m> 0.0059</x-m>
+            <y-m> 0.0826</y-m>
+            <z-m>-0.0044</z-m>
+        </center>
+        <axis>
+		<x>-1</x></axis>
+	</animation>
+
+
+
+	<animation>
+		<name>nozl-l</name>
+		<type>rotate</type>
+		<object-name>needle-nozl-l</object-name>
+		<property>engines/engine[0]/nozzle-pos-norm</property>
+        <factor>235</factor>
+        <center>
+            <x-m> 0.0098</x-m>
+            <y-m>-0.0780</y-m>
+            <z-m>-0.1269</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+	<animation>
+		<name>nozl-r</name>
+		<type>rotate</type>
+		<object-name>needle-nozl-r</object-name>
+		<property>engines/engine[1]/nozzle-pos-norm</property>
+        <factor>235</factor>
+		<center>
+            <x-m> 0.0098</x-m>
+            <y-m>-0.0273</y-m>
+            <z-m>-0.1275</z-m>
+        </center>
+		<axis><x>-1</x></axis>
+	</animation>
+
+    <animation>
+        <name>hyd-1</name>
+        <type>rotate</type>
+        <object-name>needle-hyd-1</object-name>
+        <property>fdm/jsbsim/systems/hydraulics/combined-system-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>4000</ind>
+                <dep>320</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m> 0.0059</x-m>
+            <y-m> 0.0489</y-m>
+            <z-m> 0.0637</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+    <animation>
+        <name>hyd-1</name>
+        <type>rotate</type>
+        <object-name>needle-hyd-2</object-name>
+        <property>fdm/jsbsim/systems/hydraulics/flight-system-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>4000</ind>
+                <dep>320</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m> 0.0059</x-m>
+            <y-m> 0.0820</y-m>
+            <z-m> 0.0647</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+    <animation>
+        <name>hyd-3</name>
+        <type>rotate</type>
+        <object-name>needle-hyd-3</object-name>
+        <property>fdm/jsbsim/systems/hydraulics/combined-system-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>4000</ind>
+                <dep>320</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m> 0.0093</x-m>
+            <y-m> 0.0673</y-m>
+            <z-m> 0.0279</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+    <!-- lighting -->
+
+	<animation> 
+		<object-name>mount</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.45</red>
+			<green>0.22</green>
+			<blue>0.12</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>face</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.50</red>
+			<green>0.25</green>
+			<blue>0.14</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>needles</object-name>
+		<type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.70</red>
+			<green>0.35</green>
+			<blue>0.15</blue>
+		</emission>
+	</animation>
+
+
+
+	<!-- *** LoD *** -->
+	<animation> 
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>5</max-m>
+	</animation>
+
+</PropertyList>
