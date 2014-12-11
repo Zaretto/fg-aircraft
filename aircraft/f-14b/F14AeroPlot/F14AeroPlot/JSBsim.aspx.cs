@@ -200,11 +200,15 @@ namespace F14AeroPlot
                         writer.Write("    <function name=\"aero/coefficients/C{0}\">\n", aero_axis.Key);
                         //writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
                         writer.Write("      <sum>\n");
-                        foreach (var coeff in aero_axis)
+                        foreach (var coeff in aero_axis.Where(xx=>!xx.Value.IsFactor))
                         {
                             writer.Write("          <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
                         }
                         writer.Write("       </sum>\n");
+                        foreach (var coeff in aero_axis.Where(xx=>xx.Value.IsFactor))
+                        {
+                            writer.Write("        <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
+                        }
                         writer.Write("    </function>\n");
                     }
                 writer.Write("  <axis name=\"{0}\">\n", aero_axis.Key);
