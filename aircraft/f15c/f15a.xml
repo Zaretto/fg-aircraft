@@ -436,7 +436,6 @@
     <flight_control name="FCS F15">
 
         <property>fcs/hook-engage</property>
-        <property>systems/hook/tailhook-cmd-norm</property>
         <property>fcs/flap-cmd-sum</property>
         <property>fcs/roll-trim-sas-cmd-norm</property>
 
@@ -704,7 +703,6 @@
         <property value="0">fcs/roll-sas-enable</property>
         <property value="0">fcs/external-tanks-fitted</property>
         <property value="0">fcs/aim-fitted</property>
-        <property value="0">fcs/slat-cmd</property>
         <channel name="Yaw">
 
             <!-- yaw damper only active when in range alpha +/10 deg -->
@@ -869,33 +867,6 @@
                 <output>fcs/flap-total-dmd</output>
             </switch>
 
-            <switch name="fcs/slat-total-dmd">
-                <default value="0"/>
-                <test value="fcs/slat-total-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-
-                <test value="1">
-                    fcs/flap-total-dmd ge 0.5
-                    systems/hydraulics/combined-system-pressure ne 0
-                </test>
-
-                <test value="fcs/slat-cmd">
-                    fcs/slat-cmd ne 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                </test>
-                <test value="systems/cadc/manuv-slat-extension-cmd">
-                    systems/cadc/manuv-slat-extension-cmd ne 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                </test>
-                <clipto>
-                    <min> 0 </min>
-                    <max>  1 </max>
-                </clipto>
-                <output>fcs/slat-total-dmd</output>
-            </switch>
-
-
             <kinematic name="Flaps Control">
                 <input>fcs/flap-total-dmd</input>
                 <traverse>
@@ -904,16 +875,8 @@
                         <time>      0 </time>
                     </setting>
                     <setting>
-                        <position> 10 </position>
-                        <time>    0.4 </time>
-                    </setting>
-                    <setting>
-                        <position> 25 </position>
-                        <time>    0.6 </time>
-                    </setting>
-                    <setting>
-                        <position> 35 </position>
-                        <time>    0.8 </time>
+                        <position> 30 </position>
+                        <time>    1.9 </time>
                     </setting>
                 </traverse>
                 <output>fcs/flap-pos-deg</output>
@@ -923,7 +886,7 @@
                 <input>fcs/flap-pos-deg</input>
                 <domain>
                     <min>  0 </min>
-                    <max> 35 </max>
+                    <max> 30 </max>
                 </domain>
                 <range>
                     <min> 0 </min>
@@ -1266,16 +1229,6 @@
         <ground_reactions> ON </ground_reactions>
         <fcs> ON </fcs>
         <propulsion> ON </propulsion>
-        <property>fcs/speedbrake-pos-norm</property>
-        <property>fcs/slat-pos-norm-deg</property>
-        <property>fcs/slat-cmd-norm</property>
-        <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
-        <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
-        <property>velocities/mach</property>
-        <property>systems/hook/tailhook-cmd-norm</property>
-        <property>systems/hook/hook-decel-force</property>
-        <property>forces/fbx-prop-lbs</property>
-        <property>gear/tailhook-pos-norm</property>
     </output>
     <!--The roll(L) and yaw(N) moments are due to aerodynamics only, while
    the pitch(Z), includes a thrust term. These are given by.
