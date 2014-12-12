@@ -267,6 +267,10 @@ var quickstart = func() {
     if(total_lbs < 400)
         set_fuel(5500);
 
+        settimer(func { 
+
+    setprop("controls/lighting/panel-norm",1);
+    setprop("controls/lighting/instruments-norm",1);
     setprop("sim/model/f15/controls/hud/on-off",1);
     setprop("sim/model/f15/controls/VDI/on-off",1);
     setprop("sim/model/f15/controls/HSD/on-off",1);
@@ -292,7 +296,7 @@ setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
 setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
 setprop("/fdm/jsbsim/propulsion/set-running",1);
 setprop("/fdm/jsbsim/propulsion/set-running",0);
-
+ }, 0.2);
 }
 
 

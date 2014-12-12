@@ -2,6 +2,14 @@
 
 <PropertyList>
 
+    <fdm>
+        <jsbsim>
+            <metrics>
+                <two-place-canopy type="int">1</two-place-canopy>
+            </metrics>
+        </jsbsim>
+    </fdm>
+
     <sim>
 
         <description>F-15 JSBSim</description>
@@ -19,7 +27,7 @@
             <FDM type="int">5</FDM>
             <systems type="int">3</systems>
             <cockpit type="int">1</cockpit>
-            <model type="int">4</model>
+            <model type="int">1</model>
         </rating>
 
         <flight-model>jsb</flight-model>
@@ -108,13 +116,6 @@
 						<on-off type="bool">0</on-off>
 					</HSD>
 					<pilots-displays>
-						<mode>
-							<aa-bt type="bool">false</aa-bt>
-							<ag-bt type="bool">false</ag-bt>
-							<cruise-bt type="bool">true</cruise-bt>
-							<ldg-bt type="bool">false</ldg-bt>
-							<to-bt type="bool">false</to-bt>
-						</mode>
 						<steer>
 							<awl-bt type="bool">false</awl-bt><!-- 0 -->
 							<dest-bt type="bool">false</dest-bt><!-- 1 -->
@@ -245,6 +246,11 @@
 						<g-max archive="y" type="double">1</g-max>
 						<g-min archive="y" type="double">1</g-min>
 					</g-meter>
+					<hud-mode-aa type="bool">false</hud-mode-aa>
+					<hud-mode-ag type="bool">false</hud-mode-ag>
+					<hud-mode-cruise type="bool">true</hud-mode-cruise>
+					<hud-mode-ldg type="bool">false</hud-mode-ldg>
+					<hud-mode-to type="bool">false</hud-mode-to>
 					<radar-altimeter>
 						<limit-bug type="double">250</limit-bug>
 					</radar-altimeter>

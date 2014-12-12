@@ -357,11 +357,11 @@ aircraft.data.add("sim/model/f15/controls/VDI/brightness",
 	"sim/hud/visibility[1]",
 	"sim/model/f15/controls/hud/on-off",
 	"sim/model/f15/controls/HSD/on-off",
-	"sim/model/f15/controls/pilots-displays/mode/aa-bt",
-	"sim/model/f15/controls/pilots-displays/mode/ag-bt",
-	"sim/model/f15/controls/pilots-displays/mode/cruise-bt",
-	"sim/model/f15/controls/pilots-displays/mode/ldg-bt",
-	"sim/model/f15/controls/pilots-displays/mode/to-bt",
+    "sim/model/f15/instrumentation/hud-mode-aa",
+    "sim/model/f15/instrumentation/hud-mode-ag",
+    "sim/model/f15/instrumentation/hud-mode-to",
+    "sim/model/f15/instrumentation/hud-mode-ldg",
+    "sim/model/f15/instrumentation/hud-mode-crs",
 	"sim/model/f15/controls/pilots-displays/hsd-mode-nav");
 
 var inc_ticker = func {
@@ -774,11 +774,11 @@ setprop("sim/model/f15/lighting/warn-medium-lights-switch/enabled", 1);
 # Where group is the parent node that contains the radio state nodes as children.
 
 sel_displays_main_mode = func(group, which) {
-setprop("sim/model/instrumentation/hud-mode-aa",0);
-setprop("sim/model/instrumentation/hud-mode-ag",0);
-setprop("sim/model/instrumentation/hud-mode-to",0);
-setprop("sim/model/instrumentation/hud-mode-ldg",0);
-setprop("sim/model/instrumentation/hud-mode-crs",0);
+setprop("sim/model/f15/instrumentation/hud-mode-aa",0);
+setprop("sim/model/f15/instrumentation/hud-mode-ag",0);
+setprop("sim/model/f15/instrumentation/hud-mode-to",0);
+setprop("sim/model/f15/instrumentation/hud-mode-ldg",0);
+setprop("sim/model/f15/instrumentation/hud-mode-crs",0);
 print("set mode ",group~which);
 setprop(group~"-"~which,1);
 #	foreach (var n; props.globals.getNode(group).getChildren()) {

@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://jsbsim.sf.net/JSBSimScript.xsl"?>
+<runscript xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://jsbsim.sf.net/JSBSimScript.xsd"
+    name="F-14 Fuel CG movement test">
+    <description>F-14 Fuel CG movement test based on F14-AAD-1 Figure 8-2</description>
+    <!--
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 Figure 8-2
+    -->
+    <use aircraft="f-14a" initialize="qtg/fuel-cg-reset"/>
+    <run start="0.0" end="10" dt="0.033333">
+
+        <event name="Initial setup">
+            <condition> simulation/sim-time-sec le 0.1 </condition>
+            <set name="propulsion/engine[0]/set-running" value="1"/>
+            <set name="propulsion/engine[1]/set-running" value="1"/>
+            <set name="gear/gear-cmd-norm" value="0"/>
+            <set name="gear/gear-pos-norm" value="0"/>
+            <set name="fcs/flap-cmd-norm" value="0"/>
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+            <set name="propulsion/tank[0]/contents-lbs" value="120"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="1320"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+            <set name="propulsion/tank[3]/contents-lbs" value="299"/>
+            <!-- left sump -->
+            <set name="propulsion/tank[5]/contents-lbs" value="299"/>
+            <!-- right sump -->
+            <set name="propulsion/tank[8]/contents-lbs" value="0"/>
+            <!-- left external  -->
+            <set name="propulsion/tank[9]/contents-lbs" value="0"/>
+            <!--  right external -->
+            <set name="propulsion/tank[10]/contents-lbs" value="10"/>
+            <!-- left feed -->
+            <set name="propulsion/tank[11]/contents-lbs" value="10"/>
+            <!-- right feed -->
+            <set name="fcs/throttle-cmd-norm[0]"  value="0"/>
+            <set name="fcs/throttle-cmd-norm[1]"  value="0"/>
+            <set name="fcs/yaw-damper-enable" value="0"/>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+            </notify>
+        </event>
+
+        <event name="AFT 4000 - CG -7">
+            <condition> simulation/sim-time-sec ge 1 </condition>
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+            <set name="propulsion/tank[0]/contents-lbs" value="0"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="4000"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+        </event>
+        <event name="AFT 4000 - cg -7">
+            <condition> simulation/sim-time-sec ge 1.1 </condition>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>inertia/cg-x-in</property>
+            </notify>
+        </event>
+
+        <event name="AFT 2000 - CG -4">
+            <condition> simulation/sim-time-sec ge 1.3 </condition>
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+            <set name="propulsion/tank[0]/contents-lbs" value="0"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="2000"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+        </event>
+        <event name="AFT 2000 - cg -4">
+            <condition> simulation/sim-time-sec ge 1.4 </condition>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>inertia/cg-x-in</property>
+            </notify>
+        </event>
+        <event name="FWD/AFT FULL - CG 0">
+            <condition> simulation/sim-time-sec ge 1.5 </condition>
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+            <set name="propulsion/tank[0]/contents-lbs" value="4406"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="4006"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+        </event>
+        <event name="FWD/AFT FULL - CG 0">
+            <condition> simulation/sim-time-sec ge 1.6 </condition>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>inertia/cg-x-in</property>
+            </notify>
+        </event>
+
+        <event name="FWD +3350 (aft 0) - CG +4">
+            <condition> simulation/sim-time-sec ge 1.7 </condition>
+            <set name="propulsion/tank[0]/contents-lbs" value="3359"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="0"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+        </event>
+        <event name="FWD +3350 (aft 0) - CG +4">
+            <condition> simulation/sim-time-sec ge 1.8 </condition>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>inertia/cg-x-in</property>
+            </notify>
+        </event>
+        <event name="FWD +400 - cg 0">
+            <condition> simulation/sim-time-sec ge 2 </condition>
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+            <set name="propulsion/tank[0]/contents-lbs" value="700"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="300"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+        </event>
+        <event name="FWD +400 - cg 0">
+            <condition> simulation/sim-time-sec ge 2.1 </condition>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>inertia/cg-x-in</property>
+            </notify>
+        </event>
+
+        <event name="FWD +400 (1700lbs)- cg 0">
+            <condition> simulation/sim-time-sec ge 2.3 </condition>
+            <set name="propulsion/tank[6]/contents-lbs" value="0"/>
+            <!-- left wing -->
+            <set name="propulsion/tank[7]/contents-lbs" value="0"/>
+            <!-- right wing -->
+            <set name="propulsion/tank[0]/contents-lbs" value="1700"/>
+            <!-- FWD -->
+            <set name="propulsion/tank[1]/contents-lbs" value="1300"/>
+            <!-- AFT -->
+            <set name="propulsion/tank[2]/contents-lbs" value="0"/>
+            <!-- left beam -->
+            <set name="propulsion/tank[4]/contents-lbs" value="0"/>
+            <!-- right beam -->
+        </event>
+        <event name="FWD +400 (1700lbs)- cg 0">
+            <condition> simulation/sim-time-sec ge 2.4 </condition>
+            <notify>
+                <property>inertia/cg-x-mac-percent</property>
+                <property>inertia/cg-x-in</property>
+            </notify>
+        </event>
+    </run>
+</runscript>
