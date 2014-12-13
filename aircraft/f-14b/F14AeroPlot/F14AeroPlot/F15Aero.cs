@@ -719,15 +719,16 @@ namespace F14AeroPlot
                                      aerodata.Data["CdDBRK"],
                                      aerodata.Data["CdDFM"],
                                      aerodata.Data["CdMach"],
+                                     aerodata.Data["CdTNK"],
                                     /* CFXDE */ });
             aerodata.Compute("SIDE",
                                      new[] { CFYB,
                                      CYDAD,
                                      CYDRD,
                                      CYDTD,
+                                     CYRB,
                                      CFYP,
                                      CFYR,
-                                     aerodata.Data["CdTNK"],
                                      aerodata.Data["CyMach"] 
                                      });
             aerodata.Compute("ROLL",
@@ -758,7 +759,8 @@ namespace F14AeroPlot
                                      CNDTD,
                                      CMNP,
                                      CMNR,
-                                     //aerodata.Data["CNMach"] 
+                                     CNRB,
+                                     aerodata.Data["CNMach"] 
                                      });
             aerodata.Compute("YAW", "(DCNB*BETA)");
             //aero/cadc-control-effectivity-factor
