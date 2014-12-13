@@ -6,7 +6,7 @@
 
     <fileheader>
         <author>Richard Harrison</author>
-        <filecreationdate>2014-12-12</filecreationdate>
+        <filecreationdate>2014-12-13</filecreationdate>
         <version>1.0</version>
         <description>F-15 - basic aerodynamics are the same, except for the two place canopy which is accounted for</description>
         <note>Aircraft origin for measurements is the nose</note>
@@ -15,8 +15,8 @@
             pounds and a c.g. location at 563.1 inches (6:12). To
             convert c.g. location in inches to percent mean aerodynamic
             chord, the following equation is used for all A through D
-            models of the F-15: (measurements in inches)
-            % MAC = (xcg - 508.1 * 100) / 191.33
+            models of the F-15: (measurements in inches).
+            % MAC = (xcg - 408.1 * 100) / 191.33
         </note>
         <limitation></limitation>
         <reference
@@ -72,7 +72,7 @@
 
     <mass_balance>
         <location unit="IN" name="CG">
-            <x>403</x>
+            <x>408</x>
             <y>0</y>
             <z>0</z>
         </location>
@@ -301,7 +301,7 @@
             </thruster>
         </engine>
         <tank type="FUEL">
-            <!--External Tank-->
+            <!--0: External Tank-->
             <location unit="IN">
                 <x>450</x>
                 <y>0</y>
@@ -309,10 +309,10 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <contents unit="LBS">3950</contents>
-            <priority>0</priority>
+            <priority>1</priority>
         </tank>
         <tank type="FUEL">
-            <!--Tank 1-->
+            <!--1: Tank 1-->
             <location unit="IN">
                 <x>422</x>
                 <y>0</y>
@@ -320,21 +320,10 @@
             </location>
             <capacity unit="LBS">3300</capacity>
             <contents unit="LBS">3300</contents>
-            <priority>1</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--Left Wing Tank-->
-            <location unit="IN">
-                <x>450</x>
-                <y>0</y>
-                <z>-7.83</z>
-            </location>
-            <capacity unit="LBS">2750</capacity>
-            <contents unit="LBS">2750</contents>
             <priority>2</priority>
         </tank>
         <tank type="FUEL">
-            <!--Right Wing Tank-->
+            <!--2: Left Wing Tank-->
             <location unit="IN">
                 <x>450</x>
                 <y>0</y>
@@ -345,7 +334,18 @@
             <priority>3</priority>
         </tank>
         <tank type="FUEL">
-            <!--Left Engine Feed-->
+            <!--3: Right Wing Tank-->
+            <location unit="IN">
+                <x>450</x>
+                <y>0</y>
+                <z>-7.83</z>
+            </location>
+            <capacity unit="LBS">2750</capacity>
+            <contents unit="LBS">2750</contents>
+            <priority>4</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--4: Left Engine Feed-->
             <location unit="IN">
                 <x>430</x>
                 <y>0</y>
@@ -353,10 +353,10 @@
             </location>
             <capacity unit="LBS">1200</capacity>
             <contents unit="LBS">1200</contents>
-            <priority>4</priority>
+            <priority>5</priority>
         </tank>
         <tank type="FUEL">
-            <!--Right Engine Feed-->
+            <!--5: Right Engine Feed-->
             <location unit="IN">
                 <x>430</x>
                 <y>0</y>
@@ -364,21 +364,10 @@
             </location>
             <capacity unit="LBS">1500</capacity>
             <contents unit="LBS">1500</contents>
-            <priority>5</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--Left External Wing Tank-->
-            <location unit="IN">
-                <x>450</x>
-                <y>0</y>
-                <z>-7.83</z>
-            </location>
-            <capacity unit="LBS">3950</capacity>
-            <contents unit="LBS">3950</contents>
             <priority>6</priority>
         </tank>
         <tank type="FUEL">
-            <!--Right External Wing Tank-->
+            <!--6: Left External Wing Tank-->
             <location unit="IN">
                 <x>450</x>
                 <y>0</y>
@@ -389,7 +378,18 @@
             <priority>7</priority>
         </tank>
         <tank type="FUEL">
-            <!--Left Feed line-->
+            <!--7: Right External Wing Tank-->
+            <location unit="IN">
+                <x>450</x>
+                <y>0</y>
+                <z>-7.83</z>
+            </location>
+            <capacity unit="LBS">3950</capacity>
+            <contents unit="LBS">3950</contents>
+            <priority>8</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--8: Left Feed line-->
             <location unit="IN">
                 <x>454</x>
                 <y>-38</y>
@@ -397,10 +397,10 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>8</priority>
+            <priority>9</priority>
         </tank>
         <tank type="FUEL">
-            <!--Right Feed line-->
+            <!--9: Right Feed line-->
             <location unit="IN">
                 <x>454</x>
                 <y>38</y>
@@ -408,7 +408,7 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>9</priority>
+            <priority>10</priority>
         </tank>
     </propulsion>
 
@@ -4026,6 +4026,7 @@
                 <value>
                     0.975 <!-- DTFLX3 -->
                 </value>
+                <value>0.3</value>
                 <property>fcs/differential-elevator-pos-deg</property>
                 <property>aero/cadc-control-effectivity-factor</property>
                 <table>
