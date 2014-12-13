@@ -102,8 +102,8 @@
         <name>KIAS tape (cruise, ag)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
             </or>
         </condition>
         <input>
@@ -145,8 +145,8 @@
         <name>KIAS speed (cruise, ag)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
             </or>
         </condition>
         <x>-86</x>
@@ -169,9 +169,9 @@
         <name>KIAS speed, top (to, aa, ldg)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-to</property>
-                <property>sim/model/f15/instrumentation/hud-mode-aa</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
             </or>
         </condition>
         <x>-86</x>
@@ -193,8 +193,8 @@
         <name>Vertical speed (1000 ft per minute) (to, ldg)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-to</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
             </or>
         </condition>
         <input>
@@ -236,8 +236,8 @@
         <name>Altitude tape (cruise, ag)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
             </or>
         </condition>
 
@@ -281,8 +281,8 @@
         <name>Altitude (cruise, ag)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
             </or>
         </condition>
         <input>
@@ -306,8 +306,8 @@
         <name>Altitude, top (to, ldg)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-to</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
             </or>
         </condition>
         <input>
@@ -329,7 +329,7 @@
         <condition>
             <property>/autopilot/route-manager/active</property>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
             </or>
         </condition>
         <input>
@@ -348,7 +348,7 @@
         <condition>
             <property>/autopilot/route-manager/active</property>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
             </or>
         </condition>
         <input>
@@ -367,7 +367,7 @@
     <label>
         <name>Altitude, top (aa)</name>
         <condition>
-            <property>sim/model/f15/instrumentation/hud-mode-aa</property>
+            <property>sim/model/f15/instrumentation/hud/mode-aa</property>
         </condition>
         <input>
             <property>/instrumentation/altimeter/indicated-altitude-ft</property>
@@ -390,9 +390,9 @@
         <condition>
             <and>
                 <or>
-                    <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
-                    <property>sim/model/f15/instrumentation/hud-mode-aa</property>
-                    <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ag</property>
                 </or>
                 <not>
                     <or>
@@ -440,9 +440,9 @@
         <condition>
             <and>
                 <or>
-                    <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
-                    <property>sim/model/f15/instrumentation/hud-mode-aa</property>
-                    <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ag</property>
                 </or>
                 <not>
                     <or>
@@ -486,8 +486,8 @@
         <condition>
             <and>
                 <or>
-                    <property>sim/model/f15/instrumentation/hud-mode-to</property>
-                    <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
                 </or>
                 <not>
                     <or>
@@ -557,8 +557,8 @@
         <condition>
             <and>
                     <or>
-                    <property>sim/model/f15/instrumentation/hud-mode-to</property>
-                    <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
                 </or>
                 <not>
                     <or>
@@ -608,8 +608,8 @@
         <name>Radar Altitude label 'R' (to, ldg)</name>
         <condition>
             <or>
-                <property>sim/model/f15/instrumentation/hud-mode-to</property>
-                <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
             </or>
             <not>
                 <or>
@@ -748,7 +748,7 @@
     <label>
         <name>Target</name>
 		<condition>
-<!--            <property>sim/model/f15/instrumentation/hud-mode-aa</property>-->
+<!--            <property>sim/model/f15/instrumentation/hud/mode-aa</property>-->
             <property>sim/model/f15/instrumentation/radar-awg-9/hud/target-display</property>
 
         </condition>
@@ -768,8 +768,8 @@
             <property>sim/model/f15/lighting/warn-medium-lights-switch/state</property>
 <!--
 			<or>
-				<property>sim/model/f15/instrumentation/hud-mode-to</property>
-				<property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+				<property>sim/model/f15/instrumentation/hud/mode-to</property>
+				<property>sim/model/f15/instrumentation/hud/mode-ldg</property>
 			</or>
 -->
         </condition>
@@ -781,7 +781,7 @@
     <label>
         <name>Target Distance</name>
 		<condition>
-<!--            <property>sim/model/f15/instrumentation/hud-mode-aa</property>-->
+<!--            <property>sim/model/f15/instrumentation/hud/mode-aa</property>-->
             <property>sim/model/f15/instrumentation/radar-awg-9/hud/target-display</property>
         </condition>
         <input>
@@ -848,7 +848,7 @@
     <label>
         <name>Hud mode to</name>
 		<condition>
-            <property>sim/model/f15/instrumentation/hud-mode-to</property>
+            <property>sim/model/f15/instrumentation/hud/mode-to</property>
         </condition>
         <x>-100</x>
         <y>55</y>
@@ -858,7 +858,7 @@
     <label>
         <name>Hud mode crs</name>
         <condition>
-            <property>sim/model/f15/instrumentation/hud-mode-cruise</property>
+            <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
         </condition>
         <x>-100</x>
         <y>55</y>
@@ -868,7 +868,7 @@
     <label>
         <name>Hud mode a/a</name>
 		<condition>
-            <property>sim/model/f15/instrumentation/hud-mode-aa</property>
+            <property>sim/model/f15/instrumentation/hud/mode-aa</property>
         </condition>
         <x>-100</x>
         <y>55</y>
@@ -878,7 +878,7 @@
     <label>
         <name>Hud mode a/g</name>
 		<condition>
-            <property>sim/model/f15/instrumentation/hud-mode-ag</property>
+            <property>sim/model/f15/instrumentation/hud/mode-ag</property>
         </condition>
         <x>-100</x>
         <y>55</y>
@@ -888,7 +888,7 @@
     <label>
         <name>Hud mode ldg</name>
 		<condition>
-            <property>sim/model/f15/instrumentation/hud-mode-ldg</property>
+            <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
         </condition>
         <x>-100</x>
         <y>55</y>
