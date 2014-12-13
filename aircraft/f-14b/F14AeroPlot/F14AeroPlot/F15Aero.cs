@@ -404,6 +404,14 @@ namespace F14AeroPlot
                 Title = "ANALYSIS OF THE EFFECTS OF REMOVING NOSE BALLAST FROM THE F-15 EAGLE",
                 Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/ADA244044.pdf",
             });
+            aerodata.References.Add(new ReferenceDocument
+            {
+                Id = "NASA CR-152391-VOL-1 Figure 3-2 p54",
+                Author = "DR. J. R. LUMMUS, G. T. JOYCE, O C. D. O MALLEY",
+                Date = "October 1980",
+                Title = "ANALYSIS OF WIND TUNNEL TEST RESULTS FOR A 9.39-PER CENT SCALE MODEL OF A VSTOL FIGHTER/ATTACK AIRCRAFT : VOLUME I - STUDY OVERVIEW",
+                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/19820014497.pdf",
+            });
 
             aerodata.Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%";
             aerodata.Notes.Add(@"Aircraft origin for measurements is the nose");
@@ -695,6 +703,7 @@ namespace F14AeroPlot
 
             F15_extra.AddExtra(aerodata);
             aerodata.Data["ClMach"].IsFactor = true;
+            aerodata.Data["CdMach"].IsFactor = true;
             aerodata.Data["CyMach"].IsFactor = true;
             aerodata.Data["CLMach"].IsFactor = true;
             aerodata.Data["CMMach"].IsFactor = true;
