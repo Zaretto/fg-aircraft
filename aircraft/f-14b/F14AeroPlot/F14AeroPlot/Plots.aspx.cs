@@ -38,7 +38,14 @@ namespace F14AeroPlot
   </head><body>",aero.Title);
             writer.Write("<h1>{0}</h1>", aero.Title);
             int PlotLineThickness = 2;
-            foreach (var aero_element in aero.Data)
+
+            foreach (var axis in aero.Data.GroupBy(xx=>xx.Value.Axis))
+            {
+                if (!String.IsNullOrEmpty(axis.Key))
+                    writer.Write("<h2>{0}</h2>", axis.Key);
+                //else
+                //    writer.Write("<h2>Additional</h2>" );
+                foreach (var aero_element in axis)
             {
                 writer.Write("\n");
                 //                if (aero.HasData(aero_element))
@@ -222,6 +229,7 @@ aero_element.Value.IndependentVars[2],
                 }
                 //                writer.Write("</div></p>");
             }
+        }
             var compute = aero.GetCompute();
             foreach (var axis in compute)
             {
