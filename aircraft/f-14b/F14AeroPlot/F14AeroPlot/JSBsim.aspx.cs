@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.DataVisualization.Charting;
 using System.Web.UI.WebControls;
+using System.Xml;
 
 
 namespace F14AeroPlot
@@ -20,14 +23,15 @@ namespace F14AeroPlot
 //            writer.Write("<h1>F14 Aerodynamics</h1>");
             Response.ContentType = "text/xml";
             var aero_only = true;
+            aero_only = false;
             if (!aero_only)
             {
-                writer.Write("<?xml version=\"1.0\"?>");
+                writer.Write("<?xml version=\"1.0\"?>\n");
                 //writer.Write("<?xml-stylesheet type=\"text/xsl\" href=\"http://jsbsim.sourceforge.net/JSBSim.xsl\"?>");
                 //            writer.Write("<?xml-stylesheet type=\"text/xsl\" href=\"http://www.zaretto.com/sites/zaretto.com/files/JSBSim.xsl\"?>");
-                writer.Write("<?xml-stylesheet type=\"text/xsl\" href=\"/JSBSim.xsl\"?>");
+                writer.Write("<?xml-stylesheet type=\"text/xsl\" href=\"/JSBSim.xsl\"?>\n");
 
-                writer.Write("<fdm_config name=\"f-15\" version=\"2.0\" release=\"PRODUCTION\"\n");
+                writer.Write("<fdm_config name=\"{0}\" version=\"2.0\" release=\"DEVELOPMENT\"\n",aero.AircraftType);
                 writer.Write("   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n");
                 writer.Write("   xsi:noNamespaceSchemaLocation=\"http://jsbsim.sourceforge.net/JSBSim.xsd\">\n");
                 writer.Write("\n");
@@ -35,11 +39,9 @@ namespace F14AeroPlot
                 writer.Write("        <author>Richard Harrison</author>\n");
                 writer.Write("        <filecreationdate>{0}</filecreationdate>", DateTime.Now.ToString("yyyy-MM-dd"));
                 writer.Write("        <version>1.0</version>\n");
-                writer.Write("        <description>\n");
-                writer.Write("            Models an F-15\n");
-                writer.Write("        </description>\n");
-                writer.Write("        <note>Aircraft origin for measurements is the nose.</note>\n");
-                writer.Write("        <note></note>\n");
+                writer.Write("        <description>{0}</description>\n",aero.Description);
+                foreach(var n in aero.Notes)
+                    writer.Write("        <note>{0}</note>\n",n);
                 writer.Write("        <limitation></limitation>\n");
                 foreach (var r in aero.References)
                 {
@@ -52,6 +54,79 @@ namespace F14AeroPlot
                     writer.Write("        />\n");
                 }
                 writer.Write("    </fileheader>\n");
+                foreach (var s in aero.Systems)
+                {
+                    writer.Write("<system file=\"{0}\"/>\n", s);
+                }
+
+                {
+                    XmlDocument doc = new XmlDocument();
+                    //    XmlElement el = (XmlElement)doc.AppendChild(doc.CreateElement("Foo"));
+                    //    el.SetAttribute("Bar", "some & value");
+                    //    el.AppendChild(doc.CreateElement("Nested")).InnerText = "data";
+
+                    XmlElement metrics = doc.CreateElement("metrics");
+                    doc.AppendChild(metrics);
+                    metrics.AppendChild(aero.WingArea.CreateXmlNode(doc, "wingarea"));
+                    metrics.AppendChild(aero.wing_incidence.CreateXmlNode(doc, "wing_incidence"));
+                    metrics.AppendChild(aero.wingspan.CreateXmlNode(doc, "wingspan"));
+                    metrics.AppendChild(aero.chord.CreateXmlNode(doc, "chord"));
+                    metrics.AppendChild(aero.EyePoint.CreateXmlNode(doc, "EYEPOINT"));
+                    metrics.AppendChild(aero.VRP.CreateXmlNode(doc, "VRP"));
+                    metrics.AppendChild(aero.AERORP.CreateXmlNode(doc, "AERORP"));
+                    writer.Write(prettify(doc));
+                }
+                {
+                    XmlDocument doc = new XmlDocument();
+
+                    XmlElement mass = doc.CreateElement("mass_balance");
+                    doc.AppendChild(mass);
+                    mass.AppendChild(aero.CG.CreateXmlNode(doc, "CG"));
+                    mass.AppendChild(aero.IXX.CreateXmlNode(doc, "ixx"));
+                    mass.AppendChild(aero.IYY.CreateXmlNode(doc, "iyy"));
+                    mass.AppendChild(aero.IZZ.CreateXmlNode(doc, "izz"));
+                    mass.AppendChild(aero.IXZ.CreateXmlNode(doc, "ixz"));
+                    mass.AppendChild(aero.EmptyWeight.CreateXmlNode(doc, "emptywt"));
+                    writer.Write(prettify(doc));
+                }
+                {
+                    XmlDocument doc = new XmlDocument();
+
+                    XmlElement gr = doc.CreateElement("ground_reactions");
+                    doc.AppendChild(gr);
+                    foreach (var g in aero.GroundReactions)
+                    {
+                        g.CreateXmlNodes(doc, gr);
+                    }
+                    writer.Write(prettify(doc));
+                }
+                {
+                    XmlDocument doc = new XmlDocument();
+
+                    XmlElement p = doc.CreateElement("propulsion");
+                    doc.AppendChild(p);
+                    foreach (var g in aero.Engines)
+                    {
+                        g.CreateXmlNodes(doc, p);
+                    }
+                    foreach (var g in aero.Tanks.OrderBy(x=>x.Priority))
+                    {
+                        g.CreateXmlNodes(doc, p);
+                    }
+                    writer.Write(prettify(doc));
+                }
+                {
+                    XmlDocument doc = new XmlDocument();
+
+                    XmlElement p = doc.CreateElement("external_reactions");
+                    doc.AppendChild(p);
+                    foreach (var g in aero.ExternalReactions)
+                    {
+                        g.CreateXmlNodes(doc, p);
+                    }
+                    writer.Write(prettify(doc));
+                }
+                writer.Write("<flight_control name=\"FCS\"></flight_control>\n");
                 writer.Write("<aerodynamics>\n");
             }
 //            writer.Write("<pre>\n");
@@ -72,8 +147,15 @@ namespace F14AeroPlot
                         if (aero.Is3d(aero_element))
                         {
 
-                            writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item.Variable);
+                            writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
                             writer.Write("    <description>{0}</description>\n", aerodat_item.Title);
+                            if (aero_element.Components.Any())
+                            {
+                                writer.Write("    <sum>\n");
+                                foreach (var c in aero_element.Components)
+                                    writer.Write("    <property>{0}</property>\n",c);
+                            }
+
                             writer.Write("    <product>\n");
                             OutputExtraIndependentVariables(aero, writer, aero_element);
                             writer.Write("          <table>\n");
@@ -109,6 +191,10 @@ namespace F14AeroPlot
                             }
                             writer.Write("          </table>\n");
                             writer.Write("       </product>\n");
+                            if (aero_element.Components.Any())
+                            {
+                                writer.Write("    </sum>\n");
+                            }
                             writer.Write("    </function>\n");
 
                             //                      writer.Write("<pre>\n");
@@ -119,8 +205,14 @@ namespace F14AeroPlot
                             //                          writer.Write("<h2>{0}</h2>", aero_element);
                             //                          writer.Write("<pre>\n");
 
-                            writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item.Variable);
+                            writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
                             writer.Write("    <description>{0}</description>\n", aerodat_item.Title);
+                            if (aero_element.Components.Any())
+                            {
+                                writer.Write("    <sum>\n");
+                                foreach (var c in aero_element.Components)
+                                    writer.Write("    <property>{0}</property>\n",c);
+                            }
                             writer.Write("    <product>\n");
                             OutputExtraIndependentVariables(aero, writer, aero_element);
                             writer.Write("          <table>\n");
@@ -149,6 +241,10 @@ namespace F14AeroPlot
                             writer.Write("\n            </tableData>\n");
                             writer.Write("          </table>\n");
                             writer.Write("       </product>\n");
+                            if (aero_element.Components.Any())
+                            {
+                                writer.Write("    </sum>\n");
+                            }
                             writer.Write("    </function>\n");
 
                             //                      writer.Write("<pre>\n");
@@ -163,8 +259,14 @@ namespace F14AeroPlot
                                     //                        writer.Write("<h2>{0}</h2>", aero_element);
                                     //                        writer.Write("<pre>\n");
 
-                                    writer.Write("    <function name=\"aero/coefficients/{0}\">\n", aerodat_item.Variable);
+                                    writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
                                     writer.Write("    <description>{0}</description>\n", aero_element.Title);
+                                    if (aero_element.Components.Any())
+                                    {
+                                        writer.Write("    <sum>\n");
+                                        foreach (var c in aero_element.Components)
+                                            writer.Write("    <property>{0}</property>\n",c);
+                                    }
                                     writer.Write("    <product>\n");
                                     OutputExtraIndependentVariables(aero, writer, aero_element);
                                     writer.Write("          <table>\n");
@@ -178,6 +280,10 @@ namespace F14AeroPlot
                                     writer.Write("            </tableData>\n");
                                     writer.Write("          </table>\n");
                                     writer.Write("       </product>\n");
+                                    if (aero_element.Components.Any())
+                                    {
+                                        writer.Write("    </sum>\n");
+                                    }
                                     writer.Write("    </function>\n");
                                     //                        writer.Write("<pre>\n");
                                 }
@@ -229,6 +335,43 @@ namespace F14AeroPlot
 //            writer.Write("</pre>\n");
         }
 
+        private string prettify(XmlDocument doc)
+        {
+            String Result = "";
+
+            MemoryStream mStream = new MemoryStream();
+            XmlTextWriter writer = new XmlTextWriter(mStream, Encoding.Unicode);
+
+            try
+            {
+                writer.Formatting = Formatting.Indented;
+
+                // Write the XML into a formatting XmlTextWriter
+                doc.WriteContentTo(writer);
+                writer.Flush();
+                mStream.Flush();
+
+                // Have to rewind the MemoryStream in order to read
+                // its contents.
+                mStream.Position = 0;
+
+                // Read MemoryStream contents into a StreamReader.
+                StreamReader sReader = new StreamReader(mStream);
+
+                // Extract the text from the StreamReader.
+                String FormattedXML = sReader.ReadToEnd();
+
+                Result = FormattedXML;
+            }
+            catch (XmlException)
+            {
+            }
+
+            mStream.Close();
+            writer.Close();
+
+            return Result+"\n\n";
+        }
         private object FormatIntValue(double p, int np)
         {
             if (p < 0)

@@ -50,7 +50,7 @@ namespace F14AeroPlot
                         var table_data_element = aero_element.Value.data.GroupBy(xx => xx.iv3).Select(xx => new { Key = xx.Key, Values = xx });
                         foreach (var table in table_data_element)
                         {
-                            string base_name = String.Format(ChartFileNamePrefix + "_{0}_{1}.png", aero_element.Key, table.Key);
+                            string base_name = String.Format(ChartFileNamePrefix + "_{0}_{1}.png", aero_element.Key, table.Key).AsValidFilename();
                             System.Web.UI.DataVisualization.Charting.Chart chart = new System.Web.UI.DataVisualization.Charting.Chart();
                             chart.Width = ChartWidth * 3;
                             chart.Height = ChartHeight * 3;
@@ -116,7 +116,7 @@ aero_element.Value.IndependentVars[2],
                     }
                     else if (aero_element.Value.IndependentVars.Count == 2)
                     {
-                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key);
+                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key).AsValidFilename();
 
                         var aero_data_element = aero_element.Value.data.GroupBy(xx => xx.iv2).Select(xx => new { Key = xx.Key, Values = xx });
                         System.Web.UI.DataVisualization.Charting.Chart chart = new System.Web.UI.DataVisualization.Charting.Chart();
@@ -176,7 +176,7 @@ aero_element.Value.IndependentVars[2],
                     }
                     else if (aero_element.Value.IndependentVars.Count == 1)
                     {
-                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key);
+                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key).AsValidFilename();
 
                         var aero_data_element = aero_element.Value.data.Select(xx => new { Key = xx.iv1, Value = xx.Value });
                         if (aero_data_element != null)
