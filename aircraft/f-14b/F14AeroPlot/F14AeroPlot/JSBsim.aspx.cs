@@ -299,29 +299,29 @@ namespace F14AeroPlot
                 }
 
             }
-            foreach (var aero_axis in aero.Data.Where(xx=>!string.IsNullOrEmpty(xx.Value.Axis)).GroupBy(xx => xx.Value.Axis))
+            foreach (var aero_axis in aero.Data.Where(xx => !string.IsNullOrEmpty(xx.Value.Axis)).GroupBy(xx => xx.Value.Axis))
             {
-                    if (!String.IsNullOrEmpty(aero_axis.Key) )
+                if (!String.IsNullOrEmpty(aero_axis.Key))
+                {
+                    writer.Write("    <function name=\"aero/coefficients/C{0}\">\n", aero_axis.Key);
+                    //writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
+                    writer.Write("      <sum>\n");
+                    foreach (var coeff in aero_axis.Where(xx => !xx.Value.IsFactor))
                     {
-                        writer.Write("    <function name=\"aero/coefficients/C{0}\">\n", aero_axis.Key);
-                        //writer.Write("    <description>{0}</description>\n", aero.GetDescription(aerodat_item));
-                        writer.Write("      <sum>\n");
-                        foreach (var coeff in aero_axis.Where(xx=>!xx.Value.IsFactor))
-                        {
-                            writer.Write("          <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
-                        }
-                        writer.Write("       </sum>\n");
-                        foreach (var coeff in aero_axis.Where(xx=>xx.Value.IsFactor))
-                        {
-                            writer.Write("        <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
-                        }
-                        writer.Write("    </function>\n");
+                        writer.Write("          <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
                     }
+                    writer.Write("       </sum>\n");
+                    writer.Write("    </function>\n");
+                }
                 writer.Write("  <axis name=\"{0}\">\n", aero_axis.Key);
                 writer.Write("    <function name=\"aero/force/{0}\">\n", aero_axis.Key);
                 //writer.Write("    <description>{0} {1}</description>\n", aero_axis.Key, Char.IsLower(coeff.Substring(1,1).First()) ? "Force" : "Moment");
                 writer.Write("    <product>\n");
                 output_denormalisation(writer, aero_axis.Key);
+                foreach (var coeff in aero_axis.Where(xx => xx.Value.IsFactor))
+                {
+                    writer.Write("        <property>aero/coefficients/{0}</property>\n", aero.Lookup(coeff.Value.Variable));
+                }
                 writer.Write("       </product>\n");
                 writer.Write("    </function>\n");
 
