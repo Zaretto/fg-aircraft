@@ -7,8 +7,9 @@
                 <title>
                     <xsl:value-of select="@name"/>
                 </title>
+                <link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css' rel='stylesheet'/>
             </head>
-            <body style="font-family:Arial;font-size:90%">
+            <body >
                 <a name="top"/>
                 <font face="Arial" size="3" color="224488">
                     <b>
@@ -16,15 +17,14 @@
                     </b>
                 </font>
                 <br/>
-                <font face="Arial" size="2">Configuration File Version: <xsl:value-of
-                        select="@version"/></font>
+                <font>Configuration File Version: <xsl:value-of select="@version"/></font>
                 <br/>
-                <font face="Arial" size="2">Release level: <xsl:value-of select="@release"/></font>
+                <font>Release level: <xsl:value-of select="@release"/></font>
                 <br/>
                 <xsl:if test="fileheader/license/licenseName">
                     <xsl:if test="fileheader/license/licenseURL">
                         <xsl:variable name="licenseURL" select="fileheader/license/licenseURL"/>
-                        <font face="Arial" size="2">License: <a href="{$licenseURL}">
+                        <font>License: <a href="{$licenseURL}">
                                 <xsl:value-of select="fileheader/license/licenseName"/>
                             </a>
                         </font>
@@ -32,7 +32,7 @@
                     </xsl:if>
                 </xsl:if>
                 <hr width="100%"/>
-                <font face="Arial" size="2">
+                <font>
                     <xsl:if test="fileheader">[<a href="#fileheader">File Information</a>] </xsl:if>
                     <xsl:if test="metrics">[<a href="#metrics">Metrics</a>] </xsl:if>
                     <xsl:if test="mass_balance">[<a href="#massbalance">Mass and Balance</a>] </xsl:if>
@@ -65,8 +65,7 @@
                         <!-- FILEHEADER -->
                         <a name="fileheader"/>
                         <tr bgcolor="EEEEEE">
-                            <table width="100%" bgcolor="EEEEEE" cellpadding="0" cellspacing="0"
-                                style="font-family:arial;font-size:90%">
+                            <table width="100%" bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="4">
                                         <b>FILE INFORMATION</b>
@@ -188,7 +187,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -198,7 +197,7 @@
                         <!-- METRICS -->
                         <a name="metrics"/>
                         <tr bgcolor="DDEEFF">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -350,7 +349,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -360,7 +359,7 @@
                         <!-- MASS and BALANCE -->
                         <a name="massbalance"/>
                         <tr bgcolor="DDEEFF">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -504,7 +503,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -514,7 +513,7 @@
                         <!-- GROUND REACTIONS -->
                         <a name="groundreactions"/>
                         <tr bgcolor="DDEEFF">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%"
                                 bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -526,57 +525,72 @@
                                         <hr size="1"/>
                                     </td>
                                 </tr>
+                                    <tr>
+                                <th>Name</th>
+                                <th>Contact Point</th>
+                                <th>Position</th>
+                                <th>Static friction coefficient</th>
+                            <th>Dynamic friction coefficient</th>
+                            <th>Rolling friction coefficient</th>
+                            <th>Spring constant</th>
+                                <th>Damping constant</th>
+                                <th>Maximum steering angle</th>
+                                <th>Brake group</th>
+                                    </tr>
                                 <xsl:for-each select="ground_reactions/contact">
-                                    <xsl:if test="@type='BOGEY'">
                                         <tr>
-                                            <td valign="top">Bogey: <xsl:value-of select="@name"/>
+                                            <td>
+                                                <xsl:value-of select="@type"/>
                                             </td>
                                             <td>
-                                                <u>Position <xsl:if test="location/@unit"
-                                                  >(<xsl:value-of select="location/@unit"
-                                                  />)</xsl:if></u>: <xsl:value-of
-                                                  select="location/x"/>, <xsl:value-of
-                                                  select="location/y"/>, <xsl:value-of
-                                                  select="location/z"/><br/>
-                                                <u>Static friction coefficient</u>: <xsl:value-of
-                                                  select="static_friction"/><br/>
-                                                <u>Dynamic friction coefficient</u>: <xsl:value-of
-                                                  select="dynamic_friction"/><br/>
-                                                <u>Rolling friction coefficient</u>: <xsl:value-of
-                                                  select="rolling_friction"/><br/>
-                                                <u>Spring constant<xsl:if test="spring_coeff/@unit">
-                                                  (<xsl:value-of
-                                                  select="spring_coeff/@unit"
-                                                />)</xsl:if></u>: <xsl:value-of
-                                                  select="spring_coeff"/><br/>
-                                                <u>Damping constant<xsl:if
-                                                  test="damping_coeff/@unit"> (<xsl:value-of
-                                                  select="damping_coeff/@unit"
-                                                />)</xsl:if></u>: <xsl:value-of
-                                                  select="damping_coeff"/><br/>
-                                                <u>Maximum steering angle<xsl:if
-                                                  test="max_steer/@unit"> (<xsl:value-of
-                                                  select="max_steer/@unit"
-                                                />)</xsl:if></u>: <xsl:value-of select="max_steer"
-                                                /><br/>
+                                                <xsl:value-of select="@name"/>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of select="location/x"/>, 
+                                                <xsl:value-of select="location/y"/>, 
+                                                <xsl:value-of select="location/z"/>
+                                                <xsl:if test="location/@unit">
+                                                    (<xsl:value-of select="location/@unit" />)
+                                                </xsl:if>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of select="static_friction"/>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of         select="dynamic_friction"/>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of         select="rolling_friction"/>
+                                            </td>
+                                            <td>
+                                                    <xsl:if test="spring_coeff/@unit"> (<xsl:value-of select="spring_coeff/@unit"/>) </xsl:if>
+                                                    <xsl:value-of select="spring_coeff"/><br/>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of select="damping_coeff"/>
+                                                <br/>
+                                                <xsl:if test="damping_coeff/@unit">
+                                                    (<xsl:value-of select="damping_coeff/@unit" />)
+                                                </xsl:if>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of select="max_steer"/>
+                                                <xsl:if test="max_steer/@unit">
+                                                    (<xsl:value-of select="max_steer/@unit" />)
+                                                </xsl:if>
+                                            </td>
+                                            <td>
+                                                <xsl:value-of select="brake_group" />
+                                                <xsl:if test="brake_group/@unit"> (<xsl:value-of select="brake_group/@unit" />)</xsl:if>
                                             </td>
                                         </tr>
-                                    </xsl:if>
                                 </xsl:for-each>
-                                <xsl:for-each select="ground_reactions/contact">
-                                    <xsl:if test="@type=STRUCTURE">
-                                        <tr>
-                                            <td>Contact point: <xsl:value-of select="@name"/></td>
-                                            <td>Stuff</td>
-                                        </tr>
-                                    </xsl:if>
-                                </xsl:for-each>
-                            </table>
+                        </table>
                         </tr>
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -586,7 +600,7 @@
                         <!-- PROPULSION -->
                         <a name="propulsion"/>
                         <tr bgcolor="DDEEFF">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="DDEEFF" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -601,14 +615,14 @@
                                 <xsl:for-each select="propulsion/engine">
                                     <tr>
                                         <td valign="top"  width="25%" nowrap="nowrap">
-                                        <font face="Arial" size="2">
+                                        <font>
                                             <b>Engine: </b>
                                             [Defined in file: <xsl:value-of select="@file"/>.xml]
                                         </font>
                                         </td>
                                         <td width="10"> </td>
                                     <td align="left">
-                                        <font face="Arial" size="2"/>
+                                        <font/>
                                         <b>Engine location</b>: [<xsl:value-of select="location/x"/>,
                                                                       <xsl:value-of select="location/y"/>,
                                                                       <xsl:value-of select="location/z"/>] (Unit: <xsl:value-of select="location/@unit"/>)<br/>
@@ -622,7 +636,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -634,7 +648,7 @@
                             <xsl:variable name="sysname" select="@name"/>
                             <a name="system_{$sysname}"/>
                             <tr bgcolor="FFDDDD">
-                                <table width="100%" style="font-family:Arial; font-size:90%"
+                                <table width="100%" 
                                     bgcolor="FFDDDD" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td colspan="2">
@@ -649,7 +663,7 @@
                                 <xsl:for-each select="channel">
                                     <tr>
                                         <td valign="top">
-                                            <font face="Arial" size="2">
+                                            <font>
                                                 <b>Channel </b>
                                                 <xsl:value-of select="@name"/>
                                             </font>
@@ -659,7 +673,7 @@
 
                                         <td>
                                             <xsl:for-each select="child::*">
-                                                <font face="Arial" size="2">
+                                                <font>
                                                   <p><b>Component: </b><xsl:value-of
                                                   select="@name"/>, Type:
                                                   <xsl:choose>
@@ -1008,9 +1022,9 @@
                                                           <table>
                                                               <tr>
                                                                   <td nowrap="1" valign="center" align="left">
-                                                                      <font face="Arial" size="2">Proportional gain (kp): <xsl:value-of select="kp"/></font><br/>
-                                                                      <font face="Arial" size="2">Integral gain (ki): <xsl:value-of select="ki"/></font><br/>
-                                                                      <font face="Arial" size="2">Derivative gain (kd): <xsl:value-of select="kd"/></font>
+                                                                      <font>Proportional gain (kp): <xsl:value-of select="kp"/></font><br/>
+                                                                      <font>Integral gain (ki): <xsl:value-of select="ki"/></font><br/>
+                                                                      <font>Derivative gain (kd): <xsl:value-of select="kd"/></font>
                                                                   </td>
                                                               </tr>
                                                           </table>
@@ -1046,7 +1060,7 @@
                             <xsl:variable name="sysfile" select="@file"/>
                             <a name="system_{$sysfile}"/>
                             <tr bgcolor="FFDDDD">
-                                <table width="100%" style="font-family:Arial; font-size:90%"
+                                <table width="100%" 
                                     bgcolor="FFDDDD" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td colspan="2">
@@ -1063,7 +1077,7 @@
                         </xsl:if>
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
                     </xsl:for-each>
@@ -1073,7 +1087,7 @@
                         <xsl:if test="autopilot/@name">
                             <a name="autopilot"/>
                             <tr bgcolor="FFDDDD">
-                                <table width="100%" style="font-family:Arial; font-size:90%"
+                                <table width="100%" 
                                     bgcolor="FFDDDD" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td colspan="2">
@@ -1088,7 +1102,7 @@
                                 <xsl:for-each select="autopilot/channel">
                                     <tr>
                                         <td valign="top">
-                                            <font face="Arial" size="2">
+                                            <font>
                                                 <b>Channel </b>
                                                 <xsl:value-of select="@name"/>
                                             </font>
@@ -1098,7 +1112,7 @@
 
                                         <td>
                                             <xsl:for-each select="child::*">
-                                                <font face="Arial" size="2">
+                                                <font>
                                                   <p><b>Component: </b><xsl:value-of
                                                   select="@name"/>, Type:
                                                   <xsl:choose>
@@ -1447,9 +1461,9 @@
                                                           <table>
                                                               <tr>
                                                                   <td nowrap="1" valign="center" align="left">
-                                                                      <font face="Arial" size="2">Proportional gain (kp): <xsl:value-of select="kp"/></font><br/>
-                                                                      <font face="Arial" size="2">Integral gain (ki): <xsl:value-of select="ki"/></font><br/>
-                                                                      <font face="Arial" size="2">Derivative gain (kd): <xsl:value-of select="kd"/></font>
+                                                                      <font>Proportional gain (kp): <xsl:value-of select="kp"/></font><br/>
+                                                                      <font>Integral gain (ki): <xsl:value-of select="ki"/></font><br/>
+                                                                      <font>Derivative gain (kd): <xsl:value-of select="kd"/></font>
                                                                   </td>
                                                               </tr>
                                                           </table>
@@ -1484,7 +1498,7 @@
                         <xsl:if test="autopilot/@file">
                             <a name="autopilot"/>
                             <tr bgcolor="FFDDDD">
-                                <table width="100%" style="font-family:Arial; font-size:90%"
+                                <table width="100%" 
                                     bgcolor="FFDDDD" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td colspan="2">
@@ -1501,7 +1515,7 @@
                         </xsl:if>
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
                     </xsl:if>
@@ -1510,7 +1524,7 @@
                     <xsl:if test="flight_control">
                         <a name="flightcontrol"/>
                         <tr bgcolor="FFDDDD">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="FFDDDD" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -1525,7 +1539,7 @@
                                 <xsl:for-each select="flight_control/channel">
                                     <tr>
                                         <td valign="top">
-                                            <font face="Arial" size="2">
+                                            <font>
                                                 <b>Channel </b>
                                                 <xsl:value-of select="@name"/>
                                             </font>
@@ -1535,7 +1549,7 @@
 
                                         <td>
                                             <xsl:for-each select="child::*">
-                                                <font face="Arial" size="2">
+                                                <font>
                                                   <p><b>Component: </b><xsl:value-of
                                                   select="@name"/>, Type:
                                                   <xsl:choose>
@@ -1884,9 +1898,9 @@
                                                           <table>
                                                               <tr>
                                                                   <td nowrap="1" valign="center" align="left">
-                                                                      <font face="Arial" size="2">Proportional gain (kp): <xsl:value-of select="kp"/></font><br/>
-                                                                      <font face="Arial" size="2">Integral gain (ki): <xsl:value-of select="ki"/></font><br/>
-                                                                      <font face="Arial" size="2">Derivative gain (kd): <xsl:value-of select="kd"/></font>
+                                                                      <font>Proportional gain (kp): <xsl:value-of select="kp"/></font><br/>
+                                                                      <font>Integral gain (ki): <xsl:value-of select="ki"/></font><br/>
+                                                                      <font>Derivative gain (kd): <xsl:value-of select="kd"/></font>
                                                                   </td>
                                                               </tr>
                                                           </table>
@@ -1919,7 +1933,7 @@
                         </tr>
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
                     </xsl:if>
@@ -1928,7 +1942,7 @@
                     <xsl:if test="aerodynamics">
                         <a name="aerodynamics"/>
                         <tr bgcolor="CCCCCC">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="3">
@@ -1990,7 +2004,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -2000,7 +2014,7 @@
                         <!-- INPUT -->
                         <a name="input"/>
                         <tr bgcolor="BBBBBB">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -2021,7 +2035,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
 
@@ -2031,7 +2045,7 @@
                         <!-- OUTPUT -->
                         <a name="output"/>
                         <tr bgcolor="BBBBBB">
-                            <table width="100%" style="font-family:Arial; font-size:90%"
+                            <table width="100%" 
                                 bgcolor="EEEEEE" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td colspan="2">
@@ -2048,7 +2062,7 @@
 
                         <tr>
                             <br/>
-                            <font face="Arial" size="2">[<a href="#top">Top</a>]</font>
+                            <font>[<a href="#top">Top</a>]</font>
                             <p/>
                         </tr>
                     </xsl:if>
