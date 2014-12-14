@@ -6,7 +6,7 @@
 
     <fileheader>
         <author>Richard Harrison</author>
-        <filecreationdate>2014-12-13</filecreationdate>
+        <filecreationdate>2014-12-14</filecreationdate>
         <version>1.0</version>
         <description>F-15 - basic aerodynamics are the same, except for the two place canopy which is accounted for</description>
         <note>Aircraft origin for measurements is the nose</note>
@@ -71,7 +71,7 @@
             <z>-13</z>
         </location>
         <location unit="IN" name="AERORP">
-            <x>419</x>
+            <x>457.06845</x>
             <y>0</y>
             <z>0</z>
         </location>
@@ -906,7 +906,6 @@
         <function name="aero/coefficients/CMM1">
             <description>BASIC PITCHING MOMENT - CM</description>
             <product>
-                <property>aero/cadc-control-effectivity-factor</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
@@ -1131,7 +1130,6 @@
         <function name="aero/coefficients/CML1">
             <description>BASIC ROLLING MOMENT - CL(BETA)</description>
             <product>
-                <property>aero/cadc-control-effectivity-factor</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -3796,7 +3794,6 @@
             <description>YAWING MOMENT DUE TO AILERON DEFLECTION -CNDA</description>
             <product>
                 <property>fcs/aileron-pos-deg</property>
-                <property>aero/cadc-control-effectivity-factor</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
@@ -3873,7 +3870,6 @@
                     0.89 <!-- DRFLX3 -->
                 </value>
                 <property>aero/coefficients/EPA43</property>
-                <property>aero/cadc-control-effectivity-factor</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -3952,7 +3948,6 @@
                 </value>
                 <value>0.3</value>
                 <property>fcs/differential-elevator-pos-deg</property>
-                <property>aero/cadc-control-effectivity-factor</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>

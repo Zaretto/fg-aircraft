@@ -64,5 +64,19 @@ namespace F14AeroPlot
             return node;
         }
 
+
+        internal Location FromChord(DenominatedAmount chord, double percentX, double percentY, double percentZ )
+        {
+            if (percentX > 1) percentX /= 100;
+            if (percentY > 1) percentY /= 100;
+            if (percentY > 1) percentZ /= 100;
+            if (chord.Unit != Unit)
+                throw new Exception("Must be in same units");
+
+            return new Location(percentX * chord.Amount + X,
+                percentY * chord.Amount + Y,
+                percentZ * chord.Amount + Z, 
+                Unit);
+        }
     }
 }

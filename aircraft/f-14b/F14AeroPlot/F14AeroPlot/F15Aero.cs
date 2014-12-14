@@ -427,8 +427,9 @@ namespace F14AeroPlot
             aerodata.chord = new DenominatedAmount(191.3, "IN");
             aerodata.EyePoint = new Location(197, 0, -3.94, "IN");
             aerodata.VRP = new Location(386, 0, -13, "IN");
-            aerodata.AERORP = new Location(419, 0, 0, "IN");
             aerodata.CG = new Location(408, 0, 0, "IN");
+            aerodata.AERORP = aerodata.CG.FromChord(aerodata.chord, 25.65,0,0);
+
             aerodata.IXX = new DenominatedAmount(28700, "SLUG*FT2");
             aerodata.IYY = new DenominatedAmount(165100, "SLUG*FT2");
             aerodata.IZZ = new DenominatedAmount(187900, "SLUG*FT2");
@@ -623,6 +624,7 @@ namespace F14AeroPlot
 
             var CFYB = aerodata.Add("BASIC SIDE FORCE", "CFYB", "alpha", "beta", "elevator");
             //            CFYB.AddFactor("EPA02L");
+            //aerodata.Surfaces.Add(CFYB);
 
             var CFYP = aerodata.Add("SIDE FORCE DUE TO ROLL RATE (CYP)", "CFYP", "alpha");
             CFYP.AddFactor("PB");
@@ -764,11 +766,11 @@ namespace F14AeroPlot
                                      });
             aerodata.Compute("YAW", "(DCNB*BETA)");
             //aero/cadc-control-effectivity-factor
-            CNDAD.AddFactor("CEF");
-            CNDRDr.AddFactor("CEF");
-            CNDTD.AddFactor("CEF");
-            CMM1.AddFactor("CEF");
-            CML1.AddFactor("CEF");
+            //CNDAD.AddFactor("CEF");
+            //CNDRDr.AddFactor("CEF");
+            //CNDTD.AddFactor("CEF");
+            //CMM1.AddFactor("CEF");
+            //CML1.AddFactor("CEF");
             var DTOR = 180.0 / Math.PI;
             var DEGRAD = DTOR;
 
