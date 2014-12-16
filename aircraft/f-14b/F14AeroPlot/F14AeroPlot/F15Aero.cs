@@ -1208,7 +1208,7 @@ namespace F14AeroPlot
                         //(20725000.34643054 * Math.Pow(RAL, 8)) - (27829700.53333645 * Math.Pow(RAL, 9)));
                     }
                     else if (A < 12)
-                        CMMQ.Add(alpha, F1 * R2 + F2 * R2);
+                        CMMQ.Add(alpha, F1 * R1 + F2 * R2);
                     else if (A < 40)
                         CMMQ.Add(alpha, F2);
                     else if (A < 45)
@@ -1292,6 +1292,7 @@ namespace F14AeroPlot
 
         private static int inc(int alpha)
         {
+//            return alpha + 2;
             if (alpha <= -10) return alpha + 1;
             if (alpha >= 35) return alpha + 5;
             return alpha + 1;
@@ -1299,9 +1300,10 @@ namespace F14AeroPlot
 
         private static int incbeta(int beta)
         {
-            if (beta <= -10) return beta + 10;
-            if (beta >= 10) return beta + 10;
-            return beta + 5;
+//            return beta + 2;
+            if (beta <= -10) return beta + 4;
+            if (beta >= 10) return beta + 4;
+            return beta + 1;
         }
 
 
