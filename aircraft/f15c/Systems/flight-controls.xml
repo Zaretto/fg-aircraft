@@ -26,8 +26,14 @@
                 <min> -0.57895 </min>
                 <max>  0.2105 </max>
             </range>
-            <output>fcs/elevator-pos-demand</output>
+            <output>fcs/elevator-pos-raw-demand</output>
         </aerosurface_scale>
+
+        <pure_gain name="Elevator Control">
+            <input>fcs/elevator-pos-raw-demand</input>
+            <gain>aero/cadc-control-effectivity-factor</gain>
+            <output>fcs/elevator-pos-demand</output>
+        </pure_gain >
 
         <!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
         <kinematic name="elevator position">
@@ -35,7 +41,7 @@
             <traverse>
                 <setting>
                     <position>-1</position>
-                    <time>1.75</time>
+                    <time>0.9</time>
                 </setting>
                 <setting>
                     <position>1</position>
@@ -46,8 +52,13 @@
             <output>fcs/elevator-pos-rad</output>
         </kinematic>
 
-        <aerosurface_scale name="Differential elevator">
+        <pure_gain name="fcs/differential-elevator-pos-norm">
             <input>fcs/roll-trim-sum</input>
+            <gain>0.3</gain>
+        </pure_gain>
+
+        <aerosurface_scale name="fcs/differential-elevator-pos-deg">
+            <input>fcs/differential-elevator-pos-norm</input>
             <domain>
                 <min>  -1 </min>
                 <max>   1 </max>
@@ -56,34 +67,7 @@
                 <min> -6 </min>
                 <max>  6 </max>
             </range>
-            <gain>0.3</gain>
-            <output>fcs/differential-elevator-pos-deg</output>
         </aerosurface_scale>
-
-        <aerosurface_scale name="Differential elevator">
-            <input>fcs/roll-trim-sum</input>
-            <domain>
-                <min>  -1 </min>
-                <max>   1 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <gain>0.3</gain>
-            <output>fcs/differential-elevator-pos-norm</output>
-        </aerosurface_scale>
-
-        <summer name="Left elevator normalization">
-            <input>fcs/elevator-pos-deg</input>
-            <input>fcs/left-aileron-pos-deg</input>
-            <output>fcs/left-elevator-pos-deg</output>
-        </summer>
-        <summer name="Right elevator normalization">
-            <input>fcs/elevator-pos-deg</input>
-            <input>-fcs/right-aileron-pos-deg</input>
-            <output>fcs/right-elevator-pos-deg</output>
-        </summer>
 
         <aerosurface_scale name="elevator normalization">
             <input>fcs/elevator-pos-rad</input>
@@ -102,7 +86,7 @@
 
     <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
     <channel name="Roll">
-        <summer name="Roll Trim Sum">
+        <summer name="fcs/roll-trim-sum-raw">
             <input>fcs/aileron-cmd-norm</input>
             <input>fcs/roll-trim-cmd-norm</input>
             <input>fcs/roll-trim-sas-cmd-norm</input>
@@ -112,6 +96,11 @@
                 <max>  1 </max>
             </clipto>
         </summer>
+
+        <pure_gain name="fcs/roll-trim-sum">
+            <input>fcs/roll-trim-sum-raw</input>
+            <gain>aero/cadc-control-effectivity-factor</gain>
+        </pure_gain >
 
         <switch name="fcs/roll-trim-actuator">
             <default value="fcs/roll-trim-sum"/>
@@ -176,17 +165,16 @@
             <input>fcs/roll-trim-actuator</input>
             <range>
                 <min> -20 </min>
-                <max>  20</max>
+                <max>  20 </max>
             </range>
             <output>fcs/aileron-pos-deg</output>
         </aerosurface_scale>
 
-
         <aerosurface_scale name="aileron normalization">
             <input>fcs/aileron-pos-rad</input>
             <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
+                <min> -0.34906585 </min>
+                <max>  0.34906585 </max>
             </domain>
             <range>
                 <min> -1 </min>
@@ -201,7 +189,7 @@
         <!-- rudder limits +/-30deg 40 deg/sec-->
         <!-- stabilizer limits +/7deg 30 deg/sec-->
 
-        <summer name="Rudder Command Sum">
+        <summer name="fcs/rudder-command-raw-sum">
             <input>fcs/rudder-cmd-norm</input>
             <input>fcs/yaw-trim-cmd-norm</input>
             <clipto>
@@ -209,6 +197,10 @@
                 <max>  1 </max>
             </clipto>
         </summer>
+        <pure_gain name="fcs/rudder-command-sum">
+            <input>fcs/rudder-command-raw-sum</input>
+            <gain>aero/cadc-control-effectivity-factor</gain>
+        </pure_gain >
 
         <summer name="Rudder Sum">
             <input>fcs/rudder-command-sum</input>
