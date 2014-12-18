@@ -149,6 +149,119 @@
             </greater-than>
         </condition>
     </animation>
+	<animation>
+		<type>translate</type>
+		<object-name>low fwd oleo</object-name>
+		<object-name>Nose wheel</object-name>
+		<object-name>Cylinder</object-name>
+		<property>gear/gear[0]/compression-norm</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>-0.1</dep></entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>0.6</dep>
+            </entry>
+        </interpolation>
+		<axis>
+			<x>0.098</x>
+			<y>0</y>
+			<z>1.13</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>Main lower oleo</object-name>
+		<object-name>Main  wheel</object-name>
+		<property>gear/gear[1]/compression-norm</property>
+        <offset-m>-0.1</offset-m>
+        <factor></factor>
+		<interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-0.1</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>0.3</dep>
+            </entry>
+        </interpolation>
+		<axis>
+			<x>0.098</x>
+			<y>0</y>
+			<z>1.13</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>translate</type>
+		<object-name>Main lower oleo.001</object-name>
+		<object-name>Main  wheel.001</object-name>
+		<property>gear/gear[2]/compression-norm</property>
+		<interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-0.1</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>0.3</dep>
+            </entry>
+            </interpolation>
+		<axis>
+			<x>0.098</x>
+			<y>0</y>
+			<z>1.13</z>
+		</axis>
+	</animation>
+
+<!-- wheel rotation -->
+	<animation>
+		<type>spin</type>
+		<object-name>Nose wheel</object-name>
+		<property>gear/gear[0]/rollspeed-ms</property>
+		<factor>7.0</factor>
+		<center>
+			<x-m>-3.284</x-m>
+			<y-m>0.0792</y-m>
+			<z-m>-1.6948</z-m>
+		</center>
+		<axis>
+			<x>0.0</x>
+			<y>-1.76</y>
+			<z>0.013</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>spin</type>
+		<object-name>Main  wheel</object-name>
+		<property>gear/gear[1]/rollspeed-ms</property>
+		<factor> -7.0 </factor>
+		<center>
+			<x-m>2.0036</x-m>
+			<y-m>-1.53596</y-m>
+			<z-m>-1.60016</z-m>
+		</center>
+		<axis>
+			<x>-9.5604938271604938271604938271605e-5</x>
+			<y>1.76</y>
+			<z>-0.082</z>
+		</axis>
+	</animation>
+	<animation>
+		<type>spin</type>
+		<object-name>Main  wheel.001</object-name>
+		<property>gear/gear[2]/rollspeed-ms</property>
+		<factor>5.8</factor>
+		<center>
+			<x-m>2.0036</x-m>
+			<y-m>1.58591</y-m>
+			<z-m>-1.60016</z-m>
+		</center>
+		<axis>
+            <x>9.5604938271604938271604938271605e-5</x>
+            <y>1.76</y>
+            <z>0.082</z>
+        </axis>
+	</animation>
 
     <animation>
         <type>rotate</type>
@@ -206,13 +319,13 @@
 
     <animation>
         <type>rotate</type>
-        <object-name>AirBrake</object-name>
+        <object-name>Airbrake</object-name>
         <property>surface-positions/speedbrake-pos-norm</property>
-		<factor>45</factor>
+		<factor>-45</factor>
         <center>
-            <x-m>-0.77961</x-m>
-            <y-m>0.02497</y-m>
-            <z-m>1.22783</z-m>
+            <x-m>-0.7927</x-m>
+            <y-m>0.0206</y-m>
+            <z-m>1.1368</z-m>
         </center>
         <axis>
             <x>0.0</x>
@@ -225,92 +338,110 @@
 
     <animation>
         <type>rotate</type>
-        <object-name>AileronLeft</object-name>
-        <property>sim/multiplay/generic/float[2]</property>
-        <factor>-30</factor>
+        <object-name>StabilatorL</object-name>
+        <object-name>StabilatorR</object-name>
+        <property>surface-positions/elevator-pos-norm</property>
+        <factor>25</factor>
+        <center>
+            <x-m>7.9652</x-m>
+            <y-m>-1.7929</y-m>
+            <z-m>0</z-m>
+        </center>
         <axis>
-            <x1-m>3.2932</x1-m>
-            <y1-m>-1.7576</y1-m>
-            <z1-m>0.4722</z1-m>
-            <x2-m>3.9028</x2-m>
-            <y2-m>-4.6271</y2-m>
-            <z2-m>0.5008</z2-m>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
         </axis>
     </animation>
 
     <animation>
         <type>rotate</type>
-        <object-name>AileronRight</object-name>
+        <object-name>AIleronL</object-name>
         <property>sim/multiplay/generic/float[2]</property>
         <factor>-30</factor>
         <axis>
-            <x1-m>3.5845</x1-m>
-            <y1-m>3.271</y1-m>
-            <z1-m>0.5364</z1-m>
-            <x2-m>4.1659</x2-m>
-            <y2-m>4.6161</y2-m>
-            <z2-m>0.5302</z2-m>
+            <x1-m>5.0335</x1-m>
+            <y1-m>-5.3892</y1-m>
+            <z1-m>0.4772</z1-m>
+            <x2-m>4.4189</x2-m>
+            <y2-m>-3.7767</y2-m>
+            <z2-m>0.5701</z2-m>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>AIleronL.001</object-name>
+        <property>sim/multiplay/generic/float[2]</property>
+        <factor>-30</factor>
+        <axis>
+            <x1-m>5.0335</x1-m>
+            <y1-m>5.4368</y1-m>
+            <z1-m>0.4754</z1-m>
+            <x2-m>4.44085</x2-m>
+            <y2-m>3.8377</y2-m>
+            <z2-m>0.5746</z2-m>
         </axis>
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>LeftFlap</object-name>
+        <object-name>FlapL</object-name>
         <property>surface-positions/flap-pos-norm</property>
         <factor>35</factor>
         <axis>
-            <x1-m>3.4526</x1-m>
-            <y1-m>-3.3104</y1-m>
-            <z1-m>0.05399</z1-m>
-            <x2-m>3.4875</x2-m>
-            <y2-m>-1.7624</y2-m>
-            <z2-m>0.37</z2-m>
+            <x1-m>4.4107</x1-m>
+            <y1-m>-3.7839</y1-m>
+            <z1-m>0.5651</z1-m>
+            <x2-m>4.3970</x2-m>
+            <y2-m>-1.9840</y2-m>
+            <z2-m>0.5725</z2-m>
         </axis>
     </animation>
 
     <animation>
         <type>rotate</type>
-        <object-name>RightFlap</object-name>
+        <object-name>FlapL.001</object-name>
         <property>surface-positions/flap-pos-norm</property>
         <factor>-35</factor>
         <axis>
-            <x1-m>3.5845</x1-m>
-            <y1-m>3.271</y1-m>
-            <z1-m>0.5364</z1-m>
-            <x2-m>3.5480</x2-m>
-            <y2-m>1.7312</y2-m>
-            <z2-m>0.5551</z2-m>
+            <x1-m>4.44085</x1-m>
+            <y1-m>3.8298</y1-m>
+            <z1-m>0.5566</z1-m>
+            <x2-m>4.4111</x2-m>
+            <y2-m>2.02199</y2-m>
+            <z2-m>0.6155</z2-m>
         </axis>
     </animation>
 
     <animation>
         <type>rotate</type>
-        <object-name>RudderLeft</object-name>
+        <object-name>rudder</object-name>
         <property>surface-positions/rudder-pos-norm</property>
         <factor>30</factor>
         <axis>
-            <x1-m>6.20</x1-m>
-            <y1-m>-1.40</y1-m>
-            <z1-m>0.63</z1-m>
-            <x2-m>6.48</x2-m>
-            <y2-m>-1.40</y2-m>
-            <z2-m>1.85</z2-m>
+            <x1-m>7.7720</x1-m>
+            <y1-m>-1.7059</y1-m>
+            <z1-m>2.3325</z1-m>
+            <x2-m>7.3705</x2-m>
+            <y2-m>-1.6659</y2-m>
+            <z2-m>0.7031</z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>rudder.001</object-name>
+        <property>surface-positions/rudder-pos-norm</property>
+        <factor>30</factor>
+        <axis>
+            <x1-m>7.7720</x1-m>
+            <y1-m>1.7596</y1-m>
+            <z1-m>2.3325</z1-m>
+            <x2-m>7.3705</x2-m>
+            <y2-m>1.7928</y2-m>
+            <z2-m>0.7031</z2-m>
         </axis>
     </animation>
 
-    <animation>
-        <type>rotate</type>
-        <object-name>RudderRight</object-name>
-        <property>surface-positions/rudder-pos-norm</property>
-        <factor>30</factor>
-        <axis>
-            <x1-m>6.20</x1-m>
-            <y1-m>1.40</y1-m>
-            <z1-m>0.63</z1-m>
-            <x2-m>6.48</x2-m>
-            <y2-m>1.40</y2-m>
-            <z2-m>1.85</z2-m>
-        </axis>
-    </animation>
     
  <model>
   <name>nozzle</name>
