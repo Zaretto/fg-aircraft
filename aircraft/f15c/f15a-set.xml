@@ -5,7 +5,7 @@
     <fdm>
         <jsbsim>
             <metrics>
-                <two-place-canopy type="int">1</two-place-canopy>
+                <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
 
             <systems>
@@ -57,6 +57,14 @@
         <startup>
             <splash-texture>Aircraft/f15c/f15c-splash.rgb</splash-texture>
         </startup>
+        <systems>
+            <autopilot>
+                <path>Aircraft/f15c/Systems/f-15-AFCS.xml</path>
+            </autopilot>
+            <autopilot>
+                <path>Aircraft/f15c/Systems/canopy.xml</path>
+            </autopilot>
+        </systems>
 
         <sound>
             <path>Aircraft/f15c/f15-sound.xml</path>
@@ -697,12 +705,12 @@
             <maximum-takeoff-mass-lbs>74350</maximum-takeoff-mass-lbs>
         </mass-and-balance>
 
-        <vne>850</vne>
+        <vne>1100</vne>
 
         <max-gear-extension-speed>300</max-gear-extension-speed>
         <max-flap-extension-speed>
             <flaps>0.4857142857142857</flaps>
-            <speed>245</speed>
+            <speed>250</speed>
         </max-flap-extension-speed>
     </limits>
 
@@ -1136,7 +1144,7 @@ else
             <!--<file>Aircraft/f15c/Nasal/weapons.nas</file>-->
             <file>Aircraft/f15c/Nasal/electrics.nas</file>
             <file>Aircraft/f15c/Nasal/instruments.nas</file>
-            <!--<file>Aircraft/f15c/Nasal/afcs.nas</file>-->
+            <file>Aircraft/f15c/Nasal/afcs.nas</file>
             <!--<file>Aircraft/f15c/Nasal/fox2.nas</file>-->
             <file>Aircraft/f15c/Nasal/chronograph.nas</file>
         </aircraft>

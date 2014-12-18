@@ -13,10 +13,10 @@
 # Original f15 : (YASim) APC is for display purposes only 
 #                  (JSBSim) Richard Harrison  (rjh@zaretto.com) APC system in the FDM
 
-var APCengaged = props.globals.getNode("sim/model/f15/systems/apc/engaged");
+var APCengaged = props.globals.getNode("sim/model/f15/systems/apc/engaged",1);
 var engaded = 0;
 var gear_down = props.globals.getNode("controls/gear/gear-down");
-var disengaged_light = props.globals.getNode("sim/model/f15/systems/apc/self-disengaged-light");
+var disengaged_light = props.globals.getNode("sim/model/f15/systems/apc/self-disengaged-light",1);
 var throttle_0 = props.globals.getNode("controls/engines/engine[0]/throttle");
 var throttle_1 = props.globals.getNode("controls/engines/engine[1]/throttle");
 

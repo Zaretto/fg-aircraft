@@ -8,9 +8,9 @@
 
 <system name="CADC">
 
-    <property value="0.006"> systems/afcs/altitude-hold-pid-kp </property>
-    <property value="0.0000028"> systems/afcs/altitude-hold-pid-ki </property>
-    <property value="0.0025"> systems/afcs/altitude-hold-pid-kd </property>
+    <property value="1e-005"> systems/afcs/altitude-hold-pid-kp </property>
+    <property value="1e-006"> systems/afcs/altitude-hold-pid-ki </property>
+    <property value="0.0005"> systems/afcs/altitude-hold-pid-kd </property>
     <property value="1.2"> systems/afcs/altitude-hold-elevator-gain </property>
 
     <property value="2"> systems/afcs/altitude-hold-lag-constant </property>
@@ -89,8 +89,11 @@
                             <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
                             <tableData>
                                 0.00  1.0
-                                1.00  0.6
-                                2.40  0.3
+                                0.20  1.0
+                                0.25  0.7
+                                0.40  0.6
+                                1.00  0.2
+                                2.40  0.1
                             </tableData>
                         </table>
                     </sum>
@@ -235,7 +238,7 @@
                     <independentVar lookup="row">velocities/ve-kts</independentVar>
                     <tableData>
                         30     0.00
-                        60     1.0
+                        60     2.0
                     </tableData>
                 </table>
                 <gain>fcs/yaw-damper-active</gain>
