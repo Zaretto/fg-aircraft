@@ -35,8 +35,7 @@
     <property>fcs/flap-cmd-sum</property>
     <property>fcs/roll-trim-sas-cmd-norm</property>
 
-
-<channel name="Auxiliary">
+    <channel name="Auxiliary">
         <pure_gain name="Pilot G">
             <input>accelerations/n-pilot-z-norm</input>
             <gain>-1</gain>
@@ -238,7 +237,7 @@
                     <independentVar lookup="row">velocities/ve-kts</independentVar>
                     <tableData>
                         30     0.00
-                        60     2.0
+                        60     4.0
                     </tableData>
                 </table>
                 <gain>fcs/yaw-damper-active</gain>
@@ -612,4 +611,54 @@
         </pure_gain>
 
     </channel>
+
+    <channel name="Inlet Control">
+        <fcs_function name="propulsion/inlet/ramp1-position-demand-deg">
+            <function>
+                <product>
+                    <sum>
+                        <table>
+                            <independentVar lookup="row">velocities/mach</independentVar>
+                            <tableData>
+                                0.00    0
+                                0.2     0
+                                0.8     4
+                            </tableData>
+                        </table>
+                        <table>
+                            <independentVar lookup="row">aero/alpha-deg</independentVar>
+                            <tableData>
+                                0    0
+                                30   16
+                            </tableData>
+                        </table>
+                    </sum>
+                </product>
+            </function>
+            <clipto>
+                <min> 0 </min>
+                <max>  16 </max>
+            </clipto>
+        </fcs_function>
+        <switch name="propulsion/inlet/ramp1-position-deg">
+            <description>Inlet outer ramp position</description>
+            <default value="0"/>
+            <test value="propulsion/inlet/ramp1-position-demand-deg" logic="AND">
+                systems/hydraulics/combined-system-pressure ne 0
+                position/aircraft-on-ground eq 0
+            </test>
+            <!-- in air ramps will get pushed up. this is a guess and they may be locked up.-->
+            <test value="0" logic="AND">
+                systems/hydraulics/combined-system-pressure lt 1
+                velocities/ve-kts gt 30
+            </test>
+            <!-- no hydraulics means no engines.-->
+            <test value="16">
+                systems/hydraulics/combined-system-pressure lt 1
+            </test>
+        </switch>
+
+    </channel>
+
+
 </system>
