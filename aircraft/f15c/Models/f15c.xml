@@ -53,9 +53,9 @@
     <model>
         <path>Effects/flammes/flammesG.xml</path>
         <offsets>
-            <x-m>  4.3</x-m>
-            <y-m>   -0.6</y-m>
-            <z-m>   0.25</z-m>
+            <x-m>  6.3</x-m>
+            <y-m>   -0.7</y-m>
+            <z-m>   0.1</z-m>
 
         </offsets>
     </model>
@@ -64,9 +64,9 @@
     <model>
         <path>Effects/flammes/flammesD.xml</path>
         <offsets>
-            <x-m>  4.3</x-m>
-            <y-m>  0.6</y-m>
-            <z-m>  0.25</z-m>
+            <x-m>  6.3</x-m>
+            <y-m>  0.7</y-m>
+            <z-m>  0.1</z-m>
 
         </offsets>
     </model>
@@ -268,11 +268,20 @@
         <object-name>FrontWheel</object-name>
         <object-name>FrontWheelTire</object-name>
         <property>gear/gear[0]/position-norm</property>
-		<interpolation>
-			<entry><ind>0</ind><dep>-110</dep></entry>
-			<entry><ind>0.1</ind><dep>-110</dep></entry>
-			<entry><ind>1</ind><dep>0</dep></entry>
-		</interpolation>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-110</dep>
+            </entry>
+            <entry>
+                <ind>0.1</ind>
+                <dep>-110</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
         <center>
             <x-m>-3.0</x-m>
             <y-m>0.0</y-m>
@@ -284,8 +293,25 @@
             <z>0</z>
         </axis>
     </animation>
+    <!-- inlet ramps-->
+    <animation>
+        <type>rotate</type>
+        <object-name>Intake ramp</object-name>
+        <object-name>IntakeLipL</object-name>
+        <property>fdm/jsbsim/propulsion/inlet/ramp1-position-deg</property>
+        <center>
+            <x-m>-2.06031</x-m>
+            <y-m>0.87825</y-m>
+            <z-m>-0.16711</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-<!--gear -->
+    <!--gear -->
 
     <animation>
         <type>select</type>
@@ -320,6 +346,7 @@
     <animation>
         <type>rotate</type>
         <object-name>Airbrake</object-name>
+        <object-name>AirbrakeInside</object-name>
         <property>surface-positions/speedbrake-pos-norm</property>
 		<factor>-45</factor>
         <center>
@@ -417,7 +444,7 @@
         <type>rotate</type>
         <object-name>rudder</object-name>
         <property>surface-positions/rudder-pos-norm</property>
-        <factor>30</factor>
+        <factor>-30</factor>
         <axis>
             <x1-m>7.7720</x1-m>
             <y1-m>-1.7059</y1-m>
@@ -431,7 +458,7 @@
         <type>rotate</type>
         <object-name>rudder.001</object-name>
         <property>surface-positions/rudder-pos-norm</property>
-        <factor>30</factor>
+        <factor>-30</factor>
         <axis>
             <x1-m>7.7720</x1-m>
             <y1-m>1.7596</y1-m>
