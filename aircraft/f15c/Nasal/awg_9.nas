@@ -71,8 +71,9 @@ var FD_TAN3DEG = 0.052407779283; # tan(3)
 
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
-
+our_ac_name = "f15c";
 	my_radarcorr = radardist.my_maxrange( our_ac_name ); # in kilometers
+#print("ac ",our_ac_name," my_radarcorr ",my_radarcorr);
 	if (our_ac_name == "f15-bs") { we_are_bs = 1; }
 	}
 
@@ -297,13 +298,14 @@ var hud_nearest_tgt = func() {
 		#var u_elev_deg = (90 - nearest_u.get_total_elevation(our_pitch));
 		var u_dev_rad = (90 - nearest_u.get_deviation(our_true_heading)) * D2R;
 		var u_elev_rad = (90 - nearest_u.get_total_elevation(our_pitch)) * D2R;
+#print("nearest_u ",wcs_mode, nearest_u.get_range()," Display", nearest_u.get_display(), "dev ",nearest_u.deviation," ",l_az_fld," ",r_az_fld);
 		if (
 			wcs_mode == "tws-auto"
 			and nearest_u.get_display()
 			and nearest_u.deviation > l_az_fld
 			and nearest_u.deviation < r_az_fld
 		) {
-			var devs = develev_to_devroll(u_dev_rad, u_elev_rad);
+			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
 			var combined_dev_deg = devs[0];
 			var combined_dev_length =  devs[1];
 			var clamped = devs[2];

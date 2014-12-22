@@ -406,7 +406,7 @@ var AIM9 = {
 		if ( me.status == 1 ) {
 			var h_rad = (90 - me.curr_tgt_h) * D2R;
 			var e_rad = (90 - me.curr_tgt_e) * D2R; 
-			var devs = develev_to_devroll(h_rad, e_rad);
+			var devs = aircraft.develev_to_devroll(h_rad, e_rad);
 			var combined_dev_deg = devs[0];
 			var combined_dev_length =  devs[1];
 			var clamped = devs[2];
