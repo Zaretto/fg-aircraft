@@ -613,6 +613,7 @@
     </channel>
 
     <channel name="Inlet Control">
+        <description>Inlet Ramp angle demand. NASA TP-3627, p14 Figure 10</description>
         <fcs_function name="propulsion/inlet/ramp1-position-demand-deg">
             <function>
                 <product>
@@ -628,8 +629,8 @@
                         <table>
                             <independentVar lookup="row">aero/alpha-deg</independentVar>
                             <tableData>
-                                0    0
-                                30   16
+                                0     0
+                                9     16
                             </tableData>
                         </table>
                     </sum>
@@ -637,7 +638,7 @@
             </function>
             <clipto>
                 <min> 0 </min>
-                <max>  16 </max>
+                <max> 16 </max>
             </clipto>
         </fcs_function>
         <switch name="propulsion/inlet/ramp1-position-deg">
@@ -657,6 +658,17 @@
                 systems/hydraulics/combined-system-pressure lt 1
             </test>
         </switch>
+        <aerosurface_scale name="propulsion/inlet/ramp1-position-norm">
+            <input>propulsion/inlet/ramp1-position-deg</input>
+            <domain>
+                <min>  0 </min>
+                <max> 16 </max>
+            </domain>
+            <range>
+                <min>   0 </min>
+                <max>   1 </max>
+            </range>
+        </aerosurface_scale>
 
     </channel>
 

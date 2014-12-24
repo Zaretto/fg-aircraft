@@ -6,7 +6,7 @@
 
     <fileheader>
         <author>Richard Harrison</author>
-        <filecreationdate>2014-12-22</filecreationdate>
+        <filecreationdate>2014-12-24</filecreationdate>
         <version>1.0</version>
         <description>F-15 - basic aerodynamics are the same, except for the two place canopy which is accounted for</description>
         <note>Aircraft origin for measurements is the nose</note>
@@ -45,7 +45,14 @@
             author="DR. J. R. LUMMUS, G. T. JOYCE, O C. D. O MALLEY"
             title="ANALYSIS OF WIND TUNNEL TEST RESULTS FOR A 9.39-PER CENT SCALE MODEL OF A VSTOL FIGHTER/ATTACK AIRCRAFT : VOLUME I - STUDY OVERVIEW"
             date="October 1980"
-            URL="http://www.zaretto.com/sites/zaretto.com/files/F-15-data/19820014497.pdf"
+            URL="http://www.zaretto.com/sites/zaretto.com/files/F-15-data/19810014497.pdf"
+        />
+        <reference
+            refID="NASA TP-3627"
+            author="Frank W. Burcham, Jr., Trindel A. Maine, C. Gordon Fullerton, and Lannie Dean Webb"
+            title="Development and Flight Evaluation of an Emergency Digital Flight Control System Using Only Engine Thrust on an F-15 Airplane"
+            date="September 1996"
+            URL="http://www.zaretto.com/sites/zaretto.com/files/F-15-data/88414main_H-2048.pdf"
         />
     </fileheader>
     <metrics>
@@ -342,7 +349,7 @@
             </location>
             <capacity unit="LBS">2750</capacity>
             <contents unit="LBS">2750</contents>
-            <priority>4</priority>
+            <priority>3</priority>
         </tank>
         <tank type="FUEL">
             <!--4: Left Engine Feed-->
@@ -353,7 +360,7 @@
             </location>
             <capacity unit="LBS">1200</capacity>
             <contents unit="LBS">1200</contents>
-            <priority>5</priority>
+            <priority>4</priority>
         </tank>
         <tank type="FUEL">
             <!--5: Right Engine Feed-->
@@ -364,7 +371,7 @@
             </location>
             <capacity unit="LBS">1500</capacity>
             <contents unit="LBS">1500</contents>
-            <priority>6</priority>
+            <priority>4</priority>
         </tank>
         <tank type="FUEL">
             <!--6: Left External Wing Tank-->
@@ -375,7 +382,7 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <contents unit="LBS">3950</contents>
-            <priority>7</priority>
+            <priority>5</priority>
         </tank>
         <tank type="FUEL">
             <!--7: Right External Wing Tank-->
@@ -386,7 +393,7 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <contents unit="LBS">3950</contents>
-            <priority>8</priority>
+            <priority>5</priority>
         </tank>
         <tank type="FUEL">
             <!--8: Left Feed line-->
@@ -397,7 +404,7 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>9</priority>
+            <priority>6</priority>
         </tank>
         <tank type="FUEL">
             <!--9: Right Feed line-->
@@ -408,7 +415,7 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>10</priority>
+            <priority>6</priority>
         </tank>
     </propulsion>
 
@@ -586,14 +593,14 @@
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
                         -25		 0.02100000
-                        -20		 0.02100000
+                        -20		 0.03100000
                         -15		 0.04140000
                         -5		 0.06500000
                         0		 0.07840000
                         5		 0.06500000
                         15		 0.05140000
-                        25		 0.02100000
-                        40		 0.02100000
+                        35		 0.02100000
+                        40		 0.01880000
                     </tableData>
                 </table>
             </product>
@@ -760,6 +767,22 @@
                 </table>
             </product>
         </function>
+        <function name="aero/coefficients/DCdRamp">
+            <description>Cd increment due to ramps, NASA TP-3627, p14 Figure 10</description>
+            <product>
+                <property>propulsion/inlet/ramp1-position-norm</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <tableData>
+                        -5		-0.00049713
+                        1.25		 0.00100614
+                        7.5		 0.00670196
+                        13.75		 0.01263050
+                        20		 0.01632770
+                    </tableData>
+                </table>
+            </product>
+        </function>
         <function name="aero/coefficients/CFZB">
             <description>BASIC LIFT</description>
             <product>
@@ -897,6 +920,22 @@
                         14		-0.00020000
                         16		-0.00010000
                         18		 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/DClRamp">
+            <description>Cl increment due to ramps, NASA TP-3627, p14 Figure 10</description>
+            <product>
+                <property>propulsion/inlet/ramp1-position-norm</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <tableData>
+                        -5		 0.00005593
+                        1.25		-0.00001055
+                        7.5		 0.00009866
+                        13.75		 0.00062220
+                        20		 0.00125403
                     </tableData>
                 </table>
             </product>
@@ -1142,18 +1181,49 @@
                 </table>
             </product>
         </function>
+        <function name="aero/coefficients/DCMRamp">
+            <description>CM increment due to ramps, NASA TP-3627, p14 Figure 10</description>
+            <product>
+                <property>propulsion/inlet/ramp1-position-norm</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <tableData>
+                        -5		-0.00197787
+                        1.25		 0.00134069
+                        7.5		 0.00981163
+                        13.75		 0.02150840
+                        20		 0.03194620
+                    </tableData>
+                </table>
+            </product>
+        </function>
         <function name="aero/coefficients/CLMach">
             <description>Roll Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
             <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0		 1.00000000
-                        0.2		 1.00000000
-                        0.6		 0.95837601
-                        0.9		 0.50000000
-                        1.1		 1.00000000
-                        2.4		 0.50000000
+                        0.202		 1.25794500
+                        0.306		 1.14121500
+                        0.4		 1.06271780
+                        0.503		 1.02191240
+                        0.608		 1.00000000
+                        0.705		 0.99095090
+                        0.802		 1.00087010
+                        0.901		 1.01070930
+                        0.923		 1.04170840
+                        0.934		 1.07933440
+                        0.945		 1.12959800
+                        1.009		 1.88004830
+                        1.029		 2.02490370
+                        1.048		 2.14446970
+                        1.092		 2.23175260
+                        1.17		 2.26116200
+                        1.603		 2.18576420
+                        1.797		 2.13606970
+                        1.948		 2.08126270
+                        1.999		 2.06086000
+                        2.091		 2.03300270
                     </tableData>
                 </table>
             </product>
@@ -4317,6 +4387,7 @@
                 <property>aero/coefficients/CFZB</property>
                 <property>aero/coefficients/ClDFM</property>
                 <property>aero/coefficients/ClUC</property>
+                <property>aero/coefficients/DClRamp</property>
             </sum>
         </function>
         <axis name="LIFT">
@@ -4336,6 +4407,7 @@
                 <property>aero/coefficients/CdUC</property>
                 <property>aero/coefficients/CdDBRK</property>
                 <property>aero/coefficients/CdDFM</property>
+                <property>aero/coefficients/DCdRamp</property>
             </sum>
         </function>
         <axis name="DRAG">
@@ -4398,6 +4470,7 @@
                 <property>aero/coefficients/DCMAIM</property>
                 <property>aero/coefficients/CMUC</property>
                 <property>aero/coefficients/CMDFM</property>
+                <property>aero/coefficients/DCMRamp</property>
             </sum>
         </function>
         <axis name="PITCH">
@@ -4434,6 +4507,7 @@
             </function>
         </axis>
     </aerodynamics>
+
     <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <simulation> ON </simulation>
         <atmosphere> ON </atmosphere>
