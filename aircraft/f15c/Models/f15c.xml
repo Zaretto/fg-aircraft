@@ -30,9 +30,8 @@
         <path>Effects/smoke/smokeL.xml</path>
         <offsets>
             <x-m>  7.7 </x-m>
-            <y-m>  -0.65</y-m>
-            <z-m> -0.1</z-m>
-
+            <y-m>   -0.7</y-m>
+            <z-m>   0.1</z-m>
         </offsets>
     </model>
 
@@ -41,10 +40,8 @@
         <path>Effects/smoke/smokeR.xml</path>
         <offsets>
             <x-m>  7.7</x-m>
-            <y-m>  0.55</y-m>
-            <z-m> -0.1</z-m>
-
-
+            <y-m>  0.7</y-m>
+            <z-m>  0.1</z-m>
         </offsets>
     </model>
 
@@ -97,8 +94,8 @@
         <path>Effects/trail/trailL.xml</path>
         <offsets>
             <x-m>  7.7 </x-m>
-            <y-m>  -0.65</y-m>
-            <z-m> -0.1</z-m>
+            <y-m>   -0.7</y-m>
+            <z-m>   0.1</z-m>
         </offsets>
     </model>
 
@@ -107,8 +104,8 @@
         <path>Effects/trail/trailR.xml</path>
         <offsets>
             <x-m>  7.7</x-m>
-            <y-m>  0.55</y-m>
-            <z-m> -0.1</z-m>
+            <y-m>  0.7</y-m>
+            <z-m>  0.1</z-m>
         </offsets>
     </model>
 
@@ -361,13 +358,29 @@
         </axis>
     </animation>
     
- <!-- Surfaces -->   
+ <!-- Surfaces -->
 
     <animation>
         <type>rotate</type>
         <object-name>StabilatorL</object-name>
+        <property>sim/multiplay/generic/float[4]</property>
+        <factor>25</factor>
+        <center>
+            <x-m>7.9652</x-m>
+            <y-m>-1.7929</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
         <object-name>StabilatorR</object-name>
-        <property>surface-positions/elevator-pos-norm</property>
+        <property>sim/multiplay/generic/float[5]</property>
         <factor>25</factor>
         <center>
             <x-m>7.9652</x-m>
