@@ -23,22 +23,44 @@
 	</animation>-->
 
 	<!-- Bingo -->
-	<animation>
-		<type>rotate</type>
-		<object-name>bingo-bug</object-name>
+    <animation>
+        <type>rotate</type>
+        <object-name>bingo-bug</object-name>
         <property>sim/model/f15/controls/fuel/bingo</property>
-		<interpolation>
-			<entry><ind>0</ind><dep>-105</dep></entry>
-			<entry><ind>15000</ind><dep>110</dep></entry>
-		</interpolation>
-		<axis>
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-105</dep>
+            </entry>
+            <entry>
+                <ind>15000</ind>
+                <dep>110</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>bingo-knob</object-name>
+        <property>sim/model/f15/controls/fuel/bingo</property>
+        <factor>0.048</factor>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+        <center>
+            <x-m>0.0154</x-m>
+            <y-m>0.0352</y-m>
+            <z-m>0.0144</z-m>
+        </center>
+    </animation>
 
-	<animation>
+    <animation>
 		<type>rotate</type>
 		<object-name>needle</object-name>
         <property>consumables/fuel/total-fuel-lbs</property>
