@@ -17,7 +17,9 @@ hud_alpha.setDoubleValue(0);
 
 var update_hud = func {
 	var v = view.getValue();
-	if (v == "Cockpit View") {
+#	if (v == "Cockpit View" || ) {
+    if (getprop("sim/current-view/internal"))
+    {
 		var h_intens = hud_intens_control.getValue();
 		var h_alpha  = hud_alpha.getValue();
 		var g_alpha  = pilot_g_alpha.getValue();
