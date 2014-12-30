@@ -6,7 +6,7 @@
 
     <fileheader>
         <author>Richard Harrison</author>
-        <filecreationdate>2014-12-24</filecreationdate>
+        <filecreationdate>2014-12-29</filecreationdate>
         <version>1.0</version>
         <description>F-15 - basic aerodynamics are the same, except for the two place canopy which is accounted for</description>
         <note>Aircraft origin for measurements is the nose</note>
@@ -258,12 +258,12 @@
                 <pitch>0</pitch>
                 <yaw>0</yaw>
             </orient>
-            <feed>0</feed>
             <feed>1</feed>
             <feed>2</feed>
             <feed>4</feed>
             <feed>6</feed>
-            <feed>8</feed>
+            <feed>7</feed>
+            <feed>9</feed>
             <thruster file="direct">
                 <location unit="IN">
                     <x>682</x>
@@ -289,11 +289,11 @@
                 <yaw>0</yaw>
             </orient>
             <feed>0</feed>
-            <feed>1</feed>
+            <feed>2</feed>
             <feed>3</feed>
             <feed>5</feed>
             <feed>7</feed>
-            <feed>9</feed>
+            <feed>8</feed>
             <thruster file="direct">
                 <location unit="IN">
                     <x>682</x>
@@ -308,51 +308,7 @@
             </thruster>
         </engine>
         <tank type="FUEL">
-            <!--0: External Tank-->
-            <location unit="IN">
-                <x>450</x>
-                <y>0</y>
-                <z>-7.83</z>
-            </location>
-            <capacity unit="LBS">3950</capacity>
-            <contents unit="LBS">3950</contents>
-            <priority>1</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--1: Tank 1-->
-            <location unit="IN">
-                <x>422</x>
-                <y>0</y>
-                <z>-5.77</z>
-            </location>
-            <capacity unit="LBS">3300</capacity>
-            <contents unit="LBS">3300</contents>
-            <priority>2</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--2: Left Wing Tank-->
-            <location unit="IN">
-                <x>450</x>
-                <y>0</y>
-                <z>-7.83</z>
-            </location>
-            <capacity unit="LBS">2750</capacity>
-            <contents unit="LBS">2750</contents>
-            <priority>3</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--3: Right Wing Tank-->
-            <location unit="IN">
-                <x>450</x>
-                <y>0</y>
-                <z>-7.83</z>
-            </location>
-            <capacity unit="LBS">2750</capacity>
-            <contents unit="LBS">2750</contents>
-            <priority>3</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--4: Left Engine Feed-->
+            <!--0: Left Engine Feed-->
             <location unit="IN">
                 <x>430</x>
                 <y>0</y>
@@ -360,10 +316,10 @@
             </location>
             <capacity unit="LBS">1200</capacity>
             <contents unit="LBS">1200</contents>
-            <priority>4</priority>
+            <priority>10</priority>
         </tank>
         <tank type="FUEL">
-            <!--5: Right Engine Feed-->
+            <!--1: Right Engine Feed-->
             <location unit="IN">
                 <x>430</x>
                 <y>0</y>
@@ -371,10 +327,65 @@
             </location>
             <capacity unit="LBS">1500</capacity>
             <contents unit="LBS">1500</contents>
+            <priority>9</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--2: Tank 1-->
+            <location unit="IN">
+                <x>422</x>
+                <y>0</y>
+                <z>-5.77</z>
+            </location>
+            <capacity unit="LBS">3300</capacity>
+            <contents unit="LBS">3300</contents>
+            <priority>8</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--3: Left Wing Tank-->
+            <location unit="IN">
+                <x>450</x>
+                <y>0</y>
+                <z>-7.83</z>
+            </location>
+            <capacity unit="LBS">2750</capacity>
+            <contents unit="LBS">2750</contents>
+            <priority>7</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--4: Right Wing Tank-->
+            <location unit="IN">
+                <x>450</x>
+                <y>0</y>
+                <z>-7.83</z>
+            </location>
+            <capacity unit="LBS">2750</capacity>
+            <contents unit="LBS">2750</contents>
+            <priority>6</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--5: Left External Wing Tank-->
+            <location unit="IN">
+                <x>450</x>
+                <y>0</y>
+                <z>-7.83</z>
+            </location>
+            <capacity unit="LBS">3950</capacity>
+            <contents unit="LBS">3950</contents>
+            <priority>5</priority>
+        </tank>
+        <tank type="FUEL">
+            <!--6: Right External Wing Tank-->
+            <location unit="IN">
+                <x>450</x>
+                <y>0</y>
+                <z>-7.83</z>
+            </location>
+            <capacity unit="LBS">3950</capacity>
+            <contents unit="LBS">3950</contents>
             <priority>4</priority>
         </tank>
         <tank type="FUEL">
-            <!--6: Left External Wing Tank-->
+            <!--7: External Tank-->
             <location unit="IN">
                 <x>450</x>
                 <y>0</y>
@@ -382,18 +393,7 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <contents unit="LBS">3950</contents>
-            <priority>5</priority>
-        </tank>
-        <tank type="FUEL">
-            <!--7: Right External Wing Tank-->
-            <location unit="IN">
-                <x>450</x>
-                <y>0</y>
-                <z>-7.83</z>
-            </location>
-            <capacity unit="LBS">3950</capacity>
-            <contents unit="LBS">3950</contents>
-            <priority>5</priority>
+            <priority>3</priority>
         </tank>
         <tank type="FUEL">
             <!--8: Left Feed line-->
@@ -404,7 +404,7 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>6</priority>
+            <priority>2</priority>
         </tank>
         <tank type="FUEL">
             <!--9: Right Feed line-->
@@ -415,7 +415,7 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>6</priority>
+            <priority>1</priority>
         </tank>
     </propulsion>
 
@@ -4507,7 +4507,6 @@
             </function>
         </axis>
     </aerodynamics>
-
     <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <simulation> ON </simulation>
         <atmosphere> ON </atmosphere>
