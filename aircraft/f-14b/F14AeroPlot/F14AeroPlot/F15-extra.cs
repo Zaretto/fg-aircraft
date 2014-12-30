@@ -51,46 +51,39 @@ namespace F14AeroPlot
         }
         public static void AddExtra(Aerodata aero)
         {
+            var mach_table = @"0.202	1.2579450
+0.306	1.1412150
+0.400	1.0627178
+0.503	1.0219124
+0.608	1.0000000
+0.705	0.9909509
+0.802	1.0008701
+0.901	1.0107093
+0.923	1.0417084
+0.934	1.0793344
+0.945	1.1295980
+1.009	1.8800483
+1.029	2.0249037
+1.048	2.1444697
+1.092	2.2317526
+1.170	2.2611620
+1.603	2.1857642
+1.797	2.1360697
+1.948	2.0812627
+1.999	2.0608600
+2.091	2.0330027
+";
             var ad = aero.Add("Lift Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4", "ClMach", "mach");
-            ad.data = parse(ad, 1, @"0	1
-                                    0.2	1
-                                    0.6	0.95837601
-                                    0.9	0.5
-                                    1.1	1
-                                    2.4	0.5
-");
+            ad.data = parse(ad, 1, mach_table);
+
             ad = aero.Add("Yaw factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4", "CyMach", "mach");
-            ad.data = parse(ad, 1, @"0	1
-                                    0.2	1
-                                    0.6	0.95837601
-                                    0.9	0.5
-                                    1.1	1
-                                    2.4	0.5
-");
+            ad.data = parse(ad, 1, mach_table);
             ad = aero.Add("Roll Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4", "CLMach", "mach");
-            ad.data = parse(ad, 1, @"0	1
-                                    0.2	1
-                                    0.6	0.95837601
-                                    0.9	0.5
-                                    1.1	1
-                                    2.4	0.5
-");
+            ad.data = parse(ad, 1, mach_table);
             ad = aero.Add("Pitch Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4", "CMMach", "mach");
-            ad.data = parse(ad, 1, @"0	1
-                                    0.2	1
-                                    0.6	0.95837601
-                                    0.9	0.5
-                                    1.1	1
-                                    2.4	0.5
-");
+            ad.data = parse(ad, 1, mach_table);
             ad = aero.Add("Yaw Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4", "CNMach", "mach");
-            ad.data = parse(ad, 1, @"0	1
-                                    0.2	1
-                                    0.6	0.95837601
-                                    0.9	0.5
-                                    1.1	1
-                                    2.4	0.5
-");
+            ad.data = parse(ad, 1, mach_table);
             //            var ad = aero.Add("Lift Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4", "ClMach", "mach", "alpha");
 
             //            ad.data = parse(ad, 2, @"   0.0         0.2         0.6         0.9         1.1         1.3         1.5         1.8         2.1         2.6         3.0
@@ -229,14 +222,14 @@ namespace F14AeroPlot
             ad = aero.Add("Drag due to speedbrakes", "CdDBRK", "alpha");
             ad.AddFactor("fcs/speedbrake-pos-norm");
             ad.data = parse(ad, 1, @"                        -25	0.0210
-                        -20	0.0210
+                        -20	0.0310
                         -15	0.0414
                         -5	0.0650
                         0	0.0784
                         5	0.0650
                         15	0.0514
-                        25	0.0210
-                        40	0.0210");
+                        35	0.0210
+                        40	0.0188");
 
             ad = aero.Add("Drag mach factor (NASA CR-152391-VOL-1 Figure 3-2 p54)", "CdMach", "mach");
             ad.data = parse(ad, 1, @"
@@ -323,6 +316,33 @@ namespace F14AeroPlot
                         95.0	1405.7
                         99.9	1684.7
                        104.0	1684.7");
-        }
+
+            ad = aero.Add("Cd increment due to ramps, NASA TP-3627, p14 Figure 10", "DCdRamp", "alpha");
+            ad.AddFactor("propulsion/inlet/ramp1-position-norm");
+            ad.data = parse(ad, 1, @" -5	-0.000497134
+1.25	0.00100614
+7.5	0.00670196
+13.75	0.0126305
+20	0.0163277
+");
+            ad = aero.Add("CM increment due to ramps, NASA TP-3627, p14 Figure 10", "DCMRamp", "alpha");
+            ad.AddFactor("propulsion/inlet/ramp1-position-norm");
+            ad.data = parse(ad, 1, @"-5	-0.00197787
+1.25	0.00134069
+7.5	0.00981163
+13.75	0.0215084
+20	0.0319462
+");
+            ad = aero.Add("Cl increment due to ramps, NASA TP-3627, p14 Figure 10", "DClRamp", "alpha");
+            ad.AddFactor("propulsion/inlet/ramp1-position-norm");
+            ad.data = parse(ad, 1, @"
+-5	0.000055925
+1.25	-0.000010545
+7.5	0.000098660
+13.75	0.000622195
+20	0.001254030
+");
+
+       }
     }
 }
