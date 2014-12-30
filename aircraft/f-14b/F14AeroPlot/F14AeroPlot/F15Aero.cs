@@ -373,6 +373,7 @@ namespace F14AeroPlot
             aerodata.Systems.Add("f-15-hydraulic");
             aerodata.Systems.Add("f-15-electrics");
             aerodata.Systems.Add("f-15-cadc");
+            aerodata.Systems.Add("f-15-apc");
             aerodata.Systems.Add("hook");
             aerodata.Systems.Add("catapult");
             aerodata.Systems.Add("holdback");
@@ -410,9 +411,17 @@ namespace F14AeroPlot
                 Author = "DR. J. R. LUMMUS, G. T. JOYCE, O C. D. O MALLEY",
                 Date = "October 1980",
                 Title = "ANALYSIS OF WIND TUNNEL TEST RESULTS FOR A 9.39-PER CENT SCALE MODEL OF A VSTOL FIGHTER/ATTACK AIRCRAFT : VOLUME I - STUDY OVERVIEW",
-                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/19820014497.pdf",
+                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/19810014497.pdf",
             });
-
+            aerodata.References.Add(new ReferenceDocument
+            {
+                Id = "NASA TP-3627",
+                Author = "Frank W. Burcham, Jr., Trindel A. Maine, C. Gordon Fullerton, and Lannie Dean Webb",
+                Date = "September 1996",
+                Title = "Development and Flight Evaluation of an Emergency Digital Flight Control System Using Only Engine Thrust on an F-15 Airplane",
+                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/88414main_H-2048.pdf",
+            });
+            
             aerodata.Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%";
             aerodata.Notes.Add(@"Aircraft origin for measurements is the nose");
             aerodata.Notes.Add(@"F-15C in the critical aft c.g. configuration has a weight of 33,467
@@ -426,7 +435,9 @@ namespace F14AeroPlot
             aerodata.wing_incidence = new DenominatedAmount(2, "DEG");
             aerodata.chord = new DenominatedAmount(191.3, "IN");
             aerodata.EyePoint = new Location(197, 0, -3.94, "IN");
-            aerodata.VRP = new Location(386, 0, -13, "IN");
+//            aerodata.VRP = new Location(386, 0, -13, "IN");
+            // model is at CG
+            aerodata.VRP = new Location(0, 0, 0, "IN");
             aerodata.CG = new Location(408, 0, 0, "IN");
             aerodata.AERORP = aerodata.CG.FromChord(aerodata.chord, 25.65,0,0);
 
@@ -439,7 +450,7 @@ namespace F14AeroPlot
             aerodata.GroundReactions.Add(new Gear(aerodata)
             {
                 Name = "NOSE_LG",
-                Location = new Location(197, 0, -78.01, "IN"),
+                Location = new Location(197, 0, -77.6496063, "IN"),
                 MaxSteer = new DenominatedAmount(89, "DEG"),
                 BrakeGroup = "NOSE"
             });
@@ -447,14 +458,14 @@ namespace F14AeroPlot
             aerodata.GroundReactions.Add(new Gear(aerodata)
             {
                 Name = "LEFT_MLG",
-                Location = new Location(451, -98, -82.1, "IN"),
+                Location = new Location(451, -98, -84.3385827, "IN"),
                 MaxSteer = new DenominatedAmount(0, "DEG"),
                 BrakeGroup = "LEFT"
             });
             aerodata.GroundReactions.Add(new Gear(aerodata)
             {
                 Name = "RIGHT_MLG",
-                Location = new Location(451, 98, -82.1, "IN"),
+                Location = new Location(451, 98, -84.3385827, "IN"),
                 MaxSteer = new DenominatedAmount(0, "DEG"),
                 BrakeGroup = "RIGHT"
             }
@@ -522,47 +533,51 @@ namespace F14AeroPlot
                 Location = new Location(682, 12, 0, "IN"),
                 Orient = new Location(0, 0, 0, "DEG"),
             });
-            var t = new Tank("External Tank", 450, 0, -7.83, "IN", 1, 3950, "LBS");
+            Tank t;
+            t = new Tank("Right Feed line", 454, 38, -47, "IN", 1, 10, "LBS");
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Left Feed line", 454, -38, -47, "IN", 2, 10, "LBS");
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+
+            t = new Tank("External Tank", 450, 0, -7.83, "IN", 3, 3950, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Tank 1", 422, 0, -5.77, "IN", 2, 3300, "LBS");
+            t = new Tank("Right External Wing Tank", 450, 0, -7.83, "IN", 4, 3950, "LBS");
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Left External Wing Tank", 450, 0, -7.83, "IN", 5, 3950, "LBS");
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+
+            t = new Tank("Right Wing Tank", 450, 0, -7.83, "IN", 6, 2750, "LBS");
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Left Wing Tank", 450, 0, -7.83, "IN", 7, 2750, "LBS");
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+
+
+            t = new Tank("Tank 1", 422, 0, -5.77, "IN", 8, 3300, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Left Wing Tank", 450, 0, -7.83, "IN", 3, 2750, "LBS");
-            aerodata.AddTank(t);
-            aerodata.Engines[0].AddFeed(t);
-
-            t = new Tank("Right Wing Tank", 450, 0, -7.83, "IN", 4, 2750, "LBS");
+            t = new Tank("Right Engine Feed", 430, 0, -7.83, "IN", 9, 1500, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Left Engine Feed", 430, 0, -7.83, "IN", 5, 1200, "LBS");
+            
+            t = new Tank("Left Engine Feed", 430, 0, -7.83, "IN", 10, 1200, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
             
-            t = new Tank("Right Engine Feed", 430, 0, -7.83, "IN", 6, 1500, "LBS");
-            aerodata.AddTank(t);
-            aerodata.Engines[1].AddFeed(t);
-            
-            t = new Tank("Left External Wing Tank", 450, 0, -7.83, "IN", 7, 3950, "LBS");
-            aerodata.AddTank(t);
-            aerodata.Engines[0].AddFeed(t);
-            
-            t = new Tank("Right External Wing Tank", 450, 0, -7.83, "IN", 8, 3950, "LBS");
-            aerodata.AddTank(t);
-            aerodata.Engines[1].AddFeed(t);
-            
-            t = new Tank("Left Feed line", 454, -38, -47, "IN", 9, 10, "LBS");
-            aerodata.AddTank(t);
-            aerodata.Engines[0].AddFeed(t);
-            
-            t = new Tank("Right Feed line", 454, 38, -47, "IN", 10, 10, "LBS");
-            aerodata.AddTank(t);
-            aerodata.Engines[1].AddFeed(t);
 
             aerodata.ExternalReactions.Add(new ExternalForce
             {
@@ -714,6 +729,7 @@ namespace F14AeroPlot
                                              aerodata.Data["ClUC"],
                                              aerodata.Data["ClDFM"],
                                              aerodata.Data["ClMach"],
+                                             aerodata.Data["DClRamp"],
                                             /* CFZDE */ });
             aerodata.Compute("DRAG",
                                      new[] { CFX,
@@ -722,6 +738,7 @@ namespace F14AeroPlot
                                      aerodata.Data["CdDFM"],
                                      aerodata.Data["CdMach"],
                                      aerodata.Data["CdTNK"],
+                                     aerodata.Data["DCdRamp"],
                                     /* CFXDE */ });
             aerodata.Compute("SIDE",
                                      new[] { CFYB,
@@ -751,7 +768,9 @@ namespace F14AeroPlot
 //                                     aerodata.Data["CMBRK"],
                                      aerodata.Data["CMUC"],
                                      aerodata.Data["CMDFM"],
-                                     aerodata.Data["CMMach"] 
+                                     aerodata.Data["CMMach"] ,
+                                     aerodata.Data["DCMRamp"],
+
                                     });
             aerodata.Compute("YAW",
                                      new[] { CMN1,

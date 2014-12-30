@@ -57,7 +57,7 @@ namespace F14AeroPlot
                         var table_data_element = aero_element.Value.data.GroupBy(xx => xx.iv3).Select(xx => new { Key = xx.Key, Values = xx });
                         foreach (var table in table_data_element)
                         {
-                            string base_name = String.Format(ChartFileNamePrefix + "_{0}_{1}.png", aero_element.Key, table.Key).AsValidFilename();
+                            string base_name = String.Format(ChartFileNamePrefix + "_{0}_{1}_{2}.png", axis.Key, aero_element.Key, table.Key).AsValidFilename();
                             System.Web.UI.DataVisualization.Charting.Chart chart = new System.Web.UI.DataVisualization.Charting.Chart();
                             chart.Width = ChartWidth * 3;
                             chart.Height = ChartHeight * 3;
@@ -123,7 +123,7 @@ aero_element.Value.IndependentVars[2],
                     }
                     else if (aero_element.Value.IndependentVars.Count == 2)
                     {
-                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key).AsValidFilename();
+                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_{1}_{2}.png", axis.Key, aero_element.Key, aero_element.Value.IndependentVars[0]).AsValidFilename();
 
                         var aero_data_element = aero_element.Value.data.GroupBy(xx => xx.iv2).Select(xx => new { Key = xx.Key, Values = xx });
                         System.Web.UI.DataVisualization.Charting.Chart chart = new System.Web.UI.DataVisualization.Charting.Chart();
@@ -183,7 +183,7 @@ aero_element.Value.IndependentVars[2],
                     }
                     else if (aero_element.Value.IndependentVars.Count == 1)
                     {
-                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_alpha.png", aero_element.Key).AsValidFilename();
+                        string base_name = String.Format(ChartFileNamePrefix + "_{0}_{1}_{2}.png", axis.Key, aero_element.Key, aero_element.Value.IndependentVars[0]).AsValidFilename();
 
                         var aero_data_element = aero_element.Value.data.Select(xx => new { Key = xx.iv1, Value = xx.Value });
                         if (aero_data_element != null)
@@ -250,7 +250,96 @@ aero_element.Value.IndependentVars[2],
                 }
                 writer.Write("</ol>");
             }
+            writer.Write("<span class='col-md-6'>");
+            writer.Write("<h2>Mass and balance</h2>");
+            writer.Write("<table class='table'>");
+            writer.Write("<thead>");
+            output_location_table_header(writer);
+            writer.Write("<tr>");
+            output_location(writer, aero.AERORP, "Aerodynamic Reference Point (CoP)");
+            writer.Write("</tr>");
+
+            writer.Write("<tr>");
+            output_location(writer, aero.CG, "Aircraft CG");
+            writer.Write("</tr>");
+            writer.Write("</table>");
+            writer.Write("</span>");
+            writer.Write("<span class='col-md-4'>");
+            writer.Write("<h2>Ground Reactions</h2>");
+            writer.Write("<table class='table'  width='30%'>");
+            output_location_table_header(writer);
+            writer.Write("<tbody>");
+            foreach (var g in aero.GroundReactions)
+            {
+                writer.Write("<tr>");
+                output_location(writer, g.Location, g.Name);
+                writer.Write("</tr>");
+            }
+            writer.Write("</tbody>");
+            writer.Write("</table>");
+            writer.Write("</span>");
+
+            writer.Write("<span class='col-md-6'>");
+            writer.Write("<h2>Propulsion</h2>");
+            writer.Write("<table class='table'  width='30%'>");
+            output_location_table_header(writer, "<th>Feed</th>");
+            writer.Write("<tbody>");
+            foreach (var g in aero.Engines)
+            {
+                writer.Write("<tr>");
+                output_location(writer, g.Location, g.Name);
+                writer.Write("<td>{0}</td>", String.Join(",", g.Feed.Select(xx=>get_tank(aero,xx))));
+                writer.Write("</tr>");
+            }
+            writer.Write("</tbody>");
+            writer.Write("</table>");
+            writer.Write("</span>");
+
+            writer.Write("<span class='col-md-6'>");
+            writer.Write("<h2>Tanks</h2>");
+            writer.Write("<table class='table'  width='30%'>");
+            output_location_table_header(writer, "<th class='col-sm-1'>Capacity</th><th class='col-sm-1'>Id</th><th class='col-sm-1'>Priority</th>");
+            writer.Write("<tbody>");
+            foreach (var g in aero.Tanks)
+            {
+                writer.Write("<tr>");
+                output_location(writer, g.Location, g.Name);
+                writer.Write("<td>{0} {1}</td>", g.Capacity.Amount, g.Capacity.Unit);
+                writer.Write("<td>{0}</td>", g.Id);
+                writer.Write("<td>{0}</td>", g.Priority);
+                writer.Write("</tr>");
+            }
+            writer.Write("</tbody>");
+            writer.Write("</table>");
+            writer.Write("</span>");
+
             writer.Write("</body></html>");
+        }
+
+        private string get_tank(F15Aero aero, int xx)
+        {
+            if (xx < aero.Tanks.Count)
+                return string.Format("{0} [{1}]", aero.Tanks[xx].Name, xx);
+            return string.Format("*UNDEF* [{1}]", aero.Tanks[xx].Name, xx);
+        }
+
+        private static void output_location_table_header(HtmlTextWriter writer, string extra=null)
+        {
+            writer.Write("<tr>");
+            writer.Write("<th>Element</th>");
+            writer.Write("<th class='col-sm-1'>X</th>");
+            writer.Write("<th class='col-sm-1'>Y</th>");
+            writer.Write("<th class='col-sm-1'>Z</th>");
+            writer.Write("<th class='col-sm-1'>Unit</th>");
+            if(!String.IsNullOrEmpty(extra))
+                writer.Write(extra);
+            writer.Write("</tr>");
+            writer.Write("</thead>");
+        }
+
+        private void output_location(HtmlTextWriter writer, Location location, string p)
+        {
+            writer.Write("<td>{4}</td><td>{0:0.00}</td><td>{1:0.00}</td><td>{2:0.00}</td><td>{3}</td>", location.X, location.Y, location.Z, location.Unit, p);
         }
 
         private void AddImageToHTML(HtmlTextWriter writer, string base_name, string aero_element, System.Web.UI.DataVisualization.Charting.Chart chart)

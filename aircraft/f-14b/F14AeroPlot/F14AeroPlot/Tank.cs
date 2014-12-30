@@ -12,11 +12,11 @@ namespace F14AeroPlot
         public int Priority;
         public DenominatedAmount Capacity;
 
-        public Tank(string name, double p1, double p2, double p3, string units, int p4, int capacity,string fuel_units )
+        public Tank(string name, double p1, double p2, double p3, string units, int pri, int capacity,string fuel_units )
         {
             Name = name;
+            Priority = pri;
             Location = new Location(p1, p2, p3, units);
-            Priority = p4;
             Capacity = new DenominatedAmount(capacity, fuel_units);
         }
 
@@ -28,10 +28,10 @@ namespace F14AeroPlot
                 return new DenominatedAmount(Capacity.Amount, Capacity.Unit);
             }
         }
-        internal XmlElement CreateXmlNodes(System.Xml.XmlDocument doc, System.Xml.XmlElement grnode)
+        internal XmlElement CreateXmlNodes(System.Xml.XmlDocument doc, System.Xml.XmlElement grnode, int tank_index)
         {
             XmlElement gr = doc.CreateElement("tank");
-            gr.AppendChild(doc.CreateComment(String.Format("{0}: {1}",Id,Name)));
+            gr.AppendChild(doc.CreateComment(String.Format("{0}: {1}", tank_index, Name)));
             grnode.AppendChild(gr);
             gr.SetAttribute("type", "FUEL");
 
@@ -46,6 +46,16 @@ namespace F14AeroPlot
             return gr;
         }
 
-        public int Id { get; set; }
+        public int Id = 0;
+        //{
+        //    get
+        //    {
+        //        return Priority;
+        //    }
+        //    set
+        //    {
+        //        Priority = value;
+        //    }
+        //}
     }
 }

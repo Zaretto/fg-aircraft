@@ -54,11 +54,6 @@ namespace F14AeroPlot
                     writer.Write("        />\n");
                 }
                 writer.Write("    </fileheader>\n");
-                foreach (var s in aero.Systems)
-                {
-                    writer.Write("<system file=\"{0}\"/>\n", s);
-                }
-
                 {
                     XmlDocument doc = new XmlDocument();
                     //    XmlElement el = (XmlElement)doc.AppendChild(doc.CreateElement("Foo"));
@@ -109,9 +104,10 @@ namespace F14AeroPlot
                     {
                         g.CreateXmlNodes(doc, p);
                     }
-                    foreach (var g in aero.Tanks.OrderBy(x=>x.Priority))
+                    int tank_idx = 0;
+                    foreach (var g in aero.Tanks.OrderByDescending(x=>x.Priority))
                     {
-                        g.CreateXmlNodes(doc, p);
+                        g.CreateXmlNodes(doc, p, tank_idx++);
                     }
                     writer.Write(prettify(doc));
                 }
@@ -127,6 +123,11 @@ namespace F14AeroPlot
                     writer.Write(prettify(doc));
                 }
                 writer.Write("<flight_control name=\"FCS\"></flight_control>\n");
+                foreach (var s in aero.Systems)
+                {
+                    writer.Write("<system file=\"{0}\"/>\n", s);
+                }
+
                 writer.Write("<aerodynamics>\n");
             }
 //            writer.Write("<pre>\n");
