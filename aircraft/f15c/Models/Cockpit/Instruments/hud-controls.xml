@@ -25,7 +25,35 @@
 		</emission>
 	</animation>
 
-	<!-- *** LoD *** -->
+    <animation>
+        <type>select</type>
+        <object-name>master-caution-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f15/instrumentation/warnings/master-caution</property>
+        </condition>
+    </animation>
+
+    <!-- Master Caution Button -->
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>master-caution-on</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <interval-sec>0.1</interval-sec>
+            <binding>
+                <command>nasal</command>
+                <script>aircraft.master_caution_pressed()</script>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- *** LoD *** -->
 	<animation>
 		<type>range</type>
 		<min-m>0</min-m>

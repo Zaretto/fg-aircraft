@@ -128,13 +128,13 @@ var Left = 0;
 var Both = -1;
 	#tanks ("name", number, initial connection status)
     # the order of these is significant for the set_fuel operation
-	Tank1     = Tank.new("Tank 1", 0, 1, Both);
-	Left_Feed      = Tank.new("L Feed", 1, 1, Left); 
-	Right_Feed      = Tank.new("R Feed", 2, 1, Right);
+	Tank1     = Tank.new("Tank 1", 2, 1, Both);
 	WingInternal_L   = Tank.new("Internal Wing L", 3, 1, Left);
-	WingInternal_R   = Tank.new("Internal Wing R", 4, 1, Left);
+	WingInternal_R   = Tank.new("Internal Wing R", 4, 1, Right);
+	Left_Feed      = Tank.new("L Feed", 0, 1, Left); 
+	Right_Feed      = Tank.new("R Feed", 1, 1, Right);
 	WingExternal_L   = Tank.new("External Wing L", 5, 1, Left);
-	WingExternal_R   = Tank.new("External Wing R", 6, 1, Left);
+	WingExternal_R   = Tank.new("External Wing R", 6, 1, Right);
 	Centre_External  = Tank.newExternal("Centre External", 7, ext_select_state, Both); 
 }
 

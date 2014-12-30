@@ -10,13 +10,13 @@ var oil_pressure_r = props.globals.getNode("engines/engine[1]/oil-pressure-psi",
 var ca_oil_press_light  = props.globals.getNode("sim/model/f15/lights/ca-oil-press", 1);
 
 var bingo      = props.globals.getNode("sim/model/f15/controls/fuel/bingo", 1);
-var ca_bingo_light  = props.globals.getNode("sim/model/f15/lights/ca-bingo", 1);
+var ca_bingo_light  = props.globals.getNode("sim/model/f15/lights/ca-bingo-fuel", 1);
 
-var ca_canopy_light = props.globals.getNode("sim/model/f15/lights/ca-lad-canopy", 1);
+var ca_canopy_light = props.globals.getNode("sim/model/f15/lights/ca-canopy-lock", 1);
 var canopy = props.globals.getNode("canopy/position-norm", 1);
 canopy.setValue(0);
 
-var ca_ramp_light = props.globals.getNode("sim/model/f15/lights/ca-ramps", 1);
+var ca_ramp_light = props.globals.getNode("sim/model/f15/lights/ca-l-inlet", 1);
 
 var masterCaution_light = props.globals.getNode("sim/model/f15/instrumentation/warnings/master-caution", 1);
 var masterCaution_light_set = props.globals.getNode("sim/model/f15/controls/master-caution-set", 1);
@@ -25,16 +25,15 @@ masterCaution_light_set.setBoolValue(0);
 var jettisonLeft = props.globals.getNode("controls/armament/station[2]/jettison-all", 1);
 var jettisonRight = props.globals.getNode("controls/armament/station[7]/jettison-all", 1);
 
-var ca_l_gen_light  = props.globals.getNode("sim/model/f15/lights/ca-l-gen", 1);
-var ca_r_gen_light  = props.globals.getNode("sim/model/f15/lights/ca-r-gen", 1);
+var ca_l_gen_light  = props.globals.getNode("sim/model/f15/lights/ca-l-gen-out", 1);
+var ca_r_gen_light  = props.globals.getNode("sim/model/f15/lights/ca-r-gen-out", 1);
 
-var ca_l_fuel_press_light  = props.globals.getNode("sim/model/f15/lights/ca-l-fuel-press", 1);
-var ca_r_fuel_press_light  = props.globals.getNode("sim/model/f15/lights/ca-r-fuel-press", 1);
+var ca_l_fuel_press_light  = props.globals.getNode("sim/model/f15/lights/ca-l-bst-pmp", 1);
+var ca_r_fuel_press_light  = props.globals.getNode("sim/model/f15/lights/ca-r-bst-pmp", 1);
 
-var ca_l_fuel_low  = props.globals.getNode("sim/model/f15/lights/ca-l-fuel-low", 1);
-var ca_r_fuel_low  = props.globals.getNode("sim/model/f15/lights/ca-r-fuel-low", 1);
+var ca_fuel_low  = props.globals.getNode("sim/model/f15/lights/ca-fuel-low", 1);
 
-var ca_hyd_press_light  = props.globals.getNode("sim/model/f15/lights/ca-hyd-press", 1);
+var ca_hyd_press_light  = props.globals.getNode("sim/model/f15/lights/ca-hydraulic", 1);
 
 var l_eng_starter = props.globals.getNode("controls/engines/engine[0]/starter",1);
 var r_eng_starter = props.globals.getNode("controls/engines/engine[1]/starter",1);
@@ -241,39 +240,39 @@ var runEMMISC = func {
 		}
 	}
 
-	if (total_fuel_l < 1000)
+	if (total_lbs < 1000)
     {
-		if (!ca_l_fuel_low.getBoolValue())
+		if (!ca_fuel_low.getBoolValue())
 		{
-    	    ca_l_fuel_low.setBoolValue(1);
+    	    ca_fuel_low.setBoolValue(1);
             masterCaution = 1;
         }
         master_caution_active = 1;
 	}
 	else
 	{
-		if (ca_l_fuel_low.getBoolValue())
+		if (ca_fuel_low.getBoolValue())
 		{
-		    ca_l_fuel_low.setBoolValue(0);
+		    ca_fuel_low.setBoolValue(0);
 		}
 	}
 
-	if (total_fuel_r < 1000)
+	if (getprop("/gear/tailhook/position-norm") > 0.2)
     {
-		if (!ca_r_fuel_low.getBoolValue())
-		{
-    	    ca_r_fuel_low.setBoolValue(1);
+        if (!getprop("sim/model/f15/lights/ca-hook"))
+        {
+            setprop("sim/model/f15/lights/ca-hook",1);
             masterCaution = 1;
         }
         master_caution_active = 1;
-	}
-	else
-	{
-		if (ca_r_fuel_low.getBoolValue())
-		{
-		    ca_r_fuel_low.setBoolValue(0);
-		}
-	}
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-hook"))
+        {
+            setprop("sim/model/f15/lights/ca-hook",0);
+        }
+    }
 
 	if (getprop("/fdm/jsbsim/systems/electrics/transrect-online") < 2)
     {
