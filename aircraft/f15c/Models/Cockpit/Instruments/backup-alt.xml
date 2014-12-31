@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Backup Altimeter by Richard Harrison; rjh@zaretto.com (based on AI.xml by Dave Culp) -->
+
+<PropertyList>
+
+    <path>backup-alt.ac</path>
+
+    <animation>
+        <type>material</type>
+
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>AttitudeBall</object-name>
+        <object-name>SkyPointer</object-name>
+        <object-name>AIairplane</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-needle-feet</object-name>
+        <property>orientation/roll-deg</property>
+        <factor>1</factor>
+        <center>
+            <x-m>0.0076</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- *** LoD *** -->
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>5</max-m>
+    </animation>
+
+</PropertyList>
