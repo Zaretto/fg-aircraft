@@ -32,18 +32,191 @@
     <animation>
         <type>rotate</type>
         <object-name>balt-needle-feet</object-name>
-        <property>orientation/roll-deg</property>
-        <factor>1</factor>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.36</factor>
         <center>
-            <x-m>0.0076</x-m>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-needle-100-feet</object-name>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.036</factor>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-needle-1000-feet</object-name>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.0036</factor>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <!--***set barometric pressure***-->
+
+    <animation>
+        <type>pick</type>
+        <object-name>balt-dec-pressure</object-name>
+        <visible>false</visible>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/backup-altimeter/setting-inhg</property>
+                <step>-0.01</step>
+                <min>27.90</min>
+                <max>31.40</max>
+                <wrap>0</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>balt-dec-pressure</object-name>
+        <visible>0</visible>
+        <action>
+            <button>1</button>
+            <repeatable>true</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/backup-altimeter/setting-inhg</property>
+                <step>-0.1</step>
+                <min>27.90</min>
+                <max>31.40</max>
+                <wrap>0</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>balt-inc-pressure</object-name>
+        <visible>0</visible>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/backup-altimeter/setting-inhg</property>
+                <step>0.01</step>
+                <min>27.90</min>
+                <max>31.40</max>
+                <wrap>0</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>balt-inc-pressure</object-name>
+        <visible>0</visible>
+        <action>
+            <button>1</button>
+            <repeatable>true</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/backup-altimeter/setting-inhg</property>
+                <step>0.1</step>
+                <min>27.90</min>
+                <max>31.40</max>
+                <wrap>0</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-barometric-pressure-readout</object-name>
+        <property>/instrumentation/backup-altimeter/setting-inhg</property>
+        <interpolation>
+            <entry>
+                <ind>28</ind>
+                <dep>-200</dep>
+            </entry>
+            <entry>
+                <ind>30</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>31.3</ind>
+                <dep>130</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>0</x-m>
             <y-m>0</y-m>
             <z-m>0</z-m>
         </center>
         <axis>
             <x>1</x>
-            <y>0</y>
-            <z>0</z>
         </axis>
+    </animation>
+    <!--Lighting-->
+    <animation>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>balt-mount</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+    <animation>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>balt-face</object-name>
+        <object-name>balt-barometric-pressure-readout</object-name>
+        <object-name>balt-needle-feet</object-name>
+        <object-name>balt-needle-100-feet</object-name>
+        <object-name>balt-needle-1000-feet</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.55</green>
+            <blue>0.55</blue>
+        </emission>
     </animation>
 
     <!-- *** LoD *** -->
