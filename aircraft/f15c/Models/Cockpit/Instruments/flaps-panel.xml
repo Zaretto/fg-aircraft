@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Flaps panel by Richard Harrison; rjh@zaretto.com  -->
+
+<PropertyList>
+
+	<path>flaps-panel.ac</path>
+
+	
+	<!-- Lighting -->
+	<animation>
+		<object-name>mount</object-name> 
+		<type>material</type>
+		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not><property>sim/rendering/rembrandt/enabled</property></not>
+        </condition>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.55</red>
+			<green>0.24</green>
+			<blue>0.10</blue>
+		</emission>
+	</animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>flap-transit-light</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>/surface-positions/flap-pos-norm</property>
+                <value>0</value>
+            </greater-than>
+            <less-than>
+                <property>/surface-positions/flap-pos-norm</property>
+                <value>1</value>
+            </less-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>flap-down-light</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>/surface-positions/flap-pos-norm</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+
+
+    <!-- *** LoD *** -->
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>

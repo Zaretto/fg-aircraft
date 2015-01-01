@@ -22,7 +22,20 @@
 		</condition>
 	</animation>-->
 
-	<!-- Bingo -->
+    <animation>
+        <type>select</type>
+        <object-name>off-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
+
+    <!-- Bingo -->
     <animation>
         <type>rotate</type>
         <object-name>bingo-bug</object-name>
