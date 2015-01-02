@@ -37,12 +37,16 @@ var click = func {
 }
 
 var update_chrono = func {
-	var on = chrono_onoff.getBoolValue();
-	if ( on ) {
-		var i_sec = indicated_sec.getValue();
-		var e_sec = i_sec - offset;
-		elapsed_sec.setValue( e_sec );
-	}
+
+    if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
+    {
+        var on = chrono_onoff.getBoolValue();
+        if ( on ) {
+            var i_sec = indicated_sec.getValue();
+            var e_sec = i_sec - offset;
+            elapsed_sec.setValue( e_sec );
+        }
+    }
 }
 
 # Uncomment the following if update_chrono() has to be launched standalone.

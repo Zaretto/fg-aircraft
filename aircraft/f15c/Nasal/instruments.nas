@@ -528,7 +528,7 @@ var main_loop = func {
         ara_63_update();
 		update_hud();
 		g_min_max();
-		update_chrono();
+		f15_chronograph.update_chrono();
 
 		if (( cnt == 6 ) or ( cnt == 12 )) {
 			# done each 0.3 sec.
