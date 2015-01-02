@@ -84,10 +84,13 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>gear/gear[0]/position-norm</property>
-                <value>1</value>
-            </equals>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <equals>
+                    <property>gear/gear[0]/position-norm</property>
+                    <value>1</value>
+                </equals>
+            </or>
         </condition>
     </animation>
     <animation>
@@ -98,10 +101,13 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>gear/gear[1]/position-norm</property>
-                <value>1</value>
-            </equals>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <equals>
+                    <property>gear/gear[1]/position-norm</property>
+                    <value>1</value>
+                </equals>
+            </or>
         </condition>
     </animation>
     <animation>
@@ -112,13 +118,55 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>gear/gear[2]/position-norm</property>
-                <value>1</value>
-            </equals>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <equals>
+                    <property>gear/gear[2]/position-norm</property>
+                    <value>1</value>
+                </equals>
+            </or>
         </condition>
     </animation>
 
+    <animation>
+        <type>select</type>
+        <object-name>landing-gear-handle-lit</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+                <or>
+                    <property>sim/model/f15/lights/master-test-lights</property>
+                    <and>
+                        <greater-than>
+                            <property>gear/gear[0]/position-norm</property>
+                            <value>0</value>
+                        </greater-than>
+                        <less-than>
+                            <property>gear/gear[0]/position-norm</property>
+                            <value>1</value>
+                        </less-than>
+                        <greater-than>
+                            <property>gear/gear[1]/position-norm</property>
+                            <value>0</value>
+                        </greater-than>
+                        <less-than>
+                            <property>gear/gear[1]/position-norm</property>
+                            <value>1</value>
+                        </less-than>
+                        <greater-than>
+                            <property>gear/gear[2]/position-norm</property>
+                            <value>0</value>
+                        </greater-than>
+                        <less-than>
+                            <property>gear/gear[2]/position-norm</property>
+                            <value>1</value>
+                        </less-than>
+                </and>
+            </or>
+        </condition>
+    </animation>
 
     <!-- *** LoD *** -->
     <animation>
