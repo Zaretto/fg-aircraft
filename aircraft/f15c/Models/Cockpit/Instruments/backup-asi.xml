@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Backup ASI by Richard Harrison; rjh@zaretto.com -->
+
+<PropertyList>
+
+    <path>backup-asi.ac</path>
+
+    <animation>
+        <type>material</type>
+
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>face</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>basi-needle-knots</object-name>
+        <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>60</ind>
+                <dep>13</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>45</dep>
+            </entry>
+            <entry>
+                <ind>150</ind>
+                <dep>161</dep>
+            </entry>
+            <entry>
+                <ind>170</ind>
+                <dep>180</dep>
+            </entry>
+            <entry>
+                <ind>200</ind>
+                <dep>210</dep>
+            </entry>
+            <entry>
+                <ind>300</ind>
+                <dep>250</dep>
+            </entry>
+            <entry>
+                <ind>400</ind>
+                <dep>270</dep>
+            </entry>
+            <entry>
+                <ind>850</ind>
+                <dep>345</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!--Lighting-->
+    <animation>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>basi-mount</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+    <animation>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>balt-face</object-name>
+        <object-name>balt-needle-knots</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.55</green>
+            <blue>0.55</blue>
+        </emission>
+    </animation>
+
+    <!-- *** LoD *** -->
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>5</max-m>
+    </animation>
+
+</PropertyList>
