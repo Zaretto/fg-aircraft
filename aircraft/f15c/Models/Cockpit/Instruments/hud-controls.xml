@@ -33,9 +33,41 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <property>sim/model/f15/instrumentation/warnings/master-caution</property>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/instrumentation/warnings/master-caution</property>
+            </or>
         </condition>
     </animation>
+    <animation>
+        <type>select</type>
+        <object-name>sam-light-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/instrumentation/warnings/ac-sam</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>ai-light-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/instrumentation/warnings/ca-ai</property>
+            </or>
+        </condition>
+    </animation>
+
 
     <!-- Master Caution Button -->
     <animation>
