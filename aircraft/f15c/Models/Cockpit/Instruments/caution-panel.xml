@@ -938,7 +938,10 @@
         <condition>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
-                <property>sim/model/f15/lights/ca-spd-bk-out</property>
+                <greater-than>
+                    <property>surface-positions/speedbrake-pos-norm</property>
+                    <value>0</value>
+                </greater-than>
             </or>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
