@@ -21,6 +21,31 @@
         <y-offset>0.65</y-offset>
         <z-offset>0.65</z-offset>
     </animation>-->
+    <animation>
+        <type>select</type>
+        <object-name>off-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>mach-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
 
     <animation>
 		<type>rotate</type>

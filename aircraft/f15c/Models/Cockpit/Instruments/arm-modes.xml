@@ -5,18 +5,73 @@
 
 	<path>arm-modes.ac</path>
 
-	<animation>
-		<type>select</type>
-		<object-name>instrument</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
+    <!--<animation>
+        <type>select</type>
+        <object-name>instrument</object-name>
+        <condition>
+            <equals>
+                <property>sim/current-view/name</property>
+                <value>Cockpit View</value>
+            </equals>
+        </condition>
+    </animation>-->
 
- 
+    <animation>
+        <type>select</type>
+        <object-name>beacon-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>ag-light-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>adi-light-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>vi-light-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+
+
     <!-- Lighting -->
 
 	<animation>

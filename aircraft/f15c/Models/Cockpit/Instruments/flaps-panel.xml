@@ -25,6 +25,43 @@
 			<blue>0.10</blue>
 		</emission>
 	</animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>hook-switch</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <object-name>hook-switch</object-name>
+        <type>rotate</type>
+        <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>30</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>-10</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.7057</x-m>
+            <y-m>-0.4022</y-m>
+            <z-m>0.8428</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
     <animation>
         <type>select</type>
