@@ -34,14 +34,19 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <greater-than>
-                <property>/surface-positions/flap-pos-norm</property>
-                <value>0</value>
-            </greater-than>
-            <less-than>
-                <property>/surface-positions/flap-pos-norm</property>
-                <value>1</value>
-            </less-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <and>
+                    <greater-than>
+                        <property>/surface-positions/flap-pos-norm</property>
+                        <value>0</value>
+                    </greater-than>
+                    <less-than>
+                        <property>/surface-positions/flap-pos-norm</property>
+                        <value>1</value>
+                    </less-than>
+                </and>
+            </or>
         </condition>
     </animation>
     <animation>
@@ -52,10 +57,13 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>/surface-positions/flap-pos-norm</property>
-                <value>1</value>
-            </equals>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <equals>
+                    <property>/surface-positions/flap-pos-norm</property>
+                    <value>1</value>
+                </equals>
+            </or>
         </condition>
     </animation>
 
