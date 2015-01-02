@@ -1,62 +1,51 @@
 <?xml version="1.0"?>
 
-<!--IVSI (Instantaneous Vertical Speed Indicator)-->
+<!--F-15 VSI by Richard Harrison (rjh@zaretto.com).
+    Seems to be Pioneer - Central Division of Bendix Corporation (Davenport, Iowa) vertical speed indicator (VSI)
+-->
 
 <PropertyList>
     <path>vsi.ac</path>
-    <!--<animation>
-        <type>select</type>
-        <object-name>vsi</object-name>
-        <condition>
-            <equals>
-                <property>sim/current-view/name</property>
-                <value>Cockpit View</value>
-            </equals>
-        </condition>
-    </animation>-->
+  
     <animation>
         <type>select</type>
         <object-name>vsi-off-flag</object-name>
         <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
         </condition>
     </animation>
 
-    <!--<animation>
-        <type>scale</type>
-        <x-offset>0.6</x-offset>
-        <y-offset>0.6</y-offset>
-        <z-offset>0.6</z-offset>
-    </animation>-->
+    <!--The modelled position of the needle is straight up (0 deg) to make rotations easier to understand-->
     <animation>
         <name>vsi-needle</name>
         <type>rotate</type>
         <object-name>vsi-needle</object-name>
-        <!--<property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>-->
         <property>velocities/vertical-speed-fps</property>
         <interpolation>
             <entry>
-                <ind>-100.0</ind>
-                <dep>-255.0</dep>
+                <ind>-100.0</ind> <!---6000 fpm-->
+                <dep>-263.0</dep>
             </entry>
             <entry>
                 <ind>-66.667</ind>
-                <dep>-214.8</dep>
+                <dep>-238</dep>
             </entry>
             <entry>
                 <ind>-33.333</ind>
-                <dep>-170.0</dep>
+                <dep>-198</dep>
             </entry>
             <entry>
                 <ind>-16.667</ind>
-                <dep>-135.0</dep>
+                <dep>-161</dep>
             </entry>
             <entry>
-                <ind>-8.333</ind>
-                <dep>-112.4</dep>
+                <ind>-8.333</ind> <!-- 500 fpm -->
+                <dep>-129</dep>
             </entry>
             <entry>
                 <ind>0.0</ind>
@@ -64,23 +53,23 @@
             </entry>
             <entry>
                 <ind>8.333</ind>
-                <dep>-67.6</dep>
+                <dep>-51</dep>
             </entry>
             <entry>
                 <ind>16.667</ind>
-                <dep>-45.0</dep>
+                <dep>-19.0</dep>
             </entry>
             <entry>
                 <ind>33.333</ind>
-                <dep>-10.0</dep>
+                <dep>19.0</dep>
             </entry>
             <entry>
                 <ind>66.667</ind>
-                <dep>34.8</dep>
+                <dep>57</dep>
             </entry>
             <entry>
-                <ind>100.0</ind>
-                <dep>75.0</dep>
+                <ind>100.0</ind> <!--6000 fpm-->
+                <dep>81</dep>
             </entry>
         </interpolation>
         <axis>
@@ -130,7 +119,7 @@
         </emission>
     </animation>
     <animation>
-        <object-name>vsi-needle-w</object-name>
+        <object-name>vsi-needle</object-name>
         <type>material</type>
         <condition>
             <greater-than>
