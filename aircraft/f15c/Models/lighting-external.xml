@@ -31,6 +31,8 @@
         <object-name>RBT-coll_halo_CP</object-name>
         <object-name>taxi-halo-sphere</object-name>
         <object-name>taxi-light-cone</object-name>
+        <object-name>landing-light-halo-sphere</object-name>
+        <object-name>landing-light-cone</object-name>
     </animation>
 
     <light-params>
@@ -734,7 +736,17 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <property>sim/multiplay/generic/int[7]</property>
+            <or>
+                <equals>
+                    <property>sim/multiplay/generic/int[7]</property>
+                    <value>1</value>
+                </equals>
+                <equals>
+                    <property>sim/multiplay/generic/int[7]</property>
+                    <value>3</value>
+                </equals>
+            </or>
+            <property>controls/gear/gear-down</property>
         </condition>
     </animation>
     <animation>
@@ -749,9 +761,9 @@
             <z>-0.024</z>
         </direction>
         <position>
-            <x>-6.5672</x>
+            <x>-3.69842</x>
             <y>0</y>
-            <z>-1</z>
+            <z>-0.7944</z>
         </position>
         <ambient>
             <r>0.95</r>
@@ -789,9 +801,109 @@
         <object-name>taxi-halo-sphere</object-name>
         <nopreview/>
         <position>
-            <x>-5.2612</x>
+            <x>-3.69842</x>
             <y>0</y>
-            <z>-0.7269</z>
+            <z>-0.7944</z>
+        </position>
+        <ambient>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </ambient>
+        <diffuse>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </diffuse>
+        <specular>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </specular>
+        <attenuation>
+            <c>1</c>
+            <l>1.7</l>
+            <q>4</q>
+        </attenuation>
+        <cutoff>1.3</cutoff>
+        <near-m>0.01</near-m>
+        <far-m>1.3</far-m>
+    </animation>
+
+    <!-- Landing lights -->
+    <animation>
+        <type>select</type>
+        <object-name>landing-lights</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>sim/multiplay/generic/int[7]</property>
+                <value>1</value>
+            </greater-than>
+            <property>controls/gear/gear-down</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>light</type>
+        <light-type>spot</light-type>
+        <name>landing-light</name>
+        <object-name>landing-light-cone</object-name>
+        <nopreview/>
+        <direction>
+            <x>-1</x>
+            <y>0</y>
+            <z>-0.024</z>
+        </direction>
+        <position>
+            <x>-3.512</x>
+            <y>0</y>
+            <z>-0.9644</z>
+        </position>
+        <ambient>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </ambient>
+        <diffuse>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </diffuse>
+        <specular>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </specular>
+        <attenuation>
+            <c>0.5</c>
+            <l>0.07</l>
+            <q>0</q>
+        </attenuation>
+        <exponent>30.0</exponent>
+        <cutoff>200</cutoff>
+        <near-m>0.01</near-m>
+        <far-m>200</far-m>
+    </animation>
+    <!-- Landing light halo -->
+    <animation>
+        <type>light</type>
+        <light-type>point</light-type>
+        <name>landing-light-halo</name>
+        <object-name>landing-light-halo-sphere</object-name>
+        <nopreview/>
+        <position>
+            <x>-3.512</x>
+            <y>0</y>
+            <z>-0.9644</z>
         </position>
         <ambient>
             <r>0.95</r>
