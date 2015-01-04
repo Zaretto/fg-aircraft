@@ -24,6 +24,51 @@
 			<blue>0.10</blue>
 		</emission>
 	</animation>
+    <animation>
+        <type>select</type>
+        <object-name>fire-button-left-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>fire-button-right-on</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+    <!--<animation>
+        <type>material</type>
+        <object-name>fire-button-left</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>1</red>
+            <green>0</green>
+            <blue>0</blue>
+        </emission>
+    </animation>-->
 
 	<!-- *** LoD *** -->
 	<animation>

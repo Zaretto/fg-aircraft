@@ -1,10 +1,68 @@
 AC3Db
 MATERIAL "ac3dmat1" rgb 1 1 1  amb 0.2 0.2 0.2  emis 0 0 0  spec 0.2 0.2 0.2  shi 128  trans 0
 MATERIAL "ac3dmat12" rgb 0.266667 0.266667 0.266667  amb 0.2 0.2 0.2  emis 0 0 0  spec 0.2 0.2 0.2  shi 128  trans 0
+MATERIAL "ac3dmat1" rgb 1 1 1  amb 1 1 1  emis 1 1 1  spec 0 0 0  shi 0  trans 0
 MATERIAL "ac3dmat14" rgb 0.8 0.8 0.8  amb 0.459 0.443 0.435  emis 0 0 0  spec 0.2 0.2 0.2  shi 128  trans 0
 MATERIAL "ac3dmat3" rgb 1 0 0  amb 1 0 0  emis 1 0.769 0.769  spec 0.2 0.2 0.2  shi 128  trans 0
 OBJECT world
-kids 1
+kids 5
+OBJECT poly
+name "light-flares"
+loc -5.70335 1.07153 -0.364001
+texture "canopy-lock-panel.rgb"
+crease 45.000000
+numvert 4
+0 0.00321889 -0.0115141
+0 0.00321889 0.0115141
+0 -0.00321889 0.0115141
+0 -0.00321889 -0.0115141
+numsurf 1
+SURF 0x30
+mat 2
+refs 4
+0 0.99237 0.891427
+1 0.716015 0.891427
+2 0.716015 0.797789
+3 0.99237 0.797789
+kids 0
+OBJECT poly
+name "light-chaff"
+loc -5.70359 1.07153 -0.336725
+texture "canopy-lock-panel.rgb"
+crease 45.000000
+numvert 4
+0 -0.00321889 -0.0113096
+0 -0.00321889 0.0113096
+0 0.00321889 0.0113096
+0 0.00321889 -0.0113096
+numsurf 1
+SURF 0x30
+mat 2
+refs 4
+3 0.706949 0.888533
+2 0.428513 0.888533
+1 0.428513 0.802638
+0 0.706949 0.802638
+kids 0
+OBJECT poly
+name "light-program"
+loc -5.70335 1.08202 -0.336196
+texture "canopy-lock-panel.rgb"
+crease 45.000000
+numvert 4
+0 0.00321889 -0.0115141
+0 0.00321889 0.0115141
+0 -0.00321889 0.0115141
+0 -0.00321889 -0.0115141
+numsurf 1
+SURF 0x30
+mat 2
+refs 4
+0 0.706637 0.991189
+1 0.43087 0.991189
+2 0.43087 0.894718
+3 0.706637 0.894718
+kids 0
 OBJECT group
 name "canopy-lock-panel"
 loc -3.78938e-005 1.09113 -0.334517
@@ -31,43 +89,43 @@ numvert 10
 -5.70473 -0.0336832 -0.0453542
 numsurf 6
 SURF 0x30
-mat 2
+mat 3
 refs 5
-4 0 0.0702698
-3 0.00737995 1
-2 0.682657 0.99343
-1 0.99631 0.710897
-0 1 0.0801255
+4 0.101563 0.493177
+3 0.101563 0.493177
+2 0.101563 0.493177
+1 0.101563 0.493177
+0 0.101563 0.493177
 SURF 0x30
-mat 2
+mat 3
 refs 4
 9 0 0
 5 0 0
 4 0 0
 0 0 0
 SURF 0x30
-mat 2
+mat 3
 refs 4
 8 0 0
 9 0 0
 0 0 0
 1 0 0
 SURF 0x30
-mat 2
+mat 3
 refs 4
 7 0 0
 8 0 0
 1 0 0
 2 0 0
 SURF 0x30
-mat 2
+mat 3
 refs 4
 6 0 0
 7 0 0
 2 0 0
 3 0 0
 SURF 0x30
-mat 2
+mat 3
 refs 4
 5 0 0
 6 0 0
@@ -1229,10 +1287,29 @@ numvert 4
 -5.703 -0.0077039 0.0135261
 numsurf 1
 SURF 0x30
-mat 3
+mat 4
 refs 4
 0 0.0924766 0.936481
 1 0.385728 0.935151
 2 0.389989 0.755443
 3 0.0882161 0.756108
+kids 0
+OBJECT poly
+name "light-minimum"
+loc -5.70285 1.08271 -0.364786
+texture "canopy-lock-panel.rgb"
+crease 45.000000
+numvert 4
+0 -0.00308251 -0.0113778
+0 -0.00308251 0.0113778
+0 0.00308251 0.0113778
+0 0.00308251 -0.0113778
+numsurf 1
+SURF 0x30
+mat 2
+refs 4
+3 0.993943 0.99564
+2 0.717147 0.99564
+1 0.717147 0.897971
+0 0.993943 0.897971
 kids 0
