@@ -6,6 +6,50 @@
   <!--<offsets>
    <z-m>0.5</z-m> 
   </offsets>-->
+    <!--Wing Bend-->
+    <animation>
+        <type>rotate</type>
+        <object-name>WingL</object-name>
+        <object-name>WingL.001</object-name>
+        <object-name>FlapL</object-name>
+        <object-name>AileronL</object-name>
+        <object-name>WingTipPosL-Light</object-name>
+        <object-name>WingTipPosL-Housing</object-name>
+        <property>surface-positions/wing-fold-pos-norm</property>
+        <factor>-7.0</factor>
+        <center>
+            <x-m>0.6428</x-m>
+            <y-m>-1.8488</y-m>
+            <z-m>0.4820</z-m>
+        </center>
+        <axis>
+            <x>1.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>WingR</object-name>
+        <object-name>WingR.001</object-name>
+        <object-name>FlapR</object-name>
+        <object-name>AileronR</object-name>
+        <object-name>WingTipPosR-Light</object-name>
+        <object-name>WingTipPosR-Housing</object-name>
+        <property>surface-positions/wing-fold-pos-norm</property>
+        <factor>7.0</factor>
+        <center>
+            <x-m>0.6428</x-m>
+            <y-m>1.8488</y-m>
+            <z-m>0.4820</z-m>
+        </center>
+        <axis>
+            <x>1.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+
     <!-- ******************************************************************* -->
     <!-- Lighting                                                            -->
     <!-- ******************************************************************* -->
@@ -472,7 +516,7 @@
 
     <animation>
         <type>rotate</type>
-        <object-name>AIleronL</object-name>
+        <object-name>AileronL</object-name>
         <property>sim/multiplay/generic/float[2]</property>
         <factor>-30</factor>
         <axis>
@@ -487,7 +531,7 @@
 
     <animation>
         <type>rotate</type>
-        <object-name>AIleronL.001</object-name>
+        <object-name>AileronR</object-name>
         <property>sim/multiplay/generic/float[2]</property>
         <factor>-30</factor>
         <axis>
@@ -516,7 +560,7 @@
 
     <animation>
         <type>rotate</type>
-        <object-name>FlapL.001</object-name>
+        <object-name>FlapR</object-name>
         <property>surface-positions/flap-pos-norm</property>
         <factor>-35</factor>
         <axis>
