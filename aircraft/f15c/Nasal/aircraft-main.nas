@@ -38,6 +38,7 @@ var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1
 
 # Lighting 
 #setprop("sim/model/path","data/Aircraft/f15/F15.xml");
+#setprop("sim/model/path","Aircraft/F-15C/Models/F-15C_Eagle.xml");
 
 # Collision lights flasher
 var anti_collision_switch = props.globals.getNode("sim/model/f15/controls/lighting/anti-collision-switch");

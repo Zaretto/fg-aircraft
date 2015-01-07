@@ -4,9 +4,354 @@
 <PropertyList>
 
 	<path>left-side-panel.ac</path>
+<!-- generators -->
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-gen-left-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/electrics/l-gen-switch</property>
+            </binding>
+        </action>
+    </animation>
 
-	
-	<!-- Lighting -->
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-gen-left-switch</object-name>
+        <property>sim/model/f15/controls/electrics/l-gen-switch</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-50</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.65485</x-m>
+            <y-m> 0.30604</y-m>
+            <z-m> 0.68</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-gen-right-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/electrics/r-gen-switch</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-gen-right-switch</object-name>
+        <property>sim/model/f15/controls/electrics/r-gen-switch</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-50</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.65485</x-m>
+            <y-m> 0.32359</y-m>
+            <z-m> 0.68</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-ext-power-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/electrics/ground-power</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-ext-power-switch</object-name>
+        <property>fdm/jsbsim/systems/electrics/ground-power</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-50</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.61818</x-m>
+            <y-m> 0.33740</y-m>
+            <z-m> 0.68</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-emerg-gen-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/electrics/emerg-gen-switch</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-emerg-gen-switch</object-name>
+        <property>sim/model/f15/controls/electrics/emerg-gen-switch</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-40</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.65456</x-m>
+            <y-m> 0.35292</y-m>
+            <z-m> 0.67552</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>l-eng-master-guard</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/engs/l-eng-master-guard</property>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>l-eng-master-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    if(getprop("sim/model/f15/controls/engs/l-eng-master-guard"))
+                    {
+                    if (!getprop("engines/engine[0]/running") and  getprop("controls/engines/engine[0]/cutoff"))
+                    {
+                    setprop("controls/engines/engine[0]/starter",1);
+                    print("Set crank L");
+                    settimer(func { setprop("controls/engines/engine[0]/cutoff",0) }, 0.2);
+
+                    }
+                    else setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    }
+                </script>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>l-eng-master-switch</object-name>
+        <property>controls/engines/engine[0]/cutoff</property>
+        <factor>-70</factor>
+        <center>
+            <x-m>-5.617</x-m>
+            <y-m> 0.3089</y-m>
+            <z-m> 0.67669</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>l-eng-master-guard</object-name>
+        <property>sim/model/f15/controls/engs/l-eng-master-guard</property>
+        <factor>90</factor>
+        <center>
+            <x-m>-5.628</x-m>
+            <y-m> 0.3089</y-m>
+            <z-m> 0.68</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+<!-- r-eng-master-->
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>r-eng-master-guard</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/engs/r-eng-master-guard</property>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>r-eng-master-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    if(getprop("sim/model/f15/controls/engs/r-eng-master-guard"))
+                    {
+                    if (!getprop("engines/engine[1]/running") and  getprop("controls/engines/engine[1]/cutoff"))
+                    {
+                    setprop("controls/engines/engine[1]/starter",1);
+                    print("Set crank 1");
+                    settimer(func { setprop("controls/engines/engine[1]/cutoff",0) }, 0.2);
+
+                    }
+                    else setprop("controls/engines/engine[1]/cutoff",1-getprop("controls/engines/engine[1]/cutoff"));
+                    }
+                </script>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>r-eng-master-switch</object-name>
+        <property>controls/engines/engine[1]/cutoff</property>
+        <factor>-70</factor>
+        <center>
+            <x-m>-5.617</x-m>
+            <y-m> 0.39689</y-m>
+            <z-m> 0.67669</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>r-eng-master-guard</object-name>
+        <property>sim/model/f15/controls/engs/r-eng-master-guard</property>
+        <factor>90</factor>
+        <center>
+            <x-m>-5.628</x-m>
+            <y-m> 0.39689</y-m>
+            <z-m> 0.68</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+<!--jfs -->
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-jfs-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/electrics/jfs-starter</property>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-jfs-switch</object-name>
+        <property>sim/model/f15/controls/electrics/jfs-starter</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-30</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>30</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.60940</x-m>
+            <y-m> 0.36461</y-m>
+            <z-m> 0.67669</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+
+    <!-- Lighting -->
 	<animation>
 		<object-name>mount</object-name> 
 		<type>material</type>
@@ -24,8 +369,33 @@
 			<blue>0.10</blue>
 		</emission>
 	</animation>
+    <animation>
+        <type>select</type>
+        <object-name>jfs-ready-lamp-on</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/jfs-ready</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>jfs-ready-lamp-on</object-name>
+        <type>material</type>
+        
+        <emission>
+            <factor-prop>sim/model/f15/controls/lighting/index-norm</factor-prop>
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
 
-	<!-- *** LoD *** -->
+    <!-- *** LoD *** -->
 	<animation>
 		<type>range</type>
 		<min-m>0</min-m>

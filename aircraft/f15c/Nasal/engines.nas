@@ -43,7 +43,9 @@ engine_crank_switch_pos_prop.setValue(0);
 var engine_start_initiated = 0;
 
 var jfs_start = props.globals.getNode("sim/model/f15/controls/jfs",1);
+var jfs_running_lamp = props.globals.getNode("sim/model/f15/lights/jfs-ready",1);
 jfs_start.setValue(0);
+jfs_running_lamp.setValue(0);
 
 var jfs_invoke_shutdown_active = 0;
 var jfs_set_running_active = 0;
@@ -210,6 +212,8 @@ var jfs_set_running = func{
     }
     jfs_start.setValue(11);
     jfs_running = 1;
+    jfs_running_lamp.setValue(jfs_running);
+    setprop("fdm/jsbsim/systems/engines/jfs-running",jfs_running);
     jfs_starting = 0;
 
     if (engine_crank_switch_pos == 1) {
@@ -229,7 +233,9 @@ var jfs_set_running = func{
 var jfs_invoke_shutdown = func{
 
 #    print("Jfs invoke shutdown  callback");
-    var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
+    if (getprop("sim/model/f15/controls/electrics/jfs-starter")) 
+        return;
+    var jfs_switch_pos = getprop("sim/model/f15/controls/electrics/jfs-starter");
 
     # do nothing whilst not running or when the switch is still set.
     var l_running = l_running_prop.getValue();
@@ -239,7 +245,7 @@ var jfs_invoke_shutdown = func{
 # If neither engine running then need JFS
     if (!l_running and !r_running)
     {
-        if(!jfs_running or engine_crank_switch_pos)
+        if(!jfs_running or jfs_switch_pos)
         {
             return;
         }
@@ -249,6 +255,8 @@ var jfs_invoke_shutdown = func{
         jfs_start.setValue(1);
         jfs_running = 0;
         jfs_starting = 0;
+jfs_running_lamp.setValue(jfs_running);
+    setprop("fdm/jsbsim/systems/engines/jfs-running",jfs_running);
     }
     print("Jfs invoke shutdown cancel callback");
     shutdownTimer.stop();
@@ -264,9 +272,50 @@ var startupTimer = maketimer(11, jfs_set_running);
 var jfsShutdownTime = 55; # time after crank switch set to centre that the JFS will turn off.
 var jfsStartupTime = 10; # amount of time it takes JFS to be ready - before the start will be able to turn the engine (i.e. how long before starter_cmd is set)
 
+setprop("sim/model/f15/controls/electrics/jfs-starter",0);
+
 #
 #
 # Switch / action callbacks
+setlistener("sim/model/f15/controls/electrics/jfs-starter", func {
+    var jfs_starter  = getprop("sim/model/f15/controls/electrics/jfs-starter");
+
+    if (jfs_starter)
+    {
+        print("JFS Starter callback");
+            var l_running = l_running_prop.getValue();
+            var r_running = r_running_prop.getValue();
+        if (!jfs_running)
+        {
+
+            shutdownTimer.restart(jfsShutdownTime);
+
+            if (!jfs_starting)
+            {
+                jfs_starting = 1;
+                jfs_start.setValue(10);
+                startupTimer.restart(jfsStartupTime);
+                print("Start JFS");
+            }
+            return;
+        }
+        else
+        {
+            print("JFS cannot start because already running or engines running");
+        }
+ 
+    }
+    else
+    {
+        jfs_start.setValue(1);
+        jfs_running = 0;
+        jfs_starting = 0;
+        jfs_running_lamp.setValue(jfs_running);
+    setprop("fdm/jsbsim/systems/engines/jfs-running",jfs_running);
+        print("Jfs shutdown");
+    }
+});
+
 
 var engine_crank_switch = func(n) {
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
@@ -323,15 +372,6 @@ var engine_crank_switch = func(n) {
 
     if (!bleed_air_available)
     {
-        if (!jfs_running)
-        {
-            if (!jfs_starting)
-            {
-                jfs_starting = 1;
-                jfs_start.setValue(10);
-                startupTimer.restart(jfsStartupTime);
-                print("Start JFS");
-            }
             if (n == 0) {
                 engine_crank_switch_pos_prop.setIntValue(1);
             } 
@@ -339,7 +379,6 @@ var engine_crank_switch = func(n) {
                 engine_crank_switch_pos_prop.setIntValue(2);
             } 
             return;
-        }
     }
 
 	if (n == 0) {

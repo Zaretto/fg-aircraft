@@ -28,6 +28,9 @@ var jettisonRight = props.globals.getNode("controls/armament/station[7]/jettison
 var ca_l_gen_light  = props.globals.getNode("sim/model/f15/lights/ca-l-gen-out", 1);
 var ca_r_gen_light  = props.globals.getNode("sim/model/f15/lights/ca-r-gen-out", 1);
 
+var ca_l_inlet_light  = props.globals.getNode("sim/model/f15/lights/ca-l-inlet", 1);
+var ca_r_inlet_light  = props.globals.getNode("sim/model/f15/lights/ca-r-inlet", 1);
+
 var ca_l_fuel_press_light  = props.globals.getNode("sim/model/f15/lights/ca-l-bst-pmp", 1);
 var ca_r_fuel_press_light  = props.globals.getNode("sim/model/f15/lights/ca-r-bst-pmp", 1);
 
@@ -203,6 +206,41 @@ var runEMMISC = func {
         if (ca_l_gen_light.getBoolValue())
         {
             ca_l_gen_light.setBoolValue(0);
+        }
+    }
+
+#
+# Inlet ramps.
+    if(!getprop("fdm/jsbsim/systems/hydraulics/combined-system-pressure"))
+    {
+        if (!ca_l_inlet_light.getBoolValue())
+        {
+            ca_l_inlet_light.setBoolValue(1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (ca_l_inlet_light.getBoolValue())
+        {
+            ca_l_inlet_light.setBoolValue(0);
+        }
+    }
+    if(!getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure"))
+    {
+        if (!ca_r_inlet_light.getBoolValue())
+        {
+            ca_r_inlet_light.setBoolValue(1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (ca_r_inlet_light.getBoolValue())
+        {
+            ca_r_inlet_light.setBoolValue(0);
         }
     }
 
@@ -403,11 +441,6 @@ setlistener("sim/model/f15/controls/electrics/r-gen-switch", func {
 }, 1, 0);
 
 setlistener("sim/model/f15/controls/electrics/emerg-gen-switch", func {
-    var guard = getprop("sim/model/f15/controls/electrics/emerg-gen-guard-lever");
-    if (!guard)
-    {
-        setprop("sim/model/f15/controls/electrics/emerg-gen-switch",1);
-    }
     var v = getprop("sim/model/f15/controls/electrics/emerg-gen-switch");
     if(v != nil)
     {

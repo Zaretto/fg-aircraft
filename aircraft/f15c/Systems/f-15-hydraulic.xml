@@ -25,6 +25,7 @@
   <property value="0">systems/hydraulics/combined-system-pump-failed</property>
   <property value="0">systems/hydraulics/emerg-flyt-hyd-switch</property>
   <property value="1">systems/hydraulics/hyd-transfer-pump-switch</property>
+  <property value="0">systems/engines/jfs-running</property>
 
   <channel name="flight">
     <switch name="systems/hydraulics/flight-system-pressure">
@@ -69,14 +70,21 @@ engines at 11 percent rpm.
 
     <switch name="systems/hydraulics/emerg-pump-low-speed-psi">
           <default value="0"/>
-          <test  logic="AND" value="2001">
-<!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
-                systems/hydraulics/emerg-system-pump-failed eq 0
-                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-                systems/electrics/ac-right-main-bus gt 5
-          </test>
-          <test  logic="AND" value="0">
+        <test  logic="AND" value="2001">
+            <!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
+            systems/hydraulics/emerg-system-pump-failed eq 0
+            systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+            systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+            systems/electrics/ac-right-main-bus gt 5
+        </test>
+        <test  logic="AND" value="2001">
+            <!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
+            systems/hydraulics/emerg-system-pump-failed eq 0
+            systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+            systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+            systems/engines/jfs-running ne 0
+        </test>
+        <test  logic="AND" value="0">
                 systems/hydraulics/emerg-pump-low-speed-psi ge 1800
                 systems/hydraulics/emerg-system-pump-failed ne 0
                 systems/hydraulics/flight-system-psi gt systems/hydraulics/emerg-pump-auto-deactivation
