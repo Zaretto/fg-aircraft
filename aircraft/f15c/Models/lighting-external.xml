@@ -82,6 +82,20 @@
         <y-offset>1</y-offset>
         <z-offset>1</z-offset>
     </animation>
+    <!--<animation>
+        <type>scale</type>
+        <object-name>coll_halo_CP</object-name>
+        <property>sim/multiplay/generic/int[3]</property>
+        <x-min>0</x-min>
+        <y-min>0</y-min>
+        <z-min>0</z-min>
+        <x-factor>0.2</x-factor>
+        <y-factor>0.2</y-factor>
+        <z-factor>0.2</z-factor>
+        <x-offset>0</x-offset>
+        <y-offset>0</y-offset>
+        <z-offset>0</z-offset>
+    </animation>-->
     <animation>
         <type>dist-scale</type>
         <object-name>coll_halo_CP</object-name>
@@ -135,6 +149,12 @@
             <l>1.5</l>
             <q>4</q>
         </attenuation>
+        <!--<dim-factor>
+            <property>sim/multiplay/generic/int[3]</property>
+            <factor>0.5</factor>
+            <min>0</min>
+            <max>5</max>
+        </dim-factor>-->
         <cutoff>10</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -183,6 +203,20 @@
         <y-offset>1</y-offset>
         <z-offset>1</z-offset>
     </animation>
+    <!--<animation>
+        <type>scale</type>
+        <object-name>coll_halo_TR</object-name>
+        <property>sim/multiplay/generic/int[3]</property>
+        <x-min>0</x-min>
+        <y-min>0</y-min>
+        <z-min>0</z-min>
+        <x-factor>0.2</x-factor>
+        <y-factor>0.2</y-factor>
+        <z-factor>0.2</z-factor>
+        <x-offset>0</x-offset>
+        <y-offset>0</y-offset>
+        <z-offset>0</z-offset>
+    </animation>-->
     <animation>
         <type>dist-scale</type>
         <object-name>coll_halo_TR</object-name>
@@ -231,6 +265,12 @@
             <b>0</b>
             <a>1.0</a>
         </specular>
+        <!--<dim-factor>
+            <property>sim/multiplay/generic/int[3]</property>
+            <factor>0.5</factor>
+            <min>0</min>
+            <max>5</max>
+        </dim-factor>-->
         <attenuation>
             <c>1.3</c>
             <l>1.5</l>
@@ -283,6 +323,20 @@
         <y-offset>1</y-offset>
         <z-offset>1</z-offset>
     </animation>
+    <!--<animation>
+        <type>scale</type>
+        <object-name>coll_halo_TL</object-name>
+        <property>sim/multiplay/generic/int[3]</property>
+        <x-min>0</x-min>
+        <y-min>0</y-min>
+        <z-min>0</z-min>
+        <x-factor>0.2</x-factor>
+        <y-factor>0.2</y-factor>
+        <z-factor>0.2</z-factor>
+        <x-offset>0</x-offset>
+        <y-offset>0</y-offset>
+        <z-offset>0</z-offset>
+    </animation>-->
     <animation>
         <type>dist-scale</type>
         <object-name>coll_halo_TL</object-name>
@@ -336,6 +390,13 @@
             <l>1.5</l>
             <q>4</q>
         </attenuation>
+        <!--<dim-factor>
+            <property>sim/multiplay/generic/int[3]</property>
+            <factor>0.5</factor>
+            <min>0</min>
+            <max>5</max>
+        </dim-factor>-->
+
         <cutoff>10</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -473,6 +534,12 @@
             <l>1.5</l>
             <q>4</q>
         </attenuation>
+        <!--<dim-factor>
+            <property>sim/multiplay/generic/int[3]</property>
+            <factor>0.5</factor>
+            <min>0</min>
+            <max>5</max>
+        </dim-factor>-->
         <cutoff>10</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -606,6 +673,13 @@
             <l>1.5</l>
             <q>4</q>
         </attenuation>
+        <!--<dim-factor>
+            <property>sim/multiplay/generic/int[3]</property>
+            <factor>0.5</factor>
+            <min>0</min>
+            <max>5</max>
+        </dim-factor>-->
+
         <cutoff>10</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -721,6 +795,13 @@
             <l>1.5</l>
             <q>4</q>
         </attenuation>
+        <dim-factor>
+            <property>sim/multiplay/generic/int[4]</property>
+            <factor>0.5</factor>
+            <min>0</min>
+            <max>5</max>
+        </dim-factor>
+
         <cutoff>10</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -933,5 +1014,22 @@
         <far-m>1.3</far-m>
     </animation>
 
+<!-- formation lights -->
+    <animation>
+        <object-name>FormationLights</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <emission>
+            <factor-prop>sim/multiplay/generic/int[1]</factor-prop>
+            <red>0.182</red>
+            <green>0.196</green>
+            <blue>0.156</blue>
+        </emission>
+    </animation>
 
 </PropertyList>
