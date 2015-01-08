@@ -15,6 +15,7 @@
         <object-name>AileronL</object-name>
         <object-name>WingTipPosL-Light</object-name>
         <object-name>WingTipPosL-Housing</object-name>
+        <object-name>LWingSlimmer</object-name>
         <property>surface-positions/wing-fold-pos-norm</property>
         <factor>-7.0</factor>
         <center>
@@ -36,6 +37,7 @@
         <object-name>AileronR</object-name>
         <object-name>WingTipPosR-Light</object-name>
         <object-name>WingTipPosR-Housing</object-name>
+        <object-name>RWingSlimmer</object-name>
         <property>surface-positions/wing-fold-pos-norm</property>
         <factor>7.0</factor>
         <center>
@@ -416,13 +418,129 @@
     <!-- inlet ramps-->
     <animation>
         <type>rotate</type>
-        <object-name>Intake ramp</object-name>
-        <object-name>IntakeLipL</object-name>
-        <property>fdm/jsbsim/propulsion/inlet/ramp1-position-deg</property>
+        <object-name>IntakeRampL0</object-name> <!-- RampL0 is outer and contains Ramp L1 -->
+        <object-name>IntakeRampL2</object-name>
+        <object-name>IntakeRampL3</object-name>
+        <property>fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg</property>
+        <center>
+            <x-m>-2.06031</x-m>
+            <y-m>-0.87825</y-m>
+            <z-m>-0.16711</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>IntakeRampR0</object-name>
+        <object-name>IntakeRampR2</object-name>
+        <object-name>IntakeRampR3</object-name>
+        <property>fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg</property>
         <center>
             <x-m>-2.06031</x-m>
             <y-m>0.87825</y-m>
             <z-m>-0.16711</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>locked-track</type>
+
+        <object-name>IntakeRampL2</object-name>
+        <center>
+            <x-m>-2.7205</x-m>
+            <y-m>-1.1078</y-m>
+            <z-m> 0.6987</z-m>
+        </center>
+        <lock-axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </lock-axis>
+        <track-axis>
+            <x>1</x>
+            <y>0</y>
+            <z>1</z>
+        </track-axis>
+
+        <target-name>IntakeRampL4</target-name>
+        <target-center>
+            <x-m>-0.4662</x-m>
+            <y-m>-1.1028</y-m>
+            <z-m>0.1819</z-m>
+        </target-center>
+
+        <slave-name>IntakeRampL3</slave-name>
+        <slave-center>
+            <x-m>-2.6958</x-m>
+            <y-m>-1.4924</y-m>
+            <z-m>0.4838</z-m>
+        </slave-center>
+    </animation>
+    <animation>
+        <type>locked-track</type>
+
+        <object-name>IntakeRampR2</object-name>
+        <center>
+            <x-m>-2.7205</x-m>
+            <y-m>-1.1078</y-m>
+            <z-m> 0.6987</z-m>
+        </center>
+        <lock-axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </lock-axis>
+        <track-axis>
+            <x>1</x>
+            <y>0</y>
+            <z>1</z>
+        </track-axis>
+
+        <target-name>IntakeRampR4</target-name>
+        <target-center>
+            <x-m>-0.4662</x-m>
+            <y-m>-1.1028</y-m>
+            <z-m>0.1819</z-m>
+        </target-center>
+
+        <slave-name>IntakeRampR3</slave-name>
+        <slave-center>
+            <x-m>-2.6958</x-m>
+            <y-m>-1.4924</y-m>
+            <z-m>0.4838</z-m>
+        </slave-center>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>IntakeRampL4</object-name>
+        <property>fdm/jsbsim/propulsion/inlet/l-ramp4-position-deg</property>
+        <center>
+            <x-m>-0.3691</x-m>
+            <y-m>-1.1025</y-m>
+            <z-m> 0.5479</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>IntakeRampR4</object-name>
+        <property>fdm/jsbsim/propulsion/inlet/r-ramp4-position-deg</property>
+        <center>
+            <x-m>-0.3691</x-m>
+            <y-m>1.1025</y-m>
+            <z-m>0.5479</z-m>
         </center>
         <axis>
             <x>0</x>

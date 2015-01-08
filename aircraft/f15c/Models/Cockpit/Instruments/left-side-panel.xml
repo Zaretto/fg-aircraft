@@ -3,8 +3,471 @@
 
 <PropertyList>
 
-	<path>left-side-panel.ac</path>
-<!-- generators -->
+    <path>left-side-panel.ac</path>
+    <!-- EXT LT Panel-->
+
+<animation>
+        <type>knob</type>
+        <object-name>formation-light-brightness</object-name>
+        <property>sim/multiplay/generic/int[1]</property> <!-- or property as usual for rotate animation -->
+    <factor>-45</factor>
+    <offset-deg>-88</offset-deg>
+        <center>
+            <x-m>-5.3533</x-m>
+            <y-m>-0.3885</y-m>
+            <z-m>0.6589</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+ 
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/multiplay/generic/int[1]</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>5</max>                
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <!-- explicit increase binding, action binding still runs too -->
+        <!--<increase>
+            <binding>
+                <command>nasal</command>
+                <script>debug.dump('was increased', cmdarg().getNode('offset').getValue());</script>
+           </binding>
+        </increase>-->
+        <!-- explicit decrease binding, action binding still runs too --><!--
+        <decrease>
+            <binding>....</binding>
+        </decrease>-->
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>position-light-brightness</object-name>
+        <property>sim/multiplay/generic/int[4]</property>
+        <factor>-45</factor>
+        <offset-deg>-88</offset-deg>
+        <center>
+            <x-m>-5.3509</x-m>
+            <y-m>-0.3122</y-m>
+            <z-m>0.6589</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/multiplay/generic/int[4]</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>5</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>anti-collision-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/multiplay/generic/int[3]</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>anti-collision-switch</object-name>
+        <property>sim/multiplay/generic/int[3]</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.003</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.3579</x-m>
+            <y-m> 0.3521</y-m>
+            <z-m> 0.6550</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>vert-tail-flood-switch</object-name>
+        <property>sim/multiplay/generic/int[5]</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.3223</x-m>
+            <y-m>-0.3530</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/multiplay/generic/int[5]</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+<!-- Misc panel -->
+    <animation>
+        <type>knob</type>
+        <object-name>misc-l-inlet-switch</object-name>
+        <property>sim/model/f15/controls/engines/l-ramp-switch</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6775</x-m>
+            <y-m>-0.4670</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/engines/l-ramp-switch</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>misc-r-inlet-switch</object-name>
+        <property>sim/model/f15/controls/engines/r-ramp-switch</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6775</x-m>
+            <y-m>-0.4670</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/engines/r-ramp-switch</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+                    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>misc-ldg-light-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    if(getprop("sim/multiplay/generic/int[7]") == 0)
+                        setprop("sim/multiplay/generic/int[7]",2);
+                        elsif(getprop("sim/multiplay/generic/int[7]") == 2)
+                        setprop("sim/multiplay/generic/int[7]",1);
+                        elsif(getprop("sim/multiplay/generic/int[7]") == 1)
+                        setprop("sim/multiplay/generic/int[7]",0);
+                </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>misc-ldg-light-switch</object-name>
+        <property>sim/multiplay/generic/int[7]</property> <!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder-->
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>30</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>-30</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6611</x-m>
+            <y-m>-0.4441</y-m>
+            <z-m>0.6541</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!--<animation>
+        <type>knob</type>
+        <object-name>misc-ldg-light-switch</object-name>
+        <property>sim/multiplay/generic/int[7]</property> --><!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder--><!--
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/multiplay/generic/int[7]</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>-->
+<!-- SAS Panel-->
+    <!-- Misc panel -->
+
+    <animation>
+        <type>knob</type>
+        <object-name>cas-yaw-switch</object-name>
+        <property>fdm/jsbsim/fcs/yaw-damper-enable</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6546</x-m>
+            <y-m>-0.3880</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/fcs/yaw-damper-enable</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>cas-roll-switch</object-name>
+        <property>fdm/jsbsim/fcs/roll-damper-enable</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6559</x-m>
+            <y-m>-0.3515</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/fcs/roll-damper-enable</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>cas-pitch-switch</object-name>
+        <property>fdm/jsbsim/fcs/pitch-damper-enable</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6563</x-m>
+            <y-m>-0.3139</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/fcs/pitch-damper-enable</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+        <animation>
+        <type>knob</type>
+        <object-name>cas-alt-hold-switch</object-name>
+        <property>sim/model/f15/controls/afcs/alt-hold</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6223</x-m>
+            <y-m>-0.3891</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/afcs/alt-hold</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+        
+        <animation>
+        <type>knob</type>
+        <object-name>cas-att-hold-switch</object-name>
+        <property>sim/model/f15/controls/afcs/att-hold</property>
+        <factor>-60</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.6223</x-m>
+            <y-m>-0.3520</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/afcs/att-hold</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>cas-takeoff-trim-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/afcs/cas-takeoff-trim</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>cas-takeoff-trim-switch</object-name>
+        <property>sim/model/f15/controls/afcs/cas-takeoff-trim</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.003</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6251</x-m>
+            <y-m> 0.3209</y-m>
+            <z-m> 0.6550</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+        
+        <!-- engines panel -->
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-gen-left-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/electrics/l-gen-switch</property>
+            </binding>
+        </action>
+    </animation>
+    <!-- generators -->
     <animation>
         <type>pick</type>
         <visible>true</visible>
@@ -160,6 +623,121 @@
         </axis>
     </animation>
 
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-emerg-gen-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/electrics/emerg-gen-switch</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-emerg-gen-switch</object-name>
+        <property>sim/model/f15/controls/electrics/emerg-gen-switch</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-40</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.65456</x-m>
+            <y-m> 0.35292</y-m>
+            <z-m> 0.67552</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-eec-left-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/engines/l-eec-switch</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-eec-left-switch</object-name>
+        <property>sim/model/f15/controls/engines/l-eec-switch</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-40</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.65456</x-m>
+            <y-m> 0.3993</y-m>
+            <z-m> 0.67552</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>eng-eec-right-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f15/controls/engines/r-eec-switch</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>eng-eec-right-switch</object-name>
+        <property>sim/model/f15/controls/engines/r-eec-switch</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-40</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.65456</x-m>
+            <y-m> 0.3821</y-m>
+            <z-m> 0.67552</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
     <animation>
         <type>pick</type>
@@ -235,7 +813,7 @@
         </axis>
     </animation>
 
-<!-- r-eng-master-->
+    <!-- r-eng-master-->
     <animation>
         <type>pick</type>
         <visible>true</visible>
@@ -309,7 +887,7 @@
             <z>0</z>
         </axis>
     </animation>
-<!--jfs -->
+    <!--jfs -->
     <animation>
         <type>pick</type>
         <visible>true</visible>
@@ -349,26 +927,28 @@
             <z>0</z>
         </axis>
     </animation>
-    
+
 
     <!-- Lighting -->
-	<animation>
-		<object-name>mount</object-name> 
-		<type>material</type>
-		<condition>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <not><property>sim/rendering/rembrandt/enabled</property></not>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
         </condition>
-		<emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
     <animation>
         <type>select</type>
         <object-name>jfs-ready-lamp-on</object-name>
@@ -386,7 +966,7 @@
     <animation>
         <object-name>jfs-ready-lamp-on</object-name>
         <type>material</type>
-        
+
         <emission>
             <factor-prop>sim/model/f15/controls/lighting/index-norm</factor-prop>
             <red>1</red>
@@ -396,10 +976,10 @@
     </animation>
 
     <!-- *** LoD *** -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>35</max-m>
+    </animation>
 
 </PropertyList>

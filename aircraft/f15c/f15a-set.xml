@@ -115,6 +115,12 @@
 						<system-on-off type="bool">false</system-on-off>
 						<tanks-ground-sound type="bool">0</tanks-ground-sound>
 					</armament>
+                    <engines>
+                        <l-eec-switch type="int">1</l-eec-switch>
+                        <r-eec-switch type="int">1</r-eec-switch>
+                        <l-ramp-switch type="int">1</l-ramp-switch>
+                        <r-ramp-switch type="int">1</r-ramp-switch>
+                    </engines>
 					<fuel>
 						<bingo type="int">4500</bingo>
 						<dump-switch type="bool">false</dump-switch>
@@ -476,6 +482,30 @@
                 </overrides>
 			</f15>
         </model>
+
+		<multiplay>
+			<generic>
+				<float n="0">0</float><!-- free     -->
+				<!-- <float n="1">0</float> free     -->
+				<float n="2">0</float><!-- free     -->
+				<float n="3">0</float><!-- free     -->
+				<float n="4">0</float><!-- left elevator  -->
+				<float n="5">0</float><!-- right elevator -->
+				<float n="6">0</float><!-- refuel probe/door -->
+				<int n="0" type="int">0</int>    <!-- fuel dump      -->
+				<int n="1" type="int">0</int>    <!-- formation slimmers -->
+				<int n="2" type="int">0</int>    <!-- radar-standby -->
+				<int n="3" type="int">0</int>    <!-- collision lights -->
+				<int n="4" type="int">0</int>    <!-- position lights -->
+				<int n="5" type="int">0</int>    <!-- tail flood  -->
+				<int n="6" type="int">0</int>    <!-- free -->
+				<int n="7" type="int">0</int>    <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
+				<string n="0" type="string"></string>       <!-- mp-network -->
+				<string n="1" type="string">xxx</string>    <!-- instruments -->
+			</generic>
+            <!-- set default aircaft model to us; I find it hard to see the glider. -->
+            <default-model>Aircraft/f15c/Models/f15c.ac</default-model>
+		</multiplay>
 
         <rendering>
             <camera-group>

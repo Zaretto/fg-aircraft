@@ -31,6 +31,9 @@
 
         <property>systems/NWS/engaged</property>
 
+        <property value="0">propulsion/inlet/l-inlet-ramp-emerg</property>
+        <property value="0">propulsion/inlet/r-inlet-ramp-emerg</property>
+
     <property>fcs/hook-engage</property>
     <property>fcs/flap-cmd-sum</property>
     <property>fcs/roll-trim-sas-cmd-norm</property>
@@ -612,8 +615,9 @@
     </channel>
 
     <channel name="Inlet Control">
-        <description>Inlet Ramp angle demand. NASA TP-3627, p14 Figure 10</description>
+        <!-- Inlet Ramp 1 - visible from the outside -->
         <fcs_function name="propulsion/inlet/ramp1-position-demand-deg">
+            <description>Inlet Ramp angle demand. NASA TP-3627, p14 Figure 10</description>
             <function>
                 <product>
                     <sum>
@@ -668,6 +672,90 @@
                 <max>   1 </max>
             </range>
         </aerosurface_scale>
+
+        <!-- individual ramp 1 positions -->
+        <switch name="propulsion/inlet/l-ramp1-position-deg">
+            <description>Left engine outer ramp position</description>
+            <default value="0"/>
+            <test value="propulsion/inlet/ramp1-position-deg" logic="AND">
+                propulsion/inlet/l-inlet-ramp-emerg eq 0
+            </test>
+        </switch>
+        <switch name="propulsion/inlet/r-ramp1-position-deg">
+            <description>Right  engine outer ramp position</description>
+            <default value="0"/>
+            <test value="propulsion/inlet/ramp1-position-deg" logic="AND">
+                propulsion/inlet/r-inlet-ramp-emerg eq 0
+            </test>
+        </switch>
+
+        <!-- Inlet Ramp 4 - inactive at subsonic -->
+        <fcs_function name="propulsion/inlet/ramp4-position-demand-deg">
+            <description>Inlet Ramp 4 angle demand estimated</description>
+            <function>
+                <product>
+                    <sum>
+                        <table>
+                            <independentVar lookup="row">velocities/mach</independentVar>
+                            <tableData>
+                                0.00    0
+                                1.00     0
+                                2.0     12
+                            </tableData>
+                        </table>
+                    </sum>
+                </product>
+            </function>
+            <clipto>
+                <min> 0 </min>
+                <max> 16 </max>
+            </clipto>
+        </fcs_function>
+        <switch name="propulsion/inlet/ramp4-position-deg">
+            <description>Inlet outer ramp position</description>
+            <default value="0"/>
+            <test value="propulsion/inlet/ramp4-position-demand-deg" logic="AND">
+                systems/hydraulics/combined-system-pressure ne 0
+                position/aircraft-on-ground eq 0
+            </test>
+            <!-- in air ramps will get pushed up. this is a guess and they may be locked up.-->
+            <test value="0" logic="AND">
+                systems/hydraulics/combined-system-pressure lt 1
+                velocities/mach gt 0.6
+            </test>
+            <!-- no hydraulics means no engines.-->
+            <test value="16">
+                systems/hydraulics/combined-system-pressure lt 1
+            </test>
+        </switch>
+        <aerosurface_scale name="propulsion/inlet/ramp4-position-norm">
+            <input>propulsion/inlet/ramp4-position-deg</input>
+            <domain>
+                <min>  0 </min>
+                <max> 16 </max>
+            </domain>
+            <range>
+                <min>   0 </min>
+                <max>   1 </max>
+            </range>
+        </aerosurface_scale>
+
+        <!-- individual ramp positions -->
+        <switch name="propulsion/inlet/l-ramp4-position-deg">
+            <description>Left engine outer ramp position</description>
+            <default value="0"/>
+            <test value="propulsion/inlet/ramp4-position-deg" logic="AND">
+                propulsion/inlet/l-inlet-ramp-emerg eq 0
+            </test>
+        </switch>
+        <switch name="propulsion/inlet/r-ramp4-position-deg">
+            <description>Right  engine outer ramp position</description>
+            <default value="0"/>
+            <test value="propulsion/inlet/ramp4-position-deg" logic="AND">
+                propulsion/inlet/r-inlet-ramp-emerg eq 0
+            </test>
+        </switch>
+
 
     </channel>
 

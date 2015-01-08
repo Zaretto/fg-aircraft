@@ -225,7 +225,6 @@ var updateFCS = func {
 	aircraft.computeNozzles ();
 	aircraft.computeAdverse ();
 	aircraft.computeNWS ();
-	aircraft.computeAICS ();
     aircraft.electricsFrame();
 	aircraft.registerFCS (); # loop, once per frame.
 }

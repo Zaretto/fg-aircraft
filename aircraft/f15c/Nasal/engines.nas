@@ -5,12 +5,6 @@ var egt2_rankin = props.globals.getNode("engines/engine[1]/egt-degR", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
 
-var Ramp1l     = props.globals.getNode("engines/AICS/ramp1l", 1);
-var Ramp2l     = props.globals.getNode("engines/AICS/ramp2l", 1);
-var Ramp3l     = props.globals.getNode("engines/AICS/ramp3l", 1);
-var Ramp1r     = props.globals.getNode("engines/AICS/ramp1r", 1);
-var Ramp2r     = props.globals.getNode("engines/AICS/ramp2r", 1);
-var Ramp3r     = props.globals.getNode("engines/AICS/ramp3r", 1);
 var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "DOUBLE");
 var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
 var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
@@ -21,7 +15,7 @@ var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation"
 #props.globals.getNode("sim/model/f15/fx/test2",1);
 setprop("sim/model/f15/gear-sound-freeze",0);
 setprop("sim/model/f15/engine-sound-freeze",0);
-setprop("sim/model/f15/controls/switch-backup-ignition",0);
+setprop("sim/model/f15/controls/engines/switch-backup-ignition",0);
 
 setprop("/fdm/jsbsim/propulsion/engine[0]/nozzle-pos-norm",1);
 setprop("/fdm/jsbsim/propulsion/engine[1]/nozzle-pos-norm",1);
@@ -52,44 +46,6 @@ var jfs_set_running_active = 0;
 
 var GearPos   = props.globals.getNode("gear/gear[0]/position-norm", 1);
 
-#----------------------------------------------------------------------------
-# AICS (Air Inlet Control System)
-#----------------------------------------------------------------------------
-
-var computeAICS = func {
-
-	if (CurrentMach < 0.5) {
-		ramp1 = 0.0;
-		ramp3 = 0.0;
-		ramp2 = 0.0;
-	} elsif (CurrentMach < 1.2) {
-		ramp1 = (CurrentMach - 0.5) * 0.4285;
-		ramp3 = (CurrentMach - 0.5) * 0.2857;
-		ramp2 = 0.0;
-	} elsif (CurrentMach < 2.0) {
-		ramp1 = (CurrentMach - 1.2) * 0.875 + 0.3;
-		ramp3 = (CurrentMach - 1.2) + 0.2;
-		ramp2 = (CurrentMach - 1.2) / 0.8;
-	} else {
-		ramp1 = 1.0;
-		ramp3 = 1.0;
-		ramp2 = 1.0;
-	}
-
-    if(!getprop("sim/model/f15/controls/switch-l-ramp"))
-    {
-    	Ramp1l.setValue(ramp1);
-    	Ramp2l.setValue(ramp2);
-    	Ramp3l.setValue(ramp3);
-    }
-
-    if(!getprop("sim/model/f15/controls/switch-r-ramp"))
-    {
-    	Ramp1r.setValue(ramp1);
-    	Ramp2r.setValue(ramp2);
-    	Ramp3r.setValue(ramp3);
-    }
-}
 
 #----------------------------------------------------------------------------
 # Nozzle opening
@@ -438,55 +394,25 @@ var fire_handle = func(n) {
     }
 }
 
+
 #
-# engine controls panel - R RAMP switch
-var econt_r_ramp = func(n) {
-    setprop("sim/model/f15/controls/switch-r-ramp", n);
-    if (n)
+setlistener("sim/model/f15/controls/engines/l-ramp-switch", func {
+    var v = getprop("sim/model/f15/controls/engines/l-ramp-switch");
+    if (v != nil)
     {
-    	Ramp1r.setValue(0);
-    	Ramp2r.setValue(0);
-    	Ramp3r.setValue(0);
+        if (v == 0)
+            setprop("fdm/jsbsim/propulsion/inlet/l-inlet-ramp-emerg", 1);
+        else
+            setprop("fdm/jsbsim/propulsion/inlet/l-inlet-ramp-emerg", 0);
     }
-}
-
-#
-# engine controls panel - L RAMP switch
-var econt_l_ramp = func(n) {
-
-    setprop("sim/model/f15/controls/switch-l-ramp", n);
-
-    if (n)
+});
+setlistener("sim/model/f15/controls/engines/r-ramp-switch", func {
+    var v = getprop("sim/model/f15/controls/engines/r-ramp-switch");
+    if (v != nil)
     {
-    	Ramp1l.setValue(0);
-    	Ramp2l.setValue(0);
-    	Ramp3l.setValue(0);
+        if (v == 0)
+            setprop("fdm/jsbsim/propulsion/inlet/r-inlet-ramp-emerg", 1);
+        else
+            setprop("fdm/jsbsim/propulsion/inlet/r-inlet-ramp-emerg", 0);
     }
-}
-
-#
-# engine controls panel - throttle mode
-var econt_throttle_mode = func(n) {
-    setprop("sim/model/f15/controls/switch-throttle-mode", n);
-    if(n == 1) # Auto - APC
-    {
-        APC_on();
-    }
-    else
-    {
-    APC_off();
-    }
-}
-
-#
-# engine controls panel - backup ignition
-var econt_backup_ignition_toggle = func {
-    setprop("sim/model/f15/controls/switch-backup-ignition", 1 - getprop("sim/model/f15/controls/switch-backup-ignition"));
-}
-
-#
-# engine controls panel - temperature switch
-var econt_temp = func(n) {
-    setprop("sim/model/f15/controls/switch-temp", n);
-}
-
+});
