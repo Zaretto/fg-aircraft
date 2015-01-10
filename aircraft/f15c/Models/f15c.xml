@@ -847,28 +847,6 @@
         </offsets>
     </model>
 
-     <!-- Les flammes -->
-    <!-- Gauche -->
-    <model>
-        <path>Effects/flammes/flammesG.xml</path>
-        <offsets>
-            <x-m>  6.3</x-m>
-            <y-m>   -0.7</y-m>
-            <z-m>   0.1</z-m>
-
-        </offsets>
-    </model>
-
-    <!-- Droite -->
-    <model>
-        <path>Effects/flammes/flammesD.xml</path>
-        <offsets>
-            <x-m>  6.3</x-m>
-            <y-m>  0.7</y-m>
-            <z-m>  0.1</z-m>
-
-        </offsets>
-    </model>
 
     <!-- Gauche -->
     <model>
@@ -1264,18 +1242,74 @@
         </axis>
     </animation>
 
-    
- <model>
-  <name>nozzle</name>
-  <path>Aircraft/f15c/Models/nozzle-L.xml</path>
-  <offsets>
-   <x-m>0.0</x-m>
-   <y-m>0.0</y-m>
-   <z-m>0.0</z-m>
-  </offsets>
- </model>     
- 
-  <model>
+    <model>
+        <name>nozzle</name>
+        <path>Aircraft/f15c/Models/nozzle-L.xml</path>
+        <offsets>
+            <x-m>0.0</x-m>
+            <y-m>0.0</y-m>
+            <z-m>0.0</z-m>
+        </offsets>
+    </model>
+    <!-- Les flammes -->
+    <!-- Gauche -->
+    <!--<model>
+        <path>Effects/flammes/flammesG.xml</path>
+        <offsets>
+            <x-m>  6.3</x-m>
+            <y-m>   -0.7</y-m>
+            <z-m>   0.1</z-m>
+
+        </offsets>
+    </model>-->
+    <model>
+        <path>Effects/Engines/AfterburnerL.xml</path>
+        <offsets>
+            <x-m>  6.3</x-m>
+            <y-m>   -0.7</y-m>
+            <z-m>   0.1</z-m>
+
+        </offsets>
+    </model>
+
+    <!-- Droite -->
+    <model>
+        <path>Effects/Engines/AfterburnerR.xml</path>
+        <offsets>
+            <x-m>  6.3</x-m>
+            <y-m>  0.7</y-m>
+            <z-m>  0.1</z-m>
+
+        </offsets>
+    </model>
+    <animation>
+        <type>material</type>
+        <object-name>AfterburnerL</object-name>
+        <object-name>TurbineL</object-name>
+        <object-name>AfterburnerL.001</object-name>
+
+        <emission>
+            <red>1.0</red>
+            <green>0.5</green>
+            <blue>0.0</blue>
+            <factor-prop>engines/engine[0]/afterburner</factor-prop>
+        </emission>
+    </animation>
+    <animation>
+        <type>material</type>
+        <object-name>AfterburnerR</object-name>
+        <object-name>TurbineR</object-name>
+        <object-name>AfterburnerR.001</object-name>
+
+        <emission>
+            <red>1.0</red>
+            <green>0.5</green>
+            <blue>0.0</blue>
+            <factor-prop>engines/engine[1]/afterburner</factor-prop>
+        </emission>
+    </animation>
+
+    <model>
   <name>nozzle</name>
   <path>Aircraft/f15c/Models/nozzle-R.xml</path>
   <offsets>
