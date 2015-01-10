@@ -6,25 +6,6 @@
 	<path>hud-controls.ac</path>
 
 	
-	<!-- Lighting -->
-	<animation>
-		<object-name>mount</object-name> 
-		<type>material</type>
-		<condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not><property>sim/rendering/rembrandt/enabled</property></not>
-        </condition>
-		<emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-
     <animation>
         <type>select</type>
         <object-name>master-caution-on</object-name>
@@ -85,6 +66,52 @@
         </action>
     </animation>
 
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/flt-inst</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>5</max-m>
+    </animation>
     <!-- *** LoD *** -->
 	<animation>
 		<type>range</type>

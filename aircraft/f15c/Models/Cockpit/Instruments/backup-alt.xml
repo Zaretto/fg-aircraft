@@ -177,6 +177,7 @@
     </animation>
     <!--Lighting-->
     <animation>
+        <object-name>mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -186,8 +187,10 @@
             <not>
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
         </condition>
-        <object-name>balt-mount</object-name>
         <emission>
             <factor-prop>controls/lighting/panel-norm</factor-prop>
             <red>0.55</red>
@@ -195,7 +198,9 @@
             <blue>0.10</blue>
         </emission>
     </animation>
+
     <animation>
+        <object-name>instrument</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -206,24 +211,17 @@
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <object-name>balt-face</object-name>
-        <object-name>balt-barometric-pressure-readout</object-name>
-        <object-name>balt-needle-feet</object-name>
-        <object-name>balt-needle-100-feet</object-name>
-        <object-name>balt-needle-1000-feet</object-name>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <factor-prop>controls/lighting/stby-inst</factor-prop>
             <red>0.55</red>
-            <green>0.55</green>
-            <blue>0.55</blue>
+            <green>0.24</green>
+            <blue>0.10</blue>
         </emission>
     </animation>
-
     <!-- *** LoD *** -->
     <animation>
         <type>range</type>
         <min-m>0</min-m>
-        <max-m>5</max-m>
+        <max-m>20</max-m>
     </animation>
-
 </PropertyList>

@@ -5,22 +5,6 @@
 <PropertyList>
 	<path>altimeter.ac</path>
 
-	<!--<animation>
-		<type>select</type>
-		<object-name>altimeter</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>-->
-    <!--<animation>
-        <type>scale</type>
-        <x-offset>0.75</x-offset>
-        <y-offset>0.75</y-offset>
-        <z-offset>0.75</z-offset>
-    </animation>-->
 	<animation>
 		<type>rotate</type>
 		<condition>
@@ -206,7 +190,7 @@
 	<animation>
 		<name>ingh-knob-left-fine</name>
 		<type>pick</type>
-		<visible>true</visible>
+		<visible>false</visible>
 		<object-name>ingh-knob-left</object-name>
 		<action>
 			<button>0</button>
@@ -226,7 +210,7 @@
 	<animation>
 		<name>ingh-knob-left-coarse</name>
 		<type>pick</type>
-		<visible>true</visible>
+		<visible>false</visible>
 		<object-name>ingh-knob-left</object-name>
 		<action>
 			<button>1</button>
@@ -246,7 +230,7 @@
 	<animation>
 		<name>ingh-knob-right-fine</name>
 		<type>pick</type>
-		<visible>true</visible>
+		<visible>false</visible>
 		<object-name>ingh-knob-right</object-name>
 		<action>
 			<button>0</button>
@@ -266,7 +250,7 @@
 	<animation>
 		<name>ingh-knob-right-coarse</name>
 		<type>pick</type>
-		<visible>true</visible>
+		<visible>false</visible>
 		<object-name>ingh-knob-right</object-name>
 		<action>
 			<button>1</button>
@@ -284,9 +268,9 @@
 	</animation>
 
 	<!-- lighting -->
-	<animation>
-		<object-name>mount</object-name>
-		<type>material</type>
+    <animation>
+        <object-name>ext</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -297,16 +281,16 @@
             </not>
         </condition>
         <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
 
-	<animation> 
-		<object-name>knobs</object-name>
-		<type>material</type>
+    <animation>
+        <object-name>instr</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -317,75 +301,14 @@
             </not>
         </condition>
         <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+            <factor-prop>controls/lighting/flt-inst</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
+        </emission>
+    </animation>
 
-	<animation>
-		<object-name>face</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-
-	<animation>
-		<object-name>drums</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-
-	<animation>
-		<object-name>needle-w</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-
-
-	<animation>
+    <animation>
 		<type>range</type>
 		<min-m>0</min-m>
 		<max-m>50</max-m>

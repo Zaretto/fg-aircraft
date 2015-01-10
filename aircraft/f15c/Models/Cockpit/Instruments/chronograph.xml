@@ -1,193 +1,157 @@
 <?xml version="1.0"?>
-<PropertyList> 
-	<path>chronograph.ac</path>
+<PropertyList>
+    <path>chronograph.ac</path>
 
-    <!--<animation>
-        <type>scale</type>
-        <x-offset>0.5</x-offset>
-        <y-offset>0.5</y-offset>
-        <z-offset>0.5</z-offset>
+    <animation>
+        <type>rotate</type>
+        <object-name>HourHand</object-name>
+        <property>instrumentation/clock/indicated-sec</property>
+        <factor>0.00833333333333333</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.1515</y-m>
+            <z-m> 0.8510</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
     </animation>
     <animation>
-		<type>select</type>
-		<object-name>clock</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>-->
-
-	<animation> 
-		<type>rotate</type>
-		<object-name>HourHand</object-name>
-		<property>instrumentation/clock/indicated-sec</property>
-		<factor>0.00833333333333333</factor>
+        <type>rotate</type>
+        <object-name>MinuteHand</object-name>
+        <property>instrumentation/clock/indicated-sec</property>
+        <factor>0.1</factor>
         <center>
             <x-m> -5.6980</x-m>
             <y-m> 0.1515</y-m>
             <z-m> 0.8510</z-m>
         </center>
-        <axis> 
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
-	<animation> 
-		<type>rotate</type>
-		<object-name>MinuteHand</object-name>
-		<property>instrumentation/clock/indicated-sec</property>
-		<factor>0.1</factor>
-        <center>
-            <x-m> -5.6980</x-m>
-            <y-m> 0.1515</y-m>
-            <z-m> 0.8510</z-m>
-        </center>
-        <axis> 
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
-	<animation> 
-		<type>rotate</type>
-		<object-name>SecondHand</object-name>
-		<property>instrumentation/clock/elapsed-sec</property>
-		<factor>6</factor>
-        <center>
-            <x-m> -5.6980</x-m>
-            <y-m> 0.1515</y-m>
-            <z-m> 0.8510</z-m>
-        </center>
-        <axis> 
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
-	<animation> 
-		<type>rotate</type>
-		<object-name>ElapsedMinutesHand</object-name>
-		<property>instrumentation/clock/elapsed-sec</property>
-		<factor>0.1</factor>
-        <center>
-            <x-m> -5.6980</x-m>
-            <y-m> 0.1515</y-m>
-            <z-m> 0.8510</z-m>
-        </center>
-        <axis> 
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
-
-	<!-- Clock Setting Knob -->
-	<animation>
-		<name>time-offset-left-fine</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>time-offset-left</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>instrumentation/clock/offset-sec</property>
-				<step>-60</step>
-			</binding>
-		</action>
-	</animation>
-	<animation>
-		<name>time-offset-left-hours</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>time-offset-left</object-name>
-		<action>
-			<button>1</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>instrumentation/clock/offset-sec</property>
-				<step>-3600</step>
-			</binding>
-		</action>
-	</animation>
-	<animation>
-		<name>time-offset-right-fine</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>time-offset-right</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>instrumentation/clock/offset-sec</property>
-				<step>60</step>
-			</binding>
-		</action>
-	</animation>
-	<animation>
-		<name>time-offset-right-hours</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>time-offset-right</object-name>
-		<action>
-			<button>1</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>instrumentation/clock/offset-sec</property>
-				<step>3600</step>
-			</binding>
-		</action>
-	</animation>
-
-	<!-- Chronometer Start Stop Button -->
-	<animation>
-		<name>start-stop-reset</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>chronometer-button</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>false</repeatable>
-			<binding>
-				<command>nasal</command>
-				<script>f15_chronograph.click()</script>
-			</binding>
-		</action>
-	</animation>
-
-	<!-- lighting -->
-	<animation> 
-		<object-name>mount</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
-        </emission>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
     </animation>
     <animation>
-        <object-name>knob</object-name>
+        <type>rotate</type>
+        <object-name>SecondHand</object-name>
+        <property>instrumentation/clock/elapsed-sec</property>
+        <factor>6</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.1515</y-m>
+            <z-m> 0.8510</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>ElapsedMinutesHand</object-name>
+        <property>instrumentation/clock/elapsed-sec</property>
+        <factor>0.1</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.1515</y-m>
+            <z-m> 0.8510</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- Clock Setting Knob -->
+    <animation>
+        <name>time-offset-left-fine</name>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>time-offset-left</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>-60</step>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>time-offset-left-hours</name>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>time-offset-left</object-name>
+        <action>
+            <button>1</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>-3600</step>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>time-offset-right-fine</name>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>time-offset-right</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>60</step>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>time-offset-right-hours</name>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>time-offset-right</object-name>
+        <action>
+            <button>1</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>3600</step>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- Chronometer Start Stop Button -->
+    <animation>
+        <name>start-stop-reset</name>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>chronometer-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f15_chronograph.click()</script>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -206,7 +170,7 @@
         </emission>
     </animation>
     <animation>
-        <object-name>button</object-name>
+        <object-name>instrument</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -218,56 +182,17 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
         </emission>
     </animation>
+
+    <!--  LoD  -->
     <animation>
-        <type>material</type>
-        <object-name>face</object-name>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
-        </emission>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>35</max-m>
     </animation>
-    <animation>
-        <type>material</type>
-        <object-name>needles</object-name>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-
-
-	<!--  LoD  -->
-	<animation> 
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
 </PropertyList>

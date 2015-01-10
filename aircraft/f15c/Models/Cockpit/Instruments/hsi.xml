@@ -5,12 +5,7 @@
 	<name>HSI</name>
 	<path>hsi.ac</path>
 
-    <!--<animation>
-        <type>scale</type>
-        <x-offset>0.7</x-offset>
-        <y-offset>0.7</y-offset>
-        <z-offset>0.7</z-offset>
-    </animation>-->
+    
 	<animation>
 		<type>rotate</type>
 		<object-name>hsi</object-name>
@@ -429,10 +424,9 @@
 
 
 	<!-- lighting -->
-
-	<animation>
-		<object-name>panel</object-name>
-		<type>material</type>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -441,20 +435,18 @@
             <not>
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.385</red>
-			<green>0.168</green>
-			<blue>0.07</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>instrument</object-name>
-		<type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -463,19 +455,16 @@
             <not>
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+        <emission>
+            <factor-prop>controls/lighting/flt-inst</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
+        </emission>
+    </animation>
 
-	<animation>
+    <animation>
 		<type>range</type>
 		<min-m>0</min-m>
 		<max-m>5</max-m>

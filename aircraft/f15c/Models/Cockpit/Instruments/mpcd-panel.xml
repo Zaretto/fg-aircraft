@@ -7,25 +7,47 @@
 
 	
 	<!-- Lighting -->
-	<animation>
-		<object-name>mount</object-name> 
-		<type>material</type>
-		<condition>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <not><property>sim/rendering/rembrandt/enabled</property></not>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
         </condition>
-		<emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <!--<factor-prop>controls/lighting/mpcd-screen</factor-prop>-->
+            <factor-prop>controls/lighting/flt-inst</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
 
-	<!-- *** LoD *** -->
+    <!-- *** LoD *** -->
 	<animation>
 		<type>range</type>
 		<min-m>0</min-m>

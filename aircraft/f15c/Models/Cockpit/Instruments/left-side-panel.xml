@@ -6,12 +6,13 @@
     <path>left-side-panel.ac</path>
     <!-- EXT LT Panel-->
 
-<animation>
+    <animation>
         <type>knob</type>
         <object-name>formation-light-brightness</object-name>
-        <property>sim/multiplay/generic/int[1]</property> <!-- or property as usual for rotate animation -->
-    <factor>-45</factor>
-    <offset-deg>-88</offset-deg>
+        <property>sim/multiplay/generic/int[1]</property>
+        <!-- or property as usual for rotate animation -->
+        <factor>-45</factor>
+        <offset-deg>-88</offset-deg>
         <center>
             <x-m>-5.3533</x-m>
             <y-m>-0.3885</y-m>
@@ -22,14 +23,14 @@
             <y>0</y>
             <z>1</z>
         </axis>
- 
+
         <action>
             <binding>
                 <command>property-adjust</command>
                 <property>sim/multiplay/generic/int[1]</property>
                 <factor>1</factor>
                 <min>0</min>
-                <max>5</max>                
+                <max>5</max>
                 <wrap>false</wrap>
             </binding>
         </action>
@@ -40,7 +41,8 @@
                 <script>debug.dump('was increased', cmdarg().getNode('offset').getValue());</script>
            </binding>
         </increase>-->
-        <!-- explicit decrease binding, action binding still runs too --><!--
+        <!-- explicit decrease binding, action binding still runs too -->
+        <!--
         <decrease>
             <binding>....</binding>
         </decrease>-->
@@ -142,7 +144,7 @@
             </binding>
         </action>
     </animation>
-<!-- Misc panel -->
+    <!-- Misc panel -->
     <animation>
         <type>knob</type>
         <object-name>misc-l-inlet-switch</object-name>
@@ -200,7 +202,7 @@
         </action>
     </animation>
 
-                    <animation>
+    <animation>
         <type>pick</type>
         <visible>true</visible>
         <object-name>misc-ldg-light-switch</object-name>
@@ -211,11 +213,11 @@
                 <command>nasal</command>
                 <script>
                     if(getprop("sim/multiplay/generic/int[7]") == 0)
-                        setprop("sim/multiplay/generic/int[7]",2);
-                        elsif(getprop("sim/multiplay/generic/int[7]") == 2)
-                        setprop("sim/multiplay/generic/int[7]",1);
-                        elsif(getprop("sim/multiplay/generic/int[7]") == 1)
-                        setprop("sim/multiplay/generic/int[7]",0);
+                    setprop("sim/multiplay/generic/int[7]",2);
+                    elsif(getprop("sim/multiplay/generic/int[7]") == 2)
+                    setprop("sim/multiplay/generic/int[7]",1);
+                    elsif(getprop("sim/multiplay/generic/int[7]") == 1)
+                    setprop("sim/multiplay/generic/int[7]",0);
                 </script>
             </binding>
         </action>
@@ -223,7 +225,8 @@
     <animation>
         <type>rotate</type>
         <object-name>misc-ldg-light-switch</object-name>
-        <property>sim/multiplay/generic/int[7]</property> <!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder-->
+        <property>sim/multiplay/generic/int[7]</property>
+        <!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder-->
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -253,7 +256,9 @@
     <!--<animation>
         <type>knob</type>
         <object-name>misc-ldg-light-switch</object-name>
-        <property>sim/multiplay/generic/int[7]</property> --><!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder--><!--
+        <property>sim/multiplay/generic/int[7]</property> -->
+    <!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder-->
+    <!--
 
         <action>
             <binding>
@@ -266,7 +271,7 @@
             </binding>
         </action>
     </animation>-->
-<!-- SAS Panel-->
+    <!-- SAS Panel-->
     <!-- Misc panel -->
 
     <animation>
@@ -356,7 +361,7 @@
         </action>
     </animation>
 
-        <animation>
+    <animation>
         <type>knob</type>
         <object-name>cas-alt-hold-switch</object-name>
         <property>sim/model/f15/controls/afcs/alt-hold</property>
@@ -384,8 +389,8 @@
             </binding>
         </action>
     </animation>
-        
-        <animation>
+
+    <animation>
         <type>knob</type>
         <object-name>cas-att-hold-switch</object-name>
         <property>sim/model/f15/controls/afcs/att-hold</property>
@@ -452,8 +457,8 @@
             <z>1</z>
         </axis>
     </animation>
-        
-        <!-- engines panel -->
+
+    <!-- engines panel -->
     <animation>
         <type>pick</type>
         <visible>true</visible>
@@ -928,10 +933,268 @@
         </axis>
     </animation>
 
+    <!-- Interior Lighting panel-->
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-console-right-knob</object-name>
+        <property>controls/lighting/r-console</property>
+        <factor>-30</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.5282</x-m>
+            <y-m>0.5164</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
 
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/r-console</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-console-left-knob</object-name>
+        <property>controls/lighting/l-console</property>
+        <factor>-30</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.5286</x-m>
+            <y-m>0.4652</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/l-console</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-aux-inst-knob</object-name>
+        <property>controls/lighting/aux-inst</property>
+        <factor>-30</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.4894</x-m>
+            <y-m>0.4882</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/aux-inst</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-eng-inst-knob</object-name>
+        <property>controls/lighting/eng-inst</property>
+        <factor>-30</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.4527</x-m>
+            <y-m>0.5178</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/eng-inst</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-flt-inst-knob</object-name>
+        <property>controls/lighting/flt-inst</property>
+        <factor>-30</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.4525</x-m>
+            <y-m>0.4652</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/flt-inst</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-storm-flood-knob</object-name>
+        <property>controls/lighting/panel-norm</property>
+        <factor>-300</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.4047</x-m>
+            <y-m>0.5124</y-m>
+            <z-m>0.6876</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/panel-norm</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-warn-caution-knob</object-name>
+        <property>controls/lighting/warn-caution</property>
+        <factor>-30</factor>
+        <offset-deg>133</offset-deg>
+        <center>
+            <x-m>-5.4045</x-m>
+            <y-m>0.4585</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/warn-caution</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>light-test-switch</object-name>
+        <property>sim/model/f15/lights/master-test-lights</property>
+        <factor>-50</factor>
+        <offset-deg>20</offset-deg>
+        <center>
+            <x-m>-5.4846</x-m>
+            <y-m>-0.4428</y-m>
+            <z-m>0.6712</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>lighting-stby-inst-switch</object-name>
+        <property>controls/lighting/stby-inst</property>
+        <factor>-50</factor>
+        <offset-deg>20</offset-deg>
+        <center>
+            <x-m>-5.4846</x-m>
+            <y-m>-0.4428</y-m>
+            <z-m>0.6712</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/stby-inst</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
     <!-- Lighting -->
     <animation>
-        <object-name>mount</object-name>
+        <object-name>r-console</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -943,12 +1206,32 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
+            <factor-prop>controls/lighting/r-console</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
         </emission>
     </animation>
+    <animation>
+        <object-name>l-console</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/l-console</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
+        </emission>
+    </animation>
+    <!-- lights -->
     <animation>
         <type>select</type>
         <object-name>jfs-ready-lamp-on</object-name>

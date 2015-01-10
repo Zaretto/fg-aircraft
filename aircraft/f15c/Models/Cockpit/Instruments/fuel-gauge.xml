@@ -5,23 +5,6 @@
 	<name>fuel-gauge</name>
 	<path>fuel-gauge.ac</path>
 
-    <!--<animation>
-        <type>scale</type>
-        <x-offset>0.47</x-offset>
-        <y-offset>0.47</y-offset>
-        <z-offset>0.47</z-offset>
-    </animation>
-	<animation>
-		<type>select</type>
-		<object-name>fuel-gauge</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>-->
-
     <animation>
         <type>select</type>
         <object-name>off-flag</object-name>
@@ -325,64 +308,6 @@
 	<!-- fuselage and feed tanks -->
 
 
-	<!-- lighting -->
-	<animation> 
-		<object-name>mount</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>0.85</red>
-            <green>0.54</green>
-            <blue>0.40</blue>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>backlight</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>0.85</red>
-            <green>0.54</green>
-            <blue>0.40</blue>
-        </emission>
-    </animation>
     <!-- Bingo Knob -->
     
     <animation>
@@ -424,6 +349,45 @@
 
 </animation>
 
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>0.055</red>
+            <green>0.024</green>
+            <blue>0.010</blue>
+        </emission>
+    </animation>
     <animation>
 		<type>range</type>
 		<min-m>0</min-m>

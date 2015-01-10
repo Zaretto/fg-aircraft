@@ -4,27 +4,9 @@
 
 <PropertyList>
 
-	<path>flaps-panel.ac</path>
+    <path>flaps-panel.ac</path>
 
-	
-	<!-- Lighting -->
-	<animation>
-		<object-name>mount</object-name> 
-		<type>material</type>
-		<condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not><property>sim/rendering/rembrandt/enabled</property></not>
-        </condition>
-		<emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+
     <animation>
         <type>pick</type>
         <visible>true</visible>
@@ -105,11 +87,31 @@
     </animation>
 
 
+    <!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
     <!-- *** LoD *** -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>35</max-m>
+    </animation>
 
 </PropertyList>

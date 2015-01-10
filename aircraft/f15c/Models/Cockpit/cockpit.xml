@@ -73,6 +73,15 @@
         </offsets>
     </model>
     <model>
+        <path>Instruments/tews.xml</path>
+        <offsets>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+            <pitch-deg>0</pitch-deg>
+        </offsets>
+    </model>
+    <model>
         <path>Instruments/vsd-mount.xml</path>
         <offsets>
             <x-m>0</x-m>
@@ -265,5 +274,24 @@
             <pitch-deg>0</pitch-deg>
         </offsets>
     </model>
+    <animation>
+        <object-name>main-instrument-panel</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>
 
 </PropertyList>
