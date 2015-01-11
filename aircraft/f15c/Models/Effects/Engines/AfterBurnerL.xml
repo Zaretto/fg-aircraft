@@ -155,11 +155,10 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
     <animation>
         <type>material</type>
         <object-name>FlameModelBurn</object-name>
-
         <emission>
             <red>1.0</red>
-            <green>1.0</green>
-            <blue>1.0</blue>
+            <green>0.78</green>
+            <blue>0.67</blue>
             <factor-prop>engines/engine[0]/afterburner</factor-prop>
         </emission>
     </animation>
@@ -168,12 +167,13 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
         <type>material</type>
         <object-name>FlameTrail</object-name>
         <object-name>FlameModel</object-name>
-        <object-name>FlameModelBurn</object-name>
 
         <ambient>
-            <red-prop>sim/model/f15/fx/inverse-intensity</red-prop>
-            <green-prop>sim/model/f15/fx/inverse-intensity</green-prop>
-            <blue-prop>sim/model/f15/fx/inverse-intensity</blue-prop>
+            <red-prop>rendering/scene/diffuse/red</red-prop>
+            <green-prop>rendering/scene/diffuse/red</green-prop>
+            <blue-prop>rendering/scene/diffuse/red</blue-prop>
+            <factor>-1</factor>
+            <offset>1.0</offset>
         </ambient>
         <transparency>
             <alpha-prop>rendering/scene/diffuse/red</alpha-prop>

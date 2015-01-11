@@ -28,7 +28,6 @@
     </fdm>
 
     <sim>
-
         <description>F-15 JSBSim</description>
         <author>Richard Harrison</author>
         <status>production</status>
@@ -134,28 +133,11 @@
 					<hud>
 						<intens type="double">1</intens>
 					</hud>
-					<lighting>
-						<anti-collision-switch type="bool">true</anti-collision-switch>
-						<hook-bypass type="bool">false</hook-bypass><!-- false = carrier -->
-						<index-norm type="double">1</index-norm>
-						<position-tail-switch type="int">1</position-tail-switch>
-						<position-wing-switch type="int">1</position-wing-switch>
-						<position-flash-switch type="bool">true</position-flash-switch>
-                        <l-console archive="y" type="int">1</l-console>
-                        <r-console archive="y" type="int">1</r-console>
-                        <aux-instr-console archive="y" type="int">1</aux-instr-console>
-                        <standby-inst archive="y" type="int">1</standby-inst>
-                        <flt-inst archive="y" type="int">1</flt-inst>
-                        <eng-inst archive="y" type="int">1</eng-inst>
-                        <warning-caution archive="y" type="int">5</warning-caution>
-                        <!--<storm-flood archive="y" type="int">1</storm-flood>-->
-                        <!-- using controls/lighting/panel-norm for storm-flood -->
-					</lighting>
 					<HSD>
 						<brightness type="double">1</brightness>
 						<on-off type="bool">0</on-off>
 					</HSD>
-					<pilots-displays>
+                    <pilots-displays>
 						<steer>
 							<awl-bt type="bool">false</awl-bt><!-- 0 -->
 							<dest-bt type="bool">false</dest-bt><!-- 1 -->
@@ -192,6 +174,7 @@
 				<fx>
 					<burner type="int">0</burner>
 					<heat-blur-on type="bool">false</heat-blur-on>
+                    <rotate-flame>1</rotate-flame>
 				</fx>
 				<instrumentation>
 					<airspeed-indicator>
@@ -334,12 +317,8 @@
 					<warnings>
 						<master-caution type="bool">0</master-caution>
 					</warnings>
-				</instrumentation>
-				<lighting>
-					<position-wing-factor type="int">0</position-wing-factor>
-					<position-tail-factor type="int">0</position-tail-factor>
-				</lighting>
-				<systems>
+                </instrumentation>
+                <systems>
 					<armament>
 						<aim9>
 							<count type="int">0</count>
@@ -814,13 +793,25 @@
         <armament>
             <trigger type="bool">false</trigger>
         </armament>
-        <lighting>
-            <instruments-norm type="double">0</instruments-norm>
-            <panel-norm type="double">0</panel-norm>
-            <strobe type="bool">false</strobe>
-            <nav-lights type="bool">true</nav-lights>
-            <taxi-light type="bool">false</taxi-light>
-        </lighting>
+        <controls>
+            <lighting>
+                <anti-collision-switch type="bool">true</anti-collision-switch>
+                <hook-bypass type="bool">false</hook-bypass>
+                <index-norm type="double">0.3</index-norm>
+                <position-tail-switch type="int">1</position-tail-switch>
+                <position-wing-switch type="int">1</position-wing-switch>
+                <position-flash-switch type="bool">true</position-flash-switch>
+                <l-console userarchive="y" type="int">1</l-console>
+                <r-console userarchive="y" type="int">1</r-console>
+                <aux-instr-console type="int">1</aux-instr-console>
+                <standby-inst type="int">1</standby-inst>
+                <flt-inst type="int">3</flt-inst>
+                <eng-inst type="int">3</eng-inst>
+                <warn-caution>5</warn-caution>
+                <!--<storm-flood archive="y" type="int">1</storm-flood>-->
+                <!-- using controls/lighting/panel-norm for storm-flood -->
+            </lighting>
+        </controls>
         <flight>
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
             <fake>0.0</fake>

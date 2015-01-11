@@ -53,8 +53,14 @@ var GearPos   = props.globals.getNode("gear/gear[0]/position-norm", 1);
 
 # Constant
 NozzleSpeed = 1.0;
+var current_flame_number = 0;
 
-var computeNozzles = func {
+var computeEngines = func {
+
+   current_flame_number = (current_flame_number + 1);        
+   if (current_flame_number > 3) current_flame_number = 0;
+   setprop("sim/model/f15/fx/flame-number",current_flame_number);
+
 
 	var eng1_burner = Engine1Burner.getValue();
 	var eng2_burner = Engine2Burner.getValue();

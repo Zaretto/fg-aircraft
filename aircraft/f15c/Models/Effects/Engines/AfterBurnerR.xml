@@ -1,5 +1,12 @@
 <?xml version="1.0"?>
+<!-- 
+This is based on Enqrique Laso's work on the F20 - however the following has changed.
 
+1. Using a cone for the flame trail rather than a billboard surface
+2. The illumination factor for the flame trail is the inverse of the available light (from rendering/scene/diffuse) - so that in full daylight there isn't much visible in terms of light from the trial.
+3. To get the flame trail to look right we control both the emissive light and the transparency - so at noon there isn't much light emission and it is fairly transparent.
+4. Using rembrandt lighting cone for each engine - positioned roughly in the edge of the nozzles
+-->
 <PropertyList>
 
     <path>flame.ac</path>
@@ -72,7 +79,6 @@
     <animation>
         <type>translate</type>
         <object-name>FlameModel</object-name>
-        <object-name>FlameTrail</object-name>
         <factor>0.0</factor>
         <offset-m>0.0</offset-m>
         <axis>
@@ -133,6 +139,8 @@
             <z>0</z>
         </axis>
     </animation>
+
+    <!-- control the emisssion and transparency to get something that looks right -->
     <animation>
         <type>material</type>
         <object-name>FlameModel</object-name>
@@ -147,11 +155,10 @@
     <animation>
         <type>material</type>
         <object-name>FlameModelBurn</object-name>
-
         <emission>
             <red>1.0</red>
-            <green>1.0</green>
-            <blue>1.0</blue>
+            <green>0.78</green>
+            <blue>0.67</blue>
             <factor-prop>engines/engine[1]/afterburner</factor-prop>
         </emission>
     </animation>
@@ -160,12 +167,13 @@
         <type>material</type>
         <object-name>FlameTrail</object-name>
         <object-name>FlameModel</object-name>
-        <object-name>FlameModelBurn</object-name>
 
         <ambient>
-            <red-prop>sim/model/f15/fx/inverse-intensity</red-prop>
-            <green-prop>sim/model/f15/fx/inverse-intensity</green-prop>
-            <blue-prop>sim/model/f15/fx/inverse-intensity</blue-prop>
+            <red-prop>rendering/scene/diffuse/red</red-prop>
+            <green-prop>rendering/scene/diffuse/red</green-prop>
+            <blue-prop>rendering/scene/diffuse/red</blue-prop>
+            <factor>-1</factor>
+            <offset>1.0</offset>
         </ambient>
         <transparency>
             <alpha-prop>rendering/scene/diffuse/red</alpha-prop>

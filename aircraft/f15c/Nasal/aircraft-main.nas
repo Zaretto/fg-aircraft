@@ -171,7 +171,6 @@ var carrier_ara_63_position = nil;
 var carrier_heading = nil;
 var carrier_ara_63_heading = nil;
 
-
 var wow = 1;
 setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("/controls/flight/SAS-roll",0);
@@ -222,10 +221,11 @@ var updateFCS = func {
 	#update functions
 #	aircraft.computeFlaps ();
 #	aircraft.computeSpoilers ();
-	aircraft.computeNozzles ();
+	aircraft.computeEngines ();
 	aircraft.computeAdverse ();
 	aircraft.computeNWS ();
     aircraft.electricsFrame();
+
 	aircraft.registerFCS (); # loop, once per frame.
 }
 
