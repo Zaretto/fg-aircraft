@@ -28,6 +28,8 @@
         <object-name>fwd retract strut</object-name>
         <object-name>Landing light</object-name>
         <object-name>Taxi light</object-name>
+        <object-name>Landing lightBulb</object-name>
+        <object-name>Taxi lightBulb</object-name>
         <object-name>Nose wheel</object-name>
         <condition>
             <greater-than>
@@ -45,6 +47,8 @@
         <object-name>fwd retract strut</object-name>
         <object-name>Landing light</object-name>
         <object-name>Taxi light</object-name>
+        <object-name>Landing lightBulb</object-name>
+        <object-name>Taxi lightBulb</object-name>
         <object-name>Nose wheel</object-name>
         <property>gear/gear[0]/position-norm</property>
         <interpolation>
@@ -466,17 +470,6 @@
         </axis>
     </animation>
 
-    <animation>
-        <type>select</type>
-        <object-name>FrontWheel</object-name>
-        <object-name>FrontWheelTire</object-name>
-        <condition>
-            <greater-than>
-                <property>gear/gear[0]/position-norm</property>
-                <value>0</value>
-            </greater-than>
-        </condition>
-    </animation>
     <animation>
         <type>translate</type>
         <object-name>Lower FWD oleo</object-name>
@@ -902,12 +895,6 @@
         </offsets>
     </model>
 
-    <animation>
-        <type>noshadow</type>
-        <object-name>ExternalFlame</object-name>
-        <object-name>InternalFlame</object-name>
-    </animation>
-
     <effect>
         <inherits-from>Effects/model-transparent</inherits-from>
         <object-name>Glass_Canopy01</object-name>
@@ -932,36 +919,6 @@
     </animation>
 
 
-    <animation>
-        <type>rotate</type>
-        <object-name>FrontWheel</object-name>
-        <object-name>FrontWheelTire</object-name>
-        <property>gear/gear[0]/position-norm</property>
-        <interpolation>
-            <entry>
-                <ind>0</ind>
-                <dep>-110</dep>
-            </entry>
-            <entry>
-                <ind>0.1</ind>
-                <dep>-110</dep>
-            </entry>
-            <entry>
-                <ind>1</ind>
-                <dep>0</dep>
-            </entry>
-        </interpolation>
-        <center>
-            <x-m>-3.0</x-m>
-            <y-m>0.0</y-m>
-            <z-m>-0.1</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>-1</y>
-            <z>0</z>
-        </axis>
-    </animation>
     <!-- inlet ramps-->
     <animation>
         <type>rotate</type>
@@ -1317,6 +1274,52 @@
    <y-m>0.0</y-m>
    <z-m>0.0</z-m>
   </offsets>
- </model>   
+ </model>
 
+    <animation>
+        <object-name>Taxi lightBulb</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <equals>
+                    <property>sim/multiplay/generic/int[7]</property>
+                    <value>1</value>
+                </equals>
+                <equals>
+                    <property>sim/multiplay/generic/int[7]</property>
+                    <value>3</value>
+                </equals>
+            </or>
+        </condition>
+        <emission>
+            <factor>1</factor>
+            <red>0.782</red>
+            <green>0.796</green>
+            <blue>0.756</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>Landing lightBulb</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than> <!-- this is a bit mask so the condition will catch 2 and 3 which are the only possible values -->
+                <property>sim/multiplay/generic/int[7]</property>
+                <value>1</value>
+            </greater-than>
+        </condition>
+        <emission>
+            <factor>1</factor>
+            <red>0.782</red>
+            <green>0.796</green>
+            <blue>0.756</blue>
+        </emission>
+    </animation>
 </PropertyList>

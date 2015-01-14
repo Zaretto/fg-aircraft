@@ -836,82 +836,63 @@
         <name>taxi-light</name>
         <object-name>taxi-light-cone</object-name>
         <nopreview/>
+
+        <attenuation>
+            <!--<c>  0.300 </c>
+            <l>  0.200 </l>
+            <q>  0.002 </q>-->
+            <c>1.0</c>
+            <l>0.02</l>
+            <q>0.0009</q>
+        </attenuation>
         <direction>
+            <x> -0.998 </x>
+            <y>  0.000 </y>
+            <z> -0.125 </z>
+        </direction>
+        <exponent> 9.0 </exponent>
+        <cutoff>   80.0 </cutoff>
+        <near-m>    2.5 </near-m>
+        <far-m>    65.0 </far-m>
+
+        <position>
+            <x>-3.69842</x>
+            <y>0</y>
+            <z>-0.7944</z>
+        </position>
+        <!--<direction>
             <x>-1</x>
             <y>0</y>
             <z>-0.024</z>
-        </direction>
-        <position>
-            <x>-3.69842</x>
-            <y>0</y>
-            <z>-0.7944</z>
-        </position>
+        </direction>-->
+        <!--<attenuation>
+            <c>2.0</c>
+            <l>0.002</l>
+            <q>0.00005</q>
+        </attenuation>
+        <exponent>66.0</exponent>
+        <cutoff>100</cutoff>
+        <near-m>0.01</near-m>
+        <far-m>100</far-m>-->
+
         <ambient>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>  0.5 </r>
+            <g>  0.5 </g>
+            <b>  0.5 </b>
+            <a>  1.0 </a>
         </ambient>
         <diffuse>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>  0.8 </r>
+            <g>  0.8 </g>
+            <b>  0.8 </b>
+            <a>  1.0 </a>
         </diffuse>
         <specular>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>  0.5 </r>
+            <g>  0.5 </g>
+            <b>  0.5 </b>
+            <a>  1.0 </a>
         </specular>
-        <attenuation>
-            <c>0.5</c>
-            <l>0.07</l>
-            <q>0</q>
-        </attenuation>
-        <exponent>30.0</exponent>
-        <cutoff>200</cutoff>
-        <near-m>0.01</near-m>
-        <far-m>200</far-m>
-    </animation>
-    <!-- Taxi light halo -->
-    <animation>
-        <type>light</type>
-        <light-type>point</light-type>
-        <name>taxi-halo</name>
-        <object-name>taxi-halo-sphere</object-name>
-        <nopreview/>
-        <position>
-            <x>-3.69842</x>
-            <y>0</y>
-            <z>-0.7944</z>
-        </position>
-        <ambient>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
-        </ambient>
-        <diffuse>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
-        </diffuse>
-        <specular>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
-        </specular>
-        <attenuation>
-            <c>1</c>
-            <l>1.7</l>
-            <q>4</q>
-        </attenuation>
-        <cutoff>1.3</cutoff>
-        <near-m>0.01</near-m>
-        <far-m>1.3</far-m>
     </animation>
 
     <!-- Landing lights -->
@@ -936,82 +917,83 @@
         <name>landing-light</name>
         <object-name>landing-light-cone</object-name>
         <nopreview/>
+       <position>
+            <x>-8.812</x>
+            <y>0</y>
+            <z>-0.8144</z>
+        </position>
+
         <direction>
+            <x> -0.998 </x>
+            <y>  0.000 </y>
+            <z>  0.06 </z>
+        </direction>
+        <attenuation>
+            <c>1.0</c>
+            <l>0.002</l>
+            <q>0.00005</q>
+        </attenuation>
+        <exponent>30.0</exponent>
+        <cutoff>669</cutoff>
+        <far-m>479</far-m>
+        <near-m>3.5</near-m>
+
+        <ambient>
+            <r>  0.3 </r>
+            <g>  0.3 </g>
+            <b>  0.3 </b>
+            <a>  1.0 </a>
+        </ambient>
+        <diffuse>
+            <r>  0.8 </r>
+            <g>  0.8 </g>
+            <b>  0.8 </b>
+            <a>  1.0 </a>
+        </diffuse>
+        <specular>
+            <r>  0.5 </r>
+            <g>  0.5 </g>
+            <b>  0.5 </b>
+            <a>  1.0 </a>
+        </specular>
+        <!--<direction>
             <x>-1</x>
             <y>0</y>
             <z>-0.024</z>
-        </direction>
-        <position>
-            <x>-3.512</x>
+        </direction>-->
+        <!--<position>
+            <x>-3.812</x>
             <y>0</y>
-            <z>-0.9644</z>
+            <z>-0.8144</z>
         </position>
         <ambient>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
+            <r>0.75</r>
+            <g>0.7</g>
+            <b>0.7</b>
             <a>1</a>
         </ambient>
         <diffuse>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
+            <r>0.75</r>
+            <g>0.7</g>
+            <b>0.7</b>
             <a>1</a>
         </diffuse>
         <specular>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
+            <r>0.75</r>
+            <g>0.7</g>
+            <b>0.7</b>
             <a>1</a>
         </specular>
         <attenuation>
-            <c>0.5</c>
-            <l>0.07</l>
-            <q>0</q>
+            <c>1.0</c>
+            <l>0.002</l>
+            <q>0.00005</q>
         </attenuation>
-        <exponent>30.0</exponent>
-        <cutoff>200</cutoff>
+        <exponent>46.0</exponent>
+        <cutoff>1200</cutoff>
         <near-m>0.01</near-m>
-        <far-m>200</far-m>
-    </animation>
-    <!-- Landing light halo -->
-    <animation>
-        <type>light</type>
-        <light-type>point</light-type>
-        <name>landing-light-halo</name>
-        <object-name>landing-light-halo-sphere</object-name>
-        <nopreview/>
-        <position>
-            <x>-3.512</x>
-            <y>0</y>
-            <z>-0.9644</z>
-        </position>
-        <ambient>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
-        </ambient>
-        <diffuse>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
-        </diffuse>
-        <specular>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
-        </specular>
-        <attenuation>
-            <c>1</c>
-            <l>1.7</l>
-            <q>4</q>
-        </attenuation>
-        <cutoff>1.3</cutoff>
-        <near-m>0.01</near-m>
-        <far-m>1.3</far-m>
+        <far-m>1200</far-m>
+        -->
     </animation>
 
 <!-- afterburners -->

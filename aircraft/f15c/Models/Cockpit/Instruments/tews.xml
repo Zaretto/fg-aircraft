@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+
+<PropertyList>
+
+	<path>tews.ac</path>
+
+	
+	<!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <!--<animation>
+        <object-name>screen</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/mpcd-screen</factor-prop>
+            <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>
+        </emission>
+    </animation>-->
+
+    <!-- *** LoD *** -->
+	<animation>
+		<type>range</type>
+		<min-m>0</min-m>
+		<max-m>35</max-m>
+	</animation>
+
+</PropertyList>
