@@ -2,6 +2,8 @@ var egt_norm1 = props.globals.getNode("engines/engine[0]/egt-norm", 1);
 var egt_norm2 = props.globals.getNode("engines/engine[1]/egt-norm", 1);
 var egt1_rankin = props.globals.getNode("engines/engine[0]/egt-degR", 1);
 var egt2_rankin = props.globals.getNode("engines/engine[1]/egt-degR", 1);
+var egt1_c = props.globals.getNode("engines/engine[0]/egt-degC", 1);
+var egt2_c = props.globals.getNode("engines/engine[1]/egt-degC", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
 
@@ -71,6 +73,8 @@ var computeEngines = func {
 
     egt1_rankin.setValue(egt1.getValue());
     egt2_rankin.setValue(egt2.getValue());
+    egt1_c.setValue((egt1.getValue()-491.67)*(5/9));
+    egt2_c.setValue((egt2.getValue()-491.67)*(5/9));
 
     	if ( getprop("sim/replay/time") > 0 ) 
         { 
