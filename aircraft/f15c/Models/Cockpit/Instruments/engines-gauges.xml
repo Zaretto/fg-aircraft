@@ -15,9 +15,18 @@
 		<name>temp-l</name>
 		<type>rotate</type>
 		<object-name>needle-temp-l</object-name>
-		<property>engines/engine[0]/egt-norm</property>
-        <factor>235</factor>
-		<center>
+		<property>engines/engine[0]/egt-degC</property>
+        <interpolation>
+            <entry>
+                <ind>200</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1400</ind>
+                <dep>235</dep>
+            </entry>
+        </interpolation>
+        <center>
             <x-m> 0.0012</x-m>
             <y-m> -0.0409</y-m>
             <z-m> 0.0029</z-m>
@@ -29,9 +38,18 @@
 		<name>temp-r</name>
 		<type>rotate</type>
 		<object-name>needle-temp-r</object-name>
-		<property>engines/engine[1]/egt-norm</property>
-        <factor>235</factor>
-		<center>
+        <property>engines/engine[1]/egt-degC</property>
+        <interpolation>
+            <entry>
+                <ind>200</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1400</ind>
+                <dep>235</dep>
+            </entry>
+        </interpolation>
+        <center>
             <x-m> 0.0012</x-m>
             <y-m> 0.0161</y-m>
             <z-m> 0.0029</z-m>
@@ -256,8 +274,431 @@
             <x>-1</x>
         </axis>
     </animation>
-    <!-- lighting -->
 
+<!-- drums -->
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-n1-1</object-name>
+        <!--<property>engines/engine[0]/n1</property>-->
+        <property>engines/engine[0]/n1</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-n1-2</object-name>
+        <property>engines/engine[0]/n1</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-n1-3</object-name>
+        <property>engines/engine[0]/n1</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-n1-1</object-name>
+        <property>engines/engine[1]/n1</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-n1-2</object-name>
+        <property>engines/engine[1]/n1</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-n1-3</object-name>
+        <property>engines/engine[1]/n1</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-egt-1</object-name>
+        <property>engines/engine[0]/egt-degC</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>0.1</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-egt-2</object-name>
+        <property>engines/engine[0]/egt-degC</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-egt-3</object-name>
+        <property>engines/engine[0]/egt-degR</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-egt-4</object-name>
+        <property>engines/engine[0]/egt-degC</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-egt-1</object-name>
+        <property>engines/engine[1]/egt-degC</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>0.1</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-egt-2</object-name>
+        <property>engines/engine[1]/egt-degC</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-egt-3</object-name>
+        <property>engines/engine[1]/egt-degC</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-egt-4</object-name>
+        <property>engines/engine[1]/egt-degC</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-ff-1</object-name>
+        <!--<property>engines/engine[0]/fuel-flow_pph</property>-->
+        <property>engines/engine[0]/fuel-flow_pph</property>
+        <factor>0.00001</factor>
+        <offset>-10000</offset>
+        <step>10000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-ff-2</object-name>
+        <property>engines/engine[0]/fuel-flow_pph</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-ff-3</object-name>
+        <property>engines/engine[0]/fuel-flow_pph</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>l-ff-4</object-name>
+        <property>engines/engine[0]/fuel-flow_pph</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-ff-1</object-name>
+        <property>engines/engine[1]/fuel-flow_pph</property>
+        <factor>0.00001</factor>
+        <offset>-10000</offset>
+        <step>10000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-ff-2</object-name>
+        <property>engines/engine[1]/fuel-flow_pph</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-ff-3</object-name>
+        <property>engines/engine[1]/fuel-flow_pph</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>r-ff-4</object-name>
+        <property>engines/engine[1]/fuel-flow_pph</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <!-- lighting -->
 
 	<animation>
 		<object-name>face</object-name>
@@ -297,9 +738,12 @@
         </condition>
         <emission>
 			<factor-prop>controls/lighting/eng-inst</factor-prop>
-            <red>0.055</red>
-            <green>0.024</green>
-            <blue>0.010</blue>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
         </emission>
 	</animation>
 
@@ -317,9 +761,13 @@
         </condition>
         <emission>
             <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
         </emission>
     </animation>
 

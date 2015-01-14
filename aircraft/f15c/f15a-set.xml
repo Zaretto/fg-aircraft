@@ -793,25 +793,37 @@
         <armament>
             <trigger type="bool">false</trigger>
         </armament>
-        <controls>
-            <lighting>
-                <anti-collision-switch type="bool">true</anti-collision-switch>
-                <hook-bypass type="bool">false</hook-bypass>
-                <index-norm type="double">0.3</index-norm>
-                <position-tail-switch type="int">1</position-tail-switch>
-                <position-wing-switch type="int">1</position-wing-switch>
-                <position-flash-switch type="bool">true</position-flash-switch>
-                <l-console userarchive="y" type="int">1</l-console>
-                <r-console userarchive="y" type="int">1</r-console>
-                <aux-instr-console type="int">1</aux-instr-console>
-                <standby-inst type="int">1</standby-inst>
-                <flt-inst type="int">3</flt-inst>
-                <eng-inst type="int">3</eng-inst>
-                <warn-caution>5</warn-caution>
-                <!--<storm-flood archive="y" type="int">1</storm-flood>-->
-                <!-- using controls/lighting/panel-norm for storm-flood -->
-            </lighting>
-        </controls>
+        <lighting>
+            <anti-collision-switch type="bool">true</anti-collision-switch>
+            <hook-bypass type="bool">false</hook-bypass>
+            <index-norm type="double">0.3</index-norm>
+            <position-tail-switch type="int">1</position-tail-switch>
+            <position-wing-switch type="int">1</position-wing-switch>
+            <position-flash-switch type="bool">true</position-flash-switch>
+            <l-console userarchive="y" type="int">1</l-console>
+            <r-console userarchive="y" type="int">1</r-console>
+            <aux-instr-console type="int">1</aux-instr-console>
+            <standby-inst type="int">1</standby-inst>
+            <flt-inst type="int">3</flt-inst>
+            <eng-inst type="int">3</eng-inst>
+            <warn-caution type="int">5</warn-caution>
+
+            <!-- component values for lighting. these are set for 100W tungsten ref: http://planetpixelemporium.com/tutorialpages/light.html -->
+            <panel-red type="double">1.000</panel-red>
+            <panel-green type="double">0.576</panel-green>
+            <panel-blue type="double">0.161</panel-blue>
+
+            <instrument-red type="double">0.1000</instrument-red>
+            <instrument-green type="double">0.0576</instrument-green>
+            <instrument-blue type="double">0.0161</instrument-blue>
+
+            <console-red type="double">0.1000</console-red>
+            <console-green type="double">0.0576</console-green>
+            <console-blue type="double">0.0161</console-blue>
+
+            <!--<storm-flood archive="y" type="int">1</storm-flood>-->
+            <!-- using controls/lighting/panel-norm for storm-flood -->
+        </lighting>
         <flight>
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
             <fake>0.0</fake>
@@ -885,7 +897,7 @@ else
 				<desc>Toggle autopilot altitude mode.</desc>
 				<binding>
 					<command>nasal</command>
-					<script>f14_afcs.afcs_altitude_engage_toggle();</script>
+					<script>aircraft.afcs_altitude_engage_toggle();</script>
 				</binding>
 			</key>
 
@@ -894,7 +906,7 @@ else
 				<desc>Toggle autopilot heading mode.</desc>
 				<binding>
 					<command>nasal</command>
-					<script>f14_afcs.afcs_heading_switch(0);</script>
+					<script>aircraft.afcs_heading_switch(0);</script>
 				</binding>
 			</key>
 
@@ -921,7 +933,7 @@ else
 				<desc>Toggle autopilot attitude mode</desc>
 				<binding>
 					<command>nasal</command>
-					<script>f14_afcs.afcs_engage_toggle()</script>
+					<script>aircraft.afcs_engage_toggle()</script>
 				</binding>
 			</key>
 
@@ -950,7 +962,7 @@ else
 					<command>nasal</command>
 					<script>
 					if (! aircraft.wow) {
-						f14_afcs.afcs_engage_selected_mode()
+						aircraft.afcs_engage_selected_mode()
 					}
 					</script>
 				</binding>

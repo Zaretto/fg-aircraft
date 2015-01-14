@@ -49,6 +49,18 @@
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>ldg-warn-silence</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/cadc/gear-warn-silence-dmd</property>
+            </binding>
+        </action>
+    </animation>
 
     <animation>
         <type>select</type>
@@ -110,34 +122,9 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-                <or>
-                    <property>sim/model/f15/lights/master-test-lights</property>
-                    <and>
-                        <greater-than>
-                            <property>gear/gear[0]/position-norm</property>
-                            <value>0</value>
-                        </greater-than>
-                        <less-than>
-                            <property>gear/gear[0]/position-norm</property>
-                            <value>1</value>
-                        </less-than>
-                        <greater-than>
-                            <property>gear/gear[1]/position-norm</property>
-                            <value>0</value>
-                        </greater-than>
-                        <less-than>
-                            <property>gear/gear[1]/position-norm</property>
-                            <value>1</value>
-                        </less-than>
-                        <greater-than>
-                            <property>gear/gear[2]/position-norm</property>
-                            <value>0</value>
-                        </greater-than>
-                        <less-than>
-                            <property>gear/gear[2]/position-norm</property>
-                            <value>1</value>
-                        </less-than>
-                </and>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>/fdm/jsbsim/systems/cadc/gear-warning</property>
             </or>
         </condition>
     </animation>
@@ -157,9 +144,13 @@
         </condition>
         <emission>
             <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
         </emission>
     </animation>
 

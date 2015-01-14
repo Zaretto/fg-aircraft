@@ -53,7 +53,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>needle-max</object-name>
-		<property>sim/model/f-14b/instrumentation/g-meter/g-max</property>
+		<property>sim/model/f15/instrumentation/g-meter/g-max</property>
 		<interpolation>
 			<entry><ind>-5</ind><dep>-202.5</dep></entry>
 			<entry><ind>-4</ind><dep>-112.5</dep></entry>
@@ -81,7 +81,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>needle-min</object-name>
-		<property>sim/model/f-14b/instrumentation/g-meter/g-min</property>
+		<property>sim/model/f15/instrumentation/g-meter/g-min</property>
 		<interpolation>
 			<entry><ind>-5</ind><dep>-202.5</dep></entry>
 			<entry><ind>-4</ind><dep>-112.5</dep></entry>
@@ -97,6 +97,30 @@
 		</interpolation>
 		<axis><x>-1</x></axis>
 	</animation>
+    <animation>
+        <type>pick</type>
+        <object-name>reset-button</object-name>
+        <visible>false</visible>
+			<action>
+				<name>cmd-on-off-switch-up</name>
+				<button>0</button>
+				<x>-205</x>
+				<y>20</y>
+				<w>70</w>
+				<h>70</h>
+				<repeatable type="bool">true</repeatable>
+				<binding> 
+					<command>property-assign</command>
+					<property>sim/model/f15/instrumentation/g-meter/g-max</property>
+					<value>1</value>
+				</binding>
+				<binding> 
+					<command>property-assign</command>
+					<property>sim/model/f15/instrumentation/g-meter/g-min</property>
+					<value>1</value>
+				</binding>
+			</action>
+</animation>
 
 	<!-- Lighting -->
 	<animation>
@@ -111,9 +135,12 @@
         </condition>
         <emission>
             <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.55</red>
-            <green>0.24</green>
-            <blue>0.10</blue>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
         </emission>
 	</animation>
 
@@ -131,9 +158,13 @@
         </condition>
         <emission>
             <factor-prop>controls/lighting/flt-inst</factor-prop>
-            <red>0.055</red>
-            <green>0.024</green>
-            <blue>0.010</blue>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+
         </emission>
     </animation>
 
