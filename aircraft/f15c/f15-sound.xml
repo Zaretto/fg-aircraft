@@ -1191,6 +1191,23 @@
             </volume>
             <max-dist>5</max-dist>
         </stall>
+        <gear-warning>
+            <name>gear-warning</name>
+            <mode>looped</mode>
+            <path>Sounds/f-15-warning-tone.wav</path>
+            <condition>
+                <property>/fdm/jsbsim/systems/cadc/gear-warning-tone</property>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <property>sim/current-view/internal</property>
+            </condition>
+            <volume>
+                <factor>0.6</factor>
+            </volume>
+            <max-dist>5</max-dist>
+        </gear-warning>
         <gun>
             <name>gun</name>
             <mode>looped</mode>

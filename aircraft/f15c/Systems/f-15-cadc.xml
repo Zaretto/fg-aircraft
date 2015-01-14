@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <!--
-        Description: F14 CADC (AFCS, MANEUVERING FLAPS/SLATS)  
+        Description: F15 CADC (AFCS, Inlet Ramps)  
         Author: Richard Harrison (rjh@zaretto.com)
-        References: F14-AAD-1, NASA TT F15,406 Improvement of manuevrability at low speed, W. Staudacher, 1972
 -->
 
 
@@ -19,20 +18,22 @@
     <property value="0">systems/cadc/manuv-slat-extension-manual</property>
     <property value="0.9">systems/cadc/manuv-flap-extension-calc-lag</property>
     <property value="1.3">systems/cadc/manuv-flap-extension-washout-lag</property>
+    <property value="0">systems/cadc/gear-warn-silence-dmd</property>
+
 
     <property value="0">systems/afcs/heading-hold-active</property>
     <property value="0">systems/afcs/SAS-roll-demand</property>
 
-        <property value="1">fcs/yaw-damper-enable</property>
-        <property value="0">fcs/pitch-damper-enable</property>
-        <property value="0">fcs/roll-sas-enable</property>
-        <property value="0">fcs/external-tanks-fitted</property>
-        <property value="0">fcs/aim-fitted</property>
+    <property value="1">fcs/yaw-damper-enable</property>
+    <property value="0">fcs/pitch-damper-enable</property>
+    <property value="0">fcs/roll-sas-enable</property>
+    <property value="0">fcs/external-tanks-fitted</property>
+    <property value="0">fcs/aim-fitted</property>
 
-        <property>systems/NWS/engaged</property>
+    <property>systems/NWS/engaged</property>
 
-        <property value="0">propulsion/inlet/l-inlet-ramp-emerg</property>
-        <property value="0">propulsion/inlet/r-inlet-ramp-emerg</property>
+    <property value="0">propulsion/inlet/l-inlet-ramp-emerg</property>
+    <property value="0">propulsion/inlet/r-inlet-ramp-emerg</property>
 
     <property>fcs/hook-engage</property>
     <property>fcs/flap-cmd-sum</property>
@@ -45,296 +46,296 @@
             <output>/accelerations/pilot-gdamped</output>
         </pure_gain>
 
-            <switch name="position/aircraft-on-ground">
-                <description>Aircraft on ground</description>
-                <default value="0"/>
-                <test value="1" logic="OR">
-                    gear/unit[0]/WOW ne 0
-                    gear/unit[1]/WOW ne 0
-                    gear/unit[2]/WOW ne 0
-                </test>
-            </switch>
-            <fcs_function name="aero/alpha-indicated-deg">
-                <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
-                <function>
-                    <product>
-                        <sum>
-                            <property> aero/alpha-deg </property>
-                            <value> -0.797 </value>
-                        </sum>
-                        <value>1.231223836</value>
-                    </product>
-                </function>
-            </fcs_function>
-            <fcs_function name="aero/aero-rp-x-in">
-                <function>
-                    <description>Centre of pressure due to mach</description>
+        <switch name="position/aircraft-on-ground">
+            <description>Aircraft on ground</description>
+            <default value="0"/>
+            <test value="1" logic="OR">
+                gear/unit[0]/WOW ne 0
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+            </test>
+        </switch>
+        <fcs_function name="aero/alpha-indicated-deg">
+            <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
+            <function>
+                <product>
                     <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <tableData>
-                                0.00    419
-                                2.4     445
-                            </tableData>
-                        </table>
+                        <property> aero/alpha-deg </property>
+                        <value> -0.797 </value>
                     </sum>
-                </function>
-                <output>metrics/aero-rp-x-in</output>
-            </fcs_function>
+                    <value>1.231223836</value>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="aero/aero-rp-x-in">
+            <function>
+                <description>Centre of pressure due to mach</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <tableData>
+                            0.00    419
+                            2.4     445
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+            <output>metrics/aero-rp-x-in</output>
+        </fcs_function>
 
-            <fcs_function name="aero/cadc-control-effectivity-factor">
-                <function>
-                    <description>High speeds CADC control effectivity limitation of rudder and elevator</description>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
-                            <tableData>
-                                0.00  1.0
-                                0.20  1.0
-                                0.25  0.7
-                                0.40  0.6
-                                1.00  0.2
-                                2.40  0.1
-                            </tableData>
-                        </table>
-                    </sum>
-                </function>
-            </fcs_function>
+        <fcs_function name="aero/cadc-control-effectivity-factor">
+            <function>
+                <description>High speeds CADC control effectivity limitation of rudder and elevator</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
+                        <tableData>
+                            0.00  1.0
+                            0.20  1.0
+                            0.25  0.7
+                            0.40  0.6
+                            1.00  0.2
+                            2.40  0.1
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
 
-</channel>
-        <channel name="extra-aero">
+    </channel>
+    <channel name="extra-aero">
 
-            <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
-            <summer name="cg-x-offset-chord-in">
-                <input> inertia/cg-x-in</input>
-                <input> -metrics/aero-rp-x-in</input>
-                <output>inertia/cg-x-offset-chord-in</output>
-            </summer>
+        <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
+        <summer name="cg-x-offset-chord-in">
+            <input> inertia/cg-x-in</input>
+            <input> -metrics/aero-rp-x-in</input>
+            <output>inertia/cg-x-offset-chord-in</output>
+        </summer>
 
-            <pure_gain name="cg-x-chord-percent">
-                <description>Percent offset of the CoP from the CG</description>
-                <input>inertia/cg-x-offset-chord-in</input>
-                <gain> -0.01</gain>
-                <clipto>
-                    <min> -1 </min>
-                    <max> 1 </max>
-                </clipto>
-                <output> inertia/cg-x-mac-percent </output>
-            </pure_gain>
+        <pure_gain name="cg-x-chord-percent">
+            <description>Percent offset of the CoP from the CG</description>
+            <input>inertia/cg-x-offset-chord-in</input>
+            <gain> -0.01</gain>
+            <clipto>
+                <min> -1 </min>
+                <max> 1 </max>
+            </clipto>
+            <output> inertia/cg-x-mac-percent </output>
+        </pure_gain>
 
-            <fcs_function name="pb">
-                <description>PB Denormalization</description>
-                <function>
-                    <quotient>
-                        <product>
-                            <property>metrics/bw-ft</property>
-                            <property>velocities/p-aero-rad_sec</property>
-                        </product>
-                        <!-- over -->
-                        <product>
-                            <value>2</value>
-                            <property>velocities/vt-fps</property>
-                        </product>
-                    </quotient>
-                </function>
-                <clipto>
-                    <min> -1.00 </min>
-                    <max>  1.00 </max>
-                </clipto>
-                <output>aero/pb</output>
-            </fcs_function>
-
-            <fcs_function name="cbarq-2vo">
-                <description>For denormalization</description>
-                <function>
-                    <quotient>
-                        <product>
-                            <property>metrics/cbarw-ft</property>
-                            <property>velocities/q-aero-rad_sec</property>
-                        </product>
-                        <!-- over -->
-                        <product>
-                            <value>2</value>
-                            <property>velocities/vt-fps</property>
-                        </product>
-                    </quotient>
-                </function>
-                <clipto>
-                    <min> -2.01 </min>
-                    <max>  2.01 </max>
-                </clipto>
-                <output>aero/qb</output>
-            </fcs_function>
-            <fcs_function name="rb-2vo">
-                <description>For denormalization</description>
-                <function>
-                    <quotient>
-                        <product>
-                            <property>metrics/bw-ft</property>
-                            <property>velocities/r-aero-rad_sec</property>
-                        </product>
-                        <!-- over -->
-                        <product>
-                            <value>2</value>
-                            <property>velocities/vt-fps</property>
-                        </product>
-                    </quotient>
-                </function>
-                <clipto>
-                    <min> -1.00 </min>
-                    <max>  1.00 </max>
-                </clipto>
-                <output>aero/rb</output>
-            </fcs_function>
-
-
-            <fcs_function name="aero-cos-alpha">
-                <function>
+        <fcs_function name="pb">
+            <description>PB Denormalization</description>
+            <function>
+                <quotient>
                     <product>
-                        <cos>
-                            <property>aero/alpha-rad</property>
-                        </cos>
+                        <property>metrics/bw-ft</property>
+                        <property>velocities/p-aero-rad_sec</property>
                     </product>
-                </function>
-                <output>aero/cos-alpha</output>
-            </fcs_function>
-
-            <fcs_function name="aero-sin-alpha">
-                <function>
+                    <!-- over -->
                     <product>
-                        <sin>
-                            <property>aero/alpha-rad</property>
-                        </sin>
+                        <value>2</value>
+                        <property>velocities/vt-fps</property>
                     </product>
-                </function>
-                <output>aero/sin-alpha</output>
-            </fcs_function>
+                </quotient>
+            </function>
+            <clipto>
+                <min> -1.00 </min>
+                <max>  1.00 </max>
+            </clipto>
+            <output>aero/pb</output>
+        </fcs_function>
 
-
-        </channel>
-        <channel name="SAS">
-            <!-- yaw damper only active when in range alpha +/10 deg -->
-            <switch name="fcs/yaw-damper-active">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    aero/alpha-rad ge -0.175438596491228
-                    aero/alpha-rad le  0.175438596491228
-                    fcs/yaw-damper-enable ne 0.0
-                </test>
-                <output>fcs/yaw-damper-active</output>
-            </switch>
-
-            <switch name="fcs/roll-sas-active">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    aero/alpha-rad ge -0.175438596491228
-                    aero/alpha-rad le  0.2631578947368421
-                    fcs/roll-sas-enable ne 0.0
-                </test>
-                <output>fcs/roll-sas-active</output>
-            </switch>
-            <scheduled_gain name="Yaw Damper Rate">
-                <input>velocities/r-aero-rad_sec</input>
-                <table>
-                    <independentVar lookup="row">velocities/ve-kts</independentVar>
-                    <tableData>
-                        30     0.00
-                        60     4.0
-                    </tableData>
-                </table>
-                <gain>fcs/yaw-damper-active</gain>
-            </scheduled_gain>
-
-            <switch name="fcs/pitch-damper-active">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    aero/alpha-rad ge -0.175438596491228
-                    aero/alpha-rad le  0.2631578947368421
-                    fcs/elevator-cmd-norm ge -0.15
-                    fcs/elevator-cmd-norm le 0.15
-                    fcs/pitch-damper-enable ne 0.0
-                </test>
-                <output>fcs/pitch-damper-active</output>
-            </switch>
-
-            <scheduled_gain name="Pitch Damper Rate">
-                <!-- Figure 2-57 F14AAD-1  -->
-                <input>velocities/q-aero-rad_sec</input>
-                <table>
-                    <independentVar lookup="row">velocities/ve-kts</independentVar>
-                    <tableData>
-                        30     0.00
-                        60     1
-                    </tableData>
-                </table>
-                <gain>fcs/pitch-damper-active</gain>
-                <min> -0.2857142857142857 </min>
-                <max>  0.2857142857142857 </max>
-            </scheduled_gain>
-
-            <scheduled_gain name="fcs/roll-rate-limiter">
-                <input>fcs/aileron-cmd-norm</input>
-                <table>
-                    <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
-                    <tableData>
-                        -6.2    -1.0
-                        -1.4     0.0
-                        1.4     0.0
-                        6.2    -1.0
-                    </tableData>
-                </table>
-                <gain>fcs/roll-sas-active</gain>
-            </scheduled_gain>
-</channel>
-
-        <channel name="Nose Wheel Steering">
-            <switch name="systems/NWS/engaged">
-                <default value="0"/>
-                <test value="1">
-                    gear/unit[0]/wheel-speed-fps le 135
-                    systems/hydraulics/combined-system-pressure ne 0
-                    position/aircraft-on-ground ne 0
-                    systems/holdback/launchbar-engaged eq 0
-                </test>
-                <output>systems/NWS/engaged</output>
-            </switch>
-
-            <scheduled_gain name="fcs/scheduled-steer-pos-deg">
-                <input>fcs/steer-cmd-norm</input>
-                <table>
-                    <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
-                    <independentVar lookup="column">systems/NWS/engaged</independentVar>
-                    <tableData>
-                            0   1
-                        0   0   87
-                        80  0   45
-                    </tableData>
-                </table>
-                <output>fcs/steer-pos-deg</output>
-            </scheduled_gain>
-        </channel>
-
-        <channel name="SoundFX">
-            <fcs_function name="fcs/flap-windfx-volume">
-                <function>
+        <fcs_function name="cbarq-2vo">
+            <description>For denormalization</description>
+            <function>
+                <quotient>
                     <product>
-                        <property>velocities/ve-kts</property>
-                        <property>fcs/flap-pos-norm</property>
+                        <property>metrics/cbarw-ft</property>
+                        <property>velocities/q-aero-rad_sec</property>
                     </product>
-                </function>
-                <output>fcs/flap-windfx-volume</output>
-            </fcs_function>
-            <fcs_function name="fcs/gear-windfx-volume">
-                <function>
+                    <!-- over -->
                     <product>
-                        <property>velocities/ve-kts</property>
-                        <property>fcs/gear-control</property>
+                        <value>2</value>
+                        <property>velocities/vt-fps</property>
                     </product>
-                </function>
-                <output>fcs/gear-windfx-volume</output>
-            </fcs_function>
-        </channel>
+                </quotient>
+            </function>
+            <clipto>
+                <min> -2.01 </min>
+                <max>  2.01 </max>
+            </clipto>
+            <output>aero/qb</output>
+        </fcs_function>
+        <fcs_function name="rb-2vo">
+            <description>For denormalization</description>
+            <function>
+                <quotient>
+                    <product>
+                        <property>metrics/bw-ft</property>
+                        <property>velocities/r-aero-rad_sec</property>
+                    </product>
+                    <!-- over -->
+                    <product>
+                        <value>2</value>
+                        <property>velocities/vt-fps</property>
+                    </product>
+                </quotient>
+            </function>
+            <clipto>
+                <min> -1.00 </min>
+                <max>  1.00 </max>
+            </clipto>
+            <output>aero/rb</output>
+        </fcs_function>
+
+
+        <fcs_function name="aero-cos-alpha">
+            <function>
+                <product>
+                    <cos>
+                        <property>aero/alpha-rad</property>
+                    </cos>
+                </product>
+            </function>
+            <output>aero/cos-alpha</output>
+        </fcs_function>
+
+        <fcs_function name="aero-sin-alpha">
+            <function>
+                <product>
+                    <sin>
+                        <property>aero/alpha-rad</property>
+                    </sin>
+                </product>
+            </function>
+            <output>aero/sin-alpha</output>
+        </fcs_function>
+
+
+    </channel>
+    <channel name="SAS">
+        <!-- yaw damper only active when in range alpha +/10 deg -->
+        <switch name="fcs/yaw-damper-active">
+            <default value="0.0"/>
+            <test logic="AND" value="1">
+                aero/alpha-rad ge -0.175438596491228
+                aero/alpha-rad le  0.175438596491228
+                fcs/yaw-damper-enable ne 0.0
+            </test>
+            <output>fcs/yaw-damper-active</output>
+        </switch>
+
+        <switch name="fcs/roll-sas-active">
+            <default value="0.0"/>
+            <test logic="AND" value="1">
+                aero/alpha-rad ge -0.175438596491228
+                aero/alpha-rad le  0.2631578947368421
+                fcs/roll-sas-enable ne 0.0
+            </test>
+            <output>fcs/roll-sas-active</output>
+        </switch>
+        <scheduled_gain name="Yaw Damper Rate">
+            <input>velocities/r-aero-rad_sec</input>
+            <table>
+                <independentVar lookup="row">velocities/ve-kts</independentVar>
+                <tableData>
+                    30     0.00
+                    60     4.0
+                </tableData>
+            </table>
+            <gain>fcs/yaw-damper-active</gain>
+        </scheduled_gain>
+
+        <switch name="fcs/pitch-damper-active">
+            <default value="0.0"/>
+            <test logic="AND" value="1">
+                aero/alpha-rad ge -0.175438596491228
+                aero/alpha-rad le  0.2631578947368421
+                fcs/elevator-cmd-norm ge -0.15
+                fcs/elevator-cmd-norm le 0.15
+                fcs/pitch-damper-enable ne 0.0
+            </test>
+            <output>fcs/pitch-damper-active</output>
+        </switch>
+
+        <scheduled_gain name="Pitch Damper Rate">
+            <!-- Figure 2-57 F14AAD-1  -->
+            <input>velocities/q-aero-rad_sec</input>
+            <table>
+                <independentVar lookup="row">velocities/ve-kts</independentVar>
+                <tableData>
+                    30     0.00
+                    60     1
+                </tableData>
+            </table>
+            <gain>fcs/pitch-damper-active</gain>
+            <min> -0.2857142857142857 </min>
+            <max>  0.2857142857142857 </max>
+        </scheduled_gain>
+
+        <scheduled_gain name="fcs/roll-rate-limiter">
+            <input>fcs/aileron-cmd-norm</input>
+            <table>
+                <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
+                <tableData>
+                    -6.2    -1.0
+                    -1.4     0.0
+                    1.4     0.0
+                    6.2    -1.0
+                </tableData>
+            </table>
+            <gain>fcs/roll-sas-active</gain>
+        </scheduled_gain>
+    </channel>
+
+    <channel name="Nose Wheel Steering">
+        <switch name="systems/NWS/engaged">
+            <default value="0"/>
+            <test value="1">
+                gear/unit[0]/wheel-speed-fps le 135
+                systems/hydraulics/combined-system-pressure ne 0
+                position/aircraft-on-ground ne 0
+                systems/holdback/launchbar-engaged eq 0
+            </test>
+            <output>systems/NWS/engaged</output>
+        </switch>
+
+        <scheduled_gain name="fcs/scheduled-steer-pos-deg">
+            <input>fcs/steer-cmd-norm</input>
+            <table>
+                <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
+                <independentVar lookup="column">systems/NWS/engaged</independentVar>
+                <tableData>
+                    0   1
+                    0   0   87
+                    80  0   45
+                </tableData>
+            </table>
+            <output>fcs/steer-pos-deg</output>
+        </scheduled_gain>
+    </channel>
+
+    <channel name="SoundFX">
+        <fcs_function name="fcs/flap-windfx-volume">
+            <function>
+                <product>
+                    <property>velocities/ve-kts</property>
+                    <property>fcs/flap-pos-norm</property>
+                </product>
+            </function>
+            <output>fcs/flap-windfx-volume</output>
+        </fcs_function>
+        <fcs_function name="fcs/gear-windfx-volume">
+            <function>
+                <product>
+                    <property>velocities/ve-kts</property>
+                    <property>fcs/gear-control</property>
+                </product>
+            </function>
+            <output>fcs/gear-windfx-volume</output>
+        </fcs_function>
+    </channel>
 
     <channel name="MANOUEVRE">
 
@@ -444,7 +445,7 @@
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                                0.00000	0.50000	0.60000	0.70000	0.80000	0.90000	1.00000
+                            0.00000	0.50000	0.60000	0.70000	0.80000	0.90000	1.00000
                             0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                             5	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                             6	0.07000	0.07000	0.07000	0.07000	0.07000	0.00000	0.00000
@@ -468,7 +469,7 @@
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                                0.000000	0.45         0.500000	0.800000	0.900000	1.000000
+                            0.000000	0.45         0.500000	0.800000	0.900000	1.000000
                             0	0.000000	0.000000    0.000000	0.000000	0.000000	0.000000
                             8	0.000000   	0.000000    0.076471	0.076471	0.000000	0.000000
                             10	0.105294	0.105294    0.135294	0.135294	0.000000	0.000000
@@ -595,7 +596,7 @@
             <trigger> systems/afcs/altitude-hold-trigger </trigger>
         </pid>
 
-<!--
+        <!--
         <pure_gain name="systems/afcs/altitude-hold-divergence-pid-contents">
             <input> systems/afcs/altitude-hold-divergence-pid </input>
             <gain> 1.0 </gain>
@@ -753,6 +754,92 @@
             <default value="0"/>
             <test value="propulsion/inlet/ramp4-position-deg" logic="AND">
                 propulsion/inlet/r-inlet-ramp-emerg eq 0
+            </test>
+        </switch>
+
+
+    </channel>
+
+    <!-- gear related operations -->
+
+    <channel name="gear">
+        <!-- timer for the gear extension time to fire the warning-->
+        <switch name="systems/cadc/gear-transit-timer-delta">
+            <default value="0"/>
+            <test value="simulation/dt" logic="AND">
+                /gear/gear[0]/position-norm gt 0
+                /gear/gear[0]/position-norm lt 1
+                /gear/gear[1]/position-norm gt 0
+                /gear/gear[1]/position-norm lt 1
+                /gear/gear[2]/position-norm gt 0
+                /gear/gear[2]/position-norm lt 1
+            </test>
+        </switch>
+
+        <summer name="systems/cadc/gear-transit-timer-ltv">
+            <input>systems/cadc/gear-transit-timer</input>
+            <output>systems/cadc/gear-transit-timer-ltv</output>
+        </summer>
+        <summer name="systems/cadc/gear-transit-timer">
+            <input>systems/cadc/gear-transit-timer-ltv</input>
+            <input>systems/cadc/gear-transit-timer-delta</input>
+            <output>systems/cadc/gear-transit-timer</output>
+        </summer>
+
+        <!-- warning silence -->
+        <switch name="systems/cadc/gear-warn-silence-cmd">
+            <default value="0"/>
+            <test value="systems/cadc/gear-warn-silence-dmd">
+                gear/gear-dmd-norm ne gear/gear-pos-norm
+            </test>
+            <test value="systems/cadc/gear-warn-silence-cmd">
+                gear/gear-dmd-norm eq gear/gear-pos-norm
+            </test>
+        </switch>
+
+        <switch name="systems/cadc/gear-warn-silence">
+            <default value="0"/>
+            <test value="1">
+                systems/cadc/gear-warn-silence-dmd ne systems/cadc/gear-warn-silence-cmd
+            </test>
+            <test value="0">
+                gear/gear-dmd-norm ne gear/gear-pos-norm
+            </test>
+        </switch>
+
+        <!-- lights and tones -->
+        <switch name="systems/cadc/gear-warning">
+            <description>Landing gear warning light</description>
+            <default value="0"/>
+            <test value="1" logic="AND">
+                /gear/gear[0]/position-norm gt 0
+                /gear/gear[0]/position-norm lt 1
+                /gear/gear[1]/position-norm gt 0
+                /gear/gear[1]/position-norm lt 1
+                /gear/gear[2]/position-norm gt 0
+                /gear/gear[2]/position-norm lt 1
+            </test>
+            <test value="1" logic="AND">
+                position/h-sl-ft le 10000
+                velocities/v-down-fps gt 4.1666666666666666666666666666667 <!-- 250 FPM -->
+                gear/gear-cmd-norm lt 1
+                velocities/vc-kts lt 200
+            </test>
+        </switch>
+        <switch name="systems/cadc/gear-warning-tone">
+            <description>Landing gear warning tone</description>
+            <default value="0"/>
+            <test value="1" logic="AND">
+                systems/cadc/gear-warn-silence eq 0
+                systems/cadc/gear-warning ne 0
+                systems/cadc/gear-transit-timer  gt 10
+            </test>
+            <test value="1" logic="AND">
+                systems/cadc/gear-warn-silence eq 0
+                position/h-sl-ft le 10000
+                velocities/v-down-fps gt 4.1666666666666666666666666666667 <!-- 250 FPM -->
+                gear/gear-dmd-norm eq 0
+                velocities/vc-kts lt 200
             </test>
         </switch>
 
