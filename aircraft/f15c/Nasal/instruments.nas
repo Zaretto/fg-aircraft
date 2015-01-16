@@ -385,6 +385,7 @@ aircraft.data.add("sim/model/f15/controls/VDI/brightness",
                   "sim/multiplay/generic/int[7]",
                   "sim/hud/visibility[0]",
                   "sim/hud/visibility[1]",
+                  "sim/model/f15/controls/fuel/display-selector",
                   "sim/model/f15/controls/hud/on-off",
                   "sim/model/f15/controls/HSD/on-off",
                   "sim/model/f15/instrumentation/hud/mode-aa",
@@ -711,6 +712,10 @@ var common_init = func {
         setprop("sim/model/f15/controls/AFCS/altitude",0);
         setprop("sim/model/f15/controls/AFCS/heading-gt",0);
         setprop("sim/model/f15/controls/AFCS/engage",0);
+#
+# this is just to ensure that we start with pressure in the util hyds
+        setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",-500);
+        settimer(func {setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); }, 4);
         if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
         {
             if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
