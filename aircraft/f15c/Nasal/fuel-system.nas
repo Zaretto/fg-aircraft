@@ -199,8 +199,59 @@ var calc_levels = func() {
 
     total_fuel_l = Lg + Lw;
     total_fuel_r = Rg + Rw;
-}
 
+    var sel_display = getprop("sim/model/f15/controls/fuel/display-selector");
+
+# FUEL QUANTITY SELECTOR KNOB
+    if (sel_display == 1)
+    {
+#FEED The fuel remaining in the respective engine feed tanks will be displayed.
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display", Left_Feed.get_level_lbs());
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",Right_Feed.get_level_lbs()); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
+    }
+    else if (sel_display == 2)
+    {
+#INT WING The fuel remaining in the respective internal wing tanks is displayed.
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display", WingInternal_L.get_level_lbs());
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",WingInternal_R.get_level_lbs()); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
+    }
+    else if (sel_display == 3)
+    {
+#TANK 1 The fuel remaining in tank 1 is displayed in the LEFT counter (RIGHT indicates zero).
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display", Tank1.get_level_lbs());
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",0); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
+    }
+    else if (sel_display == 4)
+    {
+#EXT WING The fuel remaining in the respective external wing tanks is displayed.
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display", WingExternal_L.get_level_lbs());
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",WingExternal_R.get_level_lbs()); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
+    }
+    else if (sel_display == 5)
+    {
+#EXT CTR The fuel remaining in the external centerline tank is displayed in the LEFT counter (RIGHT indicates zero).
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display", Centre_External.get_level_lbs());
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",0); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
+    }
+    else if (sel_display == 6)
+    {
+#CONF TANK The fuel remaining in the respective conformal tank is displayed.
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display",0); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",0); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
+    }
+    else
+    {
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display", 6000);
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",600); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",6000);
+    }
+}
 
 
 # Controls
