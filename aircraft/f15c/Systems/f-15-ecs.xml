@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<!--
+        Description: F15 ECS 
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: 
+    -->
+
+
+<system name="ECS">
+
+    <!--<property value="0">systems/apc/target-vc-kts</property>-->
+    <property value="1">systems/ecs/pressurisation-active</property>
+    <property value="0">systems/ecs/emerg-vent</property>
+
+    <!--0 : BOTH
+    1 : Right
+    2 : Off
+    3 : Left -->
+    <property value="0">systems/ecs/bleed-air-source</property>
+
+    <channel name="Pressurisation">
+
+        <switch name="systems/ecs/pressurisation-active">
+            <default value="0.0"/>
+            <test value="0">
+                systems/ecs/emerg-vent ne 0
+            </test>
+            <test value="0">
+                systems/ecs/bleed-air-source eq 2
+            </test>
+            <test value="1" logic="AND">
+                propulsion/engine[0]/set-running ne 0
+                systems/ecs/emerg-vent eq 0
+                systems/ecs/bleed-air-source eq 3
+            </test>
+            <test value="1" logic="AND">
+                propulsion/engine[1]/set-running ne 0
+                systems/ecs/emerg-vent eq 0
+                systems/ecs/bleed-air-source eq 1
+            </test>
+            <test value="1" logic="AND">
+                propulsion/engine[0]/set-running ne 0
+                systems/ecs/emerg-vent eq 0
+                systems/ecs/bleed-air-source eq 0
+            </test>
+            <test value="1" logic="AND">
+                propulsion/engine[1]/set-running ne 0
+                systems/ecs/emerg-vent eq 0
+                systems/ecs/bleed-air-source eq 0
+            </test>
+        </switch>
+        
+        <!-- rate of change - these values are guesstimated -->
+        <switch name="systems/ecs/cabin-altitude-change-rate">
+            <default value="100"/>
+            <test value="5500"> <!-- rapid when dump vent open-->
+                systems/ecs/emerg-vent ne 0
+            </test>
+            <test value="5500"> <!-- assuming that outside to inside will be also quick when descending -->
+                systems/ecs/cabin-altitude-ft gt position/h-sl-ft
+            </test>
+            <test value="60"> <!-- when turned off the change will be more gradual-->
+                systems/ecs/pressurisation-active eq 0
+            </test>
+        </switch>
+
+        <fcs_function name="systems/ecs/scheduled-pressure">
+            <description>Cockpit pressure schedule; TO 1F-15A-1 figure 1-54 </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">position/h-sl-ft</independentVar>
+                    <tableData>
+                        -10000  -10000
+                        0	0
+                        5044	5077
+                        8053	7846
+                        23805	7846
+                        25486	9230
+                        30000	11769
+                        34956	14077
+                        45044	18692
+                        50177	20539
+                        55044	21462
+                        60000	22615
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+
+        <switch name="systems/ecs/cabin-altitude-ft-dmd">
+            <default value="0"/>
+            <test value="position/h-sl-ft">
+                systems/ecs/emerg-vent gt 0
+            </test>
+            <test value="position/h-sl-ft">
+                systems/ecs/pressurisation-active eq 0
+            </test>
+            <test value="systems/ecs/scheduled-pressure">
+                systems/ecs/pressurisation-active eq 1
+            </test>
+
+        </switch>
+
+        <actuator name="systems/ecs/cabin-alt-actuator">
+            <input>systems/ecs/cabin-altitude-ft-dmd</input>
+            <rate_limit>systems/ecs/cabin-altitude-change-rate</rate_limit>
+            <output>systems/ecs/cabin-altitude-ft</output>
+        </actuator>
+    </channel>
+    <channel name="Temperature">
+
+    </channel>
+</system>
