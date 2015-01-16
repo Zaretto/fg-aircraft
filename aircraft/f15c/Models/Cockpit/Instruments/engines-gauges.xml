@@ -254,7 +254,7 @@
         <name>hyd-3</name>
         <type>rotate</type>
         <object-name>needle-hyd-3</object-name>
-        <property>fdm/jsbsim/systems/hydraulics/combined-system-psi</property>
+        <property>fdm/jsbsim/systems/hydraulics/util-system-accumulator-psi</property>
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -266,8 +266,8 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m> 0.0712</y-m>
+            <x-m> 0.0013</x-m>
+            <y-m> 0.0769</y-m>
             <z-m> 0.0370</z-m>
         </center>
         <axis>
@@ -394,42 +394,77 @@
     </animation>
 
     <animation>
-        <type>textranslate</type>
+        <type>texmultiple</type>
         <object-name>l-egt-1</object-name>
-        <property>engines/engine[0]/egt-degC</property>
-        <factor>0.0001</factor>
-        <offset>-1000</offset>
-        <step>1000</step>
-        <scroll>0.1</scroll>
-        <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>-1</y>
-            <z>0</z>
-        </axis>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[0]/egt-degC</property>
+            <factor>0.0001</factor>
+            <offset>-1000</offset>
+            <step>1000</step>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>-1</y>
+                <z>0</z>
+            </axis>
+        </transform>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[0]/egt-hot</property>
+            <factor>0.25</factor>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>1</x>
+                <y>0</y>
+                <z>0</z>
+            </axis>
+        </transform>
     </animation>
 
     <animation>
-        <type>textranslate</type>
+        <type>texmultiple</type>
         <object-name>l-egt-2</object-name>
-        <property>engines/engine[0]/egt-degC</property>
-        <factor>0.001</factor>
-        <offset>-100</offset>
-        <step>100</step>
-        <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>-1</y>
-            <z>0</z>
-        </axis>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[0]/egt-degC</property>
+            <factor>0.001</factor>
+            <offset>-100</offset>
+            <step>100</step>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>-1</y>
+                <z>0</z>
+            </axis>
+        </transform>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[0]/egt-hot</property>
+            <factor>0.25</factor>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>-1</x>
+                <y>0</y>
+                <z>0</z>
+            </axis>
+        </transform>
     </animation>
     <animation>
         <type>textranslate</type>
@@ -469,42 +504,77 @@
         </axis>
     </animation>
     <animation>
-        <type>textranslate</type>
+        <type>texmultiple</type>
         <object-name>r-egt-1</object-name>
-        <property>engines/engine[1]/egt-degC</property>
-        <factor>0.0001</factor>
-        <offset>-1000</offset>
-        <step>1000</step>
-        <scroll>0.1</scroll>
-        <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>-1</y>
-            <z>0</z>
-        </axis>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[1]/egt-degC</property>
+            <factor>0.0001</factor>
+            <offset>-1000</offset>
+            <step>1000</step>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>-1</y>
+                <z>0</z>
+            </axis>
+        </transform>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[1]/egt-hot</property>
+            <factor>0.25</factor>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>1</x>
+                <y>0</y>
+                <z>0</z>
+            </axis>
+        </transform>
     </animation>
 
     <animation>
-        <type>textranslate</type>
+        <type>texmultiple</type>
         <object-name>r-egt-2</object-name>
-        <property>engines/engine[1]/egt-degC</property>
-        <factor>0.001</factor>
-        <offset>-100</offset>
-        <step>100</step>
-        <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>-1</y>
-            <z>0</z>
-        </axis>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[1]/egt-degC</property>
+            <factor>0.001</factor>
+            <offset>-100</offset>
+            <step>100</step>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>-1</y>
+                <z>0</z>
+            </axis>
+        </transform>
+        <transform>
+            <subtype>textranslate</subtype>
+            <property>engines/engine[1]/egt-hot</property>
+            <factor>0.25</factor>
+            <center>
+                <x-m>0</x-m>
+                <y-m>0</y-m>
+                <z-m>0</z-m>
+            </center>
+            <axis>
+                <x>-1</x>
+                <y>0</y>
+                <z>0</z>
+            </axis>
+        </transform>
     </animation>
     <animation>
         <type>textranslate</type>

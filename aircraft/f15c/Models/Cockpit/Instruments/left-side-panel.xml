@@ -1192,6 +1192,34 @@
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>air-source-knob</object-name>
+        <property>fdm/jsbsim/systems/ecs/bleed-air-source</property>
+        <!--<offset-deg>180</offset-deg>-->
+        <factor>-90</factor>
+        <center>
+            <x-m>-5.5740</x-m>
+            <y-m>0.5116</y-m>
+            <z-m>0.6753</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/systems/ecs/bleed-air-source</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>4</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
     <!-- Lighting -->
     <animation>
         <object-name>r-console</object-name>

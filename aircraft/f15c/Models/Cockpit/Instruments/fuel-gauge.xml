@@ -18,6 +18,58 @@
         </condition>
     </animation>
 
+    <animation>
+        <type>knob</type>
+        <object-name>fuel-display-selector</object-name>
+        <property>sim/model/f15/controls/fuel/display-selector</property>
+        <!-- or property as usual for rotate animation -->
+        <factor>-45</factor>
+        <offset-deg>135</offset-deg>
+        <center>
+            <x-m>0.0081</x-m>
+            <y-m>-0.0017</y-m>
+            <z-m>-0.0529</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/fuel/display-selector</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>6</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <!-- Release action, limit to 0 and 1. 2 is spring loaded starter position -->
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/fuel/display-selector</property>
+                <step>0</step>
+                <min>1</min>
+                <max>6</max>
+            </binding>
+        </release>
+        <!-- explicit increase binding, action binding still runs too -->
+        <!--<increase>
+            <binding>
+                <command>nasal</command>
+                <script>debug.dump('was increased', cmdarg().getNode('offset').getValue());</script>
+           </binding>
+        </increase>-->
+        <!-- explicit decrease binding, action binding still runs too -->
+        <!--
+        <decrease>
+            <binding>....</binding>
+        </decrease>-->
+    </animation>
+
     <!-- Bingo -->
     <animation>
         <type>rotate</type>
@@ -59,7 +111,7 @@
     <animation>
 		<type>rotate</type>
 		<object-name>needle</object-name>
-        <property>consumables/fuel/total-fuel-lbs</property>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
         <interpolation>
 			<entry><ind>0</ind><dep>0</dep></entry>
 			<entry><ind>15000</ind><dep>215</dep></entry>
@@ -75,7 +127,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>total-1</object-name>
-		<property>consumables/fuel/total-fuel-lbs</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
 		<factor>0.00001</factor>
 		<offset>-10000</offset>
 		<step>10000</step>
@@ -95,7 +147,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>total-2</object-name>
-		<property>consumables/fuel/total-fuel-lbs</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
 		<factor>0.0001</factor>
 		<offset>-1000</offset>
 		<step>1000</step>
@@ -114,7 +166,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>total-3</object-name>
-		<property>consumables/fuel/total-fuel-lbs</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
 		<factor>0.001</factor>
 		<offset>-100</offset>
 		<step>100</step>
@@ -133,7 +185,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>total-4</object-name>
-		<property>consumables/fuel/total-fuel-lbs</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
 		<factor>0.01</factor>
 		<offset>-10</offset>
 		<step>10</step>
@@ -154,7 +206,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>L-1</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
 		<factor>0.0001</factor>
 		<offset>-1000</offset>
 		<step>1000</step>
@@ -174,7 +226,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>L-2</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
 		<factor>0.001</factor>
 		<offset>-100</offset>
 		<step>100</step>
@@ -193,7 +245,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>L-3</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
 		<factor>0.01</factor>
 		<offset>-10</offset>
 		<step>10</step>
@@ -212,7 +264,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>L-4</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
 		<factor>0.1</factor>
 		<offset>-1</offset>
 		<center>
@@ -232,7 +284,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>R-1</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
 		<factor>0.0001</factor>
 		<offset>-1000</offset>
 		<step>1000</step>
@@ -252,7 +304,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>R-2</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
 		<factor>0.001</factor>
 		<offset>-100</offset>
 		<step>100</step>
@@ -271,7 +323,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>R-3</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
 		<factor>0.01</factor>
 		<offset>-10</offset>
 		<step>10</step>
@@ -290,7 +342,7 @@
 	<animation>
 		<type>textranslate</type>
 		<object-name>R-4</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-wing-display</property>
+		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
 		<factor>0.1</factor>
 		<offset>-1</offset>
 		<center>

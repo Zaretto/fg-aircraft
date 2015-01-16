@@ -210,9 +210,9 @@ var jfs_invoke_running_checks = func{
 
 #    print("Jfs invoke shutdown  callback");
 
+    var total_fuel = getprop("consumables/fuel/total-fuel-lbs");
     if (getprop("sim/model/f15/controls/electrics/jfs-starter"))
     {
-        var total_fuel = getprop("consumables/fuel/total-fuel-lbs");
         if (total_fuel > 2)
         {   
 # consume some fuel and then return. 0.2 lbs/sec seems right (it is a guess).

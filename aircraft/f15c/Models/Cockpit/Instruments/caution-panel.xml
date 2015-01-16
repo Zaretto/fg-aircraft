@@ -6,6 +6,35 @@
 	<path>caution-panel.ac</path>
 
 
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>emerg-vent-handle</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/ecs/emerg-vent</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>emerg-vent-handle</object-name>
+        <property>fdm/jsbsim/systems/ecs/emerg-vent</property>
+        <factor>90</factor>
+        <center>
+            <x-m>-5.6784</x-m>
+            <y-m>0.4997</y-m>
+            <z-m>0.7492</z-m>
+        </center>
+        <axis>
+            <x>0.96</x>
+            <y>-0.3</y>
+            <z>0.25</z>
+        </axis>
+    </animation>
 
     <!-- Caution light ca-anti-skid -->
     <animation>
@@ -295,6 +324,7 @@
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
                 <property>sim/model/f15/lights/ca-emer-bst-on</property>
+                <property>fdm/jsbsim/systems/hydraulics/emerg-pump-on</property>
             </or>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
