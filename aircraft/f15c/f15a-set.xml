@@ -53,6 +53,112 @@
             <title>F-15 Eagle</title>
         </help>
 
+        <flight-recorder>
+            <replay-config type="int">0</replay-config>
+            <config n="0">
+                <name type="string">F-15 Flight Recorder</name>
+                <signals include="/Aircraft/Generic/flightrecorder/components/environment.xml"/>
+                <signals include="/Aircraft/Generic/flightrecorder/components/position.xml"/>
+                <signals include="/Aircraft/Generic/flightrecorder/components/controls.xml"/>
+                <signals include="/Aircraft/Generic/flightrecorder/components/surfaces.xml"/>
+                <signals include="/Aircraft/Generic/flightrecorder/components/engine-jet.xml">
+                    <count type="int">2</count>
+                </signals>
+                <!-- Engine nozzles -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">engines/engine[0]/nozzle-pos-norm</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">engines/engine[1]/nozzle-pos-norm</property>
+                </signal>
+                <signals include="/Aircraft/Generic/flightrecorder/components/faults-engines.xml">
+                    <count type="int">2</count>
+                </signals>
+                <signals include="/Aircraft/Generic/flightrecorder/components/tanks.xml">
+                    <count type="int">12</count>
+                </signals>
+                <signals include="/Aircraft/Generic/flightrecorder/components/gear-retractable.xml">
+                    <count type="int">3</count>
+                </signals>
+                <!-- Wing Bend -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">surface-positions/wing-fold-pos-norm</property>
+                </signal>
+                <!-- Wing Fold -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">surface-positions/wing-pos-norm</property>
+                </signal>
+                <!-- Tail Hook -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">gear/tailhook/position-norm</property>
+                </signal>
+                <!-- Stabilisator L -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/float[4]</property>
+                </signal>
+                <!-- Stabilisator R -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/float[5]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">engines/engine[0]/afterburner</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">engines/engine[1]/afterburner</property>
+                </signal>
+                <!-- Canopy -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">canopy/position-norm</property>
+                </signal>
+                <!-- radar -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[1]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[2]</property>
+                </signal>
+                <!-- lighting -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[3]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[4]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[5]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[6]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/int[7]</property>
+                </signal>
+                <!-- Nose Wheel Steering -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">controls/flight/NWS</property>
+                </signal>
+            </config>
+        </flight-recorder>
+
+
         <startup>
             <splash-texture>Aircraft/f15c/f15c-splash.rgb</splash-texture>
         </startup>

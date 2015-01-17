@@ -77,20 +77,39 @@ var computeEngines = func {
 
     egt1_rankin.setValue(egt1.getValue());
     egt2_rankin.setValue(egt2.getValue());
-    egt1_c.setValue((egt1.getValue()-491.67)*(5/9));
-    egt2_c.setValue((egt2.getValue()-491.67)*(5/9));
+    var egt1v = egt1.getValue();
+    if (egt1v > 492)
+    {
+
+        egt1_c.setValue((egt1v-491.67)*(5/9));
+    }
+    else
+        egt1_c.setValue(0);
 
 #
 # EGT Hot is used to control the red colour on the drums
-   if(egt1_c.getValue() >= 1000)
-       setprop("/engines/engine[0]/egt-hot",1);
-   else
-       setprop("/engines/engine[0]/egt-hot",0);
+    if(egt1v >= 2291.67) # 1000degc
+        setprop("/engines/engine[0]/egt-hot",1);
+    else
+        setprop("/engines/engine[0]/egt-hot",0);
 
-   if(egt2_c.getValue() >= 1000)
-       setprop("/engines/engine[1]/egt-hot",1);
-   else
-       setprop("/engines/engine[1]/egt-hot",0);
+#
+#
+# R Engine EGT
+    var egt2v = egt2.getValue();
+    if (egt2v > 492)
+    {
+#
+# EGT Hot is used to control the red colour on the drums
+
+        egt2_c.setValue((egt2v-491.67)*(5/9));
+    }
+    else
+        egt2_c.setValue(0);
+    if(egt2v >= 2291.67) # 1000degc
+        setprop("/engines/engine[1]/egt-hot",1);
+    else
+        setprop("/engines/engine[1]/egt-hot",0);
 
    if ( getprop("sim/replay/time") > 0 ) 
    { 
