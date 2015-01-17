@@ -12,7 +12,8 @@ var UltimateMaxG = MaxG * UltimateFactor;
 var UltimateMinG = MinG * UltimateFactor;
 
 var ResidualBendFactor = MaxResidualBend / (UltimateMaxG - MaxG);
-var BendFactor = 0.66 / MaxG;
+#var BendFactor = 0.66 / MaxG;
+var BendFactor = 0.16 / MaxG; # degrees of rotation * 7 per G
 
 var fixAirframe = func {
 
@@ -25,7 +26,7 @@ var fixAirframe = func {
 }
 
 var computeWingBend = func {
-	var av_currentG = getprop ("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");   
+	var av_currentG = getprop ("sim/model/f15/instrumentation/g-meter/g-max-mooving-average") - 1.0;   # adjust to loading
     if (av_currentG == nil) return;
 	#effects of normal acceleration
 
