@@ -385,6 +385,12 @@ rwr = func(u) {
 		ecm_alert2 = 1;
 		u_ecm_signal_norm = 1;
 	}
+    #
+    # Set these again once the lights are done as need these for the RWR display.
+    u_ecm_signal = (-u_rng/20) + 2.6;
+    u_ecm_type_num = radardist.get_ecm_type_num(u_name);
+	
+    u.EcmSignal.setValue(u_ecm_signal);
 	u.EcmSignal.setValue(u_ecm_signal);
 	u.EcmSignalNorm.setIntValue(u_ecm_signal_norm);
 	u.EcmTypeNum.setIntValue(u_ecm_type_num);
