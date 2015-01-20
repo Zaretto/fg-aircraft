@@ -23,8 +23,6 @@
             <mode>once</mode>
             <path>Sounds/jfs-startup.wav</path>
             <condition>
-                <not>
-                </not>
                 <greater-than>
                     <property>sim/model/f15/controls/jfs</property>
                     <value>9</value>
@@ -776,6 +774,15 @@
         </rattle-front>
 
         <flaps-wind>
+            <condition>
+                <!--<not>
+                    <property>sim/model/f15/gear-sound-freeze</property>
+                </not>-->
+                <greater-than>
+                    <property>fdm/jsbsim/fcs/flap-windfx-volume</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
             <name>flaps-wind</name>
             <mode>looped</mode>
             <path>Sounds/wind-noise.wav</path>
@@ -794,6 +801,15 @@
         </flaps-wind>
         <!-- Gears -->
         <gear-0-wind>
+            <condition>
+                <not>
+                    <property>sim/model/f15/gear-sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>fdm/jsbsim/fcs/gear-windfx-volume</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
             <name>gear-0-wind</name>
             <mode>looped</mode>
             <path>Sounds/wind-noise.wav</path>
@@ -847,6 +863,12 @@
             <name>wind</name>
             <mode>looped</mode>
             <path>Sounds/wind-noise.wav</path>
+            <condition>
+                <greater-than>
+                    <property>velocities/airspeed-kt</property>
+                    <value>30</value>
+                </greater-than>
+            </condition>
             <volume>
                 <property>velocities/airspeed-kt</property>
                 <factor>0.000747400</factor>
@@ -893,6 +915,12 @@
         <air-brakes>
             <name>air-brakes</name>
             <mode>looped</mode>
+            <condition>
+                <greater-than>
+                    <property>surface-positions/speedbrake-pos-norm</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
             <path>Sounds/air-brakes.wav</path>
             <volume>
                 <property>velocities/airspeed-kt</property>
