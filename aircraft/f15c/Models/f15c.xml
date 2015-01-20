@@ -3,11 +3,78 @@
 <PropertyList>
 
     <path>f15c.ac</path>
-  <!--<offsets>
-   <z-m>0.5</z-m> 
-  </offsets>-->
-    <!--gear -->
 
+    <!-- Smoke and spray -->
+    <model>
+        <path>Effects/smoke/tyre-smoke-nose-sideslip.xml</path>
+        <name>tyre-smoke-nose-sideslip</name>
+        <offsets>
+            <x-m>-3.7755905511811024</x-m>
+            <y-m>0</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+    <model>
+        <path>Aircraft/Generic/Effects/tyre-smoke-nose.xml</path>
+        <name>tyre-smoke-n</name>
+        <offsets>
+            <x-m>-3.7755905511811024</x-m>
+            <y-m>0</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+    <model>
+        <path>Aircraft/Generic/Effects/tyre-smoke-port.xml</path>
+        <name>tyre-smoke-p</name>
+        <offsets>
+            <x-m>-0.4</x-m>
+            <y-m>-2.634</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+
+    <model>
+        <path>Aircraft/Generic/Effects/tyre-smoke-stbd.xml</path>
+        <name>tyre-smoke-s</name>
+        <offsets>
+            <x-m>-0.4</x-m>
+            <y-m>2.634</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+
+
+    <!-- spray -->
+    <model>
+        <path>Aircraft/Generic/Effects/rain-nose.xml</path>
+        <name>rain-n</name>
+        <offsets>
+            <x-m>-4.7755905511811024</x-m>
+            <y-m>0</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+    <model>
+        <path>Aircraft/Generic/Effects/rain-port.xml</path>
+        <name>rain-p</name>
+        <offsets>
+            <x-m>1</x-m>
+            <y-m>-2.634</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+
+    <model>
+        <path>Aircraft/Generic/Effects/rain-stbd.xml</path>
+        <name>rain-s</name>
+        <offsets>
+            <x-m>1</x-m>
+            <y-m>2.634</y-m>
+            <z-m>-2</z-m>
+        </offsets>
+    </model>
+
+    <!-- Landing gear movements -->
     <!-- To tidy things up (as there are bits of the gear that show) hide it all when it is stowed.-->
     <animation>
         <type>select</type>
@@ -39,6 +106,26 @@
         </condition>
     </animation>
     <!-- Landing Gear -->
+    <!-- Nose Wheel Steering -->
+
+    <animation>
+        <type>rotate</type>
+        <object-name>Nose wheel</object-name>
+        <object-name>Lower FWD oleo</object-name>
+        <!--<property>gear/gear[0]/steering-norm</property>-->
+        <property>controls/flight/NWS</property>
+        <factor>45.0</factor>
+        <center>
+            <x-m>-3.4036</x-m>
+            <y-m>0.0</y-m>
+            <z-m>-0.7918</z-m>
+        </center>
+        <axis>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>-1.0</z>
+        </axis>
+    </animation>
     <animation>
         <type>rotate</type>
         <object-name>nosegear retraction linkage</object-name>
@@ -474,7 +561,7 @@
         <type>translate</type>
         <object-name>Lower FWD oleo</object-name>
         <object-name>Nose wheel</object-name>
-        <object-name>Upper FWD oleo</object-name>
+        <!--<object-name>Upper FWD oleo</object-name>-->
         <property>gear/gear[0]/compression-norm</property>
         <interpolation>
             <entry>
@@ -483,7 +570,7 @@
             </entry>
             <entry>
                 <ind>1.0</ind>
-                <dep>0.6</dep>
+                <dep>0.2</dep>
             </entry>
         </interpolation>
         <axis>
@@ -506,7 +593,7 @@
             </entry>
             <entry>
                 <ind>1.0</ind>
-                <dep>0.3</dep>
+                <dep>0.2</dep>
             </entry>
         </interpolation>
         <axis>
@@ -527,7 +614,7 @@
             </entry>
             <entry>
                 <ind>1.0</ind>
-                <dep>0.3</dep>
+                <dep>0.2</dep>
             </entry>
         </interpolation>
         <axis>
@@ -764,7 +851,12 @@
    <inherits-from>Aircraft/f15c/Models/metal</inherits-from>
    <object-name>EngineCovers</object-name>
    <object-name>Heat Xchanger.001</object-name>
-</effect>
+        <object-name>SpeedBrakeRam</object-name>
+
+        <object-name>Right Main lower oleo</object-name>
+        <object-name>Lower FWD oleo</object-name>
+        <object-name>Left Main lower oleo</object-name>
+    </effect>
   
 <animation>
 		<type>shader</type>
