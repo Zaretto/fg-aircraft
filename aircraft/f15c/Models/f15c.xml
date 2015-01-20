@@ -1056,7 +1056,7 @@
 
 <!-- speed brake -->
 
-    <animation>
+    <!--<animation>
         <type>rotate</type>
         <object-name>Airbrake</object-name>
         <object-name>AirbrakeFilet</object-name>
@@ -1073,7 +1073,7 @@
             <y>1.0</y>
             <z>0</z>
         </axis>
-    </animation>
+    </animation>-->
     
  <!-- Surfaces -->
 
@@ -1322,4 +1322,150 @@
             <blue>0.756</blue>
         </emission>
     </animation>
+    <!-- speedbrake actuator -->
+    <animation>
+        <type>rotate</type>
+        <object-name>SpeedBrakeRam</object-name>
+        <object-name>SpeedBrakeActuator</object-name>
+        <property>surface-positions/speedbrake-pos-norm</property>
+        <factor>16</factor>
+        <center>
+            <x-m>1.2581</x-m>
+            <y-m>0</y-m>
+            <z-m>0.7266</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>translate</type>
+        <object-name>SpeedBrakeRam</object-name>
+        <property>surface-positions/speedbrake-pos-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0.203</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.7</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0.365</z>
+        </axis>
+        <!--<axis>
+            <x-m>1.2581</x-m>
+            <y-m>0</y-m>
+            <z-m>0.7266</z-m>
+        </axis>-->
+    </animation>
+    <!--<animation>
+        <type>rotate</type>
+        <object-name>Airbrake</object-name>
+        <object-name>AirbrakeFilet</object-name>
+        <property>surface-positions/speedbrake-pos-norm</property>
+		<factor>-45</factor>
+        <axis>
+            <x>0.0</x>
+            <y>1.0</y>
+            <z>0</z>
+        </axis>
+    </animation>-->
+
+    <animation>
+        <type>locked-track</type>
+        <object-name>Airbrake</object-name>
+        <!--<object-name>AirbrakeInside</object-name>-->
+        <center>
+            <x-m>-0.7927</x-m>
+            <y-m>0.0206</y-m>
+            <z-m>1.1368</z-m>
+        </center>
+        <lock-axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </lock-axis>
+        <track-axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </track-axis>
+
+        <target-name>SpeedBrakeRam</target-name>
+        <target-center>
+            <x-m>0.3331</x-m>
+            <y-m>0</y-m>
+            <z-m>1.0647</z-m>
+            <!--<x-m>0.4848</x-m>
+            <y-m>0</y-m>
+            <z-m>1.0156</z-m>-->
+        </target-center>
+    </animation>
+    <animation>
+        <type>locked-track</type>
+        <object-name>AirbrakeInside</object-name>
+        <center>
+            <x-m>-0.7927</x-m>
+            <y-m>0.0206</y-m>
+            <z-m>1.1368</z-m>
+        </center>
+        <lock-axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </lock-axis>
+        <track-axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </track-axis>
+
+        <target-name>SpeedBrakeRam</target-name>
+        <target-center>
+            <x-m>0.3231</x-m>
+            <y-m>0</y-m>
+            <z-m>1.0647</z-m>
+        </target-center>
+    </animation>
+    <!--<animation>
+        <type>locked-track</type>
+        <object-name>AirbrakeFilet</object-name>
+        <center>
+            <x-m>-0.7927</x-m>
+            <y-m>0.0206</y-m>
+            <z-m>1.1368</z-m>
+        </center>
+        <lock-axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </lock-axis>
+        <track-axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </track-axis>
+
+        <target-name>SpeedBrakeRam</target-name>
+        <target-center>
+            <x-m>0.4848</x-m>
+            <y-m>0</y-m>
+            <z-m>1.0156</z-m>
+            --><!--<x-m>0.32478</x-m>
+            <y-m>0</y-m>
+            <z-m>1.0959</z-m>--><!--
+        </target-center>
+    </animation>-->
+    
+
+
 </PropertyList>
