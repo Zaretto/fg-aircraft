@@ -24,7 +24,7 @@ var VSDcanvas= canvas.new({
                           });                          
                           
 VSDcanvas.addPlacement({"node": "VSDImage"});
-VSDcanvas.setColorBackground(0.36, 1, 0.3, 0.00);
+VSDcanvas.setColorBackground(0,0.1,0, 1.00);
 
 # Create a group for the parsed elements
 var SVGfile = VSDcanvas.createGroup();
@@ -34,9 +34,28 @@ print("Parse SVG ",canvas.parsesvg(SVGfile, "Aircraft/f15c/Nasal/VSD/VSD.svg"));
 SVGfile.setTranslation (-20.0, 37.0);
 print("VSD INIT");
  
+var window1 = SVGfile.getElementById("window-1");
+window1.setFont("condensed.txf").setFontSize(14, 1.4);
+var window2 = SVGfile.getElementById("window-2");
+window2.setFont("condensed.txf").setFontSize(14, 1.4);
+var window3 = SVGfile.getElementById("window-3");
+window3.setFont("condensed.txf").setFontSize(14, 1.4);
+
+var window4 = SVGfile.getElementById("window-4");
+window4.setFont("condensed.txf").setFontSize(14, 1.4);
+var acue = SVGfile.getElementById("ACUE");
+acue.setFont("condensed.txf").setFontSize(14, 1.4);
+var ecue = SVGfile.getElementById("ECUE");
+ecue.setFont("condensed.txf").setFontSize(14, 1.4);
+var morhcue = SVGfile.getElementById("MORHCUE");
+morhcue.setFont("condensed.txf").setFontSize(14, 1.4);
 
 
 var updateVSD = func ()
 {  
+window1.setText (sprintf("W1: %3.0f", getprop("/velocities/airspeed-kt")));
+window2.setText (sprintf("W2: %3.0f", getprop("/velocities/airspeed-kt")));
+window3.setText (sprintf("W3: %3.0f", getprop("/velocities/airspeed-kt")));
+window4.setText (sprintf("W4: %3.0f", getprop("/velocities/airspeed-kt")));
 
 }

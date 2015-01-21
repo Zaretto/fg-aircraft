@@ -155,12 +155,29 @@
                     <type>float</type>
                     <property type="string">controls/flight/NWS</property>
                 </signal>
+                <!-- AICS -->
+                <!--<signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/fcs/inlet-l-ramp1-position-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/fcs/inlet-r-ramp1-position-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/fcs/inlet-l-ramp4-position-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/fcs/inlet-r-ramp4-position-deg</property>
+            </signal>-->
             </config>
         </flight-recorder>
 
 
         <startup>
-            <splash-texture>Aircraft/f15c/f15c-splash.rgb</splash-texture>
+            <splash-texture>Aircraft/f15c/f15c-splash.jpg</splash-texture>
         </startup>
         <systems>
             <autopilot>
@@ -735,7 +752,7 @@
                 <target-z-offset-m archive="y" type="double">0.0</target-z-offset-m>
             </config>
         </view>
-        <view n="100">
+        <!--<view n="100">
             <name>RIO View</name>
             <type>lookfrom</type>
             <internal archive="y">true</internal>
@@ -761,7 +778,7 @@
                     </right>
                 </limits>
             </config>
-        </view>
+        </view>-->
 
         <instrumentation>
             <path>Aircraft/f15c/Systems/instrumentation.xml</path>
@@ -1298,6 +1315,8 @@ else
             <file>Aircraft/f15c/Nasal/instruments.nas</file>
             <file>Aircraft/f15c/Nasal/afcs.nas</file>
             <!--<file>Aircraft/f15c/Nasal/fox2.nas</file>-->
+            <file>Nasal/HUD/HUD_main.nas</file>
+            <file>Nasal/VSD/VSD_main.nas</file>
         </aircraft>
     </nasal>
 
