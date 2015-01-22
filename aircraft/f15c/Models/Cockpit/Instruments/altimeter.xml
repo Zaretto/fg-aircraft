@@ -44,9 +44,30 @@
 			<z>0</z>
 		</axis>
 	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-4</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <scroll>10</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
 
-	<animation>
+
+    <animation>
 		<type>textranslate</type>
 		<object-name>drum-2</object-name>
 		<condition>
@@ -68,28 +89,27 @@
 	</animation>
 
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>drum-3</object-name>
-		<condition>
-			<greater-than>
-				<property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-				<value>0</value>
-			</greater-than>
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-3</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
         </condition>
-		<property>instrumentation/altimeter/indicated-altitude-ft</property>
-		<factor>0.00001</factor>
-		<offset>-10000</offset>
-		<step>10000</step>
-		<scroll>25</scroll>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
-
-	<animation>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.00001</factor>
+        <offset>-10000</offset>
+        <step>10000</step>
+        <scroll>25</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
 		<type>select</type>
 		<object-name>negativ-flag</object-name>
 		<condition>
