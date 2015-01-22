@@ -222,7 +222,7 @@ var updateFCS = func {
 #	aircraft.computeFlaps ();
 #	aircraft.computeSpoilers ()
     aircraft.computeAPC();
-#aircraft.updateHUD();
+aircraft.updateHUD();
 aircraft.updateVSD();
 	aircraft.computeEngines ();
 	aircraft.computeAdverse ();

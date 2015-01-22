@@ -16,6 +16,8 @@ aircraft.data.add("sim/model/f15/controls/hud/intens", "sim/hud/current-color");
 hud_alpha.setDoubleValue(0);
 
 var update_hud = func {
+		hud_alpha.setDoubleValue(0);
+return;
 	var v = view.getValue();
 #	if (v == "Cockpit View" || ) {
     if (getprop("sim/current-view/internal"))

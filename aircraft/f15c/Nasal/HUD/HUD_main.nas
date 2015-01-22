@@ -23,7 +23,7 @@ var HUDcanvas= canvas.new({
                            "mipmapping": 1     
                           });                          
                           
-HUDcanvas.addPlacement({"node": "HudImage"});
+HUDcanvas.addPlacement({"node": "HUDImage"});
 HUDcanvas.setColorBackground(0.36, 1, 0.3, 0.00);
 
 # Create a group for the parsed elements
@@ -75,7 +75,7 @@ var prop_roll =  props.globals.getNode ("orientation/roll-deg");
 var Nz_prop = props.globals.getNode("/fdm/jsbsim/accelerations/Nz");
 
 
-var updateHud = func ()
+var updateHUD = func ()
 {  
 var 	IAS = prop_IAS.getValue();
 var 	mach = prop_mach.getValue(); 
