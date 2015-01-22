@@ -28,8 +28,18 @@
 
 		</emission>
 	</animation>
+    <animation>
+        <type>select</type>
+        <object-name>VSDImage</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
 
-	<!-- *** LoD *** -->
+    <!-- *** LoD *** -->
 	<animation>
 		<type>range</type>
 		<min-m>0</min-m>
