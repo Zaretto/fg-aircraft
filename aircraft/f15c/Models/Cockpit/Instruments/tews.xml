@@ -5,8 +5,19 @@
 
 	<path>tews.ac</path>
 
-	
-	<!-- Lighting -->
+
+    <animation>
+        <type>select</type>
+        <object-name>TEWSImage</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <!-- Lighting -->
     <animation>
         <object-name>mount</object-name>
         <type>material</type>
