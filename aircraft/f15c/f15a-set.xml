@@ -659,8 +659,10 @@
                 </menu>
             </default>
         </menubar>
-
         <hud>
+            <visibility n="1">false</visibility>
+</hud>
+<!--        <hud>
             <path n="1">Aircraft/f15c/Panels/hud.xml</path>
             <visibility n="1">true</visibility>
             <palette>
@@ -694,14 +696,16 @@
                 <bottom type="double">-90</bottom>
             </clipping>
         </hud>
+-->
+
         <view n="0">
             <name>Cockpit View</name>
             <type>lookfrom</type>
             <internal archive="y">true</internal>
             <config>
                 <x-offset-m archive="y">0.0</x-offset-m>
-                <y-offset-m archive="y">1.47</y-offset-m>
-                <z-offset-m archive="y">-4.9</z-offset-m>
+                <y-offset-m archive="y">1.357499884</y-offset-m>
+                <z-offset-m archive="y">-5</z-offset-m>
                 <pitch-offset-deg>-14.7</pitch-offset-deg>
                 <default-field-of-view-deg>55</default-field-of-view-deg>
                 <!--<limits>
@@ -1317,6 +1321,7 @@ else
             <!--<file>Aircraft/f15c/Nasal/fox2.nas</file>-->
             <file>Nasal/HUD/HUD_main.nas</file>
             <file>Nasal/VSD/VSD_main.nas</file>
+            <file>Nasal/TEWS/TEWS_main.nas</file>
         </aircraft>
     </nasal>
 
