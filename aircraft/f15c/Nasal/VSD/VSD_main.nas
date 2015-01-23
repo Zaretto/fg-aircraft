@@ -28,43 +28,43 @@ VSDcanvas.addPlacement({"node": "VSDImage"});
 VSDcanvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 1.00);
 
 # Create a group for the parsed elements
-var SVGfile = VSDcanvas.createGroup();
+var VSDsvg = VSDcanvas.createGroup();
  
 # Parse an SVG file and add the parsed elements to the given group
-print("Parse SVG ",canvas.parsesvg(SVGfile, "Aircraft/f15c/Nasal/VSD/VSD.svg"));
-#SVGfile.setTranslation (-20.0, 37.0);
+print("Parse SVG ",canvas.parsesvg(VSDsvg, "Nasal/VSD/VSD.svg"));
+#VSDsvg.setTranslation (-20.0, 37.0);
 print("VSD INIT");
  
-var window1 = SVGfile.getElementById("window-1");
+var window1 = VSDsvg.getElementById("window-1");
 window1.setFont("condensed.txf").setFontSize(12, 1.2);
-var window2 = SVGfile.getElementById("window-2");
+var window2 = VSDsvg.getElementById("window-2");
 window2.setFont("condensed.txf").setFontSize(12, 1.2);
-var window3 = SVGfile.getElementById("window-3");
+var window3 = VSDsvg.getElementById("window-3");
 window3.setFont("condensed.txf").setFontSize(12, 1.2);
 
-var window4 = SVGfile.getElementById("window-4");
+var window4 = VSDsvg.getElementById("window-4");
 window4.setFont("condensed.txf").setFontSize(12, 1.2);
-var acue = SVGfile.getElementById("ACUE");
+var acue = VSDsvg.getElementById("ACUE");
 acue.setFont("condensed.txf").setFontSize(12, 1.2);
 acue.setText ("A");
 acue.setVisible(0);
-var ecue = SVGfile.getElementById("ECUE");
+var ecue = VSDsvg.getElementById("ECUE");
 ecue.setFont("condensed.txf").setFontSize(12, 1.2);
 ecue.setText ("E");
 ecue.setVisible(0);
-var morhcue = SVGfile.getElementById("MORHCUE");
+var morhcue = VSDsvg.getElementById("MORHCUE");
 morhcue.setFont("condensed.txf").setFontSize(12, 1.2);
 morhcue.setText ("mh");
 morhcue.setVisible(0);
 
-#        var tgt = SVGfile.getElementById("target_friendly_"~target_idx);
-#        var tgt = SVGfile.getElementById("target_friendly_0");
+#        var tgt = VSDsvg.getElementById("target_friendly_"~target_idx);
+#        var tgt = VSDsvg.getElementById("target_friendly_0");
 var max_symbols = 10;
 var tgt_symbols =  setsize([], max_symbols);
 for (var i = 0; i < max_symbols; i += 1)
 {
     var name = "target_friendly_"~i;
-    var tgt = SVGfile.getElementById(name);
+    var tgt = VSDsvg.getElementById(name);
     if (tgt != nil)
     {
         tgt_symbols[i] = tgt;
@@ -72,9 +72,9 @@ for (var i = 0; i < max_symbols; i += 1)
     }
 }
 
-var horizon_line = SVGfile.getElementById("horizon_line");
-var nofire_cross =  SVGfile.getElementById("nofire_cross");
-var target_circle = SVGfile.getElementById("target_circle");
+var horizon_line = VSDsvg.getElementById("horizon_line");
+var nofire_cross =  VSDsvg.getElementById("nofire_cross");
+var target_circle = VSDsvg.getElementById("target_circle");
 var updateVSD = func ()
 {  
     var 	pitch = getprop("orientation/pitch-deg");
@@ -132,11 +132,11 @@ var updateVSD = func ()
                 }
                 tgt.setVisible(u.get_display());
                 var xc = u.get_deviation(heading);
-                var yc = u.get_total_elevation(pitch);
+                var yc = -u.get_total_elevation(pitch)*4;
                 tgt.setVisible(1);
-#               printf("%d(%d,%d): %s %s: %f %f %f", target_idx,xc,yc,
-#                      callsign, model, 
-#                      u.get_altitude(), u.get_total_elevation(pitch), u.get_deviation(heading));
+               printf("%d(%d,%d): %s %s: %f %f %f", target_idx,xc,yc,
+                      callsign, model, 
+                      u.get_altitude(), u.get_total_elevation(pitch), u.get_deviation(heading));
 #            tgt.setCenter(80,80);
                 tgt.setTranslation (xc, yc);
 #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
