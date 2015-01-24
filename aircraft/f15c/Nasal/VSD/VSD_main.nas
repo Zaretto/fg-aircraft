@@ -68,7 +68,7 @@ for (var i = 0; i < max_symbols; i += 1)
     if (tgt != nil)
     {
         tgt_symbols[i] = tgt;
-        print("Found symbol ",name," idx ",i);
+        tgt.setVisible(0);
     }
 }
 
@@ -114,37 +114,40 @@ var updateVSD = func ()
     foreach( u; awg_9.tgts_list ) 
     {
         var callsign = "XX";
-        if (u.Callsign != nil)
-            callsign = u.Callsign.getValue();
-        var model = "XX";
-        if (u.Model != nil)
-            model = u.Model.getValue();
-        if (target_idx < max_symbols)
+        if(u.get_display())
         {
-            tgt = tgt_symbols[target_idx];
-            if (tgt != nil)
+            if (u.Callsign != nil)
+                callsign = u.Callsign.getValue();
+            var model = "XX";
+            if (u.Model != nil)
+                model = u.Model.getValue();
+            if (target_idx < max_symbols)
             {
-                if (target_idx == 0)
+                tgt = tgt_symbols[target_idx];
+                if (tgt != nil)
                 {
-                    window2.setText (sprintf("%-4d", u.get_closure_rate()));
-                    w3_22 = sprintf("%3d-%2d",u.get_bearing(), u.get_range());
-                    w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
-                }
-                tgt.setVisible(u.get_display());
-                var xc = u.get_deviation(heading);
-                var yc = -u.get_total_elevation(pitch)*4;
-                tgt.setVisible(1);
-               printf("%d(%d,%d): %s %s: %f %f %f", target_idx,xc,yc,
-                      callsign, model, 
-                      u.get_altitude(), u.get_total_elevation(pitch), u.get_deviation(heading));
+                    if (target_idx == 0)
+                    {
+                        window2.setText (sprintf("%-4d", u.get_closure_rate()));
+                        w3_22 = sprintf("%3d-%2d",u.get_bearing(), u.get_range());
+                        w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
+                    }
+                    tgt.setVisible(u.get_display());
+                    var xc = u.get_deviation(heading);
+                    var yc = -u.get_total_elevation(pitch)*4;
+                    tgt.setVisible(1);
+#                    printf("%d(%d,%d): %s %s: %f %f %f", target_idx,xc,yc,
+#                           callsign, model, 
+#                           u.get_altitude(), u.get_total_elevation(pitch), u.get_deviation(heading));
 #            tgt.setCenter(80,80);
-                tgt.setTranslation (xc, yc);
+                    tgt.setTranslation (xc, yc);
 #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
 #tgt.setRotation (roll_rad);
+                }
             }
+            target_idx = target_idx+1;
         }
-        target_idx = target_idx+1;
-	}
+    }
     window3.setText(sprintf("G%3.0f %3s-%4s%s %s %s",
                             getprop("velocities/groundspeed-kt"),
                             "","","",
