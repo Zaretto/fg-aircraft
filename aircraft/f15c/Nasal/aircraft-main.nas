@@ -249,15 +249,17 @@ setlistener("/sim/signals/fdm-initialized", startProcess);
 #----------------------------------------------------------------------------
 
 var CurrentView_Num = props.globals.getNode("sim/current-view/view-number");
-var rio_view_num = view.indexof("RIO View");
+#var rio_view_num = view.indexof("RIO View");
 
 var toggle_cockpit_views = func() {
 	cur_v = CurrentView_Num.getValue();
-	if (cur_v != 0 ) {
+	if (cur_v != 0 )
+    {
 		CurrentView_Num.setValue(0);
-	} else {
-		CurrentView_Num.setValue(rio_view_num);
 	}
+#    else {
+#        CurrentView_Num.setValue(rio_view_num);
+#    }
 }
 
 

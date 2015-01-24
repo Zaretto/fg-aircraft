@@ -529,6 +529,37 @@
         </axis>
     </animation>
 
+    <!-- fuel  panel -->
+    <animation>
+        <type>knob</type>
+        <object-name>fuel-slipway-switch</object-name>
+		<property>sim/model/f15/controls/fuel/refuel-probe-switch</property>
+        <factor>-35</factor>
+        <offset-deg>35</offset-deg>
+        <center>
+            <x-m>-5.5543</x-m>
+            <y-m>-0.4459</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+        		<property>sim/model/f15/controls/fuel/refuel-probe-switch</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+
     <!-- engines panel -->
     <animation>
         <type>pick</type>

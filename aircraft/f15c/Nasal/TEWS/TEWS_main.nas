@@ -97,6 +97,7 @@ var TEWSSymbol = {
 };
 
 var max_symbols = 10;
+var tews_alignment_offset = -90;
 for (var i = 0; i < max_symbols; i += 1)
 {
     var ts = TEWSSymbol.new(i, TEWSsvg, "hat");
@@ -129,7 +130,9 @@ var updateTEWS = func ()
                 var tgt = TEWSSymbol.list[target_idx];
                 if (tgt != nil)
                 {
-                    var bearing = u.get_deviation(heading);
+# We have a valid target - so display it. Not quite sure why we need to adjust this but we do.
+#                    var bearing = u.get_deviation(heading);
+                    var bearing = geo.normdeg(u.get_deviation(heading) + tews_alignment_offset);
 
                     tgt.setVisible(u.get_display());
                     tgt.setCallsign(callsign);
@@ -144,6 +147,7 @@ var updateTEWS = func ()
 #                           u.get_altitude(), u.get_range(), u.get_bearing());
 
                     tgt.setTranslation (xc, yc);
+                    tgt.setRotation(geo.normdeg(heading-u.get_bearing())/57.29577950560105);
                 }
             }
             target_idx = target_idx+1;

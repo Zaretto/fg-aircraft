@@ -285,6 +285,19 @@ var RprobePos        = props.globals.getNode("sim/model/f15/refuel/position-norm
 var RprobePosGeneric = props.globals.getNode("sim/multiplay/generic/float[6]",1);
 RprobePosGeneric.alias(RprobePos);
 
+setlistener("sim/model/f15/controls/fuel/refuel-probe-switch", func {
+    var v = getprop("sim/model/f15/controls/fuel/refuel-probe-switch");
+    if (v != nil)
+    {
+        if (v == 0)
+        {
+            r_probe.close();
+        }
+        else
+            r_probe.open();
+    }
+});
+
 var refuel_probe_switch_up = func() {
 	var sw = RprobeSw.getValue();
 	if ( sw < 2 ) {

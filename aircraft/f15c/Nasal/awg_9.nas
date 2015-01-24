@@ -191,38 +191,36 @@ var az_scan = func() {
                 }
             }
 
-			if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) {
-				var u = Target.new(c);
-				u_ecm_signal      = 0;
-				u_ecm_signal_norm = 0;
-				u_radar_standby   = 0;
-				u_ecm_type_num    = 0;
-				if ( u.Range != nil ) {
-					var u_rng = u.get_range();
-					if (u_rng < range_radar2  and u.not_acting == 0 )
-                    {
-						u.get_deviation(our_true_heading);
+            var u = Target.new(c);
+            u_ecm_signal      = 0;
+            u_ecm_signal_norm = 0;
+            u_radar_standby   = 0;
+            u_ecm_type_num    = 0;
+            var u_rng = u.get_range();
+            if (u_rng < range_radar2  and u.not_acting == 0 )
+            {
+                u.get_deviation(our_true_heading);
 
-						if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld ) 
-                        {
-							u.set_display(1);
-						} 
-                        else
-                        {
-							u.set_display(0);
-						}
-						append(tgts_list, u);
-						ecm_on = EcmOn.getValue();
-						# Test if target has a radar. Compute if we are illuminated. This propery used by ECM
-						# over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
-						if ( ecm_on and u.get_rdr_standby() == 0) {
-							rwr(u);	# TODO: override display when alert.
-						}
-					} else {
-						u.set_display(0);
-					}
-				}
-			}
+                if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld ) 
+                {
+                    u.set_display(1);
+                } 
+                else
+                {
+                    u.set_display(0);
+                }
+# do not filter out
+#                    if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) 
+                append(tgts_list, u);
+                ecm_on = EcmOn.getValue();
+                # Test if target has a radar. Compute if we are illuminated. This propery used by ECM
+                # over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
+                if ( ecm_on and u.get_rdr_standby() == 0) {
+                    rwr(u);	# TODO: override display when alert.
+                }
+            } else {
+                u.set_display(0);
+            }
 		}
         #
         # we do this after the loop to keep the old value valid whilst figuring out the new one.
@@ -275,7 +273,7 @@ var az_scan = func() {
 				u.get_closure_rate();
 
 				# Check if u = nearest echo.
-				if ( tmp_nearest_rng == nil or u_rng < tmp_nearest_rng)
+				if ( u_rng != 0 and (tmp_nearest_rng == nil or u_rng < tmp_nearest_rng))
                 {
 					tmp_nearest_u = u;
 					tmp_nearest_rng = u_rng;
@@ -505,9 +503,6 @@ wcs_mode_update = func() {
 }
 
 
-
-
-
 # Target class
 # ---------------------------------------------------------------------
 var Target = {
@@ -520,14 +515,28 @@ var Target = {
 		obj.type = c.getName();
 		obj.Valid = c.getNode("valid");
 		obj.Callsign = c.getNode("callsign");
+        obj.TAS = c.getNode("velocities/true-airspeed-kt");
+
+        if (obj.Callsign == nil or obj.Callsign.getValue() == "")
+        {
+            var signNode = c.getNode("sign");
+            if (signNode != nil)
+                obj.Callsign = signNode;
+        }
+
+
         obj.Model = c.getNode("model-short");
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
-obj.position =
+        obj.propNode = c;
         obj.lat = c.getNode("position/latitude-deg").getValue();
         obj.lon = c.getNode("position/longitude-deg").getValue();
  
+        if (obj.type == "multiplayer" or obj.type == "tanker" or obj.type == "aircraft" and obj.RdrProp != nil) 
+            obj.airbone = 1;
+        else
+            obj.airbone = 0;
 #        var pos = geo.Coord.new(); # FIXME: all of these should be instance variables
 #        obj.Position.set_latlon( lat,lon);
 
@@ -589,7 +598,7 @@ obj.position =
 		obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
 
 		obj.TimeLast.setValue(ElapsedSec.getValue());
-		obj.RangeLast.setValue(obj.Range.getValue());
+		obj.RangeLast.setValue(obj.get_range());
 		# Radar emission status for other uthers of radar2.nas.
 		obj.RadarStandby = c.getNode("sim/multiplay/generic/int[2]");
 
@@ -628,6 +637,21 @@ obj.position =
 		return me.deviation;
 	},
 	get_range : func {
+        #
+        # range on carriers (and possibly other items) is always 0 so recalc.
+        if (me.Range == nil or me.Range.getValue() == 0)
+        {
+            if (me.propNode.getNode("position/global-x") != nil)
+            {
+                var x = me.propNode.getNode("position/global-x").getValue();
+                var y = me.propNode.getNode("position/global-y").getValue();
+                var z = me.propNode.getNode("position/global-z").getValue();
+
+                var tgt_pos = geo.Coord.new().set_xyz(x, y, z);
+#                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
+                return tgt_pos.distance_to(geo.aircraft_position()) * 0.000539957; # distance in NM
+            }
+        }
 		return me.Range.getValue();
 	},
 	get_horizon : func(own_alt) {
@@ -688,6 +712,20 @@ obj.position =
 		me.RoundedAlt.setValue(n);
 	},
 	get_closure_rate : func() {
+        #
+        # calc closure using trig as the elapsed time method is not really accurate enough and jitters considerably
+        if (me.TAS != nil)
+        {
+            var our_hdg = getprop("orientation/heading-deg");
+            var bearing = me.get_deviation(our_hdg);
+            var vec1 = getprop("velocities/airspeed-kt") * math.cos( (bearing - our_hdg) / 57.29577950560105);
+            var vec2 = me.TAS.getValue() * math.cos( (bearing - me.get_bearing()) / 57.29577950560105);
+            return vec1-vec2;
+        }
+        else
+            print("NO TAS ",me.type," ",u.get_range(),u.Model, u.Callsign.getValue());
+        return 0;
+
 		var dt = ElapsedSec.getValue() - me.TimeLast.getValue();
 		var rng = me.Range.getValue();
 		var lrng = me.RangeLast.getValue();

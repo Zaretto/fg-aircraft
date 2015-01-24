@@ -134,12 +134,8 @@ var updateVSD = func ()
                     }
                     tgt.setVisible(u.get_display());
                     var xc = u.get_deviation(heading);
-                    var yc = -u.get_total_elevation(pitch)*4;
+                    var yc = -u.get_total_elevation(pitch);
                     tgt.setVisible(1);
-#                    printf("%d(%d,%d): %s %s: %f %f %f", target_idx,xc,yc,
-#                           callsign, model, 
-#                           u.get_altitude(), u.get_total_elevation(pitch), u.get_deviation(heading));
-#            tgt.setCenter(80,80);
                     tgt.setTranslation (xc, yc);
 #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
 #tgt.setRotation (roll_rad);
