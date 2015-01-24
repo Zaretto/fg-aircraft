@@ -16,6 +16,17 @@
 
     <animation>
         <type>select</type>
+        <object-name>HUDImage1</object-name>
+        <object-name>HUDImage2</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
         <object-name>master-caution-on</object-name>
         <condition>
             <greater-than>
