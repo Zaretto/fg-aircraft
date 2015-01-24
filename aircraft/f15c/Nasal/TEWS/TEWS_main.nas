@@ -1,11 +1,13 @@
-# F-15 TEWS
+# F-15 TEWS; this bears only a cosmetic relation to the real device mainly because all of the document for TEWS
+#            appears to be classified and/or generally unavailable. 
+# Richard Harrison: 2015-01-23 : rjh@zaretto.com
 
 
 var TEWScanvas= canvas.new({
                            "name": "F-15 TEWS",
                            "size": [1024,1024], 
-                           "view": [256,256],                       
-                           "mipmapping": 1     
+                           "view": [326,256],                       
+                           "mipmapping": 1
                           });                          
                           
 TEWScanvas.addPlacement({"node": "TEWSImage"});
@@ -15,14 +17,10 @@ TEWScanvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529
 var TEWSsvg = TEWScanvas.createGroup();
  
 # Parse an SVG file and add the parsed elements to the given group
-print("Parse SVG ",canvas.parsesvg(TEWSsvg, "Nasal/TEWS/TEWS.svg"));
+print("TEWS : Load SVG ",canvas.parsesvg(TEWSsvg, "Nasal/TEWS/TEWS.svg"));
 #TEWSsvg.setTranslation (-20.0, 37.0);
 print("TEWS INIT");
  
-#var window1 = TEWSsvg.getElementById("window-1");
-#window1.setFont("condensed.txf").setFontSize(12, 1.2);
-#acue.setVisible(0);
-
 var TEWSSymbol = {
 	new : func (id, svg, base){
 		var obj = {parents : [TEWSSymbol] };
@@ -41,6 +39,7 @@ var TEWSSymbol = {
                 obj.label = sym;
                 obj.label.setFont("condensed.txf").setFontSize(12, 1.4);
                 obj.valid = 1;
+                obj.setVisible(0);
             }
             else
                 print("Cannot find "~label_name);
@@ -75,6 +74,18 @@ var TEWSSymbol = {
         if(me.label != nil)
             me.label.setCenter(xc,yc);
     },
+    setCallsign : func(t){
+        if (size (t) > 2)
+            me.setText(substr(t,0,2));
+        else
+            me.setText(t);
+    },
+    setGeoPosition : func (lat, lon){
+        if(me.symbol != nil)
+            me.symbol.setGeoPosition(lat, lon);
+        if(me.label != nil)
+            me.label.setGeoPosition(lat, lon);
+    },
     setText : func(t){
         if(me.label != nil)
             me.label.setText(t);
@@ -85,74 +96,60 @@ var TEWSSymbol = {
     list: [],
 };
 
-#        var tgt = TEWSsvg.getElementById("target_friendly_"~target_idx);
-#        var tgt = TEWSsvg.getElementById("target_friendly_0");
-var max_symbols = 5;
-#var tgt_symbols =  setsize([], max_symbols);
+var max_symbols = 10;
 for (var i = 0; i < max_symbols; i += 1)
 {
-var ts = TEWSSymbol.new(i, TEWSsvg, "hat");
-printf("%d: %s %s",i,ts.id, ts.valid);
-if (ts.valid)
-    ;
+    var ts = TEWSSymbol.new(i, TEWSsvg, "hat");
+    printf("TEWS Sym load: %d: %s %s",i,ts.id, ts.valid);
 }
-
-var prop_IAS =  props.globals.getNode ("/velocities/airspeed-kt");
-var prop_alpha = props.globals.getNode ("orientation/alpha-deg");
-var prop_mach =  props.globals.getNode ("/velocities/mach");
-var prop_altitude_ft =  props.globals.getNode ("/position/altitude-ft");
-var prop_heading =  props.globals.getNode("/orientation/heading-deg");
-var prop_pitch =  props.globals.getNode ("orientation/pitch-deg");
-var prop_roll =  props.globals.getNode ("orientation/roll-deg");
-var Nz_prop = props.globals.getNode("/fdm/jsbsim/accelerations/Nz");
-
-
-
 
 var updateTEWS = func ()
 {  
-    var 	IAS = prop_IAS.getValue();
-    var 	mach = prop_mach.getValue(); 
-    var 	altitude_ft = prop_altitude_ft.getValue();
-    var 	WOW = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
-    var 	heading = prop_heading.getValue();	
-    var 	pitch = prop_pitch.getValue();
-    var 	roll = prop_roll.getValue();
-    var     Nz = Nz_prop.getValue();
-    var measured_altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+    var 	heading = getprop("/orientation/heading-deg");
     var target_idx = 0;
     var radar_range = getprop("instrumentation/radar/radar2-range");
 
-    var  roll_rad = -roll*3.14159/180.0;
+    var scale = 220/2; # horizontal / vertical scale (half resolution)
 
     foreach( u; awg_9.tgts_list ) 
     {
         var callsign = "XX";
-        if (u.Callsign != nil)
-            callsign = u.Callsign.getValue();
-        var model = "XX";
-        if (u.Model != nil)
-            model = u.Model.getValue();
-        if (target_idx < max_symbols)
+        if (u.get_range() < radar_range)
         {
-            var tgt = TEWSSymbol.list[target_idx];
-            if (tgt != nil)
+            if (u.Callsign != nil)
+                callsign = u.Callsign.getValue();
+
+            var model = "XX";
+
+            if (u.Model != nil)
+                model = u.Model.getValue();
+
+            if (target_idx < max_symbols)
             {
-                tgt.setVisible(u.get_display());
-                var xc = u.get_bearing();
-                var yc = (u.get_range() / radar_range);
-                tgt.setVisible(1);
-               printf("TEWS: %d(%d,%d): %s %s: %f %f %f", target_idx,xc,yc,
-                      callsign, model, 
-                      u.get_altitude(), u.get_range(), u.get_bearing());
-            tgt.setCenter(80,80);
-                tgt.setTranslation (xc, yc);
-#tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
-#tgt.setRotation (roll_rad);
+                var tgt = TEWSSymbol.list[target_idx];
+                if (tgt != nil)
+                {
+                    var bearing = u.get_deviation(heading);
+
+                    tgt.setVisible(u.get_display());
+                    tgt.setCallsign(callsign);
+                    var r = (u.get_range()*scale) / radar_range;
+                    var xc  = r * math.cos(bearing/57.29577950560105);
+                    var yc = r * math.sin(bearing/57.29577950560105);
+
+                    tgt.setVisible(1);
+
+#                    printf("TEWS: %d(%d,%d): %s %s: :R %f B %f %f", target_idx,xc,yc,
+#                           callsign, model, 
+#                           u.get_altitude(), u.get_range(), u.get_bearing());
+
+                    tgt.setTranslation (xc, yc);
+                }
             }
+            target_idx = target_idx+1;
         }
-        target_idx = target_idx+1;
-	}
+    }
+
     for(var nv = target_idx; nv < max_symbols;nv += 1)
     {
         var tgt = TEWSSymbol.list[nv];

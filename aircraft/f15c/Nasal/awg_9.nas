@@ -203,11 +203,15 @@ var az_scan = func() {
                     {
 						u.get_deviation(our_true_heading);
 
-						if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld ) {
-							append(tgts_list, u);
-						} else {
+						if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld ) 
+                        {
+							u.set_display(1);
+						} 
+                        else
+                        {
 							u.set_display(0);
 						}
+						append(tgts_list, u);
 						ecm_on = EcmOn.getValue();
 						# Test if target has a radar. Compute if we are illuminated. This propery used by ECM
 						# over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
@@ -520,6 +524,13 @@ var Target = {
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
+obj.position =
+        obj.lat = c.getNode("position/latitude-deg").getValue();
+        obj.lon = c.getNode("position/longitude-deg").getValue();
+ 
+#        var pos = geo.Coord.new(); # FIXME: all of these should be instance variables
+#        obj.Position.set_latlon( lat,lon);
+
 #		obj.Callsign = getprop(obj.string~"/callsign");
 #print("callsign ",obj.Callsign.getValue());
 		
@@ -597,6 +608,9 @@ var Target = {
 	},
 	set_relative_bearing : func(n) {
 		me.RelBearing.setValue(n);
+	},
+	get_relative_bearing : func() {
+		return me.RelBearing.getValue();
 	},
 	get_reciprocal_bearing : func {
 		return geo.normdeg(me.get_bearing() + 180);
