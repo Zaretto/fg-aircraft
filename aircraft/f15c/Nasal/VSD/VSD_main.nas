@@ -110,6 +110,7 @@ var updateVSD = func ()
     window4.setText (sprintf("%3d", getprop("instrumentation/radar/radar2-range")));
     var w3_22="";
     var w3_7 = sprintf("T%4d",getprop("fdm/jsbsim/velocities/vc-kts"));
+    var w2 = "";
 
     foreach( u; awg_9.tgts_list ) 
     {
@@ -119,8 +120,8 @@ var updateVSD = func ()
             if (u.Callsign != nil)
                 callsign = u.Callsign.getValue();
             var model = "XX";
-            if (u.Model != nil)
-                model = u.Model.getValue();
+            if (u.ModelType != "")
+                model = u.ModelType;
             if (target_idx < max_symbols)
             {
                 tgt = tgt_symbols[target_idx];
@@ -128,7 +129,7 @@ var updateVSD = func ()
                 {
                     if (target_idx == 0)
                     {
-                        window2.setText (sprintf("%-4d", u.get_closure_rate()));
+                        w2 = sprintf("%-4d", u.get_closure_rate());
                         w3_22 = sprintf("%3d-%2d",u.get_bearing(), u.get_range());
                         w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
                     }
@@ -144,6 +145,7 @@ var updateVSD = func ()
             target_idx = target_idx+1;
         }
     }
+    window2.setText(w2);
     window3.setText(sprintf("G%3.0f %3s-%4s%s %s %s",
                             getprop("velocities/groundspeed-kt"),
                             "","","",

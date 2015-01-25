@@ -526,6 +526,27 @@ var Target = {
 
 
         obj.Model = c.getNode("model-short");
+        var model_short = c.getNode("sim/model/path");
+        if(model_short != nil)
+        {
+            var model_short_val = model_short.getValue();
+            if (model_short_val != nil and model_short_val != "")
+            {
+            var u = split("/", model_short_val); # give array
+            var s = size(u); # how many elements in array
+            var o = u[s-1];	 # the last element
+            var m = size(o); # how long is this string in the last element
+            var e = m - 4;   # - 4 chars .xml
+            obj.ModelType = substr(o, 0, e); # the string without .xml
+}
+else
+            obj.ModelType = "";
+        }
+else
+{
+            obj.ModelType = "";
+        }
+
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
@@ -718,7 +739,7 @@ var Target = {
         {
             var our_hdg = getprop("orientation/heading-deg");
             var bearing = me.get_deviation(our_hdg);
-            var vec1 = getprop("velocities/airspeed-kt") * math.cos( (bearing - our_hdg) / 57.29577950560105);
+            var vec1 = getprop("fdm/jsbsim/velocities/vtrue-kts") * math.cos( (bearing - our_hdg) / 57.29577950560105);
             var vec2 = me.TAS.getValue() * math.cos( (bearing - me.get_bearing()) / 57.29577950560105);
             return vec1-vec2;
         }
