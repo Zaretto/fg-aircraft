@@ -275,8 +275,11 @@ var az_scan = func() {
 				# Check if u = nearest echo.
 				if ( u_rng != 0 and (tmp_nearest_rng == nil or u_rng < tmp_nearest_rng))
                 {
-					tmp_nearest_u = u;
-					tmp_nearest_rng = u_rng;
+                    if(u.airbone)
+                    {
+					    tmp_nearest_u = u;
+    					tmp_nearest_rng = u_rng;
+                    }
 				}
 			}
 			u.set_display(u_display);
