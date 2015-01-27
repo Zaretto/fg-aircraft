@@ -437,7 +437,10 @@ namespace F14AeroPlot
             aerodata.EyePoint = new Location(197, 0, -3.94, "IN");
 //            aerodata.VRP = new Location(386, 0, -13, "IN");
             // model is at CG
-            aerodata.VRP = new Location(0, 0, 0, "IN");
+//            aerodata.VRP = new Location(0, 0, 0, "IN");
+
+            aerodata.VRP = new Location(386, 0, 0, "IN");
+
             aerodata.CG = new Location(408, 0, 0, "IN");
             aerodata.AERORP = aerodata.CG.FromChord(aerodata.chord, 25.65,0,0);
 
@@ -534,15 +537,15 @@ namespace F14AeroPlot
                 Orient = new Location(0, 0, 0, "DEG"),
             });
             Tank t;
-            t = new Tank("Right Feed line", 454, 38, -47, "IN", 1, 10, "LBS");
+            t = new Tank("Right Feed line", 489, 38, -47, "IN", 1, 10, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Left Feed line", 454, -38, -47, "IN", 2, 10, "LBS");
+            t = new Tank("Left Feed line", 489, -38, -47, "IN", 2, 10, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
 
-            t = new Tank("External Tank", 450, 0, -7.83, "IN", 3, 3950, "LBS");
+            t = new Tank("External Tank", 386, 0, -7.83, "IN", 3, 3950, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
             aerodata.Engines[1].AddFeed(t);
@@ -555,26 +558,26 @@ namespace F14AeroPlot
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
 
-            t = new Tank("Right Wing Tank", 450, 0, -7.83, "IN", 6, 2750, "LBS");
+            t = new Tank("Right Wing Tank", 457.02,130.32,15.35, "IN", 6, 2750, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Left Wing Tank", 450, 0, -7.83, "IN", 7, 2750, "LBS");
+            t = new Tank("Left Wing Tank", 457.02,-130.32,15.35, "IN", 7, 2750, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
 
 
-            t = new Tank("Tank 1", 422, 0, -5.77, "IN", 8, 3300, "LBS");
+            t = new Tank("Tank 1", 307.42,7.48,14.57, "IN", 8, 3300, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Right Engine Feed", 430, 0, -7.83, "IN", 9, 1500, "LBS");
+            t = new Tank("Right Engine Feed", 396.79,7.95,-5.51, "IN", 9, 1500, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[1].AddFeed(t);
 
             
-            t = new Tank("Left Engine Feed", 430, 0, -7.83, "IN", 10, 1200, "LBS");
+            t = new Tank("Left Engine Feed", 453.87,7.83,0.79, "IN", 10, 1200, "LBS");
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
             
