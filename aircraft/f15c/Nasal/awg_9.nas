@@ -323,7 +323,13 @@ var hud_nearest_tgt = func() {
 			# Clamp closure rate from -200 to +1,000 Kts.
 			var cr = nearest_u.ClosureRate.getValue();
 
-			if (cr < -200) { cr = 200 } elsif (cr > 1000) { cr = 1000 }
+			if (cr != nil)
+            {
+                if (cr < -200) 
+                    cr = 200;
+                else if (cr > 1000) 
+                    cr = 1000;
+            }
 
 			HudTgtClosureRate.setValue(cr);
 			HudTgtTDeg.setValue(combined_dev_deg);

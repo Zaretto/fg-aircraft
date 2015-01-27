@@ -88,13 +88,16 @@ var F15HUD = {
         obj.tgt_symbols =  setsize([],obj.max_symbols);
         for (var i = 0; i < obj.max_symbols; i += 1)
         {
-            var name = "target_friendly_"~i;
+            var name = "target_"~i;
             var tgt = obj.svg.getElementById(name);
             if (tgt != nil)
             {
                 obj.tgt_symbols[i] = tgt;
                 tgt.setVisible(0);
+                print("HUD: loaded ",name);
             }
+            else
+                print("HUD: could not locate ",name);
         }
 
 		return obj;
@@ -194,6 +197,54 @@ var F15HUD = {
 #roll_pointer.setCenter (118,-50);
         me.roll_pointer.setRotation (roll_rad);
 
+        var target_idx = 0;
+        foreach( u; awg_9.tgts_list ) 
+        {
+            var callsign = "XX";
+            if(u.get_display())
+            {
+                if (u.Callsign != nil)
+                    callsign = u.Callsign.getValue();
+                var model = "XX";
+                if (u.ModelType != "")
+                    model = u.ModelType;
+                if (target_idx < me.max_symbols)
+                {
+                    tgt = me.tgt_symbols[target_idx];
+                    if (tgt != nil)
+                    {
+#                    if (u == awg_9.nearest_u)
+#                    {
+#                        w2 = sprintf("%-4d", u.get_closure_rate());
+#                        w3_22 = sprintf("%3d-%2d",u.get_bearing(), u.get_range());
+#                        w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
+#                    }
+                        tgt.setVisible(u.get_display());
+                        var u_dev_rad = u.get_deviation(90 - hdp.heading)  * D2R;
+                        var u_elev_rad = u.get_total_elevation(90 - hdp.pitch)  * D2R;
+			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
+			var combined_dev_deg = devs[0];
+			var combined_dev_length =  devs[1];
+			var clamped = devs[2];
+            var xc = combined_dev_deg;
+            var yc = -combined_dev_length;
+                        tgt.setVisible(1);
+                        tgt.setTranslation (xc, yc);
+#tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
+#tgt.setRotation (roll_rad);
+                    }
+                }
+                target_idx = target_idx+1;
+            }
+        }
+        for(var nv = target_idx; nv < me.max_symbols;nv += 1)
+        {
+            tgt = me.tgt_symbols[nv];
+            if (tgt != nil)
+            {
+                tgt.setVisible(0);
+            }
+        }
     },
     list: [],
 };
@@ -211,7 +262,7 @@ var HUD_DataProvider  = {
         me.IAS = getprop("/velocities/airspeed-kt");
         me.Nz = getprop("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
         me.WOW = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
-        me.alpha = getprop ("orientation/alpha-deg");
+        me.alpha = getprop ("fdm/jsbsim/aero/alpha-indicated-deg");
         me.altitude_ft =  getprop ("/position/altitude-ft");
         me.heading =  getprop("/orientation/heading-deg");
         me.mach = getprop ("/velocities/mach");
