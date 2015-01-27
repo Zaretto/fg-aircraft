@@ -470,6 +470,10 @@
         <switch name="propulsion/inlet/ramp1-position-deg">
             <description>Inlet outer ramp position</description>
             <default value="0"/>
+            <test value="16" logic="AND">
+                systems/hydraulics/combined-system-pressure ne 0
+                position/aircraft-on-ground ne 0
+            </test>
             <test value="propulsion/inlet/ramp1-position-demand-deg" logic="AND">
                 systems/hydraulics/combined-system-pressure ne 0
                 position/aircraft-on-ground eq 0
