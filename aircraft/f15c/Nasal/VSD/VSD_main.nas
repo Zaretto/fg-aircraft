@@ -111,11 +111,11 @@ var updateVSD = func ()
     var w3_22="";
     var w3_7 = sprintf("T%4d",getprop("fdm/jsbsim/velocities/vc-kts"));
     var w2 = "";
-
+    var designated = 0;
     foreach( u; awg_9.tgts_list ) 
     {
         var callsign = "XX";
-        if(u.get_display())
+        if(u.get_display() and u.airbone)
         {
             if (u.Callsign != nil)
                 callsign = u.Callsign.getValue();
@@ -127,11 +127,12 @@ var updateVSD = func ()
                 tgt = tgt_symbols[target_idx];
                 if (tgt != nil)
                 {
+#                    if (u.airbone and !designated)
                     if (target_idx == 0)
                     {
+                        designated = 1;
                         w2 = sprintf("%-4d", u.get_closure_rate());
-                        w3_22 = sprintf("%3d-%2d",u.get_bearing(), u.get_range());
-                        w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
+                        w3_22 = sprintf("%3d-%2d %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
                     }
                     tgt.setVisible(u.get_display());
                     var xc = u.get_deviation(heading);
