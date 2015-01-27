@@ -15,6 +15,12 @@
 		<type>rotate</type>
 		<object-name>needle</object-name>
 		<property>orientation/alpha-indicated-deg</property>
+        <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
 		<interpolation>
 		<!--        AoA deg           gauge deg -->
 		<entry><ind>  0</ind><dep>  0</dep></entry>

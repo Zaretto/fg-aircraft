@@ -35,6 +35,12 @@
         <type>rotate</type>
         <object-name>face</object-name>
         <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -197,6 +203,12 @@
         <type>rotate</type>
         <object-name>mach-scale</object-name>
         <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -286,6 +298,12 @@
         <type>rotate</type>
         <object-name>mach-scale</object-name>
         <property>velocities/mach</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0</ind>

@@ -26,6 +26,12 @@
 		<type>rotate</type>
 		<object-name>needle</object-name>
 		<property>accelerations/pilot-gdamped</property>
+        <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
 		<interpolation>
 			<entry><ind>-5</ind><dep>-202.5</dep></entry>
 			<entry><ind>-4</ind><dep>-112.5</dep></entry>
@@ -54,6 +60,12 @@
 		<type>rotate</type>
 		<object-name>needle-max</object-name>
 		<property>sim/model/f15/instrumentation/g-meter/g-max</property>
+        <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
 		<interpolation>
 			<entry><ind>-5</ind><dep>-202.5</dep></entry>
 			<entry><ind>-4</ind><dep>-112.5</dep></entry>
@@ -82,6 +94,12 @@
 		<type>rotate</type>
 		<object-name>needle-min</object-name>
 		<property>sim/model/f15/instrumentation/g-meter/g-min</property>
+        <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
 		<interpolation>
 			<entry><ind>-5</ind><dep>-202.5</dep></entry>
 			<entry><ind>-4</ind><dep>-112.5</dep></entry>
