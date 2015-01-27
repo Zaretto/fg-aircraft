@@ -62,9 +62,6 @@ var fuel_dt = 0;
 var fuel_last_time = 0.0;
 
 var total = 0;
-var dump_valve = 0;
-var dumprate_lbs_hr = 90000; #1500 ppm
-var max_instant_dumprate_lbs = 1.45; # max instantaneous qty for low frame rates
 var refuel_rate_gpm = 450; # max refuel rate in gallons per minute at 50 psi pressure
 
 
@@ -87,7 +84,6 @@ var RightEngineRunning		= RightEngine.getNode("running", 1);
 LeftEngine.getNode("out-of-fuel", 1);
 RightEngine.getNode("out-of-fuel", 1);
 
-var DumpValve         = props.globals.getNode("sim/model/f15/controls/fuel/dump-valve", 1);
 var RprobeSw = props.globals.getNode("sim/model/f15/controls/fuel/refuel-probe-switch");
 var TotalFuelLbs  = props.globals.getNode("consumables/fuel/total-fuel-lbs", 1);
 var TotalFuelGals = props.globals.getNode("consumables/fuel/total-fuel-gals", 1);
@@ -105,7 +101,6 @@ var init_fuel_system = func {
 	}
 
 	#valves ("name",property, intitial status)
-	DumpValve = Valve.new("dump_valve","sim/model/f15/controls/fuel/dump-valve",0);
 
 	neg_g = Neg_g.new(0);
 
@@ -164,16 +159,6 @@ var fuel_update = func {
 
 	ext_select_state = Ext_Select_State.getValue();
 
-	# Fuel Jettison
-	dump_valve = Valve.get("dump_valve");
-	if ( dump_valve and ( TotalFuelLbs.getValue() < 4300 ) ) { fuel_dump_off() }
-	if ( dump_valve ) {
-		Left_Proportioner.jettisonFuel(fuel_dt);
-		Right_Proportioner.jettisonFuel(fuel_dt);
-	} else {
-		Left_Proportioner.set_dumprate(0);
-		Right_Proportioner.set_dumprate(0);
-	}
 }
 
 
@@ -257,27 +242,29 @@ var calc_levels = func() {
 # Controls
 # --------
 
-var fuel_dump_switch_toggle = func() {
-	var sw = getprop("sim/model/f15/controls/fuel/dump-switch");
-	if ( !sw ) {
-		setprop("sim/model/f15/controls/fuel/dump-switch", 1);
-		if (( !wow ) and (getprop("surface-positions/speedbrake-pos-norm") == 0 )) {
-			fuel_dump_on();
-		} else { settimer(func { fuel_dump_off() }, 0.1) } 
-	} else { fuel_dump_off() }
-} 
-var fuel_dump_on = func() {
-	Valve.set("dump_valve",1);
-	setprop("sim/multiplay/generic/int[0]", 1);
-}
-var fuel_dump_off = func() {
-	setprop("sim/model/f15/controls/fuel/dump-switch", 0);
-	Valve.set("dump_valve",0);
-	setprop("sim/multiplay/generic/int[0]", 0);
-}
-
-
-
+setlistener("sim/model/f15/controls/fuel/dump-switch", func(v) {
+    if (v != nil)
+    {
+        if (v.getValue())
+        {
+            print("Start  dump");
+            setprop("sim/multiplay/generic/int[0]", 1);
+            setprop("fdm/jsbsim/propulsion/fuel_dump",1);
+        }
+        else
+        { 
+            print("Stop dump");
+            setprop("sim/multiplay/generic/int[0]", 0);
+            setprop("fdm/jsbsim/propulsion/fuel_dump",0);
+        } 
+    }
+    else 
+    { 
+        print("no value");
+        setprop("sim/multiplay/generic/int[0]", 0);
+        setprop("fdm/jsbsim/propulsion/fuel_dump",0);
+    }
+});
 
 
 var r_probe = aircraft.door.new("sim/model/f15/refuel/", 1);
