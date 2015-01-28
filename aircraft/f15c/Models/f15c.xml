@@ -5,7 +5,7 @@
     <path>f15c.ac</path>
 
 
-   <animation>
+    <animation>
         <type>translate</type>
         <object-name>FuelSlipwayDoor2</object-name>
         <object-name>FuelSlipwayDoor</object-name>
@@ -771,7 +771,7 @@
             <z>0.9218</z>
         </axis>
     </animation>-->
-    
+
     <!--<animation>
         <type>translate</type>
         <object-name>fwd retract strut</object-name>
@@ -826,7 +826,7 @@
             <z-m>-0.9513</z-m>
         </slave-center>
     </animation>-->
-    
+
 
 
     <!--Wing Bend-->
@@ -897,33 +897,33 @@
 
 
     <effect>
-  <name>glossy</name>
-   <inherits-from>Aircraft/f15c/Models/metal</inherits-from>
-   <object-name>EngineCovers</object-name>
-   <object-name>Heat Xchanger.001</object-name>
+        <name>glossy</name>
+        <inherits-from>Aircraft/f15c/Models/metal</inherits-from>
+        <object-name>EngineCovers</object-name>
+        <object-name>Heat Xchanger.001</object-name>
         <object-name>SpeedBrakeRam</object-name>
 
         <object-name>Right Main lower oleo</object-name>
         <object-name>Lower FWD oleo</object-name>
         <object-name>Left Main lower oleo</object-name>
     </effect>
-  
-<animation>
-		<type>shader</type>
-		<shader>chrome</shader>
-		<texture>Aircraft/f15c/Models/glass_shader.png</texture>
-		<object-name>Nose Section.003</object-name>
-		<object-name>Canopy.002</object-name>
-</animation>
 
-	<model>
-		<path>pilot.xml</path>
-		<offsets>
-			<x-m>-5.3551</x-m>
-			<y-m>0.0000</y-m>
-			<z-m>0.9010</z-m>
-		</offsets>
-	</model>
+    <animation>
+        <type>shader</type>
+        <shader>chrome</shader>
+        <texture>Aircraft/f15c/Models/glass_shader.png</texture>
+        <object-name>Nose Section.003</object-name>
+        <object-name>Canopy.002</object-name>
+    </animation>
+
+    <model>
+        <path>pilot.xml</path>
+        <offsets>
+            <x-m>0</x-m>
+            <y-m></y-m>
+            <z-m>0</z-m>
+        </offsets>
+    </model>
     <animation>
         <type>spin</type>
         <object-name>Inlet-Guide-VaneL</object-name>
@@ -931,7 +931,8 @@
         <property>engines/engine[0]/n1</property>
         <factor> 2.0 </factor>
         <center>
-            <x-m>3.83751</x-m> <!--3.75898-->
+            <x-m>3.83751</x-m>
+            <!--3.75898-->
             <y-m> -0.751381</y-m>
             <z-m> 0.178632</z-m>
         </center>
@@ -1064,7 +1065,8 @@
     <!-- inlet ramps-->
     <animation>
         <type>rotate</type>
-        <object-name>IntakeRampL0</object-name> <!-- RampL0 is outer and contains Ramp L1 -->
+        <object-name>IntakeRampL0</object-name>
+        <!-- RampL0 is outer and contains Ramp L1 -->
         <object-name>IntakeRampL2</object-name>
         <object-name>IntakeRampL3</object-name>
         <property>fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg</property>
@@ -1196,7 +1198,7 @@
     </animation>
 
 
-<!-- speed brake -->
+    <!-- speed brake -->
 
     <!--<animation>
         <type>rotate</type>
@@ -1216,8 +1218,8 @@
             <z>0</z>
         </axis>
     </animation>-->
-    
- <!-- Surfaces -->
+
+    <!-- Surfaces -->
 
     <animation>
         <type>rotate</type>
@@ -1409,14 +1411,14 @@
     </animation>
 
     <model>
-  <name>nozzle</name>
-  <path>Aircraft/f15c/Models/nozzle-R.xml</path>
-  <offsets>
-   <x-m>0.0</x-m>
-   <y-m>0.0</y-m>
-   <z-m>0.0</z-m>
-  </offsets>
- </model>
+        <name>nozzle</name>
+        <path>Aircraft/f15c/Models/nozzle-R.xml</path>
+        <offsets>
+            <x-m>0.0</x-m>
+            <y-m>0.0</y-m>
+            <z-m>0.0</z-m>
+        </offsets>
+    </model>
 
     <animation>
         <object-name>Taxi lightBulb</object-name>
@@ -1452,7 +1454,8 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <greater-than> <!-- this is a bit mask so the condition will catch 2 and 3 which are the only possible values -->
+            <greater-than>
+                <!-- this is a bit mask so the condition will catch 2 and 3 which are the only possible values -->
                 <property>sim/multiplay/generic/int[7]</property>
                 <value>1</value>
             </greater-than>
@@ -1602,23 +1605,25 @@
             <x-m>0.4848</x-m>
             <y-m>0</y-m>
             <z-m>1.0156</z-m>
-            --><!--<x-m>0.32478</x-m>
+            -->
+    <!--<x-m>0.32478</x-m>
             <y-m>0</y-m>
-            <z-m>1.0959</z-m>--><!--
+            <z-m>1.0959</z-m>-->
+    <!--
         </target-center>
     </animation>-->
-    
-	<model>
-		<path>Models/Effects/Fuel/fuel-dump.xml</path>
-		<offsets>
-			<x-m>8.70</x-m>
-			<y-m>0</y-m>
-			<z-m>-0.0363</z-m>
-			<roll-deg>0</roll-deg>
-			<pitch-deg>0</pitch-deg>
-			<heading-deg>0</heading-deg>
-		</offsets>
-	</model>
+
+    <model>
+        <path>Models/Effects/Fuel/fuel-dump.xml</path>
+        <offsets>
+            <x-m>5.5876</x-m>
+            <y-m>5.55314</y-m>
+            <z-m>0.4507</z-m>
+            <roll-deg>0</roll-deg>
+            <pitch-deg>0</pitch-deg>
+            <heading-deg>0</heading-deg>
+        </offsets>
+    </model>
 
 
 </PropertyList>
