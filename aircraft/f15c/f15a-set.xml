@@ -1027,8 +1027,8 @@ else
 				<name>CTRL-a</name>
 				<desc>Toggle autopilot altitude mode.</desc>
 				<binding>
-					<command>nasal</command>
-					<script>aircraft.afcs_altitude_engage_toggle();</script>
+                  <command>property-toggle</command>
+                  <property>sim/model/f15/controls/afcs/alt-hold</property>
 				</binding>
 			</key>
 
@@ -1063,8 +1063,8 @@ else
 				<name>Ctrl-t</name>
 				<desc>Toggle autopilot attitude mode</desc>
 				<binding>
-					<command>nasal</command>
-					<script>aircraft.afcs_engage_toggle()</script>
+                  <command>property-toggle</command>
+                  <property>sim/model/f15/controls/afcs/att-hold</property>
 				</binding>
 			</key>
 

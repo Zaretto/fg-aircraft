@@ -5,8 +5,35 @@
 
 	<path>jett-panel.ac</path>
 
-	
-	<!-- Lighting -->
+    <animation>
+        <type>knob</type>
+        <object-name>steer-mode-selector</object-name>
+        <property>sim/model/instrumentation/vhf/mode</property>
+        <factor>56</factor>
+        <center>
+            <x-m>-5.6999</x-m>
+            <y-m>-0.0724</y-m>
+            <z-m>0.9414</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z></z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/instrumentation/vhf/mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- Lighting -->
 	<animation>
 		<object-name>mount</object-name> 
 		<type>material</type>

@@ -129,11 +129,11 @@ var afcs_altitude_engage_toggle = func() {
 		alt_switch.setBoolValue(0);
 		alt_enable.setBoolValue(0);
 		afcs_altitude_disengage();
-#        print("Alt disengage");
+        print("Alt disengage");
 	} else {
 		alt_switch.setBoolValue(1);
 		alt_enable.setBoolValue(1);
-#        print("Alt engage");
+        print("Alt engage");
         target_alt.setValue(press_alt_ft.getValue());
 setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
 setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
@@ -295,6 +295,44 @@ var afcs_heading_disengage = func() {
 	target_roll.setValue( rdeg );
 	ap_hdg_lock.setValue("wing-leveler");
 }
+
+setlistener("sim/model/f15/controls/afcs/att-hold", func(p) {
+print("Att hold ",p.getValue());
+if (p.getValue())
+afcs_attitude_engage();
+else
+{
+afcs_disengage();
+setprop("sim/model/f15/controls/afcs/autopilot-disengage",1);
+}
+
+});
+setlistener("sim/model/f15/controls/afcs/alt-hold", func(p) {
+if (p.getValue())
+{
+if(getprop("sim/model/f15/controls/afcs/att-hold"))
+{
+        print("Alt engage");
+setprop("fdm/jsbsim/systems/afcs/altitude-hold-divergence-pid",0);
+        target_alt.setValue(press_alt_ft.getValue());
+setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
+setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
+#            ap_alt_lock.setValue(1);
+}
+else
+{
+print ("attitude hold first");
+setprop("sim/model/f15/controls/afcs/autopilot-disengage",1);
+}
+}
+else
+{
+		afcs_altitude_disengage();
+setprop("sim/model/f15/controls/afcs/autopilot-disengage",1);
+        print("Alt disengage");
+}
+
+});
 
 setlistener("autopilot/settings/target-altitude-ft", func {
     var v = getprop("autopilot/settings/target-altitude-ft");

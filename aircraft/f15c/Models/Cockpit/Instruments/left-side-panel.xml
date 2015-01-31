@@ -4,15 +4,8 @@
 <PropertyList>
 
     <path>left-side-panel.ac</path>
-<!--
-ILS CHAN
-        <center>
-            <x-m>-5.7442</x-m>
-            <y-m>-0.3923</y-m>
-        </center>
-7
--->
-<!-- ILS -->
+
+    <!-- ILS -->
     <animation>
         <type>textranslate</type>
         <object-name>ils-freq-drum-1</object-name>
@@ -65,14 +58,13 @@ ILS CHAN
         <property>instrumentation/nav[0]/frequencies/selected-mhz</property>
         <factor>10</factor>
         <offset>-0.01</offset>
-        <step>0.01</step>
         <axis>
             <y>-1</y>
         </axis>
     </animation>
     <animation>
         <type>knob</type>
-        <object-name>ils-freq-outer-knob</object-name>
+        <object-name>ils-freq-inner-knob</object-name>
         <property>instrumentation/nav[0]/frequencies/selected-mhz</property>
         <!-- or property as usual for rotate animation -->
         <factor>10</factor>
@@ -99,7 +91,7 @@ ILS CHAN
     </animation>
     <animation>
         <type>knob</type>
-        <object-name>ils-freq-inner-knob</object-name>
+        <object-name>ils-freq-outer-knob</object-name>
         <property>instrumentation/nav[0]/frequencies/selected-mhz</property>
         <factor>360</factor>
         <center>
@@ -118,8 +110,34 @@ ILS CHAN
                 <property>instrumentation/nav[0]/frequencies/selected-mhz</property>
                 <factor>0.05</factor>
                 <min>108</min>
-                <max>117.95</max>
+                <max>118</max>
                 <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>ils-volume-knob</object-name>
+        <property>sim/model/f15/instrumentation/ils/volume-norm</property>
+        <factor>-270</factor>
+        <center>
+            <x-m>-5.7422</x-m>
+            <y-m>-0.316</y-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/instrumentation/ils/volume-norm</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
             </binding>
         </action>
     </animation>

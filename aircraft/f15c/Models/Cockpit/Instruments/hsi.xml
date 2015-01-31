@@ -134,30 +134,56 @@
 		<axis><y>-1</y></axis>
 	</animation>
 
-	<animation>
-	<type>rotate</type>
-	<object-name>course-knob</object-name>
-	<property>instrumentation/nav[1]/radials/selected-deg</property>
-	<center>
-		<y-m>0.0491</y-m>
-		<z-m>-0.0413</z-m>
-	</center>
-	<axis><x>-1</x></axis>
-	</animation>
+    <animation>
+        <type>knob</type>
+        <object-name>course-knob</object-name>
+        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <center>
+            <y-m>0.0491</y-m>
+            <z-m>-0.0413</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
 
-	<animation>
-	<type>rotate</type>
-	<object-name>heading-set-knob</object-name>
-	<property>instrumentation/heading-indicator-fg/offset-deg</property>
-	<center>
-		<y-m>-0.0491</y-m>
-		<z-m>-0.0413</z-m>
-	</center>
-	<axis><x>-1</x></axis>
-	</animation>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/nav[1]/radials/selected-deg</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>360</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>heading-set-knob</object-name>
+        <property>instrumentation/heading-indicator-fg/offset-deg</property>
+        <center>
+            <y-m>-0.0491</y-m>
+            <z-m>-0.0413</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/heading-indicator-fg/offset-deg</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>360</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
 
 
-<!-- ============ CDI =========== -->
+    <!-- ============ CDI =========== -->
 
 	<!-- HSI-course-card -->
 	<animation>

@@ -166,11 +166,14 @@ var ara_63_update = func {
             setprop("sim/model/f15/lights/light-wave-off",0);
             setprop("sim/model/f15/lights/acl-ready-light", 0);
             setprop("sim/model/f15/lights/ap-cplr-light",0);
-            setprop("sim/model/f15/instrumentation/nav/gs-in-range", 0);
-            setprop("sim/model/f15/instrumentation/nav/gs-needle-deflection-norm",1);
-            setprop("sim/model/f15/instrumentation/nav/heading-needle-deflection-norm",1);
-            setprop("sim/model/f15/instrumentation/nav/signal-quality-norm",0);
-            setprop("sim/model/f15/instrumentation/nav/gs-distance", 0);
+
+# Use the standard civilian ILS as no carrier tuned.
+            setprop("sim/model/f15/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
+            setprop("sim/model/f15/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
+            setprop("sim/model/f15/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
+            setprop("sim/model/f15/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
+            setprop("sim/model/f15/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
+
         }
         return;
     }
@@ -392,6 +395,9 @@ aircraft.data.add("sim/model/f15/controls/VDI/brightness",
                   "sim/model/f15/instrumentation/hud/mode-ag",
                   "sim/model/f15/instrumentation/hud/mode-to",
                   "sim/model/f15/instrumentation/hud/mode-ldg",
+                  "instrumentation/nav[0]/frequencies/selected-mhz",
+                  "sim/model/f15/instrumentation/ils/volume-norm",
+                  "sim/model/instrumentation/vhf/mode",
                   "controls/pilots-displays/hsd-mode-nav");
 
 var inc_ticker = func {

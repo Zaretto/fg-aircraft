@@ -311,6 +311,23 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-hook",0);
         }
     }
+	if (getprop("sim/model/f15/controls/afcs/autopilot-disengage"))
+    {
+        if (!getprop("sim/model/f15/lights/ca-auto-plt"))
+        {
+            setprop("sim/model/f15/lights/ca-auto-plt",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-auto-plt"))
+        {
+            setprop("sim/model/f15/lights/ca-auto-plt",0);
+        }
+    }
+
 
 	if (getprop("/fdm/jsbsim/systems/electrics/transrect-online") < 2)
     {
@@ -383,6 +400,8 @@ var master_caution_pressed = func {
     jettisonRight.setValue(0);
     masterCaution_light.setBoolValue(0);
     masterCaution_light_set.setBoolValue(0);
+
+    setprop("sim/model/f15/controls/afcs/autopilot-disengage",0);
 }
 
 var electricsFrame = func {

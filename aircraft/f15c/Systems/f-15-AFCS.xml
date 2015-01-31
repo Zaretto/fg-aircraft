@@ -389,36 +389,6 @@
 	<!-- Velocity Modes                                                  -->
 	<!-- =============================================================== -->
 
-	<!-- AoA with throttle (Approach Power Compensator - APC) -->
-	<pid-controller>
-		<name>AoA-with-throttle</name>
-		<debug>false</debug>
-		<enable>
-			<prop>autopilot/locks/aoa</prop>
-			<value>APC</value>
-		</enable>
-		<input>
-			<prop>orientation/alpha-deg</prop>
-		</input>
-		<reference>
-			<prop>sim/model/f15/instrumentation/aoa-indexer/target-deg</prop>
-		</reference>
-		<output>
-			<prop>autopilot/internal/target-speed</prop>
-		</output>
-		<config>
-			<Ts>0.02</Ts>
-			<Kp>-2.0</Kp>
-			<beta>1.0</beta>
-			<alpha>0.1</alpha>
-			<gamma>0.0</gamma>
-			<Ti>20.0</Ti>
-			<Td>0.01</Td>
-			<u_min>100.0</u_min>
-			<u_max>180.0</u_max>
-		</config>
-	</pid-controller>
-
 	<!-- Speed Auto throttle --> 
 	<pid-controller>
 		<name>Speed Auto Throttle</name>
