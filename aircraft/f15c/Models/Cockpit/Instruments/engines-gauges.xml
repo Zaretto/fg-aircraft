@@ -794,8 +794,7 @@
 	</animation>
 
 	<animation>
-        <object-name>needles</object-name>
-        <object-name>faces</object-name>
+        <object-name>instrument</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -804,6 +803,12 @@
             </greater-than>
             <not>
                 <property>sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <greater-than>
+                    <property>controls/lighting/panel</property>
+                    <property>controls/lighting/eng-inst</property>
+                </greater-than>
             </not>
         </condition>
         <emission>
@@ -818,6 +823,7 @@
 	</animation>
 
     <animation>
+        <object-name>instrument</object-name>
         <object-name>mount</object-name>
         <type>material</type>
         <condition>
