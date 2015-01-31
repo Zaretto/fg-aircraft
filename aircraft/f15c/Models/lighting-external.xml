@@ -23,6 +23,8 @@
             </greater-than>
             <property>sim/rendering/rembrandt/enabled</property>
         </condition>
+        <object-name>RBT-vert-tail-light-r</object-name>
+        <object-name>RBT-vert-tail-light-l</object-name>
         <object-name>RBT-coll_halo_TR</object-name>
         <object-name>RBT-coll_halo_TL</object-name>
         <object-name>RBT-coll_halo_WL</object-name>
@@ -1093,6 +1095,104 @@
             <green>0.196</green>
             <blue>0.156</blue>
         </emission>
+    </animation>
+<!-- tail illumination -->
+    <animation>
+        <type>light</type>
+        <light-type>spot</light-type>
+        <name>left vertical tail light</name>
+        <object-name>RBT-vert-tail-light-l</object-name>
+        <nopreview/>
+        <position>
+            <x>6.771</x>
+            <y>-1.8103</y>
+            <z>0.2252</z>
+        </position>
+        <direction>
+            <x>0</x>
+            <y>-0.5</y>
+            <z>1</z>
+        </direction>
+        <ambient>
+            <r>0.03</r>
+            <g>0.03</g>
+            <b>0.03</b>
+            <a>1.0</a>
+        </ambient>
+        <diffuse>
+            <r>0.7</r>
+            <g>0.7</g>
+            <b>0.6</b>
+            <a>1.0</a>
+        </diffuse>
+        <specular>
+            <r>0.7</r>
+            <g>0.7</g>
+            <b>0.7</b>
+            <a>1.0</a>
+        </specular>
+        <dim-factor>
+            <property>sim/multiplay/generic/int[5]</property>
+            <factor>0.5</factor>
+        </dim-factor>
+        <attenuation>
+            <c>0.005</c>
+            <l>0.025</l>
+            <q>0.025</q>
+        </attenuation>
+        <exponent>5.0</exponent>
+        <cutoff>54</cutoff>
+        <near-m>1.1</near-m>
+        <far-m>8</far-m>
+    </animation>
+
+    <animation>
+        <type>light</type>
+        <light-type>spot</light-type>
+        <name>left vertical tail light</name>
+        <object-name>RBT-vert-tail-light-r</object-name>
+        <nopreview/>
+        <position>
+            <x>6.771</x>
+            <y>1.8103</y>
+            <z>0.2252</z>
+        </position>
+        <direction>
+            <x>0</x>
+            <y>0.5</y>
+            <z>1</z>
+        </direction>
+        <ambient>
+            <r>0.03</r>
+            <g>0.03</g>
+            <b>0.03</b>
+            <a>1.0</a>
+        </ambient>
+        <diffuse>
+            <r>0.7</r>
+            <g>0.7</g>
+            <b>0.6</b>
+            <a>1.0</a>
+        </diffuse>
+        <specular>
+            <r>0.7</r>
+            <g>0.7</g>
+            <b>0.7</b>
+            <a>1.0</a>
+        </specular>
+        <dim-factor>
+            <property>sim/multiplay/generic/int[5]</property>
+            <factor>0.5</factor>
+        </dim-factor>
+        <attenuation>
+            <c>0.005</c>
+            <l>0.025</l>
+            <q>0.025</q>
+        </attenuation>
+        <exponent>5.0</exponent>
+        <cutoff>54</cutoff>
+        <near-m>1.1</near-m>
+        <far-m>8</far-m>
     </animation>
 
 </PropertyList>
