@@ -197,7 +197,7 @@ var az_scan = func() {
             u_radar_standby   = 0;
             u_ecm_type_num    = 0;
             var u_rng = u.get_range();
-            if (u_rng < range_radar2  and u.not_acting == 0 )
+            if (u_rng != nil and (u_rng < range_radar2  and u.not_acting == 0 ))
             {
                 u.get_deviation(our_true_heading);
 
@@ -628,7 +628,9 @@ else
 		obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
 
 		obj.TimeLast.setValue(ElapsedSec.getValue());
-		obj.RangeLast.setValue(obj.get_range());
+        var cur_range = obj.get_range();
+        if (cur_range != nil and obj.RangeLast != nil)
+		    obj.RangeLast.setValue(obj.get_range());
 		# Radar emission status for other uthers of radar2.nas.
 		obj.RadarStandby = c.getNode("sim/multiplay/generic/int[2]");
 
@@ -746,10 +748,11 @@ else
         # calc closure using trig as the elapsed time method is not really accurate enough and jitters considerably
         if (me.TAS != nil)
         {
+            var tas = me.TAS.getValue();
             var our_hdg = getprop("orientation/heading-deg");
             var bearing = me.get_deviation(our_hdg);
             var vec1 = getprop("fdm/jsbsim/velocities/vtrue-kts") * math.cos( (bearing - our_hdg) / 57.29577950560105);
-            var vec2 = me.TAS.getValue() * math.cos( (bearing - me.get_bearing()) / 57.29577950560105);
+            var vec2 = tas * math.cos( (bearing - me.get_bearing()) / 57.29577950560105);
             return vec1-vec2;
         }
         else

@@ -8,8 +8,9 @@ var hud_alpha          = props.globals.getNode("sim[0]/hud/color/alpha", 1);
 var view               = props.globals.getNode("sim/current-view/name");
 var OurRoll            = props.globals.getNode("orientation/roll-deg");
 
-var eye_hud_m          = 0.6686;
-var hud_radius_m       = 0.105;
+# 0.6686m = distance eye <-> to mean point of HUD screen.
+var eye_hud_m          = 0.47869;
+var hud_radius_m       = 0.185225;
 
 aircraft.data.add("sim/model/f15/controls/hud/intens", "sim/hud/current-color");
 
@@ -38,7 +39,6 @@ return;
 var develev_to_devroll = func(dev_rad, elev_rad) {
 	var clamped = 0;
 	# Deviation length on the HUD (at level flight),
-	# 0.6686m = distance eye <-> virtual HUD screen.
 	var h_dev = eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
 	var v_dev = eye_hud_m / ( math.sin(elev_rad) / math.cos(elev_rad) );
 	# Angle between HUD center/top <-> HUD center/symbol position.
@@ -48,14 +48,17 @@ var develev_to_devroll = func(dev_rad, elev_rad) {
 	var combined_dev_deg = dev_deg - OurRoll.getValue();
 	# Lenght HUD center <-> symbol pos on the HUD:
 	var combined_dev_length = math.sqrt((h_dev*h_dev)+(v_dev*v_dev));
-	# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
+
+	# clamping
 	var abs_combined_dev_deg = math.abs( combined_dev_deg );
 	var clamp = hud_radius_m;
-	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
-		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;
-		if ( coef > 0.050 ) { coef = 0.050 }
-		clamp -= coef; 
-	}
+
+    # squeeze the top of the display area for egg shaped HUD limits.
+#	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
+#		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;
+#		if ( coef > 0.050 ) { coef = 0.050 }
+#		clamp -= coef; 
+#	}
 	if ( combined_dev_length > clamp ) {
 		combined_dev_length = clamp;
 		clamped = 1;

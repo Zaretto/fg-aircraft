@@ -1,6 +1,11 @@
 # F-15 HUD - originally based on F-20 HUD main module Enrique Laso (Flying toaster) 
 # Now rewritten to have HUD class with dataprovider
 # rjh@zaretto.com 2015-01-27 
+var ht_xcf = 800;
+var ht_ycf = -900;
+var ht_xco = 0;
+var ht_yco = 0;
+var ht_debug = 0;
 
 #angular definitions
 #up angle 1.73 deg
@@ -220,18 +225,29 @@ var F15HUD = {
 #                        w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
 #                    }
                         tgt.setVisible(u.get_display());
-                        var u_dev_rad = u.get_deviation(90 - hdp.heading)  * D2R;
-                        var u_elev_rad = u.get_total_elevation(90 - hdp.pitch)  * D2R;
+                        var u_dev_rad = (90-u.get_deviation(hdp.heading))  * D2R;
+                        var u_elev_rad = (90-u.get_total_elevation( hdp.pitch))  * D2R;
 			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
 			var combined_dev_deg = devs[0];
 			var combined_dev_length =  devs[1];
 			var clamped = devs[2];
-            var xc = combined_dev_deg;
-            var yc = -combined_dev_length;
-                        tgt.setVisible(1);
+                    var yc  = ht_yco + (ht_ycf * combined_dev_length * math.cos(combined_dev_deg*D2R));
+                    var xc = ht_xco + (ht_xcf * combined_dev_length * math.sin(combined_dev_deg*D2R));
+if(devs[2])
+tgt.setVisible(getprop("sim/model/f15/lighting/hud-diamond-switch/state"));
+else
+tgt.setVisible(1);
+
+
+#                        tgt.setColorFill(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 1.00);
+#else
+#                        tgt.setColorFill(0.0039215686274509803921568627451,0.27647058823529411764705882352941,0, 0.00);
+
                         tgt.setTranslation (xc, yc);
 #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
 #tgt.setRotation (roll_rad);
+if (ht_debug)
+printf("%-10s %f,%f [%f,%f,%f] :: %f,%f",callsign,xc,yc, devs[0], devs[1], devs[2], u_dev_rad*D2R, u_elev_rad*D2R); 
                     }
                 }
                 target_idx = target_idx+1;
