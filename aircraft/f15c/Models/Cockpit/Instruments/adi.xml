@@ -111,10 +111,10 @@
 		<type>select</type>
 		<object-name>glide-slope-index</object-name>
 		<condition>
-			<equals>
-                <property>sim/model/instruments/nav/selector-ils</property>
-                <value>true</value>
-			</equals>
+            <greater-than>
+                <property>sim/model/f15/instrumentation/nav/gs-in-range</property>
+                <value>0</value>
+            </greater-than>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
@@ -125,28 +125,17 @@
 	<animation>
 		<type>translate</type>
 		<object-name>glide-slope-index</object-name>
-		<property>instrumentation/nav[0]/gs-needle-deflection</property>
+		<property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
         <condition>
                 <greater-than>
                     <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
         </condition>
-		<interpolation>
-			<entry>
-				<ind>-2.5</ind>
-				<dep>-0.036</dep>
-			</entry>
-			<entry>
-				<ind>0</ind>
-				<dep>0</dep>
-			</entry>
-			<entry>
-				<ind>2.5</ind>
-				<dep>0.036</dep>
-			</entry>
-		</interpolation>
-		<axis>
+        <factor>0.036</factor>
+        <min-m>-0.020</min-m>
+        <max-m>0.020</max-m>
+        <axis>
 			<x>-0.087</x>
 			<y>0</y>
 			<z>1</z>
@@ -248,98 +237,89 @@
 		</axis>
 	</animation>
 
-<!-- ADI's bars in homing mode -->
+<!-- ADI bars in ILS mode -->
 
-	<animation>
-		<type>select</type>
-		<object-name>nav-yaw-steering-bar</object-name>
-		<condition>
-            <property>sim/model/instruments/nav/selector-ptr</property>
-            <property>instrumentation/nav[2]/in-range</property>
-			<equals>
-				<property>sim/model/instrumentation/vhf/mode</property>
-				<value>2</value>
-			</equals>
-			<greater-than>
-				<property>sim/model/instrumentation/vhf/selector</property>
-				<value>2</value>
-			</greater-than>
-                <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </greater-than>
-		</condition>
-	</animation>
-
-	<animation>
-		<type>translate</type>
-		<object-name>nav-yaw-steering-bar</object-name>
-		<property>sim/model/instrumentation/vhf/homing-deviation</property>
+    <animation>
+        <type>select</type>
+        <object-name>nav-yaw-steering-bar</object-name>
         <condition>
+            <property>sim/model/f15/instrumentation/nav/signal-quality-norm</property>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/model/instrumentation/vhf/mode</property>
+                <value>1</value>
+            </greater-than>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
         </condition>
-        <factor>0.0012</factor>
-		<min-m>-0.0331</min-m>
-		<max-m>0.0330</max-m>
-		<axis>
-			<x>0</x>
-			<y>1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    </animation>
 
-	<animation>
-		<type>select</type>
-		<object-name>nav-pitch-steering-bar</object-name>
-		<condition>
-            <property>sim/model/instruments/nav/selector-ptr</property>
-            <property>instrumentation/nav[2]/in-range</property>
-			<equals>
-				<property>sim/model/instrumentation/vhf/mode</property>
-				<value>2</value>
-			</equals>
-			<greater-than>
-				<property>sim/model/instrumentation/vhf/selector</property>
-				<value>2</value>
-			</greater-than>
-		</condition>
-	</animation>
-
-	<animation>
-		<type>translate</type>
-		<object-name>nav-pitch-steering-bar</object-name>
-		<property>instrumentation/nav[2]/nav-distance</property>
+    <animation>
+        <type>translate</type>
+        <object-name>nav-yaw-steering-bar</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
         </condition>
-        <interpolation>
-			<entry>
-				<ind>0</ind>
-				<dep>0</dep>
-			</entry>
-			<entry>
-				<ind>50000</ind>
-				<dep>-0.030</dep>
-			</entry>
-			<entry>
-				<ind>600000</ind>
-				<dep>-0.030</dep>
-			</entry>
-		</interpolation>
-		<axis>
-			<x>0</x>
-			<y>0</y>
-			<z>1</z>
-		</axis>
-	</animation>
+        <property>sim/model/f15/instrumentation/nav/heading-needle-deflection-norm</property>
+        <!--<min-m>-0.0331</min-m>
+        <max-m>0.0330</max-m>-->
+        <factor>0.04</factor>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<!-- course-flag -->
+    <animation>
+        <type>select</type>
+        <object-name>nav-pitch-steering-bar</object-name>
+        <condition>
+            <property>sim/model/f15/instrumentation/nav/signal-quality-norm</property>
+            <greater-than>
+                <property>sim/model/instrumentation/vhf/mode</property>
+                <value>1</value>
+            </greater-than>
+            <!--<greater-than>
+				<property>sim/model/instrumentation/vhf/selector</property>
+				<value>2</value>
+			</greater-than>-->
+            <greater-than>
+                <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+                <value>-0.976</value>
+            </greater-than>
+            <less-than>
+                <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+                <value>0.976</value>
+            </less-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>nav-pitch-steering-bar</object-name>
+        <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <factor>0.04</factor>
+        <min-m>-0.025</min-m>
+        <max-m>0.035</max-m>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <!-- course-flag -->
 	<animation>
 		<type>select</type>
 		<object-name>course-flag</object-name>
@@ -361,7 +341,7 @@
 				</and>
                 <not>
                     <greater-than>
-                        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                        <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                         <value>0</value>
                     </greater-than>
                 </not>
@@ -376,7 +356,7 @@
 		<property>instrumentation/slip-skid-ball/indicated-slip-skid</property>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
         </condition>
