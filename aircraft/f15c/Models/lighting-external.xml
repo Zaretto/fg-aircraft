@@ -18,10 +18,10 @@
         <type>select</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
-            <property>sim/rendering/rembrandt/enabled</property>
+            <property>/sim/rendering/rembrandt/enabled</property>
         </condition>
         <object-name>RBT-vert-tail-light-r</object-name>
         <object-name>RBT-vert-tail-light-l</object-name>
@@ -50,7 +50,7 @@
         <!-- rembrandt halo -->
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <property>sim/multiplay/generic/int[3]</property>
@@ -171,7 +171,7 @@
         <!-- rembrandt halo -->
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <property>sim/multiplay/generic/int[3]</property>
@@ -291,7 +291,7 @@
         <!-- rembrandt halo -->
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <property>sim/multiplay/generic/int[3]</property>
@@ -412,7 +412,7 @@
         <object-name>RBT-coll_halo_WL</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <property>sim/multiplay/generic/int[4]</property>
@@ -550,7 +550,7 @@
         <object-name>RBT-coll_halo_WR</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <property>sim/multiplay/generic/int[4]</property>
@@ -686,7 +686,7 @@
         <!-- rembrandt halo -->
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <property>sim/multiplay/generic/int[4]</property>
@@ -807,7 +807,7 @@
         <object-name>taxi-lights</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -820,7 +820,7 @@
                     <value>3</value>
                 </equals>
             </or>
-            <property>controls/gear/gear-down</property>
+            <property>gear/gear[0]/position-norm</property>
         </condition>
     </animation>
     <animation>
@@ -894,14 +894,14 @@
         <object-name>landing-lights</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
             <greater-than>
                 <property>sim/multiplay/generic/int[7]</property>
                 <value>1</value>
             </greater-than>
-            <property>controls/gear/gear-down</property>
+            <property>gear/gear[0]/position-norm</property>
         </condition>
     </animation>
     <animation>
@@ -1085,7 +1085,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>sim/multiplay/generic/float[14]</property>
                 <value>0</value>
             </greater-than>
         </condition>

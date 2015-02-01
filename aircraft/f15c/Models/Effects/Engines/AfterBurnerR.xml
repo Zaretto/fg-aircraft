@@ -28,7 +28,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
         <object-name>FlameTrail</object-name>
         <condition>
             <greater-than>
-                <property>engines/engine[1]/afterburner</property>
+                <property>sim/multiplay/generic/float[8]</property>
                 <value>0</value>
             </greater-than>
         </condition>
@@ -53,8 +53,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
         <object-name>FlameModel</object-name>
         <object-name>FlameModelBurn</object-name>
         <object-name>FlameTrail</object-name>
-        <property>sim/model/f15/fx/rotate-flame</property>
-        <factor>90.0</factor>
+        <offset-deg>90.0</offset-deg>
         <center>
             <x-m>0</x-m>
             <y-m>0</y-m>
@@ -92,7 +91,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
         <type>scale</type>
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
-        <property>engines/engine[1]/nozzle-pos-norm</property>
+        <property>sim/multiplay/generic/float[11]</property>
         <x-min>1.0</x-min>
         <y-min>1.0</y-min>
         <z-min>0.5</z-min>
@@ -105,7 +104,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
         <type>scale</type>
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
-        <property>engines/engine[1]/afterburner</property>
+        <property>sim/multiplay/generic/float[9]</property>
         <x-min>1.0</x-min>
         <y-min>1.0</y-min>
         <z-min>0.5</z-min>
@@ -160,7 +159,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
             <red>1.0</red>
             <green>0.5</green>
             <blue>0.0</blue>
-            <factor-prop>engines/engine[1]/afterburner</factor-prop>
+            <property>sim/multiplay/generic/float[9]</property>
         </emission>
     </animation>
 
@@ -171,7 +170,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
             <red>1.0</red>
             <green>0.78</green>
             <blue>0.67</blue>
-            <factor-prop>engines/engine[1]/afterburner</factor-prop>
+        <property>sim/multiplay/generic/float[9]</property>
         </emission>
     </animation>
 
@@ -196,7 +195,7 @@ This is based on Enqrique Laso's work on the F20 - however the following has cha
             <red>1.0</red>
             <green>1.0</green>
             <blue>1.0</blue>
-            <factor-prop>engines/engine[1]/afterburner</factor-prop>
+        <property>sim/multiplay/generic/float[9]</property>
         </emission>
     </animation>
 </PropertyList>

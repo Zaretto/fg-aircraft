@@ -155,23 +155,39 @@
                     <type>float</type>
                     <property type="string">controls/flight/NWS</property>
                 </signal>
-                <!-- AICS -->
-                <!--<signal>
+
+                <signal>
                     <type>float</type>
-                    <property type="string">fdm/jsbsim/fcs/inlet-l-ramp1-position-deg</property>
+                    <property type="string">sim/multiplay/generic/float[8]</property>
                 </signal>
                 <signal>
                     <type>float</type>
-                    <property type="string">fdm/jsbsim/fcs/inlet-r-ramp1-position-deg</property>
+                    <property type="string">sim/multiplay/generic/float[9]</property>
                 </signal>
                 <signal>
                     <type>float</type>
-                    <property type="string">fdm/jsbsim/fcs/inlet-l-ramp4-position-deg</property>
+                    <property type="string">sim/multiplay/generic/float[10]</property>
                 </signal>
                 <signal>
                     <type>float</type>
-                    <property type="string">fdm/jsbsim/fcs/inlet-r-ramp4-position-deg</property>
-            </signal>-->
+                    <property type="string">sim/multiplay/generic/float[12]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/float[12]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/float[13]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/float[14]</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/multiplay/generic/float[15]</property>
+                </signal>
             </config>
         </flight-recorder>
 
@@ -604,6 +620,14 @@
 				<float n="4">0</float><!-- left elevator  -->
 				<float n="5">0</float><!-- right elevator -->
 				<float n="6">0</float><!-- refuel probe/door -->
+	 <float n="8" alias="/engines/engine[0]/afterburner" />
+	 <float n="9" alias="/engines/engine[1]/afterburner" />
+	 <float n="10" alias="/engines/engine[0]/nozzle-pos-norm" />
+	 <float n="11" alias="/engines/engine[1]/nozzle-pos-norm" />
+                <float n="12" alias="/fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg" />
+                <float n="13" alias="/fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg" />
+            	<float n="14" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1" />
+            	<float n="15" alias="/fdm/jsbsim/systems/electrics/ac-left-main-bus" />
 				<int n="0" type="int">0</int>    <!-- fuel dump      -->
 				<int n="1" type="int">0</int>    <!-- formation slimmers -->
 				<int n="2" type="int">0</int>    <!-- radar-standby -->
