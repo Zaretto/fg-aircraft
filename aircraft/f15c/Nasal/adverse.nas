@@ -11,7 +11,7 @@ var UltimateFactor = 2;
 var UltimateMaxG = MaxG * UltimateFactor;
 var UltimateMinG = MinG * UltimateFactor;
 
-var ResidualBendFactor = MaxResidualBend / (UltimateMaxG - MaxG);
+var ResidualBendFactor = MaxResidualBend / UltimateMaxG;
 #var BendFactor = 0.66 / MaxG;
 var BendFactor = 0.16 / MaxG; # degrees of rotation * 7 per G
 
@@ -32,11 +32,17 @@ var computeWingBend = func {
 
 	if (currentG >= MaxGreached) MaxGreached = av_currentG;
 	if (currentG <= MinGreached) MinGreached = av_currentG;
-	if (MaxGreached > MaxG and MaxGreached < UltimateMaxG) {
+	if (MaxGreached > MaxG and MaxGreached < UltimateMaxG)
+    {
 		ResidualBend = ResidualBendFactor * (MaxGreached - MaxG);
+        if (ResidualBend > MaxResidualBend)
+            ResidualBend = MaxResidualBend;
 	}
-	if (MinGreached < MinG and MinGreached > UltimateMinG) {
-		ResidualBend = ResidualBendFactor * (MaxGreached - MaxG);
+	else if (MinGreached < MinG and MinGreached > UltimateMinG)
+    {
+		ResidualBend = ResidualBendFactor * (MinGreached - MinG);
+        if (ResidualBend > MaxResidualBend)
+            ResidualBend = MaxResidualBend;
 	}
 	WingBend = ResidualBend + currentG * BendFactor;
 	setprop ("surface-positions/wing-fold-pos-norm", WingBend);
