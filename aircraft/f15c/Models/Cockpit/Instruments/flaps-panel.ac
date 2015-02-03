@@ -1,11 +1,50 @@
 AC3Db
 MATERIAL "ac3dmat13" rgb 0.533333 0.533333 0.533333  amb 0.533 0.533 0.533  emis 0 0 0  spec 0 0 0  shi 10  trans 0
+MATERIAL "ac3dmat1" rgb 1 1 1  amb 1 1 1  emis 1 1 1  spec 0 0 0  shi 0  trans 0
 OBJECT world
-kids 1
+kids 3
+OBJECT poly
+name "flap-down-light"
+loc -5.70691 1.0271 0.138935
+texture "flaps-panel.rgb"
+crease 45.000000
+numvert 4
+0.0191722 -0.252042 0.272998
+0.0149202 -0.252042 0.253513
+0.0150537 -0.259944 0.253469
+0.019289 -0.259944 0.272874
+numsurf 1
+SURF 0x30
+mat 1
+refs 4
+0 0.0957339 0.442398
+1 0.215497 0.442398
+2 0.215497 0.406427
+3 0.0962247 0.406427
+kids 0
+OBJECT poly
+name "flap-transit-light"
+loc -5.70691 1.03546 0.138796
+texture "flaps-panel.rgb"
+crease 45.000000
+numvert 4
+0.019289 -0.259944 0.272874
+0.0150537 -0.259944 0.253469
+0.0149202 -0.252042 0.253513
+0.0191722 -0.252042 0.272998
+numsurf 1
+SURF 0x30
+mat 1
+refs 4
+3 0.0941376 0.487896
+2 0.216507 0.487896
+1 0.216507 0.44926
+0 0.0946392 0.44926
+kids 0
 OBJECT group
 name "mount"
 loc -1.02213 0.411151 -1.19561
-kids 7
+kids 5
 OBJECT poly
 name "hook-switch"
 loc -4.6699 0.440656 1.59718
@@ -572,25 +611,6 @@ refs 3
 59 0.0351579 0.916846
 57 0.0363549 0.894601
 56 0.0454375 0.89757
-kids 0
-OBJECT poly
-name "flap-down-light"
-loc 0.782637 -0.0897416 -0.286113
-texture "flaps-panel.rgb"
-crease 45.000000
-numvert 4
--5.4544 0.452534 1.87301
--5.44938 0.452886 1.89181
--5.44895 0.446712 1.89181
--5.45397 0.446361 1.87301
-numsurf 1
-SURF 0x30
-mat 0
-refs 4
-0 0.220818 0.44166
-1 0.0933607 0.44166
-2 0.0933607 0.408521
-3 0.220818 0.408521
 kids 0
 OBJECT poly
 name "panel"
@@ -2519,23 +2539,4 @@ refs 3
 166 0.128946 0.667162
 164 0.12138 0.667162
 129 0.121495 0.669405
-kids 0
-OBJECT poly
-name "flap-transit-light"
-loc 0.782436 -0.0814707 -0.286129
-texture "flaps-panel.rgb"
-crease 45.000000
-numvert 4
--5.45392 0.445006 1.87286
--5.44881 0.445363 1.89197
--5.44943 0.454241 1.89197
--5.45454 0.453884 1.87286
-numsurf 1
-SURF 0x30
-mat 0
-refs 4
-3 0.219515 0.491749
-2 0.0920577 0.491749
-1 0.0920577 0.444755
-0 0.219515 0.444755
 kids 0
