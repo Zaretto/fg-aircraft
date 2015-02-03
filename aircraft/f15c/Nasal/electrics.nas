@@ -311,6 +311,24 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-hook",0);
         }
     }
+
+    if  (getprop("fdm/jsbsim/systems/hydraulics/util-system-accumulator-psi") < 500)
+    {
+        if (!getprop("sim/model/f15/lights/ca-jfs-low"))
+        {
+            setprop("sim/model/f15/lights/ca-jfs-low",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-jfs-low"))
+        {
+            setprop("sim/model/f15/lights/ca-jfs-low",0);
+        }
+    }
+
 	if (getprop("sim/model/f15/controls/afcs/autopilot-disengage"))
     {
         if (!getprop("sim/model/f15/lights/ca-auto-plt"))
