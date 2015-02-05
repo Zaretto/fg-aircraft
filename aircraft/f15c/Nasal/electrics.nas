@@ -312,6 +312,23 @@ var runEMMISC = func {
         }
     }
 
+
+    if  (getprop("fdm/jsbsim/systems/ecs/oxygen-quantity-liters") < 2)
+    {
+        if (!getprop("sim/model/f15/lights/ca-oxygen"))
+        {
+            setprop("sim/model/f15/lights/ca-oxygen",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-oxygen"))
+        {
+            setprop("sim/model/f15/lights/ca-oxygen",0);
+        }
+    }
     if  (getprop("fdm/jsbsim/systems/hydraulics/util-system-accumulator-psi") < 500)
     {
         if (!getprop("sim/model/f15/lights/ca-jfs-low"))

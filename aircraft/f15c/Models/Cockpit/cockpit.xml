@@ -312,5 +312,51 @@
             <blue-prop>controls/lighting/panel-blue</blue-prop>
         </emission>
     </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>liquid-oxygen-activate</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-assign</command>
+                <property>fdm/jsbsim/systems/ecs/liquid-oxygen-activated</property>
+                <value>1</value>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>liquid-oxygen-activate</object-name>
+        <property>fdm/jsbsim/systems/ecs/liquid-oxygen-activated</property>
+        <factor>0.01</factor>
+        <center>
+            <x-m>-5</x-m>
+            <y-m> 0.23</y-m>
+            <z-m> 0.7</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>liquid-oxygen-activate</object-name>
+        <property>fdm/jsbsim/systems/ecs/liquid-oxygen-activated</property>
+        <factor>20</factor>
+        <center>
+            <x-m>-5</x-m>
+            <y-m> 0.23</y-m>
+            <z-m> 0.7</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y></y>
+            <z>0</z>
+        </axis>
+    </animation>
 
 </PropertyList>

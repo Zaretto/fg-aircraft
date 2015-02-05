@@ -291,8 +291,23 @@ var HUD_DataProvider  = {
         me.range_rate = "0";
         if (getprop("/autopilot/route-manager/active"))
         {
-            me.nav_range = sprintf("N %4.1f", getprop("autopilot/route-manager/wp/dist"));
-            me.window5 = sprintf("%2d MIN",getprop("autopilot/route-manager/wp/eta-seconds")/60);
+            var rng = getprop("autopilot/route-manager/wp/dist");
+            var eta_s = getprop("autopilot/route-manager/wp/eta-seconds");
+            if (rng != nil)
+            {
+                me.window5 = sprintf("%2d MIN",rng);
+                me.nav_range = sprintf("N %4.1f", rng);
+            }
+            else
+            {
+                me.window5 = "XXX";
+                me.nav_range = "N XXX";
+            }
+
+            if (eta_s != nil)
+                me.window5 = sprintf("%2d MIN",eta_s/60);
+            else
+                me.window5 = "XX MIN";
         }
         else
         {

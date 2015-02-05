@@ -5,6 +5,91 @@
 
     <path>left-side-panel.ac</path>
 
+    <animation>
+        <type>knob</type>
+        <object-name>oxy-test-switch</object-name>
+        <property>fdm/jsbsim/systems/ecs/oxygen-qty-test</property>
+
+        <factor>-1</factor>
+        <center>
+            <x-m>0.0081</x-m>
+            <y-m>-0.0017</y-m>
+            <z-m>-0.0529</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/systems/ecs/oxygen-qty-test</property>
+                <factor>1</factor>
+                <min>1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/systems/ecs/oxygen-qty-test</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
+        <name>needle-oxygen-pressure</name>
+        <type>rotate</type>
+        <object-name>needle-oxygen-pressure</object-name>
+        <property>fdm/jsbsim/systems/ecs/oxygen-pressure-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-10</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>90</dep>
+            </entry>
+            <entry>
+                <ind>500</ind>
+                <dep>190</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.7249</x-m>
+            <y-m> 0.3826</y-m>
+            <z-m> 0.3826</z-m>
+        </center>
+        <axis>
+            <z>-1</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <name>needle-oxygen-liters</name>
+        <type>rotate</type>
+        <object-name>needle-oxygen-liters</object-name>
+        <property>fdm/jsbsim/systems/ecs/oxygen-quantity-liters</property>
+        <factor>40</factor>
+        <offset-deg>-10</offset-deg>
+        <center>
+            <x-m>-5.6934</x-m>
+            <y-m>0.4792</y-m>
+            <z-m> 0.6763</z-m>
+        </center>
+        <axis>
+            <z>-1</z>
+        </axis>
+    </animation>
+
     <!-- ILS -->
     <animation>
         <type>textranslate</type>
