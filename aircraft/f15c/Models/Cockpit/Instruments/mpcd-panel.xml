@@ -4,9 +4,510 @@
 <PropertyList>
 
 	<path>mpcd-panel.ac</path>
+    <animation>
+        <type>select</type>
+        <object-name>MPCDImage</object-name>
+        <condition>
+            <property>sim/model/f15/controls/MPCD/mode</property>
+        </condition>
+    </animation>
 
-	
-	<!-- Lighting -->
+    <animation>
+        <type>knob</type>
+        <object-name>mode-knob</object-name>
+        <property>sim/model/f15/controls/MPCD/mode</property>
+        <offset-deg>78</offset-deg>
+        <factor>-26</factor>
+        <center>
+            <x-m>-5.6962</x-m>
+            <y-m>-0.2628</y-m>
+            <z-m>0.8536</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- left buttons -->
+    <animation>
+        <type>translate</type>
+        <object-name>button-left-1</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>1</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-left-1</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>1</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>button-left-2</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>2</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>button-left-2</object-name>
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>2</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>button-left-3</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>3</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-left-3</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>3</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>button-left-4</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>4</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-left-4</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>4</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>button-left-5</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>5</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-left-5</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>5</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <!-- right buttons -->
+    <animation>
+        <type>translate</type>
+        <object-name>button-right-1</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>6</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-right-1</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>6</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>button-right-2</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>7</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>button-right-2</object-name>
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>7</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>button-right-3</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>8</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-right-3</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>8</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>button-right-4</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>9</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-right-4</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>9</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>button-right-5</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>10</value>
+                </equals>
+                <equals>
+                    <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+        <property>sim/model/f15/controls/MPCD/button-pressed</property>
+        <factor>-0.002</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>button-right-5</object-name>
+
+        <action>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <value>10</value>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/MPCD/button-pressed</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <!-- Lighting -->
     <animation>
         <object-name>mount</object-name>
         <type>material</type>
@@ -43,7 +544,7 @@
             </not>
         </condition>
         <emission>
-            <!--<factor-prop>controls/lighting/mpcd-screen</factor-prop>-->
+            <!--<factor-prop>controls/lighting/MPCD-screen</factor-prop>-->
             <factor-prop>controls/lighting/flt-inst</factor-prop>
             <red>  0.1000</red>
             <green>0.0576</green>
