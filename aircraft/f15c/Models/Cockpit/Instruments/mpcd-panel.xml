@@ -554,6 +554,44 @@
             <blue-prop>controls/lighting/instrument-blue</blue-prop>
         </emission>
     </animation>
+    <animation>
+        <object-name>MPCDImage</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>sim/model/f15/controls/MPCD/mode</factor-prop>
+            <red>  0.5</red>
+            <green>0.5</green>
+            <blue> 0.5</blue>
+        </emission>
+    </animation>
+    <animation>
+        <type>material</type>
+        <object-name>bit-lamp</object-name>
+        <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/mpcd-bit-ligt</property>
+            </or>
+        </condition>
+        <emission>
+            <red>  1</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
+    </animation>
 
     <!-- *** LoD *** -->
 	<animation>
