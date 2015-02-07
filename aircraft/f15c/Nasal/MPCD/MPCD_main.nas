@@ -7,7 +7,7 @@ setprop ("/sim/startup/terminal-ansi-colors",0);
 var MPCDcanvas= canvas.new({
                            "name": "F-15 MPCD",
                            "size": [1024,1024], 
-                           "view": [480,480],                       
+                           "view": [512,479.36],    # 0.13468 x 0.14384    - the instrument as drawn isn't square.                 
                            "mipmapping": 1
                           });                          
                           
@@ -220,10 +220,12 @@ setlistener("sim/model/f15/controls/MPCD/mode", func(v)
 var p1_1 = MPCD.addPage("Aircraft Menu", "p1_1");
 var p1_2 = MPCD.addPage("Top Level PACS Menu", "p1_2");
 var p1_3 = MPCD.addPage("PACS Menu", "p1_3");
+var pjitds_1 = MPCD.addPage("JITDS Decentered", "pjitds_1");
+
 
 p1_1.addMenuItem(0, "ARMT", p1_2);
 p1_1.addMenuItem(1, "BIT", p1_2);
-p1_1.addMenuItem(2, "SIT", p1_2);
+p1_1.addMenuItem(2, "SIT", pjitds_1);
 p1_1.addMenuItem(3, "WPN", p1_2);
 p1_1.addMenuItem(4, "DTM", p1_2);
 
@@ -259,6 +261,7 @@ p1_3.addMenuItem(14, "PYLON", p1_3);
 p1_3.addMenuItem(15, "MODE S", p1_3);
 p1_3.addMenuItem(18, "SIT", p1_3);
 
+pjitds_1.addMenuItem(9, "M", p1_1);
 MPCD.selectPage(p1_1);
 var mpcd_button_pushed = 0;
 
