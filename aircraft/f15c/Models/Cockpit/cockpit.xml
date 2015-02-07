@@ -28,6 +28,16 @@
     </model>-->
 
     <model>
+        <path>stick.xml</path>
+        <offsets>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+            <pitch-deg>0</pitch-deg>
+        </offsets>
+    </model>
+
+    <model>
         <path>Aircraft/f15c/Models/Cockpit/Instruments/hud-controls.xml</path>
         <offsets>
             <x-m>0</x-m>
@@ -358,5 +368,29 @@
             <z>0</z>
         </axis>
     </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rudder-pedal-left</object-name>
+        <property>controls/flight/rudder</property>
+        <factor>0.07</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>rudder-pedal-right</object-name>
+        <property>controls/flight/rudder</property>
+        <factor>0.07</factor>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
 
 </PropertyList>
