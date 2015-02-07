@@ -22,12 +22,19 @@
         <type>select</type>
         <object-name>mach-flag</object-name>
         <condition>
+            <or>
             <not>
                 <greater-than>
                     <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
             </not>
+                <less-than>
+                    <property>velocities/mach</property>
+                    <value>0.4</value>
+                </less-than>
+</or>
+
         </condition>
     </animation>
 
