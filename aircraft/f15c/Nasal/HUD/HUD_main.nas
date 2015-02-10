@@ -279,6 +279,7 @@ var HUD_DataProvider  = {
         me.Nz = getprop("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
         me.WOW = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
         me.alpha = getprop ("fdm/jsbsim/aero/alpha-indicated-deg");
+        me.beta = getprop("/orientation/side-slip-deg");
         me.altitude_ft =  getprop ("/position/altitude-ft");
         me.heading =  getprop("/orientation/heading-deg");
         me.mach = getprop ("/velocities/mach");
@@ -322,20 +323,56 @@ var HUD_DataProvider  = {
         me.roll_rad = 0.0;
 
 #velocity vector 
-        var sin_x = me.v/me.speed;
-        if (sin_x < -1) 
-            sin_x = -1;
-        else if (sin_x > 1)
-            sin_x = 1;
+##
 
-        var sin_y =me.w/me.speed;
-        if (sin_y < -1)
-            sin_y = -1;
-        else if (sin_y > 1) 
-            sin_y = 1;
+#        var Vxx = getprop("/velocities/uBody-fps");
+#        var Vyy = getprop("/velocities/vBody-fps"); 
+#        var Vzz = getprop("/velocities/wBody-fps");
+#        var Axx = getprop("/accelerations/pilot/x-accel-fps_sec");
+#        var Ayy = getprop("/accelerations/pilot/y-accel-fps_sec");
+#        var Azz = getprop("/accelerations/pilot/z-accel-fps_sec");
+#        var psi = getprop("/orientation/heading-deg") * D2R;
 
-        me.VV_x = math.asin (sin_x) * pitch_factor_2;
-        me.VV_y = math.asin (sin_y) * pitch_factor_2;
+#        var total_vel = math.sqrt(Vxx * Vxx + Vyy * Vyy + Vzz * Vzz);
+#        var ground_vel = math.sqrt(Vxx * Vxx + Vyy * Vyy);
+#        var up_vel = Vzz;
+
+#        if (ground_vel < 2.0)
+#        {
+#            if (math.abs(up_vel) < 2.0)
+#                actslope = 0.0;
+#            else
+#                actslope = (up_vel / math.abs(up_vel)) * 90.0;
+#
+#        }
+#        else
+#        {
+#            actslope = math.atan2(up_vel, ground_vel) / D2R;
+#        }
+#        var _compression = 1;
+#        var view_aspect_ratio = 1;
+#        xvvr = (-me.beta * (_compression / view_aspect_ratio));
+#        vel_y = -me.alpha * _compression;
+#        vel_x = -me.beta * (_compression / view_aspect_ratio);
+
+#        var sin_x = me.v/me.speed;
+#        if (sin_x < -1) 
+#            sin_x = -1;
+#        else if (sin_x > 1)
+#            sin_x = 1;
+
+#        var sin_y =me.w/me.speed;
+#        if (sin_y < -1)
+#            sin_y = -1;
+#        else if (sin_y > 1) 
+#            sin_y = 1;
+
+#        me.VV_x = math.asin (sin_x) * pitch_factor_2;
+#        me.VV_y = math.asin (sin_y) * pitch_factor_2;
+#        printf("VV: %d,%d : %d,%d",me.VV_x, me.VV_y, vel_x, vel_y);
+        me.VV_x = -me.beta*10; # adjust for view
+        me.VV_y = me.alpha*10; # adjust for view
+
     },
 };
 
