@@ -9,24 +9,28 @@
     <emissive>false</emissive>
     <lighting>true</lighting>
 
-    <condition>
-      <and>
-        <greater-than>
-          <property>/engines/engine[0]/n2</property>
-          <value>75</value>
-        </greater-than>
-		<greater-than>
-     <property>velocities/airspeed-kt</property>
-     <value>100</value>
-	 </greater-than>
-        <less-than>
-          <property>/position/altitude-ft</property>
-          <value>3000</value>
-        </less-than>
-      </and>
-    </condition>
+      <condition>
+          <and>
+              <greater-than>
+                  <property>/engines/engine[0]/n2</property>
+                  <value>75</value>
+              </greater-than>
+              <greater-than>
+                  <property>velocities/airspeed-kt</property>
+                  <value>100</value>
+              </greater-than>
+              <less-than>
+                  <property>/position/altitude-ft</property>
+                  <value>3000</value>
+              </less-than>
+              <equals>
+                  <property>position/aircraft-on-ground</property>
+                  <value>0</value>
+              </equals>
+          </and>
+      </condition>
 
-    <attach>world</attach>
+      <attach>world</attach>
 
     <placer>
       <type>point</type>
