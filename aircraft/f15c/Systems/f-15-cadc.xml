@@ -83,15 +83,37 @@
         <fcs_function name="aero/cadc-control-effectivity-factor">
             <function>
                 <description>High speeds CADC control effectivity limitation of rudder and elevator</description>
-                <sum>
+                <!--<sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <tableData>
                             0.00  1.0
                             0.30  1.0
                             0.60  0.8
-                            1.00  0.4
+                            0.7 0.3
+                            0.8 0.3
+                            0.9 0.25
+                            1.00  0.23
+                            1.1 0.2
+                            1.2 0.2
+                            1.3 0.1
+                            1.4 0.1
+                            1.5 0.1 
+                            1.6 0.1
                             2.40  0.1
+                        </tableData>
+                    </table>
+                </sum>-->
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            0.00  1.0
+                            200  1.0
+                            400  0.3
+                            600  0.2
+                            730  0.1
+                            1200 0.07
                         </tableData>
                     </table>
                 </sum>
