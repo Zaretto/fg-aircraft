@@ -16,7 +16,7 @@
     <property value="0">systems/afcs/target-altitude-ft</property>
     <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/gear-warn-silence-dmd</property>
-
+    <property value="0">systems/cadc/pitch-ratio-emergency</property>
 
     <property value="0">systems/afcs/heading-hold-active</property>
     <property value="0">systems/afcs/SAS-roll-demand</property>
@@ -80,7 +80,7 @@
             <output>metrics/aero-rp-x-in</output>
         </fcs_function>
 
-        <fcs_function name="aero/cadc-control-effectivity-factor">
+        <fcs_function name="systems/cadc/pitch-ratio-dmd">
             <function>
                 <description>High speeds CADC control effectivity limitation of rudder and elevator</description>
                 <!--<sum>
@@ -119,7 +119,15 @@
                 </sum>
             </function>
         </fcs_function>
-
+        <switch name="systems/cadc/pitch-ratio">
+            <description>Aircraft on ground</description>
+            <default value="systems/cadc/pitch-ratio-dmd"/>
+            <test value="1" logic="OR">
+                systems/cadc/pitch-ratio-emergency ne 0
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+            </test>
+        </switch>
     </channel>
     <channel name="extra-aero">
 

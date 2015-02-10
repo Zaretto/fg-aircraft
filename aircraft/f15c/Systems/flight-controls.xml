@@ -31,7 +31,7 @@
 
         <pure_gain name="Elevator Control">
             <input>fcs/elevator-pos-raw-demand</input>
-            <gain>aero/cadc-control-effectivity-factor</gain>
+            <gain>systems/cadc/pitch-ratio</gain>
             <output>fcs/elevator-pos-demand</output>
         </pure_gain >
 
@@ -99,7 +99,7 @@
 
         <pure_gain name="fcs/roll-trim-sum">
             <input>fcs/roll-trim-sum-raw</input>
-            <gain>aero/cadc-control-effectivity-factor</gain>
+            <gain>systems/cadc/pitch-ratio</gain>
         </pure_gain >
 
         <switch name="fcs/roll-trim-actuator">
@@ -199,7 +199,7 @@
         </summer>
         <pure_gain name="fcs/rudder-command-sum">
             <input>fcs/rudder-command-raw-sum</input>
-            <gain>aero/cadc-control-effectivity-factor</gain>
+            <gain>systems/cadc/pitch-ratio</gain>
         </pure_gain >
 
         <summer name="Rudder Sum">
