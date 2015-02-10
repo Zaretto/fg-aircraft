@@ -221,7 +221,8 @@ var p1_1 = MPCD.addPage("Aircraft Menu", "p1_1");
 var p1_2 = MPCD.addPage("Top Level PACS Menu", "p1_2");
 var p1_3 = MPCD.addPage("PACS Menu", "p1_3");
 var pjitds_1 = MPCD.addPage("JITDS Decentered", "pjitds_1");
-
+var p_spin_recovery = MPCD.addPage("Spin recovery", "p_spin_recovery");
+p_spin_recovery.cur_page = nil;
 
 p1_1.addMenuItem(0, "ARMT", p1_2);
 p1_1.addMenuItem(1, "BIT", p1_2);
@@ -231,6 +232,30 @@ p1_1.addMenuItem(4, "DTM", p1_2);
 
 p1_1.date = MPCDsvg.getElementById("p1_1_date");
 p1_1.time = MPCDsvg.getElementById("p1_1_time");
+
+p_spin_recovery.p_spin_cas = MPCDsvg.getElementById("p_spin_cas");
+p_spin_recovery.p_spin_alt = MPCDsvg.getElementById("p_spin_alt");
+p_spin_recovery.p_spin_alpha = MPCDsvg.getElementById("p_spin_alpha");
+p_spin_recovery.p_spin_stick_left  = MPCDsvg.getElementById("p_spin_stick_left");
+p_spin_recovery.p_spin_stick_right  = MPCDsvg.getElementById("p_spin_stick_right");
+p_spin_recovery.update = func
+{
+    p_spin_recovery.p_spin_alpha.setText(sprintf("%d", getprop ("orientation/alpha-indicated-deg")));
+    p_spin_recovery.p_spin_alt.setText(sprintf("%5d", getprop ("instrumentation/altimeter/indicated-altitude-ft")));
+    p_spin_recovery.p_spin_cas.setText(sprintf("%3d", getprop ("instrumentation/airspeed-indicator/indicated-speed-kt")));
+
+    if (math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368 or math.abs(getprop("fdm/jsbsim/velocities/p-rad_sec")) > 0.022)
+    {
+        p_spin_recovery.p_spin_stick_left.setVisible(1);
+        p_spin_recovery.p_spin_stick_right.setVisible(0);
+    }
+    else
+    {
+        p_spin_recovery.p_spin_stick_left.setVisible(0);
+        p_spin_recovery.p_spin_stick_right.setVisible(1);
+    }
+
+};
 
 p1_1.update = func
 {
@@ -265,10 +290,32 @@ pjitds_1.addMenuItem(9, "M", p1_1);
 MPCD.selectPage(p1_1);
 var mpcd_button_pushed = 0;
 
-
+var mpcd_spin_reset_time = 0;
 
 var updateMPCD = func ()
 {  
+    if (math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
+    {
+        if (MPCD.current_page != p_spin_recovery)
+        {
+            p_spin_recovery.cur_page = MPCD.current_page;
+            MPCD.selectPage(p_spin_recovery);
+        }
+        mpcd_spin_reset_time = getprop("instrumentation/clock/indicated-sec") + 5;
+    }
+    else
+    {
+        if (mpcd_spin_reset_time > 0 and getprop("instrumentation/clock/indicated-sec") > mpcd_spin_reset_time)
+        {
+            mpcd_spin_reset_time = 0;
+            if (p_spin_recovery.cur_page != nil)
+            {
+                MPCD.selectPage(p_spin_recovery.cur_page);
+                p_spin_recovery.cur_page = nil;
+            }
+        }
+    }
+
     if(mpcd_mode)
         MPCD.update();
 }
