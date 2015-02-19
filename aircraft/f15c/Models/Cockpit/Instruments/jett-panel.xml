@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 
+<!-- F-15C Jettison panel Richard Harrison rjh@zaretto.com -->
+
 
 <PropertyList>
 
-	<path>jett-panel.ac</path>
+    <path>jett-panel.ac</path>
 
     <animation>
         <type>knob</type>
@@ -34,18 +36,20 @@
     </animation>
 
     <!-- Lighting -->
-	<animation>
-		<object-name>mount</object-name> 
-		<type>material</type>
-		<condition>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <not><property>/sim/rendering/rembrandt/enabled</property></not>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
         </condition>
-		<emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
             <red>  1.000</red>
             <green>0.576</green>
             <blue> 0.161</blue>
@@ -53,14 +57,14 @@
             <green-prop>controls/lighting/panel-green</green-prop>
             <blue-prop>controls/lighting/panel-blue</blue-prop>
 
-		</emission>
-	</animation>
+        </emission>
+    </animation>
 
-	<!-- *** LoD *** -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
+    <!-- *** LoD *** -->
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>35</max-m>
+    </animation>
 
 </PropertyList>

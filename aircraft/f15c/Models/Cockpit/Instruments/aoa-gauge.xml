@@ -1,35 +1,41 @@
 <?xml version="1.0"?>
+<!-- F-15 AoA Gauge by Richard Harrison rjh@zaretto.com; based on F-14b by xiii  -->
 
 <PropertyList>
 
-	<name>aoa-gauge</name>
-	<path>aoa-gauge.ac</path>
+    <name>aoa-gauge</name>
+    <path>aoa-gauge.ac</path>
 
-    <!--<animation>
-        <type>scale</type>
-        <x-offset>0.6</x-offset>
-        <y-offset>0.6</y-offset>
-        <z-offset>0.6</z-offset>
-    </animation>-->
     <animation>
-		<type>rotate</type>
-		<object-name>needle</object-name>
-		<property>orientation/alpha-indicated-deg</property>
+        <type>rotate</type>
+        <object-name>needle</object-name>
+        <property>orientation/alpha-indicated-deg</property>
         <condition>
-                <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </greater-than>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
         </condition>
-		<interpolation>
-		<!--        AoA deg           gauge deg -->
-		<entry><ind>  0</ind><dep>  0</dep></entry>
-		<entry><ind> 40</ind><dep>   -302</dep></entry> 
-		<entry><ind> 50</ind><dep>   -334</dep></entry> 
+        <interpolation>
+            <!--        AoA deg           gauge deg -->
+            <entry>
+                <ind>  0</ind>
+                <dep>  0</dep>
+            </entry>
+            <entry>
+                <ind> 40</ind>
+                <dep>   -302</dep>
+            </entry>
+            <entry>
+                <ind> 50</ind>
+                <dep>   -334</dep>
+            </entry>
 
-		</interpolation>
-	<axis><x>-1</x></axis>
- </animation>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
 
     <animation>
         <type>select</type>

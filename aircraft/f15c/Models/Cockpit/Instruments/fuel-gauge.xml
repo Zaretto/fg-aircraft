@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 
-<PropertyList>
+<!-- F-15 Fuel Gauge by Richard Harrison rjh@zaretto.com-->
 
-	<name>fuel-gauge</name>
-	<path>fuel-gauge.ac</path>
+<PropertyList>
+    <name>fuel-gauge</name>
+    <path>fuel-gauge.ac</path>
 
     <animation>
         <type>select</type>
@@ -109,259 +110,265 @@
     </animation>
 
     <animation>
-		<type>rotate</type>
-		<object-name>needle</object-name>
+        <type>rotate</type>
+        <object-name>needle</object-name>
         <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
         <interpolation>
-			<entry><ind>0</ind><dep>0</dep></entry>
-			<entry><ind>15000</ind><dep>215</dep></entry>
-		</interpolation>
-		<axis>
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
-	<!--Total -->
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>15000</ind>
+                <dep>215</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <!--Total -->
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>total-1</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
-		<factor>0.00001</factor>
-		<offset>-10000</offset>
-		<step>10000</step>
-		<scroll>0.5</scroll>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-1</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.00001</factor>
+        <offset>-10000</offset>
+        <step>10000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>total-2</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
-		<factor>0.0001</factor>
-		<offset>-1000</offset>
-		<step>1000</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-2</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>total-3</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
-		<factor>0.001</factor>
-		<offset>-100</offset>
-		<step>100</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-3</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>total-4</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
-		<factor>0.01</factor>
-		<offset>-10</offset>
-		<step>10</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-4</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<!-- Left -->
+    <!-- Left -->
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>L-1</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
-		<factor>0.0001</factor>
-		<offset>-1000</offset>
-		<step>1000</step>
-		<scroll>0.5</scroll>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-1</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>L-2</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
-		<factor>0.001</factor>
-		<offset>-100</offset>
-		<step>100</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-2</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>L-3</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
-		<factor>0.01</factor>
-		<offset>-10</offset>
-		<step>10</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-3</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>L-4</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
-		<factor>0.1</factor>
-		<offset>-1</offset>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-4</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<!-- Right -->
+    <!-- Right -->
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>R-1</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
-		<factor>0.0001</factor>
-		<offset>-1000</offset>
-		<step>1000</step>
-		<scroll>0.5</scroll>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-1</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>R-2</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
-		<factor>0.001</factor>
-		<offset>-100</offset>
-		<step>100</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-2</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>R-3</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
-		<factor>0.01</factor>
-		<offset>-10</offset>
-		<step>10</step>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-3</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<type>textranslate</type>
-		<object-name>R-4</object-name>
-		<property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
-		<factor>0.1</factor>
-		<offset>-1</offset>
-		<center>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</center>
-		<axis>
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-4</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<!-- fuselage and feed tanks -->
+    <!-- fuselage and feed tanks -->
 
 
     <!-- Bingo Knob -->
-    
+
     <animation>
         <name>bingo-knob-left-coarse</name>
         <type>pick</type>
@@ -397,9 +404,9 @@
                 <wrap>false</wrap>
             </binding>
         </action>
-    
 
-</animation>
+
+    </animation>
 
     <!-- lighting -->
     <animation>
@@ -448,9 +455,9 @@
         </emission>
     </animation>
     <animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>50</max-m>
-	</animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>50</max-m>
+    </animation>
 
 </PropertyList>

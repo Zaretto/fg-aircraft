@@ -1,27 +1,60 @@
 <?xml version="1.0"?>
 
+<!-- F-15 MPCD by Richard Harrison; rjh@zaretto.com  -->
 
 <PropertyList>
-
-	<path>mpcd-panel.ac</path>
+    <path>mpcd-panel.ac</path>
     <animation>
         <type>select</type>
         <object-name>MPCDImage</object-name>
         <condition>
             <property>sim/model/f15/controls/MPCD/mode</property>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
         </condition>
     </animation>
 
+
+    <animation>
+        <type>knob</type>
+        <object-name>master-arm-switch</object-name>
+        <property>sim/model/f15/controls/armament/master-arm-switch</property>
+        <offset-deg>-30</offset-deg>
+        <factor>30</factor>
+        <center>
+            <x-m>-5.6962</x-m>
+            <y-m>-0.1864</y-m>
+            <z-m>0.8802</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/armament/master-arm-switch</property>
+                <factor>2</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
     <animation>
         <type>knob</type>
         <object-name>mode-knob</object-name>
         <property>sim/model/f15/controls/MPCD/mode</property>
-        <offset-deg>78</offset-deg>
-        <factor>-26</factor>
+        <offset-deg>80</offset-deg>
+        <factor>-40</factor>
         <center>
             <x-m>-5.6962</x-m>
-            <y-m>-0.2628</y-m>
-            <z-m>0.8536</z-m>
+            <y-m>-0.2597</y-m>
+            <z-m>0.8579</z-m>
         </center>
         <axis>
             <x>1</x>
@@ -532,29 +565,6 @@
         </emission>
     </animation>
     <animation>
-        <object-name>instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <!--<factor-prop>controls/lighting/MPCD-screen</factor-prop>-->
-            <factor-prop>controls/lighting/flt-inst</factor-prop>
-            <red>  0.1000</red>
-            <green>0.0576</green>
-            <blue> 0.0161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
         <object-name>MPCDImage</object-name>
         <type>material</type>
         <condition>
@@ -577,10 +587,10 @@
         <type>material</type>
         <object-name>bit-lamp</object-name>
         <condition>
-                <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </greater-than>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
                 <property>sim/model/f15/lights/mpcd-bit-ligt</property>
@@ -594,10 +604,10 @@
     </animation>
 
     <!-- *** LoD *** -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>35</max-m>
+    </animation>
 
 </PropertyList>

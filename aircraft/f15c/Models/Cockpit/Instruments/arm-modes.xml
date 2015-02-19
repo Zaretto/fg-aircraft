@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 
+<!-- F-15 Arm Mode panel by Richard Harrison rjh@zaretto.com-->
 
 <PropertyList>
 
-	<path>arm-modes.ac</path>
+    <path>arm-modes.ac</path>
 
     <animation>
         <type>select</type>
@@ -86,9 +87,9 @@
 
         </emission>
     </animation>
-	<animation>
-		<object-name>instrument</object-name> 
-		<type>material</type>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -98,23 +99,23 @@
                 <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/aux-inst</factor-prop>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
             <red>  0.1000</red>
             <green>0.0576</green>
             <blue> 0.0161</blue>
             <red-prop>controls/lighting/instrument-red</red-prop>
             <green-prop>controls/lighting/instrument-green</green-prop>
             <blue-prop>controls/lighting/instrument-blue</blue-prop>
-		</emission>
-	</animation>
+        </emission>
+    </animation>
 
 
-	<!-- *** LoD *** -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
+    <!-- *** LoD *** -->
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-m>35</max-m>
+    </animation>
 
 </PropertyList>
