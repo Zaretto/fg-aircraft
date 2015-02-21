@@ -47,6 +47,7 @@ var WSweep        = props.globals.getNode("surface-positions/wing-pos-norm", 1);
 var SasRoll       = props.globals.getNode("controls/flight/SAS-roll", 1);
 var SasPitch      = props.globals.getNode("controls/flight/SAS-pitch", 1);
 var SasYaw        = props.globals.getNode("controls/flight/SAS-yaw", 1);
+setprop("controls/flight/rudder-pos-norm",0);
 
 var airspeed       = 0;
 var airspeed_sqr   = 0;
@@ -208,7 +209,7 @@ var computeSAS = func {
 	    	last_r = smooth_r;
     }
    	SasYaw.setValue(smooth_r);
-
+    setprop("surface-positions/rudder-pos-norm", -getprop("controls/flight/rudder-pos-norm"));
 }
 setlistener("sim/model/f-14b/controls/SAS/yaw", func {
     if(usingJSBSim)        fdm_yawdamper.setValue(SasYawOn.getValue());

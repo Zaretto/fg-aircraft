@@ -73,7 +73,24 @@
 				<signal><type>float</type><property type="string">engines/engine[1]/afterburner</property></signal>
                 <!-- Canopy -->
                 <signal><type>float</type><property type="string">canopy/position-norm</property></signal>
-			</config>
+				<!-- Wing sweep -->
+				<signal><type>float</type><property type="string">sim/multiplay/generic/float[0]</property></signal>
+				<!-- bs switches -->
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[0]</property></signal>
+				<!-- radar -->
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[1]</property></signal>
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[2]</property></signal>
+				<!-- wing torn-->
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[3]</property></signal>
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[4]</property></signal>
+				<!-- lighting -->
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[5]</property></signal>
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[6]</property></signal>
+				<signal><type>float</type><property type="string">sim/multiplay/generic/int[7]</property></signal>
+                <!-- Nose Wheel Steering -->
+                <signal><type>float</type><property type="string">controls/flight/NWS</property></signal>
+                <signal><type>float</type><property type="string">sim/model/f-14b/instrumentation/gears/nose-wheel-steering-warnlight</property></signal>
+                </config>
 		</flight-recorder>
 
 
@@ -744,6 +761,14 @@
 					<left-wing-torn type="bool">false</left-wing-torn>
 					<right-wing-torn type="bool">false</right-wing-torn>
 				</wings>
+                <!-- values that may need to be changed in the future if the carrier handling is fixed 
+                     and/or the intialization procedure changes
+                -->
+                <overrides>
+                    <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
+                    <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
+<!--                    <init-delay type="int">0.1</init-delay> -->
+                </overrides>
 			</f-14b>
 		</model>
 

@@ -5,6 +5,9 @@ var NWScutoffSpeed = 80.0; #knots
 	var NWS_light = 0;
 
 var computeNWS = func {
+  	if ( getprop("sim/replay/time") > 0 ) { 
+       return;
+   }
     if (usingJSBSim)
     {
         NWS_light = getprop("fdm/jsbsim/systems/NWS/engaged");
@@ -56,7 +59,7 @@ controls.gearDown = func(v) {
     } elsif (v > 0) {
       setprop("/controls/gear/gear-down", 1);
     }
-}
+} 
 
 
 # Landing gear handle animation 

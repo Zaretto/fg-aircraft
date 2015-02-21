@@ -914,8 +914,8 @@
                     <value>1</value>
                 </equals>
                 <greater-than>
-                    <property>velocities/groundspeed-kt</property>
-                  <value>60</value>
+                    <property>gear/gear[0]/rollspeed-ms</property>
+                    <value>30</value>
                 </greater-than>
             </condition>
             <position>
@@ -923,10 +923,6 @@
                 <y>0.0</y>
                 <z>-0.6</z>
             </position>
-            <!--<volume>
-          <property>velocities/speed-down-fps</property>
-          <factor>0.05</factor>
-        </volume>-->
             <pitch>
                 <property>velocities/airspeed-kt</property>
                 <factor>0.0055</factor>
@@ -940,10 +936,6 @@
             <path>Aircraft/f-14b/Sounds/tyre-squeal.wav</path>
             <condition>
                 <property>gear/gear[1]/wow</property>
-                <!--<greater-than>
-            <property>velocities/airspeed-kt</property>
-            <value>100</value>
-          </greater-than>-->
             </condition>
             <reference-dist>150</reference-dist>
             <max-dist>500</max-dist>
@@ -967,10 +959,6 @@
             <path>Aircraft/f-14b/Sounds/tyre-squeal.wav</path>
             <condition>
                 <property>gear/gear[2]/wow</property>
-                <!--<greater-than>
-            <property>velocities/airspeed-kt</property>
-            <value>100</value>
-          </greater-than>-->
             </condition>
             <position>
                 <x>1.2</x>
@@ -1003,9 +991,13 @@
                         <value>-4.5</value>
                     </less-than>
                 </or>
+                <equals>
+                    <property>gear/gear[0]/wow</property>
+                    <value>1</value>
+                </equals>
                 <greater-than>
-                    <property>velocities/groundspeed-kt</property>
-                    <value>20</value>
+                    <property>gear/gear[0]/rollspeed-ms</property>
+                    <value>1</value>
                 </greater-than>
             </condition>
             <position>
@@ -1041,9 +1033,13 @@
                     </less-than>
                 </or>
                 <greater-than>
-                    <property>velocities/groundspeed-kt</property>
-                    <value>20</value>
+                    <property>gear/gear[1]/rollspeed-ms</property>
+                    <value>1</value>
                 </greater-than>
+                <equals>
+                    <property>gear/gear[1]/wow</property>
+                    <value>1</value>
+                </equals>
             </condition>
             <position>
                 <x>1.2</x>
@@ -1075,9 +1071,13 @@
                     </less-than>
                 </or>
                 <greater-than>
-                    <property>velocities/groundspeed-kt</property>
-                    <value>20</value>
+                    <property>gear/gear[2]/rollspeed-ms</property>
+                    <value>1</value>
                 </greater-than>
+                <equals>
+                    <property>gear/gear[2]/wow</property>
+                    <value>1</value>
+                </equals>
             </condition>
             <position>
                 <x>1.2</x>

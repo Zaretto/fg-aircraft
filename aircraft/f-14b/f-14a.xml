@@ -132,7 +132,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <wingspan       unit="FT" >    64 </wingspan>
         <wing_incidence unit="DEG">     2 </wing_incidence>
 
-        <chord     unit="FT" >    9.8166666666666666666666666666667 </chord>
+        <chord     unit="FT" >    9.82 </chord>
         <htailarea unit="FT2">  140.00 </htailarea>
         <htailarm  unit="FT" >   25.10 </htailarm>
         <vtailarea unit="FT2">  118.00 </vtailarea>
@@ -145,9 +145,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <z>  -3.94 </z>
         </location>
         <location name="VRP" unit="IN">
-            <x>  390</x>
+            <x>  386</x>
             <y>  0 </y>
-            <z>  -15 </z>
+            <z>  31 </z>
         </location>
         <location name="AERORP" unit="IN">
             <x> 419 </x>
@@ -160,7 +160,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <location name="CG" unit="IN">
             <x> 403</x>
             <y>   0.00 </y>
-            <z>   -4.00 </z>
+            <z>   0.00 </z>
         </location>
         <ixx unit="SLUG*FT2">     58950 </ixx>
         <iyy unit="SLUG*FT2">    225600 </iyy>
@@ -196,7 +196,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <pointmass name="Centre Left Front3">
             <weight unit="LBS"> 0 </weight>
             <location name="POINTMASS" unit="IN">
-                <x> 339 </x>
+                <x> 316 </x>
                 <y> -5 </y>
                 <z> -3 </z>
             </location>
@@ -205,7 +205,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <pointmass name="Centre Left Rear4">
             <weight unit="LBS"> 0 </weight>
             <location name="POINTMASS" unit="IN">
-                <x> 520 </x>
+                <x> 500 </x>
                 <y> -5 </y>
                 <z> -3 </z>
             </location>
@@ -213,7 +213,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <pointmass name="Centre Right Front5">
             <weight unit="LBS"> 0 </weight>
             <location name="POINTMASS" unit="IN">
-                <x> 339 </x>
+                <x> 316 </x>
                 <y>   5 </y>
                 <z>  -3 </z>
             </location>
@@ -222,7 +222,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <pointmass name="Centre Right Rear6">
             <weight unit="LBS"> 0 </weight>
             <location name="POINTMASS" unit="IN">
-                <x> 520 </x>
+                <x> 500 </x>
                 <y>   5 </y>
                 <z>  -3 </z>
             </location>
@@ -261,7 +261,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 197 </x>
                 <y> 0 </y>
-                <z> -145 </z>
+                <z> -94.01 </z>
             </location>
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
@@ -275,9 +275,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- 1 -->
         <contact type="BOGEY" name="LEFT_MLG">
             <location unit="IN">
-                <x> 431 </x>
+                <x> 451 </x>
                 <y> -98 </y>
-                <z> -145  </z>
+                <z> -102.1  </z>
             </location>
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
@@ -291,9 +291,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- 2 -->
         <contact type="BOGEY" name="RIGHT_MLG">
             <location unit="IN">
-                <x> 431 </x>
+                <x> 451 </x>
                 <y> 98 </y>
-                <z> -145 </z>
+                <z> -102.1 </z>
             </location>
             <static_friction> 0.8 </static_friction>
             <dynamic_friction> 0.5 </dynamic_friction>
@@ -304,36 +304,31 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <brake_group> RIGHT </brake_group>
             <retractable>1</retractable>
         </contact>
-
-        <!-- the wings are based on the oversweep position (in terms of y) which should be 368 inches
-             but I'm using 300 inches to allow for movement on carriers. It's a comprimise as I can't find
-             a method to change the contact point based on sweep position and this is the least worst method
-        -->
-        <!-- 3 -->
-        <contact type="STRUCTURE" name="LEFT_WING_TIP">
+       <!-- 3 -->
+       <contact type="STRUCTURE" name="LEFT_WING_TIP">
             <location unit="IN">
-                <x>  349 </x>
+                <x> 472 </x>
                 <y> -300 </y>
-                <z> -15 </z>
+                <z>   13 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
-        <!--  4 -->
+          <!--4--> 
         <contact type="STRUCTURE" name="RIGHT_WING_TIP">
             <location unit="IN">
-                <x> 349 </x>
+                <x> 472 </x>
                 <y> 300 </y>
-                <z> -15 </z>
+                <z> 13 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 100 </spring_coeff>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
@@ -341,41 +336,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!--  5 -->
         <contact type="STRUCTURE" name="FRONT_BODY">
             <location unit="IN">
-                <x> 120 </x>
+                <x> 110 </x>
                 <y> 0 </y>
-                <z> -80 </z>
+                <z> -47 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-        </contact>
-
-        <!--  6 same pos as landing gear for ease of understanding -->
-        <contact type="STRUCTURE" name="MID_BODY_LEFT">
-            <location unit="IN">
-                <x> 431 </x>
-                <y> -88 </y>
-                <z> -80  </z>
-            </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.212 </dynamic_friction>
-            <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-        </contact>
-        <contact type="STRUCTURE" name="MID_BODY_RIGHT">
-            <location unit="IN">
-                <x> 431 </x>
-                <y>  88 </y>
-                <z> -80  </z>
-            </location>
-            <static_friction> 1.2 </static_friction>
-            <dynamic_friction> 1.212 </dynamic_friction>
-            <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  8 -->
@@ -388,23 +357,23 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  9 -->
-        <contact type="STRUCTURE" name="RADOME_FRONT">
+        <!--<contact type="STRUCTURE" name="RADOME_FRONT">
             <location unit="IN">
                 <x>  20 </x>
                 <y>  0 </y>
-                <z>  -44 </z>
+                <z>  -18 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
+           <spring_coeff unit="LBS/FT"> 24000 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
-        </contact>
+        </contact>-->
 
         <!--  10 -->
         <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
@@ -416,8 +385,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  11 -->
@@ -430,21 +399,21 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
         <!-- 12 -->
         <contact type="STRUCTURE" name="REAR_BODY_LEFT">
             <location unit="IN">
                 <x> 713 </x>
                 <y> -58 </y>
-                <z> -70 </z>
+                <z> -40 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
         <!--  13 -->
@@ -452,15 +421,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 713 </x>
                 <y>  58 </y>
-                <z> -70 </z>
+                <z> -40 </z>
             </location>
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
-
+<!-- 14 -->
         <contact type="STRUCTURE" name="NOSE_CONE">
             <location unit="IN">
                 <x>  0 </x>
@@ -470,17 +439,45 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <static_friction> 1.2 </static_friction>
             <dynamic_friction> 1.212 </dynamic_friction>
             <rolling_friction> 1.413 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 43100 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 10000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
     </ground_reactions>
-
+<!--<strut_force>
+    <function>
+        <sum>
+            <product>
+                <value>-1</value>
+                <property>inertia/weight-lbs</property>
+                <property> contact/unit[5]/compression-ft </property>
+            </product>
+        </sum>
+    </function>
+    <ifthen>
+        <ge>
+            <property> contact/unit[5]/compression-velocity-fps </property>
+            <value> 0.0 </value>
+        </ge>
+        <product>
+            <value> -24000. </value>
+            <property> contact/unit[5]/compression-velocity-fps </property>
+        </product>
+        <product>
+            <value> 0. </value>
+            <property> contact/unit[5]/compression-velocity-fps </property>
+        </product>
+    </ifthen>
+    <clipto>
+        <min>-inertia/weight-lbs</min>
+        <max>inertia/weight-lbs</max>
+    </clipto>
+</strut_force>-->
     <propulsion>
         <engine file="F110-GE-400">
             <location unit="IN">
-                <x> 667 </x>
+                <x> 682 </x>
                 <y> -45 </y>
-                <z> -10 </z>
+                <z> -15 </z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -495,9 +492,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <feed>10</feed>
             <thruster file="direct">
                 <location unit="IN">
-                    <x> 667 </x>
+                    <x> 682 </x>
                     <y> -45 </y>
-                    <z> -10 </z>
+                    <z> -15 </z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -508,9 +505,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </engine>
         <engine file="F110-GE-400">
             <location unit="IN">
-                <x> 667 </x>
+                <x> 682 </x>
                 <y> 45 </y>
-                <z> -10 </z>
+                <z> -15 </z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -526,9 +523,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
             <thruster file="direct">
                 <location unit="IN">
-                    <x> 667 </x>
+                    <x> 682 </x>
                     <y> 45 </y>
-                    <z> -10 </z>
+                    <z> -15 </z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -548,7 +545,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!--  FWD Fuselage -->
         <tank type="FUEL">
             <location unit="IN">
-                <x>332</x>
+                <x>382</x>
                 <y>0</y>
                 <z>-51.77165354</z>
             </location>
@@ -559,7 +556,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- AFT Fuselage -->
         <tank type="FUEL">
             <location unit="IN">
-                <x>482</x>
+                <x>592</x>
                 <y>0</y>
                 <z>-47.83464567</z>
             </location>
@@ -614,7 +611,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- Left wing    -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 402</x>
+                <x> 462</x>
                 <y> -38.5826772</y>
                 <z> -27</z>
             </location>
@@ -625,7 +622,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <!-- Right Wing -->
         <tank type="FUEL">
             <location unit="IN">
-                <x> 402</x>
+                <x> 462</x>
                 <y> 38.5826772</y>
                 <z> -27</z>
             </location>
@@ -1562,7 +1559,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     </product>
                 </function>
             </fcs_function>
-            <fcs_function name="aero/cp-offset-wing-sweep">
+            <fcs_function name="aero/aero-rp-x-in">
                 <function>
                     <description>Centre of pressure due to mach and wingsweep angle</description>
                     <!-- MAC is 16% cbar . cbar is 9.8ft giving us 18.81in as offset to %MAC -->
@@ -1578,12 +1575,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                               0.00    -409           -419.1
                               2.40    -411           -419.6
 -->
-                                0.00    -419           -429.1
-                                2.40    -421           -429.6
+                                0.00    419           429.1
+                                2.40    421           449.6
                             </tableData>
                         </table>
                     </sum>
                 </function>
+                <output>metrics/aero-rp-x-in</output>
             </fcs_function>
 
             <fcs_function name="aero/cadc-control-effectivity-factor">
@@ -1595,8 +1593,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                             <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
                             <tableData>
                                 0.00  1.0
-                                1.00  0.75
-                                2.40  0.5
+                                1.00  0.6
+                                2.40  0.3
                             </tableData>
                         </table>
                     </sum>
@@ -1625,20 +1623,20 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <description>For denormalization</description>
                 <function>
                     <quotient>
-                        <sum>
+                        <product>
                             <property>metrics/cbarw-ft</property>
                             <property>velocities/q-aero-rad_sec</property>
-                        </sum>
+                        </product>
                         <!-- over -->
                         <product>
                             <value>2</value>
-                            <property>ic/vt-fps</property>
+                            <property>velocities/vt-fps</property>
                         </product>
                     </quotient>
                 </function>
                 <clipto>
-                    <min> -0.01 </min>
-                    <max>  0.01 </max>
+                    <min> -2.01 </min>
+                    <max>  2.01 </max>
                 </clipto>
                 <output>aero/cbarq-2vo</output>
             </fcs_function>
@@ -1754,7 +1752,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                        -15	1.00000000	1.00000000	0.96116198	1.23316641	1.40907629	1.33640164	1.12714710	0.92586768	0.76458179	0.58666528	0.51350202
                        -10	1.00000000	1.00000000	0.99142346	1.27199174	1.45344001	1.37847726	1.16263449	0.95501794	0.78865408	0.60513601	0.52966925
                         -5	1.00000000	1.00000000	0.96759116	1.24141501	1.41850155	1.34534078	1.13468655	0.93206078	0.76969605	0.59058947	0.51693681
-                         0	1.00000000	1.00000000	1.19797000	1.53699000	1.75624000	1.66566000	1.40485000	1.15398000	0.95295700	0.73120600	0.64001700
+<!--                         0	1.00000000	1.00000000	1.19797000	1.53699000	1.75624000	1.66566000	1.40485000	1.15398000	0.95295700	0.73120600	0.64001700-->
                          4	1.00000000	1.00000000	0.95837601	1.22959201	1.40499202	1.33252801	1.12388001	0.92318401	0.76236561	0.58496481	0.51201361
                          8	1.00000000	1.00000000	0.99142346	1.27199174	1.45344001	1.37847726	1.16263449	0.95501794	0.78865408	0.60513601	0.52966925
                         12	1.00000000	1.00000000	0.96759116	1.24141501	1.41850155	1.34534078	1.13468655	0.93206078	0.76969605	0.59058947	0.51693681
@@ -1803,7 +1801,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <tableData>
                                0   	          22	      50	      58
                         0	1.000000	1.000000	0.791274    0.653661
-                        5	1.000000	1.000000	0.791274	0.653661
                         10	1.000000	1.000000	0.829267	0.700928
                         15	1.000000	1.000000	0.953910	0.860083
                         20	1.000000	1.000000	0.960603	0.910701
@@ -1856,35 +1853,28 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <function name="aero/coefficients/DClSLM">
             <description>Delta Cl due to mean slat position</description>
-            <product>
+                <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/slat-pos-norm-deg</independentVar>
                     <tableData>
-                            0      	0.48         	1
-                        -55	0	-0.144556247	-0.144556247
-                        -50	0	-0.156499216	-0.156499216
-                        -45	0	-0.160675523	-0.160675523
-                        -40	0	-0.143821527	-0.143821527
-                        -35	0	-0.098332511	-0.098332511
-                        -30	0	-0.063050788	-0.063050788
-                        -25	0	-0.044942003	-0.044942003
-                        -20	0	-0.033808341	-0.033808341
-                        -15	0	-0.027487793	-0.027487793
-                        -10	0	-0.021957471	-0.021957471
-                        -5	0	-0.013322784	-0.013322784
-                        0	0	0.003134923	0.003134923
-                        5	0	0.013322784	0.013322784
-                        10	0	0.021957471	0.021957471
-                        15	0	0.027487793	0.027487793
-                        20	0	0.033808341	0.033808341
-                        25	0	0.044942003	0.044942003
-                        30	0	0.063050788	0.063050788
-                        35	0	0.098332511	0.098332511
-                        40	0	0.143821527	0.143821527
-                        45	0	0.160675523	0.160675523
-                        50	0	0.156499216	0.156499216
-                        55	0	0.144556247	0.144556247
+                        	   0   	   8	     17
+                        -20	0.0000	-0.0355	-0.0321
+                        -15	0.0000	-0.0321	-0.0256
+                        -10	0.0000	-0.0256	-0.0203
+                        -5	0.0000	-0.0203	-0.0116
+                         0	0.0000	-0.0116	0.0016
+                         5	0.0000	0.0016	0.0116
+                        10	0.0000	0.0116	0.0203
+                        15	0.0000	0.0203	0.0256
+                        20	0.0000	0.0256	0.0321
+                        25	0.0000	0.0321	0.0355
+                        30	0.0000	0.0355	0.0385
+                        35	0.0000	0.0385	0.0386
+                        40	0.0000	0.0386	0.0354
+                        45	0.0000	0.0354	0.0334
+                        50	0.0000	0.0334	0.0316
+                        55	0.0000	0.0316	0.0285
                     </tableData>
                 </table>
             </product>
@@ -1896,10 +1886,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                            	-20     	  -5	      0 	  5 	 10 	 15 	 50
+                            	-20     	  -5	      0 	  5 	 10 	 25 	 50
                           0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                          10	-0.01400	-0.13160	0.13440	0.13160	0.12880	0.10920	0.01400
-                         35	-0.09016	-0.25872	0.25480	0.25872	0.25872	0.21560	0.22540
+                         35	-0.09016	-0.25872	0.25480	0.25872	0.29872	0.21560	0.22540
                          50	-0.24500	-0.60200	0.59500	0.60200	0.58800	0.46200	0.24500
                     </tableData>
                 </table>
@@ -1913,7 +1903,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                                   	 -20     	  -5	      0 	  5 	 10 	 15 	 50
+                                   	 -20     	  -5	      0 	  5 	 10 	 25 	 50
                             0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                            10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
                            35	-0.03864	-0.11088	0.10920	0.11088	0.11088	0.09240	0.09660
@@ -1925,6 +1915,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <function name="aero/coefficients/ClDSpL">
             <description>Delta Cl due to left spoiler deflection - Figure 8, NASA-TB D-8236 </description>
+<!-- F14-AAD-1, 14.12.7; fully deployed No.4 spoiler at 200 kts 20,000 feet 25deg/sec roll rate at 22deg, 4deg/sec wings at 62deg -->
             <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -2141,52 +2132,30 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </product>
         </function>
         <function name="aero/coefficients/CdMach">
-            <description>Drag factor due to mach (NASA-TP-2580 Figure 16)</description>
+            <description>Drag increment due to mach (NASA-TP-2580 Figure 16)</description>
             <product>
                 <property>Factor1</property>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
                         <!-- This follows the basic shape to provide a factor that has been tuned to match known performance characteristics and may well be wrong 
-                     based on tp2580 but tuned to meet F14-AAD-1
-                 -->
-                        <!-- these are the values from the table; but they don't seem to give the right performance figures; so either this or engines are producing figures that are too low/high
-0.2	1
-0.4	0.972775014
-0.59	0.913789386
-0.79	0.913031141
-0.84	0.891651926
-0.89	0.896772618
-0.91	0.939045513
-0.98	1.791818684
-0.99	1.934660033
-1	1.525247835
-1.03	1.554031693
-1.2	1.557481113
-1.25	1.530799705
-2	1.379712548
-2.17	1.336705362
-2.47	1.330274553
-2.72	1.292251704
--->
-                        0.20	1.000000
-                        0.40	0.972775
-                        0.59	0.913789
-                        0.79	0.913031
-                        0.84	0.891652
-                        0.89	0.896773
-                        0.91	0.939046
-                        0.98	1.343864
-                        0.99	1.450995
-                        1.00	1.143936
-                        1.03	1.165524
-                        1.20	1.168111
-                        1.25	1.148100
-                        2.00	1.034784
-                        2.17	1.002529
-                        2.47	0.997706
-                        2.72	0.969189
-                    </tableData>
+                              based on tp2580 but tuned to meet F14-AAD-1 -->
+                        0.20	0.00000
+                        0.80	0.02472
+                        0.84	0.02772
+                        0.90	0.02520
+                        0.94	0.05736
+                        0.98	0.07676
+                        0.99	0.08288
+                        1.00	0.08495
+                        1.03	0.05483
+                        1.20	0.05102
+                        1.25	0.03375
+                        1.70	0.02500
+                        2.00	0.02260
+                        2.17	0.02190
+                        2.47	0.02179
+                   </tableData>
                 </table>
             </product>
         </function>
@@ -2230,11 +2199,26 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cd due to mean slat position</description>
             <product>
                 <table>
-                    <independentVar lookup="row">fcs/slat-pos-norm-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/slat-pos-norm-deg</independentVar>
                     <tableData>
-                        0	0.00000
-                        10	0.000002543
-                        11	0.00000 <!-- after 10deg included in CDSLM-->
+                            	     0       8	    17
+                        -20 	0.0000	0.0082	0.0057
+                        -15 	0.0000	0.0057	0.0035
+                        -10 	0.0000	0.0035	0.0017
+                         -5 	0.0000	0.0017	0.0006
+                          0 	0.0000	0.0006	0.0002
+                          5 	0.0000	0.0002	0.0006
+                         10 	0.0000	0.0006	0.0017
+                         15 	0.0000	0.0017	0.0035
+                         20 	0.0000	0.0035	0.0057
+                         25 	0.0000	0.0057	0.0082
+                         30 	0.0000	0.0082	0.0110
+                         35 	0.0000	0.0110	0.0132
+                         40 	0.0000	0.0132	0.0148
+                         45 	0.0000	0.0148	0.0166
+                         50 	0.0000	0.0166	0.0185
+                         55 	0.0000	0.0185	0.0202
                     </tableData>
                 </table>
             </product>
@@ -2247,7 +2231,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                            	-20 	 -5 	  0 	  5 	 10 	 15 	 50
+                            	-20 	 -5 	  0 	  5 	 10 	 25	 50
                        0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                       10	0.01400	0.02268	0.01932	0.02268	0.02548	0.02856	0.09590
                       35	0.09016	0.06894	0.06222	0.06894	0.09862	0.14286	0.55734
@@ -2263,7 +2247,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                            	-20 	 -5 	  0 	  5 	 10 	 15 	 50
+                            	-20 	 -5 	  0 	  5 	 10 	 25 	 50
                        0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
                       10	0.00600	0.00972	0.00828	0.00972	0.01092	0.01224	0.04110
                       35	0.03864	0.02954	0.02666	0.02954	0.04226	0.06122	0.23886
@@ -2359,9 +2343,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </function>
 
         <function name="aero/coefficients/Cd">
-            <product>
-                <property>aero/coefficients/CdMach</property>
                 <sum>
+                    <property>aero/coefficients/CdMach</property>
                     <property>aero/coefficients/CdBAS</property>
                     <property>aero/coefficients/DCdDS1</property>
                     <property>aero/coefficients/DCdDS2</property>
@@ -2373,7 +2356,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>aero/coefficients/CdTNK</property>
                     <property>aero/coefficients/CdDSp</property>
                 </sum>
-            </product>
         </function>
 
 
@@ -2922,7 +2904,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>CMQ</description>
             <product>
                 <property>aero/cbarq-2vo</property>
-                <property>velocities/q-aero-rad_sec</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
@@ -2973,9 +2954,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                         -10	 0.00000
                         -4	 0.00000
                         0	-0.01750
-                        4	-0.01000
-                        8	-0.00250
-                        14	 0.00000
+                        5	-0.01000
+                        10	-0.00250
+                        20	 0.00000
                     </tableData>
                 </table>
             </product>
@@ -3010,11 +2991,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                               0	       5	     10 	      15	     20	         60
-                        0	 0.00000	 0.00000	0.00000 	 0.00000	0.00000 	0.00000
-                        5    0.01320	 0.00396	0.00589 	 0.00762	0.00798 	0.00342
-                        15   0.01520	 0.00456	0.00649 	 0.01045	0.00798 	0.00342
-                        40	 0.00634	 0.00679	0.00472 	 0.00317	0.00000 	0.00000
+                    	          0		  5	 	 10		 15		 20	 	 60
+                         0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                         5	0.01320	0.00396	0.00589	0.00762	0.00798	0.00342
+                        15	0.01520	0.00456	0.00649	0.01045	0.00798	0.00342
+                        35	0.01696	0.01523	0.01355	0.01092	0.01148	0.01148
                     </tableData>
                 </table>
             </product>
@@ -3026,12 +3007,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
-                                 0	       5	     10 	      15	     20	         60
-                         0	 0.00000	0.00000 	0.00000 	0.00000 	0.00000 	0.00000
-                         5   0.01320	0.00924 	0.01375 	0.01778 	0.01862 	0.00798
-                        15   0.01520	0.01064 	0.01515 	0.02439 	0.01862 	0.00798
-                        40	 0.01478	0.01583 	0.01102 	0.00739 	0.00000 	0.00000
-                        <!--40	-0.24240	-0.21760	-0.19360	-0.15600	-0.16400-->
+                    	          0		  5	 	 10		 15		 20	 	 60
+                         0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
+                         5	0.00594	0.00178	0.00265	0.00343	0.00359	0.00154
+                        15	0.00684	0.00205	0.00292	0.00470	0.00359	0.00154
+                        35	0.00763	0.00685	0.00610	0.00491	0.00517	0.00517
                     </tableData>
                 </table>
             </product>
@@ -3105,7 +3085,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </product>
         </function>
         <function name="aero/coefficients/CNP">
-            <description>CNP</description>
+            <description>CNP, AFWAL, Revised TM-81833 Fig37.</description>
             <product>
                 <property>aero/bi2vel</property>
                 <property>velocities/p-aero-rad_sec</property>
@@ -3114,15 +3094,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <tableData>
                         -10 -0.09470000
                         -5 -0.09470000
-                        0 -0.03330000
-                        5 -0.09470000
+                         0 -0.03330000
+                         5 -0.09470000
                         10 -0.10680000
                         15 -0.11890000
                         20 -0.13100000
                         25 -0.08000000
                         30 -0.01160000
-                        35 0.14210000
-                        40 0.10070000
+                        35  0.14210000
+                        40  0.10070000
                         45 -0.02980000
                         50 -0.09580000
                         55 -0.01340000
@@ -3139,8 +3119,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
                         -5 -0.11540000
-                        0 -0.11540000
-                        5 -0.12560000
+                         0 -0.11540000
+                         5 -0.12560000
                         10 -0.13800000
                         15 -0.20480000
                         20 -0.18970000
@@ -3149,7 +3129,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                         35 -0.29110000
                         40 -0.14490000
                         45 -0.04580000
-                        50 0.04550000
+                        50  0.04550000
                         55 -0.04410000
                     </tableData>
                 </table>
@@ -3163,10 +3143,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                        0 0.00025000
-                        5 0.00025000
-                        10 0.00017500
-                        15 0.00007500
+                         0  0.00025000
+                         5  0.00025000
+                        10  0.00017500
+                        15  0.00007500
                         20 -0.00005000
                         25 -0.00022500
                         30 -0.00037500
@@ -3190,8 +3170,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                        0 0.00000000
-                        5 0.00000000
+                         0 0.00000000
+                         5 0.00000000
                         10 0.00000000
                         15 0.00000000
                         20 0.00000000
@@ -3263,7 +3243,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/Cd</property>
-                    <!--          <property>aero/coefficients/Cmach</property> -->
                     <property>aero/coefficients/ClSweepFactor</property>
                 </product>
             </function>
@@ -3288,7 +3267,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>metrics/bw-ft</property>
                     <property>aero/coefficients/CL</property>
                     <property>aero/coefficients/Cmach</property>
-                    <property>aero/coefficients/ClSweepFactor</property>
                 </product>
             </function>
         </axis>
@@ -3301,7 +3279,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>metrics/cbarw-ft</property>
                     <property>aero/coefficients/CM</property>
                     <property>aero/coefficients/Cmach</property>
-                    <property>aero/coefficients/ClSweepFactor</property>
                 </product>
             </function>
         </axis>
@@ -3314,7 +3291,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>metrics/bw-ft</property>
                     <property>aero/coefficients/CN</property>
                     <property>aero/coefficients/Cmach</property>
-                    <property>aero/coefficients/ClSweepFactor</property>
                 </product>
             </function>
         </axis>

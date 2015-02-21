@@ -103,6 +103,68 @@
 <!-- ******************************************************************* -->
 <!-- FX                                                                  -->
 <!-- ******************************************************************* -->
+
+ <model>
+  <path>Aircraft/Generic/Effects/tyre-smoke-nose.xml</path>
+  <name>tyre-smoke-n</name>
+  <offsets>
+   <x-m>-5.7755905511811024</x-m>
+   <y-m>0</y-m>
+   <z-m>-3</z-m>
+  </offsets>
+ </model>
+ <model>
+  <path>Aircraft/Generic/Effects/tyre-smoke-port.xml</path>
+  <name>tyre-smoke-p</name>
+  <offsets>
+    <x-m>1</x-m>
+   <y-m>-2.634</y-m>
+   <z-m>-2.784</z-m>
+  </offsets>
+ </model>
+ 
+ <model>
+  <path>Aircraft/Generic/Effects/tyre-smoke-stbd.xml</path>
+  <name>tyre-smoke-s</name>
+  <offsets>
+    <x-m>1</x-m>
+   <y-m>2.634</y-m>
+   <z-m>-2.784</z-m>
+  </offsets>
+ </model>
+ 
+
+<!-- spray -->
+ <model>
+  <path>Aircraft/Generic/Effects/rain-nose.xml</path>
+  <name>rain-n</name>
+  <offsets>
+   <x-m>-5.7755905511811024</x-m>
+   <y-m>0</y-m>
+   <z-m>-3</z-m>
+  </offsets>
+ </model>
+ <model>
+  <path>Aircraft/Generic/Effects/rain-port.xml</path>
+  <name>rain-p</name>
+  <offsets>
+    <x-m>1</x-m>
+   <y-m>-2.634</y-m>
+   <z-m>-2.784</z-m>
+  </offsets>
+ </model>
+ 
+ <model>
+  <path>Aircraft/Generic/Effects/rain-stbd.xml</path>
+  <name>rain-s</name>
+  <offsets>
+    <x-m>1</x-m>
+   <y-m>2.634</y-m>
+   <z-m>-2.784</z-m>
+  </offsets>
+ </model>
+ 
+
 	<!--<model>
 		<path>Aircraft/f-14b/Models/Stores/aim-9/aim-9-0.xml</path>
 		<offsets>
@@ -502,9 +564,8 @@
 		<object-name>Spoiler4L</object-name>  
 		<object-name>LeftWingLight</object-name>
 		<object-name>LWingSlimmer</object-name>
-		<property>surface-positions/wing-pos-norm</property>
+		<property>sim/multiplay/generic/float[0]</property>
 		<interpolation>
-			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>46</dep></entry>
 			<entry><ind>1.2</ind><dep>52</dep></entry>
@@ -604,7 +665,7 @@
 		<object-name>Spoiler4R</object-name> 
 		<object-name>RightWingLight</object-name>
 		<object-name>RWingSlimmer</object-name>
-		<property>surface-positions/wing-pos-norm</property>
+		<property>sim/multiplay/generic/float[0]</property>
 		<interpolation>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
@@ -693,7 +754,7 @@
 		<object-name>CanvasSeal.005</object-name>
 		<condition>
 			<less-than-equals>
-				<property>surface-positions/wing-pos-norm</property>
+        		<property>sim/multiplay/generic/float[0]</property>
 				<value>0.1</value>
 			</less-than-equals>
 		</condition>
@@ -705,11 +766,11 @@
 		<object-name>CanvasSeal.004</object-name>
 		<condition>
 			<greater-than>
-				<property>surface-positions/wing-pos-norm</property>
+                <property>sim/multiplay/generic/float[0]</property>
 				<value>0.1</value>
 			</greater-than>
 			<less-than-equals>
-				<property>surface-positions/wing-pos-norm</property>
+        		<property>sim/multiplay/generic/float[0]</property>
 				<value>0.6</value>
 			</less-than-equals>
 		</condition>
@@ -721,7 +782,7 @@
 		<object-name>CanvasSeal.003</object-name>
 		<condition>
 			<greater-than>
-				<property>surface-positions/wing-pos-norm</property>
+        		<property>sim/multiplay/generic/float[0]</property>
 				<value>0.6</value>
 			</greater-than>
 		</condition>
@@ -877,7 +938,7 @@
 		<type>rotate</type>
 		<object-name>RudderL</object-name>
 		<property>surface-positions/rudder-pos-norm</property>
-		<factor>30</factor>
+		<factor>-30</factor>
 		<center>
 			<x-m>7.531</x-m>
 			<y-m>-1.496</y-m>
@@ -894,7 +955,7 @@
 		<type>rotate</type>
 		<object-name>RudderR</object-name>
 		<property>surface-positions/rudder-pos-norm</property>
-		<factor>30</factor>
+		<factor>-30</factor>
 		<center>
 			<x-m>7.531</x-m>
 			<y-m>1.496</y-m>
@@ -1559,7 +1620,7 @@
 		<type>select</type>
 		<object-name>LandingLight-on</object-name>
 		<condition>
-			<property>controls/lighting/taxi-light</property>
+			<property>sim/multiplay/generic/int[7]</property>
 		</condition>
 	</animation>
 	<animation>
@@ -1567,7 +1628,7 @@
 		<object-name>LandingLight-off</object-name>
 		<condition>
 			<not>
-					<property>controls/lighting/taxi-light</property>
+    			<property>sim/multiplay/generic/int[7]</property>
 			</not>
 		</condition>
 	</animation>
@@ -1781,7 +1842,7 @@
 		<property>gear/gear[0]/compression-norm</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>-0.30</dep></entry>
-			<entry><ind>1</ind><dep>0.42</dep></entry>
+			<entry><ind>2</ind><dep>0.42</dep></entry>
 		</interpolation>
 		<axis>
 			<x>0</x>
@@ -1797,7 +1858,7 @@
 		<property>gear/gear[0]/compression-norm</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>15</dep></entry>
-			<entry><ind>1</ind><dep>-45</dep></entry>
+			<entry><ind>2</ind><dep>-45</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>-4.499</x-m>
@@ -1817,7 +1878,7 @@
 		<property>gear/gear[0]/compression-norm</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>-15</dep></entry>
-			<entry><ind>1</ind><dep>45</dep></entry>
+			<entry><ind>2</ind><dep>45</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>-4.318</x-m>
@@ -2129,7 +2190,7 @@
 		<property>gear/gear[1]/compression-norm</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>-0.2</dep></entry>
-			<entry><ind>1</ind><dep>0.6</dep></entry>
+			<entry><ind>2</ind><dep>0.6</dep></entry>
 		</interpolation>
 		<axis>
 			<x>0.098</x>
@@ -2146,7 +2207,7 @@
 			<entry><ind>0</ind><dep>30</dep></entry>
 			<entry><ind>0.33</ind><dep>0</dep></entry>
 			<entry><ind>0.66</ind><dep>-25</dep></entry>
-			<entry><ind>1</ind><dep>-40</dep></entry>
+			<entry><ind>2</ind><dep>-40</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>2.261</x-m>
@@ -2168,7 +2229,7 @@
 			<entry><ind>0</ind><dep>-30</dep></entry>
 			<entry><ind>0.33</ind><dep>0</dep></entry>
 			<entry><ind>0.66</ind><dep>25</dep></entry>
-			<entry><ind>1</ind><dep>40</dep></entry>
+			<entry><ind>2</ind><dep>40</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>2.306</x-m>
@@ -2475,7 +2536,7 @@
 		<property>gear/gear[2]/compression-norm</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>-0.2</dep></entry>
-			<entry><ind>1</ind><dep>0.6</dep></entry>
+			<entry><ind>2</ind><dep>0.6</dep></entry>
 		</interpolation>
 		<axis>
 			<x>0.098</x>
@@ -2492,7 +2553,7 @@
 			<entry><ind>0</ind><dep>-30</dep></entry>
 			<entry><ind>0.33</ind><dep>0</dep></entry>
 			<entry><ind>0.66</ind><dep>25</dep></entry>
-			<entry><ind>1</ind><dep>40</dep></entry>
+			<entry><ind>2</ind><dep>40</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>2.261</x-m>
@@ -2514,7 +2575,7 @@
 			<entry><ind>0</ind><dep>30</dep></entry>
 			<entry><ind>0.33</ind><dep>0</dep></entry>
 			<entry><ind>0.66</ind><dep>-25</dep></entry>
-			<entry><ind>1</ind><dep>-40</dep></entry>
+			<entry><ind>2</ind><dep>-40</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>2.306</x-m>

@@ -30,6 +30,10 @@ var MagDev           = props.globals.getNode("orientation/local-mag-dev", 1);
 
 var mag_dev = 0;
 var tc_mode = 0;
+var carrier_pos_first_time = 1;
+var carrier_x_offset = 0;
+var carrier_y_offset = 0;
+var carrier_z_offset = 0;
 
 aircraft.data.add(VtcRadialDeg, TcModeSwitch);
 
@@ -563,10 +567,11 @@ var main_loop = func {
 		# done each 0.1 sec, cnt even.
 		inc_ticker();
 		tacan_update();
-ara_63_update();
+        ara_63_update();
 		f14_hud.update_hud();
 		g_min_max();
 		f14_chronograph.update_chrono();
+
 		if (( cnt == 6 ) or ( cnt == 12 )) {
 			# done each 0.3 sec.
 			f14.fuel_update();
@@ -597,87 +602,163 @@ ara_63_update();
 	settimer(main_loop, UPDATE_PERIOD);
 }
 
+var common_carrier_init = func {
+
+    if (f14.carrier_ara_63_position != nil and geo.aircraft_position() != nil)
+    {
+        if (geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 6000 and geo.aircraft_position().distance_to(f14.carrier_ara_63_position) > 400)
+        {
+            print("Starting with hook down as near carrier");
+            setprop("controls/gear/tailhook",1);
+            setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
+        }
+
+    }
+
+    if (!getprop("sim/model/f-14b/overrides/special-carrier-handling"))
+        return ;
+
+    var lat = getprop("/position/latitude-deg");
+    var lon = getprop("/position/longitude-deg");
+    var info = geodinfo(lat, lon);
+
+    var carrier = getprop("/sim/presets/carrier");
+    var on_carrier = 0;
+
+    if (carrier != nil or carrier != "")
+        on_carrier = 1;
+
+    if (info == nil or info[1] == nil)
+    {
+# seems to be that we could be on a carrier
+        on_carrier = 1;
+    }
+
+    if(on_carrier)
+    {
+        var ground_elevation = getprop("/position/ground-elev-ft");
+        if (ground_elevation == nil)
+            ground_elevation = 65.2;
+
+        if (carrier != nil and carrier != "" ) # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
+        {
+            if (f14.carrier_ara_63_position == nil or geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 200)
+            {
+                print("Special init for Carrier cat launch");
+                setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
+                setprop("gear/launchbar/position-norm",1);
+            }
+
+            var current_pos = geo.Coord.new().set_latlon(getprop("/position/latitude-deg"), getprop("/position/longitude-deg"));
+
+#
+# Locate the carrier in case it has moved from the stated initial position.
+
+            var raw_list = props.globals.getNode("ai/models").getChildren();
+            var carrier_located = 0;
+
+            foreach( var c; raw_list )
+            {
+                if (!c.getNode("valid", 1).getValue()) {
+                    continue;
+                }
+                if(c.getName() == "carrier")
+                {
+                    var name=c.getNode("name").getValue();
+                    if (name == carrier)
+                    {
+                        print("Found our carrier ", c.getNode("position/latitude-deg").getValue()," ", c.getNode("position/longitude-deg").getValue());
+                        var carrier_pos = geo.Coord.new().set_latlon( c.getNode("position/latitude-deg").getValue(), c.getNode("position/longitude-deg").getValue());
+
+
+                        if (carrier_pos_first_time)
+                        {
+                            # record the offset between the carrier and the preset position; as when
+                            # the carrier moves this will be need to place the aircraft correctly.
+                            carrier_pos_first_time = 0;
+                            carrier_x_offset = carrier_pos.x() - current_pos.x();
+                            carrier_y_offset = carrier_pos.y() - current_pos.y();
+                            carrier_z_offset = carrier_pos.z() - current_pos.z();
+                            print("Offset to launch ",carrier_x_offset," ",carrier_y_offset," ",carrier_y_offset);                        }
+                        else
+                        {
+                            carrier_pos.set_x(carrier_pos.x()-carrier_x_offset);
+                            carrier_pos.set_y(carrier_pos.y()-carrier_y_offset);
+                            carrier_pos.set_z(carrier_pos.z()-carrier_z_offset);
+                        }
+
+                        # now figure out the correct height based on the terrain elevation (which will be the carrier)
+                        # initially; however once the carrier has moved we may need to adjust this.
+                        # in any case is this is less than 6 meters we'd be in the bilges so this probably means
+                        # that the elevation data isn't valid so use hardcoded value of 65.2
+                        current_pos = carrier_pos;
+                        var info = geodinfo(lat, lon);
+                        if (info != nil) 
+                        {
+                            print("the carrier deckj is is at elevation ", info[0], " m");
+                            ground_elevation = info[0]*3.28084; # convert to feet
+                            if (ground_elevation < 1) ground_elevation = 65.2;
+                        }
+                        if (ground_elevation < 6) ground_elevation = 65.2;
+                    }
+                }
+            }
+                   
+            setprop("/controls/gear/gear-down", 1);
+
+            if (current_pos != nil)
+            {
+                print("Adjusting launch position by 7meters");
+                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),7);
+            }
+            setprop("/position/latitude-deg", current_pos.lat());
+            setprop("/position/longitude-deg", current_pos.lon());
+
+            print("Moving the aircraft into the launch position properly... for ",carrier, " alt ",ground_elevation," lat ", current_pos.lat(), " lon ",current_pos.lon());
+
+            setprop("/position/altitude-ft", ground_elevation+getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
+        }
+    }
+
+}
 var common_init = func {
     if(f14.usingJSBSim)
     {
-print("Setting replay medium res to 50hz");
-setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
-setprop("/controls/flight/SAS-roll",0);
-setprop("sim/model/f-14b/controls/AFCS/altitude",0);
-setprop("sim/model/f-14b/controls/AFCS/heading-gt",0);
-setprop("sim/model/f-14b/controls/AFCS/engage",0);
-if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
-{
-        if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
+        print("Setting replay medium res to 50hz");
+        setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
+        setprop("/controls/flight/SAS-roll",0);
+        setprop("sim/model/f-14b/controls/AFCS/altitude",0);
+        setprop("sim/model/f-14b/controls/AFCS/heading-gt",0);
+        setprop("sim/model/f-14b/controls/AFCS/engage",0);
+        if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
         {
-#            if(getprop("/fdm/jsbsim/fcs/gear/gear-pos-norm") == nil or getprop("/fdm/jsbsim/fcs/gear/gear-pos-norm") < 1)
-#            {
+            if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
+            {
                 print("Starting with gear down as below 500 ft");
                 setprop("/controls/gear/gear-down", 1);
-#                setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
-#                setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-#                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-#                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-#            }
-            if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
-            {
-                setprop("/controls/gear/brake-parking",1);
-                print("--> Set parking brake as below 50 ft");
+                setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
+                setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
+                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+
+                if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
+                {
+                    setprop("/controls/gear/brake-parking",1);
+                    print("--> Set parking brake as below 50 ft");
+                }
             }
-        }
-        else 
-        {
-#            if(getprop("/fdm/jsbsim/fcs/gear/gear-pos-norm") == nil or getprop("/fdm/jsbsim/fcs/gear/gear-pos-norm") > 0)
-#            {
+            else 
+            {
                 print("Starting with gear up as above 500 ft");
                 setprop("/controls/gear/gear-down", 0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-#            }
-            setprop("/controls/gear/brake-parking",0);
-        }
-}
-        if (f14.carrier_ara_63_position != nil and geo.aircraft_position() != nil)
-        {
-            if (geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 6000 and geo.aircraft_position().distance_to(f14.carrier_ara_63_position) > 400)
-            {
-                print("Starting with hook down as near carrier");
-                setprop("controls/gear/tailhook",1);
-                setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
+                setprop("/controls/gear/brake-parking",0);
             }
-
         }
-        var lat = getprop("/position/latitude-deg");
-        var lon = getprop("/position/longitude-deg");
-        var info = geodinfo(lat, lon);
-#        debug.dump(info);
-        if (info[1] == nil)
-        {
-# seems to be that we could be on a carrier
-
-            var carrier = getprop("/sim/presets/carrier");
-            if (carrier != nil and carrier != "" ) # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
-            {
-                if (f14.carrier_ara_63_position == nil or geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 200)
-                {
-                    print("Special init for Carrier cat launch");
-                    setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
-                    setprop("gear/launchbar/position-norm",1);
-                    setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
-                }
-            }
-
-#        var parkpos = getprop("/sim/presets/parkpos");
-#        if (getprop("/sim/presets/carrier") != "" and parkpos != nil and size(parkpos) > 4 and substr(parkpos,0,4) == "cat-")
-#        {
-#            print ("Special init for cat-");
-
-#    setprop("/fdm/jsbsim/position/h-sl-ft",10+getprop("/fdm/jsbsim/position/h-sl-ft"));
-#        setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
-#        }
-        }
+        common_carrier_init();
     }
 }
 
@@ -703,16 +784,6 @@ var init = func {
 	}
 
     common_init();
-    if (f14.usingJSBSim)
-    {
-        var carrier = getprop("/sim/presets/carrier");
-        if (carrier != nil and carrier != "" and getprop("/fdm/jsbsim/position/h-agl-ft") < 100) 
-        {
-            print ("Special launch init for cat-");
-            setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
-            setprop("orientation/pitch-deg",0);
-        }
-    }
     if ( ! main_loop_launched ) {
         settimer(main_loop, 0.5);
         settimer(f14.external_load_loop, 3);
@@ -721,19 +792,22 @@ var init = func {
 }
 
 setlistener("sim/signals/fdm-initialized", init);
-setprop("/sim/alt", 8.850329274);
-setprop("/sim/init-delay", 0.1);
 
+
+setlistener("sim/position-finalized", func (is_done) {
+    print("position-finalized ",is_done.getValue());
+    if (is_done.getValue())
+    {
+    common_init();
+#        common_carrier_init();
+    }
+
+});
 setlistener("sim/signals/reinit", func (reinit) {
-    print("Reint ",reinit);
     if (reinit.getValue()) {
         f14.internal_save_fuel();
-        setprop("/fdm/jsbsim/position/h-agl-ft",    getprop("sim/alt"));
     } else {
-        common_init();
         settimer(func { f14.internal_restore_fuel() }, 0.6);
-        common_init();
-        settimer(func { common_init() }, getprop("/sim/init-delay"));
     }
 });
 # Miscelaneous definitions and tools ############

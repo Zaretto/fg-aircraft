@@ -1,6 +1,7 @@
 # Utilities #########
 
 # Lighting 
+#setprop("sim/model/path","data/Aircraft/f-14b/F-14B.xml");
 
 # Collision lights flasher
 var anti_collision_switch = props.globals.getNode("sim/model/f-14b/controls/lighting/anti-collision-switch");
@@ -12,12 +13,16 @@ var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.
 setprop("/sim/model/f-14b/lighting/position/enabled", 1);
 setprop("sim/model/f-14b/fx/smoke",0);
 
+var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
+
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
 var position_intens = 0;
 setprop("fdm/jsbsim/Factor1",1);
 setprop("sim/fdm/surface/override-level", 0);
 
+aircraft.tyresmoke_system.new(0, 1, 2);
+aircraft.rain.init();
 
 var position_switch = func(n) {
 	var sw_pos = sw_pos_prop.getValue();
@@ -150,12 +155,14 @@ var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/in
 var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
 var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
 var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
+var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
 
 #
 #
 # ARA-63 (Carrier Landing System) support
+var tuned_carrier_name=getprop("/sim/presets/carrier");
 var carrier_ara_63_position = nil;
 var carrier_heading = nil;
 var carrier_ara_63_heading = nil;
@@ -306,6 +313,7 @@ var timedMotions = func {
 	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
 	right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
+	lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
 }
 
 
@@ -319,6 +327,8 @@ setprop("/controls/flight/SAS-roll",0);
 var registerFCS = func {settimer (updateFCS, 0);}
 
 var updateFCS = func {
+	 aircraft.rain.update();
+
 	#Fectch most commonly used values
 	CurrentIAS = getprop ("/velocities/airspeed-kt");
 	CurrentMach = getprop ("/velocities/mach");
@@ -358,6 +368,9 @@ var updateFCS = func {
         currentG = getprop ("accelerations/pilot-g");
 		setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
 		setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
+        setprop("engines/engine[0]/fuel-flow_pph",getprop("engines/engine[0]/fuel-flow-gph")*1.46551724137931);
+        setprop("engines/engine[1]/fuel-flow_pph",getprop("engines/engine[1]/fuel-flow-gph")*1.46551724137931);
+
     }
 
 	#update functions

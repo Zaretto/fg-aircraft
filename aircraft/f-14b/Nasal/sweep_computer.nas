@@ -38,7 +38,8 @@ if (usingJSBSim) setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
 var minSweep = 0.2941176470588235;
 var maxSweepAuxFlaps = 0.3235294117647059;
 var maxSweep = 1.0 - minSweep;
-var mnSweepFactor = (maxSweep - minSweep) / (MachHi - MachLo);
+var maxSweepMach = 0.88235294117647058823529411764706; # 60 degrees normalised
+var mnSweepFactor = MachHi / (maxSweepMach-minSweep);
 # Functions
     
 setprop("/fdm/jsbsim/fcs/wing-sweep-cmd",0.2941176470588235);
@@ -169,13 +170,18 @@ var computeSweep = func {
 
     if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
 
+    if(OverSweep) return;
+
 # Sweep vs. Mach motion
-    if (current_mach <= MachLo) {
+    if (current_mach <= MachLo)
+    {
         WingSweep = minSweep;
-    } elsif (current_mach < MachHi) {
-        WingSweep = minSweep + (current_mach * mnSweepFactor); #(current_mach - MachLo) / MachSweepRange;
-    } else {
-        WingSweep = maxSweep;
+    }
+    else if (current_mach < MachHi)
+    {
+        WingSweep = minSweep + (current_mach-MachLo) * mnSweepFactor;
+        if (WingSweep > maxSweepMach)
+            WingSweep = maxSweepMach;
     }
     setprop("/fdm/jsbsim/fcs/wing-sweep-cmd",WingSweep);
 }
