@@ -1,3 +1,11 @@
+# F-15 HUD Support
+# ---------------------------
+# The F-15 has a canvas based hud; so this module really only provides 
+# turning off of the standard HUD and the develev to devrool function
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
+# ---------------------------
+
 # This generic func is deactivated cause we don't need it and we have a better
 # use for "h" keyboard shortcut.
 aircraft.HUD.cycle_color = func {}
@@ -10,7 +18,9 @@ var OurRoll            = props.globals.getNode("orientation/roll-deg");
 
 # 0.6686m = distance eye <-> to mean point of HUD screen.
 var eye_hud_m          = 0.47869;
-var hud_radius_m       = 0.185225;
+var hud_position = 5.63410; # really -5.6 but avoiding more complex equations by being optimal with the signs.
+var hud_radius_m       = 0.16848; 
+#var hud_radius_m       = 0.185225;
 
 aircraft.data.add("sim/model/f15/controls/hud/intens", "sim/hud/current-color");
 
@@ -38,6 +48,7 @@ return;
 
 var develev_to_devroll = func(dev_rad, elev_rad) {
 	var clamped = 0;
+    eye_hud_m = hud_position + getprop("sim/current-view/z-offset-m"); # optimised for signs so we get a positive distance.
 	# Deviation length on the HUD (at level flight),
 	var h_dev = eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
 	var v_dev = eye_hud_m / ( math.sin(elev_rad) / math.cos(elev_rad) );

@@ -1,6 +1,10 @@
-# F-15 TEWS; this bears only a cosmetic relation to the real device mainly because all of the document for TEWS
-#            appears to be classified and/or generally unavailable. 
+# F-15 Canvas MPCD (Multi-Purpose-Colour-Display)
+# ---------------------------
+# MPCD has many pages; the classes here support multiple pages, menu
+# operation and the update loop.
+# ---------------------------
 # Richard Harrison: 2015-01-23 : rjh@zaretto.com
+# ---------------------------
 
 setprop ("/sim/startup/terminal-ansi-colors",0);
 
@@ -290,11 +294,17 @@ pjitds_1.addMenuItem(9, "M", p1_1);
 MPCD.selectPage(p1_1);
 var mpcd_button_pushed = 0;
 
+#
+# Time after which the Spin page will be hidden
 var mpcd_spin_reset_time = 0;
 
 var updateMPCD = func ()
 {  
-    if (math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
+    # see if spin recovery page needs to be displayed.
+    # it is displayed automatically and will remain for 5 seconds.
+    # this page provides (sort of) guidance on how to recover from a spin
+    # which is identified by the yar rate.
+    if (!wow and math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
     {
         if (MPCD.current_page != p_spin_recovery)
         {

@@ -1,4 +1,6 @@
-# F-15 VSD - based on Enrique Laso (Flying toaster) F-20 HUD main module
+# F-15 VSD; using Canvas
+# ---------------------------
+# Richard Harrison: 2015-01-23 : rjh@zaretto.com
 
 #angular definitions
 #up angle 1.73 deg
@@ -103,8 +105,7 @@ var updateVSD = func ()
         nofire_cross.setVisible(0);
         target_circle.setVisible(0);
     }
-    
-    window1.setText ("     VS BST   MEM  LSG/000");
+var w1 = "     VS BST   MEM  ";
 
     var target_idx=0;
     window4.setText (sprintf("%3d", getprop("instrumentation/radar/radar2-range")));
@@ -132,7 +133,9 @@ var updateVSD = func ()
                     {
                         designated = 1;
                         w2 = sprintf("%-4d", u.get_closure_rate());
-                        w3_22 = sprintf("%3d-%2d %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
+                        w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
+var aspect = u.get_reciprocal_bearing()/10;
+w1 = sprintf("%4d %2d%c %2d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading());
                     }
                     tgt.setVisible(u.get_display());
                     var xc = u.get_deviation(heading);
@@ -146,10 +149,11 @@ var updateVSD = func ()
             target_idx = target_idx+1;
         }
     }
+    window1.setText(w1);
     window2.setText(w2);
-    window3.setText(sprintf("G%3.0f %3s-%4s%s %s %s",
+#    window3.setText(sprintf("G%3.0f %3s-%4s%s %s %s",
+    window3.setText(sprintf("G%3.0f %s %s",
                             getprop("velocities/groundspeed-kt"),
-                            "","","",
                             w3_7 , 
                             w3_22));
     for(var nv = target_idx; nv < max_symbols;nv += 1)

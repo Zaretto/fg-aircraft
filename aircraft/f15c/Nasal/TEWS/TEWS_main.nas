@@ -1,6 +1,11 @@
-# F-15 TEWS; this bears only a cosmetic relation to the real device mainly because all of the document for TEWS
-#            appears to be classified and/or generally unavailable. 
+# F-15 TEWS; Canvas
+# ---------------------------
+# This bears only a cosmetic relation to the real device mainly because 
+# all of the document for TEWS appears to be classified and/or 
+# generally unavailable. 
+# ---------------------------
 # Richard Harrison: 2015-01-23 : rjh@zaretto.com
+# ---------------------------
 
 
 var TEWScanvas= canvas.new({

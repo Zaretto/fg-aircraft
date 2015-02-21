@@ -1,4 +1,13 @@
-# mocks effects of acceleration and flutter on the structure (wing).
+#
+# F-15 Adverse effectts.
+# ---------------------------
+# Models effects from acceleration and flutter on the wing.
+# Residual wing bending after large G will be reatined.
+# Fix airframe to reset damage.
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xx
+#
+
 var WingBend = 0.0;
 var ResidualBend = 0.0;
 var MaxResidualBend = 0.3;

@@ -1,4 +1,8 @@
-# Replacement for fuel.nas for the f15 particular fuel system.
+# F-15 Fuel system 
+# ---------------------------
+# The main fuel computations are performed in JSBSim; these are support routines
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
 
 fuel.update = func{}; # disable the generic fuel updater
 

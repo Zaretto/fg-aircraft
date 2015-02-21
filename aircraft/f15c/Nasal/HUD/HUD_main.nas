@@ -1,6 +1,12 @@
-# F-15 HUD - originally based on F-20 HUD main module Enrique Laso (Flying toaster) 
-# Now rewritten to have HUD class with dataprovider
-# rjh@zaretto.com 2015-01-27 
+# F-15 Canvas HUD
+# ---------------------------
+# HUD class has dataprovider
+# F-15C HUD is in two parts so we have a single class that we can instantiate
+# twice on for each combiner pane
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2015-01-27  - based on F-20 HUD main module Enrique Laso (Flying toaster) 
+# ---------------------------
+
 var ht_xcf = 800;
 var ht_ycf = -900;
 var ht_xco = 0;

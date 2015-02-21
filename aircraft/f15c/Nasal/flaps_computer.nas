@@ -1,6 +1,7 @@
-#----------------------------------------------------------------------------
-# Flaps computer     
-#----------------------------------------------------------------------------
+#
+# F-15 Flaps and speedbrakes supporting controls
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
 
 var FlapsCmd     = props.globals.getNode("controls/flight/flaps", 1);
 

@@ -1,7 +1,10 @@
-#----------------------------------------------------------------------------
-# Electrical System: Misc
-# EMMISC
-#----------------------------------------------------------------------------
+#
+# F-15 Electrical System: Misc (EMMISC)
+# ---------------------------
+# Manages caution lights, and electrics controls
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-23; based on my F-14 version
+
 
 # Constants
 

@@ -1,3 +1,11 @@
+#
+# F-15 Backsat routines
+# ---------------------------
+# Not currently used as F15-C does not have a backseat
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
+#
+
 var UPDATE_PERIOD = 0.05;
 
 # Check pilot's aircraft path from it's callsign.

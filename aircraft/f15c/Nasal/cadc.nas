@@ -1,17 +1,9 @@
-
-#----------------------------------------------------------------------------
-# APC - Approach Power Compensator
-#----------------------------------------------------------------------------
-# target:        - sim/model/f15/instrumentation/aoa-indexer/target-deg (11,3 deg AoA)
-# engaged by:    - Throttle Mode Lever
-#                - keystroke "a" (toggle)
-# disengaged by: - Throttle Mode Lever
-#                - keystroke "a" (toggle)
-#                - WoW
-#                - throttle levers at ~ idle or MIL
-#                - autopilot emer disengage padle (TODO)
-# Original f15 : (YASim) APC is for display purposes only 
-#                  (JSBSim) Richard Harrison  (rjh@zaretto.com) APC system in the FDM
+#
+# F-15 Autothrottle interface
+# ---------------------------
+# Interface from APC to JSBSim APC system
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
 
 var APCengaged = props.globals.getNode("sim/model/f15/systems/apc/engaged",1);
 var engaded = 0;

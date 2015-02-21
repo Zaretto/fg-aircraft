@@ -1,8 +1,11 @@
-# F15 engines support ; rjh@zaretto.com Jan 2015 - based on F-14B engines.nas by Alexis Bory
 #
-# This manages the EGT for display, afterburners for model, JFS (except bleed which is in a Systems/f-15-hydrualics.xml)
+# F-15 engines support routines
+# ---------------------------
+# EGT for display, afterburners for model, JFS (except bleed which is in a Systems/f-15-hydrualics.xml)
 # start procedure
-#
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Jan 2015 - based on F-14B engines.nas by Alexis Bory
+
 var egt_norm1 = props.globals.getNode("engines/engine[0]/egt-norm", 1);
 var egt_norm2 = props.globals.getNode("engines/engine[1]/egt-norm", 1);
 var egt1_rankin = props.globals.getNode("engines/engine[0]/egt-degR", 1);

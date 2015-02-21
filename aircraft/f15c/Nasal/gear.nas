@@ -1,5 +1,9 @@
-# Nose Wheel Steering
-# -------------------
+# F-15 Nose Wheel Steering
+# ---------------------------
+# Interface from the JSBSim routines to the aircraft 
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
+# ---------------------------
 
 var NWS_light = 0;
 

@@ -1,5 +1,10 @@
-# AFCS (Auto Flight Control System) Panel
-# ---------------------------------------
+#
+# F-15 AFCS (Auto Flight Control System)  interfaces
+# ---------------------------
+# Connects the autopilot (part JSBSim and part traditional) to the panels and UI
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-28. Based on F-14b by xii
+#
 
 # Set the Autopilot in Passive Mode so the keyboard "Up, Down, Right, Left" keys
 # override the Autopilot instead of changing its settings. 
