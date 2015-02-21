@@ -1,6 +1,13 @@
-# AWG-9 Radar routines.
+#
+# F-15 AWG-9 Radar routines.
+# ---------------------------
 # RWR (Radar Warning Receiver) is computed in the radar loop for better performance
 # AWG-9 Radar computes the nearest target for AIM-9.
+# Provides the 'tuned carrier' tacan channel support for ARA-63 emulation
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
+#
+# 
 
 var ElapsedSec        = props.globals.getNode("sim/time/elapsed-sec");
 var SwpFac            = props.globals.getNode("sim/model/f15/instrumentation/awg-9/sweep-factor", 1);
@@ -605,33 +612,45 @@ else
 		}	
 
 		obj.TgtsFiles = obj.InstrTgts.getNode(obj.shortstring, 1);
+        if (obj.RdrProp != nil)
+		{
+            obj.Range          = obj.RdrProp.getNode("range-nm");
+            obj.Bearing        = obj.RdrProp.getNode("bearing-deg");
+            obj.Elevation      = obj.RdrProp.getNode("elevation-deg");
+            obj.TotalElevation = obj.RdrProp.getNode("total-elevation-deg", 1);
+        }
+        else
+        {
+            obj.Range          = nil;
+            obj.Bearing        = nil;
+            obj.Elevation      = nil;
+            obj.TotalElevation = nil;
+        }
 
-		obj.Range          = obj.RdrProp.getNode("range-nm");
-		obj.Bearing        = obj.RdrProp.getNode("bearing-deg");
-		obj.Elevation      = obj.RdrProp.getNode("elevation-deg");
-		obj.TotalElevation = obj.RdrProp.getNode("total-elevation-deg", 1);
-		obj.BBearing       = obj.TgtsFiles.getNode("bearing-deg", 1);
-		obj.BHeading       = obj.TgtsFiles.getNode("true-heading-deg", 1);
-		obj.RangeScore     = obj.TgtsFiles.getNode("range-score", 1);
-		obj.RelBearing     = obj.TgtsFiles.getNode("ddd-relative-bearing", 1);
-		obj.Carrier        = obj.TgtsFiles.getNode("carrier", 1);
-		obj.EcmSignal      = obj.TgtsFiles.getNode("ecm-signal", 1);
-		obj.EcmSignalNorm  = obj.TgtsFiles.getNode("ecm-signal-norm", 1);
-		obj.EcmTypeNum     = obj.TgtsFiles.getNode("ecm_type_num", 1);
-		obj.Display        = obj.TgtsFiles.getNode("display", 1);
-		obj.Fading         = obj.TgtsFiles.getNode("ddd-echo-fading", 1);
-		obj.DddDrawRangeNm = obj.TgtsFiles.getNode("ddd-draw-range-nm", 1);
-		obj.TidDrawRangeNm = obj.TgtsFiles.getNode("tid-draw-range-nm", 1);
-		obj.RoundedAlt     = obj.TgtsFiles.getNode("rounded-alt-ft", 1);
-		obj.TimeLast       = obj.TgtsFiles.getNode("closure-last-time", 1);
-		obj.RangeLast      = obj.TgtsFiles.getNode("closure-last-range-nm", 1);
-		obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
-
+        if (obj.TgtsFiles != nil)
+        {
+            obj.BBearing       = obj.TgtsFiles.getNode("bearing-deg", 1);
+            obj.BHeading       = obj.TgtsFiles.getNode("true-heading-deg", 1);
+            obj.RangeScore     = obj.TgtsFiles.getNode("range-score", 1);
+            obj.RelBearing     = obj.TgtsFiles.getNode("ddd-relative-bearing", 1);
+            obj.Carrier        = obj.TgtsFiles.getNode("carrier", 1);
+            obj.EcmSignal      = obj.TgtsFiles.getNode("ecm-signal", 1);
+            obj.EcmSignalNorm  = obj.TgtsFiles.getNode("ecm-signal-norm", 1);
+            obj.EcmTypeNum     = obj.TgtsFiles.getNode("ecm_type_num", 1);
+            obj.Display        = obj.TgtsFiles.getNode("display", 1);
+            obj.Fading         = obj.TgtsFiles.getNode("ddd-echo-fading", 1);
+            obj.DddDrawRangeNm = obj.TgtsFiles.getNode("ddd-draw-range-nm", 1);
+            obj.TidDrawRangeNm = obj.TgtsFiles.getNode("tid-draw-range-nm", 1);
+            obj.RoundedAlt     = obj.TgtsFiles.getNode("rounded-alt-ft", 1);
+            obj.TimeLast       = obj.TgtsFiles.getNode("closure-last-time", 1);
+            obj.RangeLast      = obj.TgtsFiles.getNode("closure-last-range-nm", 1);
+            obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
+        }
 		obj.TimeLast.setValue(ElapsedSec.getValue());
         var cur_range = obj.get_range();
         if (cur_range != nil and obj.RangeLast != nil)
 		    obj.RangeLast.setValue(obj.get_range());
-		# Radar emission status for other uthers of radar2.nas.
+		# Radar emission status for other users of radar2.nas.
 		obj.RadarStandby = c.getNode("sim/multiplay/generic/int[2]");
 
 		obj.deviation = nil;
@@ -640,11 +659,15 @@ else
 	},
 	get_heading : func {
 		var n = me.Heading.getValue();
-		me.BHeading.setValue(n);
+        if (n != nil)
+		    me.BHeading.setValue(n);
 		return n;	},
 	get_bearing : func {
 		var n = me.Bearing.getValue();
-		me.BBearing.setValue(n);
+        if (n != nil)
+        {
+    		me.BBearing.setValue(n);
+        }
 		return n;
 	},
 	set_relative_bearing : func(n) {
@@ -683,8 +706,9 @@ else
 #                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
                 return tgt_pos.distance_to(geo.aircraft_position()) * 0.000539957; # distance in NM
             }
+            return me.Range.getValue();
         }
-		return me.Range.getValue();
+        return 0;
 	},
 	get_horizon : func(own_alt) {
 		var tgt_alt = me.get_altitude();
@@ -696,9 +720,8 @@ else
 			}
 			if ( tgt_alt < 0 ) { tgt_alt = 0.001 }
 			return radardist.radar_horizon( own_alt, tgt_alt );
-		} else {
-			return(0);
 		}
+			return(0);
 	},
 	check_carrier_type : func {
 		var type = "none";
@@ -743,6 +766,13 @@ else
 	set_rounded_alt : func(n) {
 		me.RoundedAlt.setValue(n);
 	},
+    get_TAS: func(){
+        if (me.TAS != nil)
+        {
+            return me.TAS.getValue();
+        }
+        return 0;
+    },
 	get_closure_rate : func() {
         #
         # calc closure using trig as the elapsed time method is not really accurate enough and jitters considerably

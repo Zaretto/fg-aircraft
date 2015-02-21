@@ -1,3 +1,11 @@
+#
+# F-15 Main Nasal Module 
+# ---------------------------
+# Declares globals; provides update loop 
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
+#
+
 ## Global constants ##
 var true = 1;
 var false = 0;

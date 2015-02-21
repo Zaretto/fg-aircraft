@@ -1,3 +1,7 @@
+#
+# F-15 AIM Missile
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
 
 
 var AcModel        = props.globals.getNode("sim/model/f15");
@@ -6,7 +10,7 @@ var OurRoll        = props.globals.getNode("orientation/roll-deg");
 var OurPitch       = props.globals.getNode("orientation/pitch-deg");
 var HudReticleDev  = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/hud/reticle-total-deviation", 1);
 var HudReticleDeg  = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/hud/reticle-total-angle", 1);
-var aim_9_model    = "Aircraft/f15/Models/Stores/aim-9/aim-9-";
+var aim_9_model    = "Models/Stores/aim-9/aim-9-";
 var SwSoundOnOff   = AcModel.getNode("systems/armament/aim9/sound-on-off");
 var SwSoundVol     = AcModel.getNode("systems/armament/aim9/sound-volume");
 var vol_search     = 0.12;

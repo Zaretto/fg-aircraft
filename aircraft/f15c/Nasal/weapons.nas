@@ -1,9 +1,14 @@
+# F-15 Weapons system
+# ---------------------------
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
+# ---------------------------
+
 var AcModel = props.globals.getNode("sim/model/f15");
 var SwCoolOffLight   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var MslPrepOffLight  = AcModel.getNode("controls/armament/acm-panel-lights/msl-prep-off-light");
 var StickSelector    = AcModel.getNode("controls/armament/stick-selector");
 var ArmSwitch        = AcModel.getNode("controls/armament/master-arm-switch");
-var ArmLever         = AcModel.getNode("controls/armament/master-arm-lever");
 var GrSwitch         = AcModel.getNode("controls/armament/gun-rate-switch");
 var SysRunning       = AcModel.getNode("systems/armament/system-running");
 var GunRunning       = AcModel.getNode("systems/gun/running");
@@ -24,14 +29,13 @@ var aim9_count = 0;
 Current_aim9   = nil;
 
 
-aircraft.data.add( StickSelector, ArmLever, ArmSwitch );
+aircraft.data.add( StickSelector, ArmSwitch );
 
 
 # Init
 var weapons_init = func() {
 	print("Initializing f15 weapons system");
-	ArmSwitch.setValue(1);
-	ArmLever.setBoolValue(0);
+	ArmSwitch.setValue(0);
 	system_stop();
 	SysRunning.setBoolValue(0);
 	update_gun_ready();
@@ -51,6 +55,7 @@ var weapons_init = func() {
 		}
 	}, 0, 1);
 }
+
 
 
 # Main loop
@@ -152,12 +157,12 @@ var fire_gun = func {
 
 var update_sw_ready = func() {
 	var sw_count = SwCount.getValue();
-	#print("SIDEWINDER: sw_count - 1 = ", sw_count - 1);
+print("SIDEWINDER: sw_count = ", sw_count - 1);
 	if (StickSelector.getValue() == 2 and ArmSwitch.getValue() == 2) {
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
 			var pylon = aim9_seq[sw_count - 1];
-			#print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
-			Current_aim9 = fox2.AIM9.new(pylon.index);
+			print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
+			Current_aim9 = aircraft.AIM9.new(pylon.index);
 		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	
@@ -169,7 +174,7 @@ var update_sw_ready = func() {
 }
 
 var release_aim9 = func() {
-	#print("RELEASE AIM-9 status: ", Current_aim9.status);
+#print("RELEASE AIM-9 status: ", Current_aim9.status);
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
 			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
@@ -196,6 +201,7 @@ var set_status_current_aim9 = func(n) {
 # System start and stop.
 # Timers for weapons system status lights.
 var system_start = func {
+    print("Sustem start");
 	settimer (func { GunRateHighLight.setBoolValue(1); }, 0.3);
 	update_gun_ready();
 	SysRunning.setBoolValue(1);
@@ -209,6 +215,7 @@ var system_start = func {
 	}, 2.5);
 }
 var system_stop = func {
+    print("Sustem stop");
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
 	foreach (var S; Station.list) {
@@ -224,21 +231,24 @@ var system_stop = func {
 
 
 # Controls
-var master_arm_lever_toggle = func {
-	var master_arm_lever = ArmLever.getBoolValue(); # 0 = Closed, 1 = Open.
-	var master_arm_switch = ArmSwitch.getValue();
-	if ( master_arm_lever and master_arm_switch > 1 ) {
-		ArmSwitch.setValue(1);
+setlistener("sim/model/f15/controls/armament/master-arm-switch", func(v)
+{
+    print("Master arm ",v.getValue());
+	var master_arm_lever = 1;
+    var a = v.getValue();
+	var master_arm_switch = ArmSwitch.getValue(); # 2 = On, 1 = Off, 0 = training (not operational yet).
+	if (master_arm_switch)
+    {
+        system_start();
 	}
-	ArmLever.setBoolValue( ! master_arm_lever );
-	if (master_arm_switch == 2) {
-		ArmSwitch.setValue(1);
-		system_stop();
+    else
+    {
+        system_stop();
 	}
-}
+});
 
 var master_arm_switch = func(a) {
-	var master_arm_lever = ArmLever.getBoolValue();
+	var master_arm_lever = 1;
 	var master_arm_switch = ArmSwitch.getValue(); # 2 = On, 1 = Off, 0 = training (not operational yet).
 	if (a == 1) {
 		if (master_arm_switch == 0) {
@@ -259,22 +269,23 @@ var master_arm_switch = func(a) {
 
 var master_arm_cycle = func() {
 	# Keyb. shorcut. Safety lever automaticly set. 
-	var master_arm_lever = ArmLever.getBoolValue();
+	var master_arm_lever = 1;
 	var master_arm_switch = ArmSwitch.getValue();
+print("arm_cycle: master_arm_switch",master_arm_switch);
 	if (master_arm_switch == 0) {
 		# Training --> Off.
 		ArmSwitch.setValue(1);
-		ArmLever.setBoolValue(0);
+#		ArmLever.setBoolValue(0);
 	} elsif (master_arm_switch == 1) {
 		# Off --> 0n.
 		ArmSwitch.setValue(2);
-		ArmLever.setBoolValue(1);
+#		ArmLever.setBoolValue(1);
 		system_start();
 		SysRunning.setBoolValue(1);
 	} elsif (master_arm_switch == 2)  {
 		# Training mode (not operational yet).
 		ArmSwitch.setValue(0);
-		ArmLever.setBoolValue(0);
+#		ArmLever.setBoolValue(0);
 		system_stop();
 		SysRunning.setBoolValue(0);
 	}
@@ -348,6 +359,7 @@ var station_selector = func(n, v) {
 var station_selector_cycle = func() {
 	# Fast selector, selects with one keyb shorcut all AIM-9 or nothing.
 	# Only to choices ATM.
+print("Station selector cycle");
 	var s = 0;
 	var p0 = getprop("sim/model/f15/controls/armament/station-selector[0]");
 	var p7 = getprop("sim/model/f15/controls/armament/station-selector[7]");

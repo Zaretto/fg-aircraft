@@ -1,3 +1,11 @@
+# F-15 General Instrumentation related methods
+# ---------------------------
+# This module is responsible for instrumentation updates; managing the init process (i.e. reposition) has special logic
+# for carrier takeoff (the F-15 can't do this in real life; but carriers are still fun so I'm leaving carrier support in the F-15)
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
+# ---------------------------
+
 var UPDATE_PERIOD = 0.05;
 var main_loop_launched = 0; # Used to avoid to start the main loop twice.
 
@@ -757,11 +765,11 @@ var common_init = func {
 # Init ####################
 var init = func {
 	print("Initializing f15 Systems");
-#	ext_loads_init();
+	ext_loads_init();
 	init_fuel_system();
 	aircraft.data.load();
 #	f15_net.mp_network_init(1);
-#	weapons_init();
+	weapons_init();
 	ticker.setDoubleValue(0);
 	local_mag_deviation();
 	tacan_switch_init();
@@ -778,7 +786,7 @@ var init = func {
     common_init();
     if ( ! main_loop_launched ) {
         settimer(main_loop, 0.5);
-#        settimer(external_load_loop, 3);
+        settimer(external_load_loop, 3);
         main_loop_launched = 1;
     }
 }

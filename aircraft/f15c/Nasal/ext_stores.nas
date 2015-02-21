@@ -1,3 +1,10 @@
+#
+# F-15 External stores 
+# ---------------------------
+# Manages the external stores; pylons etc.
+# ---------------------------
+# Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
+
 var ExtTanks = props.globals.getNode("sim/model/f15/systems/external-loads/external-tanks");
 var WeaponsSet = props.globals.getNode("sim/model/f15/systems/external-loads/external-load-set");
 var WeaponsWeight = props.globals.getNode("sim/model/f15/systems/external-loads/weapons-weight", 1);
@@ -28,11 +35,7 @@ var ext_loads_init = func() {
 	S7 = Station.new(7, 6);
 	S8 = Station.new(8, 7);
 	S9 = Station.new(9, 7);
-# Remap the menu item "Equipment > Fuel & Payload" to the f15 dialog
-# This is also on "Tomcat Controls > Fuel & Stores".
-#	gui.menuEnable("fuel-and-payload", false);
-    gui.menuBind("fuel-and-payload", "aircraft.ext_loads_dlg.open()");
-    gui.menuEnable("fuel-and-payload", 1);
+
 	foreach (var S; Station.list) {
 		S.set_type(S.get_type()); # initialize bcode.
 	}
@@ -201,7 +204,7 @@ var update_wpstring = func {
 	b_wpstring = b_wpstring ~ bits.string(b_set,3);
 	# Send the bits string as INT over MP.
 	var b_stores = bits.value(b_wpstring);
-	send_wps_state(b_stores);
+	f15_net.send_wps_state(b_stores);
 }
 
 # Emergency jettison:

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <path>puff-nuzzle.ac</path>
+
+  <animation>
+    <type>billboard</type>
+    <spherical>true</spherical>
+  </animation>
+
+  <animation>
+    <type>scale</type>
+    <object-name>puff</object-name>
+    <use-personality>true</use-personality>
+    <property>sim/time/elapsed-sec</property>
+    <factor>0.5</factor>
+    <x-min>3</x-min>
+    <y-min>3</y-min>
+    <z-min>3</z-min>
+    <x-factor>25</x-factor>
+    <y-factor>25</y-factor>
+    <z-factor>25</z-factor>
+  </animation>
+
+  <animation>
+    <type>blend</type>
+    <object-name>puff</object-name>
+    <use-personality>true</use-personality>
+    <property>sim/time/elapsed-sec</property>
+    <factor>0.15</factor>
+    <offset>0</offset>
+    <min>0.1</min>
+    <max>1</max>
+  </animation>
+</PropertyList>

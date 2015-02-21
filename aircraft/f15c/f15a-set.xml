@@ -655,17 +655,46 @@
             </redout>
         </rendering>
 
+		<submodels>
+			<serviceable>true</serviceable>
+			<path>submodels.xml</path>
+		</submodels>
         <menubar>
             <default>
                 <menu n="50">
                     <label>F-15 Eagle </label>
-                    <item n="2">
-                        <label>Select Livery</label>
-                        <binding>
-                            <command>nasal</command>
-                            <script>aircraft.livery.dialog.toggle()</script>
-                        </binding>
-                    </item>
+					<item n="0">
+						<label>Repair Airframe</label>
+						<binding>
+							<command>nasal</command>
+							<script>aircraft.fixAirframe();</script>
+						</binding>
+					</item>
+					<item n="1">
+						<label>Fuel and Stores</label>
+							<binding>
+							<command>nasal</command>
+							<script>aircraft.ext_loads_dlg.open()</script>
+						</binding>
+					</item>
+					<item n="2">
+						<label>Select Livery</label>
+						<binding>
+							<command>nasal</command>
+							<script>aircraft.livery.dialog.toggle()</script>
+						</binding>
+					</item>
+<!--
+					<item n="4">
+						<label>Select MP back seater</label>
+						<binding>
+							<command>nasal</command>
+							<script>
+								dual_control_tools.copilot_dialog.show(aircraft_dual_control.copilot_type);
+							</script>
+						</binding>
+					</item>
+-->
                     <item n="6">
                         <label>Quickstart</label>
                         <binding>
@@ -1225,7 +1254,7 @@ else
 				<desc>Cycle Stick Weapon Mode Selector</desc>
 				<binding>
 					<command>property-adjust</command>
-					<property>sim/model/f-14b/controls/armament/stick-selector</property>
+					<property>sim/model/f15/controls/armament/stick-selector</property>
 					<step>1</step>
 					<min>0</min>
 					<max>4</max>
@@ -1306,9 +1335,7 @@ else
         <dual_control>
             <file>Aircraft/Generic/DualControl/pilot-dual-control.nas</file>
         </dual_control>
-        <f15_net>
-            <file>Aircraft/f15c/Nasal/mp-network.nas</file>
-        </f15_net>-->
+        -->
         <!--<an_arc_182v>
             <file>Aircraft/f15c/Nasal/an-arc-182v.nas</file>
         </an_arc_182v>
@@ -1318,6 +1345,9 @@ else
 		<f15_chronograph>
             <file>Aircraft/f15c/Nasal/chronograph.nas</file>
 		</f15_chronograph>
+        <f15_net>
+            <file>Aircraft/f15c/Nasal/mp-network.nas</file>
+        </f15_net>
         <aircraft>
             <file>Aircraft/f15c/Nasal/liveries.nas</file>
             <file>Aircraft/f15c/Nasal/aircraft-main.nas</file>
@@ -1329,18 +1359,21 @@ else
             <file>Aircraft/f15c/Nasal/engines.nas</file>
             <file>Aircraft/f15c/Nasal/spoilers.nas</file>
             <file>Aircraft/f15c/Nasal/adverse.nas</file>
-            <!--<file>Aircraft/f15c/Nasal/ext_stores.nas</file>-->
             <file>Aircraft/f15c/Nasal/fuel-system.nas</file>
-            <!--<file>Aircraft/f15c/Nasal/weapons.nas</file>-->
             <file>Aircraft/f15c/Nasal/electrics.nas</file>
             <file>Aircraft/f15c/Nasal/instruments.nas</file>
             <file>Aircraft/f15c/Nasal/afcs.nas</file>
-            <!--<file>Aircraft/f15c/Nasal/fox2.nas</file>-->
+            <file>Aircraft/f15c/Nasal/fox2.nas</file>
             <file>Nasal/HUD/HUD_main.nas</file>
             <file>Nasal/VSD/VSD_main.nas</file>
             <file>Nasal/TEWS/TEWS_main.nas</file>
             <file>Nasal/MPCD/MPCD_main.nas</file>
+            <file>Aircraft/f15c/Nasal/weapons.nas</file>
+            <file>Aircraft/f15c/Nasal/ext_stores.nas</file>
         </aircraft>
+		<environment>
+			<file>Nasal/environment.nas</file>
+		</environment>
     </nasal>
 
 </PropertyList>
