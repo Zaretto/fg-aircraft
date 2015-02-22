@@ -202,12 +202,12 @@
         </summer>
         <pure_gain name="fcs/rudder-command-sum">
             <input>fcs/rudder-command-raw-sum</input>
-            <gain>systems/cadc/pitch-ratio</gain>
+            <gain>systems/cadc/rudder-effectivity</gain>
         </pure_gain >
 
         <summer name="Rudder Sum">
             <input>fcs/rudder-command-sum</input>
-            <input>fcs/yaw-damper-rate</input>
+            <input>fcs/yaw-damper-dmd</input>
             <clipto>
                 <min> -1.1 </min>
                 <max>  1.1 </max>

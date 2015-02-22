@@ -80,9 +80,24 @@
             <output>metrics/aero-rp-x-in</output>
         </fcs_function>
 
+        <fcs_function name="systems/cadc/rudder-effectivity">
+            <function>
+                <description>High speed CADC control effectivity limitation of rudder</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            0.00  1.0
+                            800 0.4
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+
         <fcs_function name="systems/cadc/pitch-ratio-dmd">
             <function>
-                <description>High speeds CADC control effectivity limitation of rudder and elevator</description>
+                <description>High speed CADC control effectivity limitation of elevator</description>
                 <!--<sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
@@ -240,6 +255,16 @@
 
     </channel>
     <channel name="SAS">
+        <switch name="fcs/roll-sas-active">
+            <default value="0.0"/>
+            <test logic="AND" value="1">
+                aero/alpha-rad ge -0.175438596491228
+                aero/alpha-rad le  0.2631578947368421
+                fcs/roll-sas-enable ne 0.0
+            </test>
+            <output>fcs/roll-sas-active</output>
+        </switch>
+
         <!-- yaw damper only active when in range alpha +/10 deg -->
         <switch name="fcs/yaw-damper-active">
             <default value="0.0"/>
@@ -251,16 +276,37 @@
             <output>fcs/yaw-damper-active</output>
         </switch>
 
-        <switch name="fcs/roll-sas-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                aero/alpha-rad ge -0.175438596491228
-                aero/alpha-rad le  0.2631578947368421
-                fcs/roll-sas-enable ne 0.0
-            </test>
-            <output>fcs/roll-sas-active</output>
-        </switch>
-        <scheduled_gain name="Yaw Damper Rate">
+        <scheduled_gain name="fcs/yaw-damper-rate">
+            <input>velocities/r-aero-rad_sec</input>
+            <table>
+                <independentVar>aero/qbar-psf</independentVar>
+                <tableData>
+                    3.0000	0.0000
+                    11.0000	3.6251
+                </tableData>
+            </table>
+        </scheduled_gain>
+
+        <summer name="fcs/yaw-damper-sum">
+            <input>fcs/yaw-damper-rate</input>
+            <clipto>
+                <min>-0.2000</min>
+                <max>0.2000</max>
+            </clipto>
+        </summer>
+
+        <scheduled_gain name="fcs/yaw-damper-dmd">
+            <input>fcs/yaw-damper-sum</input>
+            <table>
+                <independentVar>aero/qbar-psf</independentVar>
+                <tableData>
+                    2.9900	0.0000
+                    3.0000	1.0000
+                </tableData>
+            </table>
+            <gain>fcs/yaw-damper-active</gain>
+        </scheduled_gain>
+        <!--<scheduled_gain name="Yaw Damper Rate">
             <input>velocities/r-aero-rad_sec</input>
             <table>
                 <independentVar lookup="row">velocities/ve-kts</independentVar>
@@ -272,7 +318,7 @@
                 </tableData>
             </table>
             <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>
+        </scheduled_gain>-->
 
         <switch name="fcs/pitch-damper-active">
             <default value="0.0"/>
