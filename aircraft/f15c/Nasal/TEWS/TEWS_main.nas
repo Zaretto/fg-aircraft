@@ -101,6 +101,16 @@ var TEWSSymbol = {
     list: [],
 };
 
+var tews_on = 1;
+setlistener("sim/model/f15/controls/TEWS/brightness", func(v)
+            {
+                if (v != nil)
+                {
+                    var tews_on = v.getValue();
+                    print("TEWS On ",tews_on);
+                }
+            });
+
 var max_symbols = 10;
 var tews_alignment_offset = -90;
 for (var i = 0; i < max_symbols; i += 1)
@@ -111,6 +121,8 @@ for (var i = 0; i < max_symbols; i += 1)
 
 var updateTEWS = func ()
 {  
+if(!tews_on)
+return;
     var 	heading = getprop("/orientation/heading-deg");
     var target_idx = 0;
     var radar_range = getprop("instrumentation/radar/radar2-range");

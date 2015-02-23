@@ -37,7 +37,121 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
+            <greater-than>
+                <property>sim/model/f15/controls/VDI/brightness</property>
+                <value>0</value>
+            </greater-than>
         </condition>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-brt</object-name>
+        <property>sim/model/f15/controls/VDI/brightness</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6181</x-m>
+            <y-m>-0.2617</y-m>
+            <z-m>1.0712</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VDI/brightness</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-contrast</object-name>
+        <property>sim/model/f15/controls/VDI/contrast</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6181</x-m>
+            <y-m>-0.2623</y-m>
+            <z-m>1.0709</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VDI/contrast</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-radar</object-name>
+        <property>sim/model/f15/controls/VDI/radar</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6181</x-m>
+            <y-m>-0.2623</y-m>
+            <z-m>1.1151</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VDI/radar</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-sym-brt</object-name>
+        <property>sim/model/f15/controls/VDI/symbol-brightness</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6035</x-m>
+            <y-m>-0.2626</y-m>
+            <z-m>1.1148</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VDI/symbol-brightness</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
     </animation>
 
     <!-- *** LoD *** -->

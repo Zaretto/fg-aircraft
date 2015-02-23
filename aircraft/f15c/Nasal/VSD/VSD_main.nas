@@ -74,11 +74,24 @@ for (var i = 0; i < max_symbols; i += 1)
     }
 }
 
+var vsd_on = 1;
+setlistener("sim/model/f15/controls/VDI/brightness", func(v)
+            {
+                if (v != nil)
+                {
+                    var vsd_on = v.getValue();
+                    print("VSD On ",vsd_on);
+                }
+            });
+
 var horizon_line = VSDsvg.getElementById("horizon_line");
 var nofire_cross =  VSDsvg.getElementById("nofire_cross");
 var target_circle = VSDsvg.getElementById("target_circle");
 var updateVSD = func ()
 {  
+if(!vsd_on)
+return;
+
     var 	pitch = getprop("orientation/pitch-deg");
     var 	roll = getprop("orientation/roll-deg");
     var 	roll = getprop("orientation/roll-deg");
