@@ -125,13 +125,14 @@ var position_flash_init  = func {
 
 
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
-var cnpy = aircraft.door.new("canopy", 3.9);
+# Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25 (about 5 seconds)
+var cnpy = aircraft.door.new("canopy", 5);
 var pos = props.globals.getNode("canopy/position-norm");
 
 
 setlistener("sim/model/f15/controls/canopy/canopy-switch", func(prop) {
 	var v = prop.getValue();
-	if (v)
+	if (!v)
 	{
 		cnpy.close();
 	}
