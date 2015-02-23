@@ -37,16 +37,24 @@
 				<layout>hbox</layout>
 
 				<text>
-					<label>External Fuel Tanks:</label>
+					<label>Centre External Tank</label>
 				</text>
 
 				<checkbox>
-					<property>sim/model/f15/systems/external-loads/external-tanks</property>
+					<property>sim/model/f15/systems/external-loads/external-centre-tank</property>
 					<live>true</live>
-					<binding>
-						<command>nasal</command>
-						<script>aircraft.toggle_ext_tank_selected()</script>
-					</binding>
+				</checkbox>
+			</group>
+			<group>
+				<layout>hbox</layout>
+
+				<text>
+					<label>External Wing Tanks</label>
+				</text>
+
+				<checkbox>
+					<property>sim/model/f15/systems/external-loads/external-wing-tanks</property>
+					<live>true</live>
 				</checkbox>
 			</group>
 
@@ -69,7 +77,7 @@
           <legend>Full</legend>
           <binding>
             <command>nasal</command>
-            <script>aircraft.set_fuel(22000)</script> <!-- more than can be held will just be ignored by the set_fuel logic -->
+            <script>aircraft.set_fuel(28000)</script> <!-- more than can be held will just be ignored by the set_fuel logic -->
           </binding>
         </button>
         <button>
@@ -104,46 +112,66 @@
 						<label>Tank</label>
 					</text>
 					<text>
+                        <halign>left</halign>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[0]/name</property>
+                    </text>
+                    <text>
 						<halign>left</halign>
-						<label>L External</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[1]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>R External</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[2]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>L Wing</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[3]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>R Wing</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[4]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>FWD fuselage</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[5]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>AFT Fuselage</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[6]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>L Beam Box</label>
-					</text>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[7]/name</property>
+                    </text>
 					<text>
 						<halign>left</halign>
-						<label>R Beam Box</label>
-					</text>
-					<text>
-						<halign>left</halign>
-						<label>L Sump</label>
-					</text>
-					<text>
-						<halign>left</halign>
-						<label>R Sump</label>
-					</text>
-				</group>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[8]/name</property>
+                    </text>
+                    <text>
+                        <halign>left</halign>
+                        <label>xxxxxxxxxxxxxx</label>
+                        <live>true</live>
+                        <property>consumables/fuel/tank[9]/name</property>
+                    </text>
+                </group>
 				<group> <!-- Sliders -->
 					<layout>vbox</layout>
 					<halign>right</halign>
@@ -152,7 +180,7 @@
 					</text>
 					<slider>
 						<name>LExternal</name>
-						<property>/consumables/fuel/tank[8]/level-gal_us</property>
+						<property>/consumables/fuel/tank[0]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>267.857</max>
@@ -163,7 +191,7 @@
 					</slider>
 					<slider>
 						<name>RExternal</name>
-						<property>/consumables/fuel/tank[9]/level-gal_us</property>
+						<property>/consumables/fuel/tank[1]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>267.857</max>
@@ -174,7 +202,7 @@
 					</slider>
 					<slider>
 						<name>LWing</name>
-						<property>/consumables/fuel/tank[6]/level-gal_us</property>
+						<property>/consumables/fuel/tank[2]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>297.619</max>
@@ -185,7 +213,7 @@
 					</slider>
 					<slider>
 						<name>RWing</name>
-						<property>/consumables/fuel/tank[7]/level-gal_us</property>
+						<property>/consumables/fuel/tank[3]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>297.619</max>
@@ -196,7 +224,7 @@
 					</slider>
 					<slider>
 						<name>FWDfuselage</name>
-						<property>/consumables/fuel/tank[0]/level-gal_us</property>
+						<property>/consumables/fuel/tank[4]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>699.405</max>
@@ -207,7 +235,7 @@
 					</slider>
 					<slider>
 						<name>AFTFuselage</name>
-						<property>/consumables/fuel/tank[1]/level-gal_us</property>
+						<property>/consumables/fuel/tank[5]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>654.762</max>
@@ -218,7 +246,7 @@
 					</slider>
 					<slider>
 						<name>LBeamBox</name>
-						<property>/consumables/fuel/tank[2]/level-gal_us</property>
+						<property>/consumables/fuel/tank[6]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>186.012</max>
@@ -229,7 +257,7 @@
 					</slider>
 					<slider>
 						<name>RBeamBox</name>
-						<property>/consumables/fuel/tank[4]/level-gal_us</property>
+						<property>/consumables/fuel/tank[7]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>186.012</max>
@@ -240,7 +268,7 @@
 					</slider>
 					<slider>
 						<name>LSump</name>
-						<property>/consumables/fuel/tank[3]/level-gal_us</property>
+						<property>/consumables/fuel/tank[8]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>44.643</max>
@@ -249,18 +277,18 @@
 							<object-name>LSump</object-name>
 						</binding>
 					</slider>
-					<slider>
-						<name>RSump</name>
-						<property>/consumables/fuel/tank[5]/level-gal_us</property>
-						<live>1</live>
-						<min>0</min>
-						<max>44.643</max>
-						<binding>
-							<command>dialog-apply</command>
-							<object-name>RSump</object-name>
-						</binding>
-					</slider>
-				</group>
+                    <slider>
+                        <name>RSump</name>
+                        <property>/consumables/fuel/tank[9]/level-gal_us</property>
+                        <live>1</live>
+                        <min>0</min>
+                        <max>44.643</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                            <object-name>RSump</object-name>
+                        </binding>
+                    </slider>
+                </group>
 				<group> <!-- Level Lbs -->
 					<layout>vbox</layout>
 					<halign>right</halign>
@@ -271,73 +299,73 @@
 						<halign>right</halign>
 						<label>xxxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[8]/level-lbs</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[9]/level-lbs</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[6]/level-lbs</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[7]/level-lbs</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[0]/level-lbs</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[1]/level-lbs</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[2]/level-lbs</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[4]/level-lbs</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[3]/level-lbs</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[4]/level-lbs</property>
+					</text>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[5]/level-lbs</property>
 					</text>
-				</group>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[6]/level-lbs</property>
+					</text>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[7]/level-lbs</property>
+					</text>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[8]/level-lbs</property>
+					</text>
+                    <text>
+                        <halign>right</halign>
+                        <label>xxxxxxxx</label>
+                        <live>true</live>
+                        <format>%.1f</format>
+                        <property>/consumables/fuel/tank[9]/level-lbs</property>
+                    </text>
+                </group>
 				<group> <!-- Level Gallons -->
 					<layout>vbox</layout>
 					<halign>right</halign>
@@ -348,78 +376,77 @@
 						<halign>right</halign>
 						<label>xxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[8]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[9]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[6]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[7]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[0]/level-gal_us</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[1]/level-gal_us</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[2]/level-gal_us</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[4]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[3]/level-gal_us</property>
 					</text>
 					<text>
 						<halign>right</halign>
 						<label>xxxxxxx</label>
 						<live>true</live>
-						<format>%.3f</format>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[4]/level-gal_us</property>
+					</text>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
 						<property>/consumables/fuel/tank[5]/level-gal_us</property>
 					</text>
-				</group>
-
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[6]/level-gal_us</property>
+					</text>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[7]/level-gal_us</property>
+					</text>
+					<text>
+						<halign>right</halign>
+						<label>xxxxxxx</label>
+						<live>true</live>
+						<format>%.1f</format>
+						<property>/consumables/fuel/tank[8]/level-gal_us</property>
+					</text>
+                    <text>
+                        <halign>right</halign>
+                        <label>xxxxxxx</label>
+                        <live>true</live>
+                        <format>%.1f</format>
+                        <property>/consumables/fuel/tank[9]/level-gal_us</property>
+                    </text>
+                </group>
 			</group>
 
 			<empty>
-				<pref-height>86</pref-height>
+				<pref-height>96</pref-height>
 			</empty>
 
 		</group>
@@ -457,8 +484,36 @@
 			</empty>
 
 			<hrule/>
+            <group>
+                <!-- Weapons Sets -->
+                <layout>vbox</layout>
+                <height>300</height>
+                <valign>center</valign>
+                <default-padding>1</default-padding>
+                <combo>
+                    <pref-width>200</pref-width>
+                    <property>/sim/model/f15/systems/external-loads/external-load-set</property>
+                    <value>Clean</value>
+                    <value>Close Air Support</value>
+                    <value>Interceptor</value>
+                    <binding>
+                        <command>dialog-apply</command>
+                    </binding>
+                </combo>
+                <button>
+                    <legend>Reload gun</legend>
+                    <equal>true</equal>
+                    <binding>
+                        <command>nasal</command>
+                        <script>
+                            setprop("/ai/submodels/submodel[3]/count",135);
+                            setprop("/sim/model/f15/systems/gun/rounds",675);
+                        </script>
+                    </binding>
+                </button>
+            </group>
 
-			<empty>
+            <empty>
 				<pref-height>12</pref-height>
 			</empty>
 
@@ -476,7 +531,7 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[0]/type</property>
+							<property>payload/weight[0]/selected</property>
 						</text>
 					</group>
 					<group>
@@ -488,8 +543,8 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[1]/type</property>
-						</text>
+                            <property>payload/weight[1]/selected</property>
+                        </text>
 					</group>
 					<group>
 						<layout>hbox</layout>
@@ -500,8 +555,8 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[2]/type</property>
-						</text>
+                            <property>payload/weight[2]/selected</property>
+                        </text>
 					</group>
 					<group>
 						<layout>hbox</layout>
@@ -512,8 +567,8 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[3]/type</property>
-						</text>
+                            <property>payload/weight[3]/selected</property>
+                        </text>
 					</group>
 					<group>
 						<layout>hbox</layout>
@@ -524,8 +579,8 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[4]/type</property>
-						</text>
+                            <property>payload/weight[4]/selected</property>
+                        </text>
 					</group>
 					<group>
 						<layout>hbox</layout>
@@ -536,8 +591,8 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[5]/type</property>
-						</text>
+                            <property>payload/weight[5]/selected</property>
+                        </text>
 					</group>
 					<group>
 						<layout>hbox</layout>
@@ -548,8 +603,8 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[6]/type</property>
-						</text>
+                            <property>payload/weight[6]/selected</property>
+                        </text>
 					</group>
 					<group>
 						<layout>hbox</layout>
@@ -560,95 +615,50 @@
 						<text>
 							<label>xxxxxxxxxxxxxx</label>
 							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[7]/type</property>
-						</text>
+                            <property>payload/weight[7]/selected</property>
+                        </text>
 					</group>
-					<group>
-						<layout>hbox</layout>
-						<default-padding>0</default-padding>
-						<text>
-							<label>S8 : </label>
-						</text>
-						<text>
-							<label>xxxxxxxxxxxxxx</label>
-							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[8]/type</property>
-						</text>
-					</group>
-					<group>
-						<layout>hbox</layout>
-						<default-padding>0</default-padding>
-						<text>
-							<label>S9 : </label>
-						</text>
-						<text>
-							<label>xxxxxxxxxxxxxx</label>
-							<live>true</live>
-							<property>sim/model/f15/systems/external-loads/station[9]/type</property>
-						</text>
-					</group>
-				</group>
-
-				<group> <!-- Weapons Sets -->
-					<layout>vbox</layout>
-					<height>300</height>
-					<valign>center</valign>
-					<default-padding>1</default-padding>
-                    <button>
-                        <legend>Reload gun</legend>
-                        <equal>true</equal>
-                        <binding>
-                            <command>nasal</command>
-                            <script>
-                                setprop("/ai/submodels/submodel[3]/count",135);
-                                setprop("/sim/model/f15/systems/gun/rounds",675);
-                            </script>
-                        </binding>
-                    </button>
-                    <button>
-						<legend>Clean</legend>
-						<equal>true</equal>
-						<binding>
-							<command>nasal</command>
-							<script>aircraft.ext_loads_set("Clean")</script>
-						</binding>
-					</button>
-					<button>
-						<legend>FAD</legend>
-						<equal>true</equal>
-						<binding>
-							<command>nasal</command>
-							<script>aircraft.ext_loads_set("FAD")</script>
-						</binding>
-					</button>
-					<button>
-						<legend>FAD light</legend>
-						<equal>true</equal>
-						<binding>
-							<command>nasal</command>
-							<script>aircraft.ext_loads_set("FAD light")</script>
-						</binding>
-					</button>
-					<button>
-						<legend>FAD heavy</legend>
-						<equal>true</equal>
-						<binding>
-							<command>nasal</command>
-							<script>aircraft.ext_loads_set("FAD heavy")</script>
-						</binding>
-                    </button>
-                    <button>
-                        <legend>Bombcat</legend>
-                        <equal>true</equal>
-                        <binding>
-                            <command>nasal</command>
-                            <script>aircraft.ext_loads_set("Bombcat")</script>
-                        </binding>
-                    </button>
+                    <group>
+                        <layout>hbox</layout>
+                        <default-padding>0</default-padding>
+                        <text>
+                            <label>S8 : </label>
+                        </text>
+                        <text>
+                            <label>xxxxxxxxxxxxxx</label>
+                            <live>true</live>
+                            <property>payload/weight[8]/selected</property>
+                        </text>
+                    </group>
+                    <group>
+                        <layout>hbox</layout>
+                        <default-padding>0</default-padding>
+                        <text>
+                            <label>S9 : </label>
+                        </text>
+                        <text>
+                            <label>xxxxxxxxxxxxxx</label>
+                            <live>true</live>
+                            <property>payload/weight[9]/selected</property>
+                        </text>
+                    </group>
+                    <group>
+                        <layout>hbox</layout>
+                        <default-padding>0</default-padding>
+                        <text>
+                            <label>S10 : </label>
+                        </text>
+                        <text>
+                            <label>xxxxxxxxxxxxxx</label>
+                            <live>true</live>
+                            <property>payload/weight[10]/selected</property>
+                        </text>
+                    </group>
                 </group>
+
             </group>
 
-			<group>
+            <!--<group>
 				<layout>hbox</layout>
 
 				<text>
@@ -662,10 +672,9 @@
 						<command>property-toggle</command>
 						<property>sim/model/f15/systems/armament/mp-messaging</property>
 					</binding>
-				</checkbox>
-
-			</group>
-			<group>
+				</checkbox>-->
+			<!--</group>-->
+			<!--<group>
 				<layout>hbox</layout>
 
 				<text>
@@ -683,7 +692,7 @@
 				<text>
 					<label>KSFO.</label>
 				</text>
-			</group>
+			</group>-->
 
             
 
@@ -709,7 +718,7 @@
 				<text>
 					<label>xxxxxxxxxxxxxxxxxx</label>
 					<live>true</live>
-					<format>%.0f</format>
+					<format>%.1f</format>
 					<property>sim/model/f15/systems/external-loads/weapons-weight</property>
 				</text>
 			</group>
@@ -725,7 +734,7 @@
 				<text>
 					<label>xxxxxxxxxxxxxxxxxx</label>
 					<live>true</live>
-					<format>%.0f</format>
+					<format>%.1f</format>
 					<property>sim/model/f15/systems/external-loads/pylons-weight</property>
 				</text>
 			</group>
@@ -741,7 +750,7 @@
 				<text>
 					<label>xxxxxxxxxxxxxxxxxx</label>
 					<live>true</live>
-					<format>%.0f</format>
+					<format>%.1f</format>
 					<property>sim/model/f15/instrumentation/fuel-gauges/total</property>
 				</text>
 			</group>
@@ -787,7 +796,7 @@
 				<text>
 					<label>xxxxxxxxxxxxxxxxxx</label>
 					<live>true</live>
-					<format>%.0f</format>
+					<format>%.1f</format>
 					<property>fdm/jsbsim/inertia/weight-lbs</property>
 <!-- yasim/gross-weight-lbs -->
 				</text>

@@ -312,7 +312,17 @@
 						<contrast type="double">0.6</contrast>
 						<on-off type="bool">0</on-off>
 					</VDI>
-				</controls>
+                    <MPCD>
+                        <brightness type="double">1</brightness>
+                        <contrast type="double">0.6</contrast>
+                        <on-off type="bool">0</on-off>
+                    </MPCD>
+                    <TEWS>
+                        <brightness type="double">1</brightness>
+                        <contrast type="double">0.6</contrast>
+                        <on-off type="bool">0</on-off>
+                    </TEWS>
+                </controls>
 				<fx>
 					<burner type="int">0</burner>
 					<heat-blur-on type="bool">false</heat-blur-on>
@@ -842,41 +852,194 @@
         <instrumentation>
             <path>Aircraft/f15c/Systems/instrumentation.xml</path>
         </instrumentation>
-
-        <weight n="0">
-            <name>left wing pylon</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="1">
-            <name>left external tank</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="2">
-            <name>left fwd pylon</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="3">
-            <name>left aft pylon</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="4">
-            <name>right aft pylon</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="5">
-            <name>right fwd pylon</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="6">
-            <name>right external tank</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-        <weight n="7">
-            <name>right wing pylon</name>
-            <weight-lb type="float">0</weight-lb>
-        </weight>
-
     </sim>
+
+    <payload>
+        <weight n="0">
+            <name>Left Wing (Station 2)</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[3]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+        <weight n="1">
+            <name>Left Wing (Station 2)</name>
+            <tank>2</tank>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>Droptank</name>
+                <lbs>271.0</lbs>
+                <gals>600</gals>
+            </opt>
+        </weight>
+
+        <weight n="2">
+            <name>Left Wing (Station 2)</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+
+        <weight n="3">
+            <name>Left Body Station 3</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>345.0</lbs>
+            </opt>
+        </weight>
+
+        <weight n="4">
+            <name>Left Body Station 4</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>345.0</lbs>
+            </opt>
+        </weight>
+
+
+
+        <weight n="5">
+            <name>Center Station 5</name>
+            <tank>3</tank>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>Droptank</name>
+                <lbs>271.0</lbs>
+                <gals>600</gals>
+            </opt>
+
+        </weight>
+
+
+        <weight n="6">
+            <name>Right Body Station 6</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>345.0</lbs>
+            </opt>
+        </weight>
+
+
+        <weight n="7">
+            <name>Right Body Station 7</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>345.0</lbs>
+            </opt>
+        </weight>
+
+
+
+
+        <weight n="8">
+            <name>Right Wing Station 8</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+        <weight n="9">
+            <name>Right Wing Station 8</name>
+            <tank>4</tank>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>Droptank</name>
+                <lbs>271.0</lbs>
+                <gals>600</gals>
+            </opt>
+        </weight>
+
+        <weight n="10">
+            <name>Right Wing Station 8</name>
+            <weight-lb>0</weight-lb>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+    </payload>
 
     <systems>
         <refuel>

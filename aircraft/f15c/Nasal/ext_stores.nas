@@ -44,6 +44,7 @@ var ext_loads_init = func() {
 
 
 var ext_loads_set = func(s) {
+print("ext_loads_set(",s);
 	# Load sets: Clean, FAD, FAD light, FAD heavy, Bombcat
 	# Load set defines which weapons are mounted.
 	# It also defines which pylons are mounted, a pylon may
@@ -259,7 +260,33 @@ var external_load_loop = func() {
 	}
 	settimer(external_load_loop, 10);
 }
+#sim/model/f15/systems/external-loads/external-wing-tanks
+#sim/model/f15/systems/external-loads/external-centre-tank
 
+setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)
+{
+print("External load set ",v.getValue());
+ext_loads_set(v.getValue());
+}
+);
+
+
+for (var payload_item=0; payload_item <= 10; payload_item = payload_item+1)
+{
+setlistener("payload/weight["~payload_item~"]/selected", func(prop){
+var v = prop.getValue();
+if (v == "AIM-9")
+prop.getParent().getNode("weight-lb").setValue(190);
+elsif (v == "AIM-120")
+prop.getParent().getNode("weight-lb").setValue(335);
+elsif (v == "Droptank")
+{
+prop.getParent().getNode("weight-lb").setValue(271);
+}
+else
+prop.getParent().getNode("weight-lb").setValue(0);
+});
+}
 Station = {
 	new : func (number, weight_number){
 		var obj = {parents : [Station] };
