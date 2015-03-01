@@ -708,7 +708,10 @@ else
             }
             return me.Range.getValue();
         }
-        return 0;
+        if (me.Range == nil)
+            return 0;
+        else
+            return me.Range.getValue();
 	},
 	get_horizon : func(own_alt) {
 		var tgt_alt = me.get_altitude();
