@@ -263,6 +263,12 @@ var external_load_loop = func() {
 #sim/model/f15/systems/external-loads/external-wing-tanks
 #sim/model/f15/systems/external-loads/external-centre-tank
 
+setlistener("sim/model/f15/systems/external-loads/external-wing-tanks", func(v)
+{
+setprop("consumables/fuel/tank[5]/selected", v.getValue());
+setprop("consumables/fuel/tank[6]/selected",v.getValue());
+});
+
 setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)
 {
 print("External load set ",v.getValue());
