@@ -44,6 +44,66 @@
             </binding>
         </release>
     </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>anti-fog-switch</object-name>
+        <property>fdm/jsbsim/systems/ecs/anti-fog</property>
+
+        <factor>30</factor>
+        <offset-deg>-30</offset-deg>
+        <center>
+            <x-m>-5.6911</x-m>
+            <y-m>0.5209</y-m>
+            <z-m>0.6712</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/systems/ecs/anti-fog</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>windshield-heat-switch</object-name>
+        <property>fdm/jsbsim/systems/ecs/windshield-heat</property>
+
+        <factor>60</factor>
+        <offset-deg>-30</offset-deg>
+        <center>
+            <x-m>-5.6349</x-m>
+            <y-m>0.4543</y-m>
+            <z-m>0.6767</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/systems/ecs/windshield-heat</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+    </animation>
 
     <animation>
         <name>needle-oxygen-pressure</name>
