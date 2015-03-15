@@ -22,10 +22,17 @@ var prop_speed = props.globals.getNode("/fdm/jsbsim/velocities/vt-fps");
 var VSDcanvas= canvas.new({
                            "name": "F-15 VSD",
                            "size": [1024,1024], 
-                           "view": [256,256],                       
+                           "view": [276,278],                       
                            "mipmapping": 1     
                           });                          
                           
+#aircraft.VSDcanvas._node.setValues({
+#                           "name": "F-15 VSD",
+#                           "size": [1024,1024], 
+#                           "view": [276,278],                       
+#                           "mipmapping": 1     
+#  });
+#aircraft.VSDsvg.setTranslation(10,5)
 VSDcanvas.addPlacement({"node": "VSDImage"});
 VSDcanvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 1.00);
 
@@ -35,6 +42,7 @@ var VSDsvg = VSDcanvas.createGroup();
 # Parse an SVG file and add the parsed elements to the given group
 print("Parse SVG ",canvas.parsesvg(VSDsvg, "Nasal/VSD/VSD.svg"));
 #VSDsvg.setTranslation (-20.0, 37.0);
+VSDsvg.setTranslation(10,5);
 print("VSD INIT");
  
 var window1 = VSDsvg.getElementById("window-1");
