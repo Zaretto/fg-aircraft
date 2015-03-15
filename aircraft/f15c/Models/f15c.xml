@@ -35,7 +35,28 @@
         </unload>
     </nasal>
 
-
+    <effect>
+        <name>frosty</name>
+        <inherits-from>Effects/glass</inherits-from>
+        <object-name>CanopyGlass</object-name>
+        <object-name>WindscreenGlass</object-name>
+        <parameters>
+        <texture n="2">
+            <image>canopy-mask.png</image>
+            <type>2d</type>
+            <filter>linear-mipmap-linear</filter>
+            <wrap-s>clamp</wrap-s>
+            <wrap-t>clamp</wrap-t>
+            <internal-format>normalized</internal-format>
+        </texture>
+        <use-mask type="int">1</use-mask>
+</parameters>        
+    </effect>
+    <effect>
+        <inherits-from>Effects/model-transparent</inherits-from>
+        <object-name>CanopyGlass</object-name>
+        <object-name>WindscreenGlass</object-name>
+    </effect>
     <animation>
         <type>material</type>
         <object-name>AileronL</object-name>
@@ -43,7 +64,6 @@
         <object-name>Airbrake</object-name>
         <object-name>AirbrakeFilet</object-name>
         <object-name>Canopy</object-name>
-        <object-name>Canopy.001</object-name>
         <object-name>EngineCovers</object-name>
         <object-name>Fin.000</object-name>
         <object-name>FinPodsL.001</object-name>
@@ -106,8 +126,9 @@
     <!-- Canopy -->
     <animation>
         <type>rotate</type>
-        <object-name>Canopy.002</object-name>
         <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <!--<object-name>InsideCanopy</object-name>-->
         <property>canopy/position-norm</property>
         <interpolation>
             <entry>
@@ -133,8 +154,9 @@
     <!-- Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25-->
     <animation>
         <type>translate</type>
-        <object-name>Canopy.002</object-name>
         <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <!--<object-name>InsideCanopy</object-name>-->
         <property>canopy/position-norm</property>
         <interpolation>
             <entry>
@@ -1064,8 +1086,8 @@
         <type>shader</type>
         <shader>chrome</shader>
         <texture>Aircraft/f15c/Models/glass_shader.png</texture>
-        <object-name>Nose Section.003</object-name>
-        <object-name>Canopy.002</object-name>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
     </animation>
 
     <model>
@@ -1538,6 +1560,7 @@
         </offsets>
     </model>-->
     <model>
+        <nopreview/>
         <path>Effects/Engines/AfterburnerL.xml</path>
         <offsets>
             <x-m>  6.3</x-m>
@@ -1549,6 +1572,7 @@
 
     <!-- Droite -->
     <model>
+        <nopreview/>
         <path>Effects/Engines/AfterburnerR.xml</path>
         <offsets>
             <x-m>  6.3</x-m>
@@ -1799,6 +1823,11 @@
         </offsets>
     </model>
 
+    <!--<effect>
+        <name>test-shader</name>
+        <inherits-from>Aircraft/f15c/Models/Effects/f15test</inherits-from>
+        <object-name>shader-test</object-name>
+    </effect>-->
     <model>
         <path>Stores/f15c-stores.xml</path>
         <name>F15-C loadout</name>
