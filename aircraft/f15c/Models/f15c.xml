@@ -34,29 +34,36 @@
             livery_update.stop();
         </unload>
     </nasal>
-
-    <effect>
-        <name>frosty</name>
-        <inherits-from>Effects/glass</inherits-from>
-        <object-name>CanopyGlass</object-name>
-        <object-name>WindscreenGlass</object-name>
-        <parameters>
-        <texture n="2">
-            <image>canopy-mask.png</image>
-            <type>2d</type>
-            <filter>linear-mipmap-linear</filter>
-            <wrap-s>clamp</wrap-s>
-            <wrap-t>clamp</wrap-t>
-            <internal-format>normalized</internal-format>
-        </texture>
-        <use-mask type="int">1</use-mask>
-</parameters>        
-    </effect>
-    <effect>
+    <!--<animation>
+        <type>select</type>
+        <object-name>InsideFrontFuselage</object-name>
+        <condition>
+            <property>sim/current-view/internal</property>
+        </condition>
+    </animation>-->
+    <!--<effect>
         <inherits-from>Effects/model-transparent</inherits-from>
         <object-name>CanopyGlass</object-name>
         <object-name>WindscreenGlass</object-name>
-    </effect>
+    </effect>-->
+    <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </animation>
+    <!-- Uncomment this section for FG 3.5 ALS Glass effects
+    <effect>
+        <name>f15glass</name>
+        <inherits-from>Effects/f15glass</inherits-from>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </effect>-->
+   
     <animation>
         <type>material</type>
         <object-name>AileronL</object-name>
@@ -128,7 +135,7 @@
         <type>rotate</type>
         <object-name>Canopy</object-name>
         <object-name>CanopyGlass</object-name>
-        <!--<object-name>InsideCanopy</object-name>-->
+        <object-name>CanopyGlassInside</object-name>
         <property>canopy/position-norm</property>
         <interpolation>
             <entry>
@@ -156,7 +163,7 @@
         <type>translate</type>
         <object-name>Canopy</object-name>
         <object-name>CanopyGlass</object-name>
-        <!--<object-name>InsideCanopy</object-name>-->
+        <object-name>CanopyGlassInside</object-name>
         <property>canopy/position-norm</property>
         <interpolation>
             <entry>
@@ -1086,7 +1093,7 @@
         <type>shader</type>
         <shader>chrome</shader>
         <texture>Aircraft/f15c/Models/glass_shader.png</texture>
-        <object-name>Canopy</object-name>
+        <object-name>WindscreenGlass</object-name>
         <object-name>CanopyGlass</object-name>
     </animation>
 
@@ -1585,8 +1592,6 @@
         <type>material</type>
         <object-name>AfterburnerL</object-name>
         <object-name>TurbineL</object-name>
-        <object-name>AfterburnerL.001</object-name>
-
         <emission>
             <red>1.0</red>
             <green>0.5</green>
@@ -1598,7 +1603,6 @@
         <type>material</type>
         <object-name>AfterburnerR</object-name>
         <object-name>TurbineR</object-name>
-        <object-name>AfterburnerR.001</object-name>
 
         <emission>
             <red>1.0</red>
