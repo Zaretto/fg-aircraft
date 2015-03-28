@@ -88,7 +88,7 @@
                         <independentVar lookup="row">velocities/vc-kts</independentVar>
                         <tableData>
                             0.00  1.0
-                            800 0.4
+                            800 0.6
                         </tableData>
                     </table>
                 </sum>
@@ -366,7 +366,7 @@
         <switch name="systems/NWS/engaged">
             <default value="0"/>
             <test value="1">
-                gear/unit[0]/wheel-speed-fps le 135
+                gear/unit[0]/wheel-speed-fps le 221
                 systems/hydraulics/combined-system-pressure ne 0
                 position/aircraft-on-ground ne 0
                 systems/holdback/launchbar-engaged eq 0
@@ -380,9 +380,9 @@
                 <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
                 <independentVar lookup="column">systems/NWS/engaged</independentVar>
                 <tableData>
-                    0   1
+                        0   1
                     0   0   87
-                    80  0   45
+                    300 0   0
                 </tableData>
             </table>
             <output>fcs/steer-pos-deg</output>
