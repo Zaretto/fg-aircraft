@@ -24,7 +24,7 @@ var MPCDsvg = MPCDcanvas.createGroup();
 # Parse an SVG file and add the parsed elements to the given group
 print("MPCD : Load SVG ",canvas.parsesvg(MPCDsvg, "Nasal/MPCD/MPCD_0_0.svg"));
 #MPCDsvg.setTranslation (-20.0, 37.0);
-print("MPCD INIT");
+#print("MPCD INIT");
 
 #
 # Menu Id's
@@ -43,7 +43,7 @@ var MPCD_MenuItem = {
         obj.page = page;
         obj.menu_id = menu_id;
         obj.title = title;
-        printf("New MenuItem %s,%s,%s",menu_id, title, page);
+#        printf("New MenuItem %s,%s,%s",menu_id, title, page);
         return obj;
     },
 };
@@ -59,7 +59,7 @@ var MPCD_Page = {
         obj.device = device;
         obj.layer_id = layer_id;
         obj.menus = [];
-        print("Load page ",title);
+#        print("Load page ",title);
         obj.svg = MPCDsvg.getElementById(layer_id);
         if(obj.svg == nil)
             printf("Error loading %s: svg layer %s ",title, layer_id);
@@ -70,13 +70,13 @@ var MPCD_Page = {
     {
         if(me.svg != nil)
             me.svg.setVisible(vis);
-        print("Set visible ",me.layer_id);
+#        print("Set visible ",me.layer_id);
 
         if (vis)
         {
             foreach(mi ;  me.menus)
             {
-                printf("load menu %s %\n",mi.title, mi);
+#                printf("load menu %s %\n",mi.title, mi);
             }
         }
     },
@@ -85,7 +85,7 @@ var MPCD_Page = {
              {
                  if (mi.menu_id == button_id)
                  {
-                     printf("Page: found button %s, selecting page\n",mi.title);
+#                     printf("Page: found button %s, selecting page\n",mi.title);
                      me.device.selectPage(mi.page);
                      break;
                  }
@@ -94,13 +94,13 @@ var MPCD_Page = {
     addMenuItem : func(menu_id, title, page)
 {
         var nm = MPCD_MenuItem.new(menu_id, title, page);
-        printf("New menu %s %s on page ", menu_id, title, page.layer_id);
+#        printf("New menu %s %s on page ", menu_id, title, page.layer_id);
         append(me.menus, nm);
-        printf("Page %s: add menu %s [%s]",me.layer_id, menu_id, title);
-            foreach(mi ; me.menus)
-            {
-                printf("--menu %s",mi.title);
-            }
+#        printf("Page %s: add menu %s [%s]",me.layer_id, menu_id, title);
+#            foreach(mi ; me.menus)
+#            {
+#                printf("--menu %s",mi.title);
+#            }
         return nm;
     },
     update : func
@@ -130,10 +130,10 @@ var MPCD_Device =
                 obj.buttons[idx].setText(sprintf("M",idx));
             }
         }
-        for(var idx = 0; idx < size(obj.buttons); idx += 1)
-        {
-            printf("Button %d %s",idx,obj.buttons[idx]);
-        }
+#        for(var idx = 0; idx < size(obj.buttons); idx += 1)
+#        {
+#            printf("Button %d %s",idx,obj.buttons[idx]);
+#        }
         return obj;
     },
     notifyButton : func(button_id)
@@ -147,7 +147,7 @@ var MPCD_Device =
             button_id = button_id - 1;
             if (me.current_page != nil)
             {
-                printf("Button routing to %s",me.current_page.title);
+#                printf("Button routing to %s",me.current_page.title);
                 me.current_page.notifyButton(button_id);
             }
         }
@@ -176,7 +176,7 @@ var MPCD_Device =
 
             foreach(var mi ; p.menus)
             {
-                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
+#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
                 if (me.buttons[mi.menu_id] != nil)
                 {
                     me.buttons[mi.menu_id].setText(mi.title);
@@ -201,7 +201,7 @@ setlistener("sim/model/f15/controls/MPCD/button-pressed", func(v)
                         mpcd_button_pushed = v.getValue();
                     else
                     {
-                        printf("Button %d",mpcd_button_pushed);
+#                        printf("Button %d",mpcd_button_pushed);
                         MPCD.notifyButton(mpcd_button_pushed);
                         mpcd_button_pushed = 0;
                     }
@@ -213,7 +213,7 @@ setlistener("sim/model/f15/controls/MPCD/mode", func(v)
                 if (v != nil)
                 {
                     var mpcd_mode = v.getValue();
-                    print("MPCD Mode ",mpcd_mode);
+#                    print("MPCD Mode ",mpcd_mode);
 #    if (!mpcd_mode)
 #        MPCDcanvas.setVisible(0);
 #    else

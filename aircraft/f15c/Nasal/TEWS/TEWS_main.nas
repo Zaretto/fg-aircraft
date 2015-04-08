@@ -24,7 +24,7 @@ var TEWSsvg = TEWScanvas.createGroup();
 # Parse an SVG file and add the parsed elements to the given group
 print("TEWS : Load SVG ",canvas.parsesvg(TEWSsvg, "Nasal/TEWS/TEWS.svg"));
 #TEWSsvg.setTranslation (-20.0, 37.0);
-print("TEWS INIT");
+#print("TEWS INIT");
  
 var TEWSSymbol = {
 	new : func (id, svg, base){
@@ -107,7 +107,7 @@ setlistener("sim/model/f15/controls/TEWS/brightness", func(v)
                 if (v != nil)
                 {
                     var tews_on = v.getValue();
-                    print("TEWS On ",tews_on);
+#                    print("TEWS On ",tews_on);
                 }
             });
 
@@ -116,7 +116,7 @@ var tews_alignment_offset = -90;
 for (var i = 0; i < max_symbols; i += 1)
 {
     var ts = TEWSSymbol.new(i, TEWSsvg, "hat");
-    printf("TEWS Sym load: %d: %s %s",i,ts.id, ts.valid);
+#    printf("TEWS Sym load: %d: %s %s",i,ts.id, ts.valid);
 }
 
 var updateTEWS = func ()

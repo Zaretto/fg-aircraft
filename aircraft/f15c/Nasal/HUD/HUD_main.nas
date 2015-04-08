@@ -57,11 +57,11 @@ var F15HUD = {
         obj.svg = obj.canvas.createGroup();
  
 # Parse an SVG file and add the parsed elements to the given group
-        print("Parse SVG ",canvas.parsesvg(obj.svg, svgname));
+        print("HUD Parse SVG ",canvas.parsesvg(obj.svg, svgname));
 
         obj.svg.setTranslation (-20.0, 37.0);
 
-        print("HUD INIT");
+#        print("HUD INIT");
  
         obj.canvas._node.setValues({
                 "name": "F-15 HUD",
@@ -105,7 +105,7 @@ var F15HUD = {
             {
                 obj.tgt_symbols[i] = tgt;
                 tgt.setVisible(0);
-                print("HUD: loaded ",name);
+#                print("HUD: loaded ",name);
             }
             else
                 print("HUD: could not locate ",name);
@@ -145,7 +145,7 @@ var F15HUD = {
                                    tran_rect[2],  # 1 xe
                                    tran_rect[3], # 2 ye
                                    tran_rect[0]); #3 xs
-            print(id," using clip element ",clip_rect, " trans(",tran_rect[0],",",tran_rect[1],"  ",tran_rect[2],",",tran_rect[3],")");
+#            print(id," using clip element ",clip_rect, " trans(",tran_rect[0],",",tran_rect[1],"  ",tran_rect[2],",",tran_rect[3],")");
 #   see line 621 of simgear/canvas/CanvasElement.cxx
 #   not sure why the coordinates are in this order but are top,right,bottom,left (ys, xe, ye, xs)
             el.set("clip", clip_rect);

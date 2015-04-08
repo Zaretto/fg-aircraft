@@ -40,10 +40,9 @@ VSDcanvas.setColorBackground(0.0039215686274509803921568627451,0.176470588235294
 var VSDsvg = VSDcanvas.createGroup();
  
 # Parse an SVG file and add the parsed elements to the given group
-print("Parse SVG ",canvas.parsesvg(VSDsvg, "Nasal/VSD/VSD.svg"));
+print("VSD Init: Parse SVG ",canvas.parsesvg(VSDsvg, "Nasal/VSD/VSD.svg"));
 #VSDsvg.setTranslation (-20.0, 37.0);
 VSDsvg.setTranslation(10,5);
-print("VSD INIT");
  
 var window1 = VSDsvg.getElementById("window-1");
 window1.setFont("condensed.txf").setFontSize(12, 1.2);
@@ -88,7 +87,7 @@ setlistener("sim/model/f15/controls/VDI/brightness", func(v)
                 if (v != nil)
                 {
                     var vsd_on = v.getValue();
-                    print("VSD On ",vsd_on);
+#                    print("VSD On ",vsd_on);
                 }
             });
 
