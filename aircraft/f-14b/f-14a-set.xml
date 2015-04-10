@@ -760,6 +760,7 @@
 				<wings>
 					<left-wing-torn type="bool">false</left-wing-torn>
 					<right-wing-torn type="bool">false</right-wing-torn>
+                    <damage-enabled type="bool">false</damage-enabled>
 				</wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
@@ -1162,6 +1163,7 @@ setprop("/controls/gear/brake-parking",0);
 <binding>
 					<command>nasal</command>
 					<script>
+f14.breakWing();
 if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
 {
 print("Catapult launch");

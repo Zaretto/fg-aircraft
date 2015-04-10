@@ -862,9 +862,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <description>Left wing spoiler deflection</description>
                 <default value="fcs/spoilers-zeropos"/>
 
+                <test value="0">
+                    aero/wing-asymmetry lt  0
+                </test>
+
                 <test value="1">
                     fcs/spoiler-ground-brake-deployed eq 1
                 </test>
+
                 <test value="-fcs/spoiler-differential-pos">
                     fcs/spoiler-differential-pos le 0
                 </test>
@@ -889,6 +894,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <switch name="fcs/spoiler-right-cmd">
                 <description>Right  wing spoiler deflection</description>
                 <default value="fcs/spoilers-zeropos"/>
+
+                <test value="0">
+                    aero/wing-asymmetry gt  0
+                </test>
 
                 <test value="1">
                     fcs/spoiler-ground-brake-deployed eq 1
@@ -1103,6 +1112,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </channel>
 
         <property value="0">fcs/yaw-damper-enable</property>
+        <property value="0">aero/wing-asymmetry</property>
         <property value="0">fcs/pitch-damper-enable</property>
         <property value="0">fcs/roll-sas-enable</property>
         <property value="0">fcs/external-tanks-fitted</property>
@@ -1950,6 +1960,16 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </product>
         </function>
 
+        <function name="aero/coefficients/ClDasym">
+            <description>Delta Cl due to wing asymmetry</description>
+            <product>
+                <property>aero/wing-asymmetry</property> <!-- sqr to remove the sign (value either -1, 0 or 1 -->
+                <property>aero/wing-asymmetry</property>
+                <property>aero/coefficients/ClBAS</property>
+                <value>-0.3</value>
+            </product>
+        </function>
+
         <function name="aero/coefficients/ClUC">
             <description>Cl increment due to gear</description>
             <product>
@@ -2074,6 +2094,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/DClSLM</property>
                 <property>aero/coefficients/ClDSpL</property>
                 <property>aero/coefficients/ClDSpR</property>
+                <property>aero/coefficients/ClDasym</property>
             </sum>
         </function>
         <function name="aero/coefficients/CdUC">
@@ -2341,6 +2362,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </sum>
             </product>
         </function>
+        <function name="aero/coefficients/CdDasym">
+            <description>Delta Cl due to wing asymmetry</description>
+            <product>
+                <property>aero/wing-asymmetry</property> <!-- sqr to remove the sign (value either -1, 0 or 1 -->
+                <property>aero/wing-asymmetry</property>
+                <property>aero/coefficients/CdBAS</property>
+                <value>-0.3</value>
+            </product>
+        </function>
 
         <function name="aero/coefficients/Cd">
                 <sum>
@@ -2355,6 +2385,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>aero/coefficients/CdDBRK</property>
                     <property>aero/coefficients/CdTNK</property>
                     <property>aero/coefficients/CdDSp</property>
+                    <property>aero/coefficients/CdDasym</property>
                 </sum>
         </function>
 
@@ -2642,6 +2673,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </table>
             </product>
         </function>
+        <function name="aero/coefficients/CLDasym">
+            <description>Delta CL due to wing asymmetry</description>
+            <product>
+                <property>aero/wing-asymmetry</property>
+                <property>aero/coefficients/ClSweepFactor</property>
+                <value>0.076</value>
+            </product>
+        </function>
 
         <!-- AFWAL-TR-80-3141 part III: p55; no effect from spoilers above 10degrees alpha -->
         <function name="aero/coefficients/CLDSp">
@@ -2726,6 +2765,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/CLDR</property>
                 <property>aero/coefficients/CLDSpL</property>
                 <property>aero/coefficients/CLDSpR</property>
+                <property>aero/coefficients/CNDasym</property>
             </sum>
         </function>
 
@@ -3058,6 +3098,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </table>
             </product>
         </function>
+        <function name="aero/coefficients/CNDasym">
+            <description>Delta CN due to wing asymmetry</description>
+            <product>
+                <property>aero/wing-asymmetry</property>
+                <value>0.01293512</value>
+            </product>
+        </function>
         <function name="aero/coefficients/DCNDS">
             <description>DCNDS</description>
             <product>
@@ -3222,6 +3269,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/CNR</property>
                 <property>aero/coefficients/CNDA</property>
                 <property>aero/coefficients/CNDR</property>
+                <property>aero/coefficients/CNDasym</property>
             </sum>
         </function>
         <axis name="LIFT">

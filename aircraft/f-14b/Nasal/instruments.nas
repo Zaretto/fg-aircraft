@@ -359,6 +359,7 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/pilots-displays/mode/cruise-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/ldg-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/to-bt",
+    "sim/model/f-14b/wings/damage-enabled",
 	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav");
 
 var inc_ticker = func {
