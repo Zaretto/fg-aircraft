@@ -258,7 +258,7 @@ var updateFCS = func {
 
     # the FDM has a combined aileron deflection so split this for animation purposes.
     var current_aileron = aileron.getValue();
-    var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
+    var elevator_deflection_due_to_aileron_deflection =  current_aileron / 3.33; # 20 aileron - 6 elevator. should come from the DTD
     left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
     right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
     aileron_generic.setDoubleValue(-current_aileron);
@@ -361,6 +361,9 @@ var quickstart = func() {
     setprop("engines/engine[1]/out-of-fuel",0);
     setprop("engines/engine[1]/run",1);
     setprop("engines/engine[1]/run",1);
+    setprop("fdm/jsbsim/fcs/pitch-damper-enable",1);
+    setprop("fdm/jsbsim/fcs/roll-damper-enable",1);
+    setprop("fdm/jsbsim/fcs/yaw-damper-enable",1);
 
 setprop("/engines/engine[1]/cutoff",0);
 setprop("/engines/engine[0]/cutoff",0);

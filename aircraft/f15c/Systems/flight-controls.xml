@@ -26,8 +26,8 @@
             <input>fcs/pitch-trim-actuator</input>
             <!-- maybe this should take into account the trim limits from the AAP -->
             <range>
-                <min> -0.57895 </min>
-                <max>  0.2105 </max>
+                <min> -0.50877 </min>
+                <max>  0.26315 </max>
             </range>
             <output>fcs/elevator-pos-raw-demand</output>
         </aerosurface_scale>
@@ -56,7 +56,7 @@
         </kinematic>
 
         <pure_gain name="fcs/differential-elevator-pos-norm">
-            <input>fcs/roll-trim-sum</input>
+            <input>fcs/aileron-right-pos-norm</input>
             <gain>0.3</gain>
         </pure_gain>
 
@@ -67,8 +67,8 @@
                 <max>   1 </max>
             </domain>
             <range>
-                <min> -6 </min>
-                <max>  6 </max>
+                <min> -6.66667 </min>
+                <max>  6.66667 </max>
             </range>
         </aerosurface_scale>
 
@@ -100,19 +100,36 @@
             </clipto>
         </summer>
 
-        <pure_gain name="fcs/roll-trim-sum">
+        <pure_gain name="fcs/roll-trim-sum-norm">
             <input>fcs/roll-trim-sum-raw</input>
             <gain>systems/cadc/pitch-ratio</gain>
         </pure_gain >
 
-        <switch name="fcs/roll-trim-actuator">
-            <default value="fcs/roll-trim-sum"/>
-            <test value="fcs/roll-trim-actuator">
+        <switch name="fcs/roll-trim-actuator-norm">
+            <default value="fcs/roll-trim-sum-norm"/>
+            <test value="fcs/roll-trim-actuator-norm">
                 systems/hydraulics/flight-system-pressure ne 1
             </test>
         </switch>
+
+        <kinematic name="aileron position">
+            <input>fcs/roll-trim-actuator-norm</input>
+            <traverse>
+                <setting>
+                    <position>-1</position>
+                    <time>0.9</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.90</time>
+                    <!-- based on 30 deg/sec -->
+                </setting>
+            </traverse>
+            <output>fcs/aileron-pos-norm</output>
+        </kinematic>
+
         <aerosurface_scale name="Aileron Control">
-            <input>fcs/roll-trim-actuator</input>
+            <input>fcs/aileron-pos-norm</input>
             <range>
                 <min> -0.22807 </min>
                 <max>  0.22807 </max>
@@ -120,8 +137,63 @@
             <output>fcs/aileron-pos-rad</output>
         </aerosurface_scale>
 
+        <pure_gain name="fcs/aileron-left-pos-rad">
+            <input>fcs/aileron-pos-rad</input>
+            <gain>1</gain>
+            <output>fcs/aileron-left-pos-rad</output>
+        </pure_gain >
+
+        <pure_gain name="fcs/aileron-right-pos-rad">
+            <input>fcs/aileron-pos-rad</input>
+            <gain>1</gain>
+        </pure_gain >
+
+        <pure_gain name="fcs/aileron-left-pos-norm">
+            <input>fcs/aileron-pos-norm</input>
+            <gain>1</gain>
+        </pure_gain >
+        <pure_gain name="fcs/aileron-right-pos-norm">
+            <input>fcs/aileron-pos-norm</input>
+            <gain>1</gain>
+        </pure_gain >
+
+        <pure_gain name="fcs/aileron-right-pos-deg">
+            <input>fcs/aileron-right-pos-rad</input>
+            <gain>57.295779505601046646705075978956</gain>
+        </pure_gain >
+        <pure_gain name="fcs/aileron-left-pos-deg">
+            <input>fcs/aileron-left-pos-rad</input>
+            <gain>57.295779505601046646705075978956</gain>
+        </pure_gain >
+        <pure_gain name="fcs/aileron-pos-deg">
+            <input>fcs/aileron-right-pos-rad</input>
+            <gain>57.295779505601046646705075978956</gain>
+        </pure_gain >
+
+        <aerosurface_scale name="left aileron normalization">
+            <input>fcs/left-aileron-pos-rad</input>
+            <domain>
+                <min> -0.22807 </min>
+                <max>  0.22807 </max>
+            </domain>
+            <range>
+                <min> -1 </min>
+                <max>  1 </max>
+            </range>
+            <output>fcs/left-aileron-pos-norm</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="Aileron Control">
+            <input>fcs/right-aileron-pos-norm</input>
+            <range>
+                <min> -20 </min>
+                <max>  20 </max>
+            </range>
+            <output>fcs/aileron-pos-deg</output>
+        </aerosurface_scale>
+
         <aerosurface_scale name="Left Aileron Control">
-            <input>fcs/roll-trim-actuator</input>
+            <input>fcs/aileron-pos-norm</input>
             <range>
                 <min> -0.22807 </min>
                 <max>  0.22807 </max>
@@ -130,7 +202,7 @@
         </aerosurface_scale>
 
         <aerosurface_scale name="Right Aileron Control">
-            <input>fcs/roll-trim-actuator</input>
+            <input>fcs/aileron-pos-norm</input>
             <range>
                 <min> -0.22807 </min>
                 <max>  0.22807 </max>
@@ -165,7 +237,7 @@
         </aerosurface_scale>
 
         <aerosurface_scale name="Aileron Control">
-            <input>fcs/roll-trim-actuator</input>
+            <input>fcs/right-aileron-pos-norm</input>
             <range>
                 <min> -20 </min>
                 <max>  20 </max>
@@ -173,18 +245,6 @@
             <output>fcs/aileron-pos-deg</output>
         </aerosurface_scale>
 
-        <aerosurface_scale name="aileron normalization">
-            <input>fcs/aileron-pos-rad</input>
-            <domain>
-                <min> -0.34906585 </min>
-                <max>  0.34906585 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/aileron-norm</output>
-        </aerosurface_scale>
     </channel>
 
     <channel name="Yaw">

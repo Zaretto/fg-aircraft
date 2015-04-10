@@ -1634,7 +1634,8 @@
                 <value>
                     0.975 <!-- DTFLX1 -->
                 </value>
-                <value>0.3</value>
+                <!-- it isn't exactly clear where this 0.3 comes from however we will do this in the controls-->
+                <!--<value>0.3</value>--> 
                 <property>fcs/differential-elevator-pos-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
@@ -4611,7 +4612,7 @@
             </function>
         </axis>
     </aerodynamics>
-    <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <simulation> ON </simulation>
         <atmosphere> ON </atmosphere>
         <massprops> ON </massprops>
@@ -4624,5 +4625,5 @@
         <ground_reactions> ON </ground_reactions>
         <fcs> ON </fcs>
         <propulsion> ON </propulsion>
-    </output>
+    </output>-->
 </fdm_config>

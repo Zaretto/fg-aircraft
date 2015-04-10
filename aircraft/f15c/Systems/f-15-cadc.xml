@@ -21,7 +21,7 @@
     <property value="0">systems/afcs/heading-hold-active</property>
     <property value="0">systems/afcs/SAS-roll-demand</property>
 
-    <property value="1">fcs/yaw-damper-enable</property>
+    <property value="0">fcs/yaw-damper-enable</property>
     <property value="0">fcs/pitch-damper-enable</property>
     <property value="0">fcs/roll-sas-enable</property>
     <property value="0">fcs/external-tanks-fitted</property>
@@ -88,7 +88,7 @@
                         <independentVar lookup="row">velocities/vc-kts</independentVar>
                         <tableData>
                             0.00  1.0
-                            800 0.6
+                            800 0.7
                         </tableData>
                     </table>
                 </sum>
@@ -258,19 +258,14 @@
         <switch name="fcs/roll-sas-active">
             <default value="0.0"/>
             <test logic="AND" value="1">
-                aero/alpha-rad ge -0.175438596491228
-                aero/alpha-rad le  0.2631578947368421
                 fcs/roll-sas-enable ne 0.0
             </test>
             <output>fcs/roll-sas-active</output>
         </switch>
 
-        <!-- yaw damper only active when in range alpha +/10 deg -->
         <switch name="fcs/yaw-damper-active">
             <default value="0.0"/>
             <test logic="AND" value="1">
-                aero/alpha-rad ge -0.175438596491228
-                aero/alpha-rad le  0.175438596491228
                 fcs/yaw-damper-enable ne 0.0
             </test>
             <output>fcs/yaw-damper-active</output>
@@ -323,8 +318,6 @@
         <switch name="fcs/pitch-damper-active">
             <default value="0.0"/>
             <test logic="AND" value="1">
-                aero/alpha-rad ge -0.175438596491228
-                aero/alpha-rad le  0.2631578947368421
                 fcs/elevator-cmd-norm ge -0.15
                 fcs/elevator-cmd-norm le 0.15
                 fcs/pitch-damper-enable ne 0.0

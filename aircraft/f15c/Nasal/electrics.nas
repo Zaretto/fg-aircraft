@@ -400,6 +400,57 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-launch-bar",0);
         }
     }
+    if  (!getprop("fdm/jsbsim/fcs/yaw-damper-enable"))
+    {
+        if (!getprop("sim/model/f15/lights/ca-cas-yaw"))
+        {
+            setprop("sim/model/f15/lights/ca-cas-yaw",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-cas-yaw"))
+        {
+            setprop("sim/model/f15/lights/ca-cas-yaw",0);
+        }
+    }
+
+    if  (!getprop("fdm/jsbsim/fcs/roll-damper-enable"))
+    {
+        if (!getprop("sim/model/f15/lights/ca-cas-roll"))
+        {
+            setprop("sim/model/f15/lights/ca-cas-roll",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-cas-roll"))
+        {
+            setprop("sim/model/f15/lights/ca-cas-roll",0);
+        }
+    }
+
+    if  (!getprop("fdm/jsbsim/fcs/pitch-damper-enable"))
+    {
+        if (!getprop("sim/model/f15/lights/ca-cas-pitch"))
+        {
+            setprop("sim/model/f15/lights/ca-cas-pitch",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-cas-pitch"))
+        {
+            setprop("sim/model/f15/lights/ca-cas-pitch",0);
+        }
+    }
+
 
     if (canopy.getValue() > 0)
     {

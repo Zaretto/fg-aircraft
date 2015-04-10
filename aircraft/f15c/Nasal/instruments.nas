@@ -413,6 +413,9 @@ aircraft.data.add("sim/model/f15/controls/VDI/brightness",
                   "instrumentation/nav[0]/frequencies/selected-mhz",
                   "sim/model/f15/instrumentation/ils/volume-norm",
                   "sim/model/instrumentation/vhf/mode",
+                  "fdm/jsbsim/fcs/pitch-damper-enable",
+                  "fdm/jsbsim/fcs/roll-damper-enable",
+                  "fdm/jsbsim/fcs/yaw-damper-enable",
                   "sim/model/f15/controls/MPCD/mode",
                   "controls/pilots-displays/hsd-mode-nav");
 
