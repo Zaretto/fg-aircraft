@@ -46,6 +46,7 @@
         <object-name>CanopyGlass</object-name>
         <object-name>WindscreenGlass</object-name>
     </effect>-->
+
     <animation>
         <type>select</type>
         <condition>
@@ -56,15 +57,26 @@
         <object-name>CanopyGlassInside</object-name>
         <object-name>WindscreenGlassInside</object-name>
     </animation>
-    <!-- Uncomment this section for FG 3.5 ALS Glass effects
-    <effect>
+    <!-- Uncomment this section for FG 3.5 ALS Glass effects -->
+    <!--<effect>
         <name>f15glass</name>
         <inherits-from>Effects/f15glass</inherits-from>
         <object-name>CanopyGlassInside</object-name>
         <object-name>WindscreenGlassInside</object-name>
     </effect>-->
-   
     <animation>
+        <type>select</type>
+        <condition>
+                <property>/sim/rendering/rembrandt/enabled</property>
+        </condition>
+        <object-name>deftest</object-name>
+    </animation>
+    <effect>
+        <name>f15-test</name>
+        <inherits-from>Effects/f15test</inherits-from>
+        <object-name>deftest</object-name>
+    </effect>
+        <animation>
         <type>material</type>
         <object-name>AileronL</object-name>
         <object-name>AileronR</object-name>
