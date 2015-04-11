@@ -263,6 +263,15 @@ aero_element.Value.IndependentVars[2],
             output_location(writer, aero.CG, "Aircraft CG");
             writer.Write("</tr>");
             writer.Write("</table>");
+            writer.Write("<table class='table'  width='30%'>");
+            output_location_table_header(writer, "<th>Weight</th>");
+            writer.Write("<tbody>");
+            foreach (var g in aero.Mass)
+            {
+                writer.Write("<tr>");
+                output_location(writer, g.Location, g.Name);
+                writer.Write("<td>{0} {1}</td>", g.weight.Amount, g.weight.Unit);
+            }
             writer.Write("</span>");
             writer.Write("<span class='col-md-4'>");
             writer.Write("<h2>Ground Reactions</h2>");
@@ -298,7 +307,7 @@ aero_element.Value.IndependentVars[2],
             writer.Write("<span class='col-md-6'>");
             writer.Write("<h2>Tanks</h2>");
             writer.Write("<table class='table'  width='30%'>");
-            output_location_table_header(writer, "<th class='col-sm-1'>Capacity</th><th class='col-sm-1'>Id</th><th class='col-sm-1'>Priority</th>");
+            output_location_table_header(writer, "<th class='col-sm-1'>Capacity</th><th class='col-sm-1'>Id</th><th class='col-sm-1'>Priority</th><th>Standpipe</th>");
             writer.Write("<tbody>");
             foreach (var g in aero.Tanks)
             {
@@ -307,6 +316,10 @@ aero_element.Value.IndependentVars[2],
                 writer.Write("<td>{0} {1}</td>", g.Capacity.Amount, g.Capacity.Unit);
                 writer.Write("<td>{0}</td>", g.Id);
                 writer.Write("<td>{0}</td>", g.Priority);
+                if (g.Standpipe != null)
+                    writer.Write("<td>{0} {1}</td>", g.Standpipe.Amount, g.Standpipe.Unit);
+                else
+                    writer.Write("<td></td>");
                 writer.Write("</tr>");
             }
             writer.Write("</tbody>");

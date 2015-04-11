@@ -82,6 +82,10 @@ namespace F14AeroPlot
                     mass.AppendChild(aero.IZZ.CreateXmlNode(doc, "izz"));
                     mass.AppendChild(aero.IXZ.CreateXmlNode(doc, "ixz"));
                     mass.AppendChild(aero.EmptyWeight.CreateXmlNode(doc, "emptywt"));
+                    foreach (var g in aero.Mass)
+                    {
+                        g.CreateXmlNodes(doc, mass);
+                    }
                     writer.Write(prettify(doc));
                 }
                 {
@@ -108,6 +112,13 @@ namespace F14AeroPlot
                     foreach (var g in aero.Tanks.OrderByDescending(x=>x.Priority))
                     {
                         g.CreateXmlNodes(doc, p, tank_idx++);
+                    }
+                    if (aero.FuelDumpRate.HasValue)
+                    {
+                        XmlElement dumprate = doc.CreateElement("dump-rate");
+                                   dumprate.SetAttribute("unit", "LBS/MIN");
+                        dumprate.InnerText = aero.FuelDumpRate.ToString();
+                        p.AppendChild(dumprate);
                     }
                     writer.Write(prettify(doc));
                 }

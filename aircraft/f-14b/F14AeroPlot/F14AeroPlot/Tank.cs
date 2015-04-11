@@ -12,12 +12,15 @@ namespace F14AeroPlot
         public int Priority;
         public DenominatedAmount Capacity;
 
-        public Tank(string name, double p1, double p2, double p3, string units, int pri, int capacity,string fuel_units )
+        public Tank(string name, double p1, double p2, double p3, string units, int pri, int capacity,string fuel_units, double? standpipe )
         {
             Name = name;
             Priority = pri;
             Location = new Location(p1, p2, p3, units);
             Capacity = new DenominatedAmount(capacity, fuel_units);
+
+            if (standpipe.HasValue)
+                Standpipe = new DenominatedAmount(standpipe.Value, fuel_units);
         }
 
         public string Name { get; set; }
@@ -37,6 +40,10 @@ namespace F14AeroPlot
 
             gr.AppendChild(Location.CreateXmlNode(doc));
             gr.AppendChild(Capacity.CreateXmlNode(doc, "capacity"));
+            
+            if (Standpipe != null)
+                gr.AppendChild(Standpipe.CreateXmlNode(doc, "standpipe"));
+
             gr.AppendChild(Capacity.CreateXmlNode(doc, "contents"));
             {
                 XmlElement p = doc.CreateElement("priority");
@@ -57,5 +64,7 @@ namespace F14AeroPlot
         //        Priority = value;
         //    }
         //}
+
+        public DenominatedAmount Standpipe { get; set; }
     }
 }
