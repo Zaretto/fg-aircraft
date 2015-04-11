@@ -11,8 +11,8 @@ setprop ("/sim/startup/terminal-ansi-colors",0);
 var MPCDcanvas= canvas.new({
                            "name": "F-15 MPCD",
                            "size": [1024,1024], 
-                           "view": [512,479.36],    # 0.13468 x 0.14384    - the instrument as drawn isn't square.                 
-                           "mipmapping": 1
+                           "view": [740,680],                       
+                           "mipmapping": 1     
                           });                          
                           
 MPCDcanvas.addPlacement({"node": "MPCDImage"});
@@ -24,6 +24,7 @@ var MPCDsvg = MPCDcanvas.createGroup();
 # Parse an SVG file and add the parsed elements to the given group
 print("MPCD : Load SVG ",canvas.parsesvg(MPCDsvg, "Nasal/MPCD/MPCD_0_0.svg"));
 #MPCDsvg.setTranslation (-20.0, 37.0);
+MPCDsvg.setTranslation (270.0, 197.0);
 #print("MPCD INIT");
 
 #
