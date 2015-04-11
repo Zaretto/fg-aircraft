@@ -608,3 +608,65 @@ setprop("sim/model/f15/lights/master-test-nogo",1);
 setprop("sim/model/f15/lights/master-test-go",0);
 }
 }
+
+#
+# Use ALS secondary lighting 
+# The scheme we adopt is to use both lights in one place to make the landing light brighter and spread
+# them for the taxi light. These lights move with the view (as I suspect they are setup for being on the mlg
+# not on the nose gear - but it is a lot better than just darkness).
+# also remember that these only illuminate the runway as proper lighting calculating is not done; this is a shader
+# level implementation that is fast rather than accurate.
+# ref: http://wiki.flightgear.org/ALS_technical_notes#ALS_secondary_lights
+setlistener("sim/current-view/internal", func {
+    if (getprop("sim/current-view/internal"))
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", getprop("controls/lighting/taxi-light") != 0);
+    else
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
+}, 1, 0);
+
+var setup_als_lights = func
+{
+    var light_setting=getprop("sim/multiplay/generic/int[7]");
+
+    #
+# gear needs to be extended (not just commanded);
+
+    if (getprop("gear/gear[0]/position-norm") == nil or getprop("gear/gear[0]/position-norm") < 0.6  or !light_setting)
+    {
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
+        setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 0);
+        return;
+    }
+
+    if (light_setting & 2)
+    {
+# put both lights at the same place and brighter for the landing light
+        setprop("sim/rendering/als-secondary-lights/landing-light1-offset-deg", 0);
+        setprop("sim/rendering/als-secondary-lights/landing-light2-offset-deg", 0);
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", 1);
+        setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 1);
+        return;
+    }
+    
+    if (light_setting & 1)
+    {
+# spread the  lights for the taxi light
+        setprop("sim/rendering/als-secondary-lights/landing-light1-offset-deg", 4);
+        setprop("sim/rendering/als-secondary-lights/landing-light2-offset-deg", -4);
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", 1);
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", 1);
+        setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 1);
+        return;
+    }
+}
+
+setlistener("sim/multiplay/generic/int[7]", func
+{
+    setup_als_lights();
+
+}, 1, 0);
+
+setlistener("gear/gear[0]/position-norm", func
+{
+    setup_als_lights();
+}, 1, 0);
