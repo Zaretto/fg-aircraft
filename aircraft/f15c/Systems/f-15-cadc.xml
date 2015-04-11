@@ -17,6 +17,7 @@
     <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/gear-warn-silence-dmd</property>
     <property value="0">systems/cadc/pitch-ratio-emergency</property>
+    <property value="0">systems/cadc/roll-ratio-emergency</property>
 
     <property value="0">systems/afcs/heading-hold-active</property>
     <property value="0">systems/afcs/SAS-roll-demand</property>
@@ -139,6 +140,34 @@
             <default value="systems/cadc/pitch-ratio-dmd"/>
             <test value="1" logic="OR">
                 systems/cadc/pitch-ratio-emergency ne 0
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+            </test>
+        </switch>
+
+        <fcs_function name="systems/cadc/roll-ratio-dmd">
+            <function>
+                <description>High speed CADC control effectivity limitation of aileron</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            0.00  1.0
+                            200  1.0
+                            400  0.3
+                            600  0.2
+                            730  0.1
+                            1200 0.07
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+        <switch name="systems/cadc/roll-ratio">
+            <description>Aircraft on ground</description>
+            <default value="systems/cadc/roll-ratio-dmd"/>
+            <test value="1" logic="OR">
+                systems/cadc/roll-ratio-emergency ne 0
                 gear/unit[1]/WOW ne 0
                 gear/unit[2]/WOW ne 0
             </test>

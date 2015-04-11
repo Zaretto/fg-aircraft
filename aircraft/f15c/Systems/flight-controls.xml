@@ -102,7 +102,7 @@
 
         <pure_gain name="fcs/roll-trim-sum-norm">
             <input>fcs/roll-trim-sum-raw</input>
-            <gain>systems/cadc/pitch-ratio</gain>
+            <gain>systems/cadc/roll-ratio</gain>
         </pure_gain >
 
         <switch name="fcs/roll-trim-actuator-norm">
@@ -131,8 +131,8 @@
         <aerosurface_scale name="Aileron Control">
             <input>fcs/aileron-pos-norm</input>
             <range>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
+                <min> -0.34910106475824751265491359748647</min>
+                <max>  0.34910106475824751265491359748647</max>
             </range>
             <output>fcs/aileron-pos-rad</output>
         </aerosurface_scale>
@@ -251,10 +251,57 @@
 
         <!-- rudder limits +/-30deg 40 deg/sec-->
         <!-- stabilizer limits +/7deg 30 deg/sec-->
+        <!--<fcs_function name="fcs/ari-longitudinal-rudder-demand-norm">
+            <description>ARI</description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                    ?? or stick position ??
+                    <tableData>
+                        -30     0.1
+                        0     0
+                        30     -0.1
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min> -0.1 </min>
+                <max>  0.1 </max>
+            </clipto>
+        </fcs_function>-->
+        <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
+            <description>ARI</description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/aileron-pos-deg</independentVar>
+                    <tableData>
+                        -30     0.1
+                        0     0
+                        30     -0.1
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min> -0.1 </min>
+                <max>  0.1 </max>
+            </clipto>
+        </fcs_function>
+        <!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
+        <switch name="fcs/ari-lateral-rudder-pos-norm">
+            <default value="fcs/ari-lateral-rudder-demand-norm"/>
+            <test value="0">
+                velocities/mach ge 0.9
+            </test>
+            <test value="0" logic="OR">
+                velocities/mach ge 0.9
+                position/aircraft-on-ground ne 0
+            </test>
+        </switch>
 
         <summer name="fcs/rudder-command-raw-sum">
             <input>fcs/rudder-cmd-norm</input>
             <input>fcs/yaw-trim-cmd-norm</input>
+            <input>fcs/ari-lateral-rudder-demand-norm</input>
             <clipto>
                 <min> -1 </min>
                 <max>  1 </max>

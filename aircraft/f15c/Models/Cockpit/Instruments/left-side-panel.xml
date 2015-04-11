@@ -680,6 +680,35 @@
     <!-- Misc panel -->
     <animation>
         <type>knob</type>
+        <object-name>misc-roll-ratio-switch</object-name>
+        <property>/fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+        <factor>60</factor>
+        <offset-deg>-30</offset-deg>
+        <center>
+            <x-m>-5.672</x-m>
+            <y-m>-0.5163</y-m>
+            <z-m>0.6583</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>/fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
         <object-name>misc-l-inlet-switch</object-name>
         <property>sim/model/f15/controls/engines/l-ramp-switch</property>
         <factor>-60</factor>
@@ -706,6 +735,7 @@
             </binding>
         </action>
     </animation>
+    
     <animation>
         <type>knob</type>
         <object-name>misc-r-inlet-switch</object-name>
