@@ -130,7 +130,7 @@ var w1 = "     VS BST   MEM  ";
     var target_idx=0;
     window4.setText (sprintf("%3d", getprop("instrumentation/radar/radar2-range")));
     var w3_22="";
-    var w3_7 = sprintf("T%4d",getprop("fdm/jsbsim/velocities/vc-kts"));
+    var w3_7 = sprintf("T %d",getprop("fdm/jsbsim/velocities/vc-kts"));
     var w2 = "";
     var designated = 0;
     foreach( u; awg_9.tgts_list ) 
@@ -155,7 +155,7 @@ var w1 = "     VS BST   MEM  ";
                         w2 = sprintf("%-4d", u.get_closure_rate());
                         w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
 var aspect = u.get_reciprocal_bearing()/10;
-w1 = sprintf("%4d %2d%c %2d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading());
+w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
                     }
                     tgt.setVisible(u.get_display());
                     var xc = u.get_deviation(heading);
