@@ -104,8 +104,13 @@ var computeAICS = func {
 
 # Constant
 NozzleSpeed = 1.0;
+var current_flame_number = 0;
 
 var computeNozzles = func {
+
+   current_flame_number = (current_flame_number + 1);        
+   if (current_flame_number > 3) current_flame_number = 0;
+   setprop("sim/model/f-14b/fx/flame-number",current_flame_number);
 
 	var eng1_burner = Engine1Burner.getValue();
 	var eng2_burner = Engine2Burner.getValue();
