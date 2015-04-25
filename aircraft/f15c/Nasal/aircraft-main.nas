@@ -240,6 +240,26 @@ var splash_vec_loop = func
 splash_vec_loop();
 
 #
+# Rate 4 modules (5hz) (rate 4 comes from quarter frame at 30hz)
+
+var rate4modules = func {
+    aircraft.updateVSD();
+    aircraft.updateTEWS();
+    aircraft.updateMPCD();
+    aircraft.electricsFrame();
+	aircraft.computeNWS ();
+	settimer (rate4modules, 0.20);
+}
+var rate2modules = func {
+    aircraft.updateHUD();
+	settimer (rate2modules, 0.04);
+}
+#
+# launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
+settimer (rate4modules, 1); 
+settimer (rate2modules, 1);
+
+#
 # Standard update loop.
 
 var updateFCS = func {
@@ -285,17 +305,9 @@ var updateFCS = func {
     }
 
 	#update functions
-#	aircraft.computeFlaps ();
-#	aircraft.computeSpoilers ()
     aircraft.computeAPC();
-aircraft.updateHUD();
-aircraft.updateVSD();
-aircraft.updateTEWS();
-aircraft.updateMPCD();
 	aircraft.computeEngines ();
 	aircraft.computeAdverse ();
-	aircraft.computeNWS ();
-    aircraft.electricsFrame();
 
 	aircraft.registerFCS (); # loop, once per frame.
 }

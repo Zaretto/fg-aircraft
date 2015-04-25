@@ -86,7 +86,7 @@ setlistener("sim/model/f15/controls/VDI/brightness", func(v)
             {
                 if (v != nil)
                 {
-                    var vsd_on = v.getValue();
+                    vsd_on = v.getValue();
 #                    print("VSD On ",vsd_on);
                 }
             });

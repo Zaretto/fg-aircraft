@@ -77,6 +77,8 @@ var runEMMISC = func {
 # disable if we are in replay mode
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
+    set_console_lighting();
+
     var masterCaution =  masterCaution_light_set.getValue();
     var master_caution_active  = 0;
     var engine_crank_switch_pos = getprop("sim/model/f15/controls/engine/engine-crank");
@@ -515,10 +517,40 @@ setlistener("sim/model/f15/controls/hyds/hyd-transfer-pump-switch", func {
     }
 }, 1, 0);
 
+var set_console_lighting = func
+{
+    var v = getprop("controls/lighting/l-console");
+    setprop("controls/lighting/l-console-norm", v/10);
+    if (getprop("/fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
+        setprop("controls/lighting/l-console-eff-norm", v/10);
+    else
+        setprop("controls/lighting/l-console-eff-norm", 0);
+
+    v = getprop("controls/lighting/r-console");
+    setprop("controls/lighting/r-console-norm", v/10);
+    if (getprop("/fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
+        setprop("controls/lighting/r-console-eff-norm", v/10);
+    else
+        setprop("controls/lighting/r-console-eff-norm", 0);
+
+}
+
+
+setlistener("controls/lighting/l-console", func(prop)
+            {
+                set_console_lighting();
+            }, 1, 0);
+
+setlistener("controls/lighting/r-console", func(prop)
+            {
+                set_console_lighting();
+            }, 1, 0);
+
 #
 #
 # master gen panel 
-setlistener("sim/model/f15/controls/electrics/l-gen-switch", func {
+setlistener("sim/model/f15/controls/electrics/l-gen-switch", func
+{
     var v = getprop("sim/model/f15/controls/electrics/l-gen-switch");
     if(v != nil)
     {
@@ -533,7 +565,8 @@ setlistener("sim/model/f15/controls/electrics/l-gen-switch", func {
     }
 }, 1, 0);
 
-setlistener("sim/model/f15/controls/electrics/r-gen-switch", func {
+setlistener("sim/model/f15/controls/electrics/r-gen-switch", func
+{
     var v = getprop("sim/model/f15/controls/electrics/r-gen-switch");
     if(v != nil)
     {
