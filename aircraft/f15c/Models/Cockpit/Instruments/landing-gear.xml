@@ -122,7 +122,7 @@
 
     <!-- Lighting -->
     <animation>
-        <object-name>mount</object-name>
+        <object-name>landing-gear-mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -141,15 +141,12 @@
             <red-prop>controls/lighting/panel-red</red-prop>
             <green-prop>controls/lighting/panel-green</green-prop>
             <blue-prop>controls/lighting/panel-blue</blue-prop>
-
         </emission>
     </animation>
-
-    <!-- *** LoD *** -->
-    <animation>
-        <type>range</type>
-        <min-m>0</min-m>
-        <max-m>35</max-m>
-    </animation>
-
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-left</inherits-from>
+        <object-name>landing-gear-warn-panel</object-name>
+    </effect>
 </PropertyList>

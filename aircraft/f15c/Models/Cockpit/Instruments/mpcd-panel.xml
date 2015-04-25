@@ -542,7 +542,7 @@
     </animation>
     <!-- Lighting -->
     <animation>
-        <object-name>mount</object-name>
+        <object-name>mpcd-mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -564,6 +564,12 @@
 
         </emission>
     </animation>
+    <!-- implicit lighting (ALS) see -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-left</inherits-from>
+        <object-name>mpcd-mount</object-name>
+    </effect>
     <animation>
         <object-name>MPCDImage</object-name>
         <type>material</type>
@@ -602,12 +608,4 @@
             <blue> 1</blue>
         </emission>
     </animation>
-
-    <!-- *** LoD *** -->
-    <animation>
-        <type>range</type>
-        <min-m>0</min-m>
-        <max-m>35</max-m>
-    </animation>
-
 </PropertyList>

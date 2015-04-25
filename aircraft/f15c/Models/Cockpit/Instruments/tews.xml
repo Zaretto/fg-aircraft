@@ -63,6 +63,26 @@
             <blue>0.10</blue>
         </emission>
     </animation>-->
+        <animation>
+        <object-name>TEWSImage</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>sim/model/f15/controls/TEWS/brightness</factor-prop>
+            <red>  1</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
+    </animation>
+  
     
     <animation>
         <type>knob</type>
@@ -92,12 +112,15 @@
         </action>
     </animation>
 
-
-    <!-- *** LoD *** -->
-    <animation>
-        <type>range</type>
-        <min-m>0</min-m>
-        <max-m>35</max-m>
-    </animation>
+    <effect>
+        <name>f15panel-right</name>
+        <inherits-from>Effects/f15panel-right</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+    <effect>
+        <name>f15panel-knob</name>
+        <inherits-from>Effects/f15panel-knob</inherits-from>
+        <object-name>intensity-knob</object-name>
+    </effect>
 
 </PropertyList>

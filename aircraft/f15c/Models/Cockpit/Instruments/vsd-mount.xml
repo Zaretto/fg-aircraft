@@ -7,7 +7,7 @@
     <path>vsd-mount.ac</path>
     <!-- Lighting -->
     <animation>
-        <object-name>mount</object-name>
+        <object-name>vsd-mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -29,6 +29,20 @@
 
         </emission>
     </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-left</inherits-from>
+        <object-name>vsd-mount</object-name>
+    </effect>
+    <effect>
+        <name>f15panel-knob</name>
+        <inherits-from>Effects/f15panel-knob</inherits-from>
+        <object-name>vsd-sym-brt</object-name>
+        <object-name>vsd-sym-radar</object-name>
+        <object-name>vsd-brt</object-name>
+        <object-name>vsd-contrast</object-name>
+    </effect>
     <animation>
         <object-name>VSDImage</object-name>
         <type>material</type>
@@ -174,13 +188,6 @@
                 <wrap>false</wrap>
             </binding>
         </action>
-    </animation>
-
-    <!-- *** LoD *** -->
-    <animation>
-        <type>range</type>
-        <min-m>0</min-m>
-        <max-m>35</max-m>
     </animation>
 
 </PropertyList>
