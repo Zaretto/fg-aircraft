@@ -5,6 +5,40 @@
 <PropertyList>
     <path>engines-gauges.ac</path>
 
+
+    <!-- fan percent -->
+    <animation>
+        <name>fan-percent-l</name>
+        <type>rotate</type>
+        <object-name>needle-fan-l</object-name>
+        <property>engines/engine[0]/n2</property>
+        <factor>2.25</factor>
+        <center>
+            <x-m>-5.7033</x-m>
+            <y-m> 0.2432</y-m>
+            <z-m> 1.0132</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <animation>
+        <name>fan-percent-r</name>
+        <type>rotate</type>
+        <object-name>needle-fan-r</object-name>
+        <property>engines/engine[1]/n2</property>
+        <factor>2.25</factor>
+        <center>
+            <x-m>-5.7033</x-m>
+            <y-m> 0.3001</y-m>
+            <z-m> 1.0132</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
     <!-- temperatures -->
     <animation>
         <name>temp-l</name>
@@ -22,9 +56,9 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m> -0.0409</y-m>
-            <z-m> 0.0029</z-m>
+            <x-m> -5.7032</x-m>
+            <y-m> 0.2419</y-m>
+            <z-m> 0.9559</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -47,48 +81,14 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m> 0.0161</y-m>
-            <z-m> 0.0029</z-m>
+            <x-m> -5.7032</x-m>
+            <y-m> 0.2986</y-m>
+            <z-m> 0.9566</z-m>
         </center>
         <axis>
             <x>-1</x>
         </axis>
     </animation>
-
-    <!-- fan percent -->
-    <animation>
-        <name>fan-percent-l</name>
-        <type>rotate</type>
-        <object-name>needle-fan-l</object-name>
-        <property>engines/engine[0]/n2</property>
-        <factor>2.25</factor>
-        <center>
-            <x-m> 0.0012</x-m>
-            <y-m>-0.0403</y-m>
-            <z-m> 0.0602</z-m>
-        </center>
-        <axis>
-            <x>-1</x>
-        </axis>
-    </animation>
-
-    <animation>
-        <name>fan-percent-r</name>
-        <type>rotate</type>
-        <object-name>needle-fan-r</object-name>
-        <property>engines/engine[1]/n2</property>
-        <factor>2.25</factor>
-        <center>
-            <x-m> 0.0059</x-m>
-            <y-m> 0.0157</y-m>
-            <z-m> 0.0612</z-m>
-        </center>
-        <axis>
-            <x>-1</x>
-        </axis>
-    </animation>
-
     <!-- fuel flow -->
     <animation>
         <name>fuel-flow-ppm-l</name>
@@ -106,9 +106,9 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m>-0.0676</y-m>
-            <z-m>-0.0594</z-m>
+            <x-m> -5.7032</x-m>
+            <y-m>0.2118</y-m>
+            <z-m>0.895</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -131,63 +131,9 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m>-0.0090</y-m>
-            <z-m>-0.0596</z-m>
-        </center>
-        <axis>
-            <x>-1</x>
-        </axis>
-    </animation>
-
-
-
-
-    <!-- oil pressure -->
-    <animation>
-        <name>oil-pressure-psi-l</name>
-        <type>rotate</type>
-        <object-name>needle-oil-l</object-name>
-        <property>engines/engine[0]/oil-pressure-psi</property>
-        <interpolation>
-            <entry>
-                <ind>0.0000</ind>
-                <dep>0</dep>
-            </entry>
-            <entry>
-                <ind>100</ind>
-                <dep>310</dep>
-            </entry>
-        </interpolation>
-        <center>
-            <x-m> 0.0012</x-m>
-            <y-m> 0.0596</y-m>
-            <z-m> 0.0011</z-m>
-        </center>
-        <axis>
-            <x>-1</x>
-        </axis>
-    </animation>
-
-    <animation>
-        <name>oil-pressure-psi-r</name>
-        <type>rotate</type>
-        <object-name>needle-oil-r</object-name>
-        <property>engines/engine[1]/oil-pressure-psi</property>
-        <interpolation>
-            <entry>
-                <ind>0.0000</ind>
-                <dep>0</dep>
-            </entry>
-            <entry>
-                <ind>100</ind>
-                <dep>310</dep>
-            </entry>
-        </interpolation>
-        <center>
-            <x-m> 0.0012</x-m>
-            <y-m> 0.0884</y-m>
-            <z-m> 0.0009</z-m>
+            <x-m> -5.7033</x-m>
+            <y-m>0.2695</y-m>
+            <z-m>0.8947</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -203,9 +149,9 @@
         <property>engines/engine[0]/nozzle-pos-norm</property>
         <factor>235</factor>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m>-0.0651</y-m>
-            <z-m>-0.1105</z-m>
+            <x-m> -5.7037</x-m>
+            <y-m>0.2126</y-m>
+            <z-m>0.8432</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -219,9 +165,9 @@
         <property>engines/engine[1]/nozzle-pos-norm</property>
         <factor>235</factor>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m>-0.0104</y-m>
-            <z-m>-0.1103</z-m>
+            <x-m> -5.7037</x-m>
+            <y-m>0.2681</y-m>
+            <z-m>0.8444</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -244,9 +190,9 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m> 0.0604</y-m>
-            <z-m> 0.0701</z-m>
+            <x-m> -5.7037</x-m>
+            <y-m> 0.341</y-m>
+            <z-m> 1.0215</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -268,9 +214,9 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0012</x-m>
-            <y-m> 0.0917</y-m>
-            <z-m> 0.0707</z-m>
+            <x-m> -5.7037</x-m>
+            <y-m> 0.3736</y-m>
+            <z-m> 1.0221</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -292,14 +238,66 @@
             </entry>
         </interpolation>
         <center>
-            <x-m> 0.0013</x-m>
-            <y-m> 0.0769</y-m>
-            <z-m> 0.0370</z-m>
+            <x-m> -5.7047</x-m>
+            <y-m> 0.357</y-m>
+            <z-m> 0.9893</z-m>
         </center>
         <axis>
             <x>-1</x>
         </axis>
     </animation>
+
+    <!-- oil pressure -->
+    <animation>
+        <name>oil-pressure-psi-l</name>
+        <type>rotate</type>
+        <object-name>needle-oil-l</object-name>
+        <property>engines/engine[0]/oil-pressure-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0.0000</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>310</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m> -5.7038</x-m>
+            <y-m> 0.3426</y-m>
+            <z-m> 0.9542</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <animation>
+        <name>oil-pressure-psi-r</name>
+        <type>rotate</type>
+        <object-name>needle-oil-r</object-name>
+        <property>engines/engine[1]/oil-pressure-psi</property>
+        <interpolation>
+            <entry>
+                <ind>0.0000</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>310</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m> -5.7038</x-m>
+            <y-m> 0.3745</y-m>
+            <z-m> 0.9541</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
 
     <!-- drums -->
     <animation>
@@ -869,13 +867,10 @@
 
         </emission>
     </animation>
-
-
-    <!-- *** LoD *** -->
-    <animation>
-        <type>range</type>
-        <min-m>0</min-m>
-        <max-m>5</max-m>
-    </animation>
-
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-right</inherits-from>
+        <object-name>hyds-mount</object-name>
+    </effect>
 </PropertyList>
