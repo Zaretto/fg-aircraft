@@ -25,20 +25,21 @@
     <property value="0">systems/ecs/oxygen-supply-mode</property>
     <property value="0">systems/ecs/anti-fog</property>
     <property value="0">systems/ecs/windshield-heat</property>
-    
+    <property>systems/ecs/oxygen-quantity-liters</property>
+    <property>systems/ecs/cabin-altitude-ft</property>
+    <property>systems/ecs/oxygen-pressure-psi</property>
     <channel name="Oxygen">
-        <property>systems/ecs/oxygen-quantity-liters</property>
 
-        <switch name="systems/ecs/oxygen-converter-rate">
-            <default value="0.01"/>
-            <test value="1">
-                systems/ecs/oxygen-converter-qty-dmd gt systems/ecs/oxygen-converter-rate
-            </test>
-        </switch>
         <switch name="systems/ecs/oxygen-converter-qty-dmd">
             <default value="1000"/>
             <test value="0">
                 simulation/sim-time-sec gt 100
+            </test>
+        </switch>
+        <switch name="systems/ecs/oxygen-converter-rate">
+            <default value="0.01"/>
+            <test value="1">
+                systems/ecs/oxygen-converter-qty-dmd gt systems/ecs/oxygen-converter-rate
             </test>
         </switch>
         <actuator name="systems/ecs/oxygen-converter-qty">
