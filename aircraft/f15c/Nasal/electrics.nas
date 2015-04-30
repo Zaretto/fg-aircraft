@@ -650,21 +650,15 @@ setprop("sim/model/f15/lights/master-test-go",0);
 # also remember that these only illuminate the runway as proper lighting calculating is not done; this is a shader
 # level implementation that is fast rather than accurate.
 # ref: http://wiki.flightgear.org/ALS_technical_notes#ALS_secondary_lights
-setlistener("sim/current-view/internal", func {
-    if (getprop("sim/current-view/internal"))
-        setprop("sim/rendering/als-secondary-lights/use-landing-light", getprop("controls/lighting/taxi-light") != 0);
-    else
-        setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
-}, 1, 0);
-
 var setup_als_lights = func
 {
     var light_setting=getprop("sim/multiplay/generic/int[7]");
 
     #
-# gear needs to be extended (not just commanded);
+# gear needs to be extended (not just commanded)
+# view needs to be internal (otherwise geometry of the shader is wrong).
 
-    if (getprop("gear/gear[0]/position-norm") == nil or getprop("gear/gear[0]/position-norm") < 0.6  or !light_setting)
+    if (getprop("sim/current-view/internal") or getprop("gear/gear[0]/position-norm") == nil or getprop("gear/gear[0]/position-norm") < 0.6  or !light_setting)
     {
         setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
         setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 0);
@@ -693,13 +687,17 @@ var setup_als_lights = func
     }
 }
 
+setlistener("sim/current-view/internal", func {
+    aircraft.setup_als_lights();
+}, 1, 0);
+
 setlistener("sim/multiplay/generic/int[7]", func
 {
-    setup_als_lights();
+    aircraft.setup_als_lights();
 
 }, 1, 0);
 
 setlistener("gear/gear[0]/position-norm", func
 {
-    setup_als_lights();
+    aircraft.setup_als_lights();
 }, 1, 0);
