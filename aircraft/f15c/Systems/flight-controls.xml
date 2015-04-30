@@ -490,5 +490,33 @@
             <output>fcs/hook-pos-norm</output>
         </kinematic>
     </channel>
+    <channel name="engines">
 
+        <scheduled_gain name="ThrottleL">
+            <input>fcs/throttle-cmd-norm[0]</input>
+            <table>
+                <independentVar>fcs/throttle-pos-norm[0]</independentVar>
+                <tableData>
+                    0.00    0.0
+                    <!--0.09    0.0-->
+                    0.88    1.0
+                    1.00    2.0
+                </tableData>
+            </table>
+            <output>fcs/throttle-pos-norm[0]</output>
+        </scheduled_gain>
+        <scheduled_gain name="ThrottleR">
+            <input>fcs/throttle-cmd-norm[1]</input>
+            <table>
+                <independentVar>fcs/throttle-pos-norm[1]</independentVar>
+                <tableData>
+                    0.00    0.0
+                    <!--0.09    0.0-->
+                    0.88    1.0
+                    1.00    2.0
+                </tableData>
+            </table>
+            <output>fcs/throttle-pos-norm[1]</output>
+        </scheduled_gain>
+    </channel>
 </system>
