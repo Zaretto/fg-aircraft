@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!-- F-15C Canopy (single seat applicable to F-15A variant as well)
+   |  Richard Harrison: 2015-04-29 : rjh@zaretto.com 
+-->
+
+<PropertyList>
+    <path>f-15c-canopy.ac</path>
+
+    <effect>
+        <name>f15glass</name>
+        <inherits-from>Effects/f15glass</inherits-from>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </effect>
+    <!-- Canopy -->
+    <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </animation>
+    <!-- Uncomment this section for FG 3.5 ALS Glass effects -->
+    <effect>
+        <name>f15glass</name>
+        <inherits-from>Effects/f15glass</inherits-from>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </effect>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <property>canopy/position-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0.25</ind>
+                <dep>0.0</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>20.0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-2.36</x-m>
+            <y-m>0.0</y-m>
+            <z-m>1.4</z-m>
+        </center>
+        <axis>
+            <x>0.0</x>
+            <y>1.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+    <!-- Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25-->
+    <animation>
+        <type>translate</type>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <property>canopy/position-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0.0</ind>
+                <dep>0.0</dep>
+            </entry>
+            <entry>
+                <ind>0.25</ind>
+                <dep>0.01</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-2.36</x-m>
+            <y-m>0.0</y-m>
+            <z-m>1.4</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+        </axis>
+    </animation>
+    <animation>
+        <type>shader</type>
+        <shader>chrome</shader>
+        <texture>Aircraft/f15c/Models/glass_shader.png</texture>
+        <object-name>WindscreenGlass</object-name>
+        <object-name>CanopyGlass</object-name>
+    </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>Canopy</object-name>
+        <property-base>sim/model/livery</property-base>
+        <texture-prop>texture</texture-prop>
+        <texture>livery.AF80-0007.png</texture>
+    </animation>
+
+</PropertyList>
