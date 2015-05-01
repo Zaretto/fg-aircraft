@@ -654,11 +654,11 @@ var setup_als_lights = func
 {
     var light_setting=getprop("sim/multiplay/generic/int[7]");
 
-    #
+#
 # gear needs to be extended (not just commanded)
 # view needs to be internal (otherwise geometry of the shader is wrong).
 
-    if (getprop("sim/current-view/internal") or getprop("gear/gear[0]/position-norm") == nil or getprop("gear/gear[0]/position-norm") < 0.6  or !light_setting)
+    if (!getprop("sim/current-view/internal") or getprop("gear/gear[0]/position-norm") == nil or getprop("gear/gear[0]/position-norm") < 0.6  or !light_setting)
     {
         setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
         setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 0);
