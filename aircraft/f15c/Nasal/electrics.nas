@@ -419,6 +419,24 @@ var runEMMISC = func {
         }
     }
 
+    # windshield hot if over 150deg F for any reason.
+    if (getprop("fdm/jsbsim/systems/ecs/windscreen-temperature-k") > 338)
+    {
+        if (!getprop("sim/model/f15/lights/ca-wndshld-hot"))
+        {
+            setprop("sim/model/f15/lights/ca-wndshld-hot",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-wndshld-hot"))
+        {
+            setprop("sim/model/f15/lights/ca-wndshld-hot",0);
+        }
+    }
+
     if  (!getprop("fdm/jsbsim/fcs/roll-damper-enable"))
     {
         if (!getprop("sim/model/f15/lights/ca-cas-roll"))

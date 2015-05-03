@@ -253,6 +253,7 @@ var rate4modules = func {
 var rate2modules = func {
     aircraft.updateHUD();
 	settimer (rate2modules, 0.04);
+    setprop("environment/aircraft-effects/frost-level", getprop("/fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
 }
 #
 # launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
