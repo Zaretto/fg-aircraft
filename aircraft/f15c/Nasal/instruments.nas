@@ -419,6 +419,7 @@ aircraft.data.add("sim/model/f15/controls/VDI/brightness",
                   "fdm/jsbsim/fcs/roll-damper-enable",
                   "fdm/jsbsim/fcs/yaw-damper-enable",
                   "sim/model/f15/controls/MPCD/mode",
+                  "sim/model/f15/controls/windshield-heat",
                   "controls/pilots-displays/hsd-mode-nav");
 
 var inc_ticker = func {
@@ -739,10 +740,14 @@ var common_init = func {
         setprop("sim/model/f15/controls/AFCS/altitude",0);
         setprop("sim/model/f15/controls/AFCS/heading-gt",0);
         setprop("sim/model/f15/controls/AFCS/engage",0);
+        setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+
 #
 # this is just to ensure that we start with pressure in the util hyds
         setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",-500);
-        settimer(func {setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); }, 4);
+        settimer(func {
+                     setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); 
+                        }, 4);
         if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
         {
             if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 

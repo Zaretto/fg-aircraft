@@ -33,11 +33,12 @@
   <property>systems/ecs/oxygen-pressure-psi</property>
 <!--Windscreen Heating-->
   <property value="6750">systems/ecs/windscreen-factor1</property>
-  <property value="0.05">systems/ecs/windscreen-frost-amount-dmd-rate</property>
+  <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
 
   <property value="0.008333">systems/ecs/windscreen-dt</property>
   <property value="46">systems/ecs/windscreen-heater-watts-second</property> <!--Watts per second ramp up on heater input consumption-->
-  <property value="283">systems/ecs/windscreen-temperature-k</property>
+  <property value="290">systems/ecs/windscreen-temperature-k</property>
+  <property>systems/ecs/windscreen-heater-power-watts</property>
 
   <channel name="Oxygen">
 
@@ -232,9 +233,14 @@
   <!-- current value of temperature (so we can add to it)-->
     <switch name="systems/ecs/windscreen-lv-temperature">
       <default value="systems/ecs/windscreen-temperature-k"/>
-      <test value="systems/ecs/windscreen-oat-k" logic="AND">
-        systems/ecs/windscreen-lv-temperature eq 0
-      </test>
+        <!--<test value="systems/ecs/windscreen-oat-k" logic="AND">
+            systems/ecs/windscreen-heat-active eq 0
+            systems/ecs/windscreen-lv-temperature eq 0
+        </test>-->
+        <test value="283" logic="AND">
+            <!--systems/ecs/windscreen-heat-active gt 0-->
+            systems/ecs/windscreen-lv-temperature eq 0
+        </test>
     </switch>
 
     <switch name="systems/ecs/windscreen-heater-power-lv-watts">
@@ -252,13 +258,17 @@
     <!-- The power that the heater will draw diminshes with the difference in temperature.-->
     <fcs_function name="systems/ecs/windscreen-heater-power-watts">
       <function>
-        <sum>
-          <property>systems/ecs/windscreen-heater-power-lv-watts</property>
-          <product>
-            <property>systems/ecs/windscreen-heater-watts-second</property>
-            <property>systems/ecs/windscreen-dt</property>
-          </product>
-        </sum>
+          <ifthen>
+              <ge> <property>systems/ecs/windscreen-temperature-difference-k</property> <value>80</value> </ge>
+              <value>0</value>
+              <sum>
+                  <property>systems/ecs/windscreen-heater-power-lv-watts</property>
+                  <product>
+                      <property>systems/ecs/windscreen-heater-watts-second</property>
+                      <property>systems/ecs/windscreen-dt</property>
+                  </product>
+              </sum>
+          </ifthen>
       </function>
       <clipto>
         <min> 0 </min>
@@ -292,19 +302,19 @@
       <function>
         <sum>
           <property>systems/ecs/windscreen-lv-temperature</property>
-          <difference>
             <product>
-              <property>systems/ecs/windscreen-dt</property>
-              <product>
-                <value>0.02</value>
+                <property>systems/ecs/windscreen-dt</property>
+                <difference>
+                    <product>
+                <value>0.0017</value>
                 <property>systems/ecs/windscreen-heater-power-watts</property>
               </product>
-            </product>
             <product>
               <value>0.003</value>
               <property>systems/ecs/windscreen-temperature-difference-k</property>
             </product>
-          </difference>
+            </difference>
+            </product>
         </sum>
       </function>
     </fcs_function>

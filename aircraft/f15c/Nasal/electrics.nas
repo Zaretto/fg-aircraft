@@ -719,3 +719,8 @@ setlistener("gear/gear[0]/position-norm", func
 {
     aircraft.setup_als_lights();
 }, 1, 0);
+
+setlistener("sim/model/f15/controls/windshield-heat", func {
+setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+}, 1, 0);
+
