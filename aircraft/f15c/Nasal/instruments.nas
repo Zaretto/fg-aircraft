@@ -740,7 +740,8 @@ var common_init = func {
         setprop("sim/model/f15/controls/AFCS/altitude",0);
         setprop("sim/model/f15/controls/AFCS/heading-gt",0);
         setprop("sim/model/f15/controls/AFCS/engage",0);
-        setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+        if (getprop("sim/model/f15/controls/windshield-heat") != nil)
+            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
 
 #
 # this is just to ensure that we start with pressure in the util hyds
