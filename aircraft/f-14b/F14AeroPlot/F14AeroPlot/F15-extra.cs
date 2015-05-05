@@ -292,5 +292,59 @@ ad.AddFactor("gear/gear-pos-norm");
                         35	0.01696	0.01523	0.01355	0.01092	0.01148	0.01148");
         }
 
+
+//            ad = aero.Add("Engine 0 EGT Rankine", "propulsion/engine[0]/EGT-R", "propulsion/engine[0]/n1");
+//            ad.AddComponent("atmosphere/T-R");
+//            ad.data = parse(ad, 1, @"
+//                         0.0	0.0
+//                        20.0	0.0
+//                        30.0	541.7
+//                        49.0	541.7
+//                        62.0	631.7
+//                        78.0	1171.7
+//                        95.0	1405.7
+//                        99.9	1684.7
+//                       104.0	1684.7");
+
+//            ad = aero.Add("Engine 1 EGT Rankine", "propulsion/engine[1]/EGT-R", "propulsion/engine[1]/n1");
+//            ad.AddComponent("atmosphere/T-R");
+//            ad.data = parse(ad, 1, @"
+//                         0.0	0.0
+//                        20.0	0.0
+//                        30.0	541.7
+//                        49.0	541.7
+//                        62.0	631.7
+//                        78.0	1171.7
+//                        95.0	1405.7
+//                        99.9	1684.7
+//                       104.0	1684.7");
+
+            ad = aero.Add("Cd increment due to ramps, NASA TP-3627, p14 Figure 10", "DCdRamp", "alpha");
+            ad.AddFactor("propulsion/inlet/ramp1-position-norm");
+            ad.data = parse(ad, 1, @" -5	-0.000497134
+1.25	0.00100614
+7.5	0.00670196
+13.75	0.0126305
+20	0.0163277
+");
+            ad = aero.Add("CM increment due to ramps, NASA TP-3627, p14 Figure 10", "DCMRamp", "alpha");
+            ad.AddFactor("propulsion/inlet/ramp1-position-norm");
+            ad.data = parse(ad, 1, @"-5	-0.00197787
+1.25	0.00134069
+7.5	0.00981163
+13.75	0.0215084
+20	0.0319462
+");
+            ad = aero.Add("Cl increment due to ramps, NASA TP-3627, p14 Figure 10", "DClRamp", "alpha");
+            ad.AddFactor("propulsion/inlet/ramp1-position-norm");
+            ad.data = parse(ad, 1, @"
+-5	0.000055925
+1.25	-0.000010545
+7.5	0.000098660
+13.75	0.000622195
+20	0.001254030
+");
+
+       }
     }
 }
