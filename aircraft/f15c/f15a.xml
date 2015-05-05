@@ -575,6 +575,7 @@
     <system file="f-15-cadc"/>
     <system file="f-15-apc"/>
     <system file="f-15-ecs"/>
+    <system file="f-15-engines"/>
     <system file="hook"/>
     <system file="flight-controls"/>
     <aerodynamics>
@@ -642,50 +643,6 @@
                     </tableData>
                 </table>
             </product>
-        </function>
-        <function name="propulsion/engine[0]/EGT-R">
-            <description>Engine 0 EGT Rankine</description>
-            <sum>
-                <property>atmosphere/T-R</property>
-                <product>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
-                        <tableData>
-                            0		 0.00000000
-                            20		 0.00000000
-                            30		 541.70000000
-                            49		 541.70000000
-                            62		 631.70000000
-                            78		 1171.70000000
-                            95		 1405.70000000
-                            99.9		 1684.70000000
-                            104		 1684.70000000
-                        </tableData>
-                    </table>
-                </product>
-            </sum>
-        </function>
-        <function name="propulsion/engine[1]/EGT-R">
-            <description>Engine 1 EGT Rankine</description>
-            <sum>
-                <property>atmosphere/T-R</property>
-                <product>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
-                        <tableData>
-                            0		 0.00000000
-                            20		 0.00000000
-                            30		 541.70000000
-                            49		 541.70000000
-                            62		 631.70000000
-                            78		 1171.70000000
-                            95		 1405.70000000
-                            99.9		 1684.70000000
-                            104		 1684.70000000
-                        </tableData>
-                    </table>
-                </product>
-            </sum>
         </function>
         <function name="aero/coefficients/CdDBRK">
             <description>Drag due to speedbrakes</description>
@@ -7353,11 +7310,10 @@
             </function>
         </axis>
     </aerodynamics>
-</fdm_config>
-<!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
-        <simulation> ON </simulation>
+    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+        --><!--<simulation> ON </simulation>--><!--
         <atmosphere> ON </atmosphere>
-        <massprops> ON </massprops>
+        --><!--<massprops> ON </massprops>
         <aerosurfaces> ON </aerosurfaces>
         <rates> ON </rates>
         <velocities> ON </velocities>
@@ -7366,5 +7322,7 @@
         <coefficients> ON </coefficients>
         <ground_reactions> ON </ground_reactions>
         <fcs> ON </fcs>
-        <propulsion> ON </propulsion>
+        <propulsion> ON </propulsion>--><!--
+        <property>systems/ecs/windscreen-temperature-k</property>
     </output>-->
+</fdm_config>

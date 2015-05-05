@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<!--
+        Description: F-15 F-100 engines
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: 
+    -->
+
+
+<system name="ENGINES">
+
+    <fcs_function name="propulsion/engine[0]/EGT-R-dmd">
+        <description>Engine 0 EGT Rankine</description>
+        <function>
+            <sum>
+                <property>atmosphere/T-R</property>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[0]/fuel-flow-rate-pps</independentVar>
+                        <tableData>
+                            0		 0.00000000
+                            20		 0.00000000
+                            0.14	 541.70000000
+                            1.38		 631.70000000
+                            78		 1171.70000000
+                            95		 1405.70000000
+                            99.9		 1684.70000000
+                            104		 1684.70000000
+                        </tableData>
+                    </table>
+                </product>
+            </sum>
+        </function>
+    </fcs_function >
+    <fcs_function  name="propulsion/engine[1]/EGT-R">
+        <description>Engine 1 EGT Rankine</description>
+        <function>
+            <sum>
+                <property>atmosphere/T-R</property>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
+                        <tableData>
+                            0		 0.00000000
+                            20		 0.00000000
+                            30		 541.70000000
+                            49		 541.70000000
+                            62		 631.70000000
+                            78		 1171.70000000
+                            95		 1405.70000000
+                            99.9		 1684.70000000
+                            104		 1684.70000000
+                        </tableData>
+                    </table>
+                </product>
+            </sum>
+        </function>
+
+    </fcs_function >
+
+
+</system>
