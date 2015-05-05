@@ -317,6 +317,20 @@ namespace F14AeroPlot
             aerodata.Aliases.Add("DRUDD", "fcs/rudder-pos-deg");
             aerodata.Aliases.Add("BETA", "aero/beta-deg");
             aerodata.Aliases.Add("CEF", "aero/cadc-control-effectivity-factor");
+            aerodata.Description = "F-15 - basic aerodynamics are the same, except for the two place canopy which is accounted for";
+            aerodata.AircraftType = "F-15 (all variants)";
+            aerodata.Systems.Add("f-15-hydraulic");
+            aerodata.Systems.Add("f-15-electrics");
+            aerodata.Systems.Add("f-15-engines");
+            aerodata.Systems.Add("f-15-cadc");
+            aerodata.Systems.Add("f-15-apc");
+            aerodata.Systems.Add("f-15-ecs");
+            aerodata.Systems.Add("hook");
+            aerodata.Systems.Add("catapult");
+            aerodata.Systems.Add("holdback");
+            aerodata.Systems.Add("flight-controls");
+            //aerodata.Systems.Add("f15-config");
+
 
             aerodata.References.Add(new ReferenceDocument
             {
