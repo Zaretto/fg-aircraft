@@ -158,7 +158,90 @@
 		</axis>
 	</animation>
 
-	<!-- Instruments Wheel-->
+        <animation>
+            <type>knob</type>
+            <object-name>white-flood-switch</object-name>
+            <property>controls/lighting/dome-norm</property>
+
+            <interpolation>
+                <entry>
+                    <ind>0</ind>
+                    <dep>0</dep>
+                </entry>
+                <entry>
+                    <ind>0.5</ind>
+                    <dep>30</dep>
+                </entry>
+                <entry>
+                    <ind>1.0</ind>
+                    <dep>-30</dep>
+                </entry>
+            </interpolation>
+            <center>
+                <x-m>0.0171</x-m>
+                <y-m>0.0421</y-m>
+                <z-m>0.0039</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>1</y>
+                <z>0</z>
+            </axis>
+
+            <action>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/lighting/dome-norm</property>
+                    <factor>0.5</factor>
+                    <min>0</min>
+                    <max>1</max>
+                    <wrap>false</wrap>
+                </binding>
+            </action>
+        </animation>
+        <animation>
+            <type>knob</type>
+            <object-name>red-flood-switch</object-name>
+            <property>controls/lighting/dome-red-norm</property>
+
+            <interpolation>
+                <entry>
+                    <ind>0</ind>
+                    <dep>0</dep>
+                </entry>
+                <entry>
+                    <ind>0.5</ind>
+                    <dep>30</dep>
+                </entry>
+                <entry>
+                    <ind>1.0</ind>
+                    <dep>-30</dep>
+                </entry>
+            </interpolation>
+            <center>
+                <x-m>0.0529</x-m>
+                <y-m>0.0424</y-m>
+                <z-m>0.0039</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>1</y>
+                <z>0</z>
+            </axis>
+
+            <action>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/lighting/dome-red-norm</property>
+                    <factor>0.5</factor>
+                    <min>0</min>
+                    <max>1</max>
+                    <wrap>false</wrap>
+                </binding>
+            </action>
+        </animation>
+
+        <!-- Instruments Wheel-->
 	<animation>
 		<type>pick</type>
 		<visible>true</visible>
