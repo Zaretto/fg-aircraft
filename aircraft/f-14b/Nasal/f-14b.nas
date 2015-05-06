@@ -80,25 +80,29 @@ var position_flash_init  = func {
 
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
 var cnpy = aircraft.door.new("canopy", 3.9);
-var cswitch = props.globals.getNode("sim/model/f-14b/controls/canopy/canopy-switch", 1);
+#
+#
+# 
+setprop("sim/model/f-14b/controls/canopy/canopy-switch", 0);
 var pos = props.globals.getNode("canopy/position-norm");
 
-var canopyswitch = func(v) {
-	var p = pos.getValue();
-	if (v == 2 ) {
-		if ( p < 1 ) {
-			v = 1;
-		} elsif ( p >= 1 ) {
-			v = -1;
-		}
-	}
-	if (v < 0) {
-		cswitch.setValue(1);
+#
+#
+# cockpit will simply toggle the value of this.
+setlistener("sim/model/f-14b/controls/canopy/canopy-switch", func(v) {
+	if (v.getValue()) 
+        cnpy.open();
+    else
 		cnpy.close();
-	} elsif (v > 0) {
-		cswitch.setValue(-1);
-		cnpy.open();
-	}
+
+}, 1, 0);
+#
+#
+# canopy switch toggle (from keyboard).
+var canopyswitch = func(v) {
+    var cp = getprop("sim/model/f-14b/controls/canopy/canopy-switch");
+
+    setprop("sim/model/f-14b/controls/canopy/canopy-switch", 1 - cp);
 }
 
 
