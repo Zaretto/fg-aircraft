@@ -72,10 +72,22 @@ if(!usingJSBSim)
     setprop("engines/engine[1]/oil-pressure-psi", 28);
 }
 
+var set_console_lighting = func
+{
+    var v = getprop("controls/lighting/panel-norm");
+
+    if (getprop("/fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
+        setprop("controls/lighting/panel-eff-norm", v);
+    else
+        setprop("controls/lighting/panel-eff-norm", 0);
+}
+
 var runEMMISC = func {
 
 # disable if we are in replay mode
 #	if ( getprop("sim/replay/time") > 0 ) { return }
+
+    set_console_lighting();
 
     var masterCaution =  masterCaution_light_set.getValue();
     var master_caution_active  = 0;

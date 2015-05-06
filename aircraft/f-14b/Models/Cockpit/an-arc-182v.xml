@@ -412,14 +412,31 @@
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
+    <emission>
+      <factor-prop>controls/lighting/dome-norm</factor-prop>
+      <red>  1.000</red>
+      <green>0.576</green>
+      <blue> 0.161</blue>
+      <red-prop>controls/lighting/dome-red</red-prop>
+      <green-prop>controls/lighting/dome-green</green-prop>
+      <blue-prop>controls/lighting/dome-blue</blue-prop>
+    </emission>
+  </animation>
+
+  <effect>
+    <name>f14panel</name>
+    <inherits-from>Effects/f14panel</inherits-from>
+    <object-name>mount</object-name>
+  </effect>
+  <effect>
+    <name>f14panel-knob</name>
+    <inherits-from>Effects/f14panel-knob</inherits-from>
+    <object-name>brt-knob</object-name>
+    <object-name>mode-knob</object-name>
+    <object-name>function-knob</object-name>
+    <object-name>vol-knob</object-name>
+  </effect>
+  <animation>
 		<object-name>switches-and-knobs</object-name>
 		<type>material</type>
         <condition>
