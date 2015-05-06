@@ -1110,8 +1110,29 @@
 			<strobe type="bool">false</strobe>
 			<nav-lights type="bool">true</nav-lights>
 			<taxi-light type="bool">false</taxi-light>
-		</lighting>
-		<flight>
+            <!-- component values for lighting. these are set for 100W tungsten ref: http://planetpixelemporium.com/tutorialpages/light.html -->
+            <panel-red type="double">1.000</panel-red>
+            <panel-green type="double">0.576</panel-green>
+            <panel-blue type="double">0.161</panel-blue>
+
+            <dome-red type="double">1.000</dome-red>
+            <dome-green type="double">0.576</dome-green>
+            <dome-blue type="double">0.161</dome-blue>
+
+            <instrument-red type="double">1.000</instrument-red>
+            <instrument-green type="double">0.576</instrument-green>
+            <instrument-blue type="double">0.161</instrument-blue>
+            <!-- F-14 red: <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>-->
+
+            <console-red type="double">1.0000</console-red>
+            <console-green type="double">0.576</console-green>
+            <console-blue type="double">0.161</console-blue>
+
+
+        </lighting>
+        <flight>
 			<ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
 			<fake>0.0</fake>
 			<DLC-engaged type="bool">false</DLC-engaged>
@@ -1120,7 +1141,8 @@
 			<!-- Start with the Parking Brake on -->
 <!--			<brake-parking type="double">1.0</brake-parking> -->
 		</gear>
-	</controls>
+   
+    </controls>
 
 	<engines>
 		<engine n="0">
