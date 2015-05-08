@@ -218,8 +218,62 @@
 
 
 
-  <animation>
+    <animation>
         <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than-equals>
+                <property>controls/lighting/instruments-norm</property>
+                <property>controls/lighting/dome-norm</property>
+            </greater-than-equals>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/dome-norm</property>
+                <property>controls/lighting/instruments-norm</property>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -230,15 +284,18 @@
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.60</red>
-			<green>0.35</green>
-			<blue>0.23</blue>
-		</emission>
-	</animation>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/dome-red</red-prop>
+            <green-prop>controls/lighting/dome-green</green-prop>
+            <blue-prop>controls/lighting/dome-blue</blue-prop>
+        </emission>
+    </animation>
 
-	<animation>
+    <animation>
 		<object-name>tacan</object-name>
 		<type>noshadow</type>
 	</animation>

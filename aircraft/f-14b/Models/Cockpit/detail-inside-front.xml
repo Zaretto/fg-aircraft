@@ -94,7 +94,12 @@
 		<object-name>pedestal</object-name>
 		<object-name>consoles</object-name>
 		<object-name>checklists-pilot</object-name>
-		<type>material</type>
+        <object-name>pedals</object-name>
+        <object-name>bathtub-sides</object-name>
+        <object-name>fire-handle-l</object-name>
+        <object-name>fire-handle-r</object-name>
+        <object-name>floor</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -115,47 +120,8 @@
 
         </emission>
     </animation>
-	<animation> 
-		<object-name>pedals</object-name>
-		<object-name>bathtub-sides</object-name>
-		<object-name>fire-handle-l</object-name>
-		<object-name>fire-handle-r</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.1375</red>
-			<green>0.06</green>
-			<blue>0.025</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>floor</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.0687</red>
-			<green>0.03</green>
-			<blue>0.0125</blue>
-		</emission>
-	</animation>
+
+    
     <effect>
         <name>f14panel</name>
         <inherits-from>Effects/f14panel</inherits-from>

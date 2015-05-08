@@ -1,11 +1,15 @@
 AC3Db
 MATERIAL "ac3dmat1" rgb 1 1 1  amb 1 1 1  emis 0 0 0  spec 0.2 0.2 0.2  shi 128  trans 0
 OBJECT world
-kids 2
+kids 1
+OBJECT group
+name "mount"
+loc -0.0102597 0.0204867 -0.000333378
+kids 3
 OBJECT group
 name "guard"
-loc 0.00321337 0.0396544 -0.000666755
-kids 3
+loc 0.0134731 0.0191677 -0.000333378
+kids 2
 OBJECT poly
 name "guard-mount"
 loc -0.0295676 -0.041258 -0.0023815
@@ -155,10 +159,6 @@ refs 4
 25 0.0299785 0.223276
 22 0.0554487 0.223276
 23 0.0554487 0.223276
-kids 0
-OBJECT group
-name "mount"
-loc -0.00315683 -0.00917513 0.0110538
 kids 0
 OBJECT poly
 name "hyd-transfer-guard-lever"
@@ -420,13 +420,9 @@ refs 4
 21 0.0531877 0.172303
 19 0.0403493 0.169712
 kids 0
-OBJECT group
-name "hyd-transfer"
-loc -0.0246513 0.00740873 -0.0162734
-kids 2
 OBJECT poly
 name "hyd-transfer-pump-switch"
-loc 0.00602294 -0.000567085 0.0311056
+loc -0.00836868 -0.013645 0.0151656
 texture "fuel-panel.png"
 crease 45.000000
 numvert 17
@@ -554,8 +550,8 @@ refs 4
 0 0.0865135 0.097801
 kids 0
 OBJECT poly
-name "mount"
-loc 0.000918562 -0.00608982 0.0162734
+name "panel"
+loc -0.0134731 -0.0191677 0.000333378
 texture "hyd-transfer-pump.rgb"
 crease 45.000000
 numvert 84
