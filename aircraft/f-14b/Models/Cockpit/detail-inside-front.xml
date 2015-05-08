@@ -87,7 +87,7 @@
 		</emission>
 	</animation>-->
 	<animation> 
-		<object-name>labels</object-name>
+		<object-name>radio-labels</object-name>
 		<object-name>vert-side-panels</object-name>
 		<object-name>panel-front-up</object-name>
 		<object-name>knee-panels</object-name>
@@ -101,16 +101,20 @@
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
         <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.275</red>
-			<green>0.12</green>
-			<blue>0.05</blue>
-		</emission>
-	</animation>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
 	<animation> 
 		<object-name>pedals</object-name>
 		<object-name>bathtub-sides</object-name>
@@ -152,4 +156,9 @@
 			<blue>0.0125</blue>
 		</emission>
 	</animation>
-</PropertyList>
+    <effect>
+        <name>f14panel</name>
+        <inherits-from>Effects/f14panel</inherits-from>
+        <object-name>radio-labels</object-name>
+    </effect>
+    </PropertyList>
