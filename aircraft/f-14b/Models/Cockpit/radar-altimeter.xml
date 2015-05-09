@@ -205,77 +205,30 @@
 	</animation>
 
 	<!-- Minimal Altitude Limit Bug Setting Knob -->
-	<animation>
-		<name>low-knob-left-fine</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-left</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>-20</step>
-				<min>50</min>
-			</binding>
-		</action>
-	</animation>
+    <animation>
+        <type>knob</type>
+        <object-name>limit-altitude-knob</object-name>
+        <property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
+        <factor>0</factor>
+       
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
 
-	<animation>
-		<name>low-knob-left-coarse</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-left</object-name>
-		<action>
-			<button>1</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>-100</step>
-				<min>50</min>
-			</binding>
-		</action>
-	</animation>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
 
-	<animation>
-		<name>low-knob-right-fine</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-right</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>20</step>
-				<max>5000</max>
-			</binding>
-		</action>
-	</animation>
-
-	<animation>
-		<name>low-knob-right-coarse</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-right</object-name>
-		<action>
-			<button>1</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>100</step>
-				<max>5000</max>
-			</binding>
-		</action>
-	</animation>
+                <factor>10</factor>
+                <min>0</min>
+                <max>5000</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
 
 
 <!-- lighting -->
