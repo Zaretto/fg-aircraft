@@ -1,18 +1,26 @@
 <?xml version="1.0"?>
 
-<!-- F-14B Altimeter by Richard Harrison rjh@zaretto.com -->
+<!-- F-14B Altimeter by Richard Harrison rjh@zaretto.com 
+Bendix Instruments and Life Support Division, Davenport, Iowa, USA AAU-19A/A servoed counter-drum-pointer altimeter 
+
+Barometric input is used in both standby and normal (servoed) modes. 
+In standby mode, altimeter functions as a conventional pressure altimeter. 
+In normal mode, if indicated barometric pressure altitude matches true pressure altitude from
+central air data computer system (ADCS), no correction is made. If there is a difference, 
+a synchro overrides the barometric mechanism and positions the pointer to true altitude.
+-->
 <PropertyList>
     <path>f14-altimeter.ac</path>
 
     <animation>
         <type>rotate</type>
         <object-name>needle</object-name>
-        <condition>
+        <!--<condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-        </condition>
+        </condition>-->
         <property>instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.36</factor>
         <!--<center>
@@ -32,12 +40,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>drum-1</object-name>
-        <condition>
+        <!--<condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-        </condition>
+        </condition>-->
         <property>instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.001</factor>
         <offset>-100</offset>
@@ -49,36 +57,16 @@
             <z>0</z>
         </axis>
     </animation>
-    <!--<animation>
-        <type>textranslate</type>
-        <object-name>drum-4</object-name>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-        </condition>
-        <property>instrumentation/altimeter/indicated-altitude-ft</property>
-        <factor>0.01</factor>
-        <offset>-10</offset>
-        <step>10</step>
-        <scroll>10</scroll>
-        <axis>
-            <x>0</x>
-            <y>-1</y>
-            <z>0</z>
-        </axis>
-    </animation>-->
 
     <animation>
         <type>textranslate</type>
         <object-name>drum-2</object-name>
-        <condition>
+        <!--<condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-        </condition>
+        </condition>-->
         <property>instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.0001</factor>
         <offset>-1000</offset>
@@ -94,12 +82,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>drum-3</object-name>
-        <condition>
+        <!--<condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-        </condition>
+        </condition>-->
         <property>instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.00001</factor>
         <offset>-10000</offset>
@@ -110,23 +98,6 @@
             <y>-1</y>
             <z>0</z>
         </axis>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>negativ-flag</object-name>
-        <condition>
-            <or>
-                <!-- use the negative flag to indicate no power -->
-                <less-than>
-                    <property>instrumentation/altimeter/indicated-altitude-ft</property>
-                    <value>0</value>
-                </less-than>
-                <equals>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </equals>
-            </or>
-        </condition>
     </animation>
     <animation>
         <type>select</type>
@@ -146,6 +117,20 @@
                 <property>instrumentation/altimeter/indicated-altitude-ft</property>
                 <value>10000</value>
             </less-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>stby-flag</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </equals>
+                <property>instrumentation/altimeter/setting-stby</property>
+            </or>
         </condition>
     </animation>
 
@@ -210,84 +195,62 @@
 
     <!-- Altimeter Ingh Setting Knob -->
     <animation>
-        <name>ingh-knob-left-fine</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>ingh-knob-left</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
-                <step>-0.005</step>
-                <min>26.0</min>
-                <max>33.0</max>
-                <wrap>false</wrap>
-            </binding>
-        </action>
-    </animation>
+        <type>knob</type>
+        <object-name>barometric-pressure-knob</object-name>
+        <property>instrumentation/altimeter/setting-inhg</property>
+        <factor>0</factor>
+        <center>
+            <x-m>0.0212</x-m>
+            <y-m>-0.0354</y-m>
+            <z-m>-0.0321</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
 
-    <animation>
-        <name>ingh-knob-left-coarse</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>ingh-knob-left</object-name>
         <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
             <binding>
                 <command>property-adjust</command>
                 <property>instrumentation/altimeter/setting-inhg</property>
-                <step>-0.025</step>
-                <min>26.0</min>
-                <max>33.0</max>
+               
+                <factor>0.01</factor>
+                <min>27.90</min>
+                <max>31.40</max>
                 <wrap>false</wrap>
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>stby-reset-knob</object-name>
+        <property>instrumentation/altimeter/setting-stby</property>
+        <factor>-90</factor>
+        <center>
+            <x-m>0.0197</x-m>
+            <y-m>0.0336</y-m>
+            <z-m>-0.0323</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
 
-    <animation>
-        <name>ingh-knob-right-fine</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>ingh-knob-right</object-name>
         <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
-                <step>0.005</step>
-                <min>26.0</min>
-                <max>33.0</max>
-                <wrap>false</wrap>
-            </binding>
-        </action>
-    </animation>
+                <property>instrumentation/altimeter/setting-stby</property>
 
-    <animation>
-        <name>ingh-knob-right-coarse</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>ingh-knob-right</object-name>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
-                <step>0.025</step>
-                <min>26.0</min>
-                <max>33.0</max>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
                 <wrap>false</wrap>
             </binding>
         </action>
     </animation>
+    
 
     <!-- lighting -->
     <animation>
