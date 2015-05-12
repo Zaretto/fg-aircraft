@@ -500,3 +500,6 @@ setprop("sim/model/f-14b/lights/master-test-nogo",1);
 setprop("sim/model/f-14b/lights/master-test-go",0);
 }
 }
+setlistener("sim/model/f-14b/controls/windshield-heat", func {
+setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
+}, 1, 0);

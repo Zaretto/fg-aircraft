@@ -1006,7 +1006,12 @@
 		</weight>
 
 	</sim>
-
+    <environment>
+        <aircraft-effects>
+            <overlay-alpha type="float">0.45</overlay-alpha>
+            <use-overlay type="bool">1</use-overlay>
+        </aircraft-effects>
+    </environment>
  <fdm>
   <jsbsim>
    <systems>
@@ -1101,7 +1106,9 @@
 	</consumables>
 
 	<controls>
-		<armament>
+        <windshield-heat type="int">1</windshield-heat>
+
+        <armament>
 			<trigger type="bool">false</trigger>
 		</armament>
 		<lighting>
