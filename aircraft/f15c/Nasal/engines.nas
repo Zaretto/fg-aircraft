@@ -91,7 +91,7 @@ var computeEngines = func {
 
 #
 # EGT Hot is used to control the red colour on the drums
-    if(egt1v >= 2291.67) # 1000degc
+    if(egt1v >= 2180) # ~940 degc
         setprop("/engines/engine[0]/egt-hot",1);
     else
         setprop("/engines/engine[0]/egt-hot",0);
@@ -102,14 +102,15 @@ var computeEngines = func {
     var egt2v = egt2.getValue();
     if (egt2v > 492)
     {
-#
-# EGT Hot is used to control the red colour on the drums
-
         egt2_c.setValue((egt2v-491.67)*(5/9));
     }
     else
         egt2_c.setValue(0);
-    if(egt2v >= 2291.67) # 1000degc
+
+#
+# EGT Hot is used to control the red colour on the drums
+
+    if(egt2v >= 2180) # ~940 degc
         setprop("/engines/engine[1]/egt-hot",1);
     else
         setprop("/engines/engine[1]/egt-hot",0);

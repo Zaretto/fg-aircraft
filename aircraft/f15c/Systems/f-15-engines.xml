@@ -4,59 +4,352 @@
         Description: F-15 F-100 engines
         Author: Richard Harrison (rjh@zaretto.com)
         References: 
+        1. J79-15/-17 TURBOJET ENGINE ACCIDENT INVESTIGATION PROCEDURES ASD-TR-75-19
+        2. NASA TM-86042 Minimum Time and Fuel Flight Profiles for an F-15 Airplane with a Highly Integrated Digital Electronic Control System. Edward A. Haering, Jr., and Frank W. Burcham, Jr.
+        3. NASA TP-1069 Airflow and thrust calibration of an F100 Engine S/N p680059 at selected flight conditions. Thomas J.  Biesiadny,  Douglas  Lee,  and Jose  R.  Rodriguez 
+        3. NASA TP-1228 Altitude calibration of an F100 Engine S/N p680063, Turbofan Engine. Thomas J.  Biesiadny,  Douglas  Lee,  and Jose  R.  Rodriguez 
+        
+        Currently this is calculating the EGT and Burn thru only; using the JSBSim model for the rest.
     -->
 
-
 <system name="ENGINES">
+    <channel name="F100-L">
+        <fcs_function name="propulsion/engine[0]/c-egt-lead">
+            <description>EGT LEAD N1 %</description>
+            <function>
+                <sum>
+                    <product>
+                        <table>
+                            <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
+                            <tableData>
+                                0	18.2
+                                10	12.7
+                                24	8.45
+                                42	5.25
+                                56	4.77
+                                100	4.4
+                            </tableData>
+                        </table>
+                    </product>
+                </sum>
+            </function>
+        </fcs_function >
+        <fcs_function name="propulsion/engine[0]/c-egt-lag">
+            <description>EGT LAG N1 %</description>
+            <function>
+                <sum>
+                    <product>
+                        <table>
+                            <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
+                            <tableData>
+                                0	3.20
+                                10	2.15
+                                24	0.99
+                                42	0.56
+                                56	0.25
+                                100	0.21
+                            </tableData>
+                        </table>
+                    </product>
+                </sum>
+            </function>
+        </fcs_function >
 
-    <fcs_function name="propulsion/engine[0]/EGT-R-dmd">
-        <description>Engine 0 EGT Rankine</description>
-        <function>
-            <sum>
-                <property>atmosphere/T-R</property>
-                <product>
+        <fcs_function name="propulsion/engine[0]/fuel-flow-rate-norm">
+            <description>Fuel Flow normalized</description>
+            <function>
+                <quotient>
+                    <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
+                    <value>3</value>
+                </quotient>
+            </function>
+            <clipto>
+                <max>1.43</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/EGT-C-dmd">
+            <description>Engine 0 EGT Degrees C</description>
+            <function>
+                <sum>
                     <table>
-                        <independentVar lookup="row">propulsion/engine[0]/fuel-flow-rate-pps</independentVar>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
                         <tableData>
-                            0		 0.00000000
-                            20		 0.00000000
-                            0.14	 541.70000000
-                            1.38		 631.70000000
-                            78		 1171.70000000
-                            95		 1405.70000000
-                            99.9		 1684.70000000
-                            104		 1684.70000000
+                            0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
+                            0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
+                            0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
+                            0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
+                            0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
+                            0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
+                            0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
+                            0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
                         </tableData>
                     </table>
-                </product>
-            </sum>
-        </function>
-    </fcs_function >
-    <fcs_function  name="propulsion/engine[1]/EGT-R">
-        <description>Engine 1 EGT Rankine</description>
-        <function>
-            <sum>
-                <property>atmosphere/T-R</property>
-                <product>
+                </sum>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[0]/EGTaug-C-dmd">
+            <description>Engine 0 EGT increment due to augmentation</description>
+            <function>
+                <sum>
                     <table>
-                        <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
+                        <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
                         <tableData>
-                            0		 0.00000000
-                            20		 0.00000000
-                            30		 541.70000000
-                            49		 541.70000000
-                            62		 631.70000000
-                            78		 1171.70000000
-                            95		 1405.70000000
-                            99.9		 1684.70000000
-                            104		 1684.70000000
+                            0.87   0
+                            0.88    108
+                            <!--1.20	216
+                            1.32	232
+                            1.55	249
+                            1.77	260
+                            1.87	268-->
+                            1.00	171
                         </tableData>
                     </table>
+                </sum>
+            </function>
+        </fcs_function>
+ 
+        <lag_filter name="propulsion/engine[0]/EGTaug-C">
+            <input>propulsion/engine[0]/EGTaug-C-dmd</input>
+            <output>propulsion/engine[0]/EGTaug-C</output>
+            <c1>0.03</c1>
+        </lag_filter >
+        <fcs_function name="propulsion/engine[0]/EGT-R-dmd">
+            <description>EGT Demand degrees R</description>
+            <function>
+                <product>
+                    <sum>
+                        <property>propulsion/engine[0]/EGT-C-dmd</property>
+                        <property>propulsion/engine[0]/EGTaug-C</property>
+                        <value>273</value>
+                    </sum>
+                    <value>1.8</value>
                 </product>
-            </sum>
-        </function>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[0]/pt">
+            <description>Total Pressure</description>
+            <function>
+                <!--double pt = Math.Pow(pambient * (1.0 + 0.2 * velocities_mach * velocities_mach), 3.5);-->
+                <pow>
+                    <product>
+                        <product>
+                            <property>atmosphere/P-psf</property>
+                            <value>144</value>
+                        </product>
+                        <sum>
+                            <value>1.0</value>
+                            <product>
+                                <value>0.2</value>
+                                <property>velocities/mach</property>
+                                <property>velocities/mach</property>
+                            </product>
+                        </sum>
+                    </product>
+                    <value>3.5</value>
+                </pow>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[0]/delta">
+            <description>Delta</description>
+            <function>
+                <quotient>
+                    <property>propulsion/engine[0]/pt</property>
+                    <value>14.696</value>
+                </quotient>
+            </function>
+        </fcs_function>
 
-    </fcs_function >
+        <lead_lag_filter name="propulsion/engine[0]/EGT-R">
+            <input>propulsion/engine[0]/EGT-R-dmd</input>
+            <output>propulsion/engine[0]/EGT-R</output>
+            <c1>propulsion/engine[0]/delta</c1>
+            <c2>propulsion/engine[0]/c-egt-lead</c2>
+            <c3>propulsion/engine[0]/delta</c3>
+            <c4>propulsion/engine[0]/c-egt-lead</c4>
+        </lead_lag_filter >
+       <lag_filter name="propulsion/engine[0]/casing-temperature-R">
+            <input>propulsion/engine[0]/EGT-R</input>
+            <output>propulsion/engine[0]/casing-temperature-R</output>
+            <c1>0.01</c1>
+        </lag_filter>
+            <switch name="propulsion/engine[0]/burn-thru">
+            <default value="0"/>
+            <test value="1">
+                propulsion/engine[0]/casing-temperature-R gt 1800
+            </test>
+        </switch>
 
+    </channel>
+    <channel name="F110-R">
+        <fcs_function name="propulsion/engine[1]/c-egt-lead">
+            <description>EGT LEAD N1 %</description>
+            <function>
+                <sum>
+                    <product>
+                        <table>
+                            <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
+                            <tableData>
+                                0	18.2
+                                10	12.7
+                                24	8.45
+                                42	5.25
+                                56	4.77
+                                100	4.4
+                            </tableData>
+                        </table>
+                    </product>
+                </sum>
+            </function>
+        </fcs_function >
+        <fcs_function name="propulsion/engine[1]/c-egt-lag">
+            <description>EGT LAG N1 %</description>
+            <function>
+                <sum>
+                    <product>
+                        <table>
+                            <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
+                            <tableData>
+                                0	3.20
+                                10	2.15
+                                24	0.99
+                                42	0.56
+                                56	0.25
+                                100	0.21
+                            </tableData>
+                        </table>
+                    </product>
+                </sum>
+            </function>
+        </fcs_function >
+
+        <fcs_function name="propulsion/engine[1]/fuel-flow-rate-norm">
+            <description>Fuel Flow normalized</description>
+            <function>
+                <quotient>
+                    <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
+                    <value>3</value>
+                </quotient>
+            </function>
+            <clipto>
+                <max>1.43</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/EGT-C-dmd">
+            <description>Engine 0 EGT Degrees C</description>
+            <function>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
+                        <tableData>
+                            0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
+                            0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
+                            0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
+                            0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
+                            0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
+                            0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
+                            0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
+                            0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[1]/EGTaug-C-dmd">
+            <description>Engine 0 EGT increment due to augmentation</description>
+            <function>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">fcs/throttle-cmd-norm[1]</independentVar>
+                        <tableData>
+                            0.87   0
+                            0.88    108
+                            <!--1.20	216
+                            1.32	232
+                            1.55	249
+                            1.77	260
+                            1.87	268-->
+                            1.00	171
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+ 
+        <lag_filter name="propulsion/engine[1]/EGTaug-C">
+            <input>propulsion/engine[1]/EGTaug-C-dmd</input>
+            <output>propulsion/engine[1]/EGTaug-C</output>
+            <c1>0.03</c1>
+        </lag_filter >
+        <fcs_function name="propulsion/engine[1]/EGT-R-dmd">
+            <description>EGT Demand degrees R</description>
+            <function>
+                <product>
+                    <sum>
+                        <property>propulsion/engine[1]/EGT-C-dmd</property>
+                        <property>propulsion/engine[1]/EGTaug-C</property>
+                        <value>273</value>
+                    </sum>
+                    <value>1.8</value>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[1]/pt">
+            <description>Total Pressure</description>
+            <function>
+                <!--double pt = Math.Pow(pambient * (1.0 + 0.2 * velocities_mach * velocities_mach), 3.5);-->
+                <pow>
+                    <product>
+                        <product>
+                            <property>atmosphere/P-psf</property>
+                            <value>144</value>
+                        </product>
+                        <sum>
+                            <value>1.0</value>
+                            <product>
+                                <value>0.2</value>
+                                <property>velocities/mach</property>
+                                <property>velocities/mach</property>
+                            </product>
+                        </sum>
+                    </product>
+                    <value>3.5</value>
+                </pow>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[1]/delta">
+            <description>Delta</description>
+            <function>
+                <quotient>
+                    <property>propulsion/engine[1]/pt</property>
+                    <value>14.696</value>
+                </quotient>
+            </function>
+        </fcs_function>
+
+        <lead_lag_filter name="propulsion/engine[1]/EGT-R">
+            <input>propulsion/engine[1]/EGT-R-dmd</input>
+            <output>propulsion/engine[1]/EGT-R</output>
+            <c1>propulsion/engine[1]/delta</c1>
+            <c2>propulsion/engine[1]/c-egt-lead</c2>
+            <c3>propulsion/engine[1]/delta</c3>
+            <c4>propulsion/engine[1]/c-egt-lead</c4>
+        </lead_lag_filter >
+       <lag_filter name="propulsion/engine[1]/casing-temperature-R">
+            <input>propulsion/engine[1]/EGT-R</input>
+            <output>propulsion/engine[1]/casing-temperature-R</output>
+            <c1>0.01</c1>
+        </lag_filter>
+            <switch name="propulsion/engine[1]/burn-thru">
+            <default value="0"/>
+            <test value="1">
+                propulsion/engine[1]/casing-temperature-R gt 1800
+            </test>
+        </switch>
+
+    </channel>
 
 </system>

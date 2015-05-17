@@ -27,9 +27,9 @@
         <factor>-45</factor>
         <offset-deg>135</offset-deg>
         <center>
-            <x-m>0.0081</x-m>
-            <y-m>-0.0017</y-m>
-            <z-m>-0.0529</z-m>
+            <x-m>-5.6738</x-m>
+            <y-m>0.3404</y-m>
+            <z-m>0.8416</z-m>
         </center>
         <axis>
             <x>1</x>
@@ -91,9 +91,15 @@
             <y>0</y>
             <z>0</z>
         </axis>
+        <center>
+            <x-m>-5.6888</x-m>
+            <y-m>0.3406</y-m>
+            <z-m>0.8943</z-m>
+        </center>
     </animation>
+
     <animation>
-        <type>rotate</type>
+        <type>knob</type>
         <object-name>bingo-knob</object-name>
         <property>sim/model/f15/controls/fuel/bingo</property>
         <factor>0.048</factor>
@@ -103,10 +109,21 @@
             <z>0</z>
         </axis>
         <center>
-            <x-m>0.0003</x-m>
-            <y-m>0.0301</y-m>
-            <z-m>0.0128</z-m>
+            <x-m>-5.7034</x-m>
+            <y-m>0.3713</y-m>
+            <z-m>0.9073</z-m>
         </center>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/fuel/bingo</property>
+                <factor>500</factor>
+                <min>0</min>
+                <max>15000</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
     </animation>
 
     <animation>
@@ -128,6 +145,11 @@
             <y>0</y>
             <z>0</z>
         </axis>
+        <center>
+            <x-m>-5.6888</x-m>
+            <y-m>0.3406</y-m>
+            <z-m>0.8943</z-m>
+        </center>
     </animation>
     <!--Total -->
 
@@ -364,50 +386,6 @@
         </axis>
     </animation>
 
-    <!-- fuselage and feed tanks -->
-
-
-    <!-- Bingo Knob -->
-
-    <animation>
-        <name>bingo-knob-left-coarse</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>bingo-knob-left</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f15/controls/fuel/bingo</property>
-                <step>-500</step>
-                <min>0</min>
-                <wrap>false</wrap>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <name>bingo-knob-right-coarse</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>bingo-knob-right</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f15/controls/fuel/bingo</property>
-                <step>500</step>
-                <min>0</min>
-                <wrap>false</wrap>
-            </binding>
-        </action>
-
-
-    </animation>
-
     <!-- lighting -->
     <!--<animation>
         <object-name>mount</object-name>
@@ -465,6 +443,13 @@
         <inherits-from>Effects/f15panel-knob</inherits-from>
         <object-name>fuel-display-selector</object-name>
         <object-name>bingo-knob</object-name>
+    </effect>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
     </effect>
 
 </PropertyList>

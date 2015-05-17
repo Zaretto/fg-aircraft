@@ -303,12 +303,10 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-n1-1</object-name>
-        <!--<property>engines/engine[0]/n2</property>-->
         <property>engines/engine[0]/n2</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
-        <scroll>0.5</scroll>
         <center>
             <x-m>0</x-m>
             <y-m>0</y-m>
@@ -366,7 +364,6 @@
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
-        <scroll>0.5</scroll>
         <center>
             <x-m>0</x-m>
             <y-m>0</y-m>
@@ -440,7 +437,7 @@
         <transform>
             <subtype>textranslate</subtype>
             <property>engines/engine[0]/egt-hot</property>
-            <factor>0.25</factor>
+            <factor>-0.25</factor>
             <center>
                 <x-m>0</x-m>
                 <y-m>0</y-m>
@@ -493,7 +490,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-egt-3</object-name>
-        <property>engines/engine[0]/egt-degR</property>
+        <property>engines/engine[0]/egt-degC</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -550,7 +547,7 @@
         <transform>
             <subtype>textranslate</subtype>
             <property>engines/engine[1]/egt-hot</property>
-            <factor>0.25</factor>
+            <factor>-0.25</factor>
             <center>
                 <x-m>0</x-m>
                 <y-m>0</y-m>
@@ -642,12 +639,10 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-ff-1</object-name>
-        <!--<property>engines/engine[0]/fuel-flow_pph</property>-->
         <property>engines/engine[0]/fuel-flow_pph</property>
         <factor>0.00001</factor>
         <offset>-10000</offset>
         <step>10000</step>
-        <scroll>0.5</scroll>
         <center>
             <x-m>0</x-m>
             <y-m>0</y-m>
@@ -723,7 +718,6 @@
         <factor>0.00001</factor>
         <offset>-10000</offset>
         <step>10000</step>
-        <scroll>0.5</scroll>
         <center>
             <x-m>0</x-m>
             <y-m>0</y-m>
@@ -872,5 +866,11 @@
         <name>f15panel-left</name>
         <inherits-from>Effects/f15panel-right</inherits-from>
         <object-name>hyds-mount</object-name>
+    </effect>
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
     </effect>
 </PropertyList>

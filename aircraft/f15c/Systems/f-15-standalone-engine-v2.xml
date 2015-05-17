@@ -1,0 +1,980 @@
+<!--
+        Description: JT8D turbine model 
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: CR-1756 Modelling data; Chatper 12 "Propulsion system" p338
+-->
+<system name="JT8D">
+
+    <property value="0.9">    propulsion/alt/engine[0]/c-ff-lag </property>
+    <property value="0.1">    propulsion/alt/engine[0]/c-egt-lag </property>
+    <property value="16800">  propulsion/alt/engine[0]/c-milthrust-lb </property>
+    <property value="27080">  propulsion/alt/engine[0]/c-maxthrust-lb </property>
+    <property value="1.650">  propulsion/alt/engine[0]/c-augthrust-factor </property>
+    <property value="0.688">  propulsion/alt/engine[0]/c-tsfc </property>
+    <property value="2.104">  propulsion/alt/engine[0]/c-atsfc </property>
+    <property value="1.416">  propulsion/alt/engine[0]/c-atsfc-delta </property>
+    <property value="0.85">   propulsion/alt/engine[0]/c-bypassratio </property>
+    <property value="0.0035"> propulsion/alt/engine[0]/c-augmentation-to-egt </property>
+    <property value="0.01"> propulsion/alt/engine[0]/c-oil-temperature-lag </property>
+    <property value="0"> propulsion/alt/engine[0]/oil-temperature-R </property>
+    <property value="21"> propulsion/alt/engine[0]/c-epr-t1-lag</property>
+    <property value="1">propulsion/alt/engine[0]/epr-t1-dmd-factor</property>
+
+    <property value="0.9">    propulsion/alt/engine[1]/c-ff-lag </property>
+    <property value="0.1">    propulsion/alt/engine[1]/c-egt-lag </property>
+    <property value="16800">  propulsion/alt/engine[1]/c-milthrust-lb </property>
+    <property value="27080">  propulsion/alt/engine[1]/c-maxthrust-lb </property>
+    <property value="1.650">  propulsion/alt/engine[1]/c-augthrust-factor </property>
+    <property value="0.688">  propulsion/alt/engine[1]/c-tsfc </property>
+    <property value="2.104">  propulsion/alt/engine[1]/c-atsfc </property>
+    <property value="1.416">  propulsion/alt/engine[1]/c-atsfc-delta </property>
+    <property value="0.85">   propulsion/alt/engine[1]/c-bypassratio </property>
+    <property value="0.0035"> propulsion/alt/engine[1]/c-augmentation-to-egt </property>
+    <property value="0.01"> propulsion/alt/engine[1]/c-oil-temperature-lag </property>
+    <property value="0"> propulsion/alt/engine[1]/oil-temperature-R </property>
+    <property value="21"> propulsion/alt/engine[1]/c-epr-t1-lag</property>
+    <property value="1">propulsion/alt/engine[1]/epr-t1-dmd-factor</property>
+
+    <channel name="Engine1(Left)">
+        <switch name="fcs/throttle-cmd-norm[0]">
+            <default value="/controls/engines/engine[0]/throttle" />
+        </switch>
+
+        <switch name="fcs/throttle-pos-norm[0]">
+            <default value="fcs/throttle-cmd-norm[0]" />
+        </switch>
+
+        <fcs_function name="propulsion/alt/engine[0]/epr-base">
+            <function>
+                <description>PLA to EPR  Figure 12.1-4 CR-1756</description>
+                <product>
+                    <table>
+                        <!--                        <independentVar lookup="row">fcs/throttle-pos-norm[0] </independentVar> -->
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
+
+                        <independentVar lookup="column">atmosphere/T-R</independentVar>
+                        <tableData>
+                            394.67	459.67	518.67	579.67
+                            0.00	1.0 	1.0 	1.0 	1.0
+                            0.01	1.05335	1.02663	1.01772	1.00881
+                            0.13	1.12676	1.07328	1.04802	1.02724
+                            0.20	1.18416	1.11289	1.06832	1.04308
+                            0.33	1.30794	1.17426	1.11635	1.07624
+                            0.47	1.42128	1.25048	1.16733	1.1109
+                            0.67	1.56682	1.42128	1.29208	1.19109
+                            0.74	1.56682	1.47425	1.34800	1.22921
+                            0.87	1.56682	1.57723	1.44950	1.33068
+                            0.95	1.56682	1.57723	1.54804	1.44851 <!-- 96% augmentation so 0.95 is milthrust  -->
+                            1.00	1.56682	1.57723	1.54804	1.44851
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <summer name="propulsion/alt/engine[0]/inlet-mach">
+            <description>Inlet airflow mach</description>
+            <input>velocities/mach</input>
+            <clipto>
+                <min> 0 </min>
+                <max>1.0</max>
+            </clipto>
+        </summer>
+
+        <fcs_function name="propulsion/alt/engine[0]/epr-mach">
+            <function>
+                <description>PLA~EPR Mach number effect figure 12.1-5 CR-1756</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/inlet-mach</independentVar>
+                        <independentVar lookup="column">position/h-sl-ft</independentVar>
+                        <tableData>
+                            0    	15000   	36065
+                            0.0	-0.000000	-0.000000	-0.000000
+                            0.1	-0.019076	-0.000000	-0.000000
+                            0.2	-0.042277	-0.006561	-0.005187
+                            0.3	-0.076465	-0.039377	-0.038005
+                            0.4	-0.127136	-0.084554	-0.066695
+                            0.6	-0.188796	-0.140721	-0.100886
+                            0.7	-0.258698	-0.202380	-0.140568
+                            0.8	-0.335469	-0.266787	-0.178875
+                            0.9	-0.413614	-0.343558	-0.229547
+                            1.0	-0.497251	-0.434064	-0.291207
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/epr-dmd">
+            <function>
+                <sum>
+                    <property>propulsion/alt/engine[0]/epr-base</property>
+                    <property>propulsion/alt/engine[0]/epr-mach</property>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <summer name="propulsion/alt/engine[0]/epr-delta">
+            <input>propulsion/alt/engine[0]/epr</input>
+            <input>-propulsion/alt/engine[0]/epr-dmd</input>
+        </summer>
+
+        <lag_filter name="propulsion/alt/engine[0]/epr-t1">
+            <input> propulsion/alt/engine[0]/epr-t1-dmd </input>
+            <c1> propulsion/alt/engine[0]/c-epr-t1-lag </c1>
+        </lag_filter>
+
+        <lag_filter name="propulsion/alt/engine[0]/epr">
+            <input> propulsion/alt/engine[0]/epr-dmd </input>
+            <c1> propulsion/alt/engine[0]/epr-t1 </c1>
+        </lag_filter>
+
+        <lag_filter name="propulsion/alt/engine[0]/epr-internal">
+            <input> propulsion/alt/engine[0]/epr-base </input>
+            <c1> propulsion/alt/engine[0]/epr-t1 </c1>
+        </lag_filter>
+
+        <fcs_function name="propulsion/alt/engine[0]/n1">
+            <function>
+                <description>EPR ~ LPT RPM (N1)%. 100% N1 = 3600 RPM Figure 12.3.6</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/epr-internal</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[0]/inlet-mach</independentVar>
+                        <tableData>
+                            0.0     0.1     0.2     0.3     0.4     0.5     0.6     0.7     0.8     0.9      1.00
+                            0.75        0.00    0.00    0.00    0.00    0.00    2.89    14.92   33.52   49.67   59.08   65.61
+                            0.80        0.00    0.00    0.00    0.00    3.41    18.78   33.84   50.14   60.04   66.72   71.22
+                            0.90        0.00    0.00    0.00    18.62   35.93   49.68   60.39   67.78   72.96   76.02   78.71
+                            1.00        24.15   32.07   36.81   51.09   60.05   67.33   72.95   77.63   80.58   82.73   83.66
+                            1.25        78.84   79.53   80.33   82.25   84.85   87.46   89.71   91.07   91.76   91.63   91.79
+                            1.30        83.03   83.61   84.29   85.56   87.85   90.07   91.97   93.04   93.46   93.33   93.43
+                            1.40        89.14   89.28   89.82   91.18   92.96   94.73   95.92   96.53   96.57   96.53   96.63
+                            1.50        94.02   93.92   94.32   95.54   96.98   98.69   99.34   99.46   99.46   99.46   99.65
+                            1.55        95.82   95.78   96.40   97.49   98.84   100.36  100.76  100.98  100.95  100.95  100.95
+                            1.57        97.56   97.57   98.15   99.42   100.65  101.83  102.24  102.16  102.29  102.36  102.41
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+
+        <fcs_function name="propulsion/alt/engine[0]/epr-t1-dmd">
+            <function>
+                <description>EPR ~ Transients</description>
+                <product>
+                    <property>propulsion/alt/engine[0]/epr-t1-dmd-factor</property>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/n1</independentVar>
+                        <tableData>
+                            0   0.6
+                            25  0.16
+                            33  0.3
+                            40  0.5
+                            60  1.7
+                            70 2.0
+                            100 3
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/tt6-thetak1">
+            <function>
+                <description>Corrected High pressure turbine discharge temperature (TT6/ThetaT1) deg K Figure 12.3-5</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/epr</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[0]/inlet-mach</independentVar>
+                        <tableData>
+                            0    0.1     0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
+                            0.64        -425    -409    -118    36      3       213     349     429     469     539
+                            0.70        -275    -259    4       148     145     327     444     523     605     687
+                            0.80        -11     5       217     344     393     527     610     687     732     765
+                            0.90        253     270     432     541     642     699     739     775     800     819
+                            1.00        520     537     648     698     744     784     813     834     849     863
+                            1.10        718     730     768     794     820     847     870     880     892     901
+                            1.20        818     828     849     866     884     900     915     922     929     937
+                            1.30        891     896     909     918     933     943     951     956     962     967
+                            1.40        948     950     960     966     974     981     986     990     993     995
+                            1.50        1001    1002    1008    1011    1012    1016    1016    1021    1021    1023
+                            1.60        1047    1048    1046    1047    1048    1048    1051    1048    1048    1053
+                            1.61        1050    1051    1048    1049    1053    1051    1053    1050    1050    1055
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/theta-t2">
+            <function>
+                <sum>
+                    <value>1.0</value>
+                    <product>
+                        <value>0.2</value>
+                        <property>propulsion/alt/engine[0]/inlet-mach</property>
+                        <property>propulsion/alt/engine[0]/inlet-mach</property>
+                    </product>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/nozzle-dmd-norm">
+            <function>
+                <description>PLA Vs Nozzle open area Figure 8, NASA-TM-104326 </description>
+                <!-- See also F14-AAD-1 Figure 2-13 -->
+                <product>
+                    <table>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
+                        <tableData>
+                            0.0 	0.518071998
+                            <!--
+                            0.10	0.26
+                            0.95	0.26
+                            0.96	1.0000
+                            1.00	1.0000
+-->
+                            0.19	0.518071998
+                            0.25	0.407803505
+                            0.32	0.278669299
+                            0.40	0.260002095
+                            0.54	0.260448348
+                            0.61	0.254352699
+                            0.68	0.251395488
+                            0.73	0.245250081
+                            0.85	0.242475141
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/alt/engine[0]/nozzle-cmd-norm">
+            <default value="propulsion/alt/engine[0]/nozzle-dmd-norm"/>
+            <test value="1.0">
+                fcs/throttle-pos-norm[0] ge 0.95
+            </test>
+            <test value="1.0">
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+                fcs/throttle-pos-norm[0] lt 0.05
+            </test>
+        </switch>
+        <kinematic name="propulsion/alt/engine[0]/nozzle-pos-norm">
+            <input>propulsion/alt/engine[0]/nozzle-cmd-norm</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>1</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.4</time>
+                </setting>
+            </traverse>
+        </kinematic>
+
+        <fcs_function name="propulsion/alt/engine[0]/augmentation-pos">
+            <function>
+                <description>Augmentation factors</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
+                        <tableData>
+                            0	 0
+                            0.96 0.00
+                            1.00 1.00
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/alt/engine[0]/augmentation">
+            <default value="0.0"/>
+            <test value="propulsion/alt/engine[0]/augmentation-pos">
+                propulsion/alt/engine[0]/augmentation-pos ne 0
+                propulsion/alt/engine[0]/nozzle-pos-norm eq 1
+                propulsion/alt/engine[0]/n2 ge 97
+            </test>
+        </switch>
+
+
+        <fcs_function name="propulsion/alt/engine[0]/n2">
+            <function>
+                <description>EPR ~ HPT RPM (N2)%</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/epr-internal</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[0]/inlet-mach</independentVar>
+                        <tableData>
+                            0.0    0.1      0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
+                            1.00     50      51      62      67      71      75      77      79      81      82
+                            1.10     68      69      73      76      78      81      83      84      85      86
+                            1.20     78      79      81      82      84      86      87      88      88      89
+                            1.30     85      85      87      87      89      90      91      91      92      92
+                            1.40     90      90      91      92      93      93      94      94      95      95
+                            1.45     95      95      96      96      96      97      97      97      97      97
+                            1.50     100     100     100     100     100     100     100     100     100     100
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/alt/engine[0]/oil-pressure-psi">
+            <function>
+                <description>OIL pressure </description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/n2</independentVar>
+                        <tableData>
+                            0   0
+                            22  12
+                            50  30
+                            100 48
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/alt/engine[0]/tt6">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[0]/tt6-thetak1</property>
+                    <property>propulsion/alt/engine[0]/theta-t2</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/fn-factor">
+            <function>
+                <description>EPR ~ Installed generalized net thrust Figures 12.2-3, 12.2-4</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[0]/epr</independentVar>
+                        <independentVar lookup="column">velocities/mach</independentVar>
+                        <tableData>
+                            0   	0.1 	0.2	    0.3	    0.4	    0.5	    0.6	    0.7	    0.8	    0.9	    1
+                            0.705	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.074
+                            0.790	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.069	0.124	0.196
+                            0.920	0.000	0.000	0.000	0.000	0.000	0.052	0.140	0.197	0.252	0.305	0.357
+                            1.000	0.000	0.022	0.059	0.092	0.135	0.183	0.249	0.297	0.354	0.404	0.448
+                            1.104	0.302	0.280	0.268	0.272	0.298	0.338	0.384	0.424	0.474	0.519	0.565
+                            1.204	0.526	0.463	0.428	0.428	0.433	0.462	0.493	0.535	0.578	0.617	0.658
+                            1.306	0.708	0.626	0.579	0.567	0.557	0.571	0.594	0.630	0.668	0.710	0.753
+                            1.401	0.858	0.772	0.714	0.679	0.667	0.661	0.680	0.711	0.751	0.792	0.842
+                            1.501	0.993	0.895	0.829	0.786	0.765	0.751	0.763	0.789	0.831	0.877	0.935
+                            1.577	1.073	0.966	0.895	0.849	0.826	0.811	0.824	0.852	0.897	0.947	1.010
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/oil-temperature-delta-R-dmd">
+            <function>
+                <description>Oil temperature increment from ambient based on N1</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">position/h-sl-ft</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[0]/n1</independentVar>
+                        <tableData>
+                            0  	20	60	90	110	120
+                            0	27	175	185	211	229	229
+                            5000	9	191	191	211	229	229
+                            20000	-45	236	198	203	223	223
+                            30000	-79	248	207	203	223	223
+                            45000	-102	270	234	221	234	234
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+
+        <pure_gain name="propulsion/alt/engine[0]/ff-turbine-pph">
+            <input>propulsion/alt/engine[0]/fn-lb</input>
+            <gain>propulsion/alt/engine[0]/c-tsfc</gain>
+            <output>propulsion/alt/engine[0]/ff-turbine-pph</output>
+        </pure_gain>
+
+        <fcs_function name="propulsion/alt/engine[0]/ff-augmentation-pph">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[0]/fn-lb</property>
+                    <property>propulsion/alt/engine[0]/c-atsfc-delta</property>
+                    <property>propulsion/alt/engine[0]/augmentation</property>
+                </product>
+            </function>
+        </fcs_function>
+
+
+        <fcs_function name="propulsion/alt/engine[0]/fn-augmentation-lb">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[0]/fn-factor</property>
+                    <property>propulsion/alt/engine[0]/c-milthrust-lb</property>
+                    <property>propulsion/alt/engine[0]/c-augthrust-factor</property>
+                    <property>propulsion/alt/engine[0]/augmentation</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/fn-lb">
+            <function>
+                <sum>
+                    <product>
+                        <property>propulsion/alt/engine[0]/fn-factor</property>
+                        <property>propulsion/alt/engine[0]/c-milthrust-lb</property>
+                    </product>
+                    <product>
+                        <property>propulsion/alt/engine[0]/augmentation</property>
+                        <property>propulsion/alt/engine[0]/fn-augmentation-lb</property>
+                    </product>
+                </sum>
+                <output>propulsion/alt/engine[0]/fn-lb</output>
+            </function>
+        </fcs_function>
+
+
+        <fcs_function name="propulsion/alt/engine[0]/tt9">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[0]/ff-augmentation-pph</property>
+                    <property>propulsion/alt/engine[0]/c-augmentation-to-egt</property>
+                    <property>propulsion/alt/engine[0]/augmentation</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[0]/egt-r">
+            <function>
+                <product>
+                    <sum>
+                        <property>propulsion/alt/engine[0]/tt6</property>
+                        <property>propulsion/alt/engine[0]/tt9</property>
+                    </sum>
+                    <value>1.8</value>
+                </product>
+            </function>
+        </fcs_function>
+
+        <summer name="propulsion/alt/engine[0]/ff-total-pph">
+            <input>propulsion/alt/engine[0]/ff-turbine-pph</input>
+            <input>propulsion/alt/engine[0]/ff-augmentation-pph</input>
+            <output>propulsion/alt/engine[0]/ff-total-pph</output>
+        </summer>
+
+        <summer name="propulsion/alt/engine[0]/ff-total-pph">
+            <input>propulsion/alt/engine[0]/ff-turbine-pph</input>
+            <input>propulsion/alt/engine[0]/ff-augmentation-pph</input>
+            <output>propulsion/alt/engine[0]/ff-total-pph</output>
+        </summer>
+
+        <lag_filter name="propulsion/alt/engine[0]/oil-temperature-R-delta">
+            <input>propulsion/alt/engine[0]/oil-temperature-delta-R-dmd</input>
+            <c1> propulsion/alt/engine[0]/c-oil-temperature-lag </c1>
+            <output>propulsion/alt/engine[0]/oil-temperature-R-delta</output>
+        </lag_filter>
+
+        <summer name="propulsion/alt/engine[0]/oil-temperature-R">
+            <input>propulsion/alt/engine[0]/oil-temperature-R-delta</input>
+            <input>atmosphere/T-R</input>
+            <output>propulsion/alt/engine[0]/oil-temperature-R</output>
+        </summer>
+
+
+        <lag_filter name="propulsion/engine[0]/EGT-R">
+            <input>propulsion/alt/engine[0]/egt-r</input>
+            <output>propulsion/engine[0]/EGT-R</output>
+            <c1> propulsion/alt/engine[0]/c-egt-lag </c1>
+        </lag_filter>
+
+        <!--<switch name="/engines/engine[0]/oil-pressure-psi">
+            <test value="propulsion/alt/engine[0]/oil-pressure-psi">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="/engines/engine[1]/oil-pressure-psi">
+            <test value="propulsion/alt/engine[0]/oil-pressure-psi">
+                propulsion/engine[0]/set-running ne 0
+            </test>
+        </switch>-->
+
+    </channel>
+    <channel name="Engine2(Right)">
+        <switch name="fcs/throttle-cmd-norm[1]">
+            <default value="/controls/engines/engine[1]/throttle" />
+        </switch>
+
+        <switch name="fcs/throttle-pos-norm[1]">
+            <default value="fcs/throttle-cmd-norm[1]" />
+        </switch>
+
+        <fcs_function name="propulsion/alt/engine[1]/epr-base">
+            <function>
+                <description>PLA to EPR  Figure 12.1-4 CR-1756</description>
+                <product>
+                    <table>
+                        <!--                        <independentVar lookup="row">fcs/throttle-pos-norm[1] </independentVar> -->
+                        <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
+
+                        <independentVar lookup="column">atmosphere/T-R</independentVar>
+                        <tableData>
+                            394.67	459.67	518.67	579.67
+                            0.00	1.0 	1.0 	1.0 	1.0
+                            0.01	1.05335	1.02663	1.01772	1.00881
+                            0.13	1.12676	1.07328	1.04802	1.02724
+                            0.20	1.18416	1.11289	1.06832	1.04308
+                            0.33	1.30794	1.17426	1.11635	1.07624
+                            0.47	1.42128	1.25048	1.16733	1.1109
+                            0.67	1.56682	1.42128	1.29208	1.19109
+                            0.74	1.56682	1.47425	1.34800	1.22921
+                            0.87	1.56682	1.57723	1.44950	1.33068
+                            0.95	1.56682	1.57723	1.54804	1.44851 <!-- 96% augmentation so 0.95 is milthrust  -->
+                            1.00	1.56682	1.57723	1.54804	1.44851
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <summer name="propulsion/alt/engine[1]/inlet-mach">
+            <description>Inlet airflow mach</description>
+            <input>velocities/mach</input>
+            <clipto>
+                <min> 0 </min>
+                <max>1.0</max>
+            </clipto>
+        </summer>
+
+        <fcs_function name="propulsion/alt/engine[1]/epr-mach">
+            <function>
+                <description>PLA~EPR Mach number effect figure 12.1-5 CR-1756</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/inlet-mach</independentVar>
+                        <independentVar lookup="column">position/h-sl-ft</independentVar>
+                        <tableData>
+                            0    	15000   	36065
+                            0.0	-0.000000	-0.000000	-0.000000
+                            0.1	-0.019076	-0.000000	-0.000000
+                            0.2	-0.042277	-0.006561	-0.005187
+                            0.3	-0.076465	-0.039377	-0.038005
+                            0.4	-0.127136	-0.084554	-0.066695
+                            0.6	-0.188796	-0.140721	-0.100886
+                            0.7	-0.258698	-0.202380	-0.140568
+                            0.8	-0.335469	-0.266787	-0.178875
+                            0.9	-0.413614	-0.343558	-0.229547
+                            1.0	-0.497251	-0.434064	-0.291207
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/epr-dmd">
+            <function>
+                <sum>
+                    <property>propulsion/alt/engine[1]/epr-base</property>
+                    <property>propulsion/alt/engine[1]/epr-mach</property>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <summer name="propulsion/alt/engine[1]/epr-delta">
+            <input>propulsion/alt/engine[1]/epr</input>
+            <input>-propulsion/alt/engine[1]/epr-dmd</input>
+        </summer>
+
+        <lag_filter name="propulsion/alt/engine[1]/epr-t1">
+            <input> propulsion/alt/engine[1]/epr-t1-dmd </input>
+            <c1> propulsion/alt/engine[1]/c-epr-t1-lag </c1>
+        </lag_filter>
+
+        <lag_filter name="propulsion/alt/engine[1]/epr">
+            <input> propulsion/alt/engine[1]/epr-dmd </input>
+            <c1> propulsion/alt/engine[1]/epr-t1 </c1>
+        </lag_filter>
+
+        <lag_filter name="propulsion/alt/engine[1]/epr-internal">
+            <input> propulsion/alt/engine[1]/epr-base </input>
+            <c1> propulsion/alt/engine[1]/epr-t1 </c1>
+        </lag_filter>
+
+        <fcs_function name="propulsion/alt/engine[1]/n1">
+            <function>
+                <description>EPR ~ LPT RPM (N1)%. 100% N1 = 3600 RPM Figure 12.3.6</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/epr-internal</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[1]/inlet-mach</independentVar>
+                        <tableData>
+                            0.0     0.1     0.2     0.3     0.4     0.5     0.6     0.7     0.8     0.9      1.00
+                            0.75        0.00    0.00    0.00    0.00    0.00    2.89    14.92   33.52   49.67   59.08   65.61
+                            0.80        0.00    0.00    0.00    0.00    3.41    18.78   33.84   50.14   60.04   66.72   71.22
+                            0.90        0.00    0.00    0.00    18.62   35.93   49.68   60.39   67.78   72.96   76.02   78.71
+                            1.00        24.15   32.07   36.81   51.09   60.05   67.33   72.95   77.63   80.58   82.73   83.66
+                            1.25        78.84   79.53   80.33   82.25   84.85   87.46   89.71   91.07   91.76   91.63   91.79
+                            1.30        83.03   83.61   84.29   85.56   87.85   90.07   91.97   93.04   93.46   93.33   93.43
+                            1.40        89.14   89.28   89.82   91.18   92.96   94.73   95.92   96.53   96.57   96.53   96.63
+                            1.50        94.02   93.92   94.32   95.54   96.98   98.69   99.34   99.46   99.46   99.46   99.65
+                            1.55        95.82   95.78   96.40   97.49   98.84   100.36  100.76  100.98  100.95  100.95  100.95
+                            1.57        97.56   97.57   98.15   99.42   100.65  101.83  102.24  102.16  102.29  102.36  102.41
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+
+        <fcs_function name="propulsion/alt/engine[1]/epr-t1-dmd">
+            <function>
+                <description>EPR ~ Transients</description>
+                <product>
+                    <property>propulsion/alt/engine[1]/epr-t1-dmd-factor</property>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/n1</independentVar>
+                        <tableData>
+                            0   0.6
+                            25  0.16
+                            33  0.3
+                            40  0.5
+                            60  1.7
+                            70 2.0
+                            100 3
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/tt6-thetak1">
+            <function>
+                <description>Corrected High pressure turbine discharge temperature (TT6/ThetaT1) deg K Figure 12.3-5</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/epr</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[1]/inlet-mach</independentVar>
+                        <tableData>
+                            0    0.1     0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
+                            0.64        -425    -409    -118    36      3       213     349     429     469     539
+                            0.70        -275    -259    4       148     145     327     444     523     605     687
+                            0.80        -11     5       217     344     393     527     610     687     732     765
+                            0.90        253     270     432     541     642     699     739     775     800     819
+                            1.00        520     537     648     698     744     784     813     834     849     863
+                            1.10        718     730     768     794     820     847     870     880     892     901
+                            1.20        818     828     849     866     884     900     915     922     929     937
+                            1.30        891     896     909     918     933     943     951     956     962     967
+                            1.40        948     950     960     966     974     981     986     990     993     995
+                            1.50        1001    1002    1008    1011    1012    1016    1016    1021    1021    1023
+                            1.60        1047    1048    1046    1047    1048    1048    1051    1048    1048    1053
+                            1.61        1050    1051    1048    1049    1053    1051    1053    1050    1050    1055
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/theta-t2">
+            <function>
+                <sum>
+                    <value>1.0</value>
+                    <product>
+                        <value>0.2</value>
+                        <property>propulsion/alt/engine[1]/inlet-mach</property>
+                        <property>propulsion/alt/engine[1]/inlet-mach</property>
+                    </product>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/nozzle-dmd-norm">
+            <function>
+                <description>PLA Vs Nozzle open area Figure 8, NASA-TM-104326 </description>
+                <!-- See also F14-AAD-1 Figure 2-13 -->
+                <product>
+                    <table>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
+                        <tableData>
+                            0.0 	0.518071998
+                            <!--
+                            0.10	0.26
+                            0.95	0.26
+                            0.96	1.0000
+                            1.00	1.0000
+-->
+                            0.19	0.518071998
+                            0.25	0.407803505
+                            0.32	0.278669299
+                            0.40	0.260002095
+                            0.54	0.260448348
+                            0.61	0.254352699
+                            0.68	0.251395488
+                            0.73	0.245250081
+                            0.85	0.242475141
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/alt/engine[1]/nozzle-cmd-norm">
+            <default value="propulsion/alt/engine[1]/nozzle-dmd-norm"/>
+            <test value="1.0">
+                fcs/throttle-pos-norm[1] ge 0.95
+            </test>
+            <test value="1.0">
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+                fcs/throttle-pos-norm[1] lt 0.05
+            </test>
+        </switch>
+        <kinematic name="propulsion/alt/engine[1]/nozzle-pos-norm">
+            <input>propulsion/alt/engine[1]/nozzle-cmd-norm</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>1</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.4</time>
+                </setting>
+            </traverse>
+        </kinematic>
+
+        <fcs_function name="propulsion/alt/engine[1]/augmentation-pos">
+            <function>
+                <description>Augmentation factors</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
+                        <tableData>
+                            0	 0
+                            0.96 0.00
+                            1.00 1.00
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/alt/engine[1]/augmentation">
+            <default value="0.0"/>
+            <test value="propulsion/alt/engine[1]/augmentation-pos">
+                propulsion/alt/engine[1]/augmentation-pos ne 0
+                propulsion/alt/engine[1]/nozzle-pos-norm eq 1
+                propulsion/alt/engine[1]/n2 ge 97
+            </test>
+        </switch>
+
+
+        <fcs_function name="propulsion/alt/engine[1]/n2">
+            <function>
+                <description>EPR ~ HPT RPM (N2)%</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/epr-internal</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[1]/inlet-mach</independentVar>
+                        <tableData>
+                            0.0    0.1      0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
+                            1.00     50      51      62      67      71      75      77      79      81      82
+                            1.10     68      69      73      76      78      81      83      84      85      86
+                            1.20     78      79      81      82      84      86      87      88      88      89
+                            1.30     85      85      87      87      89      90      91      91      92      92
+                            1.40     90      90      91      92      93      93      94      94      95      95
+                            1.45     95      95      96      96      96      97      97      97      97      97
+                            1.50     100     100     100     100     100     100     100     100     100     100
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/alt/engine[1]/oil-pressure-psi">
+            <function>
+                <description>OIL pressure </description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/n2</independentVar>
+                        <tableData>
+                            0   0
+                            22  12
+                            50  30
+                            100 48
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/alt/engine[1]/tt6">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[1]/tt6-thetak1</property>
+                    <property>propulsion/alt/engine[1]/theta-t2</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/fn-factor">
+            <function>
+                <description>EPR ~ Installed generalized net thrust Figures 12.2-3, 12.2-4</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/alt/engine[1]/epr</independentVar>
+                        <independentVar lookup="column">velocities/mach</independentVar>
+                        <tableData>
+                            0   	0.1 	0.2	    0.3	    0.4	    0.5	    0.6	    0.7	    0.8	    0.9	    1
+                            0.705	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.074
+                            0.790	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.069	0.124	0.196
+                            0.920	0.000	0.000	0.000	0.000	0.000	0.052	0.140	0.197	0.252	0.305	0.357
+                            1.000	0.000	0.022	0.059	0.092	0.135	0.183	0.249	0.297	0.354	0.404	0.448
+                            1.104	0.302	0.280	0.268	0.272	0.298	0.338	0.384	0.424	0.474	0.519	0.565
+                            1.204	0.526	0.463	0.428	0.428	0.433	0.462	0.493	0.535	0.578	0.617	0.658
+                            1.306	0.708	0.626	0.579	0.567	0.557	0.571	0.594	0.630	0.668	0.710	0.753
+                            1.401	0.858	0.772	0.714	0.679	0.667	0.661	0.680	0.711	0.751	0.792	0.842
+                            1.501	0.993	0.895	0.829	0.786	0.765	0.751	0.763	0.789	0.831	0.877	0.935
+                            1.577	1.073	0.966	0.895	0.849	0.826	0.811	0.824	0.852	0.897	0.947	1.010
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/oil-temperature-delta-R-dmd">
+            <function>
+                <description>Oil temperature increment from ambient based on N1</description>
+                <product>
+                    <table>
+                        <independentVar lookup="row">position/h-sl-ft</independentVar>
+                        <independentVar lookup="column">propulsion/alt/engine[1]/n1</independentVar>
+                        <tableData>
+                            0  	20	60	90	110	120
+                            0	27	175	185	211	229	229
+                            5000	9	191	191	211	229	229
+                            20000	-45	236	198	203	223	223
+                            30000	-79	248	207	203	223	223
+                            45000	-102	270	234	221	234	234
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+
+
+        <pure_gain name="propulsion/alt/engine[1]/ff-turbine-pph">
+            <input>propulsion/alt/engine[1]/fn-lb</input>
+            <gain>propulsion/alt/engine[1]/c-tsfc</gain>
+            <output>propulsion/alt/engine[1]/ff-turbine-pph</output>
+        </pure_gain>
+
+        <fcs_function name="propulsion/alt/engine[1]/ff-augmentation-pph">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[1]/fn-lb</property>
+                    <property>propulsion/alt/engine[1]/c-atsfc-delta</property>
+                    <property>propulsion/alt/engine[1]/augmentation</property>
+                </product>
+            </function>
+        </fcs_function>
+
+
+        <fcs_function name="propulsion/alt/engine[1]/fn-augmentation-lb">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[1]/fn-factor</property>
+                    <property>propulsion/alt/engine[1]/c-milthrust-lb</property>
+                    <property>propulsion/alt/engine[1]/c-augthrust-factor</property>
+                    <property>propulsion/alt/engine[1]/augmentation</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/fn-lb">
+            <function>
+                <sum>
+                    <product>
+                        <property>propulsion/alt/engine[1]/fn-factor</property>
+                        <property>propulsion/alt/engine[1]/c-milthrust-lb</property>
+                    </product>
+                    <product>
+                        <property>propulsion/alt/engine[1]/augmentation</property>
+                        <property>propulsion/alt/engine[1]/fn-augmentation-lb</property>
+                    </product>
+                </sum>
+                <output>propulsion/alt/engine[1]/fn-lb</output>
+            </function>
+        </fcs_function>
+
+
+        <fcs_function name="propulsion/alt/engine[1]/tt9">
+            <function>
+                <product>
+                    <property>propulsion/alt/engine[1]/ff-augmentation-pph</property>
+                    <property>propulsion/alt/engine[1]/c-augmentation-to-egt</property>
+                    <property>propulsion/alt/engine[1]/augmentation</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/alt/engine[1]/egt-r">
+            <function>
+                <product>
+                    <sum>
+                        <property>propulsion/alt/engine[1]/tt6</property>
+                        <property>propulsion/alt/engine[1]/tt9</property>
+                    </sum>
+                    <value>1.8</value>
+                </product>
+            </function>
+        </fcs_function>
+
+        <summer name="propulsion/alt/engine[1]/ff-total-pph">
+            <input>propulsion/alt/engine[1]/ff-turbine-pph</input>
+            <input>propulsion/alt/engine[1]/ff-augmentation-pph</input>
+            <output>propulsion/alt/engine[1]/ff-total-pph</output>
+        </summer>
+
+        <summer name="propulsion/alt/engine[1]/ff-total-pph">
+            <input>propulsion/alt/engine[1]/ff-turbine-pph</input>
+            <input>propulsion/alt/engine[1]/ff-augmentation-pph</input>
+            <output>propulsion/alt/engine[1]/ff-total-pph</output>
+        </summer>
+
+        <lag_filter name="propulsion/alt/engine[1]/oil-temperature-R-delta">
+            <input>propulsion/alt/engine[1]/oil-temperature-delta-R-dmd</input>
+            <c1> propulsion/alt/engine[1]/c-oil-temperature-lag </c1>
+            <output>propulsion/alt/engine[1]/oil-temperature-R-delta</output>
+        </lag_filter>
+
+        <summer name="propulsion/alt/engine[1]/oil-temperature-R">
+            <input>propulsion/alt/engine[1]/oil-temperature-R-delta</input>
+            <input>atmosphere/T-R</input>
+            <output>propulsion/alt/engine[1]/oil-temperature-R</output>
+        </summer>
+
+
+        <lag_filter name="propulsion/engine[1]/EGT-R">
+            <input>propulsion/alt/engine[1]/egt-r</input>
+            <output>propulsion/engine[1]/EGT-R</output>
+            <c1> propulsion/alt/engine[1]/c-egt-lag </c1>
+        </lag_filter>
+
+        <!--<switch name="/engines/engine[1]/oil-pressure-psi">
+            <test value="propulsion/alt/engine[1]/oil-pressure-psi">
+                propulsion/engine[1]/set-running ne 0
+            </test>
+        </switch>
+
+        <switch name="/engines/engine[1]/oil-pressure-psi">
+            <test value="propulsion/alt/engine[1]/oil-pressure-psi">
+                propulsion/engine[1]/set-running ne 0
+            </test>
+        </switch>-->
+
+    </channel>
+</system>

@@ -17,7 +17,7 @@
                     <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
-            </not>
+            </not>p
         </condition>
     </animation>
 
@@ -78,6 +78,11 @@
             <y>0</y>
             <z>0</z>
         </axis>
+        <center>
+            <x-m>-5.6968</x-m>
+            <y-m>0.1554</y-m>
+            <z-m>0.9168</z-m>
+        </center>
     </animation>
 
     <!-- lighting -->
@@ -127,4 +132,10 @@
             <blue-prop>controls/lighting/instrument-blue</blue-prop>
         </emission>
     </animation>
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>

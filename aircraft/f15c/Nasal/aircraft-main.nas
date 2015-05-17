@@ -355,12 +355,13 @@ var quickstart = func() {
 
         settimer(func { 
 
-    setprop("controls/lighting/panel-norm",1);
-    setprop("controls/lighting/instruments-norm",1);
+#    setprop("controls/lighting/panel-norm",1);
+#    setprop("controls/lighting/instruments-norm",1);
     setprop("sim/model/f15/controls/hud/on-off",1);
     setprop("sim/model/f15/controls/VDI/on-off",1);
     setprop("sim/model/f15/controls/HSD/on-off",1);
 
+setprop("sim/model/f15/controls/windshield-heat",1);
     setprop("sim/model/f15/controls/electrics/emerg-flt-hyd-switch",0);
     setprop("sim/model/f15/controls/electrics/emerg-gen-guard-lever",0);
 	setprop("sim/model/f15/controls/electrics/emerg-gen-switch",1);

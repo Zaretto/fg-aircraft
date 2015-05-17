@@ -114,6 +114,11 @@
                 <dep>345</dep>
             </entry>
         </interpolation>
+        <center>
+            <x-m>-5.7005</x-m>
+            <y-m>-0.1427</y-m>
+            <z-m>0.9963</z-m>
+        </center>
         <axis>
             <x>-1</x>
             <y>0</y>
@@ -199,6 +204,11 @@
                 <dep>345</dep>
             </entry>
         </interpolation>
+        <center>
+            <x-m>-5.7005</x-m>
+            <y-m>-0.1427</y-m>
+            <z-m>0.9963</z-m>
+        </center>
         <axis>
             <x>-1</x>
             <y>0</y>
@@ -294,6 +304,11 @@
                 <dep>345</dep>
             </entry>
         </interpolation>
+        <center>
+            <x-m>-5.7005</x-m>
+            <y-m>-0.1427</y-m>
+            <z-m>0.9963</z-m>
+        </center>
         <axis>
             <x>-1</x>
             <y>0</y>
@@ -333,6 +348,11 @@
                 <dep>315</dep>
             </entry>
         </interpolation>
+        <center>
+            <x-m>-5.7005</x-m>
+            <y-m>-0.1427</y-m>
+            <z-m>0.9963</z-m>
+        </center>
         <axis>
             <x>1</x>
             <y>0</y>
@@ -342,71 +362,30 @@
 
     <!-- Air Speed Indicator's Bug Setting -->
     <animation>
-        <name>asi-bug-left-fine</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>asi-bug-left</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>-10</step>
-                <min>225</min>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <name>asi-bug-left-coarse</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>asi-bug-left</object-name>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>-50</step>
-                <min>225</min>
-            </binding>
-        </action>
-    </animation>
+        <type>knob</type>
+        <object-name>knob</object-name>
+        <property>sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
+        <factor>0</factor>
+        <center>
+            <x-m>0.0197</x-m>
+            <y-m>0.0336</y-m>
+            <z-m>-0.0323</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
 
-    <animation>
-        <name>asi-bug-right-fine</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>asi-bug-right</object-name>
         <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
             <binding>
                 <command>property-adjust</command>
                 <property>sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>10</step>
+
+                <factor>10</factor>
+                <min>0</min>
                 <max>1000</max>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <name>asi-bug-right-coarse</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>asi-bug-right</object-name>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>50</step>
-                <max>1000</max>
+                <wrap>false</wrap>
             </binding>
         </action>
     </animation>
@@ -460,4 +439,11 @@
 
         </emission>
     </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>../Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>

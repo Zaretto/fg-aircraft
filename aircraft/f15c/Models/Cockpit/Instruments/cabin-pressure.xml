@@ -12,9 +12,9 @@
         <property>fdm/jsbsim/systems/ecs/cabin-altitude-ft</property>
         <factor>0.00604</factor>
         <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
+            <x-m>-5.7076</x-m>
+            <y-m>0.3728</y-m>
+            <z-m>0.7851</z-m>
         </center>
         <max>50000</max>
         <min>50000</min>
@@ -24,7 +24,7 @@
     </animation>
     <!--Lighting-->
     <animation>
-        <object-name>cabin-pressure-mount</object-name>
+        <object-name>mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -70,4 +70,11 @@
             <blue-prop>controls/lighting/instrument-blue</blue-prop>
         </emission>
     </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>

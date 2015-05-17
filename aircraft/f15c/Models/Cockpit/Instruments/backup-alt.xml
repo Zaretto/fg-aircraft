@@ -12,9 +12,9 @@
         <property>instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.36</factor>
         <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -27,9 +27,9 @@
         <property>instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.036</factor>
         <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -42,9 +42,9 @@
         <property>/instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.0036</factor>
         <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -54,73 +54,29 @@
     <!--***set barometric pressure***-->
 
     <animation>
-        <type>pick</type>
-        <object-name>balt-dec-pressure</object-name>
-        <visible>false</visible>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/backup-altimeter/setting-inhg</property>
-                <step>-0.01</step>
-                <min>27.90</min>
-                <max>31.40</max>
-                <wrap>0</wrap>
-            </binding>
-        </action>
-    </animation>
+        <type>knob</type>
+        <object-name>balt-pressure-knob</object-name>
+        <property>instrumentation/backup-altimeter/setting-inhg</property>
+        <factor>0</factor>
+        <center>
+            <x-m>0.0197</x-m>
+            <y-m>0.0336</y-m>
+            <z-m>-0.0323</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
 
-    <animation>
-        <type>pick</type>
-        <object-name>balt-dec-pressure</object-name>
-        <visible>0</visible>
         <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
             <binding>
                 <command>property-adjust</command>
                 <property>instrumentation/backup-altimeter/setting-inhg</property>
-                <step>-0.1</step>
+                <factor>0.01</factor>
                 <min>27.90</min>
                 <max>31.40</max>
-                <wrap>0</wrap>
-            </binding>
-        </action>
-    </animation>
-
-    <animation>
-        <type>pick</type>
-        <object-name>balt-inc-pressure</object-name>
-        <visible>0</visible>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/backup-altimeter/setting-inhg</property>
-                <step>0.01</step>
-                <min>27.90</min>
-                <max>31.40</max>
-                <wrap>0</wrap>
-            </binding>
-        </action>
-    </animation>
-
-    <animation>
-        <type>pick</type>
-        <object-name>balt-inc-pressure</object-name>
-        <visible>0</visible>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/backup-altimeter/setting-inhg</property>
-                <step>0.1</step>
-                <min>27.90</min>
-                <max>31.40</max>
-                <wrap>0</wrap>
+                <wrap>false</wrap>
             </binding>
         </action>
     </animation>
@@ -144,9 +100,9 @@
             </entry>
         </interpolation>
         <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
         </center>
         <axis>
             <x>1</x>
@@ -203,4 +159,11 @@
             <blue-prop>controls/lighting/instrument-blue</blue-prop>
         </emission>
     </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>
