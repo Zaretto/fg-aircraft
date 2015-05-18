@@ -71,6 +71,8 @@ aircraft.tyresmoke_system.new(0, 1, 2);
 aircraft.rain.init();
 setprop("/environment/aircraft-effects/overlay-alpha",0.45);
 setprop("/environment/aircraft-effects/use-overlay",1);
+setprop("/environment/aircraft-effects/use-reflection",1);
+setprop("/environment/aircraft-effects/reflection-strength",0.25);
 
 
 var position_switch = func(n) {
