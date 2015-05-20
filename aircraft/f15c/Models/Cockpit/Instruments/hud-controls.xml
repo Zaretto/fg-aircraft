@@ -64,7 +64,22 @@
             </greater-than>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
-                <property>sim/model/f15/instrumentation/warnings/ca-ai</property>
+                <and>
+                    <property>instrumentation/ecm/on-off</property>
+                    <property>instrumentation/ecm/alert-type2</property>
+                    <greater-than>
+                        <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                        <value>0</value>
+                    </greater-than>
+                </and>
+                <and>
+                    <property>instrumentation/ecm/on-off</property>
+                    <property>instrumentation/ecm/alert-type1</property>
+                    <greater-than>
+                        <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                        <value>0</value>
+                    </greater-than>
+                </and>
             </or>
         </condition>
     </animation>
