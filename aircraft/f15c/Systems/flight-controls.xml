@@ -55,10 +55,75 @@
             <output>fcs/elevator-pos-rad</output>
         </kinematic>
 
-        <pure_gain name="fcs/differential-elevator-pos-norm">
-            <input>fcs/aileron-right-pos-norm</input>
+        <!-- dtd is washed out with elevator position http://www.f15sim.com/operation/f15_lat_control.html -->
+        <fcs_function name="fcs/differential-elevator-pos-norm">
+            <function>
+                <product>
+                    <property>fcs/aileron-right-pos-norm</property>
+                    <value>0.3</value> <!-- mxaimum authority -->
+                    <table>
+                        <!-- Figure 4 Mechanmical lateral control authority.
+      ** iv; Vc Kts
+      ** stabilator maximum
+      ** dv: full stock aileron deflection degrees
+-->
+                        <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                        <independentVar lookup="column">velocities/vc-kts</independentVar>
+                        <tableData>
+                            635.0	664.3	668.2	714.8	741.3	768.0	794.7
+                        -24	0.16	0.16	0.16	0.16	0.16	0.16	0.16
+                        -23	0.16	0.16	0.16	0.16	0.16	0.16	0.16
+                        -22	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -21	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -20	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -19	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -18	0.19	0.19	0.20	0.20	0.19	0.19	0.19
+                        -17	0.29	0.30	0.30	0.30	0.30	0.29	0.24
+                        -16	0.39	0.40	0.40	0.40	0.40	0.38	0.24
+                        -15	0.50	0.50	0.51	0.50	0.50	0.38	0.24
+                        -14	0.60	0.60	0.61	0.61	0.50	0.38	0.24
+                        -13	0.70	0.70	0.71	0.63	0.50	0.38	0.24
+                        -12	0.80	0.81	0.75	0.63	0.50	0.38	0.24
+                        -11	0.91	0.87	0.75	0.63	0.50	0.38	0.25
+                        -10	1.00	0.87	0.75	0.63	0.50	0.38	0.25
+                        -9	1.00	0.87	0.75	0.63	0.50	0.38	0.25
+                        -8	1.00	0.87	0.75	0.63	0.50	0.38	0.25
+                        -7	1.00	0.88	0.75	0.63	0.50	0.38	0.25
+                        -6	1.00	0.88	0.75	0.63	0.50	0.38	0.25
+                        -5	1.00	0.88	0.75	0.63	0.50	0.38	0.25
+                        -4	0.90	0.88	0.75	0.63	0.50	0.38	0.25
+                        -3	0.79	0.80	0.75	0.63	0.50	0.38	0.25
+                        -2	0.69	0.69	0.69	0.63	0.50	0.38	0.25
+                        -1	0.58	0.59	0.59	0.59	0.50	0.38	0.25
+                        0	0.47	0.49	0.48	0.49	0.48	0.38	0.25
+                        1	0.37	0.39	0.38	0.40	0.38	0.38	0.25
+                        2	0.26	0.28	0.27	0.30	0.28	0.28	0.25
+                        3	0.25	0.25	0.24	0.25	0.25	0.24	0.25
+                        4	0.25	0.25	0.24	0.25	0.24	0.24	0.25
+                        5	0.25	0.25	0.24	0.25	0.24	0.24	0.25
+                        6	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        7	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        8	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        9	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        10	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        11	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        12	0.24	0.24	0.24	0.24	0.24	0.24	0.25
+                        13	0.24	0.24	0.24	0.24	0.24	0.24	0.25
+                        14	0.24	0.24	0.24	0.24	0.24	0.24	0.25
+                        15	0.24	0.24	0.24	0.24	0.24	0.24	0.24
+                        16	0.24	0.24	0.24	0.24	0.24	0.24	0.24
+                        </tableData>
+                        <!--<independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                        <tableData>
+                            -24     0
+                              0     0.3
+                             16     0
+                        </tableData>-->
+                    </table>
+                </product>
             <gain>0.3</gain>
-        </pure_gain>
+            </function>
+        </fcs_function>
 
         <aerosurface_scale name="fcs/differential-elevator-pos-deg">
             <input>fcs/differential-elevator-pos-norm</input>
@@ -159,15 +224,15 @@
 
         <pure_gain name="fcs/aileron-right-pos-deg">
             <input>fcs/aileron-right-pos-rad</input>
-            <gain>57.295779505601046646705075978956</gain>
+            <gain>30</gain>
         </pure_gain >
         <pure_gain name="fcs/aileron-left-pos-deg">
             <input>fcs/aileron-left-pos-rad</input>
-            <gain>57.295779505601046646705075978956</gain>
+            <gain>30</gain>
         </pure_gain >
         <pure_gain name="fcs/aileron-pos-deg">
             <input>fcs/aileron-right-pos-rad</input>
-            <gain>57.295779505601046646705075978956</gain>
+            <gain>30</gain>
         </pure_gain >
 
         <aerosurface_scale name="left aileron normalization">

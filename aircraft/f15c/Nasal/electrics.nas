@@ -437,6 +437,39 @@ var runEMMISC = func {
         }
     }
 
+    if  (getprop("/fdm/jsbsim/systems/cadc/roll-ratio-emergency"))
+    {
+        if (!getprop("sim/model/f15/lights/ca-roll-ratio"))
+        {
+            setprop("sim/model/f15/lights/ca-roll-ratio",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-roll-ratio"))
+        {
+            setprop("sim/model/f15/lights/ca-roll-ratio",0);
+        }
+    }
+    if  (getprop("/fdm/jsbsim/systems/cadc/pitch-ratio-emergency"))
+    {
+        if (!getprop("sim/model/f15/lights/ca-pitch-ratio"))
+        {
+            setprop("sim/model/f15/lights/ca-pitch-ratio",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f15/lights/ca-pitch-ratio"))
+        {
+            setprop("sim/model/f15/lights/ca-pitch-ratio",0);
+        }
+    }
+
     if  (!getprop("fdm/jsbsim/fcs/roll-damper-enable"))
     {
         if (!getprop("sim/model/f15/lights/ca-cas-roll"))
