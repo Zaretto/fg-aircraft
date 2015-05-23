@@ -10,8 +10,8 @@
         <object-name>hsi</object-name>
         <condition>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
         </condition>
         <property>instrumentation/heading-indicator-fg/indicated-heading-deg</property>
@@ -29,8 +29,8 @@
         <object-name>cdi</object-name>
         <condition>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
         </condition>
         <property>instrumentation/heading-indicator-fg/indicated-heading-deg</property>
@@ -49,8 +49,8 @@
         <object-name>bearing-needle-1</object-name>
         <condition>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
         </condition>
         <property>sim/model/f15/instrumentation/tacan/indicated-bearing-mag-deg</property>
@@ -222,7 +222,7 @@
     <!-- HSI-course-card -->
     <animation>
         <type>rotate</type>
-        <object-name>HSI-course-card</object-name>
+        <object-name>gourse-card</object-name>
         <property>instrumentation/nav[1]/radials/selected-deg</property>
         <axis>
             <x>-1</x>
@@ -294,10 +294,12 @@
         <object-name>course-deviation-indicator-off</object-name>
         <condition>
             <or>
-                <less-than>
-                    <property>systems/electrical/outputs/hsi</property>
-                    <value>24</value>
-                </less-than>
+                <not>
+                    <greater-than>
+                        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                        <value>0</value>
+                    </greater-than>
+                </not>
                 <and>
                     <equals>
                         <property>sim/model/f15/f15-nav/selector-ils</property>
@@ -392,8 +394,8 @@
                 <value>true</value>
             </equals>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
             <equals>
                 <property>sim/model/f15/f15-nav/selector-ils</property>
@@ -424,8 +426,8 @@
                 <value>true</value>
             </equals>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
             <equals>
                 <property>sim/model/f15/f15-nav/selector-ils</property>
@@ -462,8 +464,8 @@
                 <value>1</value>
             </equals>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
         </condition>
     </animation>
@@ -512,8 +514,8 @@
                 <value>true</value>
             </equals>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
             <equals>
                 <property>instrumentation/tacan/switch-position</property>
@@ -544,8 +546,8 @@
                 <value>true</value>
             </equals>
             <greater-than>
-                <property>systems/electrical/outputs/hsi</property>
-                <value>24</value>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
             </greater-than>
             <equals>
                 <property>instrumentation/tacan/switch-position</property>

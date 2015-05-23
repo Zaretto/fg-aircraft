@@ -18,9 +18,11 @@ var OurRoll            = props.globals.getNode("orientation/roll-deg");
 
 # 0.6686m = distance eye <-> to mean point of HUD screen.
 var eye_hud_m          = 0.47869;
-var hud_position = 5.63410; # really -5.6 but avoiding more complex equations by being optimal with the signs.
+var hud_position = 5.66824; # really -5.6 but avoiding more complex equations by being optimal with the signs.
+#setprop("sim/model/f15/hud-position",5.63410); 
 var hud_radius_m       = 0.16848; 
-#var hud_radius_m       = 0.185225;
+#setprop("sim/model/f15/hud_radius_m",0.16848);
+var hud_radius_m       = 0.185225;
 
 aircraft.data.add("sim/model/f15/controls/hud/intens", "sim/hud/current-color");
 
@@ -48,6 +50,8 @@ return;
 
 var develev_to_devroll = func(dev_rad, elev_rad) {
 	var clamped = 0;
+#var hud_position=getprop("sim/model/f15/hud-position");
+
     eye_hud_m = hud_position + getprop("sim/current-view/z-offset-m"); # optimised for signs so we get a positive distance.
 	# Deviation length on the HUD (at level flight),
 	var h_dev = eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
@@ -63,7 +67,7 @@ var develev_to_devroll = func(dev_rad, elev_rad) {
 	# clamping
 	var abs_combined_dev_deg = math.abs( combined_dev_deg );
 	var clamp = hud_radius_m;
-
+#clamp=getprop("sim/model/f15/hud_radius_m");
     # squeeze the top of the display area for egg shaped HUD limits.
 #	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
 #		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;

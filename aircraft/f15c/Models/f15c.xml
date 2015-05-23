@@ -1032,16 +1032,37 @@
         </offsets>
     </model>
     <animation>
+        <type>select</type>
+        <object-name>FanLHighSpeed</object-name>
+        <condition>
+            <greater-than>
+                <property>engines/engine[0]/n1</property>
+                <value>50</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>FanL</object-name>
+        <condition>
+            <less-than>
+                <property>engines/engine[0]/n1</property>
+                <value>50</value>
+            </less-than>
+        </condition>
+    </animation>
+    <animation>
         <type>spin</type>
         <object-name>Inlet-Guide-VaneL</object-name>
         <object-name>FanL</object-name>
         <property>engines/engine[0]/n1</property>
-        <factor> 2.0 </factor>
+        <!-- Low Presure Turbine 10,400 rpm-->
+        <factor>104 </factor>
         <center>
-            <x-m>3.83751</x-m>
+            <x-m>3.71309</x-m>
             <!--3.75898-->
-            <y-m> -0.751381</y-m>
-            <z-m> 0.178632</z-m>
+            <y-m> -0.78081</y-m>
+            <z-m> 0.18532</z-m>
         </center>
         <axis>
             <x>-1.0</x>
@@ -1051,16 +1072,38 @@
     </animation>
 
     <animation>
+        <type>select</type>
+        <object-name>FanRHighSpeed</object-name>
+        <condition>
+            <greater-than>
+                <property>engines/engine[1]/n1</property>
+                <value>50</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>FanR</object-name>
+        <condition>
+            <less-than>
+                <property>engines/engine[1]/n1</property>
+                <value>50</value>
+            </less-than>
+        </condition>
+    </animation>
+
+    <animation>
         <type>spin</type>
         <object-name>Inlet-Guide-VaneR</object-name>
         <object-name>FanR</object-name>
         <property>engines/engine[1]/n1</property>
-        <factor>-2.0 </factor>
+        <!-- Low Presure Turbine 10,400 rpm-->
+        <factor>-104 </factor>
         <center>
-            <x-m>3.83751</x-m>
+            <x-m>3.71309</x-m>
             <!--3.75898-->
-            <y-m> 0.751381</y-m>
-            <z-m> 0.178632</z-m>
+            <y-m> 0.78081</y-m>
+            <z-m> 0.18532</z-m>
         </center>
         <axis>
             <x>1.0</x>

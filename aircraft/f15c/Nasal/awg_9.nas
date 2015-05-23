@@ -336,9 +336,9 @@ var hud_nearest_tgt = func() {
                     cr = 200;
                 else if (cr > 1000) 
                     cr = 1000;
+    			HudTgtClosureRate.setValue(cr);
             }
 
-			HudTgtClosureRate.setValue(cr);
 			HudTgtTDeg.setValue(combined_dev_deg);
 			HudTgtTDev.setValue(combined_dev_length);
 			HudTgtHDisplay.setBoolValue(1);

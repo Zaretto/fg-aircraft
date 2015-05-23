@@ -10,7 +10,7 @@
 var ht_xcf = 800;
 var ht_ycf = -900;
 var ht_xco = 0;
-var ht_yco = 0;
+var ht_yco = -30;
 var ht_debug = 0;
 
 #angular definitions

@@ -78,6 +78,8 @@ var runEMMISC = func {
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
     set_console_lighting();
+        
+    setprop("systems/electrical/outputs/DG", getprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus"));
 
     var masterCaution =  masterCaution_light_set.getValue();
     var master_caution_active  = 0;
