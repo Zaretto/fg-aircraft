@@ -302,24 +302,24 @@
             <output>fcs/yaw-damper-active</output>
         </switch>
 
-        <scheduled_gain name="fcs/yaw-damper-rate">
+        <scheduled_gain name="fcs/yaw-damper-sum">
             <input>velocities/r-aero-rad_sec</input>
             <table>
-                <independentVar>aero/qbar-psf</independentVar>
+                <independentVar>velocities/vc-kts</independentVar>
                 <tableData>
-                    3.0000	0.0000
-                    11.0000	3.6251
+                    0   0
+                    80  0
+                    120	3.6251
+                    650 1.65
+                    890 1.00
+                    1000 0.5
                 </tableData>
             </table>
-        </scheduled_gain>
-
-        <summer name="fcs/yaw-damper-sum">
-            <input>fcs/yaw-damper-rate</input>
             <clipto>
                 <min>-0.2000</min>
                 <max>0.2000</max>
             </clipto>
-        </summer>
+        </scheduled_gain>
 
         <scheduled_gain name="fcs/yaw-damper-dmd">
             <input>fcs/yaw-damper-sum</input>
