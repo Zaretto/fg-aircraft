@@ -35,7 +35,6 @@
   <property value="6750">systems/ecs/windscreen-factor1</property>
   <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
 
-  <property value="0.008333">systems/ecs/windscreen-dt</property>
   <property value="46">systems/ecs/windscreen-heater-watts-second</property> <!--Watts per second ramp up on heater input consumption-->
   <property value="290">systems/ecs/windscreen-temperature-k</property>
   <property>systems/ecs/windscreen-heater-power-watts</property>
@@ -243,19 +242,19 @@
         </test>
     </switch>
 
-    <switch name="systems/ecs/windscreen-heater-power-lv-watts">
-      <default value="systems/ecs/windscreen-heater-power-watts"/>
-      <test value="400" logic="AND">
-        systems/ecs/windscreen-heat-active ne 0
-        systems/ecs/windscreen-heater-power-watts lt 400  <!--power on--> 
-      </test>
-      <test value="0" logic="AND">
-        systems/ecs/windscreen-heat-active eq 0
-      </test>
-    </switch>
+      
+      <switch name="systems/ecs/windscreen-heater-power-lv-watts">
+          <default value="systems/ecs/windscreen-heater-power-watts"/>
+          <test value="400" logic="AND">
+              systems/ecs/windscreen-heat-active ne 0
+              systems/ecs/windscreen-heater-power-watts lt 400  <!--power on-->
+          </test>
+          <test value="0" logic="AND">
+              systems/ecs/windscreen-heat-active eq 0
+          </test>
+      </switch>
 
-
-    <!-- The power that the heater will draw diminshes with the difference in temperature.-->
+      <!-- The power that the heater will draw diminshes with the difference in temperature.-->
     <fcs_function name="systems/ecs/windscreen-heater-power-watts">
       <function>
           <ifthen>
@@ -265,14 +264,14 @@
                   <property>systems/ecs/windscreen-heater-power-lv-watts</property>
                   <product>
                       <property>systems/ecs/windscreen-heater-watts-second</property>
-                      <property>systems/ecs/windscreen-dt</property>
+                      <property>simulation/dt</property>
                   </product>
               </sum>
           </ifthen>
       </function>
       <clipto>
         <min> 0 </min>
-        <max> 1200  </max>
+        <max> 600  </max>
       </clipto>
     </fcs_function>
     <!--- Temp= Temp+ Dt*(0.2 * HeaterPowerWatts) - (0.003 * (Temp - OatK)-->
@@ -291,35 +290,57 @@
       </function>
     </fcs_function>
 
+      <fcs_function name="systems/ecs/windscreen-heater-power-watts-delta">
+          <function>
+              <table>
+                  <independentVar lookup="row">systems/ecs/windscreen-temperature-difference-k</independentVar>
+                  <tableData>
+                      0	1.00000
+                      10	0.92255
+                      20	0.88908
+                      30	0.84949
+                      40	0.80103
+                      50	0.73856
+                      60	0.65051
+                      70	0.22000
+                      79	0.02000
+                      80	0.00000
+                  </tableData>
+              </table>
+          </function>
+      </fcs_function>
       <!-- 
          - we are modelling the temperature based on the heater power
          - HeaterPower is based on a ramped value taking into account 
          - Temp= Temp+ Dt*(0.2 * HeaterPowerWatts) - (0.003 * (Temp - OatK)
        -->
 
-    <fcs_function name="systems/ecs/windscreen-temperature-k">
-      <description>Windscreen temperate K</description>
-      <function>
-        <sum>
-          <property>systems/ecs/windscreen-lv-temperature</property>
-            <product>
-                <property>systems/ecs/windscreen-dt</property>
-                <difference>
-                    <product>
-                <value>0.0017</value>
-                <property>systems/ecs/windscreen-heater-power-watts</property>
-              </product>
-            <product>
-              <value>0.003</value>
-              <property>systems/ecs/windscreen-temperature-difference-k</property>
-            </product>
-            </difference>
-            </product>
-        </sum>
-      </function>
-    </fcs_function>
+      <fcs_function name="systems/ecs/windscreen-temperature-k">
+          <description>Windscreen temperate K</description>
+          <function>
+              <sum>
+                  <property>systems/ecs/windscreen-lv-temperature</property>
+                  <product>
+                      <property>simulation/dt</property>
+                      <difference>
+                          <product>
+                              <value>0.0017</value>
+                              <product>
+                                  <property>systems/ecs/windscreen-heater-power-watts-delta</property>
+                                  <property>systems/ecs/windscreen-heater-power-watts</property>
+                              </product>
+                          </product>
+                          <product>
+                              <value>0.003</value>
+                              <property>systems/ecs/windscreen-temperature-difference-k</property>
+                          </product>
+                      </difference>
+                  </product>
+              </sum>
+          </function>
+      </fcs_function>
 
-    <fcs_function name="systems/ecs/windscreen-temperature-c">
+      <fcs_function name="systems/ecs/windscreen-temperature-c">
       <description>Windscreen temperate degrees C</description>
       <function>
         <sum>
