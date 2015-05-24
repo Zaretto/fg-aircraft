@@ -70,7 +70,6 @@ var computeEngines = func {
    if (current_flame_number > 3) current_flame_number = 0;
    setprop("sim/model/f15/fx/flame-number",current_flame_number);
 
-
 	var eng1_burner = Engine1Burner.getValue();
 	var eng2_burner = Engine2Burner.getValue();
 
@@ -125,6 +124,11 @@ var computeEngines = func {
        Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
        Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
    }
+   if ( getprop("sim/replay/time") > 0 ) 
+    return;
+
+   setprop("surface-positions/l-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
+   setprop("surface-positions/r-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
 }
 
 # JFS Startup / running noises
