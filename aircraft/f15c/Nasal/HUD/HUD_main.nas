@@ -7,8 +7,8 @@
 # Richard Harrison (rjh@zaretto.com) 2015-01-27  - based on F-20 HUD main module Enrique Laso (Flying toaster) 
 # ---------------------------
 
-var ht_xcf = 800;
-var ht_ycf = -900;
+var ht_xcf = 1024;
+var ht_ycf = -1024;
 var ht_xco = 0;
 var ht_yco = -30;
 var ht_debug = 0;
