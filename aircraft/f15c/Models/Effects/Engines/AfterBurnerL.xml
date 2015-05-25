@@ -13,6 +13,13 @@ Afterburner effects model
 
     <path>flame.ac</path>
 
+    <model>
+        <path>als-flame.xml</path>
+        <name>ALS-FlameTrail</name>
+        <!--<offsets>
+            <x-m>2.05</x-m>
+        </offsets>-->
+    </model>
     <offsets>
         <z-m>0.0</z-m>
     </offsets>
@@ -28,13 +35,34 @@ Afterburner effects model
         <object-name>FlameModel</object-name>
         <object-name>FlameModelBurn</object-name>
         <object-name>FlameTrail</object-name>
+        <object-name>ALS-FlameTrail</object-name>
         <condition>
-            <greater-than>
-                <property>sim/multiplay/generic/float[8]</property>
-                <value>0</value>
-            </greater-than>
+            <and>
+                <greater-than>
+                    <property>sim/multiplay/generic/float[8]</property>
+                    <value>0</value>
+                </greater-than>
+                <!--<not>
+                    <property>/sim/rendering/shaders/skydome</property>
+                </not>-->
+            </and>
         </condition>
     </animation>
+    <!--<animation>
+        <type>select</type>
+        <object-name>ALS-FlameTrail</object-name>
+        <object-name>FlameModelBurn</object-name>
+        <object-name>FlameModel</object-name>
+        <condition>
+            <and>
+                <greater-than>
+                    <property>sim/multiplay/generic/float[8]</property>
+                    <value>0</value>
+                </greater-than>
+                    <property>/sim/rendering/shaders/skydome</property>
+            </and>
+        </condition>
+    </animation>-->
 
 
     <animation>
@@ -99,6 +127,18 @@ Afterburner effects model
         <z-min>0.5</z-min>
         <x-factor>1.3</x-factor>
         <y-factor>1.3</y-factor>
+        <z-factor>1.0</z-factor>
+    </animation>
+
+    <animation>
+        <type>scale</type>
+        <object-name>ALS-FlameTrail</object-name>
+        <property>sim/multiplay/generic/float[10]</property>
+        <x-min>0.5</x-min>
+        <y-min>0.5</y-min>
+        <z-min>0.5</z-min>
+        <x-factor>2.3</x-factor>
+        <y-factor>1.0</y-factor>
         <z-factor>1.0</z-factor>
     </animation>
 
@@ -199,4 +239,5 @@ Afterburner effects model
             <property>sim/multiplay/generic/float[8]</property>
         </emission>
     </animation>
+
 </PropertyList>

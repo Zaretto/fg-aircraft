@@ -13,6 +13,13 @@ Afterburner effects model
 
     <path>flame.ac</path>
 
+    <model>
+        <path>als-flame.xml</path>
+        <name>ALS-FlameTrail</name>
+        <!--<offsets>
+            <x-m>2.05</x-m>
+        </offsets>-->
+    </model>
     <offsets>
         <z-m>0.0</z-m>
     </offsets>
@@ -28,6 +35,7 @@ Afterburner effects model
         <object-name>FlameModel</object-name>
         <object-name>FlameModelBurn</object-name>
         <object-name>FlameTrail</object-name>
+        <object-name>ALS-FlameTrail</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[9]</property>
@@ -93,12 +101,24 @@ Afterburner effects model
         <type>scale</type>
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
-        <property>sim/multiplay/generic/float[11]</property>
+        <property>sim/multiplay/generic/float[10]</property>
         <x-min>1.0</x-min>
         <y-min>1.0</y-min>
         <z-min>0.5</z-min>
         <x-factor>1.3</x-factor>
         <y-factor>1.3</y-factor>
+        <z-factor>1.0</z-factor>
+    </animation>
+
+    <animation>
+        <type>scale</type>
+        <object-name>ALS-FlameTrail</object-name>
+        <property>sim/multiplay/generic/float[10]</property>
+        <x-min>0.5</x-min>
+        <y-min>0.5</y-min>
+        <z-min>0.5</z-min>
+        <x-factor>2.3</x-factor>
+        <y-factor>1.0</y-factor>
         <z-factor>1.0</z-factor>
     </animation>
 
@@ -140,7 +160,6 @@ Afterburner effects model
             <z>0</z>
         </axis>
     </animation>
-
     <animation>
         <type>textranslate</type>
         <object-name>FlameTrail</object-name>
@@ -172,7 +191,7 @@ Afterburner effects model
             <red>1.0</red>
             <green>0.78</green>
             <blue>0.67</blue>
-        <property>sim/multiplay/generic/float[9]</property>
+            <property>sim/multiplay/generic/float[9]</property>
         </emission>
     </animation>
 
@@ -197,7 +216,8 @@ Afterburner effects model
             <red>1.0</red>
             <green>1.0</green>
             <blue>1.0</blue>
-        <property>sim/multiplay/generic/float[9]</property>
+            <property>sim/multiplay/generic/float[9]</property>
         </emission>
     </animation>
+
 </PropertyList>
