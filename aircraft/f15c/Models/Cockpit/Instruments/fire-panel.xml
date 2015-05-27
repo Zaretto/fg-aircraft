@@ -40,6 +40,17 @@
     </animation>
     <animation>
         <type>select</type>
+        <object-name>amad-fire-button-lamp</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <property>sim/model/f15/lights/master-test-lights</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
         <object-name>fire-button-left-on</object-name>
         <condition>
             <greater-than>
@@ -90,7 +101,7 @@
     <effect>
         <name>f15panel-left</name>
         <inherits-from>Effects/f15panel-left</inherits-from>
-        <object-name>fire-test-panel</object-name>
+        <object-name>discharge-test-panel</object-name>
     </effect>
     <!-- ALS Model Interior (Shadow) -->
     <effect>
@@ -98,6 +109,8 @@
         <inherits-from>Effects/f15interior</inherits-from>
         <object-name>fire-button-left</object-name>
         <object-name>fire-button-right</object-name>
+        <object-name>amad-fire-button</object-name>
         <object-name>discharge-switch</object-name>
+        <object-name>fire-test-panel</object-name>
     </effect>
 </PropertyList>
