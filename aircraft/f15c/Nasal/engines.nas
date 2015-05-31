@@ -15,11 +15,6 @@ var egt2_c = props.globals.getNode("engines/engine[1]/egt-degC", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
 
-var Engine1Burner = props.globals.initNode("engines/engine[0]/afterburner", 0, "DOUBLE");
-var Engine2Burner = props.globals.initNode("engines/engine[1]/afterburner", 0, "DOUBLE");
-var Engine1Augmentation = props.globals.getNode("engines/engine[0]/augmentation",1);
-var Engine2Augmentation = props.globals.getNode("engines/engine[1]/augmentation",1);
-
 
 #props.globals.getNode("sim/model/f15/fx/test1",1);
 #props.globals.getNode("sim/model/f15/fx/test2",1);
@@ -27,8 +22,8 @@ setprop("sim/model/f15/gear-sound-freeze",0);
 setprop("sim/model/f15/engine-sound-freeze",0);
 setprop("sim/model/f15/controls/engines/switch-backup-ignition",0);
 
-setprop("/fdm/jsbsim/propulsion/engine[0]/nozzle-pos-norm",1);
-setprop("/fdm/jsbsim/propulsion/engine[1]/nozzle-pos-norm",1);
+setprop("/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm",1);
+setprop("/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm",1);
 
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f15/fx/engine/l-engine-pitch-n1",1);
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f15/fx/engine/l-engine-pitch-n2",1);
@@ -50,6 +45,10 @@ var jfs_start = props.globals.getNode("sim/model/f15/controls/jfs",1);
 var jfs_running_lamp = props.globals.getNode("sim/model/f15/lights/jfs-ready",1);
 jfs_start.setValue(0);
 jfs_running_lamp.setValue(0);
+setprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight",0);
+setprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight",0);
+setprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner",0);
+setprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner",0);
 
 var jfs_set_running_active = 0;
 
@@ -66,38 +65,47 @@ var current_flame_number = 0;
 
 var computeEngines = func {
 
-   current_flame_number = (current_flame_number + 1);        
-   if (current_flame_number > 3) current_flame_number = 0;
-   setprop("sim/model/f15/fx/flame-number",current_flame_number);
+#
+# flame animation; this will adjust the texture slightly so that the
+# appears to be a degree of movement within the flame
 
-	var eng1_burner = Engine1Burner.getValue();
-	var eng2_burner = Engine2Burner.getValue();
+    current_flame_number = (current_flame_number + 1);        
 
-    # 492 is 0 deg F in Rankin. The rankin scale starts from absolute zero.
+    if (current_flame_number > 3)
+        current_flame_number = 0;
+
+    setprop("sim/model/f15/fx/flame-number",current_flame_number);
+
+#
+#
+# EGT calculations. The fdm computes EGT - however we need to scale into degrees C
+# and also decide when the engines are hot (so that the drum on the gauge becomes red)
+
+# 492 is 0 deg F in Rankin. The rankin scale starts from absolute zero.
 	egt_norm1.setValue((egt1.getValue()-492)*0.000679348);
 	egt_norm2.setValue((egt2.getValue()-492)*0.000679348);
 
     egt1_rankin.setValue(egt1.getValue());
     egt2_rankin.setValue(egt2.getValue());
+
     var egt1v = egt1.getValue();
     if (egt1v > 492)
     {
-
         egt1_c.setValue((egt1v-491.67)*(5/9));
     }
     else
         egt1_c.setValue(0);
 
-#
-# EGT Hot is used to control the red colour on the drums
+    #
+    # EGT Hot is used to control the red colour on the drums
     if(egt1v >= 2180) # ~940 degc
         setprop("/engines/engine[0]/egt-hot",1);
     else
         setprop("/engines/engine[0]/egt-hot",0);
 
-#
-#
-# R Engine EGT
+    #
+    #
+    # R Engine EGT
     var egt2v = egt2.getValue();
     if (egt2v > 492)
     {
@@ -106,29 +114,31 @@ var computeEngines = func {
     else
         egt2_c.setValue(0);
 
-#
-# EGT Hot is used to control the red colour on the drums
+    #
+    # EGT Hot is used to control the red colour on the drums
 
     if(egt2v >= 2180) # ~940 degc
         setprop("/engines/engine[1]/egt-hot",1);
     else
         setprop("/engines/engine[1]/egt-hot",0);
 
-   if ( getprop("sim/replay/time") > 0 ) 
-   { 
-       setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
-       setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
-   }
-   else
-   {
-       Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
-       Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
-   }
-   if ( getprop("sim/replay/time") > 0 ) 
-    return;
+    if ( getprop("sim/replay/time") > 0 ) 
+    { 
+        setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
+        setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
+    }
+    else
+    {
+# not in replay so copy the properties;
+        # 
+        setprop("engines/engine[0]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
+        setprop("engines/engine[1]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
+        setprop("engines/engine[0]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
+        setprop("engines/engine[1]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
 
-   setprop("surface-positions/l-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
-   setprop("surface-positions/r-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
+        setprop("surface-positions/l-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
+        setprop("surface-positions/r-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
+    }
 }
 
 # JFS Startup / running noises

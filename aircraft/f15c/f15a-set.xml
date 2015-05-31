@@ -73,11 +73,11 @@
                 <!-- Engine nozzles -->
                 <signal>
                     <type>float</type>
-                    <property type="string">engines/engine[0]/nozzle-pos-norm</property>
+                    <property type="string">/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm</property>
                 </signal>
                 <signal>
                     <type>float</type>
-                    <property type="string">engines/engine[1]/nozzle-pos-norm</property>
+                    <property type="string">/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm</property>
                 </signal>
                 <signals include="/Aircraft/Generic/flightrecorder/components/faults-engines.xml">
                     <count type="int">2</count>
@@ -677,10 +677,10 @@
                 <!-- right elevator -->
                 <float n="6">0</float>
                 <!-- refuel probe/door -->
-                <float n="8" alias="/engines/engine[0]/afterburner" />
-                <float n="9" alias="/engines/engine[1]/afterburner" />
-                <float n="10" alias="/engines/engine[0]/nozzle-pos-norm" />
-                <float n="11" alias="/engines/engine[1]/nozzle-pos-norm" />
+                <float n="8" alias="/engines/engine[0]/augmentation-burner" />
+                <float n="9" alias="/engines/engine[1]/augmentation-burner" />
+                <float n="10" alias="/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" />
+                <float n="11" alias="/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" />
                 <float n="12" alias="/surface-positions/l-ramp1-position-deg" />
                 <float n="13" alias="/surface-positions/r-ramp1-position-deg" />
                 <float n="14" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1" />
@@ -701,6 +701,8 @@
                 <!-- free -->
                 <int n="7" type="int">0</int>
                 <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
+                <int n="8" alias="/engines/engine[0]/afterburner" />
+                <int n="9" alias="/engines/engine[1]/afterburner" />
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
