@@ -22,14 +22,12 @@ Components:
         <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
         <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
     </params>-->
-    
+
     <model>
         <path>als-flame.xml</path>
         <name>ALS-FlameTrail</name>
-        <!--<offsets>
-            <x-m>2.05</x-m>
-        </offsets>-->
     </model>
+
     <offsets>
         <z-m>0.0</z-m>
     </offsets>
@@ -39,17 +37,20 @@ Components:
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
     </effect>
+
     <animation>
         <type>select</type>
         <object-name>FlameModelBurn</object-name>
         <condition>
             <or>
                 <greater-than>
-                    <property>sim/multiplay/generic/float[8]</property> <!-- ignition (sequence 0 to 1)-->
+                    <property>sim/multiplay/generic/float[8]</property>
+                    <!-- ignition (sequence 0 to 1)-->
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>sim/multiplay/generic/int[8]</property> <!-- alight -->
+                    <property>sim/multiplay/generic/int[8]</property>
+                    <!-- alight -->
                     <value>0</value>
                 </greater-than>
             </or>
@@ -59,17 +60,21 @@ Components:
     <animation>
         <type>select</type>
         <object-name>FlameModel</object-name>
+        <condition>
+            <greater-than-equals>
+                <property>sim/multiplay/generic/int[8]</property>
+                <value>1</value>
+            </greater-than-equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
         <object-name>ALS-FlameTrail</object-name>
         <condition>
-            <and>
-                <greater-than>
-                    <property>sim/multiplay/generic/int[8]</property>
-                    <value>1</value>
-                </greater-than>
-                <!--<not>
-                    <property>/sim/rendering/shaders/skydome</property>
-                </not>-->
-            </and>
+            <greater-than>
+                <property>sim/multiplay/generic/float[8]</property>
+                <value>0.8</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -155,14 +160,14 @@ Components:
         <type>scale</type>
         <object-name>ALS-FlameTrail</object-name>
         <property>sim/multiplay/generic/int[8]</property>
-        <x-min>0.6</x-min>
-        <y-min>0.6</y-min>
-        <z-min>0.6</z-min>
+        <x-min>0.2</x-min>
+        <y-min>0.3</y-min>
+        <z-min>0.3</z-min>
         <y-max>1</y-max>
         <z-max>1</z-max>
         <x-factor>0.472</x-factor>
-        <y-factor>0.2</y-factor>
-        <z-factor>0.2</z-factor>
+        <y-factor>0.6</y-factor>
+        <z-factor>0.6</z-factor>
     </animation>
 
     <animation>
@@ -218,13 +223,12 @@ Components:
         <type>material</type>
         <object-name>FlameModelBurn</object-name>
         <emission>
-            <red>0.1</red>
-            <green>0.078</green>
-            <blue>0.067</blue>
+            <red>1</red>
+            <green>0.78</green>
+            <blue>0.67</blue>
             <property>sim/multiplay/generic/float[8]</property>
         </emission>
-        
-    </animation>
+   </animation>
 
     <animation>
         <type>material</type>

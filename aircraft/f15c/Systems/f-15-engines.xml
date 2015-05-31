@@ -206,20 +206,15 @@
             <output>propulsion/engine[0]/augmentation-alightC</output>
             <c1>0.001</c1>
         </lag_filter >-->
+        <actuator name="propulsion/engine[0]/augmentation-ignition-sequence">
+            <input> propulsion/engine[0]/augmentation-igniting </input>
+            <rate_limit> 1.2 </rate_limit>
+            <clipto>
+                <min> 0 </min>
+                <max>  1</max>
+            </clipto>
+        </actuator>
 
-        <kinematic name="propulsion/engine[0]/augmentation-ignition-sequence">
-            <input>propulsion/engine[0]/augmentation-igniting</input>
-            <traverse>
-                <setting>
-                    <position>0</position>
-                    <time>0.01</time>
-                </setting>
-                <setting>
-                    <position>1</position>
-                    <time>0.4</time>
-                </setting>
-            </traverse>
-        </kinematic>
         <switch name="propulsion/engine[0]/augmentation-alight-dmd">
             <default value="0"/>
             <test value="propulsion/engine[0]/augmentation-stage">
@@ -233,6 +228,7 @@
             </test>
             <test value="propulsion/engine[0]/augmentation-alight">
                 propulsion/engine[0]/augmentation-stage gt 0
+                propulsion/engine[0]/augmentation-alight ne 0
                 propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
             </test>
         </switch>
@@ -242,8 +238,8 @@
                 propulsion/engine[0]/augmentation-alight ne 0
                 propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
             </test>
-            <test value="propulsion/engine[0]/augmentation-igniting">
-                propulsion/engine[0]/augmentation-igniting ne 0
+            <test value="propulsion/engine[0]/augmentation-ignition-sequence">
+                propulsion/engine[0]/augmentation-ignition-sequence ne 0
                 propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
             </test>
         </switch>
@@ -388,8 +384,9 @@
 
         <switch name="propulsion/engine[0]/alt/nozzle-cmd-norm">
             <default value="propulsion/engine[0]/alt/nozzle-dmd-norm"/>
-            <test value="1.0">
+            <test value="1.0" logic="OR">
                 propulsion/engine[0]/augmentation-alight gt 0
+                propulsion/engine[0]/augmentation-ignition gt 0.4
             </test>
         </switch>
         <kinematic name="propulsion/engine[0]/alt/nozzle-pos-norm">
@@ -405,10 +402,7 @@
                 </setting>
             </traverse>
         </kinematic>
-
         <!-- a/b lighting envelope; use outside of this envelope will increase risk of blowout-->
-
-        <!-- -->
     </channel>
 
     <channel name="F100-R">
@@ -564,20 +558,15 @@
             <output>propulsion/engine[1]/augmentation-alightC</output>
             <c1>0.001</c1>
         </lag_filter >-->
+        <actuator name="propulsion/engine[1]/augmentation-ignition-sequence">
+            <input> propulsion/engine[1]/augmentation-igniting </input>
+            <rate_limit> 1.2 </rate_limit>
+            <clipto>
+                <min> 0 </min>
+                <max>  1</max>
+            </clipto>
+        </actuator>
 
-        <kinematic name="propulsion/engine[1]/augmentation-ignition-sequence">
-            <input>propulsion/engine[1]/augmentation-igniting</input>
-            <traverse>
-                <setting>
-                    <position>0</position>
-                    <time>0.01</time>
-                </setting>
-                <setting>
-                    <position>1</position>
-                    <time>0.4</time>
-                </setting>
-            </traverse>
-        </kinematic>
         <switch name="propulsion/engine[1]/augmentation-alight-dmd">
             <default value="0"/>
             <test value="propulsion/engine[1]/augmentation-stage">
@@ -591,6 +580,7 @@
             </test>
             <test value="propulsion/engine[1]/augmentation-alight">
                 propulsion/engine[1]/augmentation-stage gt 0
+                propulsion/engine[1]/augmentation-alight ne 0
                 propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
             </test>
         </switch>
@@ -600,8 +590,8 @@
                 propulsion/engine[1]/augmentation-alight ne 0
                 propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
             </test>
-            <test value="propulsion/engine[1]/augmentation-igniting">
-                propulsion/engine[1]/augmentation-igniting ne 0
+            <test value="propulsion/engine[1]/augmentation-ignition-sequence">
+                propulsion/engine[1]/augmentation-ignition-sequence ne 0
                 propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
             </test>
         </switch>
@@ -746,8 +736,9 @@
 
         <switch name="propulsion/engine[1]/alt/nozzle-cmd-norm">
             <default value="propulsion/engine[1]/alt/nozzle-dmd-norm"/>
-            <test value="1.0">
+            <test value="1.0" logic="OR">
                 propulsion/engine[1]/augmentation-alight gt 0
+                propulsion/engine[1]/augmentation-ignition gt 0.4
             </test>
         </switch>
         <kinematic name="propulsion/engine[1]/alt/nozzle-pos-norm">
