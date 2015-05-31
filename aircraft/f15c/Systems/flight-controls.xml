@@ -555,34 +555,4 @@
             <output>fcs/hook-pos-norm</output>
         </kinematic>
     </channel>
-    <channel name="engines">
-
-        <!-- Throttles uses the APC value - which will either be the demanded for APC or the input value from throttle-cmd -->
-    <scheduled_gain name="ThrottleL">
-        <input>systems/apc/throttle-cmd[0]</input>
-        <table>
-            <independentVar>systems/apc/throttle-cmd[0]</independentVar>
-            <tableData>
-                0.00    0.0
-                <!--0.09    0.0-->
-                0.88    1.0
-                1.00    2.0
-            </tableData>
-        </table>
-        <output>fcs/throttle-pos-norm[0]</output>
-    </scheduled_gain>
-    <scheduled_gain name="ThrottleR">
-        <input>systems/apc/throttle-cmd[1]</input>
-        <table>
-            <independentVar>systems/apc/throttle-cmd[1]</independentVar>
-            <tableData>
-                0.00    0.0
-                <!--0.09    0.0-->
-                0.88    1.0
-                1.00    2.0
-            </tableData>
-        </table>
-        <output>fcs/throttle-pos-norm[1]</output>
-    </scheduled_gain>
-</channel>
 </system>

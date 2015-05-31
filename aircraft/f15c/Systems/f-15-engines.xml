@@ -13,6 +13,46 @@
     -->
 
 <system name="ENGINES">
+    <channel name="engine-control">
+
+        <!-- Throttles uses the APC value - which will either be the demanded for APC or the input value from throttle-cmd -->
+        <scheduled_gain name="ThrottleL">
+            <input>systems/apc/throttle-cmd[0]</input>
+            <table>
+                <independentVar>systems/apc/throttle-cmd[0]</independentVar>
+                <tableData>
+                    <!-- 5 stage non linear augmentation-->
+                    0.00    0.0
+                    0.8999  0.999
+                    0.91    1.0
+                    0.93    1.25
+                    0.95    1.50
+                    0.97    1.75
+                    1.00    2.0
+                </tableData>
+            </table>
+            <output>fcs/throttle-pos-norm[0]</output>
+        </scheduled_gain>
+        
+        <scheduled_gain name="ThrottleR">
+            <input>systems/apc/throttle-cmd[1]</input>
+            <table>
+                <independentVar>systems/apc/throttle-cmd[1]</independentVar>
+                <tableData>
+                    <!-- 5 stage non linear augmentation-->
+                    0.00    0.0
+                    0.8999  0.999
+                    0.91    1.0
+                    0.93    1.25
+                    0.95    1.50
+                    0.97    1.75
+                    1.00    2.0
+                </tableData>
+            </table>
+            <output>fcs/throttle-pos-norm[1]</output>
+        </scheduled_gain>
+    </channel>
+    
     <channel name="F100-L">
         <fcs_function name="propulsion/engine[0]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
@@ -89,21 +129,151 @@
                 </sum>
             </function>
         </fcs_function>
+
+    <!-- Augmentation 
+         The augmentation has a five stage burner; with high voltage ignition. Sufficient pressure at the ignitor is required and
+         this is performed by the augmentation control system on the engine. As soon as there is sufficient pressure, regardless of the compressor
+         rpm the augmentor can fire. 
+      -->
+        <fcs_function name="propulsion/engine[0]/PB">
+            <description>Engine 0 SS Burner pressure ratio</description>
+            <function>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                        <independentVar lookup="column">velocities/mach</independentVar>
+                        <tableData>
+	                                0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
+                                0	1.10000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                                8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                                16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
+                                24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
+                                32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
+                                40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
+                                48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
+                                56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
+                                63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
+                                71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
+                                79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
+                                87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
+                                95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
+                                97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
+                                98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
+                                100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[0]/augmentation-stage">
+            <function>
+                <integer>
+                    <sum>
+                        <value>1.0</value>
+                        <product>
+                            <sum>
+                                <property>fcs/throttle-pos-norm[0]</property>
+                                <value>-1</value>
+                            </sum>
+                            <value>5</value>
+                        </product>
+                    </sum>
+                </integer>
+                </function>
+            <clipto>
+                <min>0</min>
+                <max>5</max>
+            </clipto>
+        </fcs_function>
+        <switch name="propulsion/engine[0]/augmentation-ignition">
+            <default value="0"/>
+            <test value="1">
+                propulsion/engine[0]/PB gt 2.14
+                propulsion/engine[0]/augmentation-stage gt 0
+                propulsion/engine[0]/augmentation-alight eq 0
+            </test>
+        </switch>
+        <switch name="propulsion/engine[0]/augmentation-igniting">
+            <default value="0"/>
+            <test value="1">
+                propulsion/engine[0]/augmentation-ignition gt 0
+                propulsion/engine[0]/augmentation-alight eq 0
+            </test>
+        </switch>
+
+        <!--<lag_filter name="propulsion/engine[0]/augmentation-alight">
+            <input></input>
+            <output>propulsion/engine[0]/augmentation-alightC</output>
+            <c1>0.001</c1>
+        </lag_filter >-->
+
+        <kinematic name="propulsion/engine[0]/augmentation-ignition-sequence">
+            <input>propulsion/engine[0]/augmentation-igniting</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>0.1</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>2</time>
+                </setting>
+            </traverse>
+        </kinematic>
+        <switch name="propulsion/engine[0]/augmentation-alight-dmd">
+            <default value="0"/>
+            <test value="propulsion/engine[0]/augmentation-stage">
+                propulsion/engine[0]/augmentation-stage ne propulsion/engine[0]/augmentation-alight
+                propulsion/engine[0]/augmentation-alight ne 0
+            </test>
+            <test value="propulsion/engine[0]/augmentation-stage">
+                propulsion/engine[0]/augmentation-ignition-sequence gt 0.9
+            </test>
+            <test value="propulsion/engine[0]/augmentation-alight">
+                propulsion/engine[0]/augmentation-stage gt 0
+            </test>
+        </switch>
+        <kinematic name="propulsion/engine[0]/augmentation-alight">
+            <input>propulsion/engine[0]/augmentation-alight-dmd</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>0.01</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.01</time>
+                </setting>
+                <setting>
+                    <position>2</position>
+                    <time>0.01</time>
+                </setting>
+                <setting>
+                    <position>3</position>
+                    <time>0.01</time>
+                </setting>
+                <setting>
+                    <position>4</position>
+                    <time>0.01</time>
+                </setting>
+                <setting>
+                    <position>5</position>
+                    <time>0.01</time>
+                </setting>
+            </traverse>
+        </kinematic>
+
+        <!-- EGT equations -->
         <fcs_function name="propulsion/engine[0]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
                 <sum>
                     <table>
-                        <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
+                        <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
                         <tableData>
-                            0.87   0
-                            0.88    108
-                            <!--1.20	216
-                            1.32	232
-                            1.55	249
-                            1.77	260
-                            1.87	268-->
-                            1.00	171
+                            0.00	0
+                            1.00	86
+                            5.00	171
                         </tableData>
                     </table>
                 </sum>
@@ -180,7 +350,54 @@
                 propulsion/engine[0]/casing-temperature-R gt 1965
             </test>
         </switch>
+<!-- augmentation -->
+            <fcs_function name="propulsion/alt/engine[0]/nozzle-dmd-norm">
+            <function>
+                <description>PLA Vs Nozzle open area Figure 8, NASA-TM-104326 </description>
+                <!-- See also F14-AAD-1 Figure 2-13 -->
+                <product>
+                    <table>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
+                        <tableData>
+                            0.0 	0.51807
+                            0.2235	0.51807
+                            0.2941	0.40780
+                            0.3765	0.27867
+                            0.4706	0.26000
+                            0.6353	0.26045
+                            0.7176	0.25435
+                            0.8000	0.25140
+                            0.8588	0.24525
+                            1.0000	0.24248
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
 
+        <switch name="propulsion/alt/engine[0]/nozzle-cmd-norm">
+            <default value="propulsion/alt/engine[0]/nozzle-dmd-norm"/>
+            <test value="1.0">
+                propulsion/engine[0]/augmentation-alight gt 0
+            </test>
+        </switch>
+        <kinematic name="propulsion/alt/engine[0]/nozzle-pos-norm">
+            <input>propulsion/alt/engine[0]/nozzle-cmd-norm</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>1</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.4</time>
+                </setting>
+            </traverse>
+        </kinematic>
+
+<!-- a/b lighting envelope; use outside of this envelope will increase risk of blowout-->
+    
+    <!-- -->
     </channel>
     <channel name="F110-R">
         <fcs_function name="propulsion/engine[1]/c-egt-lead">

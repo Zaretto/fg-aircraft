@@ -29,13 +29,31 @@ Afterburner effects model
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
     </effect>
+    <animation>
+        <type>select</type>
+        <object-name>FlameModelBurn</object-name>
+        <object-name>ALS-FlameTrail</object-name>
+        <condition>
+            <or>
+                <greater-than>
+                    <property>fdm/jsbsim/propulsion/engine[0]/augmentation-igniting</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/multiplay/generic/float[8]</property>
+                    <value>0</value>
+                </greater-than>
+            </or>
+        </condition>
+    </animation>
 
     <animation>
         <type>select</type>
+        <!--<object-name>FlameModel</object-name>
+        <object-name>FlameModelBurn</object-name>-->
         <object-name>FlameModel</object-name>
-        <object-name>FlameModelBurn</object-name>
         <object-name>FlameTrail</object-name>
-        <object-name>ALS-FlameTrail</object-name>
+        <!--<object-name>ALS-FlameTrail</object-name>-->
         <condition>
             <and>
                 <greater-than>
@@ -121,28 +139,30 @@ Afterburner effects model
         <type>scale</type>
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
-        <property>sim/multiplay/generic/float[10]</property>
+        <property>sim/multiplay/generic/float[8]</property>
         <x-min>1.0</x-min>
         <y-min>1.0</y-min>
         <z-min>0.5</z-min>
-        <x-factor>1.3</x-factor>
-        <y-factor>1.3</y-factor>
-        <z-factor>1.0</z-factor>
+        <x-max>1.3</x-max>
+        <y-max>1.3</y-max>
+        <x-factor>0.26</x-factor>
+        <y-factor>0.26</y-factor>
+        <z-factor>0.2</z-factor>
     </animation>
 
     <animation>
         <type>scale</type>
         <object-name>ALS-FlameTrail</object-name>
-        <property>sim/multiplay/generic/float[10]</property>
+        <property>sim/multiplay/generic/float[8]</property>
         <x-min>0.5</x-min>
         <y-min>0.5</y-min>
         <z-min>0.5</z-min>
-        <x-factor>2.3</x-factor>
-        <y-factor>1.0</y-factor>
-        <z-factor>1.0</z-factor>
+        <x-factor>0.472</x-factor>
+        <y-factor>0.2</y-factor>
+        <z-factor>0.2</z-factor>
     </animation>
 
-    <animation>
+    <!--<animation>
         <type>scale</type>
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
@@ -153,7 +173,7 @@ Afterburner effects model
         <x-factor>1.0</x-factor>
         <y-factor>1.0</y-factor>
         <z-factor>1.5</z-factor>
-    </animation>
+    </animation>-->
 
     <animation>
         <type>translate</type>
@@ -191,7 +211,7 @@ Afterburner effects model
             <z>0</z>
         </axis>
     </animation>
-    
+
     <!-- control the emisssion and transparency to get something that looks right -->
     <animation>
         <type>material</type>
