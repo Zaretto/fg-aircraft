@@ -37,6 +37,11 @@
         <object-name>CanopyGlassInside</object-name>
         <object-name>CanopyFasteners</object-name>
         <object-name>StandbyCompass</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
         <property>canopy/position-norm</property>
         <interpolation>
             <entry>
@@ -67,6 +72,11 @@
         <object-name>CanopyGlassInside</object-name>
         <object-name>CanopyFasteners</object-name>
         <object-name>StandbyCompass</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
         <property>canopy/position-norm</property>
         <interpolation>
             <entry>
@@ -100,27 +110,14 @@
         <object-name>StandbyCompassSphere</object-name>
         <property>instrumentation/magnetic-compass/indicated-heading-deg</property>
         <center>
-            <x-m>-5.5494</x-m>
-            <y-m>0.1827</y-m>
-            <z-m>1.5292</z-m>
+            <x-m>-5.5611</x-m>
+            <y-m>0.1851</y-m>
+            <z-m>1.5392</z-m>
         </center>
         <axis>
             <z>1</z>
         </axis>
     </animation>
-    <!--<animation>
-        <type>rotate</type>
-        <object-name>StandbyCompassSphere</object-name>
-        <property>orientation/roll-deg</property>
-        <center>
-            <x-m>-5.5494</x-m>
-            <y-m>0.1827</y-m>
-            <z-m>1.5292</z-m>
-        </center>
-        <axis>
-            <x>1</x>
-        </axis>
-    </animation>-->
 
     <!--<animation>
         <object-name>StandbyCompassMount</object-name>
@@ -171,6 +168,32 @@
         </emission>
     </animation>
     
+    <animation>
+        <type>select</type>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
 
     <animation>
         <type>material</type>
@@ -183,7 +206,8 @@
         <name>f15interior</name>
         <object-name>StandbyCompassMount</object-name>
         <inherits-from>Cockpit/Effects/f15interior</inherits-from>
-        <object-name>Canopy.001</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>WindscreenCanopyFrame</object-name>
         <object-name>Canopy</object-name>
         <object-name>CanopyFasteners</object-name>
         <object-name>WindscreenFasteners</object-name>
