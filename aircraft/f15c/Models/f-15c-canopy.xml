@@ -181,12 +181,19 @@
             </greater-than>
         </condition>
     </animation>
+    <!-- The ready light comes on when the system is ready. We will do this when the door is open.
+         ref: NASA video https://www.youtube.com/watch?v=Wqo8DIKcYtk 
+     -->
     <animation>
         <type>select</type>
         <object-name>CanopyRefuelReadyLightLamp</object-name>
         <condition>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
+                <greater-than>
+                    <property>sim/multiplay/generic/float[6]</property>
+                    <value>0.9</value>
+                </greater-than>
             </or>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -198,6 +205,7 @@
     <animation>
         <type>material</type>
         <object-name>Canopy</object-name>
+        <object-name>WindscreenCanopyFrame</object-name>
         <property-base>sim/model/livery</property-base>
         <texture-prop>texture</texture-prop>
         <texture>livery.AF80-0007.png</texture>
@@ -208,9 +216,14 @@
         <inherits-from>Cockpit/Effects/f15interior</inherits-from>
         <object-name>CanopyLockShootLight</object-name>
         <object-name>WindscreenCanopyFrame</object-name>
-        <object-name>Canopy</object-name>
+        <object-name>CanopyFrame</object-name>
+        <object-name>CanopyBackCover</object-name>
         <object-name>CanopyFasteners</object-name>
         <object-name>WindscreenFasteners</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
     </effect>
 
 </PropertyList>
