@@ -49,7 +49,7 @@ var tmp_nearest_rng   = nil;
 var tmp_nearest_u     = nil;
 var nearest_rng       = 0;
 var nearest_u         = nil;
-
+var active_callsign_u = nil; # currently active callsign
 var our_true_heading  = 0;
 var our_alt           = 0;
 
@@ -75,6 +75,8 @@ var u_ecm_signal_norm = 0;
 var u_radar_standby   = 0;
 var u_ecm_type_num    = 0;
 var FD_TAN3DEG = 0.052407779283; # tan(3)
+var sel_next_target = 0;
+var sel_prev_target = 0;
 
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
@@ -121,7 +123,8 @@ var az_scan = func() {
 	our_true_heading = OurHdg.getValue();
 	our_alt = OurAlt.getValue();
 
-	if (swp_dir != swp_dir_last) {
+	if (swp_dir != swp_dir_last)
+    {
 		# Antena scan direction change (at max: more or less every 2 seconds). Reads the whole MP_list.
 		# TODO: Visual glitch on the screen: the sweep line jumps when changing az scan field.
 		az_fld = AzField.getValue();
@@ -137,7 +140,8 @@ var az_scan = func() {
 		var raw_list = Mp.getChildren();
         var carrier_located = 0;
 
-		foreach( var c; raw_list ) {
+		foreach( var c; raw_list )
+        {
 			# FIXME: At that time a multiplayer node may have been deleted while still
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
@@ -243,8 +247,11 @@ var az_scan = func() {
 		ecm_alert2 = 0;
 	}
 
+    var active_u = nil;
+    var idx = 0;
 
-	foreach( u; tgts_list ) {
+	foreach( u; tgts_list )
+    {
 		var u_display = 0;
 		var u_fading = u.get_fading() - fading_speed;
 
@@ -279,6 +286,23 @@ var az_scan = func() {
 				# Compute closure rate in Kts.
 				u.get_closure_rate();
 
+                #
+                # ensure that the currently selected target
+                # remains the active one.
+                var callsign="**";
+
+                if (u.Callsign != nil)
+                    callsign=u.Callsign.getValue();
+
+                if (u.airbone)
+                {
+                    if (active_callsign_u != nil and u.Callsign != nil and u.Callsign.getValue() == active_callsign_u)
+                    {
+                        active_u = u;
+                    }
+                }
+                idx=idx+1;
+                printf("%2d: %s %d",idx, callsign, u_rng);
 				# Check if u = nearest echo.
 				if ( u_rng != 0 and (tmp_nearest_rng == nil or u_rng < tmp_nearest_rng))
                 {
@@ -292,12 +316,78 @@ var az_scan = func() {
 			u.set_display(u_display);
 		}
 		u.set_fading(u_fading);
-	}	
+#
+#
+#
+
+        if (active_u != nil)
+        {
+            tmp_nearest_u = active_u;
+        }
+        else
+        {
+            if (nearest_u != nil)
+            {
+                active_callsign_u = nearest_u.Callsign.getValue();
+            }
+            if (tmp_nearest_u != nil)
+            {
+                if (tmp_nearest_u.Callsign != nil)
+                    active_callsign_u = tmp_nearest_u.Callsign.getValue();
+                else
+                    active_callsign_u = nil;
+
+            }
+        }
+	}
+    var tgt_cmd = getprop("sim/model/f15/instrumentation/radar-awg-9/select-target");
+    setprop("sim/model/f15/instrumentation/radar-awg-9/select-target",0);
+    if (tgt_cmd != nil)
+    {
+        if (tgt_cmd > 0)
+            awg_9.sel_next_target=1;
+        else if (tgt_cmd > 0)
+            awg_9.sel_prev_target=1;
+    }
+
+    if (awg_9.sel_next_target and awg_9.tmp_nearest_u != nil)
+    {
+        print("Sel next target");
+
+        var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
+        var nxt=nil;
+        var dist = awg_9.tmp_nearest_u.get_range();
+        foreach (var u; sorted_dist) 
+        {
+            if(u.get_range() > dist)
+            {
+                nxt = u;
+                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
+                break;
+            }
+        }
+        if (nxt == nil)
+        {
+            nxt = sorted_dist[0];
+        }
+
+        if (nxt != nil)
+        {
+            tmp_nearest_u = nxt;
+            if (tmp_nearest_u.Callsign != nil)
+                active_callsign_u = tmp_nearest_u.Callsign.getValue();
+            else
+                active_callsign_u = nil;
+                
+            printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
+        }
+        awg_9.sel_next_target =0;
+    }
+
 	swp_deg_last = swp_deg;
 	swp_dir_last = swp_dir;
 
     cnt += 0.05;
-
 }
 
 
