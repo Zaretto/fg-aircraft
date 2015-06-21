@@ -236,7 +236,11 @@ var splash_vec_loop = func
 
 #    interpolate("/environment/aircraft-effects/splash-vector-z", splash_z, 0.01);
  
-    settimer( func {splash_vec_loop() },0.5);
+if (wow and getprop("gear/gear[0]/rollspeed-ms") < 30)
+    settimer( func {splash_vec_loop() },2.5);
+else
+    settimer( func {splash_vec_loop() },1.2);
+
 }
 
 splash_vec_loop();
