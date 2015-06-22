@@ -82,7 +82,7 @@ for (var i = 0; i < max_symbols; i += 1)
 }
 
 var vsd_on = 1;
-setlistener("sim/model/f15/controls/VDI/brightness", func(v)
+setlistener("sim/model/f15/controls/VSD/brightness", func(v)
             {
                 if (v != nil)
                 {

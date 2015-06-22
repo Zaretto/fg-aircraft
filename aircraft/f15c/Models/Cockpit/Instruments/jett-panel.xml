@@ -35,7 +35,44 @@
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>slider</type>
+        <object-name>jett-button</object-name>
+        <property>controls/armament/emergency-jettison</property>
 
+        <factor>-0.01</factor>
+        <center>
+            <x-m>0.0081</x-m>
+            <y-m>-0.0017</y-m>
+            <z-m>-0.0529</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/armament/emergency-jettison</property>
+                <factor>0.2</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/armament/emergency-jettison</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
     <!-- Lighting -->
     <animation>
         <object-name>mount</object-name>

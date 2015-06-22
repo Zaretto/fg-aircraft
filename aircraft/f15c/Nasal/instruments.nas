@@ -366,11 +366,11 @@ var g_min_max = func {
 	GMaxMav.setValue(g_max_mav);
 }
 
-# VDI #####################
+# VSD #####################
 var ticker = props.globals.getNode("sim/model/f15/instrumentation/ticker", 1);
-aircraft.data.add("sim/model/f15/controls/VDI/brightness",
-	"sim/model/f15/controls/VDI/contrast",
-                  "sim/model/f15/controls/VDI/on-off",
+aircraft.data.add("sim/model/f15/controls/VSD/brightness",
+	"sim/model/f15/controls/VSD/contrast",
+                  "sim/model/f15/controls/VSD/on-off",
                   "controls/lighting/anti-collision-switch",
                   "controls/lighting/aux-inst",
                   "controls/lighting/aux-instr-console",
@@ -422,12 +422,6 @@ aircraft.data.add("sim/model/f15/controls/VDI/brightness",
                   "sim/model/f15/controls/windshield-heat",
                   "controls/pilots-displays/hsd-mode-nav");
 
-var inc_ticker = func {
-	# ticker used for VDI background continuous translation animation
-	var tick = ticker.getValue();
-	tick += 1 ;
-	ticker.setDoubleValue(tick);
-}
 
 # Air Speed Indicator #####
 aircraft.data.add("sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug");
@@ -581,7 +575,6 @@ var main_loop = func {
 
 	if ( ( a ) == int( a )) {
 		# done each 0.1 sec, cnt even.
-		inc_ticker();
 		tacan_update();
         ara_63_update();
 		update_hud();

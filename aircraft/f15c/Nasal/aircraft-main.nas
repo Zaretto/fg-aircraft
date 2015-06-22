@@ -46,7 +46,6 @@ var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1
 
 # Lighting 
 #setprop("sim/model/path","data/Aircraft/f15/F15.xml");
-#setprop("sim/model/path","Aircraft/F-15C/Models/F-15C_Eagle.xml");
 
 # Collision lights flasher
 var anti_collision_switch = props.globals.getNode("sim/model/f15/controls/lighting/anti-collision-switch");
@@ -363,9 +362,15 @@ var quickstart = func() {
 
 #    setprop("controls/lighting/panel-norm",1);
 #    setprop("controls/lighting/instruments-norm",1);
-    setprop("sim/model/f15/controls/hud/on-off",1);
-    setprop("sim/model/f15/controls/VDI/on-off",1);
-    setprop("sim/model/f15/controls/HSD/on-off",1);
+    setprop("sim/model/f15/controls/HUD/brightness",1);
+    setprop("sim/model/f15/controls/HUD/on-off",true);
+    setprop("sim/model/f15/controls/VSD/brightness",1);
+    setprop("sim/model/f15/controls/VSD/on-off",true);
+    setprop("sim/model/f15/controls/TEWS/brightness",1);
+    setprop("sim/model/f15/controls/MPCD/brightness",1);
+    setprop("sim/model/f15/controls/MPCD/on-off",true);
+    setprop("sim/model/f15/controls/MPCD/mode",2);
+    setprop("sim/model/f15/lights/radio2-brightness",0.6);
 
 setprop("sim/model/f15/controls/windshield-heat",1);
     setprop("sim/model/f15/controls/electrics/emerg-flt-hyd-switch",0);
