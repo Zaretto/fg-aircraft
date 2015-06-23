@@ -398,6 +398,7 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "controls/lighting/taxi-light",
                   "controls/lighting/turn-off-lights",
                   "controls/lighting/warn-caution",
+                  "sim/model/f15/lights/radio2-brightness",
                   "sim/multiplay/generic/int[1]", # lighting external see f15a-set.xml for details
                   "sim/multiplay/generic/int[3]",
                   "sim/multiplay/generic/int[4]",

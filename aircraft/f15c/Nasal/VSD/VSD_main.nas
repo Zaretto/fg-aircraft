@@ -153,6 +153,7 @@ var w1 = "     VS BST   MEM  ";
 #if (u == awg_9.active_u)
                 {
                     designated = 1;
+                    tgt.setVisible(0);
                     tgt = tgt_symbols[0];
 #                    w2 = sprintf("%-4d", u.get_closure_rate());
 #                    w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
@@ -168,7 +169,8 @@ var w1 = "     VS BST   MEM  ";
 #tgt.setRotation (roll_rad);
             }
         }
-        target_idx = target_idx+1;
+        if (!designated)
+            target_idx = target_idx+1;
     }
     if (awg_9.active_u != nil)
     {
