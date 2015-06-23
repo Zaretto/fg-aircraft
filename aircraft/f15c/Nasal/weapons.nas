@@ -42,6 +42,7 @@ var weapons_init = func() {
 	setlistener("controls/armament/trigger", func(Trig) {
 		# Check selected weapon type and set the trigger listeners.
 		var stick_s = StickSelector.getValue();
+print("Trigger ",stick_s);
 		if ( stick_s == 1 ) {
 			update_gun_ready();
 			if ( Trig.getBoolValue()) {
@@ -295,6 +296,7 @@ var arm_selector = func() {
 	# Checks to do when rotating the wheel on the stick.
 	update_gun_ready();
 	var stick_s = StickSelector.getValue();
+print("arm stick selector ",stick_s);
 	if ( stick_s == 0 ) {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);
@@ -359,7 +361,6 @@ var station_selector = func(n, v) {
 var station_selector_cycle = func() {
 	# Fast selector, selects with one keyb shorcut all AIM-9 or nothing.
 	# Only to choices ATM.
-print("Station selector cycle");
 	var s = 0;
 	var p0 = getprop("sim/model/f15/controls/armament/station-selector[0]");
 	var p7 = getprop("sim/model/f15/controls/armament/station-selector[7]");
@@ -371,6 +372,8 @@ print("Station selector cycle");
 	S8.set_selected(0);
 	S9.set_selected(s);	
 	armament_update();
+
+print("Station selector cycle ",p0,p7,s);
 }
 
 

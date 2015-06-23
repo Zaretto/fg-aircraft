@@ -127,7 +127,7 @@ return;
     }
 var w1 = "     VS BST   MEM  ";
 
-    var target_idx=0;
+    var target_idx=1;
     window4.setText (sprintf("%3d", getprop("instrumentation/radar/radar2-range")));
     var w3_22="";
     var w3_7 = sprintf("T %d",getprop("fdm/jsbsim/velocities/vc-kts"));
@@ -136,38 +136,53 @@ var w1 = "     VS BST   MEM  ";
     foreach( u; awg_9.tgts_list ) 
     {
         var callsign = "XX";
-        if(u.get_display() and u.airbone)
+        if (u.Callsign != nil)
+            callsign = u.Callsign.getValue();
+        var model = "XX";
+        if (u.ModelType != "")
+            model = u.ModelType;
+        if (target_idx < max_symbols)
         {
-            if (u.Callsign != nil)
-                callsign = u.Callsign.getValue();
-            var model = "XX";
-            if (u.ModelType != "")
-                model = u.ModelType;
-            if (target_idx < max_symbols)
+            tgt = tgt_symbols[target_idx];
+            if (tgt != nil)
             {
-                tgt = tgt_symbols[target_idx];
-                if (tgt != nil)
-                {
 #                    if (u.airbone and !designated)
-                    if (target_idx == 0)
-                    {
-                        designated = 1;
-                        w2 = sprintf("%-4d", u.get_closure_rate());
-                        w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
-var aspect = u.get_reciprocal_bearing()/10;
-w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
-                    }
-                    tgt.setVisible(u.get_display());
-                    var xc = u.get_deviation(heading);
-                    var yc = -u.get_total_elevation(pitch);
-                    tgt.setVisible(1);
-                    tgt.setTranslation (xc, yc);
+#                    if (target_idx == 0)
+#                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+#if (u == awg_9.active_u)
+                {
+                    designated = 1;
+                    tgt = tgt_symbols[0];
+#                    w2 = sprintf("%-4d", u.get_closure_rate());
+#                    w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
+#                    var aspect = u.get_reciprocal_bearing()/10;
+#                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
+                }
+                tgt.setVisible(u.get_display());
+                var xc = u.get_deviation(heading);
+                var yc = -u.get_total_elevation(pitch);
+                tgt.setVisible(1);
+                tgt.setTranslation (xc, yc);
 #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
 #tgt.setRotation (roll_rad);
-                }
             }
-            target_idx = target_idx+1;
         }
+        target_idx = target_idx+1;
+    }
+    if (awg_9.active_u != nil)
+    {
+        if (awg_9.active_u.Callsign != nil)
+            callsign = awg_9.active_u.Callsign.getValue();
+
+        var model = "XX";
+        if (awg_9.active_u.ModelType != "")
+            model = awg_9.active_u.ModelType;
+
+        w2 = sprintf("%-4d", awg_9.active_u.get_closure_rate());
+        w3_22 = sprintf("%3d-%1.1f %.5s %.4s",awg_9.active_u.get_bearing(), awg_9.active_u.get_range(), callsign, model);
+        var aspect = awg_9.active_u.get_reciprocal_bearing()/10;
+        w1 = sprintf("%4d %2d%s %2d %d", awg_9.active_u.get_TAS(), aspect, aspect < 180 ? "r" : "l", awg_9.active_u.get_heading(), awg_9.active_u.get_altitude());
     }
     window1.setText(w1);
     window2.setText(w2);

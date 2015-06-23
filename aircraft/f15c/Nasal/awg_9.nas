@@ -49,7 +49,8 @@ var tmp_nearest_rng   = nil;
 var tmp_nearest_u     = nil;
 var nearest_rng       = 0;
 var nearest_u         = nil;
-var active_callsign_u = nil; # currently active callsign
+var active_u = nil;
+var active_u_callsign = nil; # currently active callsign
 var our_true_heading  = 0;
 var our_alt           = 0;
 
@@ -110,7 +111,7 @@ var az_scan = func() {
 	# Antena az scan. Angular speed is constant but angle covered varies (120 or 60 deg ATM).
 	var fld_frac = az_fld / 120;                    # the screen (and the max scan angle) covers 120 deg, but we may use less (az_fld).
 	var fswp_spd = swp_spd / fld_frac;              # So the duration (fswp_spd) of a complete scan will depend on the fraction we use.
-	swp_fac = math.sin(cnt * fswp_spd) * fld_frac;  # Build a sinusoïde, each step based on a counter incremented by the main UPDATE_PERIOD
+	swp_fac = math.sin(cnt * fswp_spd) * fld_frac;  # Build a sinusoude, each step based on a counter incremented by the main UPDATE_PERIOD
 	SwpFac.setValue(swp_fac);                       # Update this value on the property tree so we can use it for the sweep line animation.
 	swp_deg = az_fld / 2 * swp_fac;                 # Now get the actual deviation of the antenae in deg,
 	swp_dir = swp_deg < swp_deg_last ? 0 : 1;       # and the direction.
@@ -123,13 +124,24 @@ var az_scan = func() {
 	our_true_heading = OurHdg.getValue();
 	our_alt = OurAlt.getValue();
 
+#
+#
+# The radar sweep is simulated such that when the scan limit is reached it is reversed
+# and the mp list is rescanned. This means the contents of the radar list will be 
+# simulated in a realistic way - the target acquisition based on what's in the MP list will
+# be ok; the values (distance etc) will be read from the target list so these will be accurate
+# which isn't quite how radar works but it will be good enough for us.
+
 	if (swp_dir != swp_dir_last)
     {
+#print("Sweep ",active_u, active_u_callsign);
 		# Antena scan direction change (at max: more or less every 2 seconds). Reads the whole MP_list.
 		# TODO: Visual glitch on the screen: the sweep line jumps when changing az scan field.
+
 		az_fld = AzField.getValue();
 		range_radar2 = RangeRadar2.getValue();
 		if ( range_radar2 == 0 ) { range_radar2 = 0.00000001 }
+
 		# Reset nearest_range score
 		nearest_u = tmp_nearest_u;
 		nearest_rng = tmp_nearest_rng;
@@ -139,6 +151,16 @@ var az_scan = func() {
 		tgts_list = [];
 		var raw_list = Mp.getChildren();
         var carrier_located = 0;
+
+if (active_u == nil or active_u.Callsign == nil or active_u.Callsign.getValue() == nil or active_u.Callsign.getValue() != active_u_callsign)
+{
+if (active_u != nil)
+#print("active_u callsign ",active_u.Callsign.getValue());
+#print("active_u ",active_u);
+#print("active_u_callsign ",active_u_callsign);
+#print("Active callsign becomes inactive");
+active_u = nil;
+}
 
 		foreach( var c; raw_list )
         {
@@ -247,7 +269,6 @@ var az_scan = func() {
 		ecm_alert2 = 0;
 	}
 
-    var active_u = nil;
     var idx = 0;
 
 	foreach( u; tgts_list )
@@ -269,26 +290,26 @@ var az_scan = func() {
 			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr))
             {
 
-				# Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
+# Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
 				u.set_relative_bearing( ddd_screen_width / az_fld * u.deviation );
 				var factor_range_radar = 0.0657 / range_radar2; # 0.0657m : length of the distance range on the DDD screen.
 				u.set_ddd_draw_range_nm( factor_range_radar * u_rng );
 				u_fading = 1;
 				u_display = 1;
 
-				# Compute mp position in our TID display. (PPI like display, normaly targets are displayed only when locked.)
+# Compute mp position in our TID display. (PPI like display, normaly targets are displayed only when locked.)
 				factor_range_radar = 0.15 / range_radar2; # 0.15m : length of the radius range on the TID screen.
 				u.set_tid_draw_range_nm( factor_range_radar * u_rng );
 
-				# Compute first digit of mp altitude rounded to nearest thousand. (labels).
+# Compute first digit of mp altitude rounded to nearest thousand. (labels).
 				u.set_rounded_alt( rounding1000( u.get_altitude() ) / 1000 );
 
-				# Compute closure rate in Kts.
+# Compute closure rate in Kts.
 				u.get_closure_rate();
 
                 #
-                # ensure that the currently selected target
-                # remains the active one.
+# ensure that the currently selected target
+# remains the active one.
                 var callsign="**";
 
                 if (u.Callsign != nil)
@@ -296,14 +317,14 @@ var az_scan = func() {
 
                 if (u.airbone)
                 {
-                    if (active_callsign_u != nil and u.Callsign != nil and u.Callsign.getValue() == active_callsign_u)
+                    if (active_u_callsign != nil and u.Callsign != nil and u.Callsign.getValue() == active_u_callsign)
                     {
                         active_u = u;
+#                        printf("%2d: found active_u %s %d",idx, callsign, u_rng);
                     }
                 }
                 idx=idx+1;
-                printf("%2d: %s %d",idx, callsign, u_rng);
-				# Check if u = nearest echo.
+# Check if u = nearest echo.
 				if ( u_rng != 0 and (tmp_nearest_rng == nil or u_rng < tmp_nearest_rng))
                 {
                     if(u.airbone)
@@ -316,30 +337,32 @@ var az_scan = func() {
 			u.set_display(u_display);
 		}
 		u.set_fading(u_fading);
-#
-#
-#
+        #
+        #
+        #
 
         if (active_u != nil)
         {
             tmp_nearest_u = active_u;
+#            print("1:nearest u active ",active_u.Callsign.getValue()," ", active_u_callsign);
         }
         else
         {
             if (nearest_u != nil)
             {
-                active_callsign_u = nearest_u.Callsign.getValue();
+                active_u_callsign = nearest_u.Callsign.getValue();
             }
             if (tmp_nearest_u != nil)
             {
                 if (tmp_nearest_u.Callsign != nil)
-                    active_callsign_u = tmp_nearest_u.Callsign.getValue();
+                    active_u_callsign = tmp_nearest_u.Callsign.getValue();
                 else
-                    active_callsign_u = nil;
+                    active_u_callsign = nil;
 
             }
         }
 	}
+#    print("2:nearest u set  ",active_u_callsign);
     var tgt_cmd = getprop("sim/model/f15/instrumentation/radar-awg-9/select-target");
     setprop("sim/model/f15/instrumentation/radar-awg-9/select-target",0);
     if (tgt_cmd != nil)
@@ -348,17 +371,24 @@ var az_scan = func() {
             awg_9.sel_next_target=1;
         else if (tgt_cmd > 0)
             awg_9.sel_prev_target=1;
+#print("tgt cmd ",tgt_cmd);
     }
 
-    if (awg_9.sel_next_target and awg_9.tmp_nearest_u != nil)
+    if (awg_9.sel_next_target)
     {
-        print("Sel next target");
+        var dist  = 0;
+        if (awg_9.active_u != nil)
+        {
+            dist = awg_9.nearest_u.get_range();
+        }
+            active_u = tgts_list[0];
+        print("Sel next target: dist=",dist);
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
-        var dist = awg_9.tmp_nearest_u.get_range();
         foreach (var u; sorted_dist) 
         {
+                printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(u.get_range() > dist)
             {
                 nxt = u;
@@ -373,11 +403,11 @@ var az_scan = func() {
 
         if (nxt != nil)
         {
-            tmp_nearest_u = nxt;
+            active_u = nearest_u = tmp_nearest_u = nxt;
             if (tmp_nearest_u.Callsign != nil)
-                active_callsign_u = tmp_nearest_u.Callsign.getValue();
+                active_u_callsign = tmp_nearest_u.Callsign.getValue();
             else
-                active_callsign_u = nil;
+                active_u_callsign = nil;
                 
             printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
         }
