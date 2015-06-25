@@ -77,6 +77,9 @@ var F15HUD = {
         obj.alt_range = obj.get_element("alt_range");
         obj.ias_range = obj.get_element("ias_range");
 
+obj.target_locked = obj.get_element("target_locked");
+obj.target_locked.setVisible(0);
+
         obj.window1 = obj.get_text("window1", "condensed.txf",9,1.4);
         obj.window2 = obj.get_text("window2", "condensed.txf",9,1.4);
         obj.window3 = obj.get_text("window3", "condensed.txf",9,1.4);
