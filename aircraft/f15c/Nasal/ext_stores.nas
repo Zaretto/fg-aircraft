@@ -67,7 +67,7 @@ print("ext_loads_set(",s);
 		S8.set_type("-");
 		S9.set_type("-");
 		S9.set_weight_lb(0);
-	} elsif ( s == "FAD" ) {
+	} elsif ( s == "Close Air Support" ) {
 		PylonsWeight.setValue(53 + 340 + 1200 + 53 + 340);
 		WeaponsWeight.setValue(191 + 510 + 1020 + 1020 + 1020 + 1020 + 510 + 191);
 		S0.set_type("AIM-9");
@@ -81,57 +81,6 @@ print("ext_loads_set(",s);
 		S5.set_weight_lb(300 + 1020); # central pylon, AIM-54 
 		S6.set_type("AIM-54");
 		S6.set_weight_lb(300 + 1020); # central pylon, AIM-54 
-		S8.set_type("AIM-7");
-		S9.set_type("AIM-9");
-		S9.set_weight_lb(53 + 340 + 191 + 510); # AIM-9rail, wing pylon, AIM-9M, AIM-7M 
-	} elsif ( s == "FAD light" ) {
-		PylonsWeight.setValue(53 + 340 + 53 + 53 + 53 + 340);
-		WeaponsWeight.setValue(191 + 510 + 510 + 510 + 510 + 510 + 510 + 191);
-		S0.set_type("AIM-9");
-		S1.set_type("AIM-9");
-		S1.set_weight_lb(53 + 340 + 191 + 53 + 191); # AIM-9rail, wing pylon, AIM-9M, AIM-9rail, AIM-9M 
-		S3.set_type("AIM-7");
-		S3.set_weight_lb(510); # AIM-7 
-		S4.set_type("AIM-7");
-		S4.set_weight_lb(510); # AIM-7 
-		S5.set_type("AIM-7");
-		S5.set_weight_lb(510); # AIM-7 
-		S6.set_type("AIM-7");
-		S6.set_weight_lb(510); # AIM-7 
-		S8.set_type("AIM-9");
-		S9.set_type("AIM-9");
-		S9.set_weight_lb(53 + 340 + 191 + 53 + 191); # AIM-9rail, wing pylon, AIM-9M, AIM-9rail, AIM-9M 
-	} elsif ( s == "FAD heavy" ) {
-		PylonsWeight.setValue(53 + 340 + 90 + 1200 + 53 + 340 + 90);
-		WeaponsWeight.setValue(191 + 1020 + 1020 + 1020 + 1020 + 1020 + 1020 + 191);
-		S0.set_type("AIM-9");
-		S1.set_type("AIM-54");
-		S1.set_weight_lb(53 + 340 + 191 + 90 + 1020); # AIM-9rail, wing pylon, AIM-9M, AIM-54launcher, AIM-54 
-		S3.set_type("AIM-54");
-		S3.set_weight_lb(300 + 1020); # central pylon, AIM-54 
-		S4.set_type("AIM-54");
-		S4.set_weight_lb(300 + 1020); # central pylon, AIM-54 
-		S5.set_type("AIM-54");
-		S5.set_weight_lb(300 + 1020); # central pylon, AIM-54 
-		S6.set_type("AIM-54");
-		S6.set_weight_lb(300 + 1020); # central pylon, AIM-54 
-		S8.set_type("AIM-54");
-		S9.set_type("AIM-9");
-		S9.set_weight_lb(53 + 340 + 191 + 90 + 1020); # AIM-9rail, wing pylon, AIM-9M, AIM-54launcher, AIM-54 
-	} elsif ( s == "Bombcat" ) {
-		PylonsWeight.setValue(53 + 340 + 90 + 1200 + 53 + 340 + 90);
-		WeaponsWeight.setValue(191 + 510 + 1000 + 1000 + 1000 + 1000 + 510 + 191);
-		S0.set_type("AIM-9");
-		S1.set_type("AIM-7");
-		S1.set_weight_lb(53 + 340 + 191 + 510); # AIM-9rail, wing pylon, AIM-9M, AIM-7M 
-		S3.set_type("MK-83");
-		S3.set_weight_lb(300 + 1000); # central pylon, MK-83 
-		S4.set_type("MK-83");
-		S4.set_weight_lb(300 + 1000); # central pylon, MK-83 
-		S5.set_type("MK-83");
-		S5.set_weight_lb(300 + 1000); # central pylon, MK-83 
-		S6.set_type("MK-83");
-		S6.set_weight_lb(300 + 1000); # central pylon, MK-83 
 		S8.set_type("AIM-7");
 		S9.set_type("AIM-9");
 		S9.set_weight_lb(53 + 340 + 191 + 510); # AIM-9rail, wing pylon, AIM-9M, AIM-7M 

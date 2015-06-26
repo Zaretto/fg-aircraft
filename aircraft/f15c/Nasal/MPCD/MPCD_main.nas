@@ -105,7 +105,64 @@ var MPCD_Page = {
         return nm;
     },
     update : func
+    {
+    },
+#
+# called when the page comes onto display
+display : func
 {
+},
+
+};
+
+var MPCD_Station = {
+	new : func (svg, ident)
+    {
+		var obj = {parents : [MPCD_Station] };
+
+        obj.status = svg.getElementById("PACS_L_"~ident);
+        if (obj.status == nil)
+            print("Failed to load PACS_L_"~ident);
+
+        obj.label = svg.getElementById("PACS_V_"~ident);
+        if (obj.label == nil)
+            print("Failed to load PACS_V_"~ident);
+
+        obj.selected = svg.getElementById("PACS_R_"~ident);
+        if (obj.selected == nil)
+            print("Failed to load PACS_R_"~ident);
+
+        obj.prop = "payload/weight["~ident~"]";
+        obj.ident = ident;
+        print("PACS_V_"~ident~":");
+        setlistener(obj.prop~"/selected", func(v)
+                    {
+                        print("listener: update ",v.getValue());
+                        obj.update();
+                    });
+        obj.update();
+        return obj;
+    },
+    update: func
+    {
+        print("Station ",me.ident," update");
+        var na = getprop(me.prop~"/selected");
+        if (na != nil and na != "none")
+        {
+            if (na == "AIM-9") na = "9L";
+            elsif (na == "AIM-120") na = "120A";
+            elsif (na == "AIM-7") na = "7M";
+
+            me.status.setText("STBY");
+            print("NA ",me.ident," ",na);
+            me.label.setText(na);
+        }
+        else
+        {
+            me.status.setText("");
+            me.label.setText("");
+        }
+        me.selected.setVisible(0);
     },
 };
 
@@ -225,6 +282,18 @@ setlistener("sim/model/f15/controls/MPCD/mode", func(v)
 var p1_1 = MPCD.addPage("Aircraft Menu", "p1_1");
 var p1_2 = MPCD.addPage("Top Level PACS Menu", "p1_2");
 var p1_3 = MPCD.addPage("PACS Menu", "p1_3");
+p1_3.S0 = MPCD_Station.new(MPCDsvg, 0);
+#1 droptank
+p1_3.S2 = MPCD_Station.new(MPCDsvg, 2);
+p1_3.S3 = MPCD_Station.new(MPCDsvg, 3);
+p1_3.S4 = MPCD_Station.new(MPCDsvg, 4);
+#5 droptank
+p1_3.S6 = MPCD_Station.new(MPCDsvg, 6);
+p1_3.S7 = MPCD_Station.new(MPCDsvg, 7);
+p1_3.S8 = MPCD_Station.new(MPCDsvg, 8);
+#9 droptank
+p1_3.S10 = MPCD_Station.new(MPCDsvg, 10);
+
 var pjitds_1 = MPCD.addPage("JITDS Decentered", "pjitds_1");
 var p_spin_recovery = MPCD.addPage("Spin recovery", "p_spin_recovery");
 p_spin_recovery.cur_page = nil;
@@ -278,7 +347,7 @@ p1_2.addMenuItem(3, "CBT JETT", p1_3);
 p1_2.addMenuItem(4, "WPN LOAD", p1_3);
 p1_2.addMenuItem(9, "M", p1_1);
 
-p1_3.addMenuItem(1, "HIGH\n500M", p1_3);
+p1_3.gun_rounds = p1_3.addMenuItem(1, "HIGH\n500M", p1_3);
 p1_3.addMenuItem(2, "NML", p1_3);
 p1_3.addMenuItem(3, "A/G", p1_3);
 p1_3.addMenuItem(4, "2/2", p1_3);
