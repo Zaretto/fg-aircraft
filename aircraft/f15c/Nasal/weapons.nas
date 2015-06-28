@@ -131,6 +131,7 @@ var update_sw_ready = func()
 print("SIDEWINDER: sw_count = ", sw_count - 1);
             foreach (var S; Station.list)
             {
+printf("AIM %d: %s, %s",S.index, S.get_type(), S.get_selected());
                 if (S.get_type() == "AIM-9" and S.get_selected())
                 {
 print("New AIM ",S.index);
@@ -178,6 +179,7 @@ print("Release ",current_pylon);
 print("currently ",getprop(current_pylon));
 			armament_update();
 			Current_aim9.release();
+            arm_selector();
 		}
 	}
 }
