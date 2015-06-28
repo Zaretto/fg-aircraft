@@ -192,7 +192,9 @@ var toggle_ext_tank_selected = func() {
 var update_wpstring = func
 {
 	var b_wpstring = "";
-	foreach (var S; Station.list) {
+    var aim9_count = 0;
+	foreach (var S; Station.list)
+    {
 # Use 3 bits per weapon pylon (3 free additional wps types).
 # Use 1 bit per fuel tank.
 # Use 3 bits for the load sheme (3 free additional shemes).
@@ -200,7 +202,11 @@ var update_wpstring = func
 		var s = S.index;
 		b = bits.string(S.bcode,S.encode_length);
 		b_wpstring = b_wpstring ~ b;
+        if (S.get_type() == "AIM-9")
+            aim9_count = aim9_count+1;
 	}
+    print("Aim9 count ",aim9_count);
+    setprop("sim/model/f15/systems/armament/aim9/count",aim9_count);
 	var set = WeaponsSet.getValue();
 	b_wpstring = b_wpstring ~ bits.string(b_set,3);
 # Send the bits string as INT over MP.
@@ -358,6 +364,7 @@ Station =
                         else
                             prop.getParent().getNode("weight-lb").setValue(0);
                         calculate_weights();
+                        update_wpstring();
                     });
 
 		return obj;

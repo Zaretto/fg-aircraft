@@ -242,14 +242,16 @@ active_u = nil;
                 {
                     u.set_display(0);
                 }
-# do not filter out
-#                    if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) 
-                append(tgts_list, u);
-                ecm_on = EcmOn.getValue();
-                # Test if target has a radar. Compute if we are illuminated. This propery used by ECM
-                # over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
-                if ( ecm_on and u.get_rdr_standby() == 0) {
-                    rwr(u);	# TODO: override display when alert.
+#                if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) 
+                if (type == "multiplayer" or type == "tanker" or type == "aircraft") 
+                {
+                    append(tgts_list, u);
+                    ecm_on = EcmOn.getValue();
+                    # Test if target has a radar. Compute if we are illuminated. This propery used by ECM
+                    # over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
+                    if ( ecm_on and u.get_rdr_standby() == 0) {
+                        rwr(u);	# TODO: override display when alert.
+                    }
                 }
             } else {
                 u.set_display(0);
@@ -783,6 +785,8 @@ else
 		    me.BHeading.setValue(n);
 		return n;	},
 	get_bearing : func {
+        if (me.Bearing == nil)
+            return 0;
 		var n = me.Bearing.getValue();
         if (n != nil)
         {
@@ -826,7 +830,8 @@ else
 #                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
                 return tgt_pos.distance_to(geo.aircraft_position()) * 0.000539957; # distance in NM
             }
-            return me.Range.getValue();
+            if (me.Range != nil)
+                return me.Range.getValue();
         }
         if (me.Range == nil)
             return 0;

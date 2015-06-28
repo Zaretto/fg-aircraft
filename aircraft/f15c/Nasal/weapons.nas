@@ -24,7 +24,6 @@ var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
-var aim9_seq   = [];
 var aim9_count = 0;
 Current_aim9   = nil;
 
@@ -33,28 +32,35 @@ aircraft.data.add( WeaponSelector, ArmSwitch );
 
 
 # Init
-var weapons_init = func() {
+var weapons_init = func()
+{
 	print("Initializing f15 weapons system");
 	ArmSwitch.setValue(0);
 	system_stop();
 	SysRunning.setBoolValue(0);
 	update_gun_ready();
-	setlistener("controls/armament/trigger", func(Trig) {
-		# Check selected weapon type and set the trigger listeners.
-		var weapon_s = WeaponSelector.getValue();
-print("Trigger ",weapon_s," ",Trig.getBoolValue());
-		if ( weapon_s == 1 ) {
-			update_gun_ready();
-			if ( Trig.getBoolValue()) {
-				GunStop.setBoolValue(0);
-				fire_gun();
-			} else {
-				GunStop.setBoolValue(1);
-			}
-		} elsif ( weapon_s == 2 and Trig.getBoolValue()) {
-			release_aim9();
-		}
-	}, 0, 1);
+	setlistener("controls/armament/trigger", func(Trig)
+                {
+# Check selected weapon type and set the trigger listeners.
+                    var weapon_s = WeaponSelector.getValue();
+                    print("Trigger ",weapon_s," ",Trig.getBoolValue());
+                    if ( weapon_s == 0 ) {
+                        update_gun_ready();
+                        if ( Trig.getBoolValue())
+                        {
+                            GunStop.setBoolValue(0);
+                            fire_gun();
+                        }
+                        else
+                        {
+                            GunStop.setBoolValue(1);
+                        }
+                    }
+                    elsif ( weapon_s == 1 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
+                }, 0, 1);
 }
 
 
@@ -63,50 +69,7 @@ print("Trigger ",weapon_s," ",Trig.getBoolValue());
 var armament_update = func {
 	# Trigered each 0.1 sec by instruments.nas main_loop() if Master Arm Engaged.
 
-	# Check AIM-9 selected with armament panel switches 1 and 8.
-	# Note in FAD light config, S1 and S8 also have AIM-9.
-	aim9_seq = [];
-	aim9_count = 0;
-	if ( S0.get_selected() ) {
-		# Check if at least one AIM-9 present on the pylons.
-		# Build AIM-9 launch sequence. FIXME aim-9s in this order: 9-0-8-1.
-		if ( S0.get_type() == "AIM-9" ) {
-			append(aim9_seq, S0);
-			S0.set_display(1);
-			aim9_count += 1;
-		} else {
-			S0.set_display(0);
-		}
-		if ( S1.get_type() == "AIM-9" ) {
-			append(aim9_seq, S1);
-			S1.set_display(1);
-			aim9_count += 1;
-		} else {
-			S1.set_display(0);
-		}
-	} else {
-		S0.set_display(0);
-		S1.set_display(0);
-	}
-	if ( S9.get_selected() ) {
-		if ( S8.get_type() == "AIM-9" ) {
-			append(aim9_seq, S8);
-			S8.set_display(1);
-			aim9_count += 1;
-		} else {
-			S8.set_display(0);
-		}
-		if ( S9.get_type() == "AIM-9" ) {
-			append(aim9_seq, S9);
-			S9.set_display(1);
-			aim9_count += 1;
-		} else {
-			S9.set_display(0);
-		}
-	} else {
-		S8.set_display(0);
-		S9.set_display(0);
-	}
+	aim9_count = SwCount.getValue();
 	# Turn sidewinder cooling lights On/Off.
 	if ( aim9_count > 0 ) {
 		SWCoolOn.setBoolValue(1);
@@ -118,12 +81,13 @@ var armament_update = func {
 		# Turn Current_aim9.status to stand by.
 		#set_status_current_aim9(-1);
 	}
-	SwCount.setValue(aim9_count);
 }
 
-var update_gun_ready = func() {
+var update_gun_ready = func()
+ {
 	var ready = 0;
-	if ( ArmSwitch.getValue() == 2 and GunCount.getValue() > 0 ) {
+	if ( ArmSwitch.getValue() and GunCount.getValue() > 0 )
+ {
 		ready = 1;
 	}
 	GunReady.setBoolValue(ready);
@@ -156,25 +120,46 @@ var fire_gun = func {
 	}
 }
 
-var update_sw_ready = func() {
+var update_sw_ready = func()
+{
 	var sw_count = SwCount.getValue();
 print("SIDEWINDER: sw_count = ", sw_count - 1);
-	if (WeaponSelector.getValue() == 2 and ArmSwitch.getValue() == 2) {
-		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
-			var pylon = aim9_seq[sw_count - 1];
-			print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
-			Current_aim9 = aircraft.AIM9.new(pylon.index);
-		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
+	if (WeaponSelector.getValue() == 1 and ArmSwitch.getValue())
+    {
+        var pylon = -1;
+		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 )
+        {
+            foreach (var S; Station.list)
+            {
+                if (S.get_type() == "AIM-9" and S.get_selected())
+                {
+                    pylon = S.index;
+                    break;
+                }
+            }
+            if (pylon >= 0)
+            {
+                print("FOX2 new !! ", pylon, " sw_count - 1 = ", sw_count - 1);
+                Current_aim9 = aircraft.AIM9.new(pylon);
+            }
+            else
+                print("Error no AIM9");
+		}
+        elsif (Current_aim9 != nil and Current_aim9.status == -1)
+        {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	
 		}
-	} elsif (Current_aim9 != nil) {
+	}
+    elsif (Current_aim9 != nil)
+    {
 		Current_aim9.status = -1;	
 		SwSoundVol.setValue(0);
 	}
 }
 
-var release_aim9 = func() {
+var release_aim9 = func()
+{
 print("RELEASE AIM-9 status: ");
 	if (Current_aim9 != nil) {
 print(" status: ", Current_aim9.status);
@@ -194,7 +179,8 @@ print(" status: ", Current_aim9.status);
 	}
 }
 
-var set_status_current_aim9 = func(n) {
+var set_status_current_aim9 = func(n)
+{
 	if (Current_aim9 != nil) {
 		Current_aim9.status = n;	
 	}
@@ -202,7 +188,8 @@ var set_status_current_aim9 = func(n) {
 
 # System start and stop.
 # Timers for weapons system status lights.
-var system_start = func {
+var system_start = func
+{
     print("Weapons System start");
 	settimer (func { GunRateHighLight.setBoolValue(1); }, 0.3);
 	update_gun_ready();
@@ -210,20 +197,24 @@ var system_start = func {
 	settimer (func { SwCoolOffLight.setBoolValue(1); }, 0.6);
 	settimer (func { MslPrepOffLight.setBoolValue(1); }, 2);
 	settimer (func {
-		if (Current_aim9 != nil and WeaponSelector.getValue() == 2 and aim9_count > 0) {
-			Current_aim9.status = 0;	
-			Current_aim9.search();	
-		}
-	}, 2.5);
+                  if (Current_aim9 != nil and WeaponSelector.getValue() and aim9_count > 0) {
+                      Current_aim9.status = 0;	
+                      Current_aim9.search();	
+                  }
+              }, 2.5);
 }
-var system_stop = func {
+
+var system_stop = func
+{
     print("Weapons System stop");
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
-	foreach (var S; Station.list) {
+	foreach (var S; Station.list)
+    {
 		S.set_display(0); # initialize bcode (showing weapons set over MP).
 	}
-	if (Current_aim9 != nil) {
+	if (Current_aim9 != nil)
+    {
 		set_status_current_aim9(-1);	
 	}
 	SwSoundVol.setValue(0);
@@ -236,9 +227,8 @@ var system_stop = func {
 setlistener("sim/model/f15/controls/armament/master-arm-switch", func(v)
 {
     print("Master arm ",v.getValue());
-	var master_arm_lever = 1;
     var a = v.getValue();
-	var master_arm_switch = ArmSwitch.getValue(); # 2 = On, 1 = Off, 0 = training (not operational yet).
+	var master_arm_switch = ArmSwitch.getValue(); 
 	if (master_arm_switch)
     {
         system_start();
@@ -249,45 +239,19 @@ setlistener("sim/model/f15/controls/armament/master-arm-switch", func(v)
 	}
 });
 
-var master_arm_switch = func(a) {
-	var master_arm_lever = 1;
-	var master_arm_switch = ArmSwitch.getValue(); # 2 = On, 1 = Off, 0 = training (not operational yet).
-	if (a == 1) {
-		if (master_arm_switch == 0) {
-			ArmSwitch.setValue(1);
-		} elsif (master_arm_switch == 1 and master_arm_lever) {
-			ArmSwitch.setValue(2);
-			system_start();
-		}
-	} else {
-		if (master_arm_switch == 1) {
-			ArmSwitch.setDoubleValue(0);
-		} elsif (master_arm_switch == 2) {
-			ArmSwitch.setValue(1);
-			system_stop();
-		}
-	}
-}
-
-var master_arm_cycle = func() {
-	# Keyb. shorcut. Safety lever automaticly set. 
-	var master_arm_lever = 1;
+var master_arm_cycle = func()
+{
 	var master_arm_switch = ArmSwitch.getValue();
-print("arm_cycle: master_arm_switch",master_arm_switch);
-	if (master_arm_switch == 0) {
-		# Training --> Off.
+    print("arm_cycle: master_arm_switch",master_arm_switch);
+	if (master_arm_switch == 0)
+    {
 		ArmSwitch.setValue(1);
-#		ArmLever.setBoolValue(0);
-	} elsif (master_arm_switch == 1) {
-		# Off --> 0n.
-		ArmSwitch.setValue(2);
-#		ArmLever.setBoolValue(1);
 		system_start();
 		SysRunning.setBoolValue(1);
-	} elsif (master_arm_switch == 2)  {
-		# Training mode (not operational yet).
+	}
+    else
+    { 
 		ArmSwitch.setValue(0);
-#		ArmLever.setBoolValue(0);
 		system_stop();
 		SysRunning.setBoolValue(0);
 	}
@@ -354,24 +318,4 @@ var arm_selector = func() {
 		S.set_type(S.get_type()); # initialize bcode.
 	}
 }
-
-
-var station_selector_cycle = func() {
-	# GUN,SRM,MRM
-	var s = 0;
-	var p0 = getprop("sim/model/f15/controls/armament/station-selector[0]");
-	var p7 = getprop("sim/model/f15/controls/armament/station-selector[7]");
-	if ( p0 < 1 or p7 < 1 ) { s = 1; }
-	setprop("sim/model/f15/controls/armament/station-selector[0]", s);
-	setprop("sim/model/f15/controls/armament/station-selector[7]", s);
-	S0.set_selected(s);
-	S1.set_selected(0);
-	S8.set_selected(0);
-	S9.set_selected(s);	
-	armament_update();
-
-print("Station selector cycle ",p0,p7,s);
-}
-
-
 

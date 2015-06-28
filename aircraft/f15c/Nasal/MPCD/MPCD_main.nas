@@ -132,19 +132,26 @@ var MPCD_Station = {
         if (obj.selected == nil)
             print("Failed to load PACS_R_"~ident);
 
+        obj.selected1 = svg.getElementById("PACS_R1_"~ident);
+        if (obj.selected1 == nil)
+            print("Failed to load PACS_R1_"~ident);
+
         obj.prop = "payload/weight["~ident~"]";
         obj.ident = ident;
-        print("PACS_V_"~ident~":");
+
         setlistener(obj.prop~"/selected", func(v)
                     {
-                        print("listener: update ",v.getValue());
                         obj.update();
                     });
         setlistener("sim/model/f15/systems/external-loads/station["~obj.ident~"]/selected", func
                     {
-                        print("update weapon selector "~obj.ident);
                         obj.update();
                     });
+        setlistener("sim/model/f15/controls/armament/master-arm-switch", func
+                    {
+                        obj.update();
+                    });
+
         obj.update();
         return obj;
     },
@@ -155,6 +162,7 @@ var MPCD_Station = {
         var sel = 0;
         var mode = "STBY";
         var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
+        var master_arm=getprop("sim/model/f15/controls/armament/master-arm-switch");
         print("Station ",me.ident," update ",sel_node,getprop(sel_node));
 
         if (na != nil and na != "none")
@@ -165,7 +173,7 @@ var MPCD_Station = {
                 if (weapon_mode == 1)
                 {
                     sel = getprop(sel_node);
-                    if (sel)
+                    if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "SRM";
@@ -176,7 +184,7 @@ var MPCD_Station = {
                 if (weapon_mode == 2)
                 {
                     sel = getprop(sel_node);
-                    if (sel)
+                    if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "MRM";
@@ -187,7 +195,7 @@ var MPCD_Station = {
                 if (weapon_mode == 2)
                 {
                     sel = getprop(sel_node);
-                    if (sel)
+                    if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "MRM";
@@ -195,7 +203,18 @@ var MPCD_Station = {
             me.status.setText(mode);
             print("NA ",me.ident," ",na);
             me.label.setText(na);
-            me.selected.setVisible(sel);
+
+            me.selected1.setVisible(sel);
+            if (mode == "RDY")
+            {
+                me.selected.setVisible(sel);
+                me.status.setColor(0,1,0);
+            }
+            else
+            {
+                me.selected.setVisible(0);
+                me.status.setColor(1,1,1);
+            }
         }
         else
         {
