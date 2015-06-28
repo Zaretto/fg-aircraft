@@ -123,16 +123,17 @@ var fire_gun = func {
 var update_sw_ready = func()
 {
 	var sw_count = SwCount.getValue();
-print("SIDEWINDER: sw_count = ", sw_count - 1);
 	if (WeaponSelector.getValue() == 1 and ArmSwitch.getValue())
     {
         var pylon = -1;
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 )
         {
+print("SIDEWINDER: sw_count = ", sw_count - 1);
             foreach (var S; Station.list)
             {
                 if (S.get_type() == "AIM-9" and S.get_selected())
                 {
+print("New AIM ",S.index);
                     pylon = S.index;
                     break;
                 }
@@ -171,8 +172,10 @@ print(" status: ", Current_aim9.status);
 				setprop("/sim/messages/atc", phrase);
 			}
 			# Set the pylon empty:
-			var current_pylon = pop(aim9_seq);
-			current_pylon.set_type("-");
+			var current_pylon = "payload/weight["~Current_aim9.ID~"]/selected";
+print("Release ",current_pylon);
+			setprop(current_pylon,"none");
+print("currently ",getprop(current_pylon));
 			armament_update();
 			Current_aim9.release();
 		}
