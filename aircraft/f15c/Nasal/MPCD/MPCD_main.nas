@@ -140,29 +140,69 @@ var MPCD_Station = {
                         print("listener: update ",v.getValue());
                         obj.update();
                     });
+        setlistener("sim/model/f15/systems/external-loads/station["~obj.ident~"]/selected", func
+                    {
+                        print("update weapon selector "~obj.ident);
+                        obj.update();
+                    });
         obj.update();
         return obj;
     },
     update: func
     {
-        print("Station ",me.ident," update");
+        var weapon_mode = getprop("sim/model/f15/controls/armament/weapon-selector");
         var na = getprop(me.prop~"/selected");
+        var sel = 0;
+        var mode = "STBY";
+        var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
+        print("Station ",me.ident," update ",sel_node,getprop(sel_node));
+
         if (na != nil and na != "none")
         {
-            if (na == "AIM-9") na = "9L";
-            elsif (na == "AIM-120") na = "120A";
-            elsif (na == "AIM-7") na = "7M";
-
-            me.status.setText("STBY");
+            if (na == "AIM-9")
+            {
+                na = "9L";
+                if (weapon_mode == 1)
+                {
+                    sel = getprop(sel_node);
+                    if (sel)
+                        mode = "RDY";
+                }
+                else mode = "SRM";
+            }
+            elsif (na == "AIM-120") 
+            {
+                na = "120A";
+                if (weapon_mode == 2)
+                {
+                    sel = getprop(sel_node);
+                    if (sel)
+                        mode = "RDY";
+                }
+                else mode = "MRM";
+            }
+            elsif (na == "AIM-7") 
+            {
+                na = "7M";
+                if (weapon_mode == 2)
+                {
+                    sel = getprop(sel_node);
+                    if (sel)
+                        mode = "RDY";
+                }
+                else mode = "MRM";
+            }
+            me.status.setText(mode);
             print("NA ",me.ident," ",na);
             me.label.setText(na);
+            me.selected.setVisible(sel);
         }
         else
         {
             me.status.setText("");
             me.label.setText("");
+            me.selected.setVisible(0);
         }
-        me.selected.setVisible(0);
     },
 };
 

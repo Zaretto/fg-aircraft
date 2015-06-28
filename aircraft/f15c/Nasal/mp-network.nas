@@ -58,6 +58,8 @@ var when_disconnecting = func (pilot) {
 ###############################################################################
 # Decodes wps_state
 # and extract f15 external load sheme and individual pylons state.
+# this is encoded in ext_stores.nas into a bitfield
+# the decode must match the encoding scheme.
 var update_ext_load = func(sender, state) {
 	var Wnode = sender.getNode("sim/model/f15/systems/external-loads", 1);
 	var StationList = Wnode.getChildren();
@@ -67,35 +69,36 @@ var update_ext_load = func(sender, state) {
 	var o = "";
 	var str = chr(wpstr[29]) ~ chr(wpstr[30]) ~ chr(wpstr[31]);
 	if ( str == "000" ) { o = "Clean" }
-	elsif ( str == "001") { o = "FAD" }
-	elsif ( str == "010") { o = "FAD light" }
-	elsif ( str == "011") { o = "FAD heavy" }
-	elsif ( str == "100") { o = "Bombcat" }
+	elsif ( str == "001") { o = "Standard Combat" }
+	elsif ( str == "010") { o = "Offensive Counter Air" }
+	elsif ( str == "011") { o = "No Fly Zone" }
+	elsif ( str == "100") { o = "Ferry Flight" }
 	Wnode.getNode("external-load-set", 1).setValue(o);
 	c -= 3;
-	var s = 9;
+	var s = 10;
 	while (s >= 0) {
-		if ( s != 2 and s != 7) {
+# fuel tanks only take one bit.
+		if ( s != 1 and s != 5 and s != 9) {
 			var ccc = c-2;
 			var cc = c-1;
 			str = chr(wpstr[ccc]) ~ chr(wpstr[cc]) ~ chr(wpstr[c]);
 			if ( str == "001" ) { o = "AIM-9" }
 			elsif ( str == "010") { o = "AIM-7" }
-			elsif ( str == "011") { o = "AIM-54" }
+			elsif ( str == "011") { o = "AIM-120" }
 			elsif ( str == "100") { o = "MK-83" }
-			elsif ( str == "000") { o = "-" }
+			elsif ( str == "000") { o = "none" }
 			Station = Wnode.getChild ("station", s , 1);
 			Station.getNode("type", 1).setValue(o);
 			c -= 3;
-			#print(str," ",s," ",o);
+			print("arm ",str," ",s," ",o);
 		} else {
-			o = "-";
+			o = "none";
 			str = chr(wpstr[c]);
-			if ( str == "1" ) { o = "external tank" }
+			if ( str == "1" ) { o = "Droptank" }
 			Station = Wnode.getChild ("station", s , 1);
 			Station.getNode("type", 1).setValue(o);
 			c -= 1;
-			#print(str," ",s," ",o);
+			print("tank ",str," ",s," ",o);
 		}
 		s -= 1 ;
 	}

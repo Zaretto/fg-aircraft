@@ -784,6 +784,41 @@
 
     <!-- Throttles -->
     <animation>
+        <type>slider</type>
+        <object-name>throttle-missile-select-switch</object-name>
+        <property>/sim/model/f15/controls/armament/weapon-selector</property>
+
+        <factor>-0.001</factor>
+        <center>
+            <x-m>0.0081</x-m>
+            <y-m>-0.0017</y-m>
+            <z-m>-0.0529</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>/sim/model/f15/controls/armament/weapon-selector</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <binding>
+                <command>nasal</command>
+                <script>aircraft.arm_selector();</script>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
         <type>rotate</type>
         <object-name>throttle-left</object-name>
         <type>rotate</type>

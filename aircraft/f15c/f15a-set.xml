@@ -246,16 +246,8 @@
                         <gun-rate-switch type="bool">true</gun-rate-switch>
                         <master-arm-lever type="bool">0</master-arm-lever>
                         <master-arm-switch type="int">1</master-arm-switch>
-                        <station-selector n="0" type="int">0</station-selector>
-                        <station-selector n="1" type="int">0</station-selector>
-                        <station-selector n="2" type="int">0</station-selector>
-                        <station-selector n="3" type="int">0</station-selector>
-                        <station-selector n="4" type="int">0</station-selector>
-                        <station-selector n="5" type="int">0</station-selector>
-                        <station-selector n="6" type="int">0</station-selector>
-                        <station-selector n="7" type="int">0</station-selector>
-                        <stick-selector type="int">0</stick-selector>
-                        <!-- 0=OFF, 1=GUN, 2=SW, 3=SP-PH -->
+                        <weapon-selector type="int">0</weapon-selector>
+                        <!-- 0=GUN, 1=SRM, 2=MRM -->
                         <system-on-off type="bool">false</system-on-off>
                         <tanks-ground-sound type="bool">0</tanks-ground-sound>
                     </armament>
@@ -547,6 +539,10 @@
                         <numeral-1 type="int">1</numeral-1>
                     </utilities>
                     <external-loads>
+                        <external-centre-tank type="bool">false</external-centre-tank>
+                        <external-wing-tanks type="bool">false</external-wing-tanks>
+                        <external-centre-tank-demand type="bool">false</external-centre-tank-demand>
+                        <external-wing-tanks-demand type="bool">false</external-wing-tanks-demand>
                         <external-load-set type="string">Clean</external-load-set>
                         <external-tanks type="bool">false</external-tanks>
                         <station n="0">
@@ -1485,13 +1481,13 @@
 
             <key n="119">
                 <name>w</name>
-                <desc>Cycle Stick Weapon Mode Selector</desc>
+                <desc>Cycle Weapon Mode Selector</desc>
                 <binding>
                     <command>property-adjust</command>
-                    <property>sim/model/f15/controls/armament/stick-selector</property>
+                    <property>sim/model/f15/controls/armament/weapon-selector</property>
                     <step>1</step>
                     <min>0</min>
-                    <max>4</max>
+                    <max>3</max>
                     <repeat>false</repeat>
                     <wrap>true</wrap>
                 </binding>

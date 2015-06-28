@@ -43,7 +43,12 @@
 				<checkbox>
 					<property>sim/model/f15/systems/external-loads/external-centre-tank</property>
 					<live>true</live>
-				</checkbox>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>sim/model/f15/systems/external-loads/external-centre-tank-demand</property>
+                        <value>true</value>
+                    </binding>
+                </checkbox>
 			</group>
 			<group>
 				<layout>hbox</layout>
@@ -55,7 +60,12 @@
 				<checkbox>
 					<property>sim/model/f15/systems/external-loads/external-wing-tanks</property>
 					<live>true</live>
-				</checkbox>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>sim/model/f15/systems/external-loads/external-wing-tanks-demand</property>
+                        <value>true</value>
+                    </binding>
+                </checkbox>
 			</group>
 
       <empty>
@@ -494,8 +504,10 @@
                     <pref-width>200</pref-width>
                     <property>/sim/model/f15/systems/external-loads/external-load-set</property>
                     <value>Clean</value>
-                    <value>Close Air Support</value>
-                    <value>Interceptor</value>
+                    <value>Standard Combat</value>
+                    <value>Offensive Counter Air</value>
+                    <value>No Fly Zone</value>
+                    <value>Ferry Flight</value>
                     <binding>
                         <command>dialog-apply</command>
                     </binding>
