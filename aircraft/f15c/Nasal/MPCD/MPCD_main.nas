@@ -221,6 +221,7 @@ var MPCD_Station = {
             me.status.setText("");
             me.label.setText("");
             me.selected.setVisible(0);
+            me.selected1.setVisible(0);
         }
     },
 };
