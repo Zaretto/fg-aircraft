@@ -23,6 +23,8 @@ var UltimateMinG = MinG * UltimateFactor;
 var ResidualBendFactor = MaxResidualBend / UltimateMaxG;
 #var BendFactor = 0.66 / MaxG;
 var BendFactor = 0.16 / MaxG; # degrees of rotation * 7 per G
+var LeftWingTorn = false;
+var RightWingTorn = false;
 
 var fixAirframe = func {
 
