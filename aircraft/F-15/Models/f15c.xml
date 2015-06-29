@@ -15,14 +15,14 @@
             var self = cmdarg();
             print("LOAD F-15 ", self.getPath());
 
-            var livery_update = aircraft.livery_update.new("Aircraft/f15c/Models/Liveries", 10 );
+            var livery_update = aircraft.livery_update.new("Aircraft/F-15/Models/Liveries", 10 );
 
             # Load the needed modules if it hasn't been done yet.
             if (!contains(globals, "f15_net"))
             {
                 print("LOAD F-15 mp network", self.getPath());
                 io.load_nasal(getprop("/sim/fg-root") ~
-                "/Aircraft/f15c/Systems/mp-network.nas", "f14_net");
+                "/Aircraft/F-15/Systems/mp-network.nas", "f14_net");
                 # Initialize network as observer.
                 f15_net.mp_network_init(0);
             }
@@ -1018,7 +1018,7 @@
 
     <effect>
         <name>glossy</name>
-        <inherits-from>Aircraft/f15c/Models/metal</inherits-from>
+        <inherits-from>Aircraft/F-15/Models/metal</inherits-from>
         <object-name>EngineCovers</object-name>
         <object-name>Heat Xchanger.001</object-name>
         <object-name>SpeedBrakeRam</object-name>
@@ -1206,7 +1206,7 @@
     <!-- Cockpit                                                             -->
     <!-- ******************************************************************* -->
     <model>
-        <path>Aircraft/f15c/Models/Cockpit/cockpit.xml</path>
+        <path>Aircraft/F-15/Models/Cockpit/cockpit.xml</path>
         <offsets>
             <x-m>0</x-m>
             <y-m>0 </y-m>
@@ -1513,7 +1513,7 @@
 
     <model>
         <name>nozzle</name>
-        <path>Aircraft/f15c/Models/nozzle-L.xml</path>
+        <path>Aircraft/F-15/Models/nozzle-L.xml</path>
         <offsets>
             <x-m>0.0</x-m>
             <y-m>0.0</y-m>
@@ -1579,7 +1579,7 @@
 
     <model>
         <name>nozzle</name>
-        <path>Aircraft/f15c/Models/nozzle-R.xml</path>
+        <path>Aircraft/F-15/Models/nozzle-R.xml</path>
         <offsets>
             <x-m>0.0</x-m>
             <y-m>0.0</y-m>
@@ -1794,7 +1794,7 @@
 
     <!--<effect>
         <name>test-shader</name>
-        <inherits-from>Aircraft/f15c/Models/Effects/f15test</inherits-from>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15test</inherits-from>
         <object-name>shader-test</object-name>
     </effect>-->
     <model>

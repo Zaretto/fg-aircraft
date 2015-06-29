@@ -52,7 +52,7 @@ setprop("sim/model/f15/controls/electrics/emerg-gen-switch",1);
 setprop("sim/model/f15/controls/electrics/l-gen-switch",1);
 setprop("sim/model/f15/controls/electrics/r-gen-switch",1);
 
-var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/f15c/Dialogs/ground-services.xml");
+var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/F-15/Dialogs/ground-services.xml");
 
     ## initialise the electrics / hyds
     setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);

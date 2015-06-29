@@ -5,5 +5,5 @@
 
 # liveries 
 #print("Initializing Liveries");
-aircraft.livery.init("Aircraft/f15c/Models/Liveries");
+aircraft.livery.init("Aircraft/F-15/Models/Liveries");
 

@@ -23,7 +23,7 @@ var S9 = nil;
 var S10 = nil;
 var droptank_node = props.globals.getNode("sim/ai/aircraft/impact/droptank", 1);
 
-var ext_loads_dlg = gui.Dialog.new("dialog","Aircraft/f15c/Dialogs/external-loads.xml");
+var ext_loads_dlg = gui.Dialog.new("dialog","Aircraft/F-15/Dialogs/external-loads.xml");
 Station =
 {
 	new : func (number)

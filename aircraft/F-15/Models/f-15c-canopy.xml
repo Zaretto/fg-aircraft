@@ -4,8 +4,18 @@
 -->
 
 <PropertyList>
-    <path>f-15d-canopy.ac</path>
+    <path>f-15c-canopy.ac</path>
 
+    <animation>
+        <type>select</type>
+        <condition>
+            <equals>
+                <property>fdm/jsbsim/metrics/two-place-canopy</property>
+                <value>0</value>
+            </equals>
+        </condition>
+        <object-name>f15c-canopy</object-name>
+    </animation>
     <!-- Uncomment this section for FG 3.5 ALS Glass effects -->
     <effect>
         <name>f15glass</name>
@@ -18,16 +28,6 @@
         <object-name>WindscreenGlassInside</object-name>
     </effect>
     <!-- Canopy -->
-    <animation>
-        <type>select</type>
-        <condition>
-            <equals>
-                <property>fdm/jsbsim/metrics/two-place-canopy</property>
-                <value>1</value>
-            </equals>
-        </condition>
-        <object-name>f15d-canopy</object-name>
-    </animation>
     <animation>
         <type>select</type>
         <condition>
@@ -113,7 +113,7 @@
     <animation>
         <type>shader</type>
         <shader>chrome</shader>
-        <texture>Aircraft/f15c/Models/glass_shader.png</texture>
+        <texture>Aircraft/F-15/Models/glass_shader.png</texture>
         <object-name>WindscreenGlass</object-name>
         <object-name>CanopyGlass</object-name>
     </animation>
