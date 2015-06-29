@@ -333,7 +333,13 @@ var AIM9 = {
 
 
 	update_track: func() {
-		if ( me.Tgt == nil ) { return(1); }
+
+		if ( me.Tgt == nil ) 
+        {
+            setprop("sim/model/f15/systems/armament/launch-light",false);
+            return(1); 
+        }
+        setprop("sim/model/f15/systems/armament/launch-light",me.status == 1);
 		if (me.status == 0) {
 			# Status = searching.
 			me.reset_seeker();
@@ -362,6 +368,7 @@ var AIM9 = {
 		me.update_track_time = time;
 		var last_tgt_e = me.curr_tgt_e;
 		var last_tgt_h = me.curr_tgt_h;
+
 		if (me.status == 1) {		
 			# Status = locked. Get target position relative to our aircraft.
 			me.curr_tgt_e = me.Tgt.get_total_elevation(OurPitch.getValue());
@@ -501,8 +508,8 @@ var AIM9 = {
 			return;
 		}
 		# search.
-		if ( awg_9.nearest_u != nil and awg_9.nearest_u.Valid.getValue()) {
-			var tgt = awg_9.nearest_u; # In the AWG-9 radar range and horizontal field.
+		if ( awg_9.active_u != nil and awg_9.active_u.Valid.getValue()) {
+			var tgt = awg_9.active_u; # In the AWG-9 radar range and horizontal field.
 			var rng = tgt.get_range();
 			var total_elev  = tgt.get_total_elevation(OurPitch.getValue()); # deg.
 			var total_horiz = tgt.get_deviation(OurHdg.getValue());         # deg.

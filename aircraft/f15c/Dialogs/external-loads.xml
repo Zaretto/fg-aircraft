@@ -512,6 +512,18 @@
                         <command>dialog-apply</command>
                     </binding>
                 </combo>
+            <group>
+                <!-- Weapons Sets -->
+                <layout>hbox</layout>
+                <default-padding>1</default-padding>
+                <button>
+                    <legend>Reload set</legend>
+                    <equal>true</equal>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>sim/model/f15/systems/external-loads/reload-demand</property>
+                    </binding>
+                </button>
                 <button>
                     <legend>Reload gun</legend>
                     <equal>true</equal>
@@ -523,6 +535,7 @@
                         </script>
                     </binding>
                 </button>
+            </group>
             </group>
 
             <empty>

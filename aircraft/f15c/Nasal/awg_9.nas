@@ -383,14 +383,19 @@ active_u = nil;
         {
             dist = awg_9.nearest_u.get_range();
         }
-            active_u = tgts_list[0];
+#            active_u = tgts_list[0];
         print("Sel next target: dist=",dist);
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
         foreach (var u; sorted_dist) 
         {
-                printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            if(u.Callsign.getValue() == active_u_callsign)
+            {
+                print("Skipping active target ",active_u_callsign);
+                continue;
+}
             if(u.get_range() > dist)
             {
                 nxt = u;
@@ -400,6 +405,7 @@ active_u = nil;
         }
         if (nxt == nil)
         {
+if(size(sorted_dist)>0)
             nxt = sorted_dist[0];
         }
 

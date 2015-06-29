@@ -55,6 +55,12 @@ setprop ("sim/model/f15/systems/external-loads/external-centre-tank", getprop("c
 }
 
 var b_set = 0;
+setlistener("sim/model/f15/systems/external-loads/reload-demand", func
+            {
+                var v = getprop("sim/model/f15/systems/external-loads/external-load-set");
+                if (v != nil)
+                    ext_loads_set(v);
+            });
 
 var ext_loads_set = func(s)
 {
