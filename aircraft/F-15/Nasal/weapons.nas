@@ -24,9 +24,10 @@ var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
-var aim9_count = 0;
-Current_aim9   = nil;
-
+var Current_srm   = nil;
+var Current_mrm   = nil;
+var Current_missile   = nil;
+var sel_missile_count = 0;
 
 aircraft.data.add( WeaponSelector, ArmSwitch );
 
@@ -60,6 +61,10 @@ var weapons_init = func()
                     {
                         release_aim9();
                     }
+                    elsif ( weapon_s == 2 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
                 }, 0, 1);
 }
 
@@ -69,16 +74,16 @@ var weapons_init = func()
 var armament_update = func {
 	# Trigered each 0.1 sec by instruments.nas main_loop() if Master Arm Engaged.
 
-	aim9_count = SwCount.getValue();
+    sel_missile_count = get_sel_missile_count();
 	# Turn sidewinder cooling lights On/Off.
-	if ( aim9_count > 0 ) {
+	if ( sel_missile_count > 0 ) {
 		SWCoolOn.setBoolValue(1);
 		SWCoolOff.setBoolValue(0);
 		update_sw_ready();
 	} else {
 		SWCoolOn.setBoolValue(0);
 		SWCoolOff.setBoolValue(1);
-		# Turn Current_aim9.status to stand by.
+		# Turn Current_srm.status to stand by.
 		#set_status_current_aim9(-1);
 	}
 }
@@ -120,42 +125,76 @@ var fire_gun = func {
 	}
 }
 
+var missile_code_from_ident= func(mty)
+{
+        if (mty == "AIM-9")
+            return "aim9";
+        else if (mty == "AIM-7")
+            return "aim7";
+        else if (mty == "AIM-120")
+            return "aim120";
+}
+var get_sel_missile_count = func()
+{
+        if (WeaponSelector.getValue() == 1)
+        {
+            Current_missile = Current_srm;
+            return getprop("sim/model/f15/systems/armament/aim9/count");
+        }
+        else if (WeaponSelector.getValue() == 2)
+        {
+            Current_missile = Current_mrm;
+            return getprop("sim/model/f15/systems/armament/aim7/count")+getprop("sim/model/f15/systems/armament/aim120/count");
+        }
+        return 0;
+}
 var update_sw_ready = func()
 {
-	var sw_count = SwCount.getValue();
-	if (WeaponSelector.getValue() == 1 and ArmSwitch.getValue())
+	if (WeaponSelector.getValue() > 0 and ArmSwitch.getValue())
     {
+    	sel_missile_count = get_sel_missile_count();
         var pylon = -1;
-		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 )
+		if ( (WeaponSelector.getValue() == 1 and (Current_srm == nil or Current_srm.status == 2)  and sel_missile_count > 0 )
+             or (WeaponSelector.getValue() == 2 and (Current_mrm == nil or Current_mrm.status == 2)  and sel_missile_count > 0 ))
         {
-print("SIDEWINDER: sw_count = ", sw_count - 1);
+            print("Missile: sel_missile_count = ", sel_missile_count - 1);
             foreach (var S; Station.list)
             {
-printf("AIM %d: %s, %s",S.index, S.get_type(), S.get_selected());
-                if (S.get_type() == "AIM-9" and S.get_selected())
+                printf("AIM %d: %s, %s",S.index, S.get_type(), S.get_selected());
+#                if (S.get_type() == "AIM-9" and S.get_selected())
+                if (S.get_selected())
                 {
-print("New AIM ",S.index);
+                    print("New AIM ",S.index);
                     pylon = S.index;
                     break;
                 }
             }
             if (pylon >= 0)
             {
-                print("FOX2 new !! ", pylon, " sw_count - 1 = ", sw_count - 1);
-                Current_aim9 = aircraft.AIM9.new(pylon);
+                if (S.get_type() == "AIM-9" or S.get_type() == "AIM-7" or S.get_type() == "AIM-120")
+                {
+                    print(S.get_type()," new !! ", pylon, " sel_missile_count - 1 = ", sel_missile_count - 1);
+                    if (WeaponSelector.getValue() == 1)
+                        Current_srm = aircraft.AIM9.new(pylon, S.get_type());
+                    else if (WeaponSelector.getValue() == 2)
+                        Current_mrm = aircraft.AIM9.new(pylon, S.get_type());
+                }
+                else
+                    print ("Cannot fire ",S.get_type());
+
             }
             else
-                print("Error no AIM9");
-		}
-        elsif (Current_aim9 != nil and Current_aim9.status == -1)
+                print("Error no missile available");
+        }
+        elsif (Current_missile != nil and Current_missile.status == -1)
         {
-			Current_aim9.status = 0;	
-			Current_aim9.search();	
-		}
-	}
-    elsif (Current_aim9 != nil)
+            Current_missile.status = 0;	
+            Current_missile.search();	
+        }
+    }
+    elsif (Current_missile != nil)
     {
-		Current_aim9.status = -1;	
+		Current_missile.status = -1;	
 		SwSoundVol.setValue(0);
 	}
 }
@@ -163,23 +202,23 @@ print("New AIM ",S.index);
 var release_aim9 = func()
 {
 print("RELEASE AIM-9 status: ");
-	if (Current_aim9 != nil) {
-print(" status: ", Current_aim9.status);
-		if ( Current_aim9.status == 1 ) {
-			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
+	if (Current_missile != nil) {
+print(" status: ", Current_missile.status);
+		if ( Current_missile.status == 1 ) {
+			var phrase = Current_missile.type~" at: " ~ Current_missile.Tgt.Callsign.getValue();
 			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
 				setprop("/sim/multiplay/chat", phrase);
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
 			# Set the pylon empty:
-			var current_pylon = "payload/weight["~Current_aim9.ID~"]/selected";
+			var current_pylon = "payload/weight["~Current_missile.ID~"]/selected";
 print("Release ",current_pylon);
 			setprop(current_pylon,"none");
 print("currently ",getprop(current_pylon));
 			armament_update();
 setprop("sim/model/f15/systems/armament/launch-light",false);
-			Current_aim9.release();
+			Current_missile.release();
             arm_selector();
 		}
 	}
@@ -187,8 +226,8 @@ setprop("sim/model/f15/systems/armament/launch-light",false);
 
 var set_status_current_aim9 = func(n)
 {
-	if (Current_aim9 != nil) {
-		Current_aim9.status = n;	
+	if (Current_missile != nil) {
+		Current_missile.status = n;	
 	}
 }
 
@@ -203,9 +242,9 @@ var system_start = func
 	settimer (func { SwCoolOffLight.setBoolValue(1); }, 0.6);
 	settimer (func { MslPrepOffLight.setBoolValue(1); }, 2);
 	settimer (func {
-                  if (Current_aim9 != nil and WeaponSelector.getValue() and aim9_count > 0) {
-                      Current_aim9.status = 0;	
-                      Current_aim9.search();	
+                  if (Current_missile != nil and WeaponSelector.getValue() and sel_missile_count > 0) {
+                      Current_missile.status = 0;	
+                      Current_missile.search();	
                   }
               }, 2.5);
 }
@@ -220,7 +259,7 @@ var system_stop = func
     {
 		S.set_display(0); # initialize bcode (showing weapons set over MP).
 	}
-	if (Current_aim9 != nil)
+	if (Current_missile != nil)
     {
 		set_status_current_aim9(-1);	
 	}
@@ -289,18 +328,22 @@ var arm_selector = func() {
     elsif ( weapon_s == 1 )
     {
 		# AIM-9: (SRM)
-		if (Current_aim9 != nil and ArmSwitch.getValue() == 2 and aim9_count > 0) 
+		if (Current_srm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
         {
-			Current_aim9.status = 0;	
-			Current_aim9.search();	
+            Current_missile = Current_srm;
+			Current_missile.status = 0;	
+			Current_missile.search();	
 		}
 	} 
     elsif ( weapon_s == 2 )
     {
         # MRM
-		SwSoundVol.setValue(0);
-        armament_update();
-		set_status_current_aim9(-1);	
+		if (Current_mrm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
+        {
+            Current_missile = Current_mrm;
+			Current_missile.status = 0;	
+			Current_missile.search();	
+		}
 	} 
     else
     {

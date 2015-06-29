@@ -324,6 +324,8 @@ var update_wpstring = func
 {
 	var b_wpstring = "";
     var aim9_count = 0;
+    var aim7_count = 0;
+    var aim120_count = 0;
 	foreach (var S; Station.list)
     {
 # Use 3 bits per weapon pylon (3 free additional wps types).
@@ -335,9 +337,15 @@ var update_wpstring = func
 		b_wpstring = b_wpstring ~ b;
         if (S.get_type() == "AIM-9")
             aim9_count = aim9_count+1;
+        if (S.get_type() == "AIM-7")
+            aim7_count = aim7_count+1;
+        if (S.get_type() == "AIM-120")
+            aim120_count = aim120_count+1;
 	}
-    print("Aim9 count ",aim9_count);
+    print("count ",aim9_count, aim7_count, aim120_count);
     setprop("sim/model/f15/systems/armament/aim9/count",aim9_count);
+    setprop("sim/model/f15/systems/armament/aim7/count",aim7_count);
+    setprop("sim/model/f15/systems/armament/aim120/count",aim120_count);
 	var set = WeaponsSet.getValue();
 	b_wpstring = b_wpstring ~ bits.string(b_set,3);
 # Send the bits string as INT over MP.

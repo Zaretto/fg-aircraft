@@ -200,24 +200,43 @@ obj.target_locked.setVisible(0);
             }
             else if (w_s == 2)
             {
-                txt = "M0F";
+                txt = sprintf("M%dF", getprop("sim/model/f15/systems/armament/aim120/count")+getprop("sim/model/f15/systems/armament/aim7/count"));
             }
             me.window2.setText(txt);
+            if (awg_9.active_u != nil)
+            {
+                if (awg_9.active_u.Callsign != nil)
+                    me.window3.setText(awg_9.active_u.Callsign.getValue());
+                var model = "XX";
+                if (awg_9.active_u.ModelType != "")
+                    model = awg_9.active_u.ModelType;
+
+#        var w2 = sprintf("%-4d", awg_9.active_u.get_closure_rate());
+#        w3_22 = sprintf("%3d-%1.1f %.5s %.4s",awg_9.active_u.get_bearing(), awg_9.active_u.get_range(), callsign, model);
+#
+#
+#these labels aren't correct - but we don't have a full simulation of the targetting and missiles so 
+#have no real idea on the details of how this works.
+                me.window4.setText(sprintf("RNG %3.1f", awg_9.active_u.get_range()));
+                me.window5.setText(sprintf("CLO %-3d", awg_9.active_u.get_closure_rate()));
+                me.window6.setText(model);
+                me.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
+            }
         }
         else
         {
             me.window2.setVisible(0);
-        }
         me.window3.setText("NAV");
         if (hdp.nav_range != "")
             me.window3.setText("NAV");
         else
             me.window3.setText("");
         me.window4.setText(hdp.nav_range);
-
         me.window5.setText(hdp.window5);
         me.window7.setText(hdp.window7);
         me.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
+        }
+
         me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
 
 #heading tape
@@ -233,6 +252,8 @@ obj.target_locked.setVisible(0);
         me.roll_pointer.setRotation (roll_rad);
 
         var target_idx = 0;
+        var designated = 0;
+        me.target_locked.setVisible(0);
         foreach( u; awg_9.tgts_list ) 
         {
             var callsign = "XX";
@@ -241,43 +262,39 @@ obj.target_locked.setVisible(0);
                 if (u.Callsign != nil)
                     callsign = u.Callsign.getValue();
                 var model = "XX";
+
                 if (u.ModelType != "")
                     model = u.ModelType;
+
                 if (target_idx < me.max_symbols)
                 {
                     tgt = me.tgt_symbols[target_idx];
                     if (tgt != nil)
                     {
-#                    if (u == awg_9.nearest_u)
-#                    {
-#                        w2 = sprintf("%-4d", u.get_closure_rate());
-#                        w3_22 = sprintf("%3d-%2d",u.get_bearing(), u.get_range());
-#                        w3_22 = w3_22 ~" "~ callsign ~ " " ~ model;
-#                    }
                         tgt.setVisible(u.get_display());
                         var u_dev_rad = (90-u.get_deviation(hdp.heading))  * D2R;
                         var u_elev_rad = (90-u.get_total_elevation( hdp.pitch))  * D2R;
-			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
-			var combined_dev_deg = devs[0];
-			var combined_dev_length =  devs[1];
-			var clamped = devs[2];
-                    var yc  = ht_yco + (ht_ycf * combined_dev_length * math.cos(combined_dev_deg*D2R));
-                    var xc = ht_xco + (ht_xcf * combined_dev_length * math.sin(combined_dev_deg*D2R));
-if(devs[2])
-tgt.setVisible(getprop("sim/model/f15/lighting/hud-diamond-switch/state"));
-else
-tgt.setVisible(1);
+                        var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
+                        var combined_dev_deg = devs[0];
+                        var combined_dev_length =  devs[1];
+                        var clamped = devs[2];
+                        var yc  = ht_yco + (ht_ycf * combined_dev_length * math.cos(combined_dev_deg*D2R));
+                        var xc = ht_xco + (ht_xcf * combined_dev_length * math.sin(combined_dev_deg*D2R));
+                        if(devs[2])
+                            tgt.setVisible(getprop("sim/model/f15/lighting/hud-diamond-switch/state"));
+                        else
+                            tgt.setVisible(1);
 
-
-#                        tgt.setColorFill(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 1.00);
-#else
-#                        tgt.setColorFill(0.0039215686274509803921568627451,0.27647058823529411764705882352941,0, 0.00);
+                        if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                        {
+                            me.target_locked.setVisible(1);
+                            me.target_locked.setTranslation (xc, yc);
+                        }
 
                         tgt.setTranslation (xc, yc);
-#tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
-#tgt.setRotation (roll_rad);
-if (ht_debug)
-printf("%-10s %f,%f [%f,%f,%f] :: %f,%f",callsign,xc,yc, devs[0], devs[1], devs[2], u_dev_rad*D2R, u_elev_rad*D2R); 
+
+                        if (ht_debug)
+                            printf("%-10s %f,%f [%f,%f,%f] :: %f,%f",callsign,xc,yc, devs[0], devs[1], devs[2], u_dev_rad*D2R, u_elev_rad*D2R); 
                     }
                 }
                 target_idx = target_idx+1;

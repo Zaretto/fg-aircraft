@@ -10,7 +10,7 @@ var OurRoll        = props.globals.getNode("orientation/roll-deg");
 var OurPitch       = props.globals.getNode("orientation/pitch-deg");
 var HudReticleDev  = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/hud/reticle-total-deviation", 1);
 var HudReticleDeg  = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/hud/reticle-total-angle", 1);
-var aim_9_model    = "Models/Stores/aim-9/aim-9-";
+#var aim_9_model    = "Models/Stores/aim-9/aim-9-";
 var SwSoundOnOff   = AcModel.getNode("systems/armament/aim9/sound-on-off");
 var SwSoundVol     = AcModel.getNode("systems/armament/aim9/sound-volume");
 var vol_search     = 0.12;
@@ -22,14 +22,25 @@ var slugs_to_lbs = 32.1740485564;
 
 
 var AIM9 = {
-	new : func (p) {
+	new : func (p, mty) {
 		var m = { parents : [AIM9]};
-		# Args: p = Pylon.
+		# Args: 
+        # p = Pylon.
+        # mty = missile type.
+        m.variant =string.lc(mty);
+        if (mty == "AIM-9")
+            mty = "aim9";
+        else if (mty == "AIM-7")
+            mty = "aim7";
+        else if (mty == "AIM-120")
+            mty = "aim120";
+
+        m.type = mty;
 
 		m.status            = 0; # -1 = stand-by, 0 = searching, 1 = locked, 2 = fired.
 		m.free              = 0; # 0 = status fired with lock, 1 = status fired but having lost lock.
 
-		m.prop              = AcModel.getNode("systems/armament/aim9/").getChild("msl", 0 , 1);
+		m.prop              = AcModel.getNode("systems/armament/"~m.type~"/").getChild("msl", 0 , 1);
 		m.PylonIndex        = m.prop.getNode("pylon-index", 1).setValue(p);
 		m.ID                = p;
 		m.pylon_prop        = props.globals.getNode("sim/model/f15/systems/external-loads/").getChild("station", p);
@@ -57,17 +68,17 @@ var AIM9 = {
 		m.direct_dist_m     = nil;
 
 		# AIM-9L specs:
-		m.aim9_fov_diam     = getprop("sim/model/f15/systems/armament/aim9/fov-deg");
+		m.aim9_fov_diam     = getprop("sim/model/f15/systems/armament/"~m.type~"/fov-deg");
 		m.aim9_fov          = m.aim9_fov_diam / 2;
-		m.max_detect_rng    = getprop("sim/model/f15/systems/armament/aim9/max-detection-rng-nm");
-		m.max_seeker_dev    = getprop("sim/model/f15/systems/armament/aim9/track-max-deg") / 2;
-		m.force_lbs         = getprop("sim/model/f15/systems/armament/aim9/thrust-lbs");
-		m.thrust_duration   = getprop("sim/model/f15/systems/armament/aim9/thrust-duration-sec");
-		m.weight_launch_lbs = getprop("sim/model/f15/systems/armament/aim9/weight-launch-lbs");
-		m.weight_whead_lbs  = getprop("sim/model/f15/systems/armament/aim9/weight-warhead-lbs");
-		m.cd                = getprop("sim/model/f15/systems/armament/aim9/drag-coeff");
-		m.eda               = getprop("sim/model/f15/systems/armament/aim9/drag-area");
-		m.max_g             = getprop("sim/model/f15/systems/armament/aim9/max-g");
+		m.max_detect_rng    = getprop("sim/model/f15/systems/armament/"~m.type~"/max-detection-rng-nm");
+		m.max_seeker_dev    = getprop("sim/model/f15/systems/armament/"~m.type~"/track-max-deg") / 2;
+		m.force_lbs         = getprop("sim/model/f15/systems/armament/"~m.type~"/thrust-lbs");
+		m.thrust_duration   = getprop("sim/model/f15/systems/armament/"~m.type~"/thrust-duration-sec");
+		m.weight_launch_lbs = getprop("sim/model/f15/systems/armament/"~m.type~"/weight-launch-lbs");
+		m.weight_whead_lbs  = getprop("sim/model/f15/systems/armament/"~m.type~"/weight-warhead-lbs");
+		m.cd                = getprop("sim/model/f15/systems/armament/"~m.type~"/drag-coeff");
+		m.eda               = getprop("sim/model/f15/systems/armament/"~m.type~"/drag-area");
+		m.max_g             = getprop("sim/model/f15/systems/armament/"~m.type~"/max-g");
 
 		# Find the next index for "models/model" and create property node.
 		# Find the next index for "ai/models/aim-9" and create property node.
@@ -79,13 +90,15 @@ var AIM9 = {
 		m.model = n.getChild("model", i, 1);
 		var n = props.globals.getNode("ai/models", 1);
 		for (var i = 0; 1; i += 1)
-			if (n.getChild("aim-9", i, 0) == nil)
+			if (n.getChild(m.variant, i, 0) == nil)
 				break;
-		m.ai = n.getChild("aim-9", i, 1);
+		m.ai = n.getChild(m.variant, i, 1);
 
 		m.ai.getNode("valid", 1).setBoolValue(1);
-		var id_model = aim_9_model ~ m.ID ~ ".xml";
-		m.model.getNode("path", 1).setValue(id_model);
+        var missile_model    = sprintf("Models/Stores/%s/%s-%d.xml", m.variant, m.variant, m.ID);
+print("Model ",missile_model);
+
+		m.model.getNode("path", 1).setValue(missile_model);
 		m.life_time = 0;
 
 		# Create the AI position and orientation properties.
@@ -580,13 +593,13 @@ var AIM9 = {
 
 	animation_flags_props: func {
 		# Create animation flags properties.
-		var msl_path = "sim/model/f15/systems/armament/aim9/flags/msl-id-" ~ me.ID;
+		var msl_path = "sim/model/f15/systems/armament/"~me.type~"/flags/msl-id-" ~ me.ID;
 		me.msl_prop = props.globals.initNode( msl_path, 1, "BOOL" );
-		var smoke_path = "sim/model/f15/systems/armament/aim9/flags/smoke-id-" ~ me.ID;
+		var smoke_path = "sim/model/f15/systems/armament/"~me.type~"/flags/smoke-id-" ~ me.ID;
 		me.smoke_prop = props.globals.initNode( smoke_path, 0, "BOOL" );
-		var explode_path = "sim/model/f15/systems/armament/aim9/flags/explode-id-" ~ me.ID;
+		var explode_path = "sim/model/f15/systems/armament/"~me.type~"/flags/explode-id-" ~ me.ID;
 		me.explode_prop = props.globals.initNode( explode_path, 0, "BOOL" );
-		var explode_smoke_path = "sim/model/f15/systems/armament/aim9/flags/explode-smoke-id-" ~ me.ID;
+		var explode_smoke_path = "sim/model/f15/systems/armament/"~me.type~"/flags/explode-smoke-id-" ~ me.ID;
 		me.explode_smoke_prop = props.globals.initNode( explode_smoke_path, 0, "BOOL" );
 	},
 
