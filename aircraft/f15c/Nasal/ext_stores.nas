@@ -24,23 +24,140 @@ var S10 = nil;
 var droptank_node = props.globals.getNode("sim/ai/aircraft/impact/droptank", 1);
 
 var ext_loads_dlg = gui.Dialog.new("dialog","Aircraft/f15c/Dialogs/external-loads.xml");
+Station =
+{
+	new : func (number)
+    {
+		var obj = {parents : [Station] };
+		obj.prop = props.globals.getNode("sim/model/f15/systems/external-loads/").getChild ("station", number , 1);
+		obj.index = number;
+		obj.type = obj.prop.getNode("type", 1);
+		obj.bcode = 0;
+        obj.set_type(getprop("payload/weight["~number~"]/selected"));
+        obj.encode_length = 3; # bits for transmit
+		obj.display = obj.prop.initNode("display", 0, "INT");
+
+        # the jsb external loads from 0-9 match the indexes used here incremented by 1 as the first element
+        # in jsb sim doesn't have [0]
+        var propname = sprintf( "fdm/jsbsim/inertia/pointmass-weight-lbs[%d]",number);
+
+    	obj.weight_lb = props.globals.getNode(propname , 1);
+
+		obj.selected = obj.prop.getNode("selected",1);
+		append(Station.list, obj);
+        #
+# set listener to detect when stores changed and update
+        setlistener("payload/weight["~obj.index~"]/selected", func(prop){
+                        var v = prop.getValue();
+                        obj.set_type(v);
+                        if (v == "AIM-9")
+                            prop.getParent().getNode("weight-lb").setValue(190);
+                        elsif (v == "AIM-7")
+                        prop.getParent().getNode("weight-lb").setValue(510);
+                        elsif (v == "AIM-120")
+                        prop.getParent().getNode("weight-lb").setValue(335);
+                        elsif (v == "Droptank")
+                        {
+                            prop.getParent().getNode("weight-lb").setValue(271);
+                        }
+                        else
+                            prop.getParent().getNode("weight-lb").setValue(0);
+                        calculate_weights();
+                        update_wpstring();
+                    });
+
+		return obj;
+	},
+    set_type : func (t) 
+    {
+		me.type.setValue(t);
+		me.bcode = 0;
+		if ( t == "AIM-9" )
+        {
+			me.bcode = 1;
+		}
+        elsif ( t == "AIM-7" )
+        {
+			me.bcode = 2;
+		} 
+        elsif ( t == "AIM-120" )
+        {
+			me.bcode = 3;
+		} 
+        elsif ( t == "MK-83" )
+        {
+			me.bcode = 4;
+		} 
+        elsif ( t == "Droptank" )
+        {
+			me.bcode = 5; # although 5 only bit 0 will be used
+		}
+	},
+    get_type : func ()
+    {
+		return me.type.getValue();	
+	},
+    set_display : func (n)
+    {
+		me.display.setValue(n);
+	},
+    add_weight_lb : func (t)
+    {
+		w = me.weight_lb.getValue();
+		me.weight_lb.setValue( w + t );
+	},
+    set_weight_lb : func (t)
+    {
+		me.weight_lb.setValue(t);	
+	},
+    get_weight_lb : func ()
+    {
+		return me.weight_lb.getValue();	
+	},
+    get_selected : func ()
+    {
+		return me.selected.getBoolValue();	
+	},
+    set_selected : func (n)
+    {
+		me.selected.setBoolValue(n);
+	},
+    toggle_selected : func ()
+    {
+		me.selected.setBoolValue( !me.get_selected() );
+	},
+    list : [],
+};
+    
 
 
 var ext_loads_init = func() {
-	S0 = Station.new(0);
-	S1 = Station.new(1);
+    print("F-15 External loads init");
+    if (S0 == nil)
+        S0 = Station.new(0);
+    if (S1 == nil)
+        S1 = Station.new(1);
     S1.encode_length=1;
-	S2 = Station.new(2);
-	S3 = Station.new(3);
-	S4 = Station.new(4);
-	S5 = Station.new(5);
+    if (S2 == nil)
+        S2 = Station.new(2);
+    if (S3 == nil)
+        S3 = Station.new(3);
+    if (S4 == nil)
+        S4 = Station.new(4);
+    if (S5 == nil)
+        S5 = Station.new(5);
     S5.encode_length=1;
-	S6 = Station.new(6);
-	S7 = Station.new(7);
-	S8 = Station.new(8);
-	S9 = Station.new(9);
+    if (S6 == nil)
+        S6 = Station.new(6);
+    if (S7 == nil)
+        S7 = Station.new(7);
+    if (S8 == nil)
+        S8 = Station.new(8);
+    if (S9 == nil)
+        S9 = Station.new(9);
     S9.encode_length=1;
-	S10 = Station.new(10);
+    if (S10 == nil)
+        S10 = Station.new(10);
 
 #	foreach (var S; Station.list)
 #    {
@@ -50,8 +167,11 @@ var ext_loads_init = func() {
 }
 var update_dialog_checkboxes = func
 {
-setprop ("sim/model/f15/systems/external-loads/external-wing-tanks", getprop("consumables/fuel/tank[5]/selected") or getprop("consumables/fuel/tank[6]/selected"));
-setprop ("sim/model/f15/systems/external-loads/external-centre-tank", getprop("consumables/fuel/tank[7]/selected"));
+    if (getprop("consumables/fuel/tank[5]/selected") != nil)
+    {
+        setprop ("sim/model/f15/systems/external-loads/external-wing-tanks", getprop("consumables/fuel/tank[5]/selected") or getprop("consumables/fuel/tank[6]/selected"));
+        setprop ("sim/model/f15/systems/external-loads/external-centre-tank", getprop("consumables/fuel/tank[7]/selected"));
+    }
 }
 
 var b_set = 0;
@@ -59,7 +179,12 @@ setlistener("sim/model/f15/systems/external-loads/reload-demand", func
             {
                 var v = getprop("sim/model/f15/systems/external-loads/external-load-set");
                 if (v != nil)
+                {
+                    # reload the current set
                     ext_loads_set(v);
+
+                    #ensure that the missiles are appropriately selected.
+                    arm_selector();                }
             });
 
 var ext_loads_set = func(s)
@@ -331,108 +456,3 @@ var calculate_weights=func
     TanksWeight.setValue(tw);
 }
 
-Station =
-{
-	new : func (number)
-    {
-		var obj = {parents : [Station] };
-		obj.prop = props.globals.getNode("sim/model/f15/systems/external-loads/").getChild ("station", number , 1);
-		obj.index = number;
-		obj.type = obj.prop.getNode("type", 1);
-		obj.bcode = 0;
-        obj.set_type(getprop("payload/weight["~number~"]/selected"));
-        obj.encode_length = 3; # bits for transmit
-		obj.display = obj.prop.initNode("display", 0, "INT");
-
-        # the jsb external loads from 0-9 match the indexes used here incremented by 1 as the first element
-        # in jsb sim doesn't have [0]
-        var propname = sprintf( "fdm/jsbsim/inertia/pointmass-weight-lbs[%d]",number);
-
-    	obj.weight_lb = props.globals.getNode(propname , 1);
-
-		obj.selected = obj.prop.getNode("selected",1);
-		append(Station.list, obj);
-        #
-# set listener to detect when stores changed and update
-        setlistener("payload/weight["~obj.index~"]/selected", func(prop){
-                        var v = prop.getValue();
-                        obj.set_type(v);
-                        if (v == "AIM-9")
-                            prop.getParent().getNode("weight-lb").setValue(190);
-                        elsif (v == "AIM-7")
-                        prop.getParent().getNode("weight-lb").setValue(510);
-                        elsif (v == "AIM-120")
-                        prop.getParent().getNode("weight-lb").setValue(335);
-                        elsif (v == "Droptank")
-                        {
-                            prop.getParent().getNode("weight-lb").setValue(271);
-                        }
-                        else
-                            prop.getParent().getNode("weight-lb").setValue(0);
-                        calculate_weights();
-                        update_wpstring();
-                    });
-
-		return obj;
-	},
-    set_type : func (t) 
-    {
-		me.type.setValue(t);
-		me.bcode = 0;
-		if ( t == "AIM-9" )
-        {
-			me.bcode = 1;
-		}
-        elsif ( t == "AIM-7" )
-        {
-			me.bcode = 2;
-		} 
-        elsif ( t == "AIM-120" )
-        {
-			me.bcode = 3;
-		} 
-        elsif ( t == "MK-83" )
-        {
-			me.bcode = 4;
-		} 
-        elsif ( t == "Droptank" )
-        {
-			me.bcode = 5; # although 5 only bit 0 will be used
-		}
-	},
-    get_type : func ()
-    {
-		return me.type.getValue();	
-	},
-    set_display : func (n)
-    {
-		me.display.setValue(n);
-	},
-    add_weight_lb : func (t)
-    {
-		w = me.weight_lb.getValue();
-		me.weight_lb.setValue( w + t );
-	},
-    set_weight_lb : func (t)
-    {
-		me.weight_lb.setValue(t);	
-	},
-    get_weight_lb : func ()
-    {
-		return me.weight_lb.getValue();	
-	},
-    get_selected : func ()
-    {
-		return me.selected.getBoolValue();	
-	},
-    set_selected : func (n)
-    {
-		me.selected.setBoolValue(n);
-	},
-    toggle_selected : func ()
-    {
-		me.selected.setBoolValue( !me.get_selected() );
-	},
-    list : [],
-};
-    

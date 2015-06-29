@@ -143,11 +143,7 @@ var MPCD_Station = {
                     {
                         obj.update();
                     });
-        setlistener("sim/model/f15/systems/external-loads/station["~obj.ident~"]/selected", func
-                    {
-                        obj.update();
-                    });
-        setlistener("sim/model/f15/controls/armament/master-arm-switch", func
+        setlistener("sim/model/f15/controls/armament/weapons-updated", func
                     {
                         obj.update();
                     });
@@ -307,6 +303,19 @@ var MPCD_Device =
         p.setVisible(1);
         me.current_page = p;
     },
+    updateMenus : func{
+            foreach(var mi ; me.current_page.menus)
+            {
+#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
+                if (me.buttons[mi.menu_id] != nil)
+                {
+                    me.buttons[mi.menu_id].setText(mi.title);
+                    me.buttons[mi.menu_id].setVisible(1);
+                }
+                else
+                    printf("No corresponding item '%s'",mi.menu_id);
+            }
+    },
 };
 
 var MPCD =  MPCD_Device.new(MPCDsvg);
@@ -407,7 +416,14 @@ p1_2.addMenuItem(3, "CBT JETT", p1_3);
 p1_2.addMenuItem(4, "WPN LOAD", p1_3);
 p1_2.addMenuItem(9, "M", p1_1);
 
-p1_3.gun_rounds = p1_3.addMenuItem(1, "HIGH\n500M", p1_3);
+p1_3.gun_rounds = p1_3.addMenuItem(1, sprintf("HIGH\n%dM",getprop("/sim/model/f15/systems/gun/rounds")), p1_3);
+setlistener("/sim/model/f15/systems/gun/rounds", func(v) {
+                if (v != nil)
+                {
+                    p1_3.gun_rounds.title = sprintf("HIGH\n%dM",v.getValue());
+                    MPCD.updateMenus();
+                }
+            });
 p1_3.addMenuItem(2, "NML", p1_3);
 p1_3.addMenuItem(3, "A/G", p1_3);
 p1_3.addMenuItem(4, "2/2", p1_3);

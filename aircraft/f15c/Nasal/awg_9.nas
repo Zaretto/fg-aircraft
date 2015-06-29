@@ -695,8 +695,10 @@ else
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
         obj.propNode = c;
-        obj.lat = c.getNode("position/latitude-deg").getValue();
-        obj.lon = c.getNode("position/longitude-deg").getValue();
+        if (c.getNode("position/latitude-deg") != nil)
+            obj.lat = c.getNode("position/latitude-deg").getValue();
+        if (c.getNode("position/longitude-deg") != nil)
+            obj.lon = c.getNode("position/longitude-deg").getValue();
  
         if (obj.type == "multiplayer" or obj.type == "tanker" or obj.type == "aircraft" and obj.RdrProp != nil) 
             obj.airbone = 1;

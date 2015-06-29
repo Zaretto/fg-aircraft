@@ -185,8 +185,29 @@ obj.target_locked.setVisible(0);
         else
             me.window1.setVisible(0);
   
-        me.window2.setVisible(0);
-
+        if(getprop("sim/model/f15/controls/armament/master-arm-switch"))
+        {
+            var w_s = getprop("sim/model/f15/controls/armament/weapon-selector");
+            me.window2.setVisible(1);
+            var txt = "";
+            if (w_s == 0)
+            {
+                txt = sprintf("%3d",getprop("/sim/model/f15/systems/gun/rounds"));
+            }
+            else if (w_s == 1)
+            {
+                txt = sprintf("S%dL", getprop("sim/model/f15/systems/armament/aim9/count"));
+            }
+            else if (w_s == 2)
+            {
+                txt = "M0F";
+            }
+            me.window2.setText(txt);
+        }
+        else
+        {
+            me.window2.setVisible(0);
+        }
         me.window3.setText("NAV");
         if (hdp.nav_range != "")
             me.window3.setText("NAV");

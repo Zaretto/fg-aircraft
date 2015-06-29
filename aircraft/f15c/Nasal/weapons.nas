@@ -178,6 +178,7 @@ print("Release ",current_pylon);
 			setprop(current_pylon,"none");
 print("currently ",getprop(current_pylon));
 			armament_update();
+setprop("sim/model/f15/systems/armament/launch-light",false);
 			Current_aim9.release();
             arm_selector();
 		}
@@ -214,6 +215,7 @@ var system_stop = func
     print("Weapons System stop");
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
+                setprop("sim/model/f15/systems/armament/launch-light",false);
 	foreach (var S; Station.list)
     {
 		S.set_display(0); # initialize bcode (showing weapons set over MP).
@@ -260,6 +262,11 @@ var master_arm_cycle = func()
 		system_stop();
 		SysRunning.setBoolValue(0);
 	}
+    demand_weapons_refresh();
+}
+
+var demand_weapons_refresh = func {
+    setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
 }
 #
 #
@@ -273,6 +280,7 @@ var arm_selector = func() {
 	update_gun_ready();
 	var weapon_s = WeaponSelector.getValue();
     print("arm stick selector ",weapon_s);
+    setprop("sim/model/f15/systems/armament/launch-light",false);
 	if ( weapon_s == 0 ) 
     {
 		SwSoundVol.setValue(0);
@@ -322,5 +330,6 @@ var arm_selector = func() {
         printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
 		S.set_type(S.get_type()); # initialize bcode.
 	}
+    setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
 }
 

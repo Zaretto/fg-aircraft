@@ -33,6 +33,7 @@ var AIM9 = {
 		m.PylonIndex        = m.prop.getNode("pylon-index", 1).setValue(p);
 		m.ID                = p;
 		m.pylon_prop        = props.globals.getNode("sim/model/f15/systems/external-loads/").getChild("station", p);
+		m.pylon_prop_name   = "sim/model/f15/systems/external-loads/station["~p~"]";
 		m.Tgt               = nil;
 		m.TgtValid          = nil;
 		m.TgtLon_prop       = nil;
@@ -130,9 +131,16 @@ var AIM9 = {
 		var in = [0,0,0];
 		var trans = [[0,0,0],[0,0,0],[0,0,0]];
 		var out = [0,0,0];
-		in[0] = me.pylon_prop.getNode("offsets/x-m").getValue() * M2FT;
-		in[1] = me.pylon_prop.getNode("offsets/y-m").getValue() * M2FT;
-		in[2] = me.pylon_prop.getNode("offsets/z-m").getValue() * M2FT;
+
+        if (me.pylon_prop.getNode("offsets/x-m") != nil)
+        {
+            in[0] = me.pylon_prop.getNode("offsets/x-m").getValue() * M2FT;
+            in[1] = me.pylon_prop.getNode("offsets/y-m").getValue() * M2FT;
+            in[2] = me.pylon_prop.getNode("offsets/z-m").getValue() * M2FT;
+        }
+        else
+            print("ERROR pylon prop not setup correctly ",me.pylon_prop_name);
+
 		# Pre-process trig functions:
 		cosRx = math.cos(-ac_roll * D2R);
 		sinRx = math.sin(-ac_roll * D2R);
@@ -336,10 +344,14 @@ var AIM9 = {
 
 		if ( me.Tgt == nil ) 
         {
-            setprop("sim/model/f15/systems/armament/launch-light",false);
+            if (me.status != 2)
+                setprop("sim/model/f15/systems/armament/launch-light",false);
             return(1); 
         }
-        setprop("sim/model/f15/systems/armament/launch-light",me.status == 1);
+# do not set launch light when missile tracking.
+        if (me.status != 2)
+            setprop("sim/model/f15/systems/armament/launch-light",me.status == 1);
+
 		if (me.status == 0) {
 			# Status = searching.
 			me.reset_seeker();
