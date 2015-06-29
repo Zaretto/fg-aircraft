@@ -35,8 +35,6 @@ var WingExternal_R         = nil;
 var Centre_External      = nil;
 var Left_Proportioner  = nil;
 var Right_Proportioner = nil;
-var ext_select_state = 1;
-var Ext_Select_State = props.globals.getNode("consumables/fuel/tank[7]/selected",1);
 
 var neg_g = nil;
 
@@ -132,9 +130,9 @@ var Both = -1;
 	WingInternal_R   = Tank.new("Internal Wing R", 4, 1, Right);
 	Left_Feed      = Tank.new("L Feed", 0, 1, Left); 
 	Right_Feed      = Tank.new("R Feed", 1, 1, Right);
-	WingExternal_L   = Tank.new("External Wing L", 5, 1, Left);
-	WingExternal_R   = Tank.new("External Wing R", 6, 1, Right);
-	Centre_External  = Tank.newExternal("Centre External", 7, ext_select_state, Both); 
+	WingExternal_L   = Tank.newExternal("External Wing L", 5, 1, Left);
+	WingExternal_R   = Tank.newExternal("External Wing R", 6, 1, Right);
+	Centre_External  = Tank.newExternal("Centre External", 7, 1, Both); 
 }
 
 var build_new_proportioners = func {
@@ -160,9 +158,6 @@ var fuel_update = func {
 	max_flow36000 = 36000 * LBS_HOUR2GALS_PERIOD;
 	max_flow18000 = 18000 * LBS_HOUR2GALS_PERIOD; 
 	refuel_rate_gpm = 450; # max rate in gallons per minute at 50 psi pressure
-
-	ext_select_state = Ext_Select_State.getValue();
-
 }
 
 
@@ -346,6 +341,7 @@ var internal_restore_fuel = func() {
 Tank = {
 	new : func (name, number, connect, side) {
 		var obj = { parents : [Tank]};
+        obj.external = 0;
 		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
 #		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
 #		obj.name = obj.prop.getNode("name", 1);
@@ -363,19 +359,18 @@ Tank = {
 		obj.selected = obj.prop.getNode("selected", 1);
 		obj.selected.setBoolValue(connect);
 		obj.ppg.setDoubleValue(6.3);
-        obj.external = 0;
 		append(Tank.list, obj);
 #		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
 	newExternal : func (name, number, connect, side) {
 		var obj = { parents : [Tank]};
+        obj.external = 1;
 		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
 #		obj.prop = props.globals.getNode("fdm/jsbsim/propulsion/tank").getChild ("tank", number , 1);
 #		obj.name = obj.prop.getNode("name", 1);
         obj.side = side; # 1 is right; 0 is left.
 		obj.name = name;
-        obj.external = 1;
 		obj.prop.getChild("name", 0, 1).setValue(name);
 		obj.capacity = obj.prop.getNode("capacity-gal_us", 1);
 		obj.ppg = obj.prop.getNode("density-ppg", 1);
@@ -401,6 +396,16 @@ Tank = {
     is_external : func {
         return me.external;
     },
+    is_side : func(s) {
+        return me.side < 0 or me.side == s;
+    },
+    is_fitted : func {
+        if (!me.external) return true;
+        if (me.prop.getNode("selected").getValue())
+            return true;
+        return false;
+    },
+
 	get_capacity : func {
 		return me.capacity.getValue(); 
 	},
@@ -661,10 +666,10 @@ var set_fuel = func(total) {
             var t = Tank.list[tank_idx];
             #
 # only consider non external tanks; or external tanks when connected.
-            print("Processing ",t.name," is ext ",t.is_external());
-            if (!t.is_external() or getprop("sim/model/f15/systems/external-loads/external-tanks"))
+            print("Processing ",t.name," is fitted ",t.is_fitted());
+            if (t.is_fitted()) # true for internal; only true when external connected
             {
-                if (t.get_side() == i)
+                if (t.is_side(i))
                 {
                     if (delta < 0)
                     {
