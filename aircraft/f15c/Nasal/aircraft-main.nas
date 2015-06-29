@@ -325,6 +325,9 @@ var startProcess = func {
 #slat_output.setDoubleValue(0);
 
 }
+var two_seater = getprop("fdm/jsbsim/metrics/two-place-canopy");
+if (two_seater)
+print("F-15 two seat variant (B,D,E)");
 
 setlistener("/sim/signals/fdm-initialized", startProcess);
 
@@ -334,7 +337,7 @@ setlistener("/sim/signals/fdm-initialized", startProcess);
 #----------------------------------------------------------------------------
 
 var CurrentView_Num = props.globals.getNode("sim/current-view/view-number");
-#var rio_view_num = view.indexof("RIO View");
+var backseat_view_num = view.indexof("Backset View");
 
 var toggle_cockpit_views = func() {
 	cur_v = CurrentView_Num.getValue();
@@ -342,9 +345,9 @@ var toggle_cockpit_views = func() {
     {
 		CurrentView_Num.setValue(0);
 	}
-#    else {
-#        CurrentView_Num.setValue(rio_view_num);
-#    }
+    else if(two_seater){
+        CurrentView_Num.setValue(backseat_view_num);
+    }
 }
 
 

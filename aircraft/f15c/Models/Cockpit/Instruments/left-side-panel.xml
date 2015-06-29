@@ -45,6 +45,35 @@
         </release>
     </animation>
     <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>oxy-supply-switch</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/ecs/liquid-oxygen-activated</property>
+            </binding>
+        </action>
+    </animation>
+
+
+    <animation>
+        <type>rotate</type>
+        <object-name>oxy-supply-switch</object-name>
+        <property>fdm/jsbsim/systems/ecs/liquid-oxygen-activated</property>
+        <factor>-45</factor>
+        <center>
+            <x-m>-5.6949</x-m>
+            <y-m> 0.3974</y-m>
+            <z-m> 0.664</z-m>
+        </center>
+        <axis>
+            <y>1</y>
+        </axis>
+    </animation>
+    
+    <animation>
         <type>knob</type>
         <object-name>anti-fog-switch</object-name>
         <property>fdm/jsbsim/systems/ecs/anti-fog</property>
@@ -730,7 +759,7 @@
     <animation>
         <type>knob</type>
         <object-name>radio2-int-knob</object-name>
-        <property>sim/model/f15/lights/radio2-brightness</property>
+        <property>controls/lighting/radio2-brightness</property>
         <factor>-300</factor>
         <center>
             <x-m>-5.298</x-m>
@@ -746,7 +775,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>sim/model/f15/lights/radio2-brightness</property>
+                <property>controls/lighting/radio2-brightness</property>
                 <factor>0.1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -806,14 +835,14 @@
                 <property>/sim/model/f15/controls/armament/weapon-selector</property>
                 <factor>1</factor>
                 <min>0</min>
-                <max>3</max>
+                <max>2</max>
                 <wrap>false</wrap>
             </binding>
         </action>
         <release>
             <binding>
                 <command>nasal</command>
-                <script>aircraft.arm_selector();</script>
+                <script>aircraft.arm_selector();    aircraft.demand_weapons_refresh();</script>
             </binding>
         </release>
     </animation>
