@@ -356,25 +356,30 @@ var update_wpstring = func
 
 # Emergency jettison:
 # -------------------
+setlistener("controls/armament/emergency-jettison", func(v)
+            {
+                if (v.getValue() > 0.8)
+                {
+                    foreach(var T; Tank.list)
+                    {
+                        if (T.is_external())
+                            T.set_level_lbs(0);
+                        printf("Set %s to 0",T.get_name());
+                    }
+                    setprop("controls/armament/station[1]/jettison-all",true);
+                    setprop("controls/armament/station[5]/jettison-all",true);
+                    setprop("controls/armament/station[9]/jettison-all",true);
+                    setprop("consumables/fuel/tank[5]/selected",false);
+                    setprop("consumables/fuel/tank[6]/selected",false);
+                    setprop("consumables/fuel/tank[7]/selected",false);
 
-var emerg_jettison = func {
-	if (S2.get_type() == "external tank") {
-		S2.set_type("-");
-		S2.set_weight_lb(0);
-		setprop("controls/armament/station[2]/jettison-all", 1);
-		Left_External.set_level(0);
-		Left_External.set_selected(0);
-	}
-	if (S7.get_type() == "external tank") {
-		S7.set_type("-");
-		S7.set_weight_lb(0);
-		setprop("controls/armament/station[7]/jettison-all", 1);
-		Right_External.set_level(0);
-		Right_External.set_selected(0);
-	}
-	ExtTanks.setBoolValue(0);
-	update_wpstring();
-}
+                    foreach (var S; Station.list)
+                    {
+                        setprop("payload/weight["~S.index~"]/selected","none");
+                    }
+                    update_wpstring();
+                }
+            });
 
 # Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
 

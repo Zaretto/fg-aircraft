@@ -452,7 +452,7 @@ Tank = {
 		return (me.get_capacity() - me.get_level()) * me.ppg.getValue();
 	},
 	get_name : func () {
-		return me.name.getValue();
+		return me.name;
 	},
 	set_transfer_tank : func (fuel_dt, tank) {
 		foreach (var t; Tank.list) {
