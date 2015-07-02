@@ -705,7 +705,7 @@ setprop("sim/model/f15/lights/master-test-go",0);
 # ref: http://wiki.flightgear.org/ALS_technical_notes#ALS_secondary_lights
 var setup_als_lights = func
 {
-    var light_setting=getprop("sim/multiplay/generic/int[7]");
+    var light_setting=getprop("sim/multiplay/generic/int[6]");
 
 #
 # gear needs to be extended (not just commanded)
@@ -744,7 +744,7 @@ setlistener("sim/current-view/internal", func {
     aircraft.setup_als_lights();
 }, 1, 0);
 
-setlistener("sim/multiplay/generic/int[7]", func
+setlistener("sim/multiplay/generic/int[6]", func
 {
     aircraft.setup_als_lights();
 

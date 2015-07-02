@@ -1036,12 +1036,12 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    if(getprop("sim/multiplay/generic/int[7]") == 0)
-                    setprop("sim/multiplay/generic/int[7]",2);
-                    elsif(getprop("sim/multiplay/generic/int[7]") == 2)
-                    setprop("sim/multiplay/generic/int[7]",1);
-                    elsif(getprop("sim/multiplay/generic/int[7]") == 1)
-                    setprop("sim/multiplay/generic/int[7]",0);
+                    if(getprop("sim/multiplay/generic/int[6]") == 0)
+                    setprop("sim/multiplay/generic/int[6]",2);
+                    elsif(getprop("sim/multiplay/generic/int[6]") == 2)
+                    setprop("sim/multiplay/generic/int[6]",1);
+                    elsif(getprop("sim/multiplay/generic/int[6]") == 1)
+                    setprop("sim/multiplay/generic/int[6]",0);
                 </script>
             </binding>
         </action>
@@ -1049,7 +1049,7 @@
     <animation>
         <type>rotate</type>
         <object-name>misc-ldg-light-switch</object-name>
-        <property>sim/multiplay/generic/int[7]</property>
+        <property>sim/multiplay/generic/int[6]</property>
         <!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder-->
         <interpolation>
             <entry>
@@ -1080,14 +1080,14 @@
     <!--<animation>
         <type>knob</type>
         <object-name>misc-ldg-light-switch</object-name>
-        <property>sim/multiplay/generic/int[7]</property> -->
+        <property>sim/multiplay/generic/int[6]</property> -->
     <!-- This is bit 0 for taxi, bit 1 for landing. As the switch is 3way 0,1,2 is fine - if there were more settings it'd be harder-->
     <!--
 
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>sim/multiplay/generic/int[7]</property>
+                <property>sim/multiplay/generic/int[6]</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>2</max>

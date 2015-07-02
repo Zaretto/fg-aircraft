@@ -29,10 +29,12 @@
     <animation>
         <type>select</type>
         <condition>
-            <equals>
-                <property>fdm/jsbsim/metrics/two-place-canopy</property>
-                <value>0</value>
-            </equals>
+            <not>
+                <equals>
+                    <property>sim/multiplay/generic/string[2]</property>
+                    <value>D</value>
+                </equals>
+            </not>
         </condition>
         <object-name>f15c-avionics-bay</object-name>
     </animation>

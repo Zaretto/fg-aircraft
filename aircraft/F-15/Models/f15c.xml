@@ -21,15 +21,14 @@
             if (!contains(globals, "f15_net"))
             {
                 print("LOAD F-15 mp network", self.getPath());
-                io.load_nasal(getprop("/sim/fg-root") ~
-                "/Aircraft/F-15/Systems/mp-network.nas", "f14_net");
+                io.load_nasal(resolvepath("Nasal/mp-network.nas"), "f15_net");
                 # Initialize network as observer.
                 f15_net.mp_network_init(0);
             }
         </load>
 
         <unload>
-            print("UNLOAD F-15C ", self.getPath());
+            print("UNLOAD F-15 ", self.getPath());
             #cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
             livery_update.stop();
         </unload>
@@ -1597,11 +1596,11 @@
             </greater-than>
             <or>
                 <equals>
-                    <property>sim/multiplay/generic/int[7]</property>
+                    <property>sim/multiplay/generic/int[6]</property>
                     <value>1</value>
                 </equals>
                 <equals>
-                    <property>sim/multiplay/generic/int[7]</property>
+                    <property>sim/multiplay/generic/int[6]</property>
                     <value>3</value>
                 </equals>
             </or>
@@ -1623,7 +1622,7 @@
             </greater-than>
             <greater-than>
                 <!-- this is a bit mask so the condition will catch 2 and 3 which are the only possible values -->
-                <property>sim/multiplay/generic/int[7]</property>
+                <property>sim/multiplay/generic/int[6]</property>
                 <value>1</value>
             </greater-than>
         </condition>

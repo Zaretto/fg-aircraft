@@ -69,6 +69,12 @@ instruments_data_import = func {
 		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered);
 		        setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
 		    }
+			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
+Pilot.getNode("engines/engine[0]/egt-degC").setValue(l[11]);
+Pilot.getNode("engines/engine[1]/egt-degC").setValue(l[12]);
+Pilot.getNode("engines/engine[0]/fuel-flow_pph").setValue(l[13]);
+Pilot.getNode("engines/engine[1]/fuel-flow_pph").setValue(l[14]);
+Pilot.getNode("consumables/fuel/total-fuel-lbs").setValue(l[15]);
 		}
 	}
 	#PilotInstrString2 = Pilot.getNode("sim/multiplay/generic/string[2]", 1);

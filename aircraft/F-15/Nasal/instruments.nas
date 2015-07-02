@@ -397,11 +397,11 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "controls/lighting/turn-off-lights",
                   "controls/lighting/warn-caution",
                   "sim/model/f15/lights/radio2-brightness",
-                  "sim/multiplay/generic/int[1]", # lighting external see f15a-set.xml for details
+                  "sim/multiplay/generic/int[1]", # lighting external see f15-common.xml for details
                   "sim/multiplay/generic/int[3]",
                   "sim/multiplay/generic/int[4]",
                   "sim/multiplay/generic/int[5]",
-                  "sim/multiplay/generic/int[7]",
+                  "sim/multiplay/generic/int[6]",
                   "sim/hud/visibility[0]",
                   "sim/hud/visibility[1]",
                   "sim/model/f15/controls/fuel/display-selector",
@@ -532,19 +532,20 @@ instruments_data_export = func {
 	# CDI
 	var cdi = sprintf( "%01.2f", HsdCdiDeflection.getValue());
 	var radial = VtcRadialDeg.getValue();
-
-	var l_s = [ias, s_mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial];
+var powered="0";
+    if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
+        powered="1";
+	var l_s = [ias, s_mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial, powered,
+sprintf("%d",getprop("engines/engine[0]/egt-degC")),
+sprintf("%d",getprop("engines/engine[1]/egt-degC")),
+sprintf("%d",getprop("engines/engine[0]/fuel-flow_pph")),
+sprintf("%d",getprop("engines/engine[1]/fuel-flow_pph")),
+sprintf("%d",getprop("consumables/fuel/total-fuel-lbs")),
+];
 	var str = "";
 	foreach( s ; l_s ) {
 		str = str ~ s ~ ";";
 	}
-    #
-    # aircraft powered - for the back seater this is a yes/no
-    if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
-        str = str ~ "1" ~ ";";
-    else
-        str = str ~ "0" ~ ";";
-
 	InstrString.setValue(str);
 
 	#InstrString2.setValue(sprintf( "%01.0f", RangeRadar2.getValue()));

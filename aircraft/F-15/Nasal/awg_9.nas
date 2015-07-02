@@ -916,10 +916,13 @@ else
         {
             var tas = me.TAS.getValue();
             var our_hdg = getprop("orientation/heading-deg");
+if(our_hdg != nil)
+{
             var bearing = me.get_deviation(our_hdg);
             var vec1 = getprop("fdm/jsbsim/velocities/vtrue-kts") * math.cos( (bearing - our_hdg) / 57.29577950560105);
             var vec2 = tas * math.cos( (bearing - me.get_bearing()) / 57.29577950560105);
             return vec1-vec2;
+}
         }
         else
             print("NO TAS ",me.type," ",u.get_range(),u.Model, u.Callsign.getValue());

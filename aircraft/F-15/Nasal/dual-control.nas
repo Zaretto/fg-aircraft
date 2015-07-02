@@ -12,8 +12,8 @@
 var DCT = dual_control_tools;
 
 # Pilot/copilot aircraft identifiers. Used by dual_control.
-var pilot_type   = "Aircraft/F-15/Models/f15c.xml";
-var copilot_type = "Aircraft/F-15/Models/f15c-bs.xml";
+var pilot_type   = "Aircraft/F-15/Models/F-15D.xml";
+var copilot_type = "Aircraft/F-15/Models/f15-bs.xml";
 
 props.globals.initNode("/sim/remote/pilot-callsign", "", "STRING");
 
@@ -127,31 +127,31 @@ var set_copilot_wrappers = func (pilot) {
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "orientation/heading-magnetic-deg";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/controls/radar-awg-9/brightness";
+	p = "sim/model/f15/controls/radar-awg-9/brightness";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/controls/radar-awg-9/on-off";
+	p = "sim/model/f15/controls/radar-awg-9/on-off";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/instrumentation/radar-awg-9/display-rdr";
+	p = "sim/model/f15/instrumentation/radar-awg-9/display-rdr";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/instrumentation/awg-9/sweep-factor";
+	p = "sim/model/f15/instrumentation/awg-9/sweep-factor";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/controls/TID/brightness";
+	p = "sim/model/f15/controls/TID/brightness";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/controls/TID/on-off";
+	p = "sim/model/f15/controls/TID/on-off";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
+	p = "sim/model/f15/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/instrumentation/radar-awg-9/wcs-mode/tws-auto";
+	p = "sim/model/f15/instrumentation/radar-awg-9/wcs-mode/tws-auto";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/radar/az-field";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/ecm/on-off";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/controls/rio-ecm-display/mode-ecm-nav";
+	p = "sim/model/f15/controls/rio-ecm-display/mode-ecm-nav";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/controls/HSD/on-off";
+	p = "sim/model/f15/controls/HSD/on-off";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f15c/instrumentation/hsd/needle-deflection";
+	p = "sim/model/f15/instrumentation/hsd/needle-deflection";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/nav[1]/radials/selected-deg";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));

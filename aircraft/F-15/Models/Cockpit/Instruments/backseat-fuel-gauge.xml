@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Backseat Fuel Gauge by Richard Harrison rjh@zaretto.com
+     based on the front fuel gauge.
+     -->
+
+<PropertyList>
+    <name>backseat-fuel-gauge</name>
+    <path>backseat-fuel-gauge.ac</path>
+
+    <animation>
+        <type>select</type>
+        <object-name>off-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
+
+
+
+    <animation>
+        <type>rotate</type>
+        <object-name>needle</object-name>
+        <property>consumables/fuel/total-fuel-lbs</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>15000</ind>
+                <dep>215</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+        <center>
+            <x-m>-5.6888</x-m>
+            <y-m>0.3406</y-m>
+            <z-m>0.8943</z-m>
+        </center>
+    </animation>
+
+    <!-- lighting -->
+    <!--<animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>-->
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-right</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+    <effect>
+        <name>f15panel-knob</name>
+        <inherits-from>Effects/f15panel-knob</inherits-from>
+        <object-name>fuel-display-selector</object-name>
+        <object-name>bingo-knob</object-name>
+    </effect>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+
+</PropertyList>

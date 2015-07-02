@@ -166,9 +166,8 @@ var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1)
 # sim/multiplay/generic/int[2] used by radar standby.
 var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
 var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
-var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
-var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
-var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
+var wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/float[3]",1);
+var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[6]",1);
 
 #
 #
