@@ -131,6 +131,7 @@ print("Model ",missile_model);
 	},
 	release: func() {
 		me.status = 2;
+        printf("%s: release %d",me.type,me.ID);
 		me.animation_flags_props();
 
 		# Get the A/C position and orientation values.
@@ -293,16 +294,36 @@ print("Model ",missile_model);
 
 		#### Guidance.
 
-		if ( me.status == 2 and me.free == 0) {
-			me.update_track();
-			if (init_launch == 0 ) {
-				# Use the rail or a/c pitch for the first frame.
-				pitch_deg = getprop("orientation/pitch-deg");
-			} else {
-				pitch_deg += me.track_signal_e;
-				hdg_deg += me.track_signal_h;
-			}
-		}
+        if ( me.status == 2 and me.free == 0)
+        {
+            if (me.life_time > 1)
+            { 
+                me.update_track();
+            }
+            #print(me.life_time);
+            if (init_launch == 0 )
+            {
+                #Use the rail or a/c pitch for the first frame.
+                pitch_deg = getprop("orientation/pitch-deg");
+            } 
+            else
+            {
+                #Here will be set the max angle of pitch and the max angle of heading to avoid G overload
+                var myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
+                if(me.max_g < myG)
+                {
+                    #print("MyG");
+                    var MyCoef = max_G_Rotation(me.track_signal_e, me.track_signal_h, total_s_ft, mass, 1,me.max_g);
+                    me.track_signal_e =  me.track_signal_e * MyCoef;
+                    me.track_signal_h =  me.track_signal_h * MyCoef;
+                    myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
+                }
+                pitch_deg += me.track_signal_e;
+                hdg_deg += me.track_signal_h;
+
+                #print("Still Tracking : Elevation ",me.track_signal_e,"Heading ",me.track_signal_h," Gload : ", myG );
+            }
+        }
 
 		
 
@@ -319,23 +340,46 @@ print("Model ",missile_model);
 
 		#### Proximity detection.
 
-		if ( me.status == 2 ) {
-			var v = me.poximity_detection();
-			if ( ! v ) {
-				# We exploded, but need a few more secs to spawn the explosion animation.
-				settimer(func { me.del(); }, 4 );
-				return;
-			}			
+        if ( me.status == 2 ) 
+        {
+            var v = me.poximity_detection();
+            if ( ! v ) 
+            {
+                # We exploded, but need a few more secs to spawn the explosion animation.
+                settimer(func { me.del(); }, 4 );
+                print("booom");
+                return;
+            }                        
+            if(me.life_time > 3)
+            {
+                #### If not exploded, check if the missile can keep the lock.
+                if ( me.free == 0 ) 
+                {
+                    var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
+                    if ( g > me.max_g ) 
+                    {
+                        # Target unreachable, fly free.
+                        me.free = 1;
+                        printf("%s: Target unreachable would exceed G %d (max=%d)",me.type,g,me.max_g);
+                        #Disable for the moment
+                    }
+                }
+            }
 
-			#### If not exploded, check if the missile can keep the lock.
- 			if ( me.free == 0 ) {
-				var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-				if ( g > 21 ) {
-					# Target unreachable, fly free.
-					me.free = 1;
-				}
-			}
-		}
+            ####Ground interaction
+            var ground = geo.elevation(me.coord.lat(),me.coord.lon());
+            #print("Ground :",ground);
+            if(ground != nil)
+            {
+                if(ground>alt_ft)
+                {
+                    print("Ground");
+                    me.free = 1;
+                    settimer(func { me.del(); }, 1 );
+                    return;
+                }
+            }
+        }
 		# record the velocities for the next loop.
 		me.s_north = speed_north_fps;
 		me.s_east = speed_east_fps;
@@ -487,6 +531,7 @@ print("Model ",missile_model);
 				} else {
 					setprop("/sim/messages/atc", phrase);
 				}
+print(phrase);
 				me.animate_explosion();
 				me.Tgt = nil;
 				return(0);
@@ -596,11 +641,14 @@ print("Model ",missile_model);
 		var msl_path = "sim/model/f15/systems/armament/"~me.type~"/flags/msl-id-" ~ me.ID;
 		me.msl_prop = props.globals.initNode( msl_path, 1, "BOOL" );
 		var smoke_path = "sim/model/f15/systems/armament/"~me.type~"/flags/smoke-id-" ~ me.ID;
-		me.smoke_prop = props.globals.initNode( smoke_path, 0, "BOOL" );
+		me.smoke_prop = props.globals.initNode( smoke_path, 1, "BOOL" );
 		var explode_path = "sim/model/f15/systems/armament/"~me.type~"/flags/explode-id-" ~ me.ID;
 		me.explode_prop = props.globals.initNode( explode_path, 0, "BOOL" );
 		var explode_smoke_path = "sim/model/f15/systems/armament/"~me.type~"/flags/explode-smoke-id-" ~ me.ID;
 		me.explode_smoke_prop = props.globals.initNode( explode_smoke_path, 0, "BOOL" );
+        printf("%s %s", smoke_path, me.smoke_prop.getValue());
+        printf("%s %s", explode_path, me.explode_prop.getValue());
+        printf("%s %s", explode_smoke_path, me.explode_smoke_prop.getValue());
 	},
 
 
@@ -657,13 +705,40 @@ var impact_report = func(pos, mass_slug, string) {
 
 }
 
-var steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, mass, dt) {
-	# Get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
-	var steer_deg = math.sqrt((steering_e_deg*steering_e_deg)+(steering_h_deg*steering_h_deg));
-	var radius_ft = math.abs(s_fps / math.cos(90 - steer_deg));
-	var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
-	#print("#### R = ", radius_ft, " G = ", g);
-	return(g);
+var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, mass, dt,gMax) {
+        # Get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
+        #This function is for calculate the maximum angle without overload G
+
+        var steer_deg = math.sqrt((steering_e_deg*steering_e_deg)+(steering_h_deg*steering_h_deg));
+        var radius_ft = math.abs(s_fps / math.cos(90 - steer_deg));
+        var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
+
+         #Isolation of Radius
+        if(s_fps<1){s_fps=1;}
+        var radius_ft2 =(mass * s_fps * s_fps * dt)/((gMax*0.9) * g_fps);
+        if(math.abs(s_fps/radius_ft2)<1){
+                var steer_rad_theoric = math.acos(math.abs(s_fps/radius_ft2));
+                var steer_deg_theoric = 90 - (steer_rad_theoric * R2D);
+        }else{
+                var steer_rad_theoric = 1;
+                var steer_deg_theoric = 1;
+        }
+
+        var radius_ft_th = math.abs(s_fps / math.cos((90 -steer_deg_theoric)*D2R));
+        var g_th = (mass * s_fps * s_fps / radius_ft_th * dt) / g_fps;
+
+        #print ("Max G ",gMax , " Actual G " , g,"steer_deg_theoric ",steer_deg_theoric);
+        
+        return(steer_deg_theoric/steer_deg);
+}
+
+steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, mass, dt) {
+        # Get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
+        var steer_deg = math.sqrt((steering_e_deg*steering_e_deg)+(steering_h_deg*steering_h_deg));
+        var radius_ft = math.abs(s_fps / math.cos((90 - steer_deg)*D2R));
+        var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
+        #print("#### R = ", radius_ft, " G = ", g);
+        return(g);
 }
 
 
