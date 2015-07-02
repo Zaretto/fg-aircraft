@@ -252,6 +252,7 @@ var rate4modules = func {
     aircraft.updateMPCD();
     aircraft.electricsFrame();
 	aircraft.computeNWS ();
+aircraft.update_weapons_over_mp();
 	settimer (rate4modules, 0.20);
 }
 var rate2modules = func {

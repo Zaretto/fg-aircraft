@@ -370,7 +370,7 @@ var arm_selector = func() {
                 sel=false;
             }
         }
-        printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
+#        printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
 		S.set_type(S.get_type()); # initialize bcode.
 	}
     setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);

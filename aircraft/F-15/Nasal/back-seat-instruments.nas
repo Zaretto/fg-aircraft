@@ -46,6 +46,7 @@ instruments_data_import = func {
 		# ias, mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial.
 		if ( size(l) > 1 ) {
 			Pilot.getNode("instrumentation/airspeed-indicator/indicated-speed-kt", 1).setValue( l[0] );
+			Pilot.getNode("fdm/jsbsim/velocities/vtrue-kts",1).setValue( l[0] );
 			Pilot.getNode("velocities/mach", 1).setValue( l[1] );
 			Pilot.getNode("sim/model/f15/instrumentation/fuel-gauges/total", 1).setValue( l[2] );
 			Pilot.getNode("sim/model/f15/instrumentation/tacan/mode", 1).setValue( l[3] );

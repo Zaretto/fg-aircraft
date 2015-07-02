@@ -159,7 +159,7 @@ var MPCD_Station = {
         var mode = "STBY";
         var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
         var master_arm=getprop("sim/model/f15/controls/armament/master-arm-switch");
-        print("Station ",me.ident," update ",sel_node,getprop(sel_node));
+#        print("Station ",me.ident," update ",sel_node,getprop(sel_node));
 
         if (na != nil and na != "none")
         {
@@ -197,7 +197,7 @@ var MPCD_Station = {
                 else mode = "MRM";
             }
             me.status.setText(mode);
-            print("NA ",me.ident," ",na);
+#            print("NA ",me.ident," ",na);
             me.label.setText(na);
 
             me.selected1.setVisible(sel);

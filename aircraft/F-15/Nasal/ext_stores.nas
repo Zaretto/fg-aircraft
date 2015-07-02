@@ -136,8 +136,10 @@ var ext_loads_init = func() {
     if (S0 == nil)
         S0 = Station.new(0);
     if (S1 == nil)
+    {
         S1 = Station.new(1);
-    S1.encode_length=1;
+        S1.encode_length=1;
+    }
     if (S2 == nil)
         S2 = Station.new(2);
     if (S3 == nil)
@@ -145,8 +147,10 @@ var ext_loads_init = func() {
     if (S4 == nil)
         S4 = Station.new(4);
     if (S5 == nil)
+    {
         S5 = Station.new(5);
-    S5.encode_length=1;
+        S5.encode_length=1;
+    }
     if (S6 == nil)
         S6 = Station.new(6);
     if (S7 == nil)
@@ -154,8 +158,10 @@ var ext_loads_init = func() {
     if (S8 == nil)
         S8 = Station.new(8);
     if (S9 == nil)
+    {
         S9 = Station.new(9);
-    S9.encode_length=1;
+        S9.encode_length=1;
+    }
     if (S10 == nil)
         S10 = Station.new(10);
 
@@ -319,39 +325,59 @@ var toggle_ext_tank_selected = func() {
 	}
 	update_wpstring();
 }
-
+var update_wp_requested = false;
+var update_wp_next = 0;
+var update_wp_frequency_s = 15;
 var update_wpstring = func
 {
-	var b_wpstring = "";
-    var aim9_count = 0;
-    var aim7_count = 0;
-    var aim120_count = 0;
-	foreach (var S; Station.list)
+    update_wp_requested = true;
+}
+
+var update_weapons_over_mp = func
+{
+    var cur_time = getprop("/sim/time/elapsed-sec");
+    if (update_wp_requested or cur_time > update_wp_next)
     {
+#        printf("Update WP %d, %d : %d",update_wp_next, cur_time, update_wp_requested);
+        var b_wpstring = "";
+        var aim9_count = 0;
+        var aim7_count = 0;
+        var aim120_count = 0;
+
+        update_wp_next = cur_time + update_wp_frequency_s;
+        update_wp_requested = false;
+
+        foreach (var S; Station.list)
+        {
 # Use 3 bits per weapon pylon (3 free additional wps types).
 # Use 1 bit per fuel tank.
 # Use 3 bits for the load sheme (3 free additional shemes).
-		var b = "0";
-		var s = S.index;
-		b = bits.string(S.bcode,S.encode_length);
-		b_wpstring = b_wpstring ~ b;
-        if (S.get_type() == "AIM-9")
-            aim9_count = aim9_count+1;
-        if (S.get_type() == "AIM-7")
-            aim7_count = aim7_count+1;
-        if (S.get_type() == "AIM-120")
-            aim120_count = aim120_count+1;
-	}
-    print("count ",aim9_count, aim7_count, aim120_count);
-    setprop("sim/model/f15/systems/armament/aim9/count",aim9_count);
-    setprop("sim/model/f15/systems/armament/aim7/count",aim7_count);
-    setprop("sim/model/f15/systems/armament/aim120/count",aim120_count);
-	var set = WeaponsSet.getValue();
-	b_wpstring = b_wpstring ~ bits.string(b_set,3);
+            var b = "0";
+            var s = S.index;
+            var v = S.bcode;
+            b = bits.string(S.bcode,S.encode_length);
+            b = substr(b, size(b)-S.encode_length, S.encode_length);
+            b_wpstring = b_wpstring ~ b;
+#printf("%2d(%d): %-4s = %-32s (%d)    ",S.index,S.encode_length,b, b_wpstring, size(b_wpstring));
+            if (S.get_type() == "AIM-9")
+                aim9_count = aim9_count+1;
+            if (S.get_type() == "AIM-7")
+                aim7_count = aim7_count+1;
+            if (S.get_type() == "AIM-120")
+                aim120_count = aim120_count+1;
+        }
+#    print("count ",aim9_count, aim7_count, aim120_count);
+        setprop("sim/model/f15/systems/armament/aim9/count",aim9_count);
+        setprop("sim/model/f15/systems/armament/aim7/count",aim7_count);
+        setprop("sim/model/f15/systems/armament/aim120/count",aim120_count);
+        var set = WeaponsSet.getValue();
+        b_wpstring = b_wpstring ~ bits.string(b_set,3);
 # Send the bits string as INT over MP.
-	var b_stores = bits.value(b_wpstring);
-	f15_net.send_wps_state(b_stores);
-    print("MP String ",b_wpstring,":",b_stores);
+        var b_stores = bits.value(b_wpstring);
+        f15_net.send_wps_state(b_stores);
+#        print("MP String ",b_wpstring,":",b_stores);
+
+    }
 }
 
 # Emergency jettison:
@@ -364,7 +390,7 @@ setlistener("controls/armament/emergency-jettison", func(v)
                     {
                         if (T.is_external())
                             T.set_level_lbs(0);
-                        printf("Set %s to 0",T.get_name());
+#                        printf("Set %s to 0",T.get_name());
                     }
                     setprop("controls/armament/station[1]/jettison-all",true);
                     setprop("controls/armament/station[5]/jettison-all",true);
@@ -387,7 +413,7 @@ var droptanks = func(n) {
 	if (wow) { setprop("sim/model/f15/controls/armament/tanks-ground-sound", 1) }
 	var droptank = droptank_node.getValue();
 	var node = props.globals.getNode(n.getValue(), 1);
-	geo.put_model("Aircraft/f15/Models/Stores/Ext-Tanks/exttank-submodel.xml",
+	geo.put_model("Aircraft/F-15/Models/Stores/Ext-Tanks/exttank-submodel.xml",
 		node.getNode("impact/latitude-deg").getValue(),
 		node.getNode("impact/longitude-deg").getValue(),
 		node.getNode("impact/elevation-m").getValue()+ 0.4,
@@ -398,19 +424,6 @@ var droptanks = func(n) {
 }
 
 setlistener( "sim/ai/aircraft/impact/droptank", droptanks );
-
-var external_load_loop = func() {
-# Whithout this periodic update the MP AI model wont have its external load
-# uptodate before being manually updated by the pilot *when* in range of
-# the observer.
-	var mp_nbr = size(props.globals.getNode("/ai/models").getChildren("multiplayer"));
-	if ( mp_nbr != nil ) {
-		if ( mp_nbr > 0 ) {
-			update_wpstring();
-		}
-	}
-	settimer(external_load_loop, 10);
-}
 
 update_dialog_checkboxes();
 

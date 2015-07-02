@@ -285,7 +285,7 @@ obj.target_locked.setVisible(0);
                         else
                             tgt.setVisible(1);
 
-                        if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                        if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
                         {
                             me.target_locked.setVisible(1);
                             me.target_locked.setTranslation (xc, yc);

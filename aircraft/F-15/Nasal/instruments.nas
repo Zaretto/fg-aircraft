@@ -779,7 +779,7 @@ var init = func {
 	ext_loads_init();
 	init_fuel_system();
 	aircraft.data.load();
-#	f15_net.mp_network_init(1);
+	f15_net.mp_network_init(1);
 	weapons_init();
 	ticker.setDoubleValue(0);
 	local_mag_deviation();
@@ -799,7 +799,6 @@ var init = func {
     common_init();
     if ( ! main_loop_launched ) {
         settimer(main_loop, 0.5);
-        settimer(external_load_loop, 3);
         main_loop_launched = 1;
     }
 }
