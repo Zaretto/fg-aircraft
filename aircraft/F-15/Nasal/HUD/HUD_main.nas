@@ -226,17 +226,17 @@ obj.target_locked.setVisible(0);
         else
         {
             me.window2.setVisible(0);
-        me.window3.setText("NAV");
-        if (hdp.nav_range != "")
             me.window3.setText("NAV");
-        else
-            me.window3.setText("");
-        me.window4.setText(hdp.nav_range);
-        me.window5.setText(hdp.window5);
-        me.window7.setText(hdp.window7);
-        me.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
+            if (hdp.nav_range != "")
+                me.window3.setText("NAV");
+            else
+                me.window3.setText("");
+            me.window4.setText(hdp.nav_range);
+            me.window5.setText(hdp.window5);
+            me.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
         }
 
+        me.window7.setText(hdp.window7);
         me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
 
 #heading tape
@@ -285,7 +285,7 @@ obj.target_locked.setVisible(0);
                         else
                             tgt.setVisible(1);
 
-                        if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                        if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
                         {
                             me.target_locked.setVisible(1);
                             me.target_locked.setTranslation (xc, yc);

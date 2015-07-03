@@ -278,11 +278,14 @@ setlistener("sim/model/f15/controls/armament/master-arm-switch", func(v)
 	if (master_arm_switch)
     {
         system_start();
+		SysRunning.setBoolValue(1);
 	}
     else
     {
         system_stop();
+		SysRunning.setBoolValue(0);
 	}
+    demand_weapons_refresh();
 });
 
 var master_arm_cycle = func()
@@ -292,16 +295,11 @@ var master_arm_cycle = func()
 	if (master_arm_switch == 0)
     {
 		ArmSwitch.setValue(1);
-		system_start();
-		SysRunning.setBoolValue(1);
 	}
     else
     { 
 		ArmSwitch.setValue(0);
-		system_stop();
-		SysRunning.setBoolValue(0);
 	}
-    demand_weapons_refresh();
 }
 
 var demand_weapons_refresh = func {

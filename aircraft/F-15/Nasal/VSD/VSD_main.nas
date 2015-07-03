@@ -149,7 +149,7 @@ var w1 = "     VS BST   MEM  ";
 #                    if (u.airbone and !designated)
 #                    if (target_idx == 0)
 #                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
-                if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
 #if (u == awg_9.active_u)
                 {
                     designated = 1;
