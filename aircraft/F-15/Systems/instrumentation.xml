@@ -56,11 +56,6 @@
         <number>0</number>
     </heading-indicator-fg>
 
-    <KT-70>
-        <name>kt-70</name>
-        <number>0</number>
-    </KT-70>
-
     <magnetic-compass>
         <name>magnetic-compass</name>
         <number>0</number>
@@ -123,4 +118,12 @@
         <number>0</number>
     </mk-viii>
 
+  <transponder>
+      <name type="string">transponder</name>
+      <number type="int">0</number>
+      <mode type="int">1</mode> <!-- 0 = Mode A, 1 = Mode C, 2 = Mode S -->
+      <bus-volts type="double">8.0</bus-volts>
+      <encoder-path type="string">/instrumentation/altimeter</encoder-path>
+      <kt70-compatibility type="bool">0</kt70-compatibility>
+    </transponder>
 </PropertyList>
