@@ -12,7 +12,8 @@ var UPDATE_PERIOD = 0.05;
 var PilotCallsign = props.globals.getNode("/sim/remote/pilot-callsign");
 var Pilot = nil;
 
-var check_pilot_callsign = func() {
+var check_pilot_callsign = func() 
+{
 	r_callsign = PilotCallsign.getValue();
 	if ( r_callsign ) {
 		var mpplayers = props.globals.getNode("/ai/models").getChildren("multiplayer");
@@ -36,11 +37,14 @@ var select_ecm_nav = func {
 
 # Receive basic instruments data over MP from pilot's aircraft.
 var PilotInstrString = nil;
-instruments_data_import = func {
+instruments_data_import = func
+{
 	if ( Pilot == nil ) { return }
 	PilotInstrString = Pilot.getNode("sim/multiplay/generic/string[1]", 1);
 	var str = PilotInstrString.getValue();
-	if ( str != nil ) {
+
+	if ( str != nil )
+    {
 		var l = split(";", str);
 		# Todo: Create the needed nodes only at connection/de-connection time. 
 		# ias, mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial.
@@ -53,6 +57,15 @@ instruments_data_import = func {
 			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
 			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
 			Pilot.getNode("instrumentation/tacan/indicated-distance-nm", 1).setValue( l[6] );
+
+            var transponder_id =sprintf("%4d",Pilot.getNode("instrumentation/transponder/transmitted-id").getValue());
+            if (transponder_id != nil)
+            {
+                Pilot.getNode("instrumentation/transponder/inputs/digit[0]", 1).setValue( substr(transponder_id,3,1) );
+                Pilot.getNode("instrumentation/transponder/inputs/digit[1]", 1).setValue( substr(transponder_id,2,1) );
+                Pilot.getNode("instrumentation/transponder/inputs/digit[2]", 1).setValue( substr(transponder_id,1,1) );
+                Pilot.getNode("instrumentation/transponder/inputs/digit[3]", 1).setValue( substr(transponder_id,0,1) );
+            }
 			var SteerSubmodeCode = Pilot.getNode("sim/model/f15/controls/pilots-displays/steer-submode-code", 1);
 			SteerSubmodeCode.setValue( l[7] );
 
@@ -71,17 +84,17 @@ instruments_data_import = func {
 		        setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
 		    }
 			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
-Pilot.getNode("engines/engine[0]/egt-degC").setValue(l[11]);
-Pilot.getNode("engines/engine[1]/egt-degC").setValue(l[12]);
-Pilot.getNode("engines/engine[0]/fuel-flow_pph").setValue(l[13]);
-Pilot.getNode("engines/engine[1]/fuel-flow_pph").setValue(l[14]);
-Pilot.getNode("consumables/fuel/total-fuel-lbs").setValue(l[15]);
+            Pilot.getNode("engines/engine[0]/egt-degC").setValue(l[11]);
+            Pilot.getNode("engines/engine[1]/egt-degC").setValue(l[12]);
+            Pilot.getNode("engines/engine[0]/fuel-flow_pph").setValue(l[13]);
+            Pilot.getNode("engines/engine[1]/fuel-flow_pph").setValue(l[14]);
+            Pilot.getNode("consumables/fuel/total-fuel-lbs").setValue(l[15]);
 		}
 	}
 	#PilotInstrString2 = Pilot.getNode("sim/multiplay/generic/string[2]", 1);
 	#var str2 = PilotInstrString2.getValue();
 	#if ( str2 != nil ) {
-		#Pilot.getNode("instrumentation/radar/radar2-range", 1).setValue(str2);
+    #Pilot.getNode("instrumentation/radar/radar2-range", 1).setValue(str2);
 	#}
 }
 

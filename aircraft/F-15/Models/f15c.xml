@@ -1035,6 +1035,27 @@
             <z-m>0</z-m>
         </offsets>
     </model>
+    <model>
+        <name>Backseater</name>
+        <path>pilot.xml</path>
+        <offsets>
+            <x-m>1.4635</x-m>
+            <y-m>-0.0088</y-m>
+            <z-m>0.1375</z-m>
+        </offsets>
+    </model>
+    <animation>
+        <type>select</type>
+        <object-name>Backseater</object-name>
+        <condition>
+            <equals>
+                <property>sim/multiplay/generic/string[2]</property>
+                <value>D</value>
+            </equals>
+        </condition>
+    </animation>
+
+
     <animation>
         <type>select</type>
         <object-name>FanLHighSpeed</object-name>
