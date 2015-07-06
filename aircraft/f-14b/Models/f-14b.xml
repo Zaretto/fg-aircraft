@@ -176,16 +176,22 @@
 	</model> Test purpose-->
 
 	<effect>
-		<inherits-from>Effects/model-transparent</inherits-from>
+		<inherits-from>Aircraft/f-14b/Models/Fx/exterior-glass</inherits-from>
 		<object-name>Canopy_0</object-name>
 		<object-name>Windshield_0</object-name>
-		<object-name>Windshield_0_inside</object-name>
 		<object-name>TCS_0</object-name>
 	</effect>
 
-	<animation>
+  <effect>
+    <name>f14glass</name>
+    <inherits-from>Effects/f14glass</inherits-from>
+    <object-name>Canopy_0Inside</object-name>
+    <object-name>Windshield_0Inside</object-name>
+  </effect>
+
+  <animation>
 		<type>select</type>
-		<object-name>Windshield_0_inside</object-name>
+		<object-name>Windshield_0Inside</object-name>
 		<condition>
 			<not>
 				<property>sim/rendering/rembrandt/enabled</property>
@@ -220,13 +226,13 @@
 			<heading-deg>0</heading-deg>
 		</offsets>
 	</model>
-	<animation>
+	<!--<animation>
 		<type>shader</type>
 		<shader>chrome</shader>
 		<texture>Aircraft/f-14b/Models/glass_shader.png</texture>
 		<object-name>Windshield_0</object-name>
 		<object-name>Canopy_0</object-name>
-	</animation>
+	</animation>-->
 	<model>
 		<path>Aircraft/f-14b/Models/Fx/contrail1.xml</path>
 		<offsets>
@@ -2612,50 +2618,64 @@
 <!-- "doors"                                                             -->
 <!-- ******************************************************************* -->
 
-	<animation>
-		<type>rotate</type>
-		<object-name>Canopy_1</object-name>
-		<object-name>Canopy_2</object-name>
-		<object-name>CanopyInside</object-name>
-		<property>canopy/position-norm</property>
-		<interpolation>
-			<entry><ind>0.0</ind><dep>0.0</dep></entry>
-			<entry><ind>1.0</ind><dep>30.0</dep></entry>
-		</interpolation>
-		<center>
-			<x-m>-1.893</x-m>
-			<y-m>0.0</y-m>
-			<z-m>0.258</z-m>
-		</center>
-		<axis>
-			<x>0.0</x>
-			<y>1.0</y>
-			<z>0.0</z>
-		</axis>
-	</animation>
 
-	<animation>
-		<type>rotate</type>
-		<object-name>Canopy_0</object-name>
-		<property>canopy/position-norm</property>
-		<interpolation>
-			<entry><ind>0.0</ind><dep>0.0</dep></entry>
-			<entry><ind>1.0</ind><dep>30.0</dep></entry>
-		</interpolation>
-		<center>
-			<x-m>-1.893</x-m>
-			<y-m>0.0</y-m>
-			<z-m>0.258</z-m>
-		</center>
-		<axis>
-			<x>0.0</x>
-			<y>1.0</y>
-			<z>0.0</z>
-		</axis>
-	</animation>
-
-
-	<animation>
+  <animation>
+    <type>rotate</type>
+    <object-name>Canopy_1</object-name>
+    <object-name>Canopy_2</object-name>
+    <object-name>CanopyInside</object-name>
+    <object-name>Canopy_0</object-name>
+    <object-name>Canopy_0Inside</object-name>
+    <property>canopy/position-norm</property>
+    <interpolation>
+      <entry>
+        <ind>0.25</ind>
+        <dep>0.0</dep>
+      </entry>
+      <entry>
+        <ind>1.0</ind>
+        <dep>30.0</dep>
+      </entry>
+    </interpolation>
+    <center>
+      <x-m>-1.893</x-m>
+      <y-m>0.0</y-m>
+      <z-m>0.258</z-m>
+    </center>
+    <axis>
+      <x>0.0</x>
+      <y>1.0</y>
+      <z>0.0</z>
+    </axis>
+  </animation>
+  <animation>
+    <type>translate</type>
+    <object-name>Canopy_1</object-name>
+    <object-name>Canopy_2</object-name>
+    <object-name>CanopyInside</object-name>
+    <object-name>Canopy_0</object-name>
+    <object-name>Canopy_0Inside</object-name>
+    <property>canopy/position-norm</property>
+    <interpolation>
+      <entry>
+        <ind>0.0</ind>
+        <dep>0.0</dep>
+      </entry>
+      <entry>
+        <ind>0.25</ind>
+        <dep>0.01</dep>
+      </entry>
+    </interpolation>
+    <center>
+      <x-m>-1.893</x-m>
+      <y-m>0.0</y-m>
+      <z-m>0.258</z-m>
+    </center>
+    <axis>
+      <x>1</x>
+    </axis>
+  </animation>
+  <animation>
 		<type>rotate</type>
 		<object-name>Fuselage.014_0</object-name>
 		<object-name>Fuselage.014_1</object-name>

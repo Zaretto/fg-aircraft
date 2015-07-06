@@ -80,25 +80,29 @@ var position_flash_init  = func {
 
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
 var cnpy = aircraft.door.new("canopy", 3.9);
-var cswitch = props.globals.getNode("sim/model/f-14b/controls/canopy/canopy-switch", 1);
+#
+#
+# 
+setprop("sim/model/f-14b/controls/canopy/canopy-switch", 0);
 var pos = props.globals.getNode("canopy/position-norm");
 
-var canopyswitch = func(v) {
-	var p = pos.getValue();
-	if (v == 2 ) {
-		if ( p < 1 ) {
-			v = 1;
-		} elsif ( p >= 1 ) {
-			v = -1;
-		}
-	}
-	if (v < 0) {
-		cswitch.setValue(1);
+#
+#
+# cockpit will simply toggle the value of this.
+setlistener("sim/model/f-14b/controls/canopy/canopy-switch", func(v) {
+	if (v.getValue()) 
+        cnpy.open();
+    else
 		cnpy.close();
-	} elsif (v > 0) {
-		cswitch.setValue(-1);
-		cnpy.open();
-	}
+
+}, 1, 0);
+#
+#
+# canopy switch toggle (from keyboard).
+var canopyswitch = func(v) {
+    var cp = getprop("sim/model/f-14b/controls/canopy/canopy-switch");
+
+    setprop("sim/model/f-14b/controls/canopy/canopy-switch", 1 - cp);
 }
 
 
@@ -458,4 +462,70 @@ setprop("/fdm/jsbsim/propulsion/set-running",0);
 }
 
 
+# set the splash vector for the new canopy rain.
 
+# for tuning the vector; these will be baked in once finished
+setprop("/sim/model/f-14b/sfx1",-0.1);
+setprop("/sim/model/f-14b/sfx2",4);
+setprop("/sim/model/f-14b/sf-x-max",400);
+setprop("/sim/model/f-14b/sfy1",0);
+setprop("/sim/model/f-14b/sfy2",0.1);
+setprop("/sim/model/f-14b/sfz1",1);
+setprop("/sim/model/f-14b/sfz2",-0.1);
+
+#var vl_x = 0;
+#var vl_y = 0;
+#var vl_z = 0;
+#var vsplash_precision = 0.001;
+var splash_vec_loop = func
+{
+    var v_x = getprop("/fdm/jsbsim/velocities/u-aero-fps");
+    var v_y = getprop("/fdm/jsbsim/velocities/v-aero-fps");
+    var v_z = getprop("/fdm/jsbsim/velocities/w-aero-fps");
+#    var v_x = getprop("/velocities/uBody-fps");
+#    var v_y = getprop("/velocities/vBody-fps");
+#    var v_z = getprop("/velocities/wBody-fps");
+    var v_x_max = getprop("/sim/model/f-14b/sf-x-max");
+ 
+    if (v_x > v_x_max) 
+        v_x = v_x_max;
+ 
+    if (v_x > 1)
+        v_x = math.sqrt(v_x/v_x_max);
+#var splash_x = -0.1 - 2.0 * v_x;
+#var splash_y = 0.0;
+#var splash_z = 1.0 - 1.35 * v_x;
+
+    var splash_x = getprop("/sim/model/f-14b/sfx1") - getprop("/sim/model/f-14b/sfx2") * v_x;
+    var splash_y = getprop("/sim/model/f-14b/sfy1") - getprop("/sim/model/f-14b/sfy2") * v_y;
+    var splash_z = getprop("/sim/model/f-14b/sfz1") - getprop("/sim/model/f-14b/sfz2") * v_z;
+
+#if (math.abs(vl_x - v_x) >  vsplash_precision)
+    setprop("/environment/aircraft-effects/splash-vector-x", splash_x);
+#if (math.abs(vl_y - v_y) >  vsplash_precision)
+    setprop("/environment/aircraft-effects/splash-vector-y", splash_y);
+#if (math.abs(vl_z - v_z) >  vsplash_precision)
+    setprop("/environment/aircraft-effects/splash-vector-z", splash_z);
+#vl_x = v_x;
+#vl_y = v_y;
+#vl_z = v_z;
+
+#    interpolate("/environment/aircraft-effects/splash-vector-z", splash_z, 0.01);
+ 
+    settimer( func {splash_vec_loop() },0.5);
+}
+
+splash_vec_loop();
+
+var rate4modules = func {
+	settimer (rate4modules, 0.20);
+}
+
+var rate2modules = func {
+	settimer (rate2modules, 0.04);
+    setprop("environment/aircraft-effects/frost-level", getprop("/fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
+}
+#
+# launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
+settimer (rate4modules, 1); 
+settimer (rate2modules, 1);

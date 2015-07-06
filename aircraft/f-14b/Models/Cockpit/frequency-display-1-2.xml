@@ -115,34 +115,38 @@
 		</condition>
 	</animation>
 
-
-
 	<!-- lighting -->
-	<animation>
-		<object-name>mount</object-name>
-		<type>material</type>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
         <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
 
-
-
-
-
-
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f14panel</name>
+        <inherits-from>Effects/f14panel</inherits-from>
+        <object-name>casing</object-name>
+        <object-name>UHF</object-name>
+        <object-name>UHF-VHF</object-name>
+    </effect>
 
 	<animation>
 		<type>range</type>
