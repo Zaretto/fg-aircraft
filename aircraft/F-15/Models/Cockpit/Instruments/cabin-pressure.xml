@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Cabin Pressure Gauge by Richard Harrison; rjh@zaretto.com -->
+
+<PropertyList>
+
+    <path>cabin-pressure.ac</path>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>cabin-pressure-needle</object-name>
+        <property>fdm/jsbsim/systems/ecs/cabin-altitude-ft</property>
+        <factor>0.00604</factor>
+        <center>
+            <x-m>-5.7076</x-m>
+            <y-m>0.3728</y-m>
+            <z-m>0.7851</z-m>
+        </center>
+        <max>50000</max>
+        <min>50000</min>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+    <!--Lighting-->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <property>controls/lighting/aux-inst</property>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

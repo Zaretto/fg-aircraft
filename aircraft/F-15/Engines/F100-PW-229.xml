@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!--
+  Name:     F100-PW-229
+  File:     F100-PW-229.xml
+  Author:   Richard Harrison (rjh@zaretto.com)
+  Date:     13 December 2014
+  Description:
+
+    Refs: F100 Thrust at altitude/mach at full power								NASA TM-86042
+  Engine Thrust tables are based on NASA TM-86042 tables 6 normalized 
+  
+  Augmentation figures are largely the same as mil thrust - it is just the difference between milthrust and maxthrust 
+  in the definition that defines the thrust. I believe this is correct as the mass flow / gas characteristics 
+  of the turbine aren't  altered when augmented so the assumption is that the values will be close in shape to the milthrust ones.
+  See the table here: http://adg.stanford.edu/aa241/propulsion/images/tvsv.gif - the ratio of Thrust to AB increases by 
+  0.26 from 0 to mach 1.0 - which in the abscence of F110 AB performance figures means that it is close enough to the trend.
+  
+  The values for Mach > 0.955 are constant as the airframe has inlet ramps to slow the incoming air and this is
+  a simple way to model it; for a more complete model there should be a data table that takes into account ramp
+  position and mach to provide inlet airflow.
+  
+  Future enhancements of the model would be to
+  1. Model inlet airflow rate
+  2. Flameout engines when insufficient air mass
+  3. Adverse effects when inlet airflow too high and would compressor stalls,  and/or stagnation and/or 
+  Refs: 
+        Flight and Static Exhaust Flow  Properties of an F110-GE-129  Engine in an F-16XL Airplane  During Acoustic Tests
+        Jon K. Holzman, Lannie D. Webb, and Frank W. Burcham, 
+        November 1996
+        NASA-TM-104326 
+
+        Real-Time Simulation of an F 110/STOVL Turbofan Engine
+        Colin K. Drummond and Peter J. Ouzts
+        October 16-17, 1989
+        NASA-TM-102409
+
+   http://www.jet-engine.net/miltfspec.html
+   http://www.f-15e.info/technology/engines/pw2/pw2.htm
+   http://www.stardestroyer.net/Armour/ShepStuff/Website/Statistics/Engines.htm
+-->
+
+<turbine_engine name="F100-PW-229">
+    <!--<milthrust> 17800 </milthrust>-->
+    <!--<maxthrust> 29160 </maxthrust>-->
+    <milthrust> 14590 </milthrust>
+    <maxthrust> 23770 </maxthrust>
+    <bypassratio>     0.36 </bypassratio>
+    <tsfc>            0.76 </tsfc>
+    <atsfc>           1.94  </atsfc>
+    <bleed>           0.03</bleed>
+    <idlen1>         30.0 </idlen1>
+    <idlen2>         60.0 </idlen2>
+    <maxn1>         100.0 </maxn1>
+    <maxn2>         100.0 </maxn2>
+    <augmented>         1 </augmented>
+    <augmethod>         2 </augmethod>
+    <!-- acceleration from 0 -> 15% (at which point the start logic takes over in FGTurbine using 1.2 and 2.0 for N1/N2 acceleration rate) -->
+    <n1spinup>1</n1spinup>
+    <n2spinup>3</n2spinup>
+
+    <injected>          0 </injected>
+
+    <function name="IdleThrust">
+        <table>
+            <independentVar lookup="row">velocities/mach</independentVar>
+            <independentVar lookup="column">atmosphere/density-altitude</independentVar>
+            <tableData>
+                            0	5000	10000	15000	20000	25000	30000	35000	40000	45000	50000	55000	60000	65000	70000	75000
+                0.000	0.029	0.025	0.021	0.018	0.015	0.013	0.011	0.009	0.007	0.005	0.004	0.003	0.003	0.002	0.002	0.001
+                0.282	0.029	0.025	0.021	0.018	0.015	0.013	0.011	0.009	0.007	0.005	0.004	0.003	0.003	0.002	0.002	0.001
+                0.300	0.029	0.025	0.021	0.018	0.015	0.013	0.010	0.009	0.007	0.005	0.004	0.003	0.003	0.002	0.002	0.001
+                0.308	0.028	0.024	0.021	0.018	0.015	0.013	0.010	0.009	0.007	0.005	0.004	0.003	0.003	0.002	0.002	0.001
+                0.601	0.043	0.037	0.031	0.027	0.023	0.019	0.016	0.013	0.010	0.008	0.006	0.005	0.004	0.003	0.002	0.002
+                0.603	0.043	0.037	0.031	0.027	0.022	0.019	0.016	0.013	0.010	0.008	0.006	0.005	0.004	0.003	0.002	0.002
+                0.605	0.043	0.037	0.031	0.027	0.022	0.019	0.016	0.013	0.010	0.008	0.006	0.005	0.004	0.003	0.002	0.002
+                0.793	0.055	0.047	0.040	0.034	0.029	0.024	0.020	0.016	0.013	0.010	0.008	0.006	0.005	0.004	0.003	0.002
+                0.804	0.056	0.048	0.041	0.035	0.029	0.024	0.020	0.017	0.013	0.010	0.008	0.006	0.005	0.004	0.003	0.002
+                0.814	0.056	0.048	0.041	0.035	0.029	0.025	0.020	0.017	0.013	0.010	0.008	0.006	0.005	0.004	0.003	0.002
+                0.946	0.065	0.056	0.048	0.041	0.034	0.029	0.024	0.019	0.015	0.012	0.010	0.007	0.006	0.005	0.004	0.003
+                0.955	0.066	0.057	0.049	0.041	0.035	0.029	0.024	0.020	0.016	0.012	0.010	0.008	0.006	0.005	0.004	0.003
+                1.200	0.066	0.057	0.049	0.041	0.035	0.029	0.024	0.020	0.016	0.012	0.010	0.008	0.006	0.005	0.004	0.003
+                1.800	0.066	0.057	0.049	0.041	0.035	0.029	0.024	0.020	0.016	0.012	0.010	0.008	0.006	0.005	0.004	0.003
+            </tableData>
+        </table>
+    </function>
+
+    <function name="MilThrust">
+        <table>
+            <independentVar lookup="row">velocities/mach</independentVar>
+            <independentVar lookup="column">atmosphere/density-altitude</independentVar>
+            <tableData>
+                0	10000	20000	30000	40000	50000	80000
+                0.0	1.00000	0.75951	0.50991	0.33466	0.19497	0.12160	0
+                0.2	1.10213	0.84269	0.58015	0.37485	0.21731	0.13398	0
+                0.4	1.17612	0.92587	0.64213	0.41503	0.24078	0.14636	0
+                0.6	1.26167	1.00905	0.74219	0.48233	0.28855	0.16491	0
+                0.8	1.31586	1.09223	0.81277	0.55591	0.33631	0.18627	0
+                1.0	1.47534	1.23699	0.97439	0.71151	0.43990	0.26734	0
+                1.2	1.50960	1.37341	1.09395	0.83346	0.56431	0.31743	0
+                1.4	1.52763	1.50641	1.26232	0.97970	0.65986	0.37193	0
+                1.6	1.54566	1.63941	1.41592	1.13653	0.77293	0.43569	0
+                1.8	1.56369	1.77241	1.56765	1.26835	0.89063	0.52490	0
+                2.0	1.58172	1.90541	1.71938	1.39791	0.98527	0.57688	0
+                2.2	1.59975	2.03841	1.87111	1.52747	1.07894	0.61386	0
+                2.4	1.61778	2.17141	2.02283	1.65702	1.05260	0.61815	0
+                2.6	1.63582	2.30441	2.17456	1.78658	1.02152	0.61032	0
+            </tableData>
+        </table>
+    </function>
+
+    <function name="AugThrust">
+        <table>
+            <independentVar lookup="row">velocities/mach</independentVar>
+            <independentVar lookup="column">atmosphere/density-altitude</independentVar>
+            <tableData>
+                0	10000	20000	30000	40000	50000	80000
+                0.0	1.00000	0.75951	0.50991	0.33466	0.19497	0.12160	0
+                0.2	1.10213	0.84269	0.58015	0.37485	0.21731	0.13398	0
+                0.4	1.17612	0.92587	0.64213	0.41503	0.24078	0.14636	0
+                0.6	1.26167	1.00905	0.74219	0.48233	0.28855	0.16491	0
+                0.8	1.31586	1.09223	0.81277	0.55591	0.33631	0.18627	0
+                1.0	1.47534	1.23699	0.97439	0.71151	0.43990	0.26734	0
+                1.2	1.50960	1.37341	1.09395	0.83346	0.56431	0.31743	0
+                1.4	1.52763	1.50641	1.26232	0.97970	0.65986	0.37193	0
+                1.6	1.54566	1.63941	1.41592	1.13653	0.77293	0.43569	0
+                1.8	1.56369	1.77241	1.56765	1.26835	0.89063	0.52490	0
+                2.0	1.58172	1.90541	1.71938	1.39791	0.98527	0.57688	0
+                2.2	1.59975	2.03841	1.87111	1.52747	1.07894	0.61386	0
+                2.4	1.61778	2.17141	2.02283	1.65702	1.05260	0.61815	0
+                2.6	1.63582	2.30441	2.17456	1.78658	1.02152	0.61032	0
+            </tableData>
+        </table>
+    </function>
+
+</turbine_engine>

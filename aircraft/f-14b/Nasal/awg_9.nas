@@ -360,11 +360,18 @@ setprop("sim/model/f-14b/lighting/hud-diamond-switch/enabled", 1);
 
 # ECM: Radar Warning Receiver
 rwr = func(u) {
+    var u_ecm_signal      = 0;
+    var u_ecm_signal_norm = 0;
+    var u_radar_standby   = 0;
+    var u_ecm_type_num    = 0;
+
 	var u_name = radardist.get_aircraft_name(u.string);
 	var u_maxrange = radardist.my_maxrange(u_name); # in kilometer, 0 is unknown or no radar.
 	var horizon = u.get_horizon( our_alt );
 	var u_rng = u.get_range();
 	var u_carrier = u.check_carrier_type();
+#print ("rwr ",u_name, " max_range=", u_maxrange, " rng=", u_rng, " horiz=",horizon, " carrier=",u_carrier);
+
 	if ( u_maxrange > 0  and u_rng < horizon ) {
 		# Test if we are in its radar field (hard coded 74°) or if we have a MPcarrier.
 		# Compute the signal strength.
@@ -386,6 +393,11 @@ rwr = func(u) {
 		ecm_alert2 = 1;
 		u_ecm_signal_norm = 1;
 	}
+#
+# Calculate the ecm signal for each target (required for the ECM display)
+    u_ecm_signal = (-u_rng/20) + 2.6;
+    u_ecm_type_num = radardist.get_ecm_type_num(u_name);
+
 	u.EcmSignal.setValue(u_ecm_signal);
 	u.EcmSignalNorm.setIntValue(u_ecm_signal_norm);
 	u.EcmTypeNum.setIntValue(u_ecm_type_num);
@@ -636,10 +648,10 @@ var Target = {
 	get_rdr_standby : func {
 		# FIXME: this one shouldn't be part of Target
 		var s = 0;
-		if ( me.RadarStandby != nil ) {
-			s = me.RadarStandby.getValue();
-			if (s == nil) { s = 0 } elsif (s != 1) { s = 0 }
-		}
+#		if ( me.RadarStandby != nil ) {
+#			s = me.RadarStandby.getValue();
+#			if (s == nil) { s = 0 } elsif (s != 1) { s = 0 }
+#		}
 		return s;
 	},
 	get_display : func() {

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<!-- F-15 C (MSIP) stick by Richard Harrison; rjh@zaretto.com -->
+
+<PropertyList>
+    <path>stick.ac</path>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>stick-handle</object-name>
+        <object-name>stick-mast</object-name>
+        <property>controls/flight/elevator</property>
+        <factor>18</factor>
+        <center>
+            <x-m>-5.5126</x-m>
+            <y-m>-0.0468</y-m>
+            <z-m> 0.3764</z-m>
+        </center>
+
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>stick-handle</object-name>
+        <property>controls/flight/aileron</property>
+        <factor>20</factor>
+        <center>
+            <x-m>-5.5126</x-m>
+            <y-m> 0.0139</y-m>
+            <z-m> 0.6024</z-m>
+        </center>
+
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+    <animation>
+        <type>slider</type>
+        <object-name>pickle-button</object-name>
+        <property>controls/armament/pickle-button</property>
+
+        <factor>-0.005</factor>
+        <center>
+            <x-m>0.0081</x-m>
+            <y-m>-0.0017</y-m>
+            <z-m>-0.0529</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/armament/pickle-button</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>nasal</command>
+                <script>if(getprop("controls/armament/pickle-button")){setprop("controls/armament/trigger",1); setprop("controls/armament/pickle-button",0); setprop("controls/armament/trigger",0); }</script>
+            </binding>
+        </release>
+    </animation>
+</PropertyList>

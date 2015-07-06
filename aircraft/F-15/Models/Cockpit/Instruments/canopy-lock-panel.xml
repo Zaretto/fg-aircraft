@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Canopy lock panel by Richard Harrison rjh@zaretto.com-->
+
+<PropertyList>
+
+    <path>canopy-lock-panel.ac</path>
+
+    <animation>
+        <type>select</type>
+        <object-name>canopy-unlocked-light-on</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-canopy-lock</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>light-program</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>light-minimum</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>light-chaff</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>light-flares</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+            </or>
+        </condition>
+    </animation>
+
+    <!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+</PropertyList>

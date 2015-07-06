@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<!-- F-15C Canopy (single seat applicable to F-15A variant as well)
+   |  Richard Harrison: 2015-04-29 : rjh@zaretto.com 
+-->
+
+<PropertyList>
+    <path>f-15d-canopy.ac</path>
+
+    <!-- Uncomment this section for FG 3.5 ALS Glass effects -->
+    <effect>
+        <name>f15glass</name>
+        <inherits-from>Effects/f15glass</inherits-from>
+        <object-name>CanopyGlassInside</object-name>
+    </effect>
+    <effect>
+        <name>f15windshield</name>
+        <inherits-from>Effects/f15windshield</inherits-from>
+        <object-name>WindscreenGlassInside</object-name>
+    </effect>
+    <!-- Canopy -->
+    <animation>
+        <type>select</type>
+        <condition>
+            <equals>
+                <property>sim/multiplay/generic/string[2]</property>
+                <value>D</value>
+            </equals>
+        </condition>
+        <object-name>f15d-canopy</object-name>
+    </animation>
+    <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <object-name>CanopyMirrors</object-name >
+        <object-name>CanopyWire</object-name >
+        <object-name>StandbyCompass</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
+        <property>canopy/position-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0.25</ind>
+                <dep>0.0</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>20.0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-2.36</x-m>
+            <y-m>0.0</y-m>
+            <z-m>1.4</z-m>
+        </center>
+        <axis>
+            <x>0.0</x>
+            <y>1.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+    <!-- Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25-->
+    <animation>
+        <type>translate</type>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <object-name>CanopyMirrors</object-name >
+        <object-name>CanopyWire</object-name >
+        <object-name>StandbyCompass</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
+        <property>canopy/position-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0.0</ind>
+                <dep>0.0</dep>
+            </entry>
+            <entry>
+                <ind>0.25</ind>
+                <dep>0.01</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-2.36</x-m>
+            <y-m>0.0</y-m>
+            <z-m>1.4</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+        </axis>
+    </animation>
+    <animation>
+        <type>shader</type>
+        <shader>chrome</shader>
+        <texture>Aircraft/F-15/Models/glass_shader.png</texture>
+        <object-name>WindscreenGlass</object-name>
+        <object-name>CanopyGlass</object-name>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>StandbyCompassSphere</object-name>
+        <property>instrumentation/magnetic-compass/indicated-heading-deg</property>
+        <center>
+            <x-m>-5.5611</x-m>
+            <y-m>0.1851</y-m>
+            <z-m>1.5392</z-m>
+        </center>
+        <axis>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <!--<animation>
+        <object-name>StandbyCompassMount</object-name>
+            <type>material</type>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <not>
+                    <property>/sim/rendering/rembrandt/enabled</property>
+                </not>
+            </condition>
+            <emission>
+                <factor-prop>controls/lighting/panel-norm</factor-prop>
+                <red>  1.000</red>
+                <green>0.576</green>
+                <blue> 0.161</blue>
+                <red-prop>controls/lighting/panel-red</red-prop>
+                <green-prop>controls/lighting/panel-green</green-prop>
+                <blue-prop>controls/lighting/panel-blue</blue-prop>
+            </emission>
+        </animation>-->
+
+
+    <animation>
+        <type>material</type>
+        <object-name>StandbyCompassSphere</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <property>controls/lighting/stby-inst</property>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    
+    <animation>
+        <type>select</type>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/systems/armament/launch-light</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <!-- The ready light comes on when the system is ready. We will do this when the door is open.
+         ref: NASA video https://www.youtube.com/watch?v=Wqo8DIKcYtk 
+     -->
+    <animation>
+        <type>select</type>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <greater-than>
+                    <property>sim/multiplay/generic/float[6]</property>
+                    <value>0.9</value>
+                </greater-than>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>Canopy</object-name>
+        <object-name>WindscreenCanopyFrame</object-name>
+        <property-base>sim/model/livery</property-base>
+        <texture-prop>texture</texture-prop>
+        <texture>livery.AF80-0007.png</texture>
+    </animation>
+    <effect>
+        <name>f15interior</name>
+        <object-name>StandbyCompassMount</object-name>
+        <inherits-from>Cockpit/Effects/f15interior</inherits-from>
+        <object-name>CanopyMirrors</object-name >
+        <object-name>CanopyWire</object-name >
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>WindscreenCanopyFrame</object-name>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <object-name>WindscreenFasteners</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
+    </effect>
+
+</PropertyList>

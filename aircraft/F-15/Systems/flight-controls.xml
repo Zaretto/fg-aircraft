@@ -1,0 +1,558 @@
+<system  name="FCS F15">
+<!-- F-15 Flight controls 
+   |  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
+-->
+
+    <channel name="Pitch">
+        <summer name="Pitch Trim Sum">
+            <input>fcs/elevator-cmd-norm</input>
+            <input>fcs/pitch-trim-cmd-norm</input>
+            <input>fcs/pitch-damper-rate</input>
+            <input>systems/afcs/elevator-cmd-delta</input>
+            <clipto>
+                <min> -1 </min>
+                <max>  1 </max>
+            </clipto>
+        </summer>
+
+        <switch name="fcs/pitch-trim-actuator">
+            <default value="fcs/pitch-trim-sum"/>
+            <test value="fcs/pitch-trim-actuator">
+                systems/hydraulics/flight-system-pressure ne 1
+            </test>
+        </switch>
+
+        <aerosurface_scale name="Elevator Control">
+            <input>fcs/pitch-trim-actuator</input>
+            <!-- maybe this should take into account the trim limits from the AAP -->
+            <range>
+                <min> -0.50877 </min>
+                <max>  0.26315 </max>
+            </range>
+            <output>fcs/elevator-pos-raw-demand</output>
+        </aerosurface_scale>
+
+        <pure_gain name="Elevator Control">
+            <input>fcs/elevator-pos-raw-demand</input>
+            <gain>systems/cadc/pitch-ratio</gain>
+            <output>fcs/elevator-pos-demand</output>
+        </pure_gain >
+
+        <!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
+        <kinematic name="elevator position">
+            <input>fcs/elevator-pos-demand</input>
+            <traverse>
+                <setting>
+                    <position>-1</position>
+                    <time>0.9</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.90</time>
+                    <!-- based on 30 deg/sec -->
+                </setting>
+            </traverse>
+            <output>fcs/elevator-pos-rad</output>
+        </kinematic>
+
+        <!-- dtd is washed out with elevator position http://www.f15sim.com/operation/f15_lat_control.html -->
+        <fcs_function name="fcs/differential-elevator-pos-norm">
+            <function>
+                <product>
+                    <property>fcs/aileron-right-pos-norm</property>
+                    <value>0.3</value> <!-- mxaimum authority -->
+                    <table>
+                        <!-- Figure 4 Mechanmical lateral control authority.
+      ** iv; Vc Kts
+      ** stabilator maximum
+      ** dv: full stock aileron deflection degrees
+-->
+                        <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                        <independentVar lookup="column">velocities/vc-kts</independentVar>
+                        <tableData>
+                            635.0	664.3	668.2	714.8	741.3	768.0	794.7
+                        -24	0.16	0.16	0.16	0.16	0.16	0.16	0.16
+                        -23	0.16	0.16	0.16	0.16	0.16	0.16	0.16
+                        -22	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -21	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -20	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -19	0.16	0.16	0.16	0.16	0.16	0.15	0.16
+                        -18	0.19	0.19	0.20	0.20	0.19	0.19	0.19
+                        -17	0.29	0.30	0.30	0.30	0.30	0.29	0.24
+                        -16	0.39	0.40	0.40	0.40	0.40	0.38	0.24
+                        -15	0.50	0.50	0.51	0.50	0.50	0.38	0.24
+                        -14	0.60	0.60	0.61	0.61	0.50	0.38	0.24
+                        -13	0.70	0.70	0.71	0.63	0.50	0.38	0.24
+                        -12	0.80	0.81	0.75	0.63	0.50	0.38	0.24
+                        -11	0.91	0.87	0.75	0.63	0.50	0.38	0.25
+                        -10	1.00	0.87	0.75	0.63	0.50	0.38	0.25
+                        -9	1.00	0.87	0.75	0.63	0.50	0.38	0.25
+                        -8	1.00	0.87	0.75	0.63	0.50	0.38	0.25
+                        -7	1.00	0.88	0.75	0.63	0.50	0.38	0.25
+                        -6	1.00	0.88	0.75	0.63	0.50	0.38	0.25
+                        -5	1.00	0.88	0.75	0.63	0.50	0.38	0.25
+                        -4	0.90	0.88	0.75	0.63	0.50	0.38	0.25
+                        -3	0.79	0.80	0.75	0.63	0.50	0.38	0.25
+                        -2	0.69	0.69	0.69	0.63	0.50	0.38	0.25
+                        -1	0.58	0.59	0.59	0.59	0.50	0.38	0.25
+                        0	0.47	0.49	0.48	0.49	0.48	0.38	0.25
+                        1	0.37	0.39	0.38	0.40	0.38	0.38	0.25
+                        2	0.26	0.28	0.27	0.30	0.28	0.28	0.25
+                        3	0.25	0.25	0.24	0.25	0.25	0.24	0.25
+                        4	0.25	0.25	0.24	0.25	0.24	0.24	0.25
+                        5	0.25	0.25	0.24	0.25	0.24	0.24	0.25
+                        6	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        7	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        8	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        9	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        10	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        11	0.24	0.25	0.24	0.25	0.24	0.24	0.25
+                        12	0.24	0.24	0.24	0.24	0.24	0.24	0.25
+                        13	0.24	0.24	0.24	0.24	0.24	0.24	0.25
+                        14	0.24	0.24	0.24	0.24	0.24	0.24	0.25
+                        15	0.24	0.24	0.24	0.24	0.24	0.24	0.24
+                        16	0.24	0.24	0.24	0.24	0.24	0.24	0.24
+                        </tableData>
+                        <!--<independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                        <tableData>
+                            -24     0
+                              0     0.3
+                             16     0
+                        </tableData>-->
+                    </table>
+                </product>
+            <gain>0.3</gain>
+            </function>
+        </fcs_function>
+
+        <aerosurface_scale name="fcs/differential-elevator-pos-deg">
+            <input>fcs/differential-elevator-pos-norm</input>
+            <domain>
+                <min>  -1 </min>
+                <max>   1 </max>
+            </domain>
+            <range>
+                <min> -6.66667 </min>
+                <max>  6.66667 </max>
+            </range>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="elevator normalization">
+            <input>fcs/elevator-pos-rad</input>
+            <domain>
+                <min>  -0.57895 </min>
+                <max>   0.21053 </max>
+            </domain>
+            <range>
+                <min> -1 </min>
+                <max>  1 </max>
+            </range>
+            <output>fcs/elevator-pos-norm</output>
+        </aerosurface_scale>
+    </channel>
+
+
+    <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
+    <channel name="Roll">
+        <summer name="fcs/roll-trim-sum-raw">
+            <input>fcs/aileron-cmd-norm</input>
+            <input>fcs/roll-trim-cmd-norm</input>
+            <input>fcs/roll-trim-sas-cmd-norm</input>
+            <input>fcs/roll-rate-limiter</input>
+            <clipto>
+                <min> -1 </min>
+                <max>  1 </max>
+            </clipto>
+        </summer>
+
+        <pure_gain name="fcs/roll-trim-sum-norm">
+            <input>fcs/roll-trim-sum-raw</input>
+            <gain>systems/cadc/roll-ratio</gain>
+        </pure_gain >
+
+        <switch name="fcs/roll-trim-actuator-norm">
+            <default value="fcs/roll-trim-sum-norm"/>
+            <test value="fcs/roll-trim-actuator-norm">
+                systems/hydraulics/flight-system-pressure ne 1
+            </test>
+        </switch>
+
+        <kinematic name="aileron position">
+            <input>fcs/roll-trim-actuator-norm</input>
+            <traverse>
+                <setting>
+                    <position>-1</position>
+                    <time>0.9</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.90</time>
+                    <!-- based on 30 deg/sec -->
+                </setting>
+            </traverse>
+            <output>fcs/aileron-pos-norm</output>
+        </kinematic>
+
+        <aerosurface_scale name="Aileron Control">
+            <input>fcs/aileron-pos-norm</input>
+            <range>
+                <min> -0.34910106475824751265491359748647</min>
+                <max>  0.34910106475824751265491359748647</max>
+            </range>
+            <output>fcs/aileron-pos-rad</output>
+        </aerosurface_scale>
+
+        <pure_gain name="fcs/aileron-left-pos-rad">
+            <input>fcs/aileron-pos-rad</input>
+            <gain>1</gain>
+            <output>fcs/aileron-left-pos-rad</output>
+        </pure_gain >
+
+        <pure_gain name="fcs/aileron-right-pos-rad">
+            <input>fcs/aileron-pos-rad</input>
+            <gain>1</gain>
+        </pure_gain >
+
+        <pure_gain name="fcs/aileron-left-pos-norm">
+            <input>fcs/aileron-pos-norm</input>
+            <gain>1</gain>
+        </pure_gain >
+        <pure_gain name="fcs/aileron-right-pos-norm">
+            <input>fcs/aileron-pos-norm</input>
+            <gain>1</gain>
+        </pure_gain >
+
+        <pure_gain name="fcs/aileron-right-pos-deg">
+            <input>fcs/aileron-right-pos-rad</input>
+            <gain>30</gain>
+        </pure_gain >
+        <pure_gain name="fcs/aileron-left-pos-deg">
+            <input>fcs/aileron-left-pos-rad</input>
+            <gain>30</gain>
+        </pure_gain >
+        <pure_gain name="fcs/aileron-pos-deg">
+            <input>fcs/aileron-right-pos-rad</input>
+            <gain>30</gain>
+        </pure_gain >
+
+        <aerosurface_scale name="left aileron normalization">
+            <input>fcs/left-aileron-pos-rad</input>
+            <domain>
+                <min> -0.22807 </min>
+                <max>  0.22807 </max>
+            </domain>
+            <range>
+                <min> -1 </min>
+                <max>  1 </max>
+            </range>
+            <output>fcs/left-aileron-pos-norm</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="Aileron Control">
+            <input>fcs/right-aileron-pos-norm</input>
+            <range>
+                <min> -20 </min>
+                <max>  20 </max>
+            </range>
+            <output>fcs/aileron-pos-deg</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="Left Aileron Control">
+            <input>fcs/aileron-pos-norm</input>
+            <range>
+                <min> -0.22807 </min>
+                <max>  0.22807 </max>
+            </range>
+            <output>fcs/left-aileron-pos-rad</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="Right Aileron Control">
+            <input>fcs/aileron-pos-norm</input>
+            <range>
+                <min> -0.22807 </min>
+                <max>  0.22807 </max>
+            </range>
+            <output>fcs/right-aileron-pos-rad</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="left aileron normalization">
+            <input>fcs/left-aileron-pos-rad</input>
+            <domain>
+                <min> -0.22807 </min>
+                <max>  0.22807 </max>
+            </domain>
+            <range>
+                <min> -1 </min>
+                <max>  1 </max>
+            </range>
+            <output>fcs/left-aileron-pos-norm</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="right aileron normalization">
+            <input>fcs/right-aileron-pos-rad</input>
+            <domain>
+                <min> -0.22807 </min>
+                <max>  0.22807 </max>
+            </domain>
+            <range>
+                <min> -1 </min>
+                <max>  1 </max>
+            </range>
+            <output>fcs/right-aileron-pos-norm</output>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="Aileron Control">
+            <input>fcs/right-aileron-pos-norm</input>
+            <range>
+                <min> -20 </min>
+                <max>  20 </max>
+            </range>
+            <output>fcs/aileron-pos-deg</output>
+        </aerosurface_scale>
+
+    </channel>
+
+    <channel name="Yaw">
+
+        <!-- rudder limits +/-30deg 40 deg/sec-->
+        <!-- stabilizer limits +/7deg 30 deg/sec-->
+        <!--<fcs_function name="fcs/ari-longitudinal-rudder-demand-norm">
+            <description>ARI</description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                    ?? or stick position ??
+                    <tableData>
+                        -30     0.1
+                        0     0
+                        30     -0.1
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min> -0.1 </min>
+                <max>  0.1 </max>
+            </clipto>
+        </fcs_function>-->
+        <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
+            <description>ARI</description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/aileron-pos-deg</independentVar>
+                    <tableData>
+                        -30     0.1
+                        0     0
+                        30     -0.1
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min> -0.1 </min>
+                <max>  0.1 </max>
+            </clipto>
+        </fcs_function>
+        <!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
+        <switch name="fcs/ari-lateral-rudder-pos-norm">
+            <default value="fcs/ari-lateral-rudder-demand-norm"/>
+            <test value="0">
+                velocities/mach ge 0.9
+            </test>
+            <test value="0" logic="OR">
+                velocities/mach ge 0.9
+                position/aircraft-on-ground ne 0
+            </test>
+        </switch>
+
+        <summer name="fcs/rudder-command-raw-sum">
+            <input>fcs/rudder-cmd-norm</input>
+            <input>fcs/yaw-trim-cmd-norm</input>
+            <input>fcs/ari-lateral-rudder-demand-norm</input>
+            <clipto>
+                <min> -1 </min>
+                <max>  1 </max>
+            </clipto>
+        </summer>
+        <pure_gain name="fcs/rudder-command-sum">
+            <input>fcs/rudder-command-raw-sum</input>
+            <gain>systems/cadc/rudder-effectivity</gain>
+        </pure_gain >
+
+        <summer name="Rudder Sum">
+            <input>fcs/rudder-command-sum</input>
+            <input>fcs/yaw-damper-dmd</input>
+            <clipto>
+                <min> -1.1 </min>
+                <max>  1.1 </max>
+            </clipto>
+        </summer>
+
+        <switch name="fcs/rudder-actuator-pos">
+            <default value="fcs/rudder-sum"/>
+            <test value="fcs/rudder-actuator-pos">
+                systems/hydraulics/flight-system-pressure ne 1
+            </test>
+        </switch>
+        <kinematic name="Rudder Control">
+            <input>fcs/rudder-actuator-pos</input>
+            <traverse>
+                <setting>
+                    <position>-0.35</position>
+                    <time>0.90</time>
+                    <!-- based on 30 deg/sec -->
+                </setting>
+                <setting>
+                    <position>0.35</position>
+                    <time>0.90</time>
+                    <!-- based on 30 deg/sec -->
+                </setting>
+            </traverse>
+            <output>fcs/rudder-pos-rad</output>
+        </kinematic>
+
+        <aerosurface_scale name="rudder normalization">
+            <input>fcs/rudder-pos-rad</input>
+            <domain>
+                <min> -0.35 </min>
+                <max>  0.35 </max>
+            </domain>
+            <range>
+                <min> -1 </min>
+                <max>  1 </max>
+            </range>
+            <output>fcs/rudder-pos-norm</output>
+        </aerosurface_scale>
+    </channel>
+
+    <channel name="Flaps">
+        <switch name="fcs/flap-total-dmd">
+            <default value="0"/>
+            <test value="fcs/flap-total-dmd">
+                systems/hydraulics/combined-system-pressure ne 1
+            </test>
+            <test value="fcs/flap-cmd-norm">
+                fcs/flap-cmd-norm ne 0
+                systems/hydraulics/combined-system-pressure ne 0
+            </test>
+            <clipto>
+                <min> 0 </min>
+                <max>  1 </max>
+            </clipto>
+            <output>fcs/flap-total-dmd</output>
+        </switch>
+
+        <kinematic name="Flaps Control">
+            <input>fcs/flap-total-dmd</input>
+            <traverse>
+                <setting>
+                    <position>  0 </position>
+                    <time>      0 </time>
+                </setting>
+                <setting>
+                    <position> 30 </position>
+                    <time>    1.9 </time>
+                </setting>
+            </traverse>
+            <output>fcs/flap-pos-deg</output>
+        </kinematic>
+
+        <aerosurface_scale name="flap normalization">
+            <input>fcs/flap-pos-deg</input>
+            <domain>
+                <min>  0 </min>
+                <max> 30 </max>
+            </domain>
+            <range>
+                <min> 0 </min>
+                <max> 1 </max>
+            </range>
+            <output>fcs/flap-pos-norm</output>
+        </aerosurface_scale>
+
+
+    </channel>
+
+    <channel name="Landing Gear">
+        <switch name="gear/gear-dmd-norm">
+            <default value="1"/>
+            <test value="1">
+                <!-- always force gear down when on ground - to prevent inadvertant retraction -->
+                position/aircraft-on-ground ne 0
+            </test>
+            <test value="gear/gear-dmd-norm">
+                systems/hydraulics/combined-system-pressure ne 1
+            </test>
+            <test value="gear/gear-cmd-norm">
+                systems/hydraulics/combined-system-pressure ne 0
+            </test>
+            <clipto>
+                <min> 0 </min>
+                <max>  1 </max>
+            </clipto>
+            <output>gear/gear-dmd-norm</output>
+        </switch>
+        <kinematic name="Gear Control">
+            <input>gear/gear-dmd-norm</input>
+            <traverse>
+                <setting>
+                    <position> 0 </position>
+                    <time>     0 </time>
+                </setting>
+                <setting>
+                    <position> 1 </position>
+                    <time>     1.8 </time>
+                </setting>
+            </traverse>
+            <output>gear/gear-pos-norm</output>
+        </kinematic>
+
+    </channel>
+
+    <channel name="Speedbrake">
+        <switch name="fcs/speedbrake-dmd-norm">
+            <default value="0"/>
+            <test value="fcs/speedbrake-dmd-norm">
+                systems/hydraulics/combined-system-pressure ne 1
+            </test>
+            <test value="fcs/speedbrake-cmd-norm">
+                systems/hydraulics/combined-system-pressure ne 0
+            </test>
+            <clipto>
+                <min> 0 </min>
+                <max>  1 </max>
+            </clipto>
+            <output>fcs/speedbrake-dmd-norm</output>
+        </switch>
+
+        <kinematic name="Speedbrake Control">
+            <input>fcs/speedbrake-dmd-norm</input>
+            <traverse>
+                <setting>
+                    <position> 0 </position>
+                    <time>     0 </time>
+                </setting>
+                <setting>
+                    <position> 1 </position>
+                    <time>     1.5 </time>
+                </setting>
+            </traverse>
+            <output>fcs/speedbrake-pos-norm</output>
+        </kinematic>
+    </channel>
+
+    <channel name="Hook">
+        <kinematic name="fcs/hook-control">
+            <input>fcs/hook-engage</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>0</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>2.5</time>
+                </setting>
+            </traverse>
+            <output>fcs/hook-pos-norm</output>
+        </kinematic>
+    </channel>
+</system>

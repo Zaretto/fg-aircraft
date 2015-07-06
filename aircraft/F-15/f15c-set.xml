@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!-- F-15 C Variant
+   |  Richard Harrison: 2015-05-24 : rjh@zaretto.com - parts taken from F-14 by xii
+-->
+<PropertyList include="f15-common.xml">
+
+    <sim>
+        <description>F-15C</description>
+        <author>Richard Harrison, Enrique Laso, xii</author>
+        <status>production</status>
+
+        <startup>
+            <splash-texture>Aircraft/F-15/f15c-splash.jpg</splash-texture>
+        </startup>
+        <model>
+            <path>Aircraft/F-15/Models/F-15C.xml</path>
+            <f15>
+                <variant>C</variant>
+            </f15>
+        </model>
+    </sim>
+    <fdm>
+        <jsbsim>
+            <metrics>
+                <two-place-canopy type="int">0</two-place-canopy>
+            </metrics>
+        </jsbsim>
+    </fdm>
+    <nasal>
+        <f15_net>
+            <file>Aircraft/F-15/Nasal/mp-network.nas</file>
+        </f15_net>
+    </nasal>
+</PropertyList>

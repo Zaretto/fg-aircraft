@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+    <logic>
+        <name>Current View Internal And Canopy Closed Logic</name>
+        <update-interval-secs type="double">0.1</update-interval-secs>
+        <input>
+            <and>
+                <property>sim/current-view/internal</property>
+                <less-than>
+                    <property>canopy/position-norm</property>
+                    <value>0.075</value>
+                </less-than>
+            </and>
+        </input>
+        <output>
+            <property>sim/current-view/internal-canopy-closed</property>
+        </output>
+    </logic>
+
+</PropertyList>

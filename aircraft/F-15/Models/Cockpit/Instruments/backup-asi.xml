@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Backup ASI by Richard Harrison; rjh@zaretto.com -->
+
+<PropertyList>
+
+    <path>backup-asi.ac</path>
+
+    <animation>
+        <type>material</type>
+
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>face</object-name>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>basi-needle-knots</object-name>
+        <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>60</ind>
+                <dep>13</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>45</dep>
+            </entry>
+            <entry>
+                <ind>150</ind>
+                <dep>161</dep>
+            </entry>
+            <entry>
+                <ind>170</ind>
+                <dep>180</dep>
+            </entry>
+            <entry>
+                <ind>200</ind>
+                <dep>210</dep>
+            </entry>
+            <entry>
+                <ind>300</ind>
+                <dep>250</dep>
+            </entry>
+            <entry>
+                <ind>400</ind>
+                <dep>270</dep>
+            </entry>
+            <entry>
+                <ind>850</ind>
+                <dep>345</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6979</x-m>
+            <y-m>-0.0566</y-m>
+            <z-m>0.7709</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!--Lighting-->
+    <!--Lighting-->
+    <animation>
+        <object-name>basi-mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <property>controls/lighting/stby-inst</property>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>basi-mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

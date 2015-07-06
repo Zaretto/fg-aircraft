@@ -112,8 +112,14 @@ namespace F14AeroPlot
         public string Title { get; set; }
 
         public List<String> Factors = new List<string>();
+        public List<String> Components = new List<string>();
         public string Axis;
 
+        internal void AddComponent(string p)
+        {
+            foreach (var f in p.Split(','))
+                Components.Add(f);
+        }
         internal void AddFactor(string p)
         {
             foreach (var f in p.Split(','))
@@ -148,6 +154,14 @@ namespace F14AeroPlot
         }
 
         public bool IsFactor { get; set; }
+
+        internal string GetVariable()
+        {
+            if (Variable.Contains("/"))
+                return Variable;
+            else return "aero/coefficients/" + Variable;
+        }
+
     }
 
     public class Aerodata
@@ -178,6 +192,37 @@ namespace F14AeroPlot
         public Dictionary<string, List<DataElement>> ComputeElems = new Dictionary<string, List<DataElement>>();
         public Dictionary<string, List<string>> ComputeExtra = new Dictionary<string, List<string>>();
         public List<string> Notes = new List<string>();
+
+        public DenominatedAmount WingArea { get; set; }
+
+        public Location EyePoint { get; set; }
+
+        public DenominatedAmount chord { get; set; }
+
+        public DenominatedAmount wing_incidence { get; set; }
+
+        public DenominatedAmount wingspan { get; set; }
+
+        public Location VRP { get; set; }
+
+        public Location AERORP { get; set; }
+
+        public Location CG { get; set; }
+
+        public DenominatedAmount EmptyWeight { get; set; }
+
+        public DenominatedAmount IXZ { get; set; }
+
+        public DenominatedAmount IZZ { get; set; }
+
+        public DenominatedAmount IYY { get; set; }
+
+        public DenominatedAmount IXX { get; set; }
+        public List<GroundReactionElement> GroundReactions = new List<GroundReactionElement>();
+        public List<PointMassElement> Mass = new List<PointMassElement>();
+        public List<Engine> Engines = new List<Engine>();
+        public List<Tank> Tanks = new List<Tank>();
+        public List<ExternalForce> ExternalReactions = new List<ExternalForce>();
 
         public void Compute(string axis, DataElement[] dataElement)
         {
@@ -267,6 +312,13 @@ namespace F14AeroPlot
         }
 
         public Dictionary<string, string> Aliases { get; set; }
+        public List<string> Systems = new List<string>();
+
+        public void AddTank(Tank t)
+        {
+            t.Id = Tanks.Count;
+            Tanks.Add(t);
+        }
 
         public Dictionary<string, DataElement> Data = new Dictionary<string, DataElement>();
 
@@ -334,8 +386,8 @@ namespace F14AeroPlot
 
             aerodata.References.Add(new ReferenceDocument
             {
-                Id = "RJH-ZARETTO-2014-12-F-15-Aero",
-                Author = "Richard Harrison",
+                Id = "ZDAT/AED/2014/12-2",
+                Author = "Richard Harrison, rjh@zaretto.com",
                 Date = "December, 2014",
                 Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%",
                 Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/rjh-zaretto-f-15-aerodynamic-data.pdf",
@@ -356,6 +408,30 @@ namespace F14AeroPlot
                 Title = "ANALYSIS OF THE EFFECTS OF REMOVING NOSE BALLAST FROM THE F-15 EAGLE",
                 Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/ADA244044.pdf",
             });
+            aerodata.References.Add(new ReferenceDocument
+            {
+                Id = "NASA CR-152391-VOL-1 Figure 3-2 p54",
+                Author = "DR. J. R. LUMMUS, G. T. JOYCE, O C. D. O MALLEY",
+                Date = "October 1980",
+                Title = "ANALYSIS OF WIND TUNNEL TEST RESULTS FOR A 9.39-PER CENT SCALE MODEL OF A VSTOL FIGHTER/ATTACK AIRCRAFT : VOLUME I - STUDY OVERVIEW",
+                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/19810014497.pdf",
+            });
+            aerodata.References.Add(new ReferenceDocument
+            {
+                Id = "NASA TP-3627",
+                Author = "Frank W. Burcham, Jr., Trindel A. Maine, C. Gordon Fullerton, and Lannie Dean Webb",
+                Date = "September 1996",
+                Title = "Development and Flight Evaluation of an Emergency Digital Flight Control System Using Only Engine Thrust on an F-15 Airplane",
+                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/88414main_H-2048.pdf",
+            });
+            aerodata.References.Add(new ReferenceDocument
+            {
+                Id = "95-fuel-dumping-system",
+                Author = "Sabc",
+                Date = "08 September 2010",
+                Title = "Fuel Dumping System",
+                Url = "http://www.f-15e.info/joomla/technology/fuel-system/95-fuel-dumping-system",
+            });
             
             aerodata.Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%";
             aerodata.Notes.Add(@"Aircraft origin for measurements is the nose");
@@ -363,8 +439,280 @@ namespace F14AeroPlot
             pounds and a c.g. location at 563.1 inches (6:12). To
             convert c.g. location in inches to percent mean aerodynamic
             chord, the following equation is used for all A through D
-            models of the F-15: (measurements in inches)
-            % MAC = (xcg - 508.1 * 100) / 191.33");
+            models of the F-15: (measurements in inches). 
+            % MAC = (xcg - 408.1 * 100) / 191.33");
+            aerodata.WingArea = new DenominatedAmount(608, "FT2");
+            aerodata.wingspan = new DenominatedAmount(42.8, "FT");
+            aerodata.wing_incidence = new DenominatedAmount(2, "DEG");
+            aerodata.chord = new DenominatedAmount(191.3, "IN");
+            aerodata.EyePoint = new Location(197, 0, -3.94, "IN");
+//            aerodata.VRP = new Location(386, 0, -13, "IN");
+            // model is at CG
+//            aerodata.VRP = new Location(0, 0, 0, "IN");
+
+            aerodata.VRP = new Location(386, 0, 0, "IN");
+
+            aerodata.CG = new Location(408, 0, 0, "IN");
+            aerodata.AERORP = aerodata.CG.FromChord(aerodata.chord, 25.65,0,0);
+
+            aerodata.IXX = new DenominatedAmount(28700, "SLUG*FT2");
+            aerodata.IYY = new DenominatedAmount(165100, "SLUG*FT2");
+            aerodata.IZZ = new DenominatedAmount(187900, "SLUG*FT2");
+            aerodata.IXZ = new DenominatedAmount(-520, "SLUG*FT2");
+            aerodata.EmptyWeight = new DenominatedAmount(28000, "LBS");
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station2-1",
+                Location = new Location(1.7844, -3.8325, 0.288, "M")
+
+            });
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station2-1",
+                Location = new Location(1.7844, -3.8325, 0.288, "M")
+
+            });
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station2-2",
+                Location = new Location(1.4077, -3.3034, 1.4077, "M")
+            });
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station2-3",
+                Location = new Location(1.7844, -3.8325, 0.288, "M"),
+            });
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station3",
+                Location = new Location(-0.3003, 1.611, 0.567, "M"),
+            });
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station4",
+                Location = new Location(3.5918, 1.611, 0.567, "M"),
+            });
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station5",
+                Location = new Location(0, 0, 0.33 , "M"),
+            });
+
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station6",
+                Location = new Location(-0.3003, 1.611, 0.567, "M"),
+            });
+
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station7",
+                Location = new Location(3.5918, 1.611, 0.567, "M"),
+            });
+
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station8",
+                Location = new Location(1.7844, 3.8325, 0.288, "M"),
+            });
+
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station9",
+                Location = new Location(1.4077, 3.3034, 1.407, "M"),
+            });
+
+
+            aerodata.Mass.Add(new PointMassElement(aerodata)
+            {
+                Name="Station10",
+                Location = new Location(1.7844, 3.8325, 0.288, "M"),
+            });
+
+            aerodata.GroundReactions.Add(new Gear(aerodata)
+            {
+                Name = "NOSE_LG",
+                Location = new Location(197, 0, -77.6496063, "IN"),
+                MaxSteer = new DenominatedAmount(89, "DEG"),
+                BrakeGroup = "NOSE"
+            });
+
+            aerodata.GroundReactions.Add(new Gear(aerodata)
+            {
+                Name = "LEFT_MLG",
+                Location = new Location(451, -98, -84.3385827, "IN"),
+                MaxSteer = new DenominatedAmount(0, "DEG"),
+                BrakeGroup = "LEFT"
+            });
+            aerodata.GroundReactions.Add(new Gear(aerodata)
+            {
+                Name = "RIGHT_MLG",
+                Location = new Location(451, 98, -84.3385827, "IN"),
+                MaxSteer = new DenominatedAmount(0, "DEG"),
+                BrakeGroup = "RIGHT"
+            }
+                 );
+
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "LEFT_WING_TIP",
+                Location = new Location(472, -256.8, 13, "IN")
+            });
+
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "RIGHT_WING_TIP",
+                Location = new Location(472, 256.8, 13, "IN")
+            });
+
+
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "CANOPY",
+                Location = new Location(214, 0, 10, "IN"),
+            });
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "RADOME_FRONT",
+                Location = new Location(20, 0, -18, "IN"),
+            });
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "LEFT_VERTICAL_TAIL",
+                Location = new Location(744, -98, 60, "IN"),
+            });
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "RIGHT_VERTICAL_TAIL",
+                Location = new Location(744, 98, 60, "IN"),
+            });
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "REAR_BODY_LEFT",
+                Location = new Location(669, -58, -12, "IN"),
+            });
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "REAR_BODY_RIGHT",
+                Location = new Location(669, 58, -12, "IN"),
+            });
+            aerodata.GroundReactions.Add(new GroundReactionElement(aerodata)
+            {
+                Name = "NOSE_CONE",
+                Location = new Location(0, 0, -15, "IN")
+            });
+            aerodata.Engines.Add(new Engine
+            {
+                Name = "F100-PW-229",
+
+                Location = new Location(682, -12, 0, "IN"),
+                Orient = new Location(0, 0, 0, "DEG"),
+            });
+            aerodata.Engines.Add(new Engine
+            {
+                Name = "F100-PW-229",
+
+                Location = new Location(682, 12, 0, "IN"),
+                Orient = new Location(0, 0, 0, "DEG"),
+            });
+            Tank t;
+            t = new Tank("Right Feed line", 489, 38, -47, "IN", 1, 10, "LBS", null);
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Left Feed line", 489, -38, -47, "IN", 2, 10, "LBS", null);
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+
+            t = new Tank("External Tank", 386, 0, -7.83, "IN", 3, 3950, "LBS", 100);
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Right External Wing Tank", 450, 0, -7.83, "IN", 4, 3950, "LBS", 100);
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Left External Wing Tank", 450, 0, -7.83, "IN", 5, 3950, "LBS", 100);
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+
+            t = new Tank("Right Wing Tank", 457.02,130.32,15.35, "IN", 6, 2750, "LBS", 100);
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Left Wing Tank", 457.02,-130.32,15.35, "IN", 7, 2750, "LBS", 100);
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+
+
+            t = new Tank("Tank 1", 307.42,7.48,14.57, "IN", 8, 3300, "LBS", 100);
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+            aerodata.Engines[1].AddFeed(t);
+
+            t = new Tank("Right Engine Feed", 396.79,7.95,-5.51, "IN", 9, 1500, "LBS", null);
+            aerodata.AddTank(t);
+            aerodata.Engines[1].AddFeed(t);
+
+
+            t = new Tank("Left Engine Feed", 453.87, 7.83, 0.79, "IN", 10, 1200, "LBS", null);
+            aerodata.AddTank(t);
+            aerodata.Engines[0].AddFeed(t);
+            
+            aerodata.FuelDumpRate = 910;
+
+            aerodata.ExternalReactions.Add(new ExternalForce
+            {
+                name = "catapult",
+                frame = "BODY",
+                location = new Location(667, 0, 0, "IN"),
+                direction = new Location(1, 0, 0, null),
+            });
+
+            aerodata.ExternalReactions.Add(new ExternalForce
+            {
+                name = "holdback",
+                frame = "BODY",
+                location = new Location(667, 0, 0, "IN"),
+                direction = new Location(-1.0, 0.0, 0.0, null)
+            });
+
+
+            aerodata.ExternalReactions.Add(new ExternalForce
+            {
+                name = "hook",
+                frame = "BODY",
+                location = new Location(300, 0, 0, "IN"),
+                direction = new Location(-0.9995, 0.0, 0.01, null)
+            });
+
+            //aerodata.ExternalReactions.Add(new ExternalForce
+            //{
+            //    frame = "BODY",
+            //    name = "F110-GE-400-1",
+            //    location = new Location(667, 45, 10, "IN"),
+            //    direction = new Location(-0.9995, 0.0, 0.01, null)
+            //});
+
+            //aerodata.ExternalReactions.Add(new ExternalForce
+            //{
+            //    frame = "BODY",
+            //    name = "F110-GE-400-2",
+            //    location = new Location(667, 45, 10, "IN"),
+            //    direction = new Location(-0.9995, 0.0, 0.01, null)
+            //});
+
+
             var EPA43 = aerodata.Add("CNDR MULTIPLIER CLDR, CYDR DUE TO SPEEDBRAKE", "EPA43", "alpha", "speedbrake");
             //var EPA02S = aerodata.Add("BETA MULTIPLIER TABLE (S)", "EPA02S", "beta");
             //var EPA02L = aerodata.Add("BETA MULTIPLIER TABLE (L)", "EPA02L", "beta");
@@ -383,6 +731,7 @@ namespace F14AeroPlot
 
             var CFYB = aerodata.Add("BASIC SIDE FORCE", "CFYB", "alpha", "beta", "elevator");
             //            CFYB.AddFactor("EPA02L");
+            //aerodata.Surfaces.Add(CFYB);
 
             var CFYP = aerodata.Add("SIDE FORCE DUE TO ROLL RATE (CYP)", "CFYP", "alpha");
             CFYP.AddFactor("PB");
@@ -421,6 +770,7 @@ namespace F14AeroPlot
 
             var DCLB = aerodata.Add("DELTA CLB DUE TO 2-PLACE CANOPY", "CMLDCLB", "alpha");
             DCLB.AddFactor("BETA");
+            DCLB.AddFactor("metrics/two-place-canopy");
 
             // CMM
             var CMM1 = aerodata.Add("BASIC PITCHING MOMENT - CM", "CMM1", "alpha", "elevator");
@@ -444,7 +794,7 @@ namespace F14AeroPlot
             CMNR.AddFactor("RB");
 
             var CNDTD = aerodata.Add("YAWING MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION - CNDDT", "CMNDTD", "alpha", "elevator");
-            CNDTD.AddFactor("DTFLX3,DTALD");
+            CNDTD.AddFactor("DTFLX3,0.3,DTALD");
             //            var CNDAD = aerodata.Add("", "CNDAD", "alpha", "aileron");
             var CNDAD = aerodata.Add("YAWING MOMENT DUE TO AILERON DEFLECTION -CNDA", "CMNDAD", "alpha");
             CNDAD.AddFactor("DDA");
@@ -462,6 +812,7 @@ namespace F14AeroPlot
 
             F15_extra.AddExtra(aerodata);
             aerodata.Data["ClMach"].IsFactor = true;
+            aerodata.Data["CdMach"].IsFactor = true;
             aerodata.Data["CyMach"].IsFactor = true;
             aerodata.Data["CLMach"].IsFactor = true;
             aerodata.Data["CMMach"].IsFactor = true;
@@ -470,6 +821,7 @@ namespace F14AeroPlot
                                              aerodata.Data["ClUC"],
                                              aerodata.Data["ClDFM"],
                                              aerodata.Data["ClMach"],
+                                             aerodata.Data["DClRamp"],
                                             /* CFZDE */ });
             aerodata.Compute("DRAG",
                                      new[] { CFX,
@@ -477,15 +829,17 @@ namespace F14AeroPlot
                                      aerodata.Data["CdDBRK"],
                                      aerodata.Data["CdDFM"],
                                      aerodata.Data["CdMach"],
+                                     aerodata.Data["CdTNK"],
+                                     aerodata.Data["DCdRamp"],
                                     /* CFXDE */ });
             aerodata.Compute("SIDE",
                                      new[] { CFYB,
                                      CYDAD,
                                      CYDRD,
                                      CYDTD,
+                                     CYRB,
                                      CFYP,
                                      CFYR,
-                                     aerodata.Data["CdTNK"],
                                      aerodata.Data["CyMach"] 
                                      });
             aerodata.Compute("ROLL",
@@ -506,7 +860,9 @@ namespace F14AeroPlot
 //                                     aerodata.Data["CMBRK"],
                                      aerodata.Data["CMUC"],
                                      aerodata.Data["CMDFM"],
-                                     aerodata.Data["CMMach"] 
+                                     aerodata.Data["CMMach"] ,
+                                     aerodata.Data["DCMRamp"],
+
                                     });
             aerodata.Compute("YAW",
                                      new[] { CMN1,
@@ -516,30 +872,45 @@ namespace F14AeroPlot
                                      CNDTD,
                                      CMNP,
                                      CMNR,
-                                     //aerodata.Data["CNMach"] 
+                                     CNRB,
+                                     aerodata.Data["CNMach"] 
                                      });
             aerodata.Compute("YAW", "(DCNB*BETA)");
-//aero/cadc-control-effectivity-factor
-            CNDAD.AddFactor("CEF");
-            CNDRDr.AddFactor("CEF");
-            CNDTD.AddFactor("CEF");
-            CMM1.AddFactor("CEF");
-            CML1.AddFactor("CEF");
+            //aero/cadc-control-effectivity-factor
+            //CNDAD.AddFactor("CEF");
+            //CNDRDr.AddFactor("CEF");
+            //CNDTD.AddFactor("CEF");
+            //CMM1.AddFactor("CEF");
+            //CML1.AddFactor("CEF");
             var DTOR = 180.0 / Math.PI;
             var DEGRAD = DTOR;
 
+            var min_DELESD = -28;
+            var max_DELESD = 16;
+            min_DELESD = -30;
+            max_DELESD = 30;
+            var min_alpha = -20;
+            var max_alpha = 60;
+            var min_beta = -20;
+            var max_beta = 20;
+            var min_speedbrake = 0;
+            var max_speedbrake = 45;
+
+            var min_rudder = -30.0;
+            var max_rudder = 30.0;
+
             //var aoa = new [] {0,5,10,15,20,25,30,35,40,45,50,55,60};
-            for (var alpha = -20; alpha <= 60; alpha = inc(alpha))
+            for (var alpha = min_alpha; alpha <= max_alpha; alpha = inc(alpha))
             {
-//                var RAL = Math.Abs(alpha / DTOR);
+                //                var RAL = Math.Abs(alpha / DTOR);
                 var RAL = (alpha / DTOR);
 
-                for (var beta1 = -20; beta1 <= 20; beta1 = incbeta(beta1))
+                for (var beta1 = min_beta; beta1 <= max_beta; beta1 = incbeta(beta1))
                 {
                     //var RARUD=0.0;
                     var RBETA = beta1 / DTOR;
                     var RABET = Math.Abs(beta1) / DTOR;
-                    for (double DELESD = -30.0; DELESD <= 30; DELESD += 5)
+                    for (double DELESD = min_DELESD; DELESD <= max_DELESD; DELESD = incelevator(DELESD))
                     {
                         var DELESR = DELESD / DTOR;
                         //var DTFLX5 = 0.975;
@@ -618,7 +989,7 @@ namespace F14AeroPlot
                 // END of beta IV terms
 
                 // Terms (alpha,elevator)
-                for (double DELESD = -30.0; DELESD <= 30; DELESD += 5)
+                for (double DELESD = min_DELESD; DELESD <= max_DELESD; DELESD = incelevator(DELESD))
                 {
                     var DELESR = DELESD / DTOR;
 
@@ -667,6 +1038,7 @@ namespace F14AeroPlot
                     + (0.00120456 * RAL * DELESR) - (0.00168102 * DELESR) + (0.0006462 *
                     +DELESR * DELESR));
                 }
+
                 //for (var beta1 = -20; beta1 <= 20; beta1 += 5)
                 //{
                 //    var DELESR = 1;
@@ -736,9 +1108,9 @@ namespace F14AeroPlot
                 // AND  SPEEDERAKE IS AUTOMATICALLY  RETIRACTED  AT  AOA
                 // GREATER  THAN  15  DEG.  THEREFORE  THIS TABLE  SHOULD NOT BE NECESARY
                 // FOR NORMAL OPERATION
-//                if (alpha >= 0 && alpha < 45)
+                //                if (alpha >= 0 && alpha < 45)
                 {
-                    for (var DSPBD = 0; DSPBD <= 45; DSPBD += 5)
+                    for (var DSPBD = min_speedbrake; DSPBD <= max_speedbrake; DSPBD += 5)
                     {
                         var DSPBR = DSPBD / DTOR;
                         if (RAL >= 15 / DTOR)
@@ -789,7 +1161,7 @@ namespace F14AeroPlot
                         CMNR.Add(alpha, -0.11);
                 }
 
-                for (var rudder = -30; rudder <= 30; rudder += 5)
+                for (var rudder = min_rudder; rudder <= max_rudder; rudder = incrudder(rudder))
                 {
                     var RARUD = rudder / DTOR;
                     CYDRD.Add(alpha, rudder, 0.00310199 + (0.00119963 * RAL) + (0.02806933 * RAL * RAL)
@@ -805,7 +1177,7 @@ namespace F14AeroPlot
                     +(0.00001043751 * RARUD) - (0.00015866 * RARUD * RARUD) + (0.00016133
                     * Math.Pow(RARUD, 3)));
                 }
-                for (double DELESD = -30.0; DELESD <= 30; DELESD += 5)
+                for (double DELESD = min_DELESD; DELESD <= max_DELESD; DELESD = incelevator(DELESD))
                 {
                     var DELESR = DELESD / DTOR;
                     CYDTD.Add(alpha, DELESD, -0.00157745 - (0.0020881 * RAL) + (0.00557239 * RAL * RAL)
@@ -842,7 +1214,7 @@ namespace F14AeroPlot
                     //                + (0.0000007520348 * DELESR * RAL) + (0.000000390773 * DELESR)
                 );
 
-                for (var beta1 = -20; beta1 <= 20; beta1 += 5)
+                for (var beta1 = min_beta; beta1 <= max_beta; beta1 = incbeta(beta1)) //beta1 += 5
                 {
                     var RABET = Math.Abs(beta1) / DTOR;
                     //CYRB (alpha,beta)
@@ -873,7 +1245,8 @@ namespace F14AeroPlot
                     //var CFY=(CFY1*EPA02L)+(CYDAD*DIA)+(CYDRD*DRUDD*DRFLX5*EPA43)+
                     //  ((CYDTD*DTFLX5)*DELEDD)+(CFYP*PB)+(CFYR*RB)+CYRB;
                 }
-                for (var beta1 = -20; beta1 <= 20; beta1 += 5)
+                for (var beta1 = min_beta; beta1 <= max_beta; beta1 = incbeta(beta1)) //beta1 += 5
+                    //for (var beta1 = -20; beta1 <= 20; beta1 += 5)
                 {
                     var RABET = Math.Abs(beta1) / DTOR;
                     //  ROLLING  MOMENT
@@ -937,7 +1310,7 @@ namespace F14AeroPlot
                 //    CMMQ.Add(alpha, 42.24676075 - (709.60757056 * RAL) + (3359.08807193 * RAL * RAL) -
                 //        (7565.32017266 * Math.Pow(RAL, 3)) + (8695.1858091 * Math.Pow(RAL, 4))
                 //        - (4891.77183313 * Math.Pow(RAL, 5)) + (1061.55915089 * Math.Pow(RAL, 6)));
-                if (alpha >-20 )
+                if (alpha > -20)
                 {
                     var A = alpha;
                     var F1 = -4.33509 + A * (-0.141624 + A * (0.0946448 + A * (-0.00798481
@@ -962,7 +1335,7 @@ namespace F14AeroPlot
                         //(20725000.34643054 * Math.Pow(RAL, 8)) - (27829700.53333645 * Math.Pow(RAL, 9)));
                     }
                     else if (A < 12)
-                        CMMQ.Add(alpha, F1 * R2 + F2 * R2);
+                        CMMQ.Add(alpha, F1 * R1 + F2 * R2);
                     else if (A < 40)
                         CMMQ.Add(alpha, F2);
                     else if (A < 45)
@@ -1020,6 +1393,7 @@ namespace F14AeroPlot
             return aerodata;
         }
 
+
         private static double GetEPA02S(int beta1)
         {
             double EPA02S = 0;
@@ -1046,16 +1420,40 @@ namespace F14AeroPlot
 
         private static int inc(int alpha)
         {
-            if (alpha <= -10) return alpha + 1;
-            if (alpha >= 35) return alpha + 5;
+//            return alpha + 2;
+            if (alpha <= -6) return alpha + 1;
+            if (alpha >= 25) return alpha + 5;
             return alpha + 1;
         }
 
         private static int incbeta(int beta)
         {
-            if (beta <= -10) return beta + 10;
-            if (beta >= 10) return beta + 10;
-            return beta + 5;
+//            return beta + 5;
+            if (beta <= -4) return beta + 5;
+            if (beta >= 4) return beta + 5;
+            return beta + 1;
         }
+        private static double incelevator(double deflection)
+        {
+//            return deflection + 5;
+            if (deflection == 15) return 16;
+            if (deflection <= -20) return deflection + 5;
+            if (deflection >= 20) return deflection + 5;
+            return deflection + 1;
+        }
+        private static double incrudder(double rudder)
+        {
+            if (rudder <= -4) return rudder + 5;
+            if (rudder >= 4) return rudder + 5;
+            return rudder + 1;
+        }
+
+
+
+        public string AircraftType { get; set; }
+
+        public string Description { get; set; }
+
+        public decimal? FuelDumpRate { get; set; }
     }
 }

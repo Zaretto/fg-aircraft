@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+    <name>ground-services</name>
+    <layout>vbox</layout>
+    <default-padding>0</default-padding>
+    <modal>false</modal>
+    <width>450</width>
+    <valign>top</valign>
+
+    <group>
+        <layout>hbox</layout>
+        <default-padding>0</default-padding>
+
+        <group>
+            <layout>vbox</layout>
+            <default-padding>1</default-padding>
+
+            <empty>
+                <pref-height>2</pref-height>
+            </empty>
+
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>External Electrical Power Connected</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/systems/electrics/ground-power</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-power</property>
+                    </binding>
+                </checkbox>
+            </group>
+
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>External Air Connected</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Smoke generator</label>
+                </text>
+
+                <checkbox>
+                    <property>sim/model/f15/fx/smoke</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>/sim/model/f15/fx/smoke</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Extended HUD</label>
+                </text>
+
+                <checkbox>
+                    <property>sim/hud/extended-mode</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>sim/hud/extended-mode</property>
+                    </binding>
+                </checkbox>
+            </group>
+        </group>
+
+
+    </group>
+    <hrule/>
+    <group>
+        <layout>hbox</layout>
+        <text>
+            <halign>left</halign>
+            <live>true</live>
+            <format>Tuned Carrier %s : Controls</format>
+            <property>sim/model/f15/tuned-carrier</property>
+            <label></label>
+        </text>
+    </group>
+    <group>
+        <layout>hbox</layout>
+        <slider>
+            <name>CarrierApproachDist</name>
+            <property>sim/presets/carrier-approach-dist-m</property>
+            <live>1</live>
+            <min>0</min>
+            <max>11000</max>
+            <binding>
+                <command>dialog-apply</command>
+                <object-name>CarrierApproachDist</object-name>
+            </binding>
+        </slider>
+        <text>
+            <halign>left</halign>
+            <live>true</live>
+            <format>%8d M</format>
+            <property>sim/presets/carrier-approach-dist-m</property>
+            <label></label>
+        </text>
+        <button>
+            <legend>Carrier Approach Repos</legend>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var np = geo.Coord.new().set_xyz(aircraft.carrier_ara_63_position.x(), aircraft.carrier_ara_63_position.y(), aircraft.carrier_ara_63_position.z());
+                    var magvar=getprop("/orientation/local-mag-dev");
+                    var dist_m = 11000;
+                    if (getprop("sim/presets/carrier-approach-dist-m") != nil)
+                    dist_m  = getprop("sim/presets/carrier-approach-dist-m");
+                    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+                    np.apply_course_distance(aircraft.carrier_ara_63_heading,-dist_m);
+                    var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
+                    print("Position to ",dist_m," height ",gs_height);
+                    setprop("sim/presets/latitude-deg",np.lat());
+                    setprop("sim/presets/longitude-deg",np.lon());
+                    setprop("sim/presets/altitude-ft",gs_height);
+                    setprop("sim/presets/airspeed-kt",140);
+                    setprop("sim/presets/pitch-deg",7);
+                    #setprop("sim/presets/heading-deg",178-magvar);
+                    setprop("sim/presets/heading-deg",aircraft.carrier_ara_63_heading-14-magvar);
+                    setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
+                    setprop("/sim/presets/carrier","");
+                    setprop("/sim/presets/parkpos","");
+                    fgcommand("reposition");
+                    setprop("sim/presets/airspeed-kt",140);
+                    np = geo.Coord.new().set_xyz(aircraft.carrier_ara_63_position.x(), aircraft.carrier_ara_63_position.y(), aircraft.carrier_ara_63_position.z());
+                    np.apply_course_distance(aircraft.carrier_ara_63_heading-116,-50);
+                    setprop("/sim/tower/latitude-deg",np.lat());
+                    setprop("/sim/tower/longitude-deg",np.lon());
+                    setprop("/sim/tower/altitude-ft",np.alt()+100);
+                </script>
+            </binding>
+            <!--      <binding>
+        <command>dialog-close</command>
+      </binding>
+-->
+        </button>
+    </group>
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <legend>Carrier Launch</legend>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var np = geo.Coord.new().set_xyz(aircraft.carrier_ara_63_position.x(), aircraft.carrier_ara_63_position.y(), aircraft.carrier_ara_63_position.z());
+                    var dist_m = 7;
+                    np.apply_course_distance(aircraft.carrier_ara_63_heading,-dist_m);
+                    setprop("sim/presets/latitude-deg",np.lat());
+                    setprop("sim/presets/longitude-deg",np.lon());
+                    setprop("sim/presets/altitude-ft",65.2);
+                    setprop("sim/presets/airspeed-kt",0);
+                    setprop("sim/presets/pitch-deg",0);
+                    setprop("/sim/presets/carrier",aircraft.tuned_carrier_name);
+                    fgcommand("reposition");
+                </script>
+            </binding>
+            <!--      <binding>
+        <command>dialog-close</command>
+      </binding>
+-->
+        </button>
+        <layout>hbox</layout>
+        <default-padding>0</default-padding>
+        <button>
+            <legend>Set Tower to Carrier</legend>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var np = geo.Coord.new().set_xyz(aircraft.carrier_ara_63_position.x(), aircraft.carrier_ara_63_position.y(), aircraft.carrier_ara_63_position.z());
+                    np.apply_course_distance(aircraft.carrier_ara_63_heading-116,-50);
+                    setprop("/sim/tower/latitude-deg",np.lat());
+                    setprop("/sim/tower/longitude-deg",np.lon());
+                    setprop("/sim/tower/altitude-ft",np.alt()+100);
+                </script>
+            </binding>
+        </button>
+    </group>
+    <hrule/>
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <legend>Close</legend>
+            <default>true</default>
+            <key>Esc</key>
+            <binding>
+                <command>dialog-close</command>
+            </binding>
+        </button>
+    </group>
+</PropertyList>

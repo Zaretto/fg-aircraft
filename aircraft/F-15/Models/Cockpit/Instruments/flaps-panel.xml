@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Flaps panel by Richard Harrison; rjh@zaretto.com  -->
+
+<PropertyList>
+    <path>flaps-panel.ac</path>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>hook-switch</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <object-name>hook-switch</object-name>
+        <type>rotate</type>
+        <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>30</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>-10</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6995</x-m>
+            <y-m>-0.411</y-m>
+            <z-m>0.8898</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>flap-transit-light</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <and>
+                    <greater-than>
+                        <property>/surface-positions/flap-pos-norm</property>
+                        <value>0</value>
+                    </greater-than>
+                    <less-than>
+                        <property>/surface-positions/flap-pos-norm</property>
+                        <value>1</value>
+                    </less-than>
+                </and>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>flap-down-light</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <equals>
+                    <property>/surface-positions/flap-pos-norm</property>
+                    <value>1</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+
+
+    <!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-left</inherits-from>
+        <object-name>emerg-lg-panel</object-name>
+    </effect>
+    <!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+
+</PropertyList>

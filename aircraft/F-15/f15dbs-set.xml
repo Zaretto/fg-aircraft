@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<!--
+	F-15 multiplayer back-seater view and control.
+    Based on work by Alexis (xii); in turn based on work by anders.
+-->
+<!--
+	Usage: fgfs - -prop:/sim/remote/pilot-callsign="remote pilot callsign" - -aircraft=f15-bs
+-->
+<PropertyList>
+
+
+
+    <input>
+        <keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml">
+            <!--<multikey include="Models/Cockpit/radios-multikey.xml"/>-->
+
+            <key n="14">
+                <name>Ctrl-n</name>
+                <desc>Toggles Radar PULSE SRCH / TWS AUTO Modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.wcs_mode_toggle()</script>
+                </binding>
+            </key>
+
+            <key n="69">
+                <name>E</name>
+                <desc>Decrease Radar Range</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.range_control(-1);</script>
+                </binding>
+            </key>
+
+            <key n="82">
+                <name>R</name>
+                <desc>Increase Radar Range</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.range_control(1);</script>
+                </binding>
+            </key>
+
+            <key n="104">
+                <name>h</name>
+                <desc>ECM cycle modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>BS_instruments.select_ecm_nav()</script>
+                </binding>
+            </key>
+
+            <key n="113">
+                <name>q</name>
+                <desc>Toggle radar standby mode</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.toggle_radar_standby();</script>
+                </binding>
+            </key>
+
+        </keyboard>
+    </input>
+
+    <instrumentation>
+        <radar>
+            <az-field type="double">120</az-field>
+            <enabled type="bool">true</enabled>
+            <range type="double">120</range>
+            <radar2-range type="double">50</radar2-range>
+            <radar-standby type="int">0</radar-standby>
+            <symbols-enabled type="bool">true</symbols-enabled>
+        </radar>
+        <ecm>
+            <enabled type="bool">true</enabled>
+            <on-off type="bool">true</on-off>
+        </ecm>
+    </instrumentation>
+
+    <sim>
+        <description>F-15D Backseat (multiplayer)</description>
+        <author>Richard Harrison, Anders Gidenstam, Alexis Bory</author>
+        <status>production</status>
+        <aircraft-version>1.2d</aircraft-version>
+
+        <tags>
+            <tag>fighter</tag>
+            <tag>jet</tag>
+            <tag>twin-engine</tag>
+            <tag>retractable-gear</tag>
+            <tag>ifr</tag>
+        </tags>
+        <rating>
+            <FDM type="int">5</FDM>
+            <systems type="int">5</systems>
+            <cockpit type="int">5</cockpit>
+            <model type="int">5</model>
+        </rating>
+
+        <!--<flight-model>jsb</flight-model>
+        <aero>f15a</aero>-->
+
+        <help>
+            <title>F-15D Eagle Backseat</title>
+        </help>
+
+        <startup>
+            <splash-texture>Aircraft/F-15/f15bs-splash.jpg</splash-texture>
+        </startup>
+
+        <gui>
+            <style>
+                <colors>
+                    <splash-screen>
+                        <red>0.57</red>
+                        <green>0.60</green>
+                        <blue>0.60</blue>
+                    </splash-screen>
+                </colors>
+            </style>
+        </gui>
+
+        <flight-model>null</flight-model>
+
+        <help>
+            <key>
+                <name>E</name>
+                <desc>Decrease Radar Range</desc>
+            </key>
+            <key>
+                <name>R</name>
+                <desc>Increase Radar Range</desc>
+            </key>
+            <key>
+                <name>Ctrl-n</name>
+                <desc>Toggles Radar PULSE SRCH / TWS AUTO Mode</desc>
+            </key>
+
+            <key>
+                <name>Ctrl-v</name>
+                <desc>Back to Backseat View.</desc>
+            </key>
+            <title>Grumman F-15 Backseat:</title>
+            <line>NOTE: You will stay standing on the runway until you find a suitable F-15 to jump into.</line>
+            <line>In the F-15 Menu  (Hit F10 if needed) choose 'Select MP-pilot', a small window appears with a list of available pilots.</line>
+            <line>You must choose a currently flying pilot in order to take place in the F-15 back seat.</line>
+            <line>As you check the box for an existing pilot, the message "Welcome on board willappear on the screen. You'll will have to wait a bit before the aircraft loads</line>
+        </help>
+
+        <menubar>
+            <default>
+                <menu n="50">
+                    <label>F-15 Controls</label>
+                    <item>
+                        <label>Select MP pilot</label>
+                        <binding>
+                            <command>nasal</command>
+                            <script>
+                                dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_type);
+                            </script>
+                        </binding>
+                    </item>
+                </menu>
+            </default>
+        </menubar>
+
+
+        <model>
+
+            <path>Models/f15-bs.xml</path>
+            <!--<variant type="string">f15-bs</variant>-->
+            <variant>D</variant>
+
+            <f15>
+                <backseat-load-network-required type="int">1</backseat-load-network-required>
+                <controls>
+                    <HSD>
+                        <on-off type="bool">true</on-off>
+                    </HSD>
+
+                    <pilots-displays>
+                        <steer-submode-code type="int">3</steer-submode-code>
+                    </pilots-displays>
+
+                    <radar-awg-9>
+                        <on-off type="bool">true</on-off>
+                        <brightness type="double">1</brightness>
+                    </radar-awg-9>
+
+                    <rio-ecm-display>
+                        <mode-ecm-nav type="bool">false</mode-ecm-nav>
+                        <!-- false = NAV, true = ECM -->
+                        <!-- steer-submode-code selected by the pilot-->
+                    </rio-ecm-display>
+
+                    <TID>
+                        <on-off type="bool">true</on-off>
+                        <brightness type="double">1</brightness>
+                    </TID>
+
+                    <VDI>
+                        <brightness type="double">1</brightness>
+                    </VDI>
+
+                </controls>
+
+                <instrumentation>
+
+                    <airspeed-indicator>
+                        <safe-speed-limit-bug type="double">830</safe-speed-limit-bug>
+                    </airspeed-indicator>
+
+                    <hsd>
+                        <needle-deflection type="double">0.00</needle-deflection>
+                    </hsd>
+
+                    <radar>
+                        <az-field type="double">120</az-field>
+                        <enabled type="bool">true</enabled>
+                        <range type="double">120</range>
+                        <!--<radar2-range type="double">50</radar2-range>-->
+                        <radar-standby type="bool">0</radar-standby>
+                        <symbols-enabled type="bool">true</symbols-enabled>
+                    </radar>
+
+                    <radar-altimeter>
+                        <limit-bug type="double">250</limit-bug>
+                    </radar-altimeter>
+
+                    <tacan>
+                        <xy-switch type="bool">0</xy-switch>
+                        <nogo-lamp type="bool">false</nogo-lamp>
+                        <go-lamp type="bool">false</go-lamp>
+                        <mode type="int">0</mode>
+                    </tacan>
+
+                    <rio-nav-display>
+                        <ready-light type="bool">false</ready-light>
+                        <track-hold-light type="bool">false</track-hold-light>
+                        <clsn-light type="bool">false</clsn-light>
+                        <!--Constant Angle Collision Steering enabled-->
+                    </rio-nav-display>
+
+                    <radar-awg-9>
+                        <ccm-mode-spl type="bool">false</ccm-mode-spl>
+                        <ccm-mode-alt-dhf type="bool">false</ccm-mode-alt-dhf>
+                        <ccm-mode-trs type="bool">false</ccm-mode-trs>
+                        <display-rdr type="bool">true</display-rdr>
+                        <display-ir type="bool">false</display-ir>
+                        <display-iff type="bool">false</display-iff>
+                        <ant-trk-light type="bool">false</ant-trk-light>
+                        <rd-rot-light type="bool">false</rd-rot-light>
+                        <jat-light type="bool">false</jat-light>
+                        <irot-light type="bool">false</irot-light>
+                        <wcs-mode>
+                            <pd-stt type="bool">false</pd-stt>
+                            <pulse-stt type="bool">false</pulse-stt>
+                            <pd-srch type="bool">false</pd-srch>
+                            <rws type="bool">false</rws>
+                            <tws-auto type="bool">false</tws-auto>
+                            <tws-man type="bool">false</tws-man>
+                            <pulse-srch type="bool">true</pulse-srch>
+                        </wcs-mode>
+                    </radar-awg-9>
+
+                </instrumentation>
+
+            </f15>
+
+        </model>
+
+        <multiplay>
+            <generic>
+                <!-- <float n="0">0</float> wing-sweep     -->
+                <!-- <float n="1">0</float> free     -->
+                <!-- <float n="2">0</float>aux flaps      -->
+                <!-- <float n="3">0</float>slats          -->
+                <!-- <float n="4">0</float>left elevator  -->
+                <!-- <float n="5">0</float>right elevator -->
+                <!-- <float n="6">0</float>refuel probe   -->
+                <int n="0" type="int">0</int>
+                <!-- bs_switches1_mpp      -->
+                <!-- <int n="1" type="int">0</int>    formation slimmers -->
+                <int n="2" type="int">1</int>
+                <!-- force radar standby transmission over MP -->
+                <!-- <int n="3" type="int">0</int>    collision lights -->
+                <!-- <int n="4" type="int">0</int>    position lights -->
+                <!-- <int n="5" type="int">0</int>    left wing torn -->
+                <!-- <int n="6" type="int">0</int>    right wing torn -->
+                <string n="0" type="string"></string>
+                <!-- bs_TDM1_mpp -->
+                <string n="1" type="string"></string>
+                <!-- pilot's instruments -->
+            </generic>
+        </multiplay>
+
+        <presets>
+            <onground type="bool">false</onground>
+            <altitude-agl-ft type="double">30.0</altitude-agl-ft>
+        </presets>
+
+        <rendering>
+
+            <camera-group>
+                <znear type="double">0.20</znear>
+            </camera-group>
+
+            <redout>
+                <parameters>
+                    <blackout-complete-g>7.9</blackout-complete-g>
+                    <blackout-onset-g>5.5</blackout-onset-g>
+                </parameters>
+            </redout>
+
+        </rendering>
+
+        <sound>
+            <audible>false</audible>
+            <path/>
+        </sound>
+
+        <!-- Aircraft specific help. -->
+        <!-- help include="help.xml"/ -->
+
+        <systems>
+            <electrical>
+                <path/>
+            </electrical>
+        </systems>
+
+        <!-- Views -->
+        <view n="0">
+            <name>Backset View</name>
+            <type>lookfrom</type>
+            <internal archive="y">true</internal>
+            <config>
+                <from-model type="bool">true</from-model>
+                <ground-level-nearplane-m type="double">0.5f</ground-level-nearplane-m>
+                <x-offset-m archive="y">0.0</x-offset-m>
+                <y-offset-m archive="y">1.6</y-offset-m>
+                <z-offset-m archive="y">-3.46</z-offset-m>
+                <pitch-offset-deg>-14.7</pitch-offset-deg>
+                <default-field-of-view-deg>90</default-field-of-view-deg>
+                <limits>
+                    <enabled type="bool">true</enabled>
+                    <left>
+                        <heading-max-deg type="double">161</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
+                        <x-offset-threshold-deg type="double">45</x-offset-threshold-deg>
+                    </left>
+                    <right>
+                        <heading-max-deg type="double">161</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
+                        <x-offset-threshold-deg type="double">45</x-offset-threshold-deg>
+                    </right>
+                </limits>
+            </config>
+        </view>
+
+        <view n="1">
+            <config>
+                <at-model type="bool">false</at-model>
+            </config>
+        </view>
+        <view n="2">
+            <config>
+                <at-model type="bool">false</at-model>
+            </config>
+        </view>
+        <view n="3">
+            <config>
+                <at-model type="bool">false</at-model>
+            </config>
+        </view>
+        <view n="5">
+            <config>
+                <at-model type="bool">false</at-model>
+            </config>
+        </view>
+        <view n="6">
+            <config>
+                <at-model type="bool">false</at-model>
+            </config>
+        </view>
+        <!--<view n="100">
+            <name>Cockpit View</name>
+            <type>lookfrom</type>
+            <internal archive="y">true</internal>
+            <config>
+                <x-offset-m archive="y">0.0</x-offset-m>
+                <y-offset-m archive="y">1.457499884</y-offset-m>
+                <z-offset-m archive="y">-5</z-offset-m>
+                <pitch-offset-deg>-14.7</pitch-offset-deg>
+                <default-field-of-view-deg>55</default-field-of-view-deg>
+            </config>
+        </view>-->
+
+    </sim>
+
+    <nasal>
+        <aircraft>
+            <file>Nasal/VSD/VSD_main.nas</file>
+        </aircraft>
+        <radardist>
+            <file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
+        </radardist>
+        <awg_9>
+            <file>Nasal/awg_9.nas</file>
+        </awg_9>
+        <dual_control_tools>
+            <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
+        </dual_control_tools>
+        <aircraft_dual_control>
+            <file>Nasal/dual-control.nas</file>
+        </aircraft_dual_control>
+        <dual_control>
+            <file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
+        </dual_control>
+        <BS_instruments>
+            <file>Nasal/back-seat-instruments.nas</file>
+        </BS_instruments>
+    </nasal>
+    <fdm>
+        <jsbsim>
+            <metrics>
+                <two-place-canopy type="int">1</two-place-canopy>
+            </metrics>
+        </jsbsim>
+    </fdm>
+</PropertyList>
