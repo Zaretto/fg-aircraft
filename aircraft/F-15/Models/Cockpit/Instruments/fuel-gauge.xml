@@ -1,0 +1,455 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Fuel Gauge by Richard Harrison rjh@zaretto.com-->
+
+<PropertyList>
+    <name>fuel-gauge</name>
+    <path>fuel-gauge.ac</path>
+
+    <animation>
+        <type>select</type>
+        <object-name>off-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>fuel-display-selector</object-name>
+        <property>sim/model/f15/controls/fuel/display-selector</property>
+        <!-- or property as usual for rotate animation -->
+        <factor>-45</factor>
+        <offset-deg>135</offset-deg>
+        <center>
+            <x-m>-5.6738</x-m>
+            <y-m>0.3404</y-m>
+            <z-m>0.8416</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/fuel/display-selector</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>6</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <!-- Release action, limit to 0 and 1. 2 is spring loaded starter position -->
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/fuel/display-selector</property>
+                <step>0</step>
+                <min>1</min>
+                <max>6</max>
+            </binding>
+        </release>
+        <!-- explicit increase binding, action binding still runs too -->
+        <!--<increase>
+            <binding>
+                <command>nasal</command>
+                <script>debug.dump('was increased', cmdarg().getNode('offset').getValue());</script>
+           </binding>
+        </increase>-->
+        <!-- explicit decrease binding, action binding still runs too -->
+        <!--
+        <decrease>
+            <binding>....</binding>
+        </decrease>-->
+    </animation>
+
+    <!-- Bingo -->
+    <animation>
+        <type>rotate</type>
+        <object-name>bingo-bug</object-name>
+        <property>sim/model/f15/controls/fuel/bingo</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-105</dep>
+            </entry>
+            <entry>
+                <ind>15000</ind>
+                <dep>110</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+        <center>
+            <x-m>-5.6888</x-m>
+            <y-m>0.3406</y-m>
+            <z-m>0.8943</z-m>
+        </center>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>bingo-knob</object-name>
+        <property>sim/model/f15/controls/fuel/bingo</property>
+        <factor>0.048</factor>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+        <center>
+            <x-m>-5.7034</x-m>
+            <y-m>0.3713</y-m>
+            <z-m>0.9073</z-m>
+        </center>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/fuel/bingo</property>
+                <factor>500</factor>
+                <min>0</min>
+                <max>15000</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>needle</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>15000</ind>
+                <dep>215</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+        <center>
+            <x-m>-5.6888</x-m>
+            <y-m>0.3406</y-m>
+            <z-m>0.8943</z-m>
+        </center>
+    </animation>
+    <!--Total -->
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-1</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.00001</factor>
+        <offset>-10000</offset>
+        <step>10000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-2</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-3</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-4</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- Left -->
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-1</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-2</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-3</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>L-4</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/left-display</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- Right -->
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-1</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>0.5</scroll>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-2</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-3</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>R-4</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/right-display</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- lighting -->
+    <!--<animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>-->
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-right</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+    <effect>
+        <name>f15panel-knob</name>
+        <inherits-from>Effects/f15panel-knob</inherits-from>
+        <object-name>fuel-display-selector</object-name>
+        <object-name>bingo-knob</object-name>
+    </effect>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+
+</PropertyList>

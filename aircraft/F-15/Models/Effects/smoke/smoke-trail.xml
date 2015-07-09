@@ -1,0 +1,138 @@
+<!-- F-15 Smoke generator (like in airshows)
+   |  Located at the back in a location that looks good rather than being accurate 
+   |  Richard Harrison: 2015-01 : rjh@zaretto.com 
+-->
+<PropertyList>
+    <particlesystem>
+        <name>Smoke Generator</name>
+        <texture>vapour.png</texture>
+
+        <emissive type="bool">false</emissive>
+        <lighting type="bool">false</lighting>
+
+        <condition>
+            <property>sim/model/f15/fx/smoke</property>
+        </condition>
+
+        <attach>world</attach>
+
+        <placer>
+            <type>point</type>
+        </placer>
+
+        <shooter>
+            <theta-min-deg>89</theta-min-deg>
+            <theta-max-deg>91</theta-max-deg>
+            <phi-min-deg>0</phi-min-deg>
+            <phi-max-deg>0</phi-max-deg>
+            <speed-mps>
+                <value>27</value>
+                <spread>2</spread>
+            </speed-mps>
+            <rotation-speed>
+                <x-min-deg-sec>0</x-min-deg-sec>
+                <y-min-deg-sec>0</y-min-deg-sec>
+                <z-min-deg-sec>-180</z-min-deg-sec>
+                <x-max-deg-sec>0</x-max-deg-sec>
+                <y-max-deg-sec>0</y-max-deg-sec>
+                <z-max-deg-sec>180</z-max-deg-sec>
+            </rotation-speed>
+        </shooter>
+
+        <counter>
+            <particles-per-sec>
+                <value>190</value>
+                <spread>91</spread>
+            </particles-per-sec>
+        </counter>
+
+        <align>billboard</align>
+
+        <particle>
+            <start>
+                <color>
+                    <red>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </red>
+                    <green>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </green>
+                    <blue>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </blue>
+                    <alpha>
+                        <value> 0.6 </value>
+                    </alpha>
+                </color>
+                <size>
+                    <value>2.5</value>
+                </size>
+            </start>
+
+            <end>
+                <color>
+                    <red>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </red>
+                    <green>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </green>
+                    <blue>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </blue>
+                    <alpha>
+                        <value> 0.00000001</value>
+                    </alpha>
+                </color>
+                <size>
+                    <value>2.75</value>
+                </size>
+            </end>
+
+            <life-sec>
+                <value>20</value>
+            </life-sec>
+
+            <mass-kg>71.9</mass-kg>
+            <radius-m>1</radius-m>
+        </particle>
+
+        <program>
+            <fluid>               air  </fluid>
+            <gravity type="bool"> false </gravity>
+            <wind typ="bool">     true </wind>
+        </program>
+
+    </particlesystem>
+
+</PropertyList>

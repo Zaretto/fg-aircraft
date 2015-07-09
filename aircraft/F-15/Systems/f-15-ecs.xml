@@ -1,0 +1,408 @@
+<?xml version="1.0"?>
+
+<!--
+        Description: F15 ECS 
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: (1) Electrical windshield heating NACA-SR-105 http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/20090015088.pdf
+        F-15 Canopy: 4.5 m2
+        F-15 Windshield: 1.38 m2
+        Total power for heating;1.2kw (calculated based on above paper is 13kw at 1.47 w/in2 (18kw at 2.2w/in2) - I'm using 1.2kw as it seems to work better.
+    -->
+
+
+<system name="ECS">
+
+  <!--<property value="0">systems/apc/target-vc-kts</property>-->
+  <property value="1">systems/ecs/pressurisation-active</property>
+  <property value="0">systems/ecs/emerg-vent</property>
+
+  <!--0 : BOTH
+    1 : Right
+    2 : Off
+    3 : Left -->
+  <property value="0">systems/ecs/bleed-air-source</property>
+
+  <property value="0">systems/ecs/liquid-oxygen-activated</property>
+  <property value="0">systems/ecs/oxygen-qty-test</property>
+  <!-- 0 off, 1 normal, 2 emerg-->
+  <property value="0">systems/ecs/oxygen-supply-mode</property>
+  <property value="0">systems/ecs/anti-fog</property>
+  <property value="0">systems/ecs/windshield-heat</property>
+  <property>systems/ecs/oxygen-quantity-liters</property>
+  <property>systems/ecs/cabin-altitude-ft</property>
+  <property>systems/ecs/oxygen-pressure-psi</property>
+<!--Windscreen Heating-->
+  <property value="6750">systems/ecs/windscreen-factor1</property>
+  <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
+
+  <property value="46">systems/ecs/windscreen-heater-watts-second</property> <!--Watts per second ramp up on heater input consumption-->
+  <property value="290">systems/ecs/windscreen-temperature-k</property>
+  <property>systems/ecs/windscreen-heater-power-watts</property>
+
+  <channel name="Oxygen">
+
+    <switch name="systems/ecs/oxygen-converter-qty-dmd">
+      <default value="1000"/>
+      <test value="0">
+        simulation/sim-time-sec gt 100
+      </test>
+    </switch>
+    <switch name="systems/ecs/oxygen-converter-rate">
+      <default value="0.01"/>
+      <test value="1">
+        systems/ecs/oxygen-converter-qty-dmd gt systems/ecs/oxygen-converter-rate
+      </test>
+    </switch>
+    <actuator name="systems/ecs/oxygen-converter-qty">
+      <input>systems/ecs/oxygen-converter-qty-dmd</input>
+      <rate_limit>systems/ecs/oxygen-converter-rate</rate_limit>
+      <output>systems/ecs/oxygen-converter-qty</output>
+    </actuator>
+    <switch name="systems/ecs/oxygen-pressure-psi-dmd">
+      <default value="80"/>
+      <test value="0">
+        systems/electrics/ac-left-main-bus lt 20
+      </test>
+      <test value="65">
+        systems/ecs/oxygen-supply-mode eq 1
+      </test>
+      <test value="55">
+        systems/ecs/oxygen-supply-mode eq 2
+      </test>
+      <test value="78">
+        simulation/sim-time-sec gt 1000
+      </test>
+    </switch>
+    <switch name="systems/ecs/oxygen-pressure-change-rate">
+      <default value="1"/>
+      <test value="0.1">
+        systems/ecs/oxygen-pressure-psi-dmd lt systems/ecs/oxygen-pressure-psi
+      </test>
+    </switch>
+    <actuator name="systems/ecs/oxygen-pressure-psi">
+      <input>systems/ecs/oxygen-pressure-psi-dmd</input>
+      <rate_limit>systems/ecs/oxygen-pressure-change-rate</rate_limit>
+      <output>systems/ecs/oxygen-pressure-psi</output>
+    </actuator>
+
+    <switch name="systems/ecs/oxygen-quantity-liters-dmd">
+      <default value="5"/>
+      <test value="0">
+        systems/ecs/oxygen-qty-test ne 0
+      </test>
+      <test value="systems/ecs/oxygen-quantity-liters">
+        systems/ecs/oxygen-quantity-liters lt systems/ecs/oxygen-quantity-liters-dmd
+      </test>
+      <test value="0">
+        systems/ecs/liquid-oxygen-activated ne 0
+      </test>
+    </switch>
+    <switch name="systems/ecs/oxygen-quantity-liters-rate">
+      <default value="5"/>
+      <test value="1">
+        systems/ecs/oxygen-qty-test ne 0
+      </test>
+      <test value="0.006">
+        systems/ecs/oxygen-quantity-liters-dmd lt systems/ecs/oxygen-quantity-liters
+      </test>
+    </switch>
+    <actuator name="oxygen-quantity-liters">
+      <input>systems/ecs/oxygen-quantity-liters-dmd</input>
+      <rate_limit>systems/ecs/oxygen-quantity-liters-rate</rate_limit>
+      <output>systems/ecs/oxygen-quantity-liters</output>
+    </actuator>
+
+  </channel>
+  <channel name="Pressurisation">
+
+    <switch name="systems/ecs/pressurisation-active">
+      <default value="0.0"/>
+      <test value="0">
+        systems/ecs/emerg-vent ne 0
+      </test>
+      <test value="0">
+        systems/ecs/bleed-air-source eq 2
+      </test>
+      <test value="1" logic="AND">
+        propulsion/engine[0]/set-running ne 0
+        systems/ecs/emerg-vent eq 0
+        systems/ecs/bleed-air-source eq 3
+      </test>
+      <test value="1" logic="AND">
+        propulsion/engine[1]/set-running ne 0
+        systems/ecs/emerg-vent eq 0
+        systems/ecs/bleed-air-source eq 1
+      </test>
+      <test value="1" logic="AND">
+        propulsion/engine[0]/set-running ne 0
+        systems/ecs/emerg-vent eq 0
+        systems/ecs/bleed-air-source eq 0
+      </test>
+      <test value="1" logic="AND">
+        propulsion/engine[1]/set-running ne 0
+        systems/ecs/emerg-vent eq 0
+        systems/ecs/bleed-air-source eq 0
+      </test>
+    </switch>
+
+    <!-- rate of change - these values are guesstimated -->
+    <switch name="systems/ecs/cabin-altitude-change-rate">
+      <default value="100"/>
+      <test value="5500">
+        <!-- rapid when dump vent open-->
+        systems/ecs/emerg-vent ne 0
+      </test>
+      <test value="5500">
+        <!-- assuming that outside to inside will be also quick when descending -->
+        systems/ecs/cabin-altitude-ft gt position/h-sl-ft
+      </test>
+      <test value="60">
+        <!-- when turned off the change will be more gradual-->
+        systems/ecs/pressurisation-active eq 0
+      </test>
+    </switch>
+
+    <fcs_function name="systems/ecs/scheduled-pressure">
+      <description>Cockpit pressure schedule; TO 1F-15A-1 figure 1-54 </description>
+      <function>
+        <table>
+          <independentVar lookup="row">position/h-sl-ft</independentVar>
+          <tableData>
+            -10000  -10000
+            0	0
+            5044	5077
+            8053	7846
+            23805	7846
+            25486	9230
+            30000	11769
+            34956	14077
+            45044	18692
+            50177	20539
+            55044	21462
+            60000	22615
+          </tableData>
+        </table>
+      </function>
+    </fcs_function>
+
+
+    <switch name="systems/ecs/cabin-altitude-ft-dmd">
+      <default value="0"/>
+      <test value="position/h-sl-ft">
+        systems/ecs/emerg-vent gt 0
+      </test>
+      <test value="position/h-sl-ft">
+        systems/ecs/pressurisation-active eq 0
+      </test>
+      <test value="systems/ecs/scheduled-pressure">
+        systems/ecs/pressurisation-active eq 1
+      </test>
+
+    </switch>
+
+    <actuator name="systems/ecs/cabin-alt-actuator">
+      <input>systems/ecs/cabin-altitude-ft-dmd</input>
+      <rate_limit>systems/ecs/cabin-altitude-change-rate</rate_limit>
+      <output>systems/ecs/cabin-altitude-ft</output>
+    </actuator>
+  </channel>
+  <channel name="Temperature">
+    
+<!-- simple model of windshield heating.-->
+
+  <fcs_function name="systems/ecs/windscreen-oat-k">
+      <description>OAT Degrees K</description>
+      <function>
+        <product>
+          <!--OAT Adjusted to degrees K-->
+          <property>atmosphere/T-R </property>
+          <value> 0.555555556 </value>
+        </product>
+      </function>
+    </fcs_function>
+
+    <switch name="systems/ecs/windscreen-heat-active">
+      <default value="0.0"/>
+      <test value="1" logic="AND">
+        systems/ecs/windshield-heat ne 0
+        systems/electrics/ac-left-main-bus-powered ne 0
+      </test>
+    </switch>
+
+  <!-- current value of temperature (so we can add to it)-->
+    <switch name="systems/ecs/windscreen-lv-temperature">
+      <default value="systems/ecs/windscreen-temperature-k"/>
+        <!--<test value="systems/ecs/windscreen-oat-k" logic="AND">
+            systems/ecs/windscreen-heat-active eq 0
+            systems/ecs/windscreen-lv-temperature eq 0
+        </test>-->
+        <test value="283" logic="AND">
+            <!--systems/ecs/windscreen-heat-active gt 0-->
+            systems/ecs/windscreen-lv-temperature eq 0
+        </test>
+    </switch>
+
+      
+      <switch name="systems/ecs/windscreen-heater-power-lv-watts">
+          <default value="systems/ecs/windscreen-heater-power-watts"/>
+          <test value="400" logic="AND">
+              systems/ecs/windscreen-heat-active ne 0
+              systems/ecs/windscreen-heater-power-watts lt 400  <!--power on-->
+          </test>
+          <test value="0" logic="AND">
+              systems/ecs/windscreen-heat-active eq 0
+          </test>
+      </switch>
+
+      <!-- The power that the heater will draw diminshes with the difference in temperature.-->
+    <fcs_function name="systems/ecs/windscreen-heater-power-watts">
+      <function>
+          <ifthen>
+              <ge> <property>systems/ecs/windscreen-temperature-difference-k</property> <value>80</value> </ge>
+              <value>0</value>
+              <sum>
+                  <property>systems/ecs/windscreen-heater-power-lv-watts</property>
+                  <product>
+                      <property>systems/ecs/windscreen-heater-watts-second</property>
+                      <property>simulation/dt</property>
+                  </product>
+              </sum>
+          </ifthen>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 600  </max>
+      </clipto>
+    </fcs_function>
+    <!--- Temp= Temp+ Dt*(0.2 * HeaterPowerWatts) - (0.003 * (Temp - OatK)-->
+
+    <fcs_function name="systems/ecs/windscreen-temperature-difference-k">
+      <description>Temperate difference between OAT and windscreen</description>
+      <function>
+        <difference>
+          <property>systems/ecs/windscreen-temperature-k</property>
+          <product>
+            <!--OAT Adjusted to degrees K-->
+            <property>atmosphere/T-R </property>
+            <value> 0.555555556 </value>
+          </product>
+        </difference>
+      </function>
+    </fcs_function>
+
+      <fcs_function name="systems/ecs/windscreen-heater-power-watts-delta">
+          <function>
+              <table>
+                  <independentVar lookup="row">systems/ecs/windscreen-temperature-difference-k</independentVar>
+                  <tableData>
+                      0	1.00000
+                      10	0.92255
+                      20	0.88908
+                      30	0.84949
+                      40	0.80103
+                      50	0.73856
+                      60	0.65051
+                      70	0.22000
+                      79	0.02000
+                      80	0.00000
+                  </tableData>
+              </table>
+          </function>
+      </fcs_function>
+      <!-- 
+         - we are modelling the temperature based on the heater power
+         - HeaterPower is based on a ramped value taking into account 
+         - Temp= Temp+ Dt*(0.2 * HeaterPowerWatts) - (0.003 * (Temp - OatK)
+       -->
+
+      <fcs_function name="systems/ecs/windscreen-temperature-k">
+          <description>Windscreen temperate K</description>
+          <function>
+              <sum>
+                  <property>systems/ecs/windscreen-lv-temperature</property>
+                  <product>
+                      <property>simulation/dt</property>
+                      <difference>
+                          <product>
+                              <value>0.0017</value>
+                              <product>
+                                  <property>systems/ecs/windscreen-heater-power-watts-delta</property>
+                                  <property>systems/ecs/windscreen-heater-power-watts</property>
+                              </product>
+                          </product>
+                          <product>
+                              <value>0.003</value>
+                              <property>systems/ecs/windscreen-temperature-difference-k</property>
+                          </product>
+                      </difference>
+                  </product>
+              </sum>
+          </function>
+      </fcs_function>
+
+      <fcs_function name="systems/ecs/windscreen-temperature-c">
+      <description>Windscreen temperate degrees C</description>
+      <function>
+        <sum>
+          <property>systems/ecs/windscreen-temperature-k</property>
+          <value>-273</value>
+        </sum>
+      </function>
+    </fcs_function>
+    
+    <!-- Frost formation:
+           Frost formation requires clear sky, little or now wind, a fairly moist atmosphere and time. 
+           The adjacent air layer becomes chilled by radiation and conduction; a large mass of air above the surface 
+           (cloudless skies, high clouds, outside of hangar etc) are factors in this process since a heat loss from the
+           surfaces is required as condensation takes place; which becomes frost if the dew point is below freezing.
+           So the conditions we need are
+           1. Sufficient relative humidity
+           2. Dew point below freezing
+           3. no surface heating.
+           
+           environment/dewpoint-degc
+           environment/temperature-degc
+           environment/relative-humidity
+       -->
+
+    <switch name="systems/ecs/windscreen-frost-dmd">
+      <default value="0"/>
+      <test value="1">
+        <!--systems/ecs/windscreen-temperature-k lt 289-->
+        <!--/environment/dewpoint-degc lt systems/ecs/windscreen-temperature-c-->
+        /environment/dewpoint-degc lt 0
+        /environment/relative-humidity gt 50
+        systems/ecs/windscreen-temperature-c lt 0
+      </test>
+    </switch>
+
+  <!-- amount of frosting based on window temperature ; between 0 and -10 it is proportionate; after this is it simply fully frosted-->
+    <fcs_function name="systems/ecs/windscreen-frost-amount-dmd">
+      <description>Windscreen frosting amount</description>
+      <function>
+        <product>
+          <property>systems/ecs/windscreen-frost-dmd</property>
+          <sum>
+            <sum>
+              <property>systems/ecs/windscreen-temperature-k</property>
+              <value>-273</value>
+            </sum>
+          </sum>
+          <value>-0.1</value>
+        </product>
+      </function>
+      <clipto>
+        <min> 0 </min>
+        <max> 1.0  </max>
+      </clipto>
+      <output>systems/ecs/windscreen-frost-amount</output>
+    </fcs_function>
+    <!-- use an actuator to gradually feed in and out frosting-->
+    <actuator name="systems/ecs/windscreen-frost-amount">
+      <input>systems/ecs/windscreen-frost-amount-dmd</input>
+      <rate_limit>systems/ecs/windscreen-frost-amount-dmd-rate</rate_limit>
+      <output>systems/ecs/windscreen-frost-amount</output>
+    </actuator>
+  </channel>
+
+</system>

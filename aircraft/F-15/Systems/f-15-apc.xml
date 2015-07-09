@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+
+<!--
+        Description: F15 autothrottle. based on f-14 APC
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 p2-27, p17-3
+                    JSBSim p51d/Systems/autothrottle.xml
+    -->
+
+
+<system name="APC">
+
+    <property value="1.2"> systems/apc/pid-kp </property>
+    <property value="0.002"> systems/apc/pid-ki </property>
+    <property value="0.0034"> systems/apc/pid-kd </property>
+    <property value="0.3"> systems/apc/throttle-gain </property>
+
+    <property value="23.12"> systems/apc/lag-constant </property>
+    <property value="335"> systems/apc/max-KTS </property>
+    <property value="0">systems/apc/target-vc-kts</property>
+    <property value="0">systems/apc/active</property>
+
+    <channel name="APC">
+
+        <!-- ensure within operating envelope -->
+        <switch name="systems/apc/trigger">
+            <default value="0.0"/>
+
+            <test value="1.0">
+                <and>
+                    propulsion/engine[0]/set-running == 0
+                    propulsion/engine[1]/set-running == 0
+                    systems/apc/active ne 0
+                    systems/apc/target-vc-kts gt 110
+                    gear/unit[0]/WOW eq 0
+                    gear/unit[1]/WOW eq 0
+                    gear/unit[2]/WOW eq 0
+                </and>
+            </test>
+
+        </switch>
+
+        <summer name="systems/apc/divergence">
+            <input> systems/apc/target-vc-kts </input>
+            <input> -velocities/vc-kts </input>
+            <clipto>
+                <min>-systems/apc/max-KTS </min>
+                <max> systems/apc/max-KTS </max>
+            </clipto>
+        </summer>
+
+        <lag_filter name="systems/apc/divergence-lag">
+            <input> systems/apc/divergence </input>
+            <c1> systems/apc/lag-constant </c1>
+        </lag_filter>
+
+        <switch name="systems/apc/switch">
+            <default value="0.0"/>
+            <test value="systems/apc/divergence-lag">
+                systems/apc/active == 1
+            </test>
+        </switch>
+
+        <pid name="systems/apc/divergence-pid">
+            <input>systems/apc/switch</input>
+            <kp> systems/apc/pid-kp </kp>
+            <ki> systems/apc/pid-ki </ki>
+            <kd> systems/apc/pid-kd </kd>
+            <trigger> systems/apc/trigger </trigger>
+        </pid>
+
+        <pure_gain name="systems/apc/divergence-pid-contents">
+            <input> systems/apc/divergence-pid </input>
+            <gain> 1.0 </gain>
+            <output>systems/apc/divergence-pid-contents</output>
+        </pure_gain>
+
+        <pure_gain name="systems/apc/throttle-cmd-out">
+            <input> systems/apc/divergence-pid </input>
+            <gain> systems/apc/throttle-gain </gain>
+            <clipto>
+                <min> -1</min>
+                <max> 0.88</max>
+            </clipto>
+            <output>systems/apc/throttle-cmd-delta</output>
+        </pure_gain>
+
+        <switch name="systems/apc/throttle-cmd[0]">
+            <default value="fcs/throttle-cmd-norm[0]"/>
+            <test value="systems/apc/throttle-cmd-delta">
+                systems/apc/active == 1
+            </test>
+        </switch>
+
+        <switch name="systems/apc/throttle-cmd[1]">
+            <default value="fcs/throttle-cmd-norm[1]"/>
+            <test value="systems/apc/throttle-cmd-delta">
+                systems/apc/active == 1
+            </test>
+        </switch>
+
+        <!--<summer name="systems/apc/throttle[0]">
+            <input>systems/apc/throttle-cmd[0]</input>
+            <clipto>
+                <min> 0</min>
+                <max>  1</max>
+            </clipto>
+            <output>fcs/throttle-pos-norm[0]</output>
+        </summer>
+
+        <summer name="systems/apc/throttle[1]">
+            <input>systems/apc/throttle-cmd[1]</input>
+            <clipto>
+                <min> 0</min>
+                <max>  1</max>
+            </clipto>
+            <output>fcs/throttle-pos-norm[1]</output>
+        </summer>-->
+    </channel>
+</system>

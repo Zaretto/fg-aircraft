@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!-- F15 submodels; Richard Harrison (rjh@zaretto.com), 2015-02-15 based on F-14 by xii-->
+
+<PropertyList>
+    <submodel>
+        <name>ExtTank-L</name>
+        <model>Models/Stores/Ext-Tanks/exttank-submodel.xml</model>
+        <trigger>controls/armament/station[1]/jettison-all</trigger>
+        <speed>0</speed>
+        <repeat>false</repeat>
+        <count>1</count>
+        <x-offset>1.1421</x-offset>
+        <y-offset>-1.4341</y-offset>
+        <z-offset>-2.1752</z-offset>
+        <yaw-offset>0</yaw-offset>
+        <pitch-offset>3.2</pitch-offset>
+        <wind>false</wind>
+        <eda>2.8</eda>
+        <weight>250</weight>
+        <cd>0.035</cd>
+        <contents>consumables/fuel/tank[5]</contents>
+        <impact>true</impact>
+        <impact-reports>sim/ai/aircraft/impact/droptank</impact-reports>
+    </submodel>
+
+    <submodel>
+        <name>ExtTank-R</name>
+        <model>Models/Stores/Ext-Tanks/exttank-submodel.xml</model>
+        <trigger>controls/armament/station[9]/jettison-all</trigger>
+        <speed>0</speed>
+        <repeat>false</repeat>
+        <count>1</count>
+        <x-offset>1.1421</x-offset>
+        <y-offset>1.4341</y-offset>
+        <z-offset>-2.1752</z-offset>
+        <yaw-offset>0</yaw-offset>
+        <pitch-offset>3.2</pitch-offset>
+        <wind>false</wind>
+        <eda>2.8</eda>
+        <weight>250</weight>
+        <cd>0.035</cd>
+        <contents>consumables/fuel/tank[6]</contents>
+        <impact>true</impact>
+        <impact-reports>sim/ai/aircraft/impact/droptank</impact-reports>
+    </submodel>
+
+    <submodel>
+        <name>ExtTank-C</name>
+        <model>Models/Stores/Ext-Tanks/exttank-submodel.xml</model>
+        <trigger>controls/armament/station[5]/jettison-all</trigger>
+        <speed>0</speed>
+        <repeat>false</repeat>
+        <count>1</count>
+        <x-offset>0</x-offset>
+        <y-offset>0</y-offset>
+        <z-offset>-2.1752</z-offset>
+        <yaw-offset>0</yaw-offset>
+        <pitch-offset>3.2</pitch-offset>
+        <wind>false</wind>
+        <eda>2.8</eda>
+        <weight>250</weight>
+        <cd>0.035</cd>
+        <contents>consumables/fuel/tank[7]</contents>
+        <impact>true</impact>
+        <impact-reports>sim/ai/aircraft/impact/droptank</impact-reports>
+    </submodel>
+
+    <!-- M61A1 gun section -->
+    <submodel>
+        <name>M61A1 nuzzle smoke</name>
+        <model>Models/Stores/M61A1/smoke-nuzzle.xml</model>
+        <trigger>sim/model/f15/systems/gun/running</trigger>
+        <speed>20</speed>
+        <repeat>true</repeat>
+        <delay>0.08</delay>
+        <count>-1</count>
+        <x-offset>24.0</x-offset>
+        <y-offset>-2.5</y-offset>
+        <z-offset>-4.0</z-offset>
+        <yaw-offset>0</yaw-offset>
+        <pitch-offset>-20.0</pitch-offset>
+        <life>20</life>
+        <buoyancy>13</buoyancy>
+        <wind>true</wind>
+        <cd>0.045</cd>
+        <random>true</random>
+        <eda>5</eda>
+        <weight>1</weight>
+        <no-roll>true</no-roll>
+    </submodel>
+
+    <M61A1>
+        <name>M61A1 API round</name>
+        <model>Models/Stores/M61A1/apibullet-tracer.xml</model>
+        <trigger>sim/model/f15/systems/gun/running</trigger>
+        <speed>3450.0</speed>
+        <fuse-range>0.0</fuse-range>
+        <repeat>true</repeat>
+        <delay>0.05</delay>
+        <!-- 1 submodel each 1/10 sec to simulate 10 rounds -->
+        <count>135</count>
+        <!-- that's 68*10 rounds (675 in RL) -->
+        <x-offset>24.0</x-offset>
+        <y-offset>-2.5</y-offset>
+        <z-offset>-4.0</z-offset>
+        <yaw-offset>0.0</yaw-offset>
+        <pitch-offset>1.7</pitch-offset>
+        <life>8.0</life>
+        <buoyancy>0</buoyancy>
+        <wind>false</wind>
+        <cd>0.193</cd>
+        <random>false</random>
+        <eda>0.007609</eda>
+        <weight>0.9369635</weight>
+        <no-roll>false</no-roll>
+        <collision>true</collision>
+        <impact>true</impact>
+        <impact-reports>ai/models/model-impact</impact-reports>
+        <submodel-path>Models/Stores/M61A1/M61A1-submodels.xml</submodel-path>
+    </M61A1>
+
+
+
+    <submodel>
+        <name>M61A1 API round 1</name>
+        <model alias ="../../M61A1/model"/>
+        <trigger alias="../../M61A1/trigger"/>
+        <delay alias="../../M61A1/delay"/>
+        <count alias="../../M61A1/count"/>
+        <speed alias="../../M61A1/speed"/>
+        <fuse-range alias="../../M61A1/fuse-range"/>
+        <repeat>true</repeat>
+        <x-offset alias="../../M61A1/x-offset"/>
+        <y-offset alias="../../M61A1/y-offset"/>
+        <z-offset alias="../../M61A1/z-offset"/>
+        <yaw-offset alias="../../M61A1/yaw-offset"/>
+        <pitch-offset alias="../../M61A1/pitch-offset"/>
+        <life alias="../../M61A1/life"/>
+        <buoyancy alias="../../M61A1/buoyancy"/>
+        <wind alias="../../M61A1/wind"/>
+        <cd alias="../../M61A1/cd"/>
+        <random alias="../../M61A1/random"/>
+        <eda alias="../../M61A1/eda"/>
+        <weight alias="../../M61A1/weight"/>
+        <no-roll alias="../../M61A1/no-roll"/>
+        <collision alias="../../M61A1/collision"/>
+        <impact alias="../../M61A1/impact"/>
+        <impact-reports alias="../../M61A1/impact-reports"/>
+        <submodel-path alias="../../M61A1/submodel-path"/>
+    </submodel>
+
+
+
+</PropertyList>

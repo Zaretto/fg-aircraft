@@ -1,0 +1,899 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+    <enable3d>true</enable3d>
+
+
+    <!--Pitch Ladder-->
+    <ladder>
+        <name>Pitch Ladder</name>
+        <type>pitch</type>
+        <x>-20</x>
+        <y>-25</y>
+        <width>40</width>
+        <height>50</height>
+        <roll-input>
+            <property>/orientation/roll-deg</property>
+        </roll-input>
+        <pitch-input>
+            <property>/orientation/pitch-deg</property>
+        </pitch-input>
+
+        <compression-factor>11.375</compression-factor>
+        <display-span>14.0</display-span>
+        <divisions>5.0</divisions>
+        <screen-hole>0</screen-hole>
+        <lbl-pos>0</lbl-pos>
+        <enable-fuselage-ref-line>false</enable-fuselage-ref-line>
+        <enable-target-spot>false</enable-target-spot>
+        <enable-velocity-vector>true</enable-velocity-vector>
+        <enable-drift-marker>false</enable-drift-marker>
+        <enable-alpha-bracket>true</enable-alpha-bracket>
+        <enable-energy-marker>false</enable-energy-marker>
+        <enable-climb-dive-marker>false</enable-climb-dive-marker>
+        <enable-glide-slope-marker>false</enable-glide-slope-marker>
+        <glide-slope>0.0</glide-slope>
+        <enable-energy-worm>false</enable-energy-worm>
+        <enable-waypoint-marker>true</enable-waypoint-marker>
+        <zero-bar-overlength>150</zero-bar-overlength>
+
+<!--
+        <enable-zenith>true</enable-zenith>
+        <enable-nadir>true</enable-nadir>
+-->
+
+    </ladder>
+
+    <!--Heading-->
+    <tape>
+        <name>Heading</name>
+        <x>-70</x>
+        <y>60</y>
+        <width>140</width>
+        <height>-7</height>
+        <input>
+            <property>orientation/heading-magnetic-deg</property>
+        </input>
+        <modulo>360</modulo>
+        <major-divisions>10</major-divisions>
+        <minor-divisions>5</minor-divisions>
+        <display-span>40</display-span>
+
+        <option>top</option>
+        <label-gap-width>16</label-gap-width>
+
+        <tick-bottom>false</tick-bottom>
+        <tick-top>false</tick-top>
+        <tick-right>false</tick-right>
+        <tick-left>false</tick-left>
+        <cap-bottom>false</cap-bottom>
+        <cap-top>false</cap-top>
+        <cap-right>false</cap-right>
+        <cap-left>false</cap-left>
+
+        <marker-offset>-5</marker-offset>
+        <enable-pointer>true</enable-pointer>
+        <pointer-type>fixed</pointer-type>
+        <tick-type>line</tick-type>
+        <tick-length>variable</tick-length>
+
+        <format>%1.0f</format>
+    </tape>
+
+    <!--Heading number -->
+    <label>
+        <name>Heading number</name>
+        <x>-9</x>
+        <y>42</y>
+        <width>18</width>
+        <height>10</height>
+        <input>
+            <property>orientation/heading-magnetic-deg</property>
+        </input>
+        <box>true</box>
+        <option>center</option>
+        <format>%3.0f</format>
+    </label>
+
+
+
+    <!--KIAS tape (cruise, ag)-->
+    <tape>
+        <name>KIAS tape (cruise, ag)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+            </or>
+        </condition>
+        <input>
+            <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+            <min>0.0</min>
+            <factor>1</factor>
+        </input>
+        <x>-86</x>
+        <y>-58</y>
+        <width>10</width>
+        <height>90</height>
+
+        <option>vertical</option>
+        <option>left</option>
+        <label-gap-width>7</label-gap-width>
+
+        <major-divisions>50</major-divisions>
+        <minor-divisions>10</minor-divisions>
+        <display-span>250</display-span>
+
+        <tick-bottom>false</tick-bottom>
+        <tick-top>false</tick-top>
+        <tick-right>false</tick-right>
+        <tick-left>false</tick-left>
+        <cap-bottom>false</cap-bottom>
+        <cap-top>false</cap-top>
+        <cap-right>false</cap-right>
+        <cap-left>false</cap-left>
+
+        <marker-offset>4</marker-offset>
+        <enable-pointer>true</enable-pointer>
+        <pointer-type>fixed</pointer-type>
+        <tick-type>line</tick-type>
+        <tick-length>variable</tick-length>
+    </tape>
+
+    <!--KIAS speed (cruise, ag)-->
+    <label>
+        <name>KIAS speed (cruise, ag)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+            </or>
+        </condition>
+        <x>-86</x>
+        <y>-18</y>
+        <width>22</width>
+        <height>10</height>
+        <halign>right</halign>
+        <format>%4.0f</format>
+        <box>true</box>
+        <option>right</option>
+        <pointer-width>10</pointer-width>
+        <pointer-length>5</pointer-length>
+        <input>
+            <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        </input>
+    </label>
+
+    <!--KIAS speed, top (to, aa, ldg)-->
+    <label>
+        <name>KIAS speed, top (to, aa, ldg)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+            </or>
+        </condition>
+        <x>-86</x>
+        <y>29</y>
+        <width>22</width>
+        <height>10</height>
+        <halign>right</halign>
+        <format>%4.0f</format>
+        <box>true</box>
+        <input>
+            <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        </input>
+    </label>
+
+
+
+    <!--Vertical speed (1000 ft per minute) (to, ldg)-->
+    <tape>
+        <name>Vertical speed (1000 ft per minute) (to, ldg)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+            </or>
+        </condition>
+        <input>
+            <property>velocities/vertical-speed-fps</property>
+            <factor>0.06</factor>
+        </input>
+
+        <x>-70</x>
+        <y>-48</y>
+        <width>10</width>
+        <height>70</height>
+        <option>vertical</option>
+        <option>left</option>
+        <label-gap-width>0</label-gap-width>
+
+        <major-divisions>1.0</major-divisions>
+        <minor-divisions>0.5</minor-divisions>
+        <display-span>4.0</display-span>
+        <format>%1.0f</format>
+
+        <tick-bottom>false</tick-bottom>
+        <tick-top>false</tick-top>
+        <tick-right>false</tick-right>
+        <tick-left>false</tick-left>
+        <cap-bottom>false</cap-bottom>
+        <cap-top>false</cap-top>
+        <cap-right>false</cap-right>
+        <cap-left>false</cap-left>
+        <marker-offset>10</marker-offset>
+        <enable-pointer>true</enable-pointer>
+        <pointer-type>fixed</pointer-type>
+        <tick-type>bullet</tick-type>
+    </tape>
+
+
+
+    <!--Altitude tape (cruise, ag)-->
+    <tape>
+        <name>Altitude tape (cruise, ag)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+            </or>
+        </condition>
+
+        <input>
+            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <factor>0.001</factor>
+        </input>
+
+        <x>44</x>
+        <y>-58</y>
+        <width>10</width>
+        <height>90</height>
+
+        <option>vertical</option>
+        <option>right</option>
+        <label-gap-width>7</label-gap-width>
+
+        <major-divisions>0.500</major-divisions>
+        <minor-divisions>0.100</minor-divisions>
+        <display-span>2.500</display-span>
+        <format>%0.1f</format>
+
+        <tick-bottom>false</tick-bottom>
+        <tick-top>false</tick-top>
+        <tick-right>false</tick-right>
+        <tick-left>false</tick-left>
+        <cap-bottom>false</cap-bottom>
+        <cap-top>false</cap-top>
+        <cap-right>false</cap-right>
+        <cap-left>false</cap-left>
+
+        <marker-offset>4</marker-offset>
+        <enable-pointer>true</enable-pointer>
+        <pointer-type>fixed</pointer-type>
+        <tick-type>line</tick-type>
+        <tick-length>variable</tick-length>
+    </tape>
+
+    <!--Altitude (cruise, ag)-->
+    <label>
+        <name>Altitude (cruise, ag)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+            </or>
+        </condition>
+        <input>
+            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <factor>0.1</factor>
+        </input>
+        <x>84</x>
+        <y>-18</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%.0f0</format>
+        <box>true</box>
+        <option>left</option>
+        <pointer-width>10</pointer-width>
+        <pointer-length>5</pointer-length>
+    </label>
+
+    <!--Altitude, top (to, ldg)-->
+    <label>
+        <name>Altitude, top (to, ldg)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+            </or>
+        </condition>
+        <input>
+            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <factor>0.1</factor>
+        </input>
+        <x>84</x>
+        <y>25</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%.0f0</format>
+        <box>true</box>
+    </label>
+
+    <!--Waypoint -->
+    <label>
+        <name>Waypoint</name>
+        <condition>
+            <property>/autopilot/route-manager/active</property>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+            </or>
+        </condition>
+        <input>
+            <property>autopilot/route-manager/wp/id</property>
+        </input>
+        <x>54</x>
+        <y>35</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>WPT %s</format>
+        <box>false</box>
+    </label>
+    <label>
+        <name>Waypoint Dist</name>
+        <condition>
+            <property>/autopilot/route-manager/active</property>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+            </or>
+        </condition>
+        <input>
+            <property>autopilot/route-manager/wp/dist</property>
+        </input>
+        <x>66</x>
+        <y>27</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%7.1f</format>
+        <box>false</box>
+    </label>
+
+    <!--Altitude, bottom (aa)-->
+    <label>
+        <name>Altitude, top (aa)</name>
+        <condition>
+            <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+        </condition>
+        <input>
+            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <factor>0.1</factor>
+        </input>
+        <x>68</x>
+        <y>-68</y>
+        <width>26</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%5.0f0</format>
+        <box>true</box>
+    </label>
+
+
+
+    <!--Radar Altitude, bottom (cruise, aa, ag)-->
+    <label>
+        <name>Radar Altitude, bottom (cruise, aa, ag)</name>
+        <condition>
+            <and>
+                <or>
+                    <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+                </or>
+                <not>
+                    <or>
+                        <less-than>
+                            <property>orientation/roll-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/roll-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <less-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <greater-than>
+                            <property>position/altitude-agl-ft</property>
+                            <value>5000</value>
+                        </greater-than>
+                    </or>
+                </not>
+            </and>
+        </condition>
+        <input>
+            <property>/position/altitude-agl-ft</property>
+            <factor>0.1</factor>
+        </input>
+        <x>68</x>
+        <y>-74</y>
+        <width>24</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%4.0f0</format>
+        <box>true</box>
+        <enable-pointer>false</enable-pointer>
+    </label>
+
+    <!--Radar Altitude label 'R', bottom (cruise, aa, ag)-->
+    <label>
+        <name>Radar Altitude label 'R', bottom (cruise, aa, ag)</name>
+        <condition>
+            <and>
+                <or>
+                    <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+                </or>
+                <not>
+                    <or>
+                        <less-than>
+                            <property>orientation/roll-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/roll-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <less-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <greater-than>
+                            <property>position/altitude-agl-ft</property>
+                            <value>5000</value>
+                        </greater-than>
+                    </or>
+                </not>
+            </and>
+        </condition>
+        <x>62</x>
+        <y>-74</y>
+        <width>1</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>R</format>
+        <box>false</box>
+        <option>left</option>
+    </label>
+
+    <!--Radar Altitude tape (to, ldg)-->
+    <tape>
+        <name>Radar Altitude tape (to, ldg)</name>
+        <condition>
+            <and>
+                <or>
+                    <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+                </or>
+                <not>
+                    <or>
+                        <less-than>
+                            <property>orientation/roll-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/roll-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <less-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <greater-than>
+                            <property>position/altitude-agl-ft</property>
+                            <value>5000</value>
+                        </greater-than>
+                    </or>
+                </not>
+            </and>
+        </condition>
+        <input>
+            <property>/position/altitude-agl-ft</property>
+            <factor>0.001</factor>
+            <max>5</max>
+            <min>0.0</min>
+        </input>
+
+        <x>74</x>
+        <y>-48</y>
+        <width>10</width>
+        <height>70</height>
+
+        <option>vertical</option>
+        <option>right</option>
+
+        <label-gap-width>8</label-gap-width>
+        <major-divisions>1.0</major-divisions>
+        <minor-divisions>0.2</minor-divisions>
+        <display-span>2.5</display-span>
+        <format>%1.0f</format>
+
+        <tick-bottom>false</tick-bottom>
+        <tick-top>false</tick-top>
+        <tick-right>false</tick-right>
+        <tick-left>false</tick-left>
+        <cap-bottom>false</cap-bottom>
+        <cap-top>false</cap-top>
+        <cap-right>false</cap-right>
+        <cap-left>false</cap-left>
+
+        <marker-offset>4</marker-offset>
+        <enable-pointer>true</enable-pointer>
+        <pointer-type>fixed</pointer-type>
+        <tick-type>bullet</tick-type>
+    </tape>
+
+    <!--Radar Altitude (to, ldg)-->
+    <label>
+        <name>Radar Altitude (to, ldg)</name>
+        <condition>
+            <and>
+                    <or>
+                    <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                    <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+                </or>
+                <not>
+                    <or>
+                        <less-than>
+                            <property>orientation/roll-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/roll-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <less-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>-45</value>
+                        </less-than>
+                        <greater-than>
+                            <property>orientation/pitch-deg</property>
+                            <value>45</value>
+                        </greater-than>
+                        <greater-than>
+                            <property>position/altitude-agl-ft</property>
+                            <value>5000</value>
+                        </greater-than>
+                    </or>
+                </not>
+            </and>
+        </condition>
+        <input>
+            <property>/position/altitude-agl-ft</property>
+            <factor>0.1</factor>
+        </input>
+        <x>80</x>
+        <y>-18</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>%.0f0</format>
+        <box>true</box>
+        <enable-pointer>true</enable-pointer>
+        <option>left</option>
+        <pointer-width>10</pointer-width>
+        <pointer-length>5</pointer-length>
+    </label>
+
+    <!--Radar Altitude label 'R' (to, ldg)-->
+    <label>
+        <name>Radar Altitude label 'R' (to, ldg)</name>
+        <condition>
+            <or>
+                <property>sim/model/f15/instrumentation/hud/mode-to</property>
+                <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+            </or>
+            <not>
+                <or>
+                    <less-than>
+                        <property>orientation/roll-deg</property>
+                        <value>-45</value>
+                    </less-than>
+                    <greater-than>
+                        <property>orientation/roll-deg</property>
+                        <value>45</value>
+                    </greater-than>
+                    <less-than>
+                        <property>orientation/pitch-deg</property>
+                        <value>-45</value>
+                    </less-than>
+                    <greater-than>
+                        <property>orientation/pitch-deg</property>
+                        <value>45</value>
+                    </greater-than>
+                    <greater-than>
+                        <property>position/altitude-agl-ft</property>
+                        <value>5000</value>
+                    </greater-than>
+                </or>
+            </not>
+        </condition>
+        <x>62</x>
+        <y>-18</y>
+        <width>1</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>R</format>
+        <box>false</box>
+        <option>left</option>
+    </label>
+
+    <!--Turn Bank Indicator-->
+    <turn-bank-indicator>
+        <name>Turn Bank Indicator</name>
+        <x>-70</x>
+        <y>-85</y>
+        <width>140</width>
+        <height>140</height>
+        <bank-input>
+            <property>/orientation/roll-deg</property>
+        </bank-input>
+        <sideslip-input>
+            <property>/orientation/side-slip-deg</property>
+        </sideslip-input>
+        <bank-scale>true</bank-scale>
+        <option>bottom</option>
+    </turn-bank-indicator>
+
+
+
+    <!--AoA-->
+    <label>
+        <name>AoA</name>
+        <halign>left</halign>
+        <x>-88</x>
+        <y>-63</y>
+        <width>1</width>
+        <height>1</height>
+        <format>a %3.1f</format>
+        <input>
+            <property>orientation/alpha-indicated-deg</property>
+        </input>
+    </label>
+
+    <!--MACH Number-->
+    <label>
+        <name>MACH Number</name>
+        <halign>left</halign>
+        <x>-88</x>
+        <y>-70</y>
+        <width>1</width>
+        <height>1</height>
+        <input>
+            <property>/velocities/mach</property>
+        </input>
+        <format>M %4.2f</format>
+    </label>
+
+    <!--G Load-->
+    <label>
+        <name>G Load</name>
+        <halign>left</halign>
+        <x>-88</x>
+        <y>-77</y>
+        <width>1</width>
+        <height>1</height>
+        <input>
+            <property>/accelerations/pilot/z-accel-fps_sec</property>
+            <factor>-0.03108095</factor>
+            <damp>1.0</damp>
+        </input>
+        <format>G %2.1f</format>
+    </label>
+
+
+
+    <!--Gear-->
+    <label>
+        <name>Gear</name>
+		<condition>
+            <equals>
+                <property>/controls/gear/gear-down</property>
+                <value>true</value>
+            </equals>
+        </condition>
+        <x>-88</x>
+        <y>-84</y>
+        <format>L</format>
+        <halign>left</halign>
+    </label>
+
+    <!--Flaps-->
+    <label>
+        <name>Flaps</name>
+        <condition>
+            <not-equals>
+                <property>/surface-positions/flap-pos-norm</property>
+                <value>0</value>
+            </not-equals>
+        </condition>
+        <input>
+            <property>/surface-positions/flap-pos-norm</property>
+            <factor>30</factor>
+        </input>
+        <x>-79</x>
+        <y>-84</y>
+        <format>F%1.0f</format>
+        <halign>left</halign>
+    </label>
+
+    <label>
+        <name>Target</name>
+		<condition>
+<!--            <property>sim/model/f15/instrumentation/hud/mode-aa</property>-->
+            <property>sim/model/f15/instrumentation/radar-awg-9/hud/target-display</property>
+
+        </condition>
+        <input>
+            <property>sim/model/f15/instrumentation/radar-awg-9/hud/target</property>
+        </input>
+        <x>-8</x>
+        <y>-84</y>
+        <format>%s</format>
+        <halign>left</halign>
+    </label>
+
+    <label>
+        <name>LaunchBar</name>
+		<condition>
+            <property>sim/model/f15/lights/ca-launch-bar</property>
+            <property>sim/model/f15/lighting/warn-medium-lights-switch/state</property>
+<!--
+			<or>
+				<property>sim/model/f15/instrumentation/hud/mode-to</property>
+				<property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+			</or>
+-->
+        </condition>
+        <x>-30</x>
+        <y>-75</y>
+        <format>LAUNCH POWER</format>
+        <halign>left</halign>
+    </label>
+    <label>
+        <name>Target Distance</name>
+		<condition>
+<!--            <property>sim/model/f15/instrumentation/hud/mode-aa</property>-->
+            <property>sim/model/f15/instrumentation/radar-awg-9/hud/target-display</property>
+        </condition>
+        <input>
+            <property>sim/model/f15/instrumentation/radar-awg-9/hud/distance</property>
+        </input>
+        <x>-60</x>
+        <y>-84</y>
+        <format>%0.2f</format>
+        <halign>left</halign>
+    </label>
+    <!--Airbrake-->
+    <label>
+        <name>Airbrake</name>
+		<condition>
+            <not-equals>
+                <property>/surface-positions/speedbrake-pos-norm</property>
+                <value>0</value>
+            </not-equals>
+        </condition>
+        <input>
+            <property>/surface-positions/speedbrake-pos-norm</property>
+            <factor>45</factor>
+        </input>
+        <x>-63</x>
+        <y>-84</y>
+        <format>SB%1.0f</format>
+        <halign>left</halign>
+    </label>
+
+    <!--Hook-->
+    <label>
+        <name>Hook</name>
+		<condition>
+            <greater-than>
+                <property>/gear/tailhook/position-norm</property>
+                <value>0.1</value>
+            </greater-than>
+        </condition>
+        <x>-84</x>
+        <y>-84</y>
+        <format>H</format>
+        <halign>left</halign>
+    </label>
+
+
+    <label>
+        <name>Tacan Range</name>
+		<condition>
+            <not-equals>
+                <property>instrumentation/tacan/indicated-distance-nm</property>
+                <value>0</value>
+            </not-equals>
+        </condition>
+        <input>
+            <property>instrumentation/tacan/indicated-distance-nm</property>
+        </input>
+        <x>23</x>
+        <y>-84</y>
+        <format>TCN %3.1f</format>
+        <halign>left</halign>
+    </label>
+
+    <!--Hud mode: to,cr,aa,ag,ld-->
+    <label>
+        <name>Hud mode to</name>
+		<condition>
+            <property>sim/model/f15/instrumentation/hud/mode-to</property>
+        </condition>
+        <x>-100</x>
+        <y>55</y>
+        <halign>left</halign>
+        <format>T/O</format>
+    </label>
+    <label>
+        <name>Hud mode crs</name>
+        <condition>
+            <property>sim/model/f15/instrumentation/hud/mode-cruise</property>
+        </condition>
+        <x>-100</x>
+        <y>55</y>
+        <halign>left</halign>
+        <format>CRS</format>
+    </label>
+    <label>
+        <name>Hud mode a/a</name>
+		<condition>
+            <property>sim/model/f15/instrumentation/hud/mode-aa</property>
+        </condition>
+        <x>-100</x>
+        <y>55</y>
+        <halign>left</halign>
+        <format>A/A</format>
+    </label>
+    <label>
+        <name>Hud mode a/g</name>
+		<condition>
+            <property>sim/model/f15/instrumentation/hud/mode-ag</property>
+        </condition>
+        <x>-100</x>
+        <y>55</y>
+        <halign>left</halign>
+        <format>A/G</format>
+    </label>
+    <label>
+        <name>Hud mode ldg</name>
+		<condition>
+            <property>sim/model/f15/instrumentation/hud/mode-ldg</property>
+        </condition>
+        <x>-100</x>
+        <y>55</y>
+        <halign>left</halign>
+        <format>LDG</format>
+    </label>
+</PropertyList>
+

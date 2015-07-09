@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<!-- F-15C JFS panel Richard Harrison rjh@zaretto.com-->
+
+<PropertyList>
+
+    <path>jfs-panel.ac</path>
+    <animation>
+        <type>knob</type>
+        <object-name>jfs-start-handle</object-name>
+        <property>sim/model/f15/controls/electrics/jfs-start-handle</property>
+        <factor>-15</factor>
+        <center>
+            <x-m>-5.7048</x-m>
+            <y-m> 0.3243</y-m>
+            <z-m> 0.78281</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/electrics/jfs-start-handle</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/electrics/jfs-start-handle</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>jfs-start-handle</object-name>
+        <property>sim/model/f15/controls/electrics/jfs-start-handle</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.02</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.7048</x-m>
+            <y-m> 0.3243</y-m>
+            <z-m> 0.78281</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+</PropertyList>
