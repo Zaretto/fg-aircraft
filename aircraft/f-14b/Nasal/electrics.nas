@@ -339,6 +339,24 @@ var runEMMISC = func {
         ca_canopy_light.setBoolValue(0);
     }
 
+    # windshield hot if over 150deg F for any reason.
+    if (getprop("fdm/jsbsim/systems/ecs/windscreen-temperature-k") > 338)
+    {
+        if (!getprop("sim/model/f-14b/lights/ca-wndshld-hot"))
+        {
+            setprop("sim/model/f-14b/lights/ca-wndshld-hot",1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop("sim/model/f-14b/lights/ca-wndshld-hot"))
+        {
+            setprop("sim/model/f-14b/lights/ca-wndshld-hot",0);
+        }
+    }
+
     if (jettisonLeft.getValue() or jettisonRight.getValue()){
         masterCaution = 1;
         master_caution_active = 1;
@@ -501,5 +519,7 @@ setprop("sim/model/f-14b/lights/master-test-go",0);
 }
 }
 setlistener("sim/model/f-14b/controls/windshield-heat", func {
-setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
+var v = getprop("sim/model/f-14b/controls/windshield-heat");
+if (v != nil)
+    setprop("fdm/jsbsim/systems/ecs/windshield-heat",v);
 }, 1, 0);
