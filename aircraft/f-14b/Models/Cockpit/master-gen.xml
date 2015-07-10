@@ -150,6 +150,88 @@
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>temp-wheel</object-name>
+        <property>sim/model/f-14b/controls/cabin-temperature</property>
+
+        <factor>-25.71428571428571</factor>
+        <offset-deg>0</offset-deg>
+        <center>
+            <x-m>0.1096</x-m>
+            <y-m>-0.0282</y-m>
+            <z-m>-0.0099</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/cabin-temperature</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>14</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <object-name>temp-wheel</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than-equals>
+                <property>controls/lighting/instruments-norm</property>
+                <property>controls/lighting/dome-norm</property>
+            </greater-than-equals>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <animation>
+        <object-name>temp-wheel</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/dome-norm</property>
+                <property>controls/lighting/instruments-norm</property>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
     <!-- bleed air source -->
     <animation>
         <type>pick</type>
