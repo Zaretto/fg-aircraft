@@ -131,8 +131,12 @@ var computeNozzles = func {
         }
         else
         {
-            Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
-            Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
+# not in replay so copy the properties;
+# 
+            setprop("engines/engine[0]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
+            setprop("engines/engine[1]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
+            setprop("engines/engine[0]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
+            setprop("engines/engine[1]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
         }
     }
     else
