@@ -19,11 +19,11 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
 
     <path>flame.ac</path>
 
-    <!--<params>
+    <params>
         <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
         <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
-    </params>-->
-
+        <flame-number>sim/model/f-14b/fx/flame-number</flame-number>
+    </params>
     <model>
         <path>als-flame.xml</path>
         <name>ALS-FlameTrail</name>
@@ -45,12 +45,12 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <condition>
             <or>
                 <greater-than>
-                    <property>sim/multiplay/generic/float[8]</property>
+                    <property alias="/params/augmentation-ignition"/>
                     <!-- ignition (sequence 0 to 1)-->
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>sim/multiplay/generic/int[8]</property>
+                    <property alias="/params/augmentation-alight"/>
                     <!-- alight -->
                     <value>0</value>
                 </greater-than>
@@ -63,7 +63,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <object-name>FlameModel</object-name>
         <condition>
             <greater-than-equals>
-                <property>sim/multiplay/generic/int[8]</property>
+                <property alias="/params/augmentation-ignition"/>
                 <value>1</value>
             </greater-than-equals>
         </condition>
@@ -73,7 +73,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <object-name>ALS-FlameTrail</object-name>
         <condition>
             <greater-than>
-                <property>sim/multiplay/generic/float[8]</property>
+                <property alias="/params/augmentation-ignition"/>
                 <value>0.8</value>
             </greater-than>
         </condition>
@@ -83,7 +83,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <object-name>FlameTrail</object-name>
         <condition>
             <greater-than>
-                <property>sim/multiplay/generic/int[8]</property>
+                <property alias="/params/augmentation-ignition"/>
                 <value>0</value>
             </greater-than>
         </condition>
@@ -145,7 +145,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <type>scale</type>
         <object-name>FlameModel</object-name>
         <object-name>FlameTrail</object-name>
-        <property>sim/multiplay/generic/int[8]</property>
+        <property alias="/params/augmentation-alight"/>
         <x-min>1.0</x-min>
         <y-min>1.0</y-min>
         <z-min>0.5</z-min>
@@ -160,7 +160,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
     <animation>
         <type>scale</type>
         <object-name>ALS-FlameTrail</object-name>
-        <property>sim/multiplay/generic/int[8]</property>
+        <property alias="/params/augmentation-alight"/>
         <x-min>0.2</x-min>
         <y-min>0.3</y-min>
         <z-min>0.3</z-min>
@@ -216,7 +216,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
             <red>1.0</red>
             <green>0.5</green>
             <blue>0.0</blue>
-            <property>sim/multiplay/generic/int[8]</property>
+            <property alias="/params/augmentation-alight"/>
         </emission>
     </animation>
 
@@ -227,7 +227,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
             <red>1</red>
             <green>0.78</green>
             <blue>0.67</blue>
-            <property>sim/multiplay/generic/float[8]</property>
+            <property alias="/params/augmentation-ignition"/>
         </emission>
    </animation>
 
@@ -252,7 +252,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
             <red>1.0</red>
             <green>1.0</green>
             <blue>1.0</blue>
-            <property>sim/multiplay/generic/int[8]</property>
+            <property alias="/params/augmentation-alight"/>
         </emission>
     </animation>
 
