@@ -340,20 +340,23 @@ var runEMMISC = func {
     }
 
     # windshield hot if over 150deg F for any reason.
-    if (getprop("fdm/jsbsim/systems/ecs/windscreen-temperature-k") > 338)
+    if(usingJSBSim)
     {
-        if (!getprop("sim/model/f-14b/lights/ca-wndshld-hot"))
+        if (getprop("fdm/jsbsim/systems/ecs/windscreen-temperature-k") > 338)
         {
-            setprop("sim/model/f-14b/lights/ca-wndshld-hot",1);
-            masterCaution = 1;
+            if (!getprop("sim/model/f-14b/lights/ca-wndshld-hot"))
+            {
+                setprop("sim/model/f-14b/lights/ca-wndshld-hot",1);
+                masterCaution = 1;
+            }
+            master_caution_active = 1;
         }
-        master_caution_active = 1;
-    }
-    else
-    {
-        if (getprop("sim/model/f-14b/lights/ca-wndshld-hot"))
+        else
         {
-            setprop("sim/model/f-14b/lights/ca-wndshld-hot",0);
+            if (getprop("sim/model/f-14b/lights/ca-wndshld-hot"))
+            {
+                setprop("sim/model/f-14b/lights/ca-wndshld-hot",0);
+            }
         }
     }
 

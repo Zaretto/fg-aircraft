@@ -24,6 +24,9 @@ if(!usingJSBSim)
     setprop("controls/engines/engine[1]/cutoff", 0);
     Engine1Augmentation = Engine1Burner;
     Engine2Augmentation = Engine2Burner;
+    setprop("engines/engine[0]/augmentation-burner", getprop("engines/engine[0]/afterburner")*5);
+    setprop("engines/engine[1]/augmentation-burner", getprop("engines/engine[1]/afterburner")*5);
+
 }
 
 #props.globals.getNode("sim/model/f-14b/fx/test1",1);
@@ -175,6 +178,12 @@ var computeNozzles = func {
             Nozzle1Target = eng1_burner;
             Nozzle2Target = eng2_burner;
         }
+        setprop("engines/engine[0]/augmentation-burner", (int)(getprop("engines/engine[0]/afterburner")+0.98));
+        setprop("engines/engine[1]/augmentation-burner", (int)(getprop("engines/engine[1]/afterburner")+0.99));
+#
+#stage is from 0-5 so scale it
+        setprop("engines/engine[0]/afterburner-stage", (int)(getprop("engines/engine[0]/afterburner")*5+0.99));
+        setprop("engines/engine[1]/afterburner-stage", (int)(getprop("engines/engine[1]/afterburner")*5+0.99));
     }
 }
 
