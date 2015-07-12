@@ -26,66 +26,39 @@ var computeEngines = func {
 
 -->
 <PropertyList>
-  <model>
-    <nopreview/>
-    <path>Afterburners/AfterBurnerL.xml</path>
-    <offsets>
-      <x-m>7.1603</x-m>
-      <y-m>1.4827</y-m>
-      <z-m>-1.2534</z-m>
-    </offsets>
-  </model>
+    <model>
+        <nopreview/>
+        <path>Afterburners/AfterBurner.xml</path>
+        <offsets>
+            <x-m>7.1603</x-m>
+            <y-m>1.4827</y-m>
+            <z-m>-1.2534</z-m>
+        </offsets>
+        <overlay>
+            <params>
+                <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
+                <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
+                <flame-number>sim/model/f-14b/fx/flame-number</flame-number>
+            </params>
+        </overlay>
+    </model>
 
-  <model>
-    <nopreview/>
-    <path>Afterburners/AfterBurnerR.xml</path>
-    <offsets>
-      <x-m>7.1603</x-m>
-      <y-m>-1.4827</y-m>
-      <z-m>-1.2534</z-m>
-    </offsets>
-  </model>
-  <animation>
-    <type>material</type>
-    <object-name>AfterburnerL</object-name>
-    <object-name>TurbineL</object-name>
-    <object-name>AfterburnerL.001</object-name>
+    <model>
+        <nopreview/>
+        <path>Afterburners/AfterBurner.xml</path>
+        <offsets>
+            <x-m>7.1603</x-m>
+            <y-m>-1.4827</y-m>
+            <z-m>-1.2534</z-m>
+        </offsets>
 
-    <emission>
-      <red>1.0</red>
-      <green>0.5</green>
-      <blue>0.0</blue>
-      <factor-prop>engines/engine[0]/afterburner</factor-prop>
-    </emission>
-  </animation>
-  <animation>
-    <type>material</type>
-    <object-name>AfterburnerR</object-name>
-    <object-name>TurbineR</object-name>
-    <object-name>AfterburnerR.001</object-name>
-
-    <emission>
-      <red>1.0</red>
-      <green>0.5</green>
-      <blue>0.0</blue>
-      <factor-prop>engines/engine[1]/afterburner</factor-prop>
-    </emission>
-  </animation>
-
-  <animation>
-    <type>blend</type>
-    <object-name>ReheatL</object-name>
-    <property>engines/engine[0]/augmentation</property>
-    <offset>1</offset>
-    <factor>-1.4</factor>
-  </animation>
-
-  <animation>
-    <type>blend</type>
-    <object-name>ReheatR</object-name>
-    <property>engines/engine[1]/augmentation</property>
-    <offset>1</offset>
-    <factor>-1.4</factor>
-  </animation>
+        <overlay>
+            <params>
+                <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
+                <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
+                <flame-number>sim/model/f-14b/fx/flame-number</flame-number>
+            </params>
+        </overlay>
+    </model>
 
 </PropertyList>

@@ -124,6 +124,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <system file="f-14b-cadc"/>
     <system file="f-14b-ecs.xml"/>
     <system file="f-14b-apc"/>
+    <system file="f-14b-engines"/>
     <system file="hook"/>
     <system file="catapult"/>
     <system file="holdback"/>
@@ -1708,47 +1709,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </function>
 
 
-        <!-- rudimentary figures based of N2 and using values from NAVAIR 01-F14AAD-1 -->
-        <function name="propulsion/engine[0]/EGT-R">
-            <description>Engine 0 EGT Rankine</description>
-            <sum>
-                <property>atmosphere/T-R</property>
-                <table>
-                    <independentVar>propulsion/engine[0]/n1</independentVar>
-                    <tableData>
-                         0.0	0.0
-                        20.0	0.0
-                        30.0	541.7
-                        49.0	541.7
-                        62.0	631.7
-                        78.0	1171.7
-                        95.0	1405.7
-                        99.9	1684.7
-                       104.0	1684.7
-                    </tableData>
-                </table>
-            </sum>
-        </function>
-        <function name="propulsion/engine[1]/EGT-R">
-            <description>Engine 1 EGT Rankine</description>
-            <sum>
-                <property>atmosphere/T-R</property>
-                <table>
-                    <independentVar>propulsion/engine[1]/n1</independentVar>
-                    <tableData>
-                         0	0.0
-                        20	0.0
-                        30	541.7
-                        49	541.7
-                        62	631.7
-                        78	1171.7
-                        95	1405.7
-                        99.9  1684.7
-                        104	1684.7
-                    </tableData>
-                </table>
-            </sum>
-        </function>
 
         <function name="aero/coefficients/Cmach">
             <!--    <description>Mach factor (all except drag) (NASA-TM-84643 Figure 3)</description> -->
