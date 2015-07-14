@@ -34,20 +34,7 @@
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-			<or>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>RIO View</value>
-				</equals>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>Back-seat View</value>
-				</equals>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>Cockpit View</value>
-				</equals>
-			</or>
+            <property>sim/current-view/internal</property>
 		</condition>
 	</animation>
 

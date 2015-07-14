@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!-- F-15 C Variant
+   |  Richard Harrison: 2015-05-24 : rjh@zaretto.com - parts taken from F-14 by xii
+-->
+<PropertyList include="f15-common.xml">
+
+    <sim>
+        <description>F-15D</description>
+        <author>Richard Harrison, Enrique Laso, xii</author>
+        <status>production</status>
+
+        <startup>
+            <splash-texture>Aircraft/F-15/f15d-splash.jpg</splash-texture>
+        </startup>
+        <model>
+            <path>Aircraft/F-15/Models/F-15D.xml</path>
+            <f15>
+                <variant>D</variant>
+            </f15>
+        </model>
+        <view n="100">
+            <name>Backset View</name>
+            <type>lookfrom</type>
+            <internal archive="y">true</internal>
+            <config>
+                <from-model type="bool">true</from-model>
+                <ground-level-nearplane-m type="double">0.5f</ground-level-nearplane-m>
+                <x-offset-m archive="y">0.0</x-offset-m>
+                <y-offset-m archive="y">1.6</y-offset-m>
+                <z-offset-m archive="y">-3.46</z-offset-m>
+                <pitch-offset-deg>-14.7</pitch-offset-deg>
+                <default-field-of-view-deg>90</default-field-of-view-deg>
+                <limits>
+                    <enabled type="bool">true</enabled>
+                    <left>
+                        <heading-max-deg type="double">161</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
+                        <x-offset-threshold-deg type="double">45</x-offset-threshold-deg>
+                    </left>
+                    <right>
+                        <heading-max-deg type="double">161</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
+                        <x-offset-threshold-deg type="double">45</x-offset-threshold-deg>
+                    </right>
+                </limits>
+            </config>
+        </view>
+    </sim>
+    <fdm>
+        <jsbsim>
+            <metrics>
+                <two-place-canopy type="int">1</two-place-canopy>
+            </metrics>
+        </jsbsim>
+    </fdm>
+    <nasal>
+        <f15_net>
+            <file>Aircraft/F-15/Nasal/mp-network.nas</file>
+        </f15_net>
+    </nasal>
+</PropertyList>

@@ -7,18 +7,6 @@
 
 	<animation>
 		<type>select</type>
-		<object-name>radar-alti</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
-
-
-	<animation>
-		<type>select</type>
 		<object-name>needle</object-name>
 		<condition>
 			<less-than>
@@ -217,122 +205,114 @@
 	</animation>
 
 	<!-- Minimal Altitude Limit Bug Setting Knob -->
-	<animation>
-		<name>low-knob-left-fine</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-left</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>-20</step>
-				<min>50</min>
-			</binding>
-		</action>
-	</animation>
+    <animation>
+        <type>knob</type>
+        <object-name>limit-altitude-knob</object-name>
+        <property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
+        <factor>0</factor>
+       
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
 
-	<animation>
-		<name>low-knob-left-coarse</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-left</object-name>
-		<action>
-			<button>1</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>-100</step>
-				<min>50</min>
-			</binding>
-		</action>
-	</animation>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
 
-	<animation>
-		<name>low-knob-right-fine</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-right</object-name>
-		<action>
-			<button>0</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>20</step>
-				<max>5000</max>
-			</binding>
-		</action>
-	</animation>
-
-	<animation>
-		<name>low-knob-right-coarse</name>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>low-knob-right</object-name>
-		<action>
-			<button>1</button>
-			<repeatable>true</repeatable>
-			<interval-sec>0.2</interval-sec>
-			<binding>
-				<command>property-adjust</command>
-				<property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
-				<step>100</step>
-				<max>5000</max>
-			</binding>
-		</action>
-	</animation>
+                <factor>10</factor>
+                <min>0</min>
+                <max>5000</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
 
 
 <!-- lighting -->
-	<animation> 
-		<object-name>mount</object-name>
-		<type>material</type>
-				<condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not><property>sim/rendering/rembrandt/enabled</property></not>
-        </condition>
- <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>instrument</object-name> 
-		<type>material</type>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
 
+        </emission>
+    </animation>
 
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>50</max-m>
-	</animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than-equals>
+                <property>controls/lighting/instruments-norm</property>
+                <property>controls/lighting/dome-norm</property>
+            </greater-than-equals>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
 
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/dome-norm</property>
+                <property>controls/lighting/instruments-norm</property>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <effect>
+        <name>f14-interior</name>
+        <inherits-from>Effects/f14interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>

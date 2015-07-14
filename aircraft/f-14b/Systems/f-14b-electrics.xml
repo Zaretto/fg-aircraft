@@ -185,5 +185,41 @@ DC Main Bus 28 V DC
           </test>
     </switch>
 
-    </channel>
+    <switch name="systems/electrics/dc-main-bus-powered">
+      <default value="0"/>
+      <test value="1">
+        systems/electrics/dc-main-bus gt 0
+      </test>
+    </switch>
+    <switch name="systems/electrics/dc-essential-bus1-powered">
+      <default value="0"/>
+      <test value="1">
+        systems/electrics/dc-essential-bus1 gt 0
+      </test>
+    </switch>
+    <switch name="systems/electrics/dc-essential-bus2-powered">
+      <default value="0"/>
+      <test value="1">
+        systems/electrics/dc-essential-bus2 gt 0
+      </test>
+    </switch>
+    <switch name="systems/electrics/ac-right-main-bus-powered">
+      <default value="0"/>
+      <test value="1">
+        systems/electrics/ac-right-main-bus gt 0
+      </test>
+    </switch>
+    <switch name="systems/electrics/ac-left-main-bus-powered">
+      <default value="0"/>
+      <test value="1">
+        systems/electrics/ac-left-main-bus gt 0
+      </test>
+    </switch>
+    <switch name="systems/electrics/ac-essential-bus1-powered">
+      <default value="0"/>
+      <test value="1">
+        systems/electrics/ac-essential-bus1 gt 0
+      </test>
+    </switch>
+  </channel>
 </system>

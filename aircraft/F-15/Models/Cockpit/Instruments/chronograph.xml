@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<!-- F-15 Clock by Richard Harrison rjh@zaretto.com; based on F-14B by xiii -->
+<PropertyList>
+    <path>chronograph.ac</path>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>HourHand</object-name>
+        <property>instrumentation/clock/indicated-sec</property>
+        <factor>0.00833333333333333</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.15158</y-m>
+            <z-m> 0.85450</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>MinuteHand</object-name>
+        <property>instrumentation/clock/indicated-sec</property>
+        <factor>0.1</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.15158</y-m>
+            <z-m> 0.85450</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>SecondHand</object-name>
+        <property>instrumentation/clock/elapsed-sec</property>
+        <factor>6</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.15158</y-m>
+            <z-m> 0.85450</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>ElapsedMinutesHand</object-name>
+        <property>instrumentation/clock/elapsed-sec</property>
+        <factor>0.1</factor>
+        <center>
+            <x-m> -5.6980</x-m>
+            <y-m> 0.15158</y-m>
+            <z-m> 0.85450</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- Clock Setting Knob -->
+    <animation>
+        <name>time-offset-left-fine</name>
+        <type>pick</type>
+        <visible>false</visible>
+        <object-name>time-offset-left</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>-60</step>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>time-offset-left-hours</name>
+        <type>pick</type>
+        <visible>false</visible>
+        <object-name>time-offset-left</object-name>
+        <action>
+            <button>1</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>-3600</step>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>time-offset-right-fine</name>
+        <visible>false</visible>
+        <visible>true</visible>
+        <object-name>time-offset-right</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>60</step>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>time-offset-right-hours</name>
+        <type>pick</type>
+        <visible>false</visible>
+        <object-name>time-offset-right</object-name>
+        <action>
+            <button>1</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/clock/offset-sec</property>
+                <step>3600</step>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- Chronometer Start Stop Button -->
+    <animation>
+        <name>start-stop-reset-pick</name>
+        <type>pick</type>
+        <visible>false</visible>
+        <object-name>start-stop-reset-pick</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f15_chronograph.click()</script>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

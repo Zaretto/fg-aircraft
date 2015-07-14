@@ -1,0 +1,1114 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Caution panel by Richard Harrison rjh@zaretto.com-->
+
+
+<PropertyList>
+    <path>caution-panel.ac</path>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>emerg-vent-handle</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/ecs/emerg-vent</property>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>emerg-vent-handle</object-name>
+        <property>fdm/jsbsim/systems/ecs/emerg-vent</property>
+        <factor>90</factor>
+        <center>
+            <x-m>-5.6784</x-m>
+            <y-m>0.4997</y-m>
+            <z-m>0.7492</z-m>
+        </center>
+        <axis>
+            <x>0.96</x>
+            <y>-0.3</y>
+            <z>0.25</z>
+        </axis>
+    </animation>
+
+    <!-- Caution light ca-anti-skid -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-anti-skid</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-anti-skid</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-anti-skid</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-attitude -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-attitude</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-attitude</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-attitude</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-auto-plt -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-auto-plt</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-auto-plt</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-auto-plt</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-av-bit -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-av-bit</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-av-bit</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-av-bit</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-bingo-fuel -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-bingo-fuel</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-bingo-fuel</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-bingo-fuel</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-bst-sys-mal -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-bst-sys-mal</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-bst-sys-mal</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-bst-sys-mal</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-cas-pitch -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-cas-pitch</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-cas-pitch</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-cas-pitch</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-cas-roll -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-cas-roll</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-cas-roll</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-cas-roll</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-cas-yaw -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-cas-yaw</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-cas-yaw</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-cas-yaw</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-ecs -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-ecs</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-ecs</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-ecs</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-emer-bst-on -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-emer-bst-on</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-emer-bst-on</property>
+                <property>fdm/jsbsim/systems/hydraulics/emerg-pump-on</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-emer-bst-on</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-fuel-hot -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-fuel-hot</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-fuel-hot</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-fuel-hot</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-fuel-low -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-fuel-low</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-fuel-low</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-fuel-low</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-hook -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-hook</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-hook</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-hook</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-hydraulic -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-hydraulic</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-hydraulic</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-hydraulic</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-iff-mode-4 -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-iff-mode-4</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-iff-mode-4</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-iff-mode-4</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-inlet-ice -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-inlet-ice</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-inlet-ice</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-inlet-ice</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-jfs-low -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-jfs-low</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-jfs-low</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-jfs-low</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-l-bleed-air -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-l-bleed-air</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-l-bleed-air</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-l-bleed-air</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-l-bst-pmp -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-l-bst-pmp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-l-bst-pmp</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-l-bst-pmp</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-l-eng-contr -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-l-eng-contr</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-l-eng-contr</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-l-eng-contr</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-l-gen-out -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-l-gen-out</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-l-gen-out</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-l-gen-out</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-l-inlet -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-l-inlet</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-l-inlet</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-l-inlet</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-oil-press -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-oil-press</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-oil-press</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-oil-press</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-oxygen -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-oxygen</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-oxygen</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-oxygen</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-pitch-ratio -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-pitch-ratio</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-pitch-ratio</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-pitch-ratio</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-r-bleed-air -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-r-bleed-air</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-r-bleed-air</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-r-bleed-air</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-r-bst-pmp -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-r-bst-pmp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-r-bst-pmp</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-r-bst-pmp</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-r-eng-contr -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-r-eng-contr</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-r-eng-contr</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-r-eng-contr</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-r-gen-out -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-r-gen-out</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-r-gen-out</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-r-gen-out</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-r-inlet -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-r-inlet</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-r-inlet</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-r-inlet</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-roll-ratio -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-roll-ratio</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-roll-ratio</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-roll-ratio</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-rud-l-mtr -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-rud-l-mtr</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-rud-l-mtr</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-rud-l-mtr</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-spd-bk-out -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-spd-bk-out</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <greater-than>
+                    <property>surface-positions/speedbrake-pos-norm</property>
+                    <value>0</value>
+                </greater-than>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-spd-bk-out</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-tot-temp-hi -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-tot-temp-hi</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-tot-temp-hi</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-tot-temp-hi</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-wndshld-hot -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-wndshld-hot</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-wndshld-hot</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-wndshld-hot</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+    <!-- Caution light ca-xfer-pump -->
+    <animation>
+        <type>select</type>
+        <object-name>ca-xfer-pump</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/lights/ca-xfer-pump</property>
+            </or>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>ca-xfer-pump</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/warn-caution</factor-prop>
+            <red>0.1</red>
+            <green>0.1</green>
+            <blue>0.1</blue>
+        </emission>
+    </animation>
+
+
+
+
+    <!--Lighting-->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+</PropertyList>

@@ -4,17 +4,6 @@
 <PropertyList>
 	<path>throttle.ac</path>
 
-	<animation>
-		<type>select</type>
-		<object-name>throttles</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
-
 	<effect>
 		<inherits-from>Effects/model-transparent</inherits-from>
 		<object-name>sweep-cover-transparent</object-name>
@@ -118,28 +107,9 @@
 
 
 	<!-- lighting -->
-	<animation>
-		<object-name>throttle-L</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.275</red>
-			<green>0.12</green>
-			<blue>0.05</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>throttle-R</object-name>
-		<type>material</type>
+    <animation>
+        <object-name>throttles</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -150,96 +120,32 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.275</red>
-            <green>0.12</green>
-            <blue>0.05</blue>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/dome-red</red-prop>
+            <green-prop>controls/lighting/dome-green</green-prop>
+            <blue-prop>controls/lighting/dome-blue</blue-prop>
         </emission>
     </animation>
-    <animation>
+
+
+
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+      <name>f14panel</name>
+      <inherits-from>Effects/f14panel</inherits-from>
+      <object-name>mount</object-name>
+    </effect>
+
+    <effect>
+        <name>f14-interior</name>
+        <inherits-from>Effects/f14interior</inherits-from>
+        <object-name>throttle-L</object-name>
+        <object-name>r-throttle-arm</object-name>
         <object-name>flap-handle</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
-            <red>0.275</red>
-            <green>0.12</green>
-            <blue>0.05</blue>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>wing-sweep-handle</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.275</red>
-			<green>0.12</green>
-			<blue>0.05</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>sweep-cover-solid</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.275</red>
-			<green>0.12</green>
-			<blue>0.05</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>mount</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-
-
-
-
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>5</max-m>
-	</animation>
+        <object-name>sweep-cover-solid</object-name>
+    </effect>
 
 </PropertyList>

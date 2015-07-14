@@ -760,6 +760,7 @@
 				<wings>
 					<left-wing-torn type="bool">false</left-wing-torn>
 					<right-wing-torn type="bool">false</right-wing-torn>
+                    <damage-enabled type="bool">false</damage-enabled>
 				</wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
@@ -781,7 +782,11 @@
 				<float n="4">0</float><!-- left elevator  -->
 				<float n="5">0</float><!-- right elevator -->
 				<float n="6">0</float><!-- refuel probe   -->
-				<int n="0" type="int">0</int>    <!-- fuel dump      -->
+                <float n="8" alias="/engines/engine[0]/augmentation-burner" />
+                <float n="9" alias="/engines/engine[1]/augmentation-burner" />
+                <float n="10" alias="/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" />
+                <float n="11" alias="/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" />
+                <int n="0" type="int">0</int>    <!-- fuel dump      -->
 				<int n="1" type="int">0</int>    <!-- formation slimmers -->
 				<int n="2" type="int">0</int>    <!-- radar-standby -->
 				<int n="3" type="int">0</int>    <!-- collision lights -->
@@ -789,6 +794,8 @@
 				<int n="5" type="int">0</int>    <!-- left wing torn -->
 				<int n="6" type="int">0</int>    <!-- right wing torn -->
 				<int n="7" type="int">0</int>    <!-- external weapons layout and pylons details -->
+                <int n="8" alias="/engines/engine[0]/afterburner" />
+                <int n="9" alias="/engines/engine[1]/afterburner" />
 				<string n="0" type="string"></string>       <!-- mp-network -->
 				<string n="1" type="string">xxx</string>    <!-- instruments -->
 				<!-- <string n="2" type="string">50</string>      free -->
@@ -1001,7 +1008,12 @@
 		</weight>
 
 	</sim>
-
+    <environment>
+        <aircraft-effects>
+            <overlay-alpha type="float">0.45</overlay-alpha>
+            <use-overlay type="bool">1</use-overlay>
+        </aircraft-effects>
+    </environment>
  <fdm>
   <jsbsim>
    <systems>
@@ -1096,7 +1108,9 @@
 	</consumables>
 
 	<controls>
-		<armament>
+        <windshield-heat type="int">1</windshield-heat>
+
+        <armament>
 			<trigger type="bool">false</trigger>
 		</armament>
 		<lighting>
@@ -1105,8 +1119,29 @@
 			<strobe type="bool">false</strobe>
 			<nav-lights type="bool">true</nav-lights>
 			<taxi-light type="bool">false</taxi-light>
-		</lighting>
-		<flight>
+            <!-- component values for lighting. these are set for 100W tungsten ref: http://planetpixelemporium.com/tutorialpages/light.html -->
+            <panel-red type="double">1.000</panel-red>
+            <panel-green type="double">0.576</panel-green>
+            <panel-blue type="double">0.161</panel-blue>
+
+            <dome-red type="double">1.000</dome-red>
+            <dome-green type="double">0.576</dome-green>
+            <dome-blue type="double">0.161</dome-blue>
+
+            <instrument-red type="double">1.000</instrument-red>
+            <instrument-green type="double">0.576</instrument-green>
+            <instrument-blue type="double">0.161</instrument-blue>
+            <!-- F-14 red: <red>0.55</red>
+            <green>0.24</green>
+            <blue>0.10</blue>-->
+
+            <console-red type="double">1.0000</console-red>
+            <console-green type="double">0.576</console-green>
+            <console-blue type="double">0.161</console-blue>
+
+
+        </lighting>
+        <flight>
 			<ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
 			<fake>0.0</fake>
 			<DLC-engaged type="bool">false</DLC-engaged>
@@ -1115,7 +1150,8 @@
 			<!-- Start with the Parking Brake on -->
 <!--			<brake-parking type="double">1.0</brake-parking> -->
 		</gear>
-	</controls>
+   
+    </controls>
 
 	<engines>
 		<engine n="0">

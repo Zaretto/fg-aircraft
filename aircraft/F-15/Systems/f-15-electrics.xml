@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<!--
+        Description: F15 electrics system (based on F-14)
+        Notes: Generator on each engine (via CSD) with emergency hydruaulic generator
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 p2-68 to p2-76
+Main generators drop off at 55% N2. 
+Emergency generator drop off at 11-12% RPM.
+Engine ignition not available below 10%
+Emergency generator 1kva or kVa essential AC and Buses No1 and No2. and AFCS
+Bidi pump operating and pressure between 2000 and 1100 psi emerg will drop to 1kBVa mode and power only the essential AC and Dc No. 1 buses. If pressure subsequently increases the emergency generator must be cycle off/reset to norm
+Figure 14-5.
+
+AC Essential No.1 And No2 Phase A BUS 115 V AC
+AC Essential No.1 And No2 Phase B BUS 115 V AC
+AC Essential No.1 And No2 Phase C BUS 115 V AC
+AC Left Main Bus 115 V AC
+AC Right Main Bus 115 V AC
+DC Essential No.1 Bus 28 V DC
+DC Essential No.2 Bus 28 V DC
+DC Main Bus 28 V DC
+
+main generators 75kva, 100A 28VDC
+emerg gen 5kva, 50A 28v, 
+    -->
+
+
+<system name="electrics">
+<!-- constants -->
+<!-- switches / controls -->
+  <property value="1">systems/electrics/lgenerator-status</property>
+  <property value="1">systems/electrics/rgenerator-status</property>
+  <property value="1">systems/electrics/emerg-generator-status</property>
+  <property value="0">systems/electrics/ground-power</property>
+<!-- equipment  -->
+<!--  <property value="2">systems/electrics/transrect-online</property> -->
+
+<!--
+AC Left Main Bus 115 V AC
+AC Right Main Bus 115 V AC
+DC Essential No.1 Bus 28 V DC
+DC Essential No.2 Bus 28 V DC
+DC Main Bus 28 V DC
+-->
+  <channel name="electrical-system">
+
+    <switch name="systems/electrics/lgenerator-kva">
+          <default value="0"/>
+          <test  logic="AND" value="75">
+            propulsion/engine[0]/n2 ge 55
+            systems/electrics/lgenerator-status eq 1
+          </test>
+    </switch>
+    <switch name="systems/electrics/rgenerator-kva">
+          <default value="0"/>
+          <test  logic="AND" value="75">
+            propulsion/engine[1]/n2 ge 55
+            systems/electrics/rgenerator-status eq 1
+          </test>
+    </switch>
+    <switch name="systems/electrics/egenerator-kva">
+          <default value="0"/>
+          <test  logic="AND" value="5">
+            systems/hydraulics/combined-system-psi ge 2100
+            systems/electrics/emerg-generator-status eq 1
+            systems/electrics/lgenerator-kva lt 20
+            systems/electrics/rgenerator-kva lt 20
+          </test>
+          <test  logic="AND" value="1">
+            systems/hydraulics/combined-system-psi ge 1100
+            systems/electrics/emerg-generator-status eq 1
+            systems/electrics/lgenerator-kva lt 20
+            systems/electrics/rgenerator-kva lt 20
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/ac-essential-bus1">
+          <default value="0"/>
+          <test  logic="OR" value="75">
+            systems/electrics/lgenerator-kva ne 0
+            systems/electrics/rgenerator-kva ne 0
+            systems/electrics/ground-power ne 0
+          </test>
+          <test  logic="AND" value="systems/electrics/egenerator-kva">
+            systems/electrics/egenerator-kva ne 0
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/ac-essential-bus2">
+          <default value="0"/>
+          <test  logic="OR" value="75">
+            systems/electrics/lgenerator-kva ne 0
+            systems/electrics/rgenerator-kva ne 0
+            systems/electrics/ground-power ne 0
+          </test>
+          <test  logic="AND" value="systems/electrics/egenerator-kva">
+            systems/electrics/egenerator-kva ne 0
+          </test>
+    </switch>
+
+
+    <switch name="systems/electrics/ac-left-main-bus">
+          <default value="0"/>
+          <test  logic="OR" value="75">
+            systems/electrics/lgenerator-kva ne 0
+            systems/electrics/rgenerator-kva ne 0
+            systems/electrics/ground-power ne 0
+          </test>
+          <test  logic="AND" value="systems/electrics/egenerator-kva">
+            systems/electrics/egenerator-kva gt 1
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/ac-right-main-bus">
+          <default value="0"/>
+          <test  logic="OR" value="75">
+            systems/electrics/lgenerator-kva ne 0
+            systems/electrics/rgenerator-kva ne 0
+            systems/electrics/ground-power ne 0
+          </test>
+          <test  logic="AND" value="systems/electrics/egenerator-kva">
+            systems/electrics/egenerator-kva gt 1
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/transrect-online">
+          <default value="0"/>
+          <test  logic="AND" value="2">
+                systems/electrics/lgenerator-kva ne 0
+                systems/electrics/rgenerator-kva ne 0
+          </test>
+          <test  logic="AND" value="2">
+            systems/electrics/ground-power ne 0
+          </test>
+          <test  logic="AND" value="2">
+                systems/electrics/egenerator-kva gt 0
+          </test>
+
+          <test  logic="AND" value="1">
+                systems/electrics/lgenerator-kva ne 0
+          </test>
+          <test  logic="AND" value="1">
+                systems/electrics/rgenerator-kva ne 0
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/dc-essential-bus1">
+          <default value="0"/>
+          <test value="0">
+            systems/electrics/transrect-online eq 0
+          </test>
+          <test logic="OR" value="28">
+                systems/electrics/lgenerator-kva gt 0
+                systems/electrics/rgenerator-kva gt 0
+                systems/electrics/ground-power ne 0
+                systems/electrics/egenerator-kva gt 0
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/dc-essential-bus2">
+          <default value="0"/>
+          <test value="0">
+            systems/electrics/transrect-online eq 0
+          </test>
+          <test logic="OR" value="28">
+                systems/electrics/lgenerator-kva gt 0
+                systems/electrics/rgenerator-kva gt 0
+                systems/electrics/ground-power ne 0
+                systems/electrics/egenerator-kva gt 0
+          </test>
+    </switch>
+
+    <switch name="systems/electrics/dc-main-bus">
+          <default value="0"/>
+          <test value="0">
+            systems/electrics/transrect-online eq 0
+          </test>
+          <test logic="OR" value="28">
+                systems/electrics/lgenerator-kva gt 0
+                systems/electrics/rgenerator-kva gt 0
+                systems/electrics/ground-power ne 0
+          </test>
+          <test  logic="AND" value="28">
+            systems/electrics/egenerator-kva gt 1
+          </test>
+    </switch>
+            <switch name="systems/electrics/dc-main-bus-powered">
+          <default value="0"/>
+          <test value="1">
+              systems/electrics/dc-main-bus gt 0
+          </test>
+      </switch>
+      <switch name="systems/electrics/dc-essential-bus1-powered">
+          <default value="0"/>
+          <test value="1">
+              systems/electrics/dc-essential-bus1 gt 0
+          </test>
+      </switch>
+      <switch name="systems/electrics/dc-essential-bus2-powered">
+          <default value="0"/>
+          <test value="1">
+              systems/electrics/dc-essential-bus2 gt 0
+          </test>
+      </switch>
+      <switch name="systems/electrics/ac-right-main-bus-powered">
+          <default value="0"/>
+          <test value="1">
+              systems/electrics/ac-right-main-bus gt 0
+          </test>
+      </switch>
+      <switch name="systems/electrics/ac-left-main-bus-powered">
+          <default value="0"/>
+          <test value="1">
+              systems/electrics/ac-left-main-bus gt 0
+          </test>
+      </switch>
+      <switch name="systems/electrics/ac-essential-bus1-powered">
+          <default value="0"/>
+          <test value="1">
+              systems/electrics/ac-essential-bus1 gt 0
+          </test>
+      </switch>
+  </channel>
+</system>

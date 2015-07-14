@@ -1,110 +1,163 @@
 <?xml version="1.0"?>
 
-<!--IVSI (Instantaneous Vertical Speed Indicator)-->
+<!--F-14B IVSI (Instantaneous Vertical Speed Indicator)
+    Richard Harrison (rjh@zaretto.com)  2015-05-05 Revised to match F-14B 
+  -->
 
 <PropertyList>
-	<path>vsi.ac</path>
+    <path>vsi.ac</path>
 
-	<animation>
-		<type>select</type>
-		<object-name>vsi</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
+    <animation>
+        <type>select</type>
+        <object-name>vsi-off-flag</object-name>
+        <condition>
+            <not>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            </not>
+        </condition>
+    </animation>
+    <animation>
+        <name>needle</name>
+        <type>rotate</type>
+        <object-name>needle</object-name>
+        <property>velocities/vertical-speed-fps</property>
+        <interpolation>
+            <entry>
+                <ind>-100.0</ind>
+                <dep>-255.0</dep>
+            </entry>
+            <entry>
+                <ind>-66.667</ind>
+                <dep>-214.8</dep>
+            </entry>
+            <entry>
+                <ind>-33.333</ind>
+                <dep>-170.0</dep>
+            </entry>
+            <entry>
+                <ind>-16.667</ind>
+                <dep>-135.0</dep>
+            </entry>
+            <entry>
+                <ind>-8.333</ind>
+                <dep>-112.4</dep>
+            </entry>
+            <entry>
+                <ind>0.0</ind>
+                <dep>-90.0</dep>
+            </entry>
+            <entry>
+                <ind>8.333</ind>
+                <dep>-67.6</dep>
+            </entry>
+            <entry>
+                <ind>16.667</ind>
+                <dep>-45.0</dep>
+            </entry>
+            <entry>
+                <ind>33.333</ind>
+                <dep>-10.0</dep>
+            </entry>
+            <entry>
+                <ind>66.667</ind>
+                <dep>34.8</dep>
+            </entry>
+            <entry>
+                <ind>100.0</ind>
+                <dep>75.0</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
-	<animation>
-		<name>needle</name>
-		<type>rotate</type>
-		<object-name>needle</object-name>
-		<!--<property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>-->
-		<property>velocities/vertical-speed-fps</property>
-		<interpolation>
-			<entry><ind>-100.0</ind><dep>-255.0</dep></entry>
-			<entry><ind>-66.667</ind><dep>-214.8</dep></entry>
-			<entry><ind>-33.333</ind><dep>-170.0</dep></entry>
-			<entry><ind>-16.667</ind><dep>-135.0</dep></entry>
-			<entry><ind>-8.333</ind><dep>-112.4</dep></entry>
-			<entry><ind>0.0</ind><dep>-90.0</dep></entry>
-			<entry><ind>8.333</ind><dep>-67.6</dep></entry>
-			<entry><ind>16.667</ind><dep>-45.0</dep></entry>
-			<entry><ind>33.333</ind><dep>-10.0</dep></entry>
-			<entry><ind>66.667</ind><dep>34.8</dep></entry>
-			<entry><ind>100.0</ind><dep>75.0</dep></entry>
-		</interpolation>
-		<axis>
-			<x>-1</x>
-			<y>0</y>
-			<z>0</z>
-		</axis>
-	</animation>
-
-	<!-- lighting -->
-	<animation>
-		<object-name>mount</object-name>
-		<type>material</type>
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
         <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	 <animation>
-		<object-name>face</object-name> 
-		<type>material</type>
-         <condition>
-             <greater-than>
-                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                 <value>0</value>
-             </greater-than>
-             <not>
-                 <property>sim/rendering/rembrandt/enabled</property>
-             </not>
-         </condition>
-         <emission>
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>needle-w</object-name> 
-		<type>material</type>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
+            <greater-than-equals>
+                <property>controls/lighting/instruments-norm</property>
+                <property>controls/lighting/dome-norm</property>
+            </greater-than-equals>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
         <emission>
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
 
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>50</max-m>
-	</animation>
-
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/dome-norm</property>
+                <property>controls/lighting/instruments-norm</property>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <effect>
+        <name>f14-interior</name>
+        <inherits-from>Effects/f14interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>

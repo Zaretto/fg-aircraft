@@ -6,19 +6,6 @@
 	<path>pilot.ac</path>
 
 	<animation>
-		<type>select</type>
-		<object-name>Pilot</object-name>
-		<condition>
-			<not>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>Cockpit View</value>
-				</equals>
-			</not>
-		</condition>
-	</animation>
-
-	<animation>
 		<type>material</type>
 		<object-name>patch</object-name>
 		<object-name>helmet</object-name>
@@ -26,5 +13,11 @@
 		<texture-prop>texture</texture-prop>
 		<texture>patch.checkmates.png</texture>
 	</animation>
+
+    <animation>
+        <type>range</type>
+        <min-m>1</min-m>
+        <max-m>9999</max-m>
+    </animation>
 
 </PropertyList>

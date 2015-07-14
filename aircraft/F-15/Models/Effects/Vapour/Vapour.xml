@@ -1,0 +1,206 @@
+		<!--
+		=========================================
+	  AeroFab - 2010 - Lockheed-Martin-FA-22A-Raptor Project
+	 =========================================
+		   http://aerofab.webnode.pt/
+
+		   Creation :	April 15, 2010 06:33:00 PM
+		   Last update: November 10, 2010 07:41:02 PM
+
+		   Revisions :
+						* October 1, 2010 04:27:45 PM
+						* November 10, 2010 07:41:02 PM ()
+		   ======================================================================
+		   Contributions :
+		   Fabrizio Fracaroli <fabriziofracaroli@hotmail.com >
+		   ======================================================================
+	/*
+	* Copyright (c) 2010  Fabrizio Fracaroli <fabriziofracaroli@hotmail.com >
+	*
+	*  This file is free software: you may copy, redistribute and/or modify it
+	*  under the terms of the GNU General Public License as published by the
+	*  Free Software Foundation, either version 2 of the License.
+	*
+	*  This file is distributed in the hope that it will be useful, but
+	*  WITHOUT ANY WARRANTY; without even the implied warranty of
+	*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+	*  General Public License for more details.
+	*
+	*  You should have received a copy of the GNU General Public License
+	*  along with this program.  If not, see http://www.gnu.org/licenses/ .
+	*
+	* This file incorporates work covered by the following copyright and
+	* permission notice:
+	*
+	* Copyright 2010, Fabrizio Fracaroli <fabriziofracaroli@hotmail.com >
+	*
+	* Permission to use, copy, modify, and/or distribute this software
+	* for any purpose with or without fee is hereby granted, provided
+	* that the above copyright notice and this permission notice appear
+	* in all copies.
+
+	* THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+	* WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+	* WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+	* AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+	* CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+	* OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+	* NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+	* CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+	*/
+
+	======================================================================
+	F-22 Vapour file made by Fabrizio Fracaroli -->
+	
+	<PropertyList>
+
+	<particlesystem>
+	<name>vertical-climb-vapour</name>
+	<texture>vapour.png</texture>
+
+	<emissive type="bool">false</emissive>
+	<lighting type="bool">false</lighting>
+
+	<condition>
+	<and>
+		<greater-than>
+		<property>velocities/airspeed-kt</property>
+		<value>180</value>
+		</greater-than>
+		<less-than>
+		<property>velocities/airspeed-kt</property>
+		<value>450</value>
+		</less-than>
+		<greater-than>
+		<property>accelerations/pilot-g</property>
+		<value>2.7</value>
+		</greater-than>
+		<greater-than>
+		<property>environment/relative-humidity</property>
+		<value>50</value>
+		</greater-than>
+		<greater-than>
+		<property>position/altitude-agl-ft</property>
+		<value>0</value>
+		</greater-than>
+		<less-than>
+		<property>position/altitude-agl-ft</property>
+		<value>8000</value>
+		</less-than>
+		<less-than>
+		<property>environment/temperature-degc</property>
+		<value>28</value>
+		</less-than>
+	</and>
+	</condition>
+
+	<attach>world</attach>
+
+	<placer>
+	<type>segments</type> 
+	<segments>
+	<vertex>
+	<x-m>-3.70573</x-m>
+	<y-m>-1.5798</y-m>
+	<z-m>-0.322113</z-m>
+	</vertex>
+	<vertex>
+	<x-m>-3.70573</x-m>
+	<y-m>1.5798</y-m>
+	<z-m>-0.322113</z-m>
+	</vertex>
+	
+	<vertex>
+	<x-m>-0.240778</x-m>
+	<y-m>-2.18808</y-m>
+	<z-m>-0.348497</z-m>
+	</vertex>
+	<vertex>
+	<x-m>-0.240778</x-m>
+	<y-m>2.18808</y-m>
+	<z-m>-0.348497</z-m>
+	</vertex>
+	
+	<vertex>
+	<x-m>2.84437</x-m>
+	<y-m>-2.86034</y-m>
+	<z-m>-0.329977</z-m>
+	</vertex>
+	<vertex>
+	<x-m>2.84437</x-m>
+	<y-m>2.86034</y-m>
+	<z-m>-0.329977</z-m>
+	</vertex>
+	</segments>
+	</placer>
+
+
+	<shooter>
+		<theta-min-deg>-1.5</theta-min-deg>
+			<theta-max-deg>1.5</theta-max-deg>
+				<phi-min-deg>-1.5</phi-min-deg>
+					<phi-max-deg>1.5</phi-max-deg>
+						<speed-mps>
+							<value>0</value>
+								<spread>10</spread>
+									</speed-mps>
+									<rotation-speed>
+								<x-min-deg-sec>0</x-min-deg-sec>
+							<y-min-deg-sec>0</y-min-deg-sec>
+						<z-min-deg-sec>0</z-min-deg-sec>
+					<x-max-deg-sec>0</x-max-deg-sec>
+				<y-max-deg-sec>0</y-max-deg-sec>
+			<z-max-deg-sec>0</z-max-deg-sec>
+		</rotation-speed>
+</shooter>
+
+	<counter>
+		<particles-per-sec>
+			<value>200</value>
+			<spread>15</spread>
+		</particles-per-sec>
+	</counter>
+	
+	<align>billboard</align>
+
+	<particle>
+		<start>
+			<color>
+				<red><value>   0.7 </value></red>
+					<green><value> 0.7 </value></green>
+						<blue><value>  0.7 </value></blue>
+						<alpha><value> 0.3 </value></alpha>
+					</color>
+				<size>
+			<value>2.45</value>
+		</size>
+	</start>
+
+	<end>
+		<color>
+			<red><value>   1.0 </value></red>
+				<green><value> 1.0 </value></green>
+					<blue><value>  1.0 </value></blue>
+						<alpha><value> 1.0 </value></alpha>
+					</color>
+				<size>
+			<value>4</value>
+		</size>
+	</end>
+
+	<life-sec>
+		<value>0.01</value>
+			</life-sec>
+			<mass-kg>0.00001</mass-kg>
+		<radius-m>0.001</radius-m>
+	</particle>
+
+	<program>
+		<fluid>water</fluid>
+			<gravity type="bool">true</gravity>
+		<wind typ="bool">false</wind>
+	</program>
+	
+	</particlesystem>
+	
+	</PropertyList>

@@ -6,17 +6,6 @@
 	<path>nozzles-gauge.ac</path>
 
 	<animation>
-		<type>select</type>
-		<object-name>nozle</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
-
-	<animation>
 		<type>rotate</type>
 		<object-name>needle</object-name>
 		<property>engines/engine[1]/nozzle-pos-norm</property>
@@ -35,50 +24,87 @@
 
 
 	<!-- Lighting -->
-	<animation>
-		<object-name>face</object-name> 
-		<type>material</type>
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>needle</object-name> 
-		<type>material</type>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
+            <greater-than-equals>
+                <property>controls/lighting/instruments-norm</property>
+                <property>controls/lighting/dome-norm</property>
+            </greater-than-equals>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.715</red>
-			<green>0.288</green>
-			<blue>0.12</blue>
-			</emission>
-	</animation>
+        <emission>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
 
-	<!-- *** LoD *** -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
-
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/dome-norm</property>
+                <property>controls/lighting/instruments-norm</property>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <effect>
+        <name>f14-interior</name>
+        <inherits-from>Effects/f14interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
 </PropertyList>

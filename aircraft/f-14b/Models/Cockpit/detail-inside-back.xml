@@ -4,27 +4,6 @@
 	<name>Detail-Inside-Back</name>
 	<path>detail-inside-back.ac</path>
 
-	<animation>
-		<type>select</type>
-		<object-name>detail-inside-back</object-name>
-		<condition>
-			<or>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>Cockpit View</value>
-				</equals>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>RIO View</value>
-				</equals>
-				<equals>
-					<property>sim/current-view/name</property>
-					<value>Back-seat View</value>
-				</equals>
-			</or>
-		</condition>
-	</animation>
-
 
 	<animation> 
 		<object-name>panels</object-name>
@@ -46,11 +25,18 @@
 			<blue>0.05</blue>
 		</emission>
 	</animation>
-
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>70</max-m>
-	</animation>
-
+    <effect>
+        <name>f14-interior</name>
+        <inherits-from>Effects/f14interior</inherits-from>
+        <object-name>detail-inside-back</object-name>
+        <object-name>details</object-name>
+        <object-name>checklists-rio</object-name>
+        <object-name>floor</object-name>
+        <object-name>panels</object-name>
+        <object-name>bath-tub-front sides</object-name>
+        <object-name>consoles</object-name>
+        <object-name>bathtub-sides</object-name>
+        <object-name>vertical-consoles</object-name>
+    </effect>
+    
 </PropertyList>

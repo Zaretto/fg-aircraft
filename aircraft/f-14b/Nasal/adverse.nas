@@ -38,13 +38,9 @@ var fixAirframe = func {
 	FailureAileron = 0.0;
 	setprop ("sim/model/f-14b/wings/left-wing-torn", LeftWingTorn);
 	setprop ("sim/model/f-14b/wings/right-wing-torn", RightWingTorn);
+    setprop ("fdm/jsbsim/aero/wing-asymmetry", 0);
 }
-
-var computeWingBend = func {
-	# Tears one wing if ultimate limits are exceeded.
-	var av_currentG = getprop ("sim/model/f-14b/instrumentation/g-meter/g-max-mooving-average");   
-    if (av_currentG == nil) return;
-	if (av_currentG >= UltimateMaxG or av_currentG <= UltimateMinG) {
+var breakWing = func {
 		if (!RightWingTorn and !LeftWingTorn) {
 			whichWingToTear = rand();
 			if (whichWingToTear > 0.5) {
@@ -56,6 +52,36 @@ var computeWingBend = func {
 		FailureAileron = RightWingTorn - LeftWingTorn;
 		setprop ("sim/model/f-14b/wings/left-wing-torn", LeftWingTorn);
 		setprop ("sim/model/f-14b/wings/right-wing-torn", RightWingTorn);
+		
+        setprop ("fdm/jsbsim/aero/wing-asymmetry", FailureAileron);
+        print("wing broken ",FailureAileron);
+}
+
+var computeWingBend = func {
+	# Tears one wing if ultimate limits are exceeded.
+	var av_currentG = getprop ("sim/model/f-14b/instrumentation/g-meter/g-max-mooving-average");   
+    if (av_currentG == nil) return;
+	if (av_currentG >= UltimateMaxG or av_currentG <= UltimateMinG)
+    {
+        if(getprop("sim/model/f-14b/wings/damage-enabled"))
+        {
+            if (!RightWingTorn and !LeftWingTorn) {
+                whichWingToTear = rand();
+                if (whichWingToTear > 0.5) {
+                    LeftWingTorn = true;
+                } else {
+                    RightWingTorn = true;
+                }
+            }
+            FailureAileron = RightWingTorn - LeftWingTorn;
+            setprop ("sim/model/f-14b/wings/left-wing-torn", LeftWingTorn);
+            setprop ("sim/model/f-14b/wings/right-wing-torn", RightWingTorn);
+		
+            setprop ("fdm/jsbsim/aero/wing-asymmetry", FailureAileron);
+            print("Over-G Wing damage", FailureAileron);
+        }
+        else
+            print("Over-G Wing damage not enabled");
 	}
 	#effects of normal acceleration
 

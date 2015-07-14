@@ -24,6 +24,9 @@ if(!usingJSBSim)
     setprop("controls/engines/engine[1]/cutoff", 0);
     Engine1Augmentation = Engine1Burner;
     Engine2Augmentation = Engine2Burner;
+    setprop("engines/engine[0]/augmentation-burner", getprop("engines/engine[0]/afterburner")*5);
+    setprop("engines/engine[1]/augmentation-burner", getprop("engines/engine[1]/afterburner")*5);
+
 }
 
 #props.globals.getNode("sim/model/f-14b/fx/test1",1);
@@ -104,8 +107,13 @@ var computeAICS = func {
 
 # Constant
 NozzleSpeed = 1.0;
+var current_flame_number = 0;
 
 var computeNozzles = func {
+
+   current_flame_number = (current_flame_number + 1);        
+   if (current_flame_number > 3) current_flame_number = 0;
+   setprop("sim/model/f-14b/fx/flame-number",current_flame_number);
 
 	var eng1_burner = Engine1Burner.getValue();
 	var eng2_burner = Engine2Burner.getValue();
@@ -126,8 +134,12 @@ var computeNozzles = func {
         }
         else
         {
-            Engine1Burner.setDoubleValue(Engine1Augmentation.getValue());
-            Engine2Burner.setDoubleValue(Engine2Augmentation.getValue());
+# not in replay so copy the properties;
+# 
+            setprop("engines/engine[0]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
+            setprop("engines/engine[1]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
+            setprop("engines/engine[0]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
+            setprop("engines/engine[1]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
         }
     }
     else
@@ -166,6 +178,12 @@ var computeNozzles = func {
             Nozzle1Target = eng1_burner;
             Nozzle2Target = eng2_burner;
         }
+        setprop("engines/engine[0]/augmentation-burner", (int)(getprop("engines/engine[0]/afterburner")+0.98));
+        setprop("engines/engine[1]/augmentation-burner", (int)(getprop("engines/engine[1]/afterburner")+0.99));
+#
+#stage is from 0-5 so scale it
+        setprop("engines/engine[0]/afterburner-stage", (int)(getprop("engines/engine[0]/afterburner")*5+0.99));
+        setprop("engines/engine[1]/afterburner-stage", (int)(getprop("engines/engine[1]/afterburner")*5+0.99));
     }
 }
 

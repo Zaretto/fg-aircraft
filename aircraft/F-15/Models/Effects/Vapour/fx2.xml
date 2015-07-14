@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>effect2.ac</path>
+
+	
+<!-- ******************************************************************* -->
+<!-- Condensation                                                        -->
+<!-- ******************************************************************* -->
+
+	<!-- condensation -->
+
+	<animation>
+      <type>select</type>
+      <object-name>condensation-left</object-name>
+	  <object-name>condensation-right</object-name>
+      <condition>
+   <and>
+    <greater-than>
+     <property>orientation/alpha-deg</property>
+     <value>9.0</value>
+    </greater-than>
+    <greater-than>
+     <property>velocities/airspeed-kt</property>
+     <value>200</value>
+    </greater-than>
+	<less-than>
+    <property>/position/altitude-ft</property>
+    <value>5000.0</value>
+     </less-than>
+   </and>
+  </condition>
+
+  <attach>world</attach>
+
+  <placer>
+   <type>point</type>
+  </placer>
+   </animation>
+
+   
+
+</PropertyList>

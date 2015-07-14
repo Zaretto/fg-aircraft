@@ -4,17 +4,6 @@
 
 	<path>master-light-panel.ac</path>
 
-	<animation>
-		<type>select</type>
-		<object-name>master-light-panel</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
-
 	<!-- Position Wing Switch -->
 	<animation>
 		<type>pick</type>
@@ -169,7 +158,90 @@
 		</axis>
 	</animation>
 
-	<!-- Instruments Wheel-->
+        <animation>
+            <type>knob</type>
+            <object-name>white-flood-switch</object-name>
+            <property>controls/lighting/dome-norm</property>
+
+            <interpolation>
+                <entry>
+                    <ind>0</ind>
+                    <dep>0</dep>
+                </entry>
+                <entry>
+                    <ind>0.5</ind>
+                    <dep>30</dep>
+                </entry>
+                <entry>
+                    <ind>1.0</ind>
+                    <dep>-30</dep>
+                </entry>
+            </interpolation>
+            <center>
+                <x-m>0.0171</x-m>
+                <y-m>0.0421</y-m>
+                <z-m>0.0039</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>1</y>
+                <z>0</z>
+            </axis>
+
+            <action>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/lighting/dome-norm</property>
+                    <factor>0.5</factor>
+                    <min>0</min>
+                    <max>1</max>
+                    <wrap>false</wrap>
+                </binding>
+            </action>
+        </animation>
+        <animation>
+            <type>knob</type>
+            <object-name>red-flood-switch</object-name>
+            <property>controls/lighting/dome-red-norm</property>
+
+            <interpolation>
+                <entry>
+                    <ind>0</ind>
+                    <dep>0</dep>
+                </entry>
+                <entry>
+                    <ind>0.5</ind>
+                    <dep>30</dep>
+                </entry>
+                <entry>
+                    <ind>1.0</ind>
+                    <dep>-30</dep>
+                </entry>
+            </interpolation>
+            <center>
+                <x-m>0.0529</x-m>
+                <y-m>0.0424</y-m>
+                <z-m>0.0039</z-m>
+            </center>
+            <axis>
+                <x>0</x>
+                <y>1</y>
+                <z>0</z>
+            </axis>
+
+            <action>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/lighting/dome-red-norm</property>
+                    <factor>0.5</factor>
+                    <min>0</min>
+                    <max>1</max>
+                    <wrap>false</wrap>
+                </binding>
+            </action>
+        </animation>
+
+        <!-- Instruments Wheel-->
 	<animation>
 		<type>pick</type>
 		<visible>true</visible>
@@ -435,70 +507,91 @@
 
 
 	<!-- lighting -->
-	<animation> 
-		<object-name>mount</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>switches</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>wheels</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/instruments-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+    <animation>
+      <object-name>mount</object-name>
+        <object-name>switches</object-name>
+        <type>material</type>
+      <condition>
+        <greater-than>
+          <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+          <value>0</value>
+        </greater-than>
+        <not>
+          <property>sim/rendering/rembrandt/enabled</property>
+        </not>
+      </condition>
+      <emission>
+        <factor-prop>controls/lighting/dome-norm</factor-prop>
+        <red>  1.000</red>
+        <green>0.576</green>
+        <blue> 0.161</blue>
+        <red-prop>controls/lighting/dome-red</red-prop>
+        <green-prop>controls/lighting/dome-green</green-prop>
+        <blue-prop>controls/lighting/dome-blue</blue-prop>
+      </emission>
+    </animation>
 
+        <animation>
+            <object-name>wheels</object-name>
+            <type>material</type>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than-equals>
+                    <property>controls/lighting/instruments-norm</property>
+                    <property>controls/lighting/dome-norm</property>
+                </greater-than-equals>
+                <not>
+                    <property>/sim/rendering/rembrandt/enabled</property>
+                </not>
+            </condition>
+            <emission>
+                <factor-prop>controls/lighting/instruments-norm</factor-prop>
+                <red>  1.1000</red>
+                <green>0.576</green>
+                <blue> 0.161</blue>
+                <red-prop>controls/lighting/instrument-red</red-prop>
+                <green-prop>controls/lighting/instrument-green</green-prop>
+                <blue-prop>controls/lighting/instrument-blue</blue-prop>
 
-	<!-- LoD -->
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
-
-</PropertyList>
+            </emission>
+        </animation>
+        <animation>
+            <object-name>wheels</object-name>
+            <type>material</type>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>controls/lighting/dome-norm</property>
+                    <property>controls/lighting/instruments-norm</property>
+                </greater-than>
+                <not>
+                    <property>/sim/rendering/rembrandt/enabled</property>
+                </not>
+            </condition>
+            <emission>
+                <factor-prop>controls/lighting/dome-norm</factor-prop>
+                <red>  1.1000</red>
+                <green>0.576</green>
+                <blue> 0.161</blue>
+                <red-prop>controls/lighting/instrument-red</red-prop>
+                <green-prop>controls/lighting/instrument-green</green-prop>
+                <blue-prop>controls/lighting/instrument-blue</blue-prop>
+            </emission>
+        </animation>
+        <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+      <name>f14panel</name>
+      <inherits-from>Effects/f14panel</inherits-from>
+      <object-name>mount</object-name>
+    </effect>
+    <effect>
+      <name>f14panel-knob</name>
+      <inherits-from>Effects/f14panel-knob</inherits-from>
+    </effect>
+ </PropertyList>

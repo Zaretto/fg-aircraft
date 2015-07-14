@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Backup Altimeter by Richard Harrison; rjh@zaretto.com -->
+
+<PropertyList>
+
+    <path>backup-alt.ac</path>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-needle-feet</object-name>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.36</factor>
+        <center>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-needle-100-feet</object-name>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.036</factor>
+        <center>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-needle-1000-feet</object-name>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.0036</factor>
+        <center>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+
+    <!--***set barometric pressure***-->
+
+    <animation>
+        <type>knob</type>
+        <object-name>balt-pressure-knob</object-name>
+        <property>instrumentation/backup-altimeter/setting-inhg</property>
+        <factor>0</factor>
+        <center>
+            <x-m>0.0197</x-m>
+            <y-m>0.0336</y-m>
+            <z-m>-0.0323</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/backup-altimeter/setting-inhg</property>
+                <factor>0.01</factor>
+                <min>27.90</min>
+                <max>31.40</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>balt-barometric-pressure-readout</object-name>
+        <property>/instrumentation/backup-altimeter/setting-inhg</property>
+        <interpolation>
+            <entry>
+                <ind>28</ind>
+                <dep>-180</dep>
+            </entry>
+            <entry>
+                <ind>30</ind>
+                <dep>15</dep>
+            </entry>
+            <entry>
+                <ind>31.3</ind>
+                <dep>130</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6951</x-m>
+            <y-m>0.0832</y-m>
+            <z-m>0.7699</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+        </axis>
+    </animation>
+    <!--Lighting-->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <property>controls/lighting/stby-inst</property>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

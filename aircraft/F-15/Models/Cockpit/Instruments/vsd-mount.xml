@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+
+<!-- F-15 VSD Richard Harrison; rjh@zaretto.com  -->
+
+<PropertyList>
+
+    <path>vsd-mount.ac</path>
+    <!-- Lighting -->
+    <animation>
+        <object-name>vsd-mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-left</inherits-from>
+        <object-name>vsd-mount</object-name>
+    </effect>
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>VSDImage</object-name>
+    </effect>
+    <effect>
+        <name>f15panel-knob</name>
+        <inherits-from>Effects/f15panel-knob</inherits-from>
+        <object-name>vsd-sym-brt</object-name>
+        <object-name>vsd-radar</object-name>
+        <object-name>vsd-brt</object-name>
+        <object-name>vsd-contrast</object-name>
+    </effect>
+    <animation>
+        <object-name>VSDImage</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>sim/model/f15/controls/VSD/brightness</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+        </emission>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>VSDImage</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>sim/model/f15/controls/VSD/brightness</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-brt</object-name>
+        <property>sim/model/f15/controls/VSD/brightness</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6181</x-m>
+            <y-m>-0.2617</y-m>
+            <z-m>1.0712</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VSD/brightness</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-contrast</object-name>
+        <property>sim/model/f15/controls/VSD/contrast</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6181</x-m>
+            <y-m>-0.2623</y-m>
+            <z-m>1.0709</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VSD/contrast</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-radar</object-name>
+        <property>sim/model/f15/controls/VSD/radar</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6181</x-m>
+            <y-m>-0.2623</y-m>
+            <z-m>1.1151</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VSD/radar</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>vsd-sym-brt</object-name>
+        <property>sim/model/f15/controls/VSD/symbol-brightness</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6035</x-m>
+            <y-m>-0.2626</y-m>
+            <z-m>1.1148</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/VSD/symbol-brightness</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+</PropertyList>

@@ -5,19 +5,6 @@
 <PropertyList>
 	<path>hsd-mount.ac</path>
 
-
-	<!-- don't show it when external view -->
-	<animation>
-		<type>select</type>
-		<object-name>hsd-mount</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
-
 	<effect>
 		<inherits-from>Effects/model-transparent</inherits-from>
 		<object-name>screen-bkg</object-name>
@@ -65,25 +52,39 @@
 			<blue>0.0</blue>
 		</emission>
 	</animation>
-	<animation>
-		<object-name>mount</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.44</red>
-			<green>0.192</green>
-			<blue>0.08</blue>
-		</emission>
-	</animation>
+  <animation>
+    <object-name>mount</object-name>
+    <type>material</type>
+    <condition>
+      <greater-than>
+        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <value>0</value>
+      </greater-than>
+      <not>
+        <property>sim/rendering/rembrandt/enabled</property>
+      </not>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/dome-norm</factor-prop>
+      <red>  1.000</red>
+      <green>0.576</green>
+      <blue> 0.161</blue>
+      <red-prop>controls/lighting/dome-red</red-prop>
+      <green-prop>controls/lighting/dome-green</green-prop>
+      <blue-prop>controls/lighting/dome-blue</blue-prop>
+    </emission>
+  </animation>
+
+  <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+  <effect>
+    <name>f14panel</name>
+    <inherits-from>Effects/f14panel</inherits-from>
+    <object-name>symbols</object-name>
+  </effect>
+  <effect>
+    <name>f14panel-knob</name>
+    <inherits-from>Effects/f14panel-knob</inherits-from>
+  </effect>
 
 
 </PropertyList>

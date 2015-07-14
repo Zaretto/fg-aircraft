@@ -11,10 +11,6 @@
 		<object-name>tid</object-name>
 		<condition>
 			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-			<equals>
 				<property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
 				<value>0</value>
 			</equals>
@@ -262,6 +258,10 @@
 		<type>select</type>
 		<object-name>pulse-srch</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch</property>
 		</condition>
 	</animation>
@@ -269,6 +269,10 @@
 		<type>select</type>
 		<object-name>tws-auto</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto</property>
 		</condition>
 	</animation>
@@ -276,6 +280,10 @@
 		<type>select</type>
 		<object-name>az-field-120</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<equals>
 				<property>instrumentation/radar/az-field</property>
 				<value>120</value>
@@ -286,6 +294,10 @@
 		<type>select</type>
 		<object-name>az-field-60</object-name>
 		<condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
 			<equals>
 				<property>instrumentation/radar/az-field</property>
 				<value>60</value>
@@ -6583,10 +6595,12 @@
 	<animation>
 		<object-name>tid</object-name>
 		<type>material</type>
+        <condition>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                   <value>0</value>
                 </greater-than>
+        </condition>
 		<emission>
 			<factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
 			<red>0.0</red>

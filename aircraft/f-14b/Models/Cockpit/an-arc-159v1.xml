@@ -4,17 +4,6 @@
 <PropertyList>
 	<path>an-arc-159v1.ac</path>
 
-	<animation>
-		<type>select</type>
-		<object-name>an-arc-159v1</object-name>
-		<condition>
-			<equals>
-				<property>sim/current-view/name</property>
-				<value>Cockpit View</value>
-			</equals>
-		</condition>
-	</animation>
-
 	<effect>
 		<inherits-from>Effects/model-transparent</inherits-from>
 		<object-name>digit-6</object-name>
@@ -442,7 +431,8 @@
 	<!-- lighting -->
 	<animation>
 		<object-name>mount</object-name>
-		<type>material</type>
+        <object-name>switches-and-knobs</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -452,32 +442,30 @@
                 <property>sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
-	<animation>
-		<object-name>switches-and-knobs</object-name>
-		<type>material</type>
-        <condition>
-            <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission> 
-			<factor-prop>controls/lighting/panel-norm</factor-prop>
-			<red>0.55</red>
-			<green>0.24</green>
-			<blue>0.10</blue>
-		</emission>
-	</animation>
+    <emission>
+      <factor-prop>controls/lighting/dome-norm</factor-prop>
+      <red>  1.000</red>
+      <green>0.576</green>
+      <blue> 0.161</blue>
+      <red-prop>controls/lighting/dome-red</red-prop>
+      <green-prop>controls/lighting/dome-green</green-prop>
+      <blue-prop>controls/lighting/dome-blue</blue-prop>
+    </emission>
+  </animation>
+
+  <effect>
+    <name>f14panel</name>
+    <inherits-from>Effects/f14panel</inherits-from>
+    <object-name>mount</object-name>
+  </effect>
+  <effect>
+    <name>f14panel-knob</name>
+    <inherits-from>Effects/f14panel-knob</inherits-from>
+    <object-name>mode-knob</object-name>
+    <object-name>chan-sel-knob</object-name>
+    <object-name>function-knob</object-name>
+    <object-name>vol-knob</object-name>
+  </effect>
 
 
 	<animation>

@@ -359,6 +359,8 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/pilots-displays/mode/cruise-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/ldg-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/to-bt",
+    "sim/model/f-14b/wings/damage-enabled",
+    "sim/model/f-14b/controls/windshield-heat",
 	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav");
 
 var inc_ticker = func {
@@ -724,6 +726,9 @@ var common_carrier_init = func {
 var common_init = func {
     if(f14.usingJSBSim)
     {
+        if (getprop("sim/model/f15/controls/windshield-heat") != nil)
+            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+
         print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
         setprop("/controls/flight/SAS-roll",0);

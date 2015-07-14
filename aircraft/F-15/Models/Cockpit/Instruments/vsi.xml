@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+<!--F-15 VSI by Richard Harrison (rjh@zaretto.com).
+    Seems to be Pioneer - Central Division of Bendix Corporation (Davenport, Iowa) vertical speed indicator (VSI)
+    same as F4: ref: http://aviation.watergeek.eu/f4b-panel.html
+-->
+
+<PropertyList>
+    <path>vsi.ac</path>
+  
+    <animation>
+        <type>select</type>
+        <object-name>vsi-off-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>p
+        </condition>
+    </animation>
+
+    <!--The modelled position of the needle is straight up (0 deg) to make rotations easier to understand-->
+    <animation>
+        <name>vsi-needle</name>
+        <type>rotate</type>
+        <object-name>vsi-needle</object-name>
+        <property>velocities/vertical-speed-fps</property>
+        <interpolation>
+            <entry>
+                <ind>-100.0</ind> <!---6000 fpm-->
+                <dep>-263.0</dep>
+            </entry>
+            <entry>
+                <ind>-66.667</ind>
+                <dep>-238</dep>
+            </entry>
+            <entry>
+                <ind>-33.333</ind>
+                <dep>-198</dep>
+            </entry>
+            <entry>
+                <ind>-16.667</ind>
+                <dep>-161</dep>
+            </entry>
+            <entry>
+                <ind>-8.333</ind> <!-- 500 fpm -->
+                <dep>-129</dep>
+            </entry>
+            <entry>
+                <ind>0.0</ind>
+                <dep>-90.0</dep>
+            </entry>
+            <entry>
+                <ind>8.333</ind>
+                <dep>-51</dep>
+            </entry>
+            <entry>
+                <ind>16.667</ind>
+                <dep>-19.0</dep>
+            </entry>
+            <entry>
+                <ind>33.333</ind>
+                <dep>19.0</dep>
+            </entry>
+            <entry>
+                <ind>66.667</ind>
+                <dep>57</dep>
+            </entry>
+            <entry>
+                <ind>100.0</ind> <!--6000 fpm-->
+                <dep>81</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+        <center>
+            <x-m>-5.6968</x-m>
+            <y-m>0.1554</y-m>
+            <z-m>0.9168</z-m>
+        </center>
+    </animation>
+
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/flt-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

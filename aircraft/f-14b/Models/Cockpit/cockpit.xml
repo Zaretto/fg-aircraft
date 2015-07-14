@@ -22,17 +22,6 @@
 		</condition>
 	</animation>-->
 
-
-	<!-- coarse cockpit -->
-	<model>
-		<path>Aircraft/f-14b/Models/Cockpit/coarse-inside.xml</path>
-		<offsets>
-			<x-m>0</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-		</offsets>
-	</model>
-
 	<!-- detailed cockpit -->
 	<model>
 		<path>Aircraft/f-14b/Models/Cockpit/detail-inside-front.xml</path>
@@ -121,7 +110,7 @@
 	</model>
 
 	<model>
-		<path>Aircraft/f-14b/Models/Cockpit/altimeter.xml</path>
+		<path>Aircraft/f-14b/Models/Cockpit/f14-altimeter.xml</path>
 		<offsets>
 			<x-m>-5.8200</x-m>
 			<y-m>-0.1710</y-m>
@@ -369,7 +358,17 @@
 		</offsets>
 	</model>
 
-	<model>
+    <model>
+        <path>Aircraft/f-14b/Models/Cockpit/cabin-pressure.xml</path>
+        <offsets>
+            <x-m>-5.73</x-m>
+            <y-m>-0.05</y-m>
+            <z-m>-0.37</z-m>
+            <pitch-deg>-9</pitch-deg>
+        </offsets>
+    </model>
+
+    <model>
 		<path>Aircraft/f-14b/Models/Cockpit/stdby-adi.xml</path>
 		<offsets>
 			<x-m>-5.8380</x-m>
@@ -441,7 +440,18 @@
 		</offsets>
 	</model>
 
-	<!-- Right Pilot Console -->
+    <model>
+        <path>Aircraft/f-14b/Models/Cockpit/lox-gauge.xml</path>
+        <offsets>
+            <x-m>-5.8360</x-m>
+            <y-m>0.2794</y-m>
+            <z-m>-0.1866</z-m>
+            <pitch-deg>-5</pitch-deg>
+            <heading-deg>-10</heading-deg>
+        </offsets>
+    </model>
+
+    <!-- Right Pilot Console -->
 	<model>
 		<path>Aircraft/f-14b/Models/Cockpit/right-vertical-console.xml</path>
 		<offsets>
@@ -487,30 +497,31 @@
 		<path>Aircraft/f-14b/Models/Cockpit/warn-panel-pilot.xml</path>
 		<offsets>
 			<x-m>-5.4503</x-m>
-			<y-m>0.38</y-m>
-			<z-m>-0.4270</z-m>
-			<roll-deg>0</roll-deg>
+			<y-m>0.42</y-m>
+			<z-m>-0.497</z-m>
+            <roll-deg>28</roll-deg>
 		</offsets>
 	</model>
 	<model>
 		<path>Aircraft/f-14b/Models/Cockpit/master-gen.xml</path>
 		<offsets>
 			<x-m>-5.3033</x-m>
-			<y-m>0.38</y-m>
-			<z-m>-0.4370</z-m>
-			<roll-deg>0</roll-deg>
-		</offsets>
+            <y-m>0.42</y-m>
+            <z-m>-0.497</z-m>
+            <roll-deg>28</roll-deg>
+        </offsets>
 	</model>
 
 
 	<model>
 		<path>Aircraft/f-14b/Models/Cockpit/hyd-transfer-pump.xml</path>
 		<offsets>
-			<x-m>-5.133</x-m>
-			<y-m>0.38</y-m>
-			<z-m>-0.4370</z-m>
-			<roll-deg>0</roll-deg>
-		</offsets>
+			<x-m>-5.06</x-m>
+            <x-m>-5.4503</x-m>
+            <y-m>0.42</y-m>
+            <z-m>-0.497</z-m>
+            <roll-deg>28</roll-deg>
+        </offsets>
 	</model>
 
 <!-- ******************************************************************* -->
@@ -547,8 +558,17 @@
 			<pitch-deg>-12.2</pitch-deg>
 		</offsets>
 	</model>
+    <model>
+        <path>Aircraft/f-14b/Models/Cockpit/cabin-pressure.xml</path>
+        <offsets>
+            <x-m>-4.2230</x-m>
+            <y-m>0.2510</y-m>
+            <z-m>0.1031</z-m>
+            <pitch-deg>-12.2</pitch-deg>
+        </offsets>
+    </model>
 
-	<model>
+    <model>
 		<path>Aircraft/f-14b/Models/Cockpit/frequency-display-1-2.xml</path>
 		<offsets>
 			<x-m>-4.2100</x-m>
@@ -569,7 +589,7 @@
 	</model>
 
 	<model>
-		<path>Aircraft/f-14b/Models/Cockpit/altimeter2.xml</path>
+		<path>Aircraft/f-14b/Models/Cockpit/f14-altimeter.xml</path>
 		<offsets>
 			<x-m>-4.1957</x-m>
 			<y-m>-0.2530</y-m>
@@ -725,7 +745,5 @@
 			<blue>0.0125</blue>
 		</emission>
 	</animation>
-
-
 
 </PropertyList>

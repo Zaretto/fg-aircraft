@@ -1,0 +1,434 @@
+<?xml version="1.0"?>
+<!-- F-15 ARU-39/A ADI by Richard Harrison rjh@zaretto.com ; based on A-10 by xiii 
+        Height - 4.160 inches nominal
+        Length - 9.265 inches nominal
+        Width  - 4.160 inches nominal
+-->
+<PropertyList>
+    <path>adi.ac</path>
+
+    <animation>
+        <type>select</type>
+        <object-name>off-flag</object-name>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>sphere</object-name>
+        <property>instrumentation/attitude-indicator/indicated-roll-deg</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <center>
+            <x-m>-5.7436</x-m>
+            <y-m>0.012</y-m>
+            <z-m>0.9862</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>sphere</object-name>
+        <property>instrumentation/attitude-indicator/indicated-pitch-deg</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <center>
+            <x-m>-5.7436</x-m>
+            <y-m>0.012</y-m>
+            <z-m>0.9862</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>turn-indicator</object-name>
+        <property>instrumentation/turn-indicator/indicated-turn-rate</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <factor>0.0114</factor>
+        <axis>
+            <y>1</y>
+        </axis>
+        <min-m>-0.0185</min-m>
+        <max-m>0.0185</max-m>
+    </animation>
+    <!--based on 1.08 indicated-turn-rate corresponding to a standard 360° turn in 2 minutes at cruise configuration (FL 320 M0.72) -->
+
+    <!-- ILS mode -->
+    <animation>
+        <type>select</type>
+        <object-name>ils-flag</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>sim/model/instruments/nav/selector-ils</property>
+                    <value>false</value>
+                </equals>
+                <not>
+                    <greater-than>
+                        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                        <value>0</value>
+                    </greater-than>
+                </not>
+                <equals>
+                    <property>instrumentation/nav[0]/in-range</property>
+                    <value>false</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>glide-slope-index</object-name>
+        <condition>
+            <greater-than>
+                <property>sim/model/f15/instrumentation/nav/gs-in-range</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>glide-slope-index</object-name>
+        <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <factor>0.036</factor>
+        <min-m>-0.020</min-m>
+        <max-m>0.020</max-m>
+        <axis>
+            <x>-0.087</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>bank-index</object-name>
+        <property>instrumentation/attitude-indicator/indicated-roll-deg</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <min-deg>-120</min-deg>
+        <max-deg>120</max-deg>
+        <center>
+            <x-m>-5.7052</x-m>
+            <y-m>0.01</y-m>
+            <z-m>0.9924</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- ADI's bars in steering mode -->
+    <animation>
+        <type>select</type>
+        <object-name>yaw-steering-bar</object-name>
+        <condition>
+            <equals>
+                <property>sim/model/instruments/nav/selector-ptr</property>
+                <value>false</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>yaw-steering-bar</object-name>
+        <condition>
+            <equals>
+                <property>sim/model/instruments/nav/selector-ptr</property>
+                <value>false</value>
+            </equals>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>controls/flight/aileron</property>
+        <factor>0.025</factor>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>pitch-steering-bar</object-name>
+        <condition>
+            <equals>
+                <property>sim/model/instruments/nav/selector-ptr</property>
+                <value>false</value>
+            </equals>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>pitch-steering-bar</object-name>
+        <condition>
+            <equals>
+                <property>sim/model/instruments/nav/selector-ptr</property>
+                <value>false</value>
+            </equals>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>controls/flight/elevator</property>
+        <factor>0.03</factor>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <!-- ADI bars in ILS mode -->
+
+    <animation>
+        <type>select</type>
+        <object-name>nav-yaw-steering-bar</object-name>
+        <condition>
+            <property>sim/model/f15/instrumentation/nav/signal-quality-norm</property>
+            <greater-than>
+                <property>sim/model/instrumentation/vhf/mode</property>
+                <value>1</value>
+            </greater-than>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>nav-yaw-steering-bar</object-name>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>sim/model/f15/instrumentation/nav/heading-needle-deflection-norm</property>
+        <!--<min-m>-0.0331</min-m>
+        <max-m>0.0330</max-m>-->
+        <factor>0.04</factor>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>nav-pitch-steering-bar</object-name>
+        <condition>
+            <property>sim/model/f15/instrumentation/nav/signal-quality-norm</property>
+            <greater-than>
+                <property>sim/model/instrumentation/vhf/mode</property>
+                <value>1</value>
+            </greater-than>
+            <!--<greater-than>
+				<property>sim/model/instrumentation/vhf/selector</property>
+				<value>2</value>
+			</greater-than>-->
+            <greater-than>
+                <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+                <value>-0.976</value>
+            </greater-than>
+            <less-than>
+                <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+                <value>0.976</value>
+            </less-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>nav-pitch-steering-bar</object-name>
+        <property>sim/model/f15/instrumentation/nav/gs-needle-deflection-norm</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <factor>0.04</factor>
+        <min-m>-0.025</min-m>
+        <max-m>0.035</max-m>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <!-- course-flag -->
+    <animation>
+        <type>select</type>
+        <object-name>course-flag</object-name>
+        <condition>
+            <or>
+                <and>
+                    <property>sim/model/instruments/nav/selector-ptr</property>
+                    <not>
+                        <property>instrumentation/nav[2]/in-range</property>
+                    </not>
+                    <equals>
+                        <property>sim/model/instrumentation/vhf/mode</property>
+                        <value>2</value>
+                    </equals>
+                    <greater-than>
+                        <property>sim/model/instrumentation/vhf/selector</property>
+                        <value>2</value>
+                    </greater-than>
+                </and>
+                <not>
+                    <greater-than>
+                        <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                        <value>0</value>
+                    </greater-than>
+                </not>
+            </or>
+        </condition>
+    </animation>
+
+    <!-- slip-ball-->
+    <animation>
+        <type>rotate</type>
+        <object-name>slip-ball</object-name>
+        <property>instrumentation/slip-skid-ball/indicated-slip-skid</property>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <factor>8</factor>
+        <min-deg>-11</min-deg>
+        <max-deg>11</max-deg>
+        <center>
+            <x-m>-5.7037</x-m>
+            <y-m>0.01</y-m>
+            <z-m>1.0139031</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- lighting -->
+
+    <animation>
+        <object-name>ext</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instr</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/flt-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>ext</object-name>
+        <object-name>instr</object-name>
+    </effect>
+</PropertyList>

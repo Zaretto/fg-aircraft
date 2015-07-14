@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<!-- 
+Afterburner effects model
+   |  Richard Harrison: 2015-01 : rjh@zaretto.com based on Enqrique Laso's work on the F20 
+
+1. Using a cone for the flame trail rather than a billboard surface
+2. The illumination factor for the flame trail is the inverse of the available light (from rendering/scene/diffuse) - so that in full daylight there isn't much visible in terms of light from the trial.
+3. To get the flame trail to look right we control both the emissive light and the transparency - so at noon there isn't much light emission and it is fairly transparent.
+4. Using rembrandt lighting cone for each engine - positioned roughly in the edge of the nozzles
+
+Components:
+
+* FlameTrail is the illuminated long trail 
+* FlameModel are the shockrings
+* FlameModelBurn is the augmentation diffuser ring at the exist of the turbine
+ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
+-->
+<PropertyList>
+
+    <path>flame.ac</path>
+
+    <params>
+        <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
+        <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
+        <flame-number>sim/model/f-14b/fx/flame-number</flame-number>
+    </params>
+    <model>
+        <path>als-flame.xml</path>
+        <name>ALS-FlameTrail</name>
+    </model>
+
+    <offsets>
+        <z-m>0.0</z-m>
+    </offsets>
+
+    <effect>
+        <inherits-from>Effects/model-transparent</inherits-from>
+        <object-name>FlameModel</object-name>
+        <object-name>FlameTrail</object-name>
+    </effect>
+
+    <animation>
+        <type>select</type>
+        <object-name>FlameModelBurn</object-name>
+        <condition>
+            <or>
+                <greater-than>
+                    <property alias="/params/augmentation-ignition"/>
+                    <!-- ignition (sequence 0 to 1)-->
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property alias="/params/augmentation-alight"/>
+                    <!-- alight -->
+                    <value>0</value>
+                </greater-than>
+            </or>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <object-name>FlameModel</object-name>
+        <condition>
+            <greater-than-equals>
+                <property alias="/params/augmentation-ignition"/>
+                <value>1</value>
+            </greater-than-equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>ALS-FlameTrail</object-name>
+        <condition>
+            <greater-than>
+                <property alias="/params/augmentation-ignition"/>
+                <value>0.8</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>FlameTrail</object-name>
+        <condition>
+            <greater-than>
+                <property alias="/params/augmentation-ignition"/>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>FlameModel</object-name>
+        <object-name>FlameTrail</object-name>
+        <factor>0.0</factor>
+        <offset-m>0</offset-m>
+        <axis>
+            <x>1.0</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>FlameModel</object-name>
+        <object-name>FlameModelBurn</object-name>
+        <object-name>FlameTrail</object-name>
+        <offset-deg>90.0</offset-deg>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+        <axis>
+            <x>0.0</x>
+            <y>1.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+
+
+
+    <animation>
+        <type>billboard</type>
+        <object-name>FlameTrail</object-name>
+        <spherical type="bool">false</spherical>
+    </animation>
+
+
+    <animation>
+        <type>translate</type>
+        <object-name>FlameModel</object-name>
+        <factor>0.0</factor>
+        <offset-m>0.0</offset-m>
+        <axis>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>1.0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>scale</type>
+        <object-name>FlameModel</object-name>
+        <object-name>FlameTrail</object-name>
+        <property alias="/params/augmentation-alight"/>
+        <x-min>1.0</x-min>
+        <y-min>1.0</y-min>
+        <z-min>0.5</z-min>
+        <x-max>1.3</x-max>
+        <y-max>1.0</y-max>
+        <z-max>1.0</z-max>
+        <x-factor>0.26</x-factor>
+        <y-factor>0.26</y-factor>
+        <z-factor>0.2</z-factor>
+    </animation>
+
+    <animation>
+        <type>scale</type>
+        <object-name>ALS-FlameTrail</object-name>
+        <property alias="/params/augmentation-alight"/>
+        <x-min>0.2</x-min>
+        <y-min>0.3</y-min>
+        <z-min>0.3</z-min>
+        <y-max>1</y-max>
+        <z-max>1</z-max>
+        <x-factor>0.472</x-factor>
+        <y-factor>0.6</y-factor>
+        <z-factor>0.6</z-factor>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>FlameModel</object-name>
+        <object-name>FlameTrail</object-name>
+        <factor>0.0</factor>
+        <offset-m>0.0</offset-m>
+        <axis>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>1.0</z>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>FlameModel</object-name>
+        <property>sim/model/f15/fx/flame-number</property>
+        <factor>-0.107421875</factor>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>FlameTrail</object-name>
+        <property>sim/model/f15/fx/flame-number</property>
+        <factor>-0.004</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- control the emisssion and transparency to get something that looks right -->
+    <animation>
+        <type>material</type>
+        <object-name>FlameModel</object-name>
+        <emission>
+            <red>1.0</red>
+            <green>0.5</green>
+            <blue>0.0</blue>
+            <property alias="/params/augmentation-alight"/>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>FlameModelBurn</object-name>
+        <emission>
+            <red>1</red>
+            <green>0.78</green>
+            <blue>0.67</blue>
+            <property alias="/params/augmentation-ignition"/>
+        </emission>
+   </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>FlameTrail</object-name>
+        <object-name>FlameModel</object-name>
+
+        <ambient>
+            <red-prop>rendering/scene/diffuse/red</red-prop>
+            <green-prop>rendering/scene/diffuse/red</green-prop>
+            <blue-prop>rendering/scene/diffuse/red</blue-prop>
+            <factor>-1</factor>
+            <offset>1.0</offset>
+        </ambient>
+        <transparency>
+            <alpha-prop>rendering/scene/diffuse/red</alpha-prop>
+            <factor>-0.8</factor>
+            <offset>1.0</offset>
+        </transparency>
+        <emission>
+            <red>1.0</red>
+            <green>1.0</green>
+            <blue>1.0</blue>
+            <property alias="/params/augmentation-alight"/>
+        </emission>
+    </animation>
+
+</PropertyList>

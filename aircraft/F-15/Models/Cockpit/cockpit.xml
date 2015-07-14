@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+
+<!-- F-15 C cockpit by Richard Harrison; rjh@zaretto.com -->
+
+<PropertyList>
+    <path>f15c-interior-front.ac</path>
+
+    <!--<effect>
+        <inherits-from>Effects/model-transparent</inherits-from>
+        <object-name>HUDImage1</object-name>
+        <object-name>HUDImage2</object-name>
+        <object-name>HUDGlass1</object-name>
+        <object-name>HUDGlass2</object-name>
+        <object-name>VSDImage</object-name>
+        <object-name>TEWSImage</object-name>
+        <object-name>MPCDImage</object-name>
+    </effect>-->
+
+    <!-- HUD --><!--
+    <model>
+        <path>Instruments/hud.xml</path>
+        <offsets>
+            <x-m>-5.6</x-m>
+            <y-m>0.0000</y-m>
+            <z-m>1.475</z-m>
+        </offsets>
+        <pitch-deg>-5</pitch-deg>
+    </model>-->
+    <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <equals>
+                    <property>sim/multiplay/generic/string[2]</property>
+                    <value>D</value>
+                </equals>
+            </not>
+        </condition>
+        <object-name>f15c-avionics-bay</object-name>
+    </animation>
+
+    <model>
+        <path>f15-interior-back.xml</path>
+    </model>
+    <model>
+        <path>Instruments/pitch-ratio-panel.xml</path>
+    </model>
+
+    <model>
+        <path>Instruments/hud-controls.xml</path>
+    </model>
+    <model>
+        <path>Instruments/landing-gear.xml</path>
+    </model>
+    <model>
+        <path>Instruments/flaps-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/jett-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/mpcd-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/tews.xml</path>
+    </model>
+    <model>
+        <path>Instruments/vsd-mount.xml</path>
+    </model>
+    <model>
+        <path>Instruments/left-side-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/caution-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/jfs-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/cabin-pressure.xml</path>
+    </model>
+    <model>
+        <path>Instruments/canopy-lock-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/fire-panel.xml</path>
+    </model>
+    <model>
+        <path>Instruments/asi/asi.xml</path>
+    </model>
+    <model>
+        <path>Instruments/aoa-gauge.xml</path>
+    </model>
+    <model>
+        <path>Instruments/accel.xml</path>
+    </model>
+<!--Centre-->
+    <model>
+        <path>Instruments/adi.xml</path>
+    </model>
+    <model>
+        <path>Instruments/arm-modes.xml</path>
+    </model>
+    <model>
+        <path>Instruments/hsi.xml</path>
+    </model>
+    <!--Right-->
+
+    <model>
+        <path>Instruments/altimeter.xml</path>
+    </model>
+
+    <model>
+        <path>Instruments/vsi.xml</path>
+    </model>
+    <model>
+        <path>Instruments/chronograph.xml</path>
+    </model>
+    <model>
+        <path>Instruments/engines-gauges.xml</path>
+    </model>
+    <model>
+        <path>Instruments/fuel-gauge.xml</path>
+    </model>
+<!-- backup instruments -->
+    <model>
+        <path>Instruments/backup-adi.xml</path>
+    </model>
+    <model>
+        <path>Instruments/backup-alt.xml</path>
+    </model>
+    <model>
+        <path>Instruments/backup-asi.xml</path>
+    </model>
+    <model>
+        <path>stick.xml</path>
+    </model>
+    <animation>
+        <object-name>main-instrument-panel</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>rudder-pedal-left</object-name>
+        <property>controls/flight/rudder</property>
+        <factor>0.07</factor>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>translate</type>
+        <object-name>rudder-pedal-right</object-name>
+        <property>controls/flight/rudder</property>
+        <factor>0.07</factor>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Cockpit/Effects/f15interior</inherits-from>
+        <object-name>GlareShield</object-name>
+        <object-name>HudGlareShield</object-name>
+        <object-name>rudder-pedal-right</object-name>
+        <object-name>rudder-pedal-left</object-name>
+        <object-name>main-instrument-panel</object-name>
+        <object-name>InteriorBucket</object-name>
+        <object-name>seat-cushion</object-name>
+        <object-name>aces2</object-name>
+    </effect>
+
+</PropertyList>

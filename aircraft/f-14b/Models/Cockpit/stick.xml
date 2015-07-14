@@ -56,9 +56,9 @@
 
 
 	<!-- Lighting -->
-	<animation> 
-		<object-name>stick</object-name>
-		<type>material</type>
+	<animation>
+        <object-name>stick-group</object-name>
+        <type>material</type>
         <condition>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -76,11 +76,10 @@
 		</emission>
 	</animation>
 
+        <effect>
+            <name>f14-interior</name>
+            <inherits-from>Effects/f14interior</inherits-from>
+            <object-name>stick-group</object-name>
+        </effect>
 
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>35</max-m>
-	</animation>
-
-</PropertyList>
+    </PropertyList>

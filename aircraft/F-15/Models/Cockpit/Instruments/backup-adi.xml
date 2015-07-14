@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Backup ADI by Richard Harrison; rjh@zaretto.com (based on AI.xml by Dave Culp) -->
+
+<PropertyList>
+
+    <path>backup-adi.ac</path>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>AttitudeBall</object-name>
+        <property>orientation/roll-deg</property>
+        <factor>1</factor>
+        <center>
+            <x-m>-5.7195</x-m>
+            <y-m>0.013</y-m>
+            <z-m>0.7712</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>AttitudeBall</object-name>
+        <property>orientation/pitch-deg</property>
+        <factor>1</factor>
+        <center>
+            <x-m>-5.7195</x-m>
+            <y-m>0.013</y-m>
+            <z-m>0.7712</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>SkyPointer</object-name>
+        <property>orientation/roll-deg</property>
+        <factor>1</factor>
+        <offset-deg>180</offset-deg>
+        <center>
+            <x-m>-5.6961</x-m>
+            <y-m>0.01</y-m>
+            <z-m>0.77</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <!--Lighting-->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <property>controls/lighting/stby-inst</property>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

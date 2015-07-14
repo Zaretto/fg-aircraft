@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Pitch Ratio panel : 2015-02-10 Richard Harrison; rjh@zaretto.com  -->
+
+<PropertyList>
+
+    <path>pitch-ratio-panel.ac</path>
+
+
+    <animation>
+        <name>needle-pitch-ratio</name>
+        <type>rotate</type>
+        <object-name>needle-pitch-ratio</object-name>
+        <property>fdm/jsbsim/systems/cadc/pitch-ratio</property>
+        <factor>225</factor>
+        <center>
+            <x-m>-5.7031</x-m>
+            <y-m>-0.2884</y-m>
+            <z-m> 0.7926</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>pitch-ratio-switch</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/cadc/pitch-ratio-emergency</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <name>pitch-ratio-switch</name>
+        <type>rotate</type>
+        <object-name>pitch-ratio-switch</object-name>
+        <property>fdm/jsbsim/systems/cadc/pitch-ratio-emergency</property>
+        <offset-deg>30</offset-deg>
+        <factor>-60</factor>
+        <center>
+            <x-m>-5.7031</x-m>
+            <y-m>-0.286</y-m>
+            <z-m> 0.7463</z-m>
+        </center>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/panel-red</red-prop>
+            <green-prop>controls/lighting/panel-green</green-prop>
+            <blue-prop>controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Effects/f15panel-left</inherits-from>
+        <object-name>pitch-ratio-panel</object-name>
+    </effect>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+<!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+
+</PropertyList>

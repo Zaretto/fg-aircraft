@@ -1,0 +1,285 @@
+<?xml version="1.0"?>
+<!--
+        Description: F15 hydraulics system
+        Notes: Supports engine and emergency pumps, with bidi transfer
+               (1) no electrical modelling so will always have hyd pressure
+               (2) Flight controls require hyds and will not function if no pressure
+               (3) pump failure supported (no pressure depending on pump/configuration of other pumps)
+               (4) Has utility system which has psi and accumulators and powers JFS
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 p2-68 to p2-76, F-15 Figure 1-15
+    -->
+
+<system name="hydraulic">
+
+    <property value="3022">systems/hydraulics/normal-pressure</property>
+    <property value="2100">systems/hydraulics/bidi-activation</property>
+    <property value="2500">systems/hydraulics/bidi-normal-pressure</property>
+    <!-- the min pressure is really for when no hydraulic fluid and the pressure has been at that level
+     for more than 10 seconds, so for now we will not model this as there is no way for fluid to be depleted -->
+    <property value="-500">systems/hydraulics/bidi-cutoff-min-pressure</property>
+    <property value="25">systems/hydraulics/reservoir-quantity</property>
+    <property value="2100">systems/hydraulics/emerg-pump-auto-activation</property>
+    <property value="2400">systems/hydraulics/emerg-pump-auto-deactivation</property>
+    <property value="0">systems/hydraulics/emerg-system-pump-failed</property>
+    <property value="0">systems/hydraulics/flight-system-pump-failed</property>
+    <property value="0">systems/hydraulics/combined-system-pump-failed</property>
+    <property value="0">systems/hydraulics/emerg-flyt-hyd-switch</property>
+    <property value="1">systems/hydraulics/hyd-transfer-pump-switch</property>
+    <property value="0">systems/engines/jfs-running</property>
+    <property value="0">systems/hydraulics/jfs-bleed</property>
+    <!-- This is used to ensure the sim starts with util hyds by setting to -ve number -->
+    <property value="0">systems/hydraulics/util-system-preload-input</property>
+
+    <channel name="flight">
+        <switch name="systems/hydraulics/flight-system-pressure">
+            <default value="0"/>
+            <test  logic="AND" value="1">
+                systems/hydraulics/flight-system-psi ge 1800
+            </test>
+        </switch>
+        <!-- 
+Sufficient  hydraulic  pressure  for smooth flight control inputs should
+be available with one engine windmilling  at  18  percent  rpm  or  two
+engines at 11 percent rpm.
+-->
+
+        <scheduled_gain name="systems/hydraulics/flight-system-pump-psi">
+            <input>propulsion/engine[1]/n2</input>
+            <table>
+                <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                <independentVar lookup="column">systems/hydraulics/flight-system-pump-failed</independentVar>
+                <tableData>
+                    0      1
+                    0       0      0
+                    18    130      0
+                </tableData>
+            </table>
+            <clipto>
+                <min> 0 </min>
+                <max>
+                    <property>systems/hydraulics/normal-pressure</property>
+                </max>
+            </clipto>
+        </scheduled_gain>
+
+        <switch name="systems/hydraulics/bidi-combined-to-flight-system-factor">
+            <default value="0"/>
+            <test  logic="AND" value="0.83">
+                systems/hydraulics/hyd-transfer-pump-switch ne 0
+                systems/hydraulics/combined-system-psi ge systems/hydraulics/bidi-activation
+                systems/hydraulics/flight-system-pump-psi le systems/hydraulics/bidi-activation
+                systems/hydraulics/flight-system-psi ge systems/hydraulics/bidi-cutoff-min-pressure
+                systems/hydraulics/combined-system-psi ge systems/hydraulics/bidi-cutoff-min-pressure
+            </test>
+        </switch>
+
+        <switch name="systems/hydraulics/emerg-pump-low-speed-psi">
+            <default value="0"/>
+            <test  logic="AND" value="2001">
+                <!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
+                systems/hydraulics/emerg-system-pump-failed eq 0
+                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+                systems/electrics/ac-right-main-bus gt 5
+            </test>
+            <test  logic="AND" value="2001">
+                <!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
+                systems/hydraulics/emerg-system-pump-failed eq 0
+                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+                systems/engines/jfs-running ne 0
+            </test>
+            <test  logic="AND" value="0">
+                systems/hydraulics/emerg-pump-low-speed-psi ge 1800
+                systems/hydraulics/emerg-system-pump-failed ne 0
+                systems/hydraulics/flight-system-psi gt systems/hydraulics/emerg-pump-auto-deactivation
+                systems/hydraulics/combined-system-psi gt systems/hydraulics/emerg-pump-auto-deactivation
+            </test>
+        </switch>
+        <switch name="systems/hydraulics/emerg-pump-on">
+            <default value="0"/>
+            <test value="1">
+                systems/hydraulics/emerg-pump-low-speed-psi gt 0
+            </test>
+            <test value="1">
+                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+            </test>
+            <test value="1">
+                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
+            </test>
+        </switch>
+        <pure_gain name="systems/hydraulics/bidi-combined-available-psi">
+            <input>systems/hydraulics/combined-system-psi</input>
+            <gain>systems/hydraulics/bidi-combined-to-flight-system-factor</gain>
+        </pure_gain>
+
+        <summer name="systems/hydraulics/bidi-transfer-combined-to-flight-system-psi">
+            <input>systems/hydraulics/bidi-combined-available-psi</input>
+            <input>-systems/hydraulics/flight-system-pump-psi</input>
+            <clipto>
+                <min> 0 </min>
+                <max>
+                    <property>systems/hydraulics/bidi-normal-pressure</property>
+                </max>
+            </clipto>
+        </summer>
+
+        <summer name="systems/hydraulics/emerg-transfer-to-flight-system-psi">
+            <input>systems/hydraulics/emerg-pump-low-speed-psi</input>
+            <input>-systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</input>
+            <input>-systems/hydraulics/flight-system-pump-psi</input>
+            <clipto>
+                <min> 0 </min>
+                <max>
+                    <property>systems/hydraulics/bidi-normal-pressure</property>
+                </max>
+            </clipto>
+        </summer>
+
+        <summer name="systems/hydraulics/flight-system-psi">
+            <input>systems/hydraulics/emerg-transfer-to-flight-system-psi</input>
+            <input>systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</input>
+            <input>systems/hydraulics/flight-system-pump-psi</input>
+            <input>-systems/hydraulics/flight-system-bleed</input>
+        </summer>
+    </channel>
+    <channel name="Combined">
+        <switch name="systems/hydraulics/combined-system-pressure">
+            <default value="0"/>
+            <test  logic="AND" value="1">
+                systems/hydraulics/combined-system-psi ge 2000
+            </test>
+        </switch>
+        <scheduled_gain name="systems/hydraulics/combined-system-pump-psi">
+            <input>propulsion/engine[0]/n2</input>
+            <table>
+                <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                <independentVar lookup="column">systems/hydraulics/combined-system-pump-failed</independentVar>
+                <tableData>
+                    0      1
+                    0       0      0
+                    18    130      0
+                </tableData>
+            </table>
+            <clipto>
+                <min> 0 </min>
+                <max>
+                    <property>systems/hydraulics/normal-pressure</property>
+                </max>
+            </clipto>
+        </scheduled_gain>
+
+
+        <switch name="systems/hydraulics/bidi-flight-to-combined-system-factor">
+            <default value="0"/>
+            <test  logic="AND" value="0.83">
+                systems/hydraulics/hyd-transfer-pump-switch ne 0
+                systems/hydraulics/flight-system-psi ge systems/hydraulics/bidi-activation
+                systems/hydraulics/combined-system-pump-psi le systems/hydraulics/bidi-activation
+                systems/hydraulics/flight-system-psi ge systems/hydraulics/bidi-cutoff-min-pressure
+                systems/hydraulics/combined-system-psi ge systems/hydraulics/bidi-cutoff-min-pressure
+            </test>
+        </switch>
+
+        <pure_gain name="systems/hydraulics/bidi-flight-available-psi">
+            <input>systems/hydraulics/flight-system-psi</input>
+            <gain>systems/hydraulics/bidi-flight-to-combined-system-factor</gain>
+        </pure_gain>
+
+        <summer name="systems/hydraulics/bidi-transfer-flight-to-combined-system-psi">
+            <input>systems/hydraulics/bidi-flight-available-psi</input>
+            <input>-systems/hydraulics/combined-system-pump-psi</input>
+            <clipto>
+                <min> 0 </min>
+                <max>
+                    <property>systems/hydraulics/bidi-normal-pressure</property>
+                </max>
+            </clipto>
+        </summer>
+
+        <summer name="systems/hydraulics/emerg-transfer-to-combined-system-psi">
+            <input>systems/hydraulics/emerg-pump-low-speed-psi</input>
+            <input>-systems/hydraulics/bidi-transfer-flight-to-combined-system-psi</input>
+            <input>-systems/hydraulics/combined-system-pump-psi</input>
+            <clipto>
+                <min> 0 </min>
+                <max>
+                    <property>systems/hydraulics/bidi-normal-pressure</property>
+                </max>
+            </clipto>
+        </summer>
+
+
+        <summer name="systems/hydraulics/combined-system-psi">
+            <input>systems/hydraulics/emerg-transfer-to-combined-system-psi</input>
+            <input>systems/hydraulics/bidi-transfer-flight-to-combined-system-psi</input>
+            <input>systems/hydraulics/combined-system-pump-psi</input>
+        </summer>
+    </channel>
+
+    <channel name="bleed">
+        <summer name="systems/hydraulics/elevator-bleed">
+            <input>-fcs/elevator-cmd-norm</input>
+            <input>-fcs/elevator-normalization</input>
+        </summer>
+
+        <summer name="systems/hydraulics/flight-system-bleed-basic">
+            <input>systems/hydraulics/elevator-bleed</input>
+        </summer>
+
+        <!-- the basic bleed load is different depending on which pump is supplying the flow; the emergency
+     pump has less power and we model this simply by a factor that is the correlation between the flow
+     and the pressure - based on the emergency pump psi
+-->
+        <scheduled_gain name="systems/hydraulics/flight-system-bleed">
+            <input>systems/hydraulics/flight-system-bleed-basic</input>
+            <table>
+                <independentVar lookup="row">systems/hydraulics/emerg-pump-low-speed-psi</independentVar>
+                <tableData>
+                    0      30
+                    2001     100
+                </tableData>
+            </table>
+            <clipto>
+                <min> 0 </min>
+                <max>300</max>
+            </clipto>
+        </scheduled_gain>
+
+    </channel>
+    <channel name="Util">
+        <switch name="systems/hydraulics/util-system-feedin">
+            <default value="0"/>
+            <test value="systems/hydraulics/combined-system-psi">
+                systems/hydraulics/combined-system-psi gt 2000
+            </test>
+            <test value="systems/hydraulics/flight-system-psi">
+                systems/hydraulics/flight-system-psi gt 2000
+            </test>
+        </switch>
+        <summer name="systems/hydraulics/util-system-bleed">
+            <input>systems/hydraulics/jfs-bleed</input>
+            <input>systems/hydraulics/util-system-feedin</input>
+            <input>systems/hydraulics/util-system-preload-input</input>
+        </summer>
+        <summer name="systems/hydraulics/util-system-psi">
+            <input>systems/hydraulics/combined-system-psi</input>
+            <input>systems/hydraulics/flight-system-psi</input>
+            <clipto>
+                <min>0</min>
+                <max>3000</max>
+            </clipto>
+        </summer>
+        <actuator name="systems/hydraulics/util-system-accumulator">
+            <input>systems/hydraulics/util-system-psi</input>
+            <rate_limit>systems/hydraulics/util-system-bleed</rate_limit>
+            <output>systems/hydraulics/util-system-accumulator-psi</output>
+            <clipto>
+                <min>0</min>
+                <max>4000</max>
+            </clipto>
+        </actuator>
+    </channel>
+
+</system>

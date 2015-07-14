@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PropertyList>
+    <name>Effects/f15test</name>
+    <type>postprocess</type>
+
+    <technique n="12">
+        <pass>
+            <render-bin>
+                <bin-name>RenderBin</bin-name>
+                <bin-number>99998</bin-number>
+            </render-bin>
+
+            <texture-unit>
+                <unit>0</unit>
+                <type>buffer</type>
+                <name>diffuse</name>
+            </texture-unit>
+
+            <program>
+                <vertex-shader>Models/Effects/f15test.vert</vertex-shader>
+                <fragment-shader>Models/Effects/f15test.frag</fragment-shader>
+            </program>
+
+            <uniform>
+                <name>current_scene_tex</name>
+                <type>sampler-2d</type>
+                <value type="int">0</value>
+            </uniform>
+        </pass>
+    </technique>
+</PropertyList>
