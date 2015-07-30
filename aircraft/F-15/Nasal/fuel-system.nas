@@ -18,6 +18,10 @@ var max_flow45000        = nil;
 var max_flow85000        = nil;
 var max_refuel_flow      = nil;
 
+var TankRightSide = 1;
+var TankLeftSide = 0;
+var TankBothSide = -1;
+
 var ai_enabled = nil;
 var refuelingN = nil;
 var refuel_serviceable = nil;
@@ -120,19 +124,16 @@ var init_fuel_system = func {
 
 
 var build_new_tanks = func {
-var Right = 1;
-var Left = 0;
-var Both = -1;
 	#tanks ("name", number, initial connection status)
     # the order of these is significant for the set_fuel operation
-	Tank1     = Tank.new("Tank 1", 2, 1, Both);
-	WingInternal_L   = Tank.new("Internal Wing L", 3, 1, Left);
-	WingInternal_R   = Tank.new("Internal Wing R", 4, 1, Right);
-	Left_Feed      = Tank.new("L Feed", 0, 1, Left); 
-	Right_Feed      = Tank.new("R Feed", 1, 1, Right);
-	WingExternal_L   = Tank.newExternal("External Wing L", 5, 1, Left);
-	WingExternal_R   = Tank.newExternal("External Wing R", 6, 1, Right);
-	Centre_External  = Tank.newExternal("Centre External", 7, 1, Both); 
+	Tank1     = Tank.new("Tank 1", 2, 1, TankBothSide);
+	WingInternal_L   = Tank.new("Internal Wing L", 3, 1, TankLeftSide);
+	WingInternal_R   = Tank.new("Internal Wing R", 4, 1, TankRightSide);
+	Left_Feed      = Tank.new("L Feed", 0, 1, TankLeftSide); 
+	Right_Feed      = Tank.new("R Feed", 1, 1, TankRightSide);
+	WingExternal_L   = Tank.newExternal("External Wing L", 5, 1, TankLeftSide);
+	WingExternal_R   = Tank.newExternal("External Wing R", 6, 1, TankRightSide);
+	Centre_External  = Tank.newExternal("Centre External", 7, 1, TankBothSide); 
 }
 
 var build_new_proportioners = func {
@@ -397,7 +398,7 @@ Tank = {
         return me.external;
     },
     is_side : func(s) {
-        return me.side < 0 or me.side == s;
+        return me.side == s;
     },
     is_fitted : func {
         if (!me.external) return true;
@@ -463,6 +464,48 @@ Tank = {
 			} 
 		}
 	},
+
+    adjust_level_by_delta : func(side, delta)
+    {
+        var t = me;
+        print("Processing ",t.name," is fitted ",t.is_fitted()," delta ",delta);
+        if (t.is_fitted()) # true for internal; only true when external connected
+        {
+            if (t.is_side(side))
+            {
+                if (delta < 0)
+                {
+                    var tdelta = t.get_level_lbs() + delta;
+                    if (tdelta < 0)
+                    {
+                        delta = delta + t.get_level_lbs();
+                        print("Tank ",t.name," empty : new_delta ", delta);
+                        t.set_level_lbs(0);
+                    }
+                    else
+                    {
+                        if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
+                        t.set_level_lbs(tdelta);
+                        print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
+                        delta = delta - tdelta;
+                    }
+                }
+                else
+                {
+                    var tdelta = t.get_ullage_lbs();
+                    if (tdelta > delta) tdelta = delta;
+#            if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
+
+                    delta = delta - tdelta;
+                    t.set_level_lbs(t.get_level_lbs() + tdelta);
+                    print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
+                }
+            }
+            else
+                print("-- not adjusting ",t.name," not matched on side ",side);
+        }
+        return delta;
+    },
 	list : [],
 };
 
@@ -656,50 +699,29 @@ var set_fuel = func(total) {
     }
 
     print("\n set_fuel to ",total," delta ",total_delta);
-    for (var i=0; i < 2; i = i+1)
+    if (total_delta > 0)
+    {
+        total_delta = Tank1.adjust_level_by_delta(TankBothSide, total_delta);
+        total_delta = Centre_External.adjust_level_by_delta(TankBothSide, total_delta);
+    }
+
+    for (var side=0; side < 2; side = side+1)
     {
         var delta = total_delta / 2;
-        print ("\nDoing side ",i, " adjust by ",delta);
+        print ("\nDoing side ",side, " adjust by ",delta);
 #	foreach (var t; Tank.list)
         for (var tank_idx=start; tank_idx != end+1; tank_idx = tank_idx + inc)
         {
             var t = Tank.list[tank_idx];
             #
 # only consider non external tanks; or external tanks when connected.
-            print("Processing ",t.name," is fitted ",t.is_fitted());
-            if (t.is_fitted()) # true for internal; only true when external connected
-            {
-                if (t.is_side(i))
-                {
-                    if (delta < 0)
-                    {
-                        var tdelta = t.get_level_lbs() + delta;
-                        if (tdelta < 0)
-                        {
-                            delta = delta + t.get_level_lbs();
-                            print("Tank ",t.name," empty : new_delta ", delta);
-                            t.set_level_lbs(0);
-                        }
-                        else
-                        {
-                            if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
-                            t.set_level_lbs(tdelta);
-                            print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
-                            delta = delta - tdelta;
-                        }
-                    }
-                    else
-                    {
-                        var tdelta = t.get_ullage_lbs();
-                        if (tdelta > delta) tdelta = delta;
-#            if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
-
-                        delta = delta - tdelta;
-                        t.set_level_lbs(t.get_level_lbs() + tdelta);
-                        print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
-                    }
-                }
-            }
+delta = t.adjust_level_by_delta(side, delta);
         }
+    }
+    total_delta = (total - getprop("consumables/fuel/total-fuel-lbs"));
+    if (total_delta < 0)
+    {
+        total_delta = Tank1.adjust_level_by_delta(TankBothSide, total_delta);
+        total_delta = Centre_External.adjust_level_by_delta(TankBothSide, total_delta);
     }
 }
