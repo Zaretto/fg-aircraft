@@ -337,7 +337,11 @@ aircraft.data.add(
     "/payload/weight[8]/selected",
     "/payload/weight[9]/selected",
     "/payload/weight[10]/selected",
-    "sim/model/f15/systems/external-loads/external-load-set"
+    "sim/model/f15/systems/external-loads/external-load-set",
+    "instrumentation/transponder/inputs/digit[0]", 
+    "instrumentation/transponder/inputs/digit[1]", 
+    "instrumentation/transponder/inputs/digit[2]", 
+    "instrumentation/transponder/inputs/digit[3]"
     );
 
 var g_max   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-max", 1);
