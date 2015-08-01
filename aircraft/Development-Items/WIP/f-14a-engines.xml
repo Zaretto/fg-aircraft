@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<!--
+        Description: F14 hydraulics system
+        Notes: Supports engine and emergency pumps, with bidi transfer
+               (1) no electrical modelling so will always have hyd pressure
+               (2) Flight controls require hyds and will not function if no pressure
+               (3) pump failure supported (no pressure depending on pump/configuration of other pumps)
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 p2-68 to p2-76
+    -->
+
+<system name="f-14a-engines">
+<propulsion>
+        <engine file="F110-GE-400">
+            <location unit="IN">
+                    <x> 667 </x>
+                    <y> -45 </y>
+                    <z> -10 </z>
+            </location>
+            <orient unit="DEG">
+                <roll> 0 </roll>
+                <pitch> 0 </pitch>
+                <yaw> 0 </yaw>
+            </orient>
+            <feed>1</feed>
+            <feed>2</feed>
+            <feed>3</feed>
+            <feed>6</feed>
+            <feed>8</feed>
+            <feed>10</feed>
+            <thruster file="direct">
+                <location unit="IN">
+                    <x> 667 </x>
+                    <y> -45 </y>
+                    <z> -10 </z>
+                </location>
+                <orient unit="DEG">
+                    <roll> 0 </roll>
+                    <pitch> 0 </pitch>
+                    <yaw> 0 </yaw>
+                </orient>
+            </thruster>
+        </engine>
+        <engine file="F110-GE-400">
+            <location unit="IN">
+                    <x> 667 </x>
+                    <y> 45 </y>
+                    <z> -10 </z>
+            </location>
+            <orient unit="DEG">
+                <roll> 0 </roll>
+                <pitch> 0 </pitch>
+                <yaw> 0 </yaw>
+            </orient>
+            <feed>0</feed>
+            <feed>4</feed>
+            <feed>5</feed>
+            <feed>7</feed>
+            <feed>9</feed>
+            <feed>11</feed>
+
+            <thruster file="direct">
+                <location unit="IN">
+                    <x> 667 </x>
+                    <y> 45 </y>
+                    <z> -10 </z>
+                </location>
+                <orient unit="DEG">
+                    <roll> 0 </roll>
+                    <pitch> 0 </pitch>
+                    <yaw> 0 </yaw>
+                </orient>
+            </thruster>
+        </engine>
+<!-- Fuel tank positions are hard to determine - so the values here are based on Figure 8-2 F14AAD-1 
+     for the fore / aft tanks - with the other tanks moved from my original estimated position
+     so that the CG remains in the range of no more than 18%. 
+     I also had to move the MLG forwards slightly from the diagram otherwise it was impossible to take off a
+     fully laden aircraft with flaps until over 210kts (which has to be wrong and as the contact point of the
+     gear isn't defined (in AFWAL-TR-80-3141) and I can only assume that those measurements are from the end of the radome
+     excluding the probe. (about 20 inches according to my diagram)
+  -->
+      <!--  FWD Fuselage -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>332</x>
+          <y>0</y>
+          <z>-51.77165354</z>
+        </location>
+<priority>4</priority>
+        <capacity unit="LBS">4700</capacity>
+        <contents unit="LBS">4700</contents>
+      </tank>
+      <!-- AFT Fuselage -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>482</x>
+          <y>0</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="LBS">4400</capacity>
+        <contents unit="LBS">4400</contents>
+<priority>4</priority>
+      </tank>
+      <!-- Left Beam Box - Feed Group   -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>396</x>
+          <y>-47.95275591</y>
+          <z>-45.07874016</z>
+        </location>
+        <capacity unit="LBS">1300</capacity>
+        <contents unit="LBS">1300</contents>
+<priority>3</priority>
+      </tank>
+      <!--  Left Sump - Feed Group    -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>396</x>
+          <y>-38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="LBS">300</capacity>
+        <contents unit="LBS">300</contents>
+<priority>5</priority>
+      </tank>
+      <!-- Right Beam Box - Feed Group    -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>396</x>
+          <y>47.95275591</y>
+          <z>-45.07874016</z>
+        </location>
+        <capacity unit="LBS">1300</capacity>
+        <contents unit="LBS">1300</contents>
+<priority>3</priority>
+      </tank>
+      <!-- Right Sump - Feed Group   -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>396</x>
+          <y>38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="LBS">300</capacity>
+        <contents unit="LBS">300</contents>
+<priority>5</priority>
+      </tank>
+      <!-- Left wing    -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x> 405</x>
+          <y> -38.5826772</y>
+          <z> -27</z>
+        </location>
+        <capacity unit="LBS">2000</capacity>
+        <contents unit="LBS">2000</contents>
+<priority>2</priority>
+      </tank>
+      <!-- Right Wing -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x> 405</x>
+          <y> 38.5826772</y>
+          <z> -27</z>
+        </location>
+        <capacity unit="LBS">2000</capacity>
+        <contents unit="LBS">2000</contents>
+<priority>2</priority>
+      </tank>
+      <!-- Left External -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>416</x>
+          <y>-55.51181102</y>
+          <z>-110.8267717</z>
+        </location>
+        <capacity unit="LBS">1600</capacity>
+        <contents unit="LBS">1600</contents>
+<priority>1</priority>
+      </tank>
+      <!-- Right External -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>416.6614173</x>
+          <y>55.51181102</y>
+          <z>-110.8267717</z>
+        </location>
+        <capacity unit="LBS">1600</capacity>
+        <contents unit="LBS">1600</contents>
+<priority>1</priority>
+      </tank>
+      <!-- Left Feed line -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>454</x>
+          <y>-38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="LBS">10</capacity>
+        <contents unit="LBS">10</contents>
+<priority>6</priority>
+      </tank>
+      <!-- Right Feed line -->
+      <tank type="FUEL">
+        <location unit="IN">
+          <x>454</x>
+          <y>38.58267717</y>
+          <z>-47.83464567</z>
+        </location>
+        <capacity unit="LBS">10</capacity>
+        <contents unit="LBS">10</contents>
+<priority>6</priority>
+      </tank>
+    </propulsion>
+</system>

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>mag-compass.ac</path>
+
+	<animation>
+		<type>rotate</type>
+		<object-name>INS-ring</object-name>
+		<property>instrumentation/magnetic-compass/indicated-heading-deg</property>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</center> 
+		<axis>
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>1.0</z>
+		</axis>
+	</animation>
+
+	<animation> 
+		<object-name>mount1</object-name>
+		<object-name>mount2</object-name>
+		<type>material</type>
+		<emission> 
+			<factor-prop>controls/lighting/panel-norm</factor-prop>
+			<red>0.3</red>
+			<green>0.2</green>
+			<blue>0.1</blue>
+		</emission>
+	</animation>
+
+
+	<animation> 
+		<type>material</type>
+		<object-name>INS-ring</object-name>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.65</red>
+			<green>0.45</green>
+			<blue>0.25</blue>
+		</emission>
+	</animation>
+	<animation> 
+		<type>material</type>
+		<object-name>INS-reticl</object-name>
+		<emission> 
+			<factor-prop>controls/lighting/instruments-norm</factor-prop>
+			<red>0.65</red>
+			<green>0.45</green>
+			<blue>0.25</blue>
+		</emission>
+	</animation>
+
+	<animation>
+		<object-name>mag-compass</object-name>
+		<type>noshadow</type>
+	</animation>
+
+
+</PropertyList>
