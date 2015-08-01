@@ -1,0 +1,19 @@
+#        var ns_to_loc = f14.carrier_ara_63_position.lat() - our_pos.lat();
+#        var ew_to_loc =  f14.carrier_ara_63_position.lon() - our_pos.lon() * math.cos(0.5 * (f14.carrier_ara_63_position.lat()/57.3 - our_pos.lat()/57.3));
+#        var az_to_loc = (f14.carrier_ara_63_heading/57.29577950560105) - math.atan2(ew_to_loc, ns_to_loc);
+#        az_to_loc = az_to_loc - 6.283185 * (int)(0.318309 * az_to_loc);
+#        var RTOD = 57.29577950560105;
+# Keep within +/- PI/2
+#        if( math.abs(az_to_loc) > 1.570796327)
+#        {
+#            var olv = az_to_loc;
+#            az_to_loc = geo.normdeg180(az_to_loc*RTOD) / RTOD;
+#            print("Normalized ",olv, " to ",az_to_loc);
+#        }
+#        var loc_width = 0.10472;
+#        var loc_dev = -4.0 * az_to_loc  / loc_width;
+
+#        if( math.abs(loc_dev) > 2) loc_dev = 2;
+#        print("ARA63: nstoloc ",ns_to_loc," ewto_loc ",ew_to_loc," az ",az_to_loc, " dev ",loc_dev);
+
+#        print("ARA63: range ",range, " to ",bearing_to, " cdi ",deviation);
