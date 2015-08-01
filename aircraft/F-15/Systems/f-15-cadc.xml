@@ -96,6 +96,32 @@
             </function>
         </fcs_function>
 
+        <fcs_function name="systems/cadc/pitch-trim-compensation">
+            <function>
+                <!--Maintain the aircraft pitch trim for speed and flaps. The PTC system relieves the pilot of the task of compensating for pitch trim for speed and flaps with large longitudinal stick motions.-->
+                <description>Pitch Trim Compensator (PTC)</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                                          0          35
+                              0    -0.28860   -0.122750
+                            200   -0.188860   -0.102750
+                            310   -0.061875    0.022125
+                            415   -0.037920    0.076125
+                            520    0.020500    0.076125
+                            620    0.001877    0.076125
+                            740    0.134250    0.076125
+                            820    0.174000    0.076125
+                            900    0.216250    0.076125
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+        
+
         <fcs_function name="systems/cadc/pitch-ratio-dmd">
             <function>
                 <description>High speed CADC control effectivity limitation of elevator</description>
