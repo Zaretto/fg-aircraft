@@ -505,7 +505,8 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-cas-pitch",0);
         }
     }
-
+#anti skid will indicate when the parking brake is on.
+    setprop("sim/model/f15/lights/ca-anti-skid", getprop("/controls/gear/brake-parking"));
 
     if (canopy.getValue() > 0)
     {
