@@ -27,6 +27,7 @@
     <property value="0">fcs/roll-sas-enable</property>
     <property value="0">fcs/external-tanks-fitted</property>
     <property value="0">fcs/aim-fitted</property>
+    <property value="0">fcs/steer-maneuver</property>
     <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
     <property>systems/NWS/engaged</property>
 
@@ -398,6 +399,13 @@
                 systems/hydraulics/combined-system-pressure ne 0
                 position/aircraft-on-ground ne 0
                 systems/holdback/launchbar-engaged eq 0
+                fcs/steer-maneuver ne 0
+            </test>
+            <test value="2">
+                gear/unit[0]/wheel-speed-fps le 221
+                systems/hydraulics/combined-system-pressure ne 0
+                position/aircraft-on-ground ne 0
+                systems/holdback/launchbar-engaged eq 0
             </test>
             <output>systems/NWS/engaged</output>
         </switch>
@@ -408,12 +416,12 @@
                 <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
                 <independentVar lookup="column">systems/NWS/engaged</independentVar>
                 <tableData>
-                        0   1
-                    0   0   87
-                    300 0   0
+                        0   1    2 
+                    0   0   1   0.4
+                    300 0   0    0
                 </tableData>
             </table>
-            <output>fcs/steer-pos-deg</output>
+            <output>fcs/steer-pos-norm-dmd</output>
         </scheduled_gain>
     </channel>
 

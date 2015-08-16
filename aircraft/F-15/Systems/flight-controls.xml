@@ -39,7 +39,6 @@
             <output>fcs/elevator-pos-demand</output>
         </pure_gain >
 
-        <!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
         <kinematic name="elevator position">
             <input>fcs/elevator-pos-demand</input>
             <traverse>
@@ -506,6 +505,20 @@
             <output>gear/gear-pos-norm</output>
         </kinematic>
 
+        <kinematic name="Rudder Control">
+            <input>fcs/steer-pos-norm-dmd</input>
+            <traverse>
+                <setting>
+                    <position>-35</position>
+                    <time>15</time>
+                </setting>
+                <setting>
+                    <position>35</position>
+                    <time>15</time>
+                </setting>
+            </traverse>
+            <output>fcs/steer-pos-deg</output>
+        </kinematic>
     </channel>
 
     <channel name="Speedbrake">
