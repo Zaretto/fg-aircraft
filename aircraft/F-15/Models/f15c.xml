@@ -75,6 +75,7 @@
         <object-name>EngineCovers</object-name>
         <object-name>Fin.000</object-name>
         <object-name>FinPodsL.001</object-name>
+        <object-name>FinPodsR</object-name>
         <object-name>Fins</object-name>
         <object-name>FlapL</object-name>
         <object-name>FlapR</object-name>
@@ -956,53 +957,6 @@
     </animation>-->
 
 
-
-    <!--Wing Bend-->
-    <animation>
-        <type>rotate</type>
-        <object-name>WingL</object-name>
-        <object-name>WingL.001</object-name>
-        <object-name>FlapL</object-name>
-        <object-name>AileronL</object-name>
-        <object-name>WingTipPosL-Light</object-name>
-        <object-name>WingTipPosL-Housing</object-name>
-        <object-name>LWingSlimmer</object-name>
-        <property>surface-positions/wing-fold-pos-norm</property>
-        <factor>-7.0</factor>
-        <center>
-            <x-m>0.6428</x-m>
-            <y-m>-1.8488</y-m>
-            <z-m>0.4820</z-m>
-        </center>
-        <axis>
-            <x>1.0</x>
-            <y>0.0</y>
-            <z>0.0</z>
-        </axis>
-    </animation>
-    <animation>
-        <type>rotate</type>
-        <object-name>WingR</object-name>
-        <object-name>WingR.001</object-name>
-        <object-name>FlapR</object-name>
-        <object-name>AileronR</object-name>
-        <object-name>WingTipPosR-Light</object-name>
-        <object-name>WingTipPosR-Housing</object-name>
-        <object-name>RWingSlimmer</object-name>
-        <property>surface-positions/wing-fold-pos-norm</property>
-        <factor>7.0</factor>
-        <center>
-            <x-m>0.6428</x-m>
-            <y-m>1.8488</y-m>
-            <z-m>0.4820</z-m>
-        </center>
-        <axis>
-            <x>1.0</x>
-            <y>0.0</y>
-            <z>0.0</z>
-        </axis>
-    </animation>
-
     <!-- ******************************************************************* -->
     <!-- Lighting                                                            -->
     <!-- ******************************************************************* -->
@@ -1841,4 +1795,55 @@
         <path>Stores/f15c-stores.xml</path>
         <name>F15-C loadout</name>
     </model>
+
+    <!--Wing Bend-->
+    <animation>
+        <type>rotate</type>
+        <object-name>WingL</object-name>
+        <object-name>WingL.001</object-name>
+        <object-name>FlapL</object-name>
+        <object-name>AileronL</object-name>
+        <object-name>WingTipPosL-Light</object-name>
+        <object-name>WingTipPosL-Housing</object-name>
+        <object-name>LWingSlimmer</object-name>
+        <object-name>WingPositionLightLeft</object-name>
+        <object-name>WingCollisionLightLeft</object-name>
+        <property>surface-positions/wing-fold-pos-norm</property>
+        <factor>-7.0</factor>
+        <center>
+            <x-m>0.6428</x-m>
+            <y-m>-1.8488</y-m>
+            <z-m>0.4820</z-m>
+        </center>
+        <axis>
+            <x>1.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>WingR</object-name>
+        <object-name>WingR.001</object-name>
+        <object-name>FlapR</object-name>
+        <object-name>AileronR</object-name>
+        <object-name>WingTipPosR-Light</object-name>
+        <object-name>WingTipPosR-Housing</object-name>
+        <object-name>RWingSlimmer</object-name>
+        <object-name>WingPositionLightRight</object-name>
+        <object-name>WingCollisionLightRight</object-name>
+        <property>surface-positions/wing-fold-pos-norm</property>
+        <factor>7.0</factor>
+        <center>
+            <x-m>0.6428</x-m>
+            <y-m>1.8488</y-m>
+            <z-m>0.4820</z-m>
+        </center>
+        <axis>
+            <x>1.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+
 </PropertyList>

@@ -12,6 +12,7 @@
     <light-params>
         <position-factor>sim/multiplay/generic/int[4]</position-factor>
         <colision-factor>-14</colision-factor>
+        <halo-factor>-20</halo-factor>
     </light-params>
 
     <effect>
@@ -61,10 +62,22 @@
             <property>sim/multiplay/generic/int[3]</property>
         </condition>
     </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>TailCollisionLight</object-name>
+        <emission>
+            <property>sim/multiplay/generic/int[3]</property>
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
     <animation>
         <type>material</type>
         <object-name>WingPositionLightRight</object-name>
         <object-name>WingPositionLightLeft</object-name>
+        <object-name>TailPositionLight</object-name>
         <emission>
             <property>sim/multiplay/generic/int[3]</property>
             <red>1</red>
@@ -159,9 +172,9 @@
         <object-name>coll_halo_TR</object-name>
         <offset-m>9.3359</offset-m>
         <axis>
-            <x>8.4811</x>
-            <y>1.730</y>
-            <z>3.3866</z>
+            <x>6.8</x>
+            <y>1.4</y>
+            <z>2.6</z>
         </axis>
     </animation>
     <animation>
@@ -177,8 +190,8 @@
         <nopreview/>
         <position>
             <x>8.4811</x>
-            <y>1.730</y>
-            <z>3.3866</z>
+            <y>1.8063</y>
+            <z>3.2934</z>
         </position>
         <ambient>
             <r>1</r>
@@ -214,12 +227,10 @@
         <far-m>10</far-m>
     </animation>
 
-    <!-- Collision Tail Left; using this as wing left collision-->
     <animation>
         <type>select</type>
         <object-name>coll_halo_WL</object-name>
         <object-name>RBT-coll_halo_WL</object-name>
-        <!-- rembrandt halo -->
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -295,6 +306,7 @@
         <type>select</type>
         <object-name>pos_halo_WL</object-name>
         <object-name>RBT-coll_halo_WL</object-name>
+        <object-name>TailCollisionLight</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -304,6 +316,7 @@
             <!--flasher -->
         </condition>
     </animation>
+    <!-- wing bend rotation for lights-->
     <animation>
         <type>rotate</type>
         <object-name>pos_halo_WL</object-name>
@@ -335,6 +348,7 @@
             <z>0.061738362</z>
         </axis>
     </animation>
+
     <animation>
         <type>billboard</type>
         <object-name>pos_halo_WL</object-name>
@@ -400,17 +414,17 @@
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>pos_halo_WR</object-name>
-        <object-name>RBT-coll_halo_WR</object-name>
+        <object-name>pos_halo_WL</object-name>
+        <object-name>RBT-coll_halo_WL</object-name>
         <property>surface-positions/wing-fold-pos-norm</property>
         <factor>-7.0</factor>
         <center>
             <x-m>1.247</x-m>
-            <y-m>2.615</y-m>
+            <y-m>-2.615</y-m>
             <z-m>-0.636</z-m>
         </center>
         <axis>
-            <x>-1.0</x>
+            <x>1.0</x>
         </axis>
     </animation>
     <animation>
@@ -484,6 +498,7 @@
     <animation>
         <type>select</type>
         <object-name>pos_halo_Tail</object-name>
+        <object-name>TailPositionLight</object-name>
         <object-name>RBT-pos_halo_Tail</object-name>
         <!-- rembrandt halo -->
         <condition>
@@ -500,9 +515,9 @@
         <object-name>pos_halo_Tail</object-name>
         <offset-m>9.3359</offset-m>
         <axis>
-            <x>8.4811</x>
-            <y>-1.730</y>
-            <z>3.3866</z>
+            <x>6.8</x>
+            <y>-1.4</y>
+            <z>2.6</z>
         </axis>
     </animation>
     <animation>
@@ -518,8 +533,8 @@
         <nopreview/>
         <position>
                 <x>8.4811</x>
-                <y>-1.730</y>
-                <z>3.3866</z>
+                <y>-1.8063</y>
+                <z>3.2934</z>
         </position>
         <ambient>
             <r>0.95</r>
@@ -1026,9 +1041,9 @@
         <object-name>pos_halo_WL</object-name>
         <object-name>pos_halo_WR</object-name>
         <property>/rendering/scene/diffuse/red</property>
-        <x-factor alias="../../light-params/colision-factor"/>
-        <y-factor alias="../../light-params/colision-factor"/>
-        <z-factor alias="../../light-params/colision-factor"/>
+        <x-factor alias="../../light-params/halo-factor"/>
+        <y-factor alias="../../light-params/halo-factor"/>
+        <z-factor alias="../../light-params/halo-factor"/>
         <x-offset>14</x-offset>
         <y-offset>14</y-offset>
         <z-offset>14</z-offset>
@@ -1057,5 +1072,4 @@
             </entry>
         </interpolation>
     </animation>
-
 </PropertyList>
