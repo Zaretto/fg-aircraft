@@ -244,26 +244,62 @@ else
 splash_vec_loop();
 
 #
+# --------------------------
+# Frame adapative update - two methods either rate 2 or rate 4.
+# RJH: 2015-08-16
+# Note: continual update of canvas elements at low frame rates makes 
+# things worse so we skip frames to reduce the load.
+# At higher frame rates the extra updates aren't required so we will skip
+# frames based on the frame rate (this is effectively 4/15 - i.e. the update
+# every 4 frames but extended to work for higher rates)
+#
+# continual update of canvas elements at low frame rates makes things worse
+# so we skip frames to reduce the load.
+# at higher frame rates the extra updates aren't required so we will skip
+# frames based on the frame rate (this is effectively 4/15 - i.e. the update
+# every 4 frames but extended to work for higher rates)
+# ---------------
+
 # Rate 4 modules (5hz) (rate 4 comes from quarter frame at 30hz)
+var r4_count = 0;
+var r2_count = 0;
 
 var rate4modules = func {
+    r4_count = r4_count - 1;
+    var frame_rate = getprop("/sim/frame-rate");
+
+    if (frame_rate <= 15 or frame_rate > 100)
+        r4_count = 4;
+    else
+        r4_count = (int)(frame_rate * 0.26667);
+
     aircraft.updateVSD();
     aircraft.updateTEWS();
     aircraft.updateMPCD();
     aircraft.electricsFrame();
 	aircraft.computeNWS ();
 aircraft.update_weapons_over_mp();
-	settimer (rate4modules, 0.20);
+#	settimer (rate4modules, 0.20);
 }
 var rate2modules = func {
+    r2_count = r2_count - 1;
+    if (r2_count > 0)
+        return;
+
+    var frame_rate = getprop("/sim/frame-rate");
+    if (frame_rate <= 15 or frame_rate > 100)
+        r2_count = 2;
+    else
+        r2_count = (int)(frame_rate * 0.1333);
+
     aircraft.updateHUD();
-	settimer (rate2modules, 0.04);
+#	settimer (rate2modules, 0.1);
     setprop("environment/aircraft-effects/frost-level", getprop("/fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
 }
 #
 # launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
-settimer (rate4modules, 1); 
-settimer (rate2modules, 1);
+#settimer (rate4modules, 1); 
+#settimer (rate2modules, 1);
 
 #
 # Standard update loop.
@@ -314,7 +350,8 @@ var updateFCS = func {
     aircraft.computeAPC();
 	aircraft.computeEngines ();
 	aircraft.computeAdverse ();
-
+rate2modules();
+rate4modules();
 	aircraft.registerFCS (); # loop, once per frame.
 }
 
