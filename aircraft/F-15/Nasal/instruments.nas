@@ -581,7 +581,6 @@ var main_loop = func {
 		# done each 0.1 sec, cnt even.
 		tacan_update();
         ara_63_update();
-		update_hud();
 		g_min_max();
 		f15_chronograph.update_chrono();
 
@@ -732,6 +731,9 @@ var common_carrier_init = func {
 var common_init = func {
 
         print("Setting replay medium res to 50hz");
+setprop("sim/hud/visibility[0]",0);
+setprop("sim/hud/visibility[1]",0);
+
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
         setprop("/controls/flight/SAS-roll",0);
         setprop("sim/model/f15/controls/AFCS/altitude",0);

@@ -103,15 +103,6 @@ var runEMMISC = func {
         }
     }
 
-    if(getprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus") < 5)
-    {
-        setprop("sim/hud/visibility[1]",0);
-    }
-    else
-    {
-        setprop("sim/hud/visibility[1]",getprop("sim/model/f15/controls/hud/on-off"));
-    }
-
 #
 # RAMPS light on when either of the following 2 conditions met:
 # 

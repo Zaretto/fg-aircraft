@@ -100,6 +100,10 @@
             </key>
             <line>__________________________________________________</line>
             <key>
+                <name>*</name>
+                <desc>Toggle maneuvering nose wheel steering (15/45 deg)</desc>
+            </key>
+            <key>
                 <name>a</name>
                 <desc>Toggle Autothrottle</desc>
             </key>
@@ -110,10 +114,6 @@
             <key>
                 <name>Ctrl-a</name>
                 <desc>Enable AFCS Altitude Mode</desc>
-            </key>
-            <key>
-                <name>*</name>
-                <desc>Engage AFCS Altitude Mode</desc>
             </key>
             <key>
                 <name>Ctrl-h</name>
@@ -1537,13 +1537,23 @@
 
             <key n="42">
                 <name>*</name>
-                <desc>Nose wheel steering or Autopilot selected mode</desc>
+                <desc>Nose wheel steering toggle</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>
-                        if (! aircraft.wow) {
-                        aircraft.afcs_engage_selected_mode()
-                        }
+                    <script type="string">
+                        <!--active maneuvering nws when on ground-->
+                        <![CDATA[ 
+                            if (getprop("/fdm/jsbsim/fcs/steer-maneuver"))
+                            {
+                                gui.popupTip("Maneuver NWS disabled");
+                                setprop("/fdm/jsbsim/fcs/steer-maneuver",0)
+                            }
+                            else
+                            {
+                                gui.popupTip("Maneuver NWS enabled");
+                                setprop("/fdm/jsbsim/fcs/steer-maneuver",1)
+                            }
+                    ]]>
                     </script>
                 </binding>
             </key>
@@ -1619,13 +1629,25 @@
                     <script>aircraft.lowerFlaps();</script>
                 </binding>
             </key>
-
             <key n="104">
                 <name>h</name>
-                <desc>HSD cycle modes</desc>
+                <desc>HUD Cycle</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>aircraft.select_key_ecm_nav();</script>
+                    <script type="string">
+                        <![CDATA[ 
+                        if(getprop("sim/hud/visibility[1]"))
+                        {
+                            setprop("sim/hud/visibility[0]",0);
+                            setprop("sim/hud/visibility[1]",0);
+                        }
+                        else
+                        {
+                            setprop("sim/hud/visibility[0]",1);
+                            setprop("sim/hud/visibility[1]",1);
+                        }
+                        ]]>
+                    </script>
                 </binding>
             </key>
 
