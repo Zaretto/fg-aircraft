@@ -391,39 +391,7 @@
         </scheduled_gain>
     </channel>
 
-    <channel name="Nose Wheel Steering">
-        <switch name="systems/NWS/engaged">
-            <default value="0"/>
-            <test value="1">
-                gear/unit[0]/wheel-speed-fps le 221
-                systems/hydraulics/combined-system-pressure ne 0
-                position/aircraft-on-ground ne 0
-                systems/holdback/launchbar-engaged eq 0
-                fcs/steer-maneuver ne 0
-            </test>
-            <test value="2">
-                gear/unit[0]/wheel-speed-fps le 221
-                systems/hydraulics/combined-system-pressure ne 0
-                position/aircraft-on-ground ne 0
-                systems/holdback/launchbar-engaged eq 0
-            </test>
-            <output>systems/NWS/engaged</output>
-        </switch>
-
-        <scheduled_gain name="fcs/scheduled-steer-pos-deg">
-            <input>fcs/steer-cmd-norm</input>
-            <table>
-                <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
-                <independentVar lookup="column">systems/NWS/engaged</independentVar>
-                <tableData>
-                        0   1    2 
-                    0   0   1   0.4
-                    300 0   0    0
-                </tableData>
-            </table>
-            <output>fcs/steer-pos-norm-dmd</output>
-        </scheduled_gain>
-    </channel>
+  
 
     <channel name="SoundFX">
         <fcs_function name="fcs/flap-windfx-volume">
