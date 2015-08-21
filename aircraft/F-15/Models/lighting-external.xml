@@ -3,7 +3,13 @@
    |  Based on F-14b by xiii
    |  
    |  Richard Harrison: 2015-01 : rjh@zaretto.com 
--->
+1 : formation slimmers 
+3 : collision lights
+4 : position lights 
+5 : tail flood 
+6 : taxi/ldg light (bit0 is taxi, bit 1 is landing)
+Items prefixed with RBT are the rembrandt light cones.
+            -->
 
 <PropertyList>
 
@@ -38,10 +44,10 @@
         <object-name>RBT-vert-tail-light-l</object-name>
         <object-name>RBT-coll_halo_TR</object-name>
         <object-name>RBT-coll_halo_WL</object-name>
-        <object-name>RBT-coll_halo_WL</object-name>
         <object-name>RBT-coll_halo_WR</object-name>
+        <object-name>RBT-pos_halo_WL</object-name>
+        <object-name>RBT-pos_halo_WR</object-name>
         <object-name>RBT-pos_halo_Tail</object-name>
-        <object-name>RBT-coll_halo_WR</object-name>
         <object-name>taxi-halo-sphere</object-name>
         <object-name>taxi-light-cone</object-name>
         <object-name>landing-light-halo-sphere</object-name>
@@ -68,6 +74,8 @@
         <object-name>TailCollisionLight</object-name>
         <emission>
             <property>sim/multiplay/generic/int[3]</property>
+                        <factor>0.1</factor>
+
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -79,10 +87,10 @@
         <object-name>WingPositionLightLeft</object-name>
         <object-name>TailPositionLight</object-name>
         <emission>
-            <property>sim/multiplay/generic/int[3]</property>
-            <red>1</red>
-            <green>1</green>
-            <blue>1</blue>
+            <factor-prop>sim/multiplay/generic/int[4]</factor-prop>
+            <red>0.2</red>
+            <green>0.2</green>
+            <blue>0.2</blue>
         </emission>
     </animation>
     <animation>
@@ -94,13 +102,6 @@
             <y>2.5417</y>
             <z>0.6970</z>
         </axis>
-
-        <!--<offset-m>2.38</offset-m>
-        <axis>
-            <x>-0.1</x>
-            <y>2.5417</y>
-            <z>0.6170</z>
-        </axis>-->
     </animation>
     <animation>
         <type>billboard</type>
@@ -109,15 +110,9 @@
 
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
+        <light-type>spot</light-type>
         <name>RBT-coll_halo_WR</name>
         <object-name>RBT-coll_halo_WR</object-name>
-        <nopreview/>
-        <position>
-            <x>-0.3</x>
-            <y>2.247</y>
-            <z>0.4290</z>
-        </position>
         <ambient>
             <r>1</r>
             <g>0.15</g>
@@ -136,18 +131,24 @@
             <b>0</b>
             <a>1.0</a>
         </specular>
+        
+        <position>
+            <x>0.042</x>
+            <y>2.3911</y>
+            <z>0.6044</z>
+        </position>
+        <direction>
+            <x>-1.5</x>
+            <y>3</y>
+            <z>0</z>
+        </direction>
         <attenuation>
-            <c>1.3</c>
-            <l>1.5</l>
-            <q>4</q>
+            <c>3.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
-        <!--<dim-factor>
-            <property>sim/multiplay/generic/int[3]</property>
-            <factor>0.5</factor>
-            <min>0</min>
-            <max>5</max>
-        </dim-factor>-->
-        <cutoff>10</cutoff>
+        <exponent>5</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
     </animation>
@@ -158,7 +159,6 @@
         <type>select</type>
         <object-name>coll_halo_TR</object-name>
         <object-name>RBT-coll_halo_TR</object-name>
-        <!-- rembrandt halo -->
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -184,15 +184,20 @@
 
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
+        <light-type>spot</light-type>
         <name>RBT-coll_halo_TR</name>
         <object-name>RBT-coll_halo_TR</object-name>
         <nopreview/>
         <position>
-            <x>8.4811</x>
-            <y>1.8063</y>
-            <z>3.2934</z>
+                <x>8.4811</x>
+                <y>1.8063</y>
+                <z>3.2934</z>
         </position>
+        <direction>
+            <x>11</x>
+            <y>1.8</y>
+            <z>3.32</z>
+        </direction>
         <ambient>
             <r>1</r>
             <g>0.15</g>
@@ -211,18 +216,13 @@
             <b>0</b>
             <a>1.0</a>
         </specular>
-        <!--<dim-factor>
-            <property>sim/multiplay/generic/int[3]</property>
-            <factor>0.5</factor>
-            <min>0</min>
-            <max>5</max>
-        </dim-factor>-->
         <attenuation>
-            <c>1.3</c>
-            <l>1.5</l>
-            <q>4</q>
+            <c>3.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
-        <cutoff>10</cutoff>
+        <exponent>1</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
     </animation>
@@ -256,15 +256,9 @@
 
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
+        <light-type>spot</light-type>
         <name>RBT-coll_halo_WL</name>
         <object-name>RBT-coll_halo_WL</object-name>
-        <nopreview/>
-        <position>
-                <x>-0.3</x>
-                <y>-2.247</y>
-                <z>0.4290</z>
-        </position>
         <ambient>
             <r>1</r>
             <g>0.15</g>
@@ -283,19 +277,24 @@
             <b>0</b>
             <a>1.0</a>
         </specular>
+        
+        <position>
+            <x>0.042</x>
+            <y>-2.3911</y>
+            <z>0.6044</z>
+        </position>
+        <direction>
+            <x>-1.5</x>
+            <y>-3</y>
+            <z>0</z>
+        </direction>
         <attenuation>
-            <c>1.3</c>
-            <l>1.5</l>
-            <q>4</q>
+            <c>3.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
-        <!--<dim-factor>
-            <property>sim/multiplay/generic/int[3]</property>
-            <factor>0.5</factor>
-            <min>0</min>
-            <max>5</max>
-        </dim-factor>-->
-
-        <cutoff>10</cutoff>
+        <exponent>5</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
     </animation>
@@ -307,6 +306,7 @@
         <object-name>pos_halo_WL</object-name>
         <object-name>RBT-coll_halo_WL</object-name>
         <object-name>TailCollisionLight</object-name>
+        <object-name>WingPositionLightLeft</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -356,9 +356,9 @@
 
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
-        <name>RBT-coll_halo_WL</name>
-        <object-name>RBT-coll_halo_WL</object-name>
+        <light-type>spot</light-type>
+        <name>RBT-pos_halo_WL</name>
+        <object-name>RBT-pos_halo_WL</object-name>
         <nopreview/>
         <position>
             <x>3.7300</x>
@@ -383,18 +383,24 @@
             <b>0</b>
             <a>1.0</a>
         </specular>
-        <attenuation>
-            <c>1.3</c>
-            <l>1.5</l>
-            <q>4</q>
-        </attenuation>
-        <!--<dim-factor>
-            <property>sim/multiplay/generic/int[3]</property>
-            <factor>0.5</factor>
+        <dim-factor>
+            <property>sim/multiplay/generic/int[4]</property>
+            <factor>0.2</factor>
             <min>0</min>
             <max>5</max>
-        </dim-factor>-->
-        <cutoff>10</cutoff>
+        </dim-factor>
+        <direction>
+            <x>-0.9988</x>
+            <y>-2</y>
+            <z>-0.0349</z>
+        </direction>
+        <attenuation>
+            <c>2.0</c>
+            <l>0.2</l>
+            <q>0.5</q>
+        </attenuation>
+        <exponent>2.5</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
     </animation>
@@ -404,6 +410,7 @@
         <type>select</type>
         <object-name>pos_halo_WR</object-name>
         <object-name>RBT-coll_halo_WR</object-name>
+        <object-name>WingPositionLightRight</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -414,8 +421,8 @@
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>pos_halo_WL</object-name>
-        <object-name>RBT-coll_halo_WL</object-name>
+        <object-name>pos_halo_WR</object-name>
+        <object-name>RBT-coll_halo_WR</object-name>
         <property>surface-positions/wing-fold-pos-norm</property>
         <factor>-7.0</factor>
         <center>
@@ -450,9 +457,9 @@
 
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
-        <name>RBT-coll_halo_WR</name>
-        <object-name>RBT-coll_halo_WR</object-name>
+        <light-type>spot</light-type>
+        <name>RBT-pos_halo_WR</name>
+        <object-name>RBT-pos_halo_WR</object-name>
         <nopreview/>
         <position>
             <x>3.7300</x>
@@ -461,35 +468,41 @@
         </position>
         <ambient>
             <r>0</r>
-            <g>1</g>
+            <g>0.9</g>
             <b>0.1</b>
             <a>1</a>
         </ambient>
         <diffuse>
             <r>0</r>
-            <g>1</g>
+            <g>0.9</g>
             <b>0.1</b>
             <a>1</a>
         </diffuse>
         <specular>
             <r>0</r>
-            <g>1</g>
+            <g>0.9</g>
             <b>0.1</b>
             <a>1</a>
         </specular>
-        <attenuation>
-            <c>1.3</c>
-            <l>1.5</l>
-            <q>4</q>
-        </attenuation>
-        <!--<dim-factor>
-            <property>sim/multiplay/generic/int[3]</property>
-            <factor>0.5</factor>
+        <dim-factor>
+            <property>sim/multiplay/generic/int[4]</property>
+            <property>sim/multiplay/generic/int[4]</property>
+            <factor>0.2</factor>
             <min>0</min>
             <max>5</max>
-        </dim-factor>-->
-
-        <cutoff>10</cutoff>
+        </dim-factor>
+        <direction>
+            <x>-0.9988</x>
+            <y>2</y>
+            <z>-0.0349</z>
+        </direction>
+        <attenuation>
+            <c>2.0</c>
+            <l>0.2</l>
+            <q>0.5</q>
+        </attenuation>
+        <exponent>2.5</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
     </animation>
@@ -527,16 +540,11 @@
 
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
+        <light-type>spot</light-type>
         <name>RBT-pos_halo_Tail</name>
         <object-name>RBT-pos_halo_Tail</object-name>
         <nopreview/>
-        <position>
-                <x>8.4811</x>
-                <y>-1.8063</y>
-                <z>3.2934</z>
-        </position>
-        <ambient>
+    <ambient>
             <r>0.95</r>
             <g>0.9</g>
             <b>0.9</b>
@@ -554,21 +562,32 @@
             <b>0.9</b>
             <a>1</a>
         </specular>
+        <position>
+                <x>8.4811</x>
+                <y>-1.8063</y>
+                <z>3.2934</z>
+        </position>
+        <direction>
+            <x>11</x>
+            <y>-1.8</y>
+            <z>3.32</z>
+        </direction>
         <attenuation>
-            <c>1.3</c>
-            <l>1.5</l>
-            <q>4</q>
+            <c>3.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
+        <exponent>1</exponent>
+        <cutoff>80</cutoff>
+        <near-m>0.01</near-m>
+        <far-m>10</far-m>
+
         <dim-factor>
             <property>sim/multiplay/generic/int[4]</property>
-            <factor>0.5</factor>
+            <factor>0.4</factor>
             <min>0</min>
             <max>5</max>
         </dim-factor>
-
-        <cutoff>10</cutoff>
-        <near-m>0.01</near-m>
-        <far-m>10</far-m>
     </animation>
 
 
@@ -867,49 +886,6 @@
             <blue>0.156</blue>
         </emission>
     </animation>
-<!-- tail illumination -->
-    <!--<animation>
-        <type>light</type>
-        <light-type>spot</light-type>
-        <name>left vertical tail light</name>
-        <object-name>RBT-vert-tail-light-l</object-name>
-        <nopreview/>
-        <position>
-            <x>7.0183</x>
-            <y>-2.53</y>
-            <z>0.56</z>
-        </position>
-        <direction>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </direction>
-        <diffuse>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
-            <a>1.0</a>
-        </diffuse>
-        <specular>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
-            <a>1.0</a>
-        </specular>
-        <attenuation>
-            <c>1.1</c>
-            <l>0.2</l>
-            <q>1.05</q>
-        </attenuation>
-        <dim-factor>
-            <property>sim/multiplay/generic/int[5]</property>
-            <factor>0.5</factor>
-        </dim-factor>
-        <exponent>1</exponent>
-        <near-m>0.01</near-m>
-        <far-m>2</far-m>
-        <cutoff>84</cutoff>
-    </animation>-->
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
@@ -917,49 +893,58 @@
         <object-name>RBT-vert-tail-light-l</object-name>
         <nopreview/>
         <position>
-            <x>6.870183</x>
-            <y>-2.53</y>
-            <z>1.56</z>
+            <x>6.270183</x>
+            <y>-1.831</y>
+            <z>0.4</z>
         </position>
         <direction>
-            <x>0</x>
-            <y>1</y>
-            <z>-1.90</z>
+            <x>5</x>
+            <y>-5</y>
+            <z>11</z>
         </direction>
+        <ambient>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </ambient>
         <diffuse>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
-            <a>1.0</a>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
         </diffuse>
         <specular>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
-            <a>1.0</a>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
         </specular>
+        <position>
+            <x>8.4811</x>
+            <y>-1.8063</y>
+            <z>3.2934</z>
+        </position>
+        <direction>
+            <x>11</x>
+            <y>-1.8</y>
+            <z>3.32</z>
+        </direction>
         <attenuation>
-            <!--<c>0.10</c>
-            <l>1.00002</l>
-            <q>4.00005</q>-->
-            <!--<c>0.80</c>
-            <l>1.00002</l>
-            <q>1.00005</q>-->
-            <!--<c>0.7</c>
-            <l>0</l>
-            <q>2</q>-->
-            <c>0</c>
-            <l>0.7</l>
-            <q>0.952</q>
+            <c>3.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
+        <exponent>1</exponent>
+        <cutoff>80</cutoff>
+        <near-m>0.01</near-m>
+        <far-m>10</far-m>
         <dim-factor>
             <property>sim/multiplay/generic/int[5]</property>
-            <factor>0.2</factor>
+            <factor>0.8</factor>
+            <min>0</min>
+            <max>5</max>
         </dim-factor>
-        <exponent>4</exponent>
-        <near-m>0.01</near-m>
-        <far-m>4</far-m>
-        <cutoff>95</cutoff>
     </animation>
 
     <animation>
@@ -969,49 +954,49 @@
         <object-name>RBT-vert-tail-light-r</object-name>
         <nopreview/>
         <position>
-            <x>6.870183</x>
-            <y>2.53</y>
-            <z>1.56</z>
+            <x>6.270183</x>
+            <y>1.831</y>
+            <z>0.4</z>
         </position>
         <direction>
-            <x>0</x>
-            <y>-1</y>
-            <z>-1.90</z>
+            <x>5</x>
+            <y>1.8</y>
+            <z>11</z>
         </direction>
+        <ambient>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
+        </ambient>
         <diffuse>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
-            <a>1.0</a>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
         </diffuse>
         <specular>
-            <r>1.0</r>
-            <g>1.0</g>
-            <b>1.0</b>
-            <a>1.0</a>
+            <r>0.95</r>
+            <g>0.9</g>
+            <b>0.9</b>
+            <a>1</a>
         </specular>
+   
         <attenuation>
-            <!--<c>0.10</c>
-            <l>1.00002</l>
-            <q>4.00005</q>-->
-            <!--<c>0.80</c>
-            <l>1.00002</l>
-            <q>1.00005</q>-->
-            <!--<c>0.7</c>
-            <l>0</l>
-            <q>2</q>-->
-            <c>0</c>
-            <l>0.7</l>
-            <q>0.952</q>
+            <c>3.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
+        <exponent>3</exponent>
+        <cutoff>80</cutoff>
+        <near-m>0.01</near-m>
+        <far-m>10</far-m>
         <dim-factor>
             <property>sim/multiplay/generic/int[5]</property>
-            <factor>0.2</factor>
+            <factor>0.8</factor>
+            <min>0</min>
+            <max>5</max>
         </dim-factor>
-        <exponent>4</exponent>
-        <near-m>0.01</near-m>
-        <far-m>4</far-m>
-        <cutoff>95</cutoff>
     </animation>
 
     <!-- using scale for the position light intensity -->
@@ -1060,15 +1045,15 @@
         <interpolation>
             <entry>
                 <ind>0</ind>
-                <dep>1</dep>
+                <dep>0.01</dep>
             </entry>
             <entry>
-                <ind>350</ind>
-                <dep>90</dep>
+                <ind>200</ind>
+                <dep>0.1</dep>
             </entry>
             <entry>
                 <ind>50000</ind>
-                <dep>1000</dep>
+                <dep>1</dep>
             </entry>
         </interpolation>
     </animation>
