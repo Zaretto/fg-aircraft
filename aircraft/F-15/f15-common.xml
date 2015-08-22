@@ -952,6 +952,13 @@
                             <script>aircraft.dlg_ground_services.open()</script>
                         </binding>
                     </item>
+                    <item n="8">
+                        <label>Aircraft Lighting</label>
+                        <binding>
+                            <command>nasal</command>
+                            <script>aircraft.dlg_lighting.open()</script>
+                        </binding>
+                    </item>
                 </menu>
             </default>
         </menubar>
@@ -1321,56 +1328,46 @@
     <consumables>
         <fuel>
             <tank n="0">
-                <name>FWD fuselage</name>
+                <name>L Feed</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="1">
-                <name>AFT fuselage</name>
+                <name>R Feed</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="2">
-                <name>l beam box</name>
+                <name>Tank 1</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="3">
-                <name>L sump</name>
+                <name>Internal Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="4">
-                <name>R beam box</name>
+                <name>Internal Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="5">
-                <name>R sump</name>
+                <name>External Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="6">
-                <name>L wing</name>
+                <name>External Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="7">
-                <name>R wing</name>
+                <name>Centre External</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="8">
-                <name>L external</name>
+                <name>L feed line</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
                 <selected type="bool">false</selected>
             </tank>
             <tank n="9">
-                <name>R external</name>
-                <kill-when-empty type="bool">false</kill-when-empty>
-                <selected type="bool">false</selected>
-            </tank>
-            <tank n="10">
-                <name>L feed line</name>
-                <kill-when-empty type="bool">false</kill-when-empty>
-                <!--<dump-rate-lbs-hr type="double">90000</dump-rate-lbs-hr>-->
-            </tank>
-            <tank n="11">
                 <name>R feed line</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
-                <!--<dump-rate-lbs-hr type="double">90000</dump-rate-lbs-hr>-->
+                <selected type="bool">false</selected>
             </tank>
         </fuel>
     </consumables>
@@ -1378,6 +1375,9 @@
     <controls>
         <armament>
             <trigger type="bool">false</trigger>
+            <cycle-mode type="bool">false</cycle-mode>
+            <master-arm type="bool">false</master-arm>
+            <selected-armament type="string"/>
         </armament>
         <lighting>
             <anti-collision-switch type="bool">true</anti-collision-switch>
@@ -1409,18 +1409,12 @@
             <console-red type="double">0.1000</console-red>
             <console-green type="double">0.0576</console-green>
             <console-blue type="double">0.0161</console-blue>
-
-            <!--<storm-flood archive="y" type="int">1</storm-flood>-->
-            <!-- using controls/lighting/panel-norm for storm-flood -->
         </lighting>
-        <flight>
+        <!--<flight>
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
-            <fake>0.0</fake>
-            <DLC-engaged type="bool">false</DLC-engaged>
-        </flight>
+        </flight>-->
         <gear>
-            <!-- Start with the Parking Brake on -->
-            <!--			<brake-parking type="double">1.0</brake-parking> -->
+            <nws-maneuvering type="bool">false</nws-maneuvering>
         </gear>
     </controls>
 
@@ -1537,11 +1531,10 @@
 
             <key n="42">
                 <name>*</name>
-                <desc>Nose wheel steering toggle</desc>
+                <desc>Nose wheel steering maneuvering toggle</desc>
                 <binding>
                     <command>nasal</command>
                     <script type="string">
-                        <!--active maneuvering nws when on ground-->
                         <![CDATA[ 
                             if (getprop("/fdm/jsbsim/fcs/steer-maneuver"))
                             {
@@ -1689,10 +1682,6 @@
                     <repeat>false</repeat>
                     <wrap>true</wrap>
                 </binding>
-                <binding>
-                    <command>nasal</command>
-                    <script>aircraft.arm_selector();</script>
-                </binding>
             </key>
             <key n="121">
                 <name>y</name>
@@ -1801,7 +1790,6 @@
             <file>Aircraft/F-15/Nasal/gear.nas</file>
             <file>Aircraft/F-15/Nasal/hud.nas</file>
             <file>Aircraft/F-15/Nasal/engines.nas</file>
-            <file>Aircraft/F-15/Nasal/spoilers.nas</file>
             <file>Aircraft/F-15/Nasal/adverse.nas</file>
             <file>Aircraft/F-15/Nasal/fuel-system.nas</file>
             <file>Aircraft/F-15/Nasal/electrics.nas</file>
