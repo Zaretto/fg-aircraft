@@ -8,12 +8,16 @@
             <name>Avionics 400hz</name>
             <path>/Sounds/avionics-400Hz.wav</path>
             <mode>looped</mode>
+            <type>avionics</type>
             <condition>
                 <greater-than>
                     <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                     <value>0</value>
                 </greater-than>
-                <property>sim/current-view/internal</property>
+                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
             </condition>
             <volume>
                 <factor>0.05</factor>
@@ -750,7 +754,11 @@
                     <property>sim/model/f15/gear-sound-freeze</property>
                 </not>
                 <property>gear/gear[0]/wow</property>
-                <property>sim/current-view/internal</property>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
 <greater-than>
     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
     <value>20</value>
@@ -905,7 +913,11 @@
                     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
                     <value>100</value>
                 </greater-than>
-                <property>sim/current-view/internal</property>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
             </condition>
             <volume>
                 <property>orientation/alpha-deg</property>
@@ -1008,6 +1020,7 @@
         </squeal-right-mlg>
 
         <squeal-nose-sideslip>
+            <name>squeal-nose-sideslip</name>
             <path>Sounds/tyre-squealing-sideslip.wav</path>
             <mode>looped</mode>
             <condition>
@@ -1133,7 +1146,7 @@
                 <factor>-0.2</factor>
             </pitch>
             <volume>
-                <factor>0.5</factor>
+                <value>0.5</value>
             </volume>
         </flap-in-transit>
         <canopy>
@@ -1142,7 +1155,7 @@
             <path>Sounds/canopy-trans.wav</path>
             <property>canopy/position-norm</property>
             <volume>
-                <factor>0.2</factor>
+                <value>0.6</value>
             </volume>
         </canopy>
         <canopy-close>
@@ -1156,7 +1169,7 @@
                 </less-than-equals>
             </condition>
             <volume>
-                <factor>0.3</factor>
+                <value>0.3</value>
             </volume>
         </canopy-close>
         <!-- stall warnings -->
@@ -1164,6 +1177,7 @@
             <name>pre-stall</name>
             <mode>looped</mode>
             <path>Sounds/900hz-intermittent.wav</path>
+            <type>avionics</type>
             <condition>
                 <greater-than>
                     <property>orientation/alpha-deg</property>
@@ -1177,25 +1191,20 @@
                     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
                     <value>10</value>
                 </greater-than>
-                <or>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>Cockpit View</value>
-                    </equals>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>RIO View</value>
-                    </equals>
-                </or>
+                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
             </condition>
             <volume>
-                <factor>0.4</factor>
+                <value>0.4</value>
             </volume>
             <max-dist>5</max-dist>
         </pre-stall>
         <stall>
             <name>stall</name>
             <mode>looped</mode>
+            <type>avionics</type>
             <path>Sounds/900hz-continuous.wav</path>
             <condition>
                 <greater-than>
@@ -1206,25 +1215,20 @@
                     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
                     <value>10</value>
                 </greater-than>
-                <or>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>Cockpit View</value>
-                    </equals>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>RIO View</value>
-                    </equals>
-                </or>
+                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
             </condition>
             <volume>
-                <factor>0.6</factor>
+                <value>0.6</value>
             </volume>
             <max-dist>5</max-dist>
         </stall>
         <gear-warning>
             <name>gear-warning</name>
             <mode>looped</mode>
+            <type>avionics</type>
             <path>Sounds/f-15-warning-tone.wav</path>
             <condition>
                 <property>/fdm/jsbsim/systems/cadc/gear-warning-tone</property>
@@ -1232,13 +1236,208 @@
                     <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
-                <property>sim/current-view/internal</property>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
             </condition>
             <volume>
-                <factor>0.6</factor>
+                <value>0.6</value>
             </volume>
             <max-dist>5</max-dist>
         </gear-warning>
+        <ows-overload-85>
+            <name>ows-overload-85</name>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <path>Sounds/betty-ows-overload-85.wav</path>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/cadc/ows-overg-85</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </ows-overload-85>
+
+        <ows-overload-92>
+            <name>ows-overload-92</name>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <path>Sounds/betty-ows-overload-92.wav</path>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/cadc/ows-overg-92</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </ows-overload-92>
+
+        <ows-overload-96>
+            <name>ows-overload-96</name>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <path>Sounds/betty-ows-overload-96.wav</path>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/cadc/ows-overg-96</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </ows-overload-96>
+        <ows-overload>
+            <name>ows-overload</name>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <path>Sounds/betty-ows-overload.wav</path>
+            <condition>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/cadc/ows-overg</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </ows-overload>
+        
+        <caution-warning>
+            <name>caution-warning</name>
+            <mode>once</mode>
+            <type>avionics</type>
+            <path>Sounds/betty-warning.wav</path>
+            <condition>
+                <greater-than>
+                    <property>sim/model/f15/instrumentation/warnings/master-caution</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/time/elapsed-sec</property>
+                    <value>2</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </caution-warning>
+        <bingo-fuel>
+            <name>bingo-fuel</name>
+            <mode>once</mode>
+            <type>avionics</type>
+            <delay-sec>0.7</delay-sec>
+            <path>Sounds/betty-bingo-fuel.wav</path>
+            <condition>
+                <greater-than>
+                    <property>sim/time/elapsed-sec</property>
+                    <value>2</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/model/f15/lights/ca-bingo-fuel</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </bingo-fuel>
+        <fuel-low>
+            <name>fuel-low</name>
+            <mode>once</mode>
+            <type>avionics</type>
+            <delay-sec>0.7</delay-sec>
+            <path>Sounds/betty-fuel-low.wav</path>
+            <condition>
+                <greater-than>
+                    <property>sim/time/elapsed-sec</property>
+                    <value>2</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/model/f15/lights/ca-fuel-low</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>sim/current-view/internal</property>
+                    <value>0</value>
+                </greater-than>
+
+            </condition>
+            <volume>
+                <value>1</value>
+            </volume>
+            <max-dist>5</max-dist>
+        </fuel-low>
         <gun>
             <name>gun</name>
             <mode>looped</mode>
@@ -1250,6 +1449,5 @@
                 <value>1</value>
             </volume>
         </gun>
-
     </fx>
 </PropertyList>
