@@ -992,6 +992,7 @@
 
     <model>
         <path>pilot.xml</path>
+        <name>LtCdrTricky</name>
         <offsets>
             <x-m>0</x-m>
             <y-m></y-m>
@@ -1009,12 +1010,46 @@
     </model>
     <animation>
         <type>select</type>
+        <object-name>LtCdrTricky</object-name>
+        <condition>
+            <and>
+                <not>
+                    <property>sim/model/hide-pilot</property>
+                </not>
+                <not>
+                    <and>
+                        <property>sim/model/hide-pilots-auto</property>
+                        <equals>
+                            <property>sim/current-view/name</property>
+                            <value>Cockpit View</value>
+                        </equals>
+                    </and>
+                </not>
+            </and>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
         <object-name>Backseater</object-name>
         <condition>
-            <equals>
-                <property>sim/multiplay/generic/string[2]</property>
-                <value>D</value>
-            </equals>
+            <and>
+                <equals>
+                    <property>sim/multiplay/generic/string[2]</property>
+                    <value>D</value>
+                </equals>
+                <not>
+                    <property>sim/model/hide-backseater</property>
+                </not>
+                <not>
+                    <and>
+                        <property>sim/model/hide-pilots-auto</property>
+                        <equals>
+                            <property>sim/current-view/name</property>
+                            <value>Backseat View</value>
+                        </equals>
+                    </and>
+                </not>
+            </and>
         </condition>
     </animation>
 

@@ -38,150 +38,7 @@
     <property>fcs/flap-cmd-sum</property>
     <property>fcs/roll-trim-sas-cmd-norm</property>
 
-    <channel name="Auxiliary">
-        <pure_gain name="Pilot G">
-            <input>accelerations/n-pilot-z-norm</input>
-            <gain>-1</gain>
-            <output>/accelerations/pilot-gdamped</output>
-        </pure_gain>
-
-        <switch name="position/aircraft-on-ground">
-            <description>Aircraft on ground</description>
-            <default value="0"/>
-            <test value="1" logic="OR">
-                gear/unit[0]/WOW ne 0
-                gear/unit[1]/WOW ne 0
-                gear/unit[2]/WOW ne 0
-            </test>
-        </switch>
-        <fcs_function name="aero/alpha-indicated-deg">
-            <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
-            <function>
-                <product>
-                    <sum>
-                        <property> aero/alpha-deg </property>
-                        <value> -0.797 </value>
-                    </sum>
-                    <value>1.231223836</value>
-                </product>
-            </function>
-        </fcs_function>
-        <fcs_function name="aero/aero-rp-x-in">
-            <function>
-                <description>Centre of pressure due to mach</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/mach</independentVar>
-                        <tableData>
-                            0.00    419
-                            2.4     445
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-            <output>metrics/aero-rp-x-in</output>
-        </fcs_function>
-
-        <fcs_function name="systems/cadc/rudder-effectivity">
-            <function>
-                <description>High speed CADC control effectivity limitation of rudder</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0.00  1.0
-                            800 0.7
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-
-        <fcs_function name="systems/cadc/pitch-trim-compensation">
-            <function>
-                <!--Maintain the aircraft pitch trim for speed and flaps. The PTC system relieves the pilot of the task of compensating for pitch trim for speed and flaps with large longitudinal stick motions.-->
-                <description>Pitch Trim Compensator (PTC)</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                        <tableData>
-                                          0          35
-                              0    -0.28860   -0.122750
-                            200   -0.188860   -0.102750
-                            310   -0.061875    0.022125
-                            415   -0.037920    0.076125
-                            520    0.020500    0.076125
-                            620    0.001877    0.076125
-                            740    0.134250    0.076125
-                            820    0.174000    0.076125
-                            900    0.216250    0.076125
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-        
-
-        <fcs_function name="systems/cadc/pitch-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of elevator</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                              0   1.0
-                             500  1.0
-                             610  0.5
-                             680  0.3
-                             780  0.2
-                             860  0.15
-                            1000  0.1
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-        <switch name="systems/cadc/pitch-ratio">
-            <description>Aircraft on ground</description>
-            <default value="systems/cadc/pitch-ratio-dmd"/>
-            <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
-                systems/cadc/pitch-ratio-emergency ne 0
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-pos-norm ne 0
-            </test>
-        </switch>
-
-        <fcs_function name="systems/cadc/roll-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of aileron</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0.00  1.0
-                            180  1.0
-                            530  0.4
-                            1100 0.12
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-        <switch name="systems/cadc/roll-ratio">
-            <description>Roll ratio actual</description>
-            <default value="systems/cadc/roll-ratio-dmd"/>
-            <test value="0.5" logic="OR">
-                systems/cadc/roll-ratio-emergency ne 0
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-pos-norm ne 0
-            </test>
-        </switch>
-    </channel>
     <channel name="extra-aero">
-
         <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
         <summer name="cg-x-offset-chord-in">
             <input> inertia/cg-x-in</input>
@@ -287,9 +144,168 @@
             </function>
             <output>aero/sin-alpha</output>
         </fcs_function>
-
-
     </channel>
+
+    <channel name="Auxiliary">
+        <pure_gain name="Pilot G">
+            <input>accelerations/n-pilot-z-norm</input>
+            <gain>-1</gain>
+            <output>/accelerations/pilot-gdamped</output>
+        </pure_gain>
+
+        <switch name="position/aircraft-on-ground">
+            <description>Aircraft on ground</description>
+            <default value="0"/>
+            <test value="1" logic="OR">
+                gear/unit[0]/WOW ne 0
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+            </test>
+        </switch>
+        <fcs_function name="aero/alpha-indicated-deg">
+            <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
+            <function>
+                <product>
+                    <sum>
+                        <property> aero/alpha-deg </property>
+                        <value> -0.797 </value>
+                    </sum>
+                    <value>1.231223836</value>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="aero/aero-rp-x-in">
+            <function>
+                <description>Centre of pressure due to mach</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <tableData>
+                            0.00    419
+                            2.4     445
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+            <output>metrics/aero-rp-x-in</output>
+        </fcs_function>
+
+        <fcs_function name="systems/cadc/rudder-effectivity">
+            <function>
+                <description>High speed CADC control effectivity limitation of rudder</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            0.00  1.0
+                            800 0.7
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/cadc/pitch-trim-compensation">
+            <function>
+                <!--Maintain the aircraft pitch trim for speed and flaps. The PTC system relieves the pilot of the task of compensating for pitch trim for speed and flaps with large longitudinal stick motions.-->
+                <description>Pitch Trim Compensator (PTC)</description>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                                          0          35
+                              0    -0.28860   -0.122750
+                            200   -0.188860   -0.102750
+                            310   -0.061875    0.022125
+                            415   -0.037920    0.076125
+                            520    0.020500    0.076125
+                            620    0.001877    0.076125
+                            740    0.134250    0.076125
+                            820    0.174000    0.076125
+                            900    0.216250    0.076125
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+        
+
+        <fcs_function name="systems/cadc/pitch-ratio-dmd">
+            <function>
+                <description>High speed CADC control effectivity limitation of elevator</description>
+                <product>
+                    <sum>
+                        <value>1</value>
+                        <abs>
+                            <property>inertia/cg-x-mac-percent</property>
+                        </abs>
+                    </sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            0      1.0
+                            300    1.0
+                            400    0.7
+                            500    0.4
+                            600    0.2
+                            900    0.05
+                            1100   0.08
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+            <clipto>
+                <min> -1 </min>
+                <max> 1 </max>
+            </clipto>
+
+        </fcs_function>
+        <switch name="systems/cadc/pitch-ratio">
+            <description>Aircraft on ground</description>
+            <default value="systems/cadc/pitch-ratio-dmd"/>
+            <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
+                systems/cadc/pitch-ratio-emergency ne 0
+            </test>
+            <test value="1" logic="OR">
+                gear/gear-pos-norm ne 0
+            </test>
+        </switch>
+
+        <fcs_function name="systems/cadc/roll-ratio-dmd">
+            <function>
+                <description>High speed CADC control effectivity limitation of aileron</description>
+                <product>
+                    <sum>
+                        <value>1</value>
+                        <abs>
+                            <property>inertia/cg-x-mac-percent</property>
+                        </abs>
+                    </sum>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            0  1.0
+                            180  1.0
+                            400  0.4
+                            1000 0.12
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
+        <switch name="systems/cadc/roll-ratio">
+            <description>Roll ratio actual</description>
+            <default value="systems/cadc/roll-ratio-dmd"/>
+            <test value="0.5" logic="OR">
+                systems/cadc/roll-ratio-emergency ne 0
+            </test>
+            <test value="1" logic="OR">
+                gear/gear-pos-norm ne 0
+            </test>
+        </switch>
+    </channel>
+
     <channel name="SAS">
         <switch name="fcs/roll-sas-active">
             <default value="0.0"/>
@@ -817,6 +833,51 @@
                 <max>  0 </max>
             </clipto>
         </fcs_function>
+        <switch name="systems/cadc/ows-maximum-g-safe">
+            <default value="1"/>
+            <test value="systems/cadc/ows-maximum-g">
+                systems/cadc/ows-maximum-g ne 0
+            </test>
+        </switch>
+        
+        <fcs_function name="systems/cadc/ows-percent-max">
+            <description>OWS Percent of max</description>
+            <function>
+                <abs>
+                    <quotient>
+                        <property>/accelerations/pilot-gdamped</property>
+                        <property>systems/cadc/ows-maximum-g</property>
+                    </quotient>
+                </abs>
+            </function>
+        </fcs_function>
+        <switch name="systems/cadc/ows-overg-85">
+            <default value="0"/>
+            <test value="1">
+                systems/cadc/ows-percent-max ge 0.85
+                systems/cadc/ows-percent-max lt 0.92
+            </test>
+        </switch>
+        <switch name="systems/cadc/ows-overg-92">
+            <default value="0"/>
+            <test value="1">
+                systems/cadc/ows-percent-max ge 0.92
+                systems/cadc/ows-percent-max lt 0.96
+            </test>
+        </switch>
+        <switch name="systems/cadc/ows-overg-96">
+            <default value="0"/>
+            <test value="1">
+                systems/cadc/ows-percent-max ge 0.96
+                systems/cadc/ows-percent-max lt 1
+            </test>
+        </switch>
+        <switch name="systems/cadc/ows-overg">
+            <default value="0"/>
+            <test value="1">
+                systems/cadc/ows-percent-max ge 1
+            </test>
+        </switch>
     </channel>
 
 </system>

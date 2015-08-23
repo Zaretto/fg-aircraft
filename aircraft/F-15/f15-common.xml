@@ -323,9 +323,12 @@
 
         <model>
             <path>Aircraft/F-15/Models/f15c.xml</path>
+            <hide-pilot type="bool">false</hide-pilot >
+            <hide-backseater type="bool">false</hide-backseater>
+            <hide-pilots-auto type="bool">true</hide-pilots-auto>
             <f15>
                 <controls>
-                    <windshield-heat type="int">1</windshield-heat>
+                    <windshield-heat type="int">0</windshield-heat>
                     <AFCS>
                         <engage type="bool">false</engage>
                         <vec-acl type="int">0</vec-acl>
@@ -892,8 +895,10 @@
             </camera-group>
             <redout>
                 <parameters>
-                    <blackout-complete-g>7.9</blackout-complete-g>
-                    <blackout-onset-g>5.5</blackout-onset-g>
+                    <blackout-complete-g>10</blackout-complete-g>
+                    <blackout-onset-g>6.5</blackout-onset-g>
+                    <redout-onset-g type="double">-2.5</redout-onset-g>
+                    <redout-complete-g type="double">-3.5</redout-complete-g>
                 </parameters>
             </redout>
         </rendering>
@@ -1009,21 +1014,21 @@
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <y-offset-m archive="y">1.457499884</y-offset-m>
                 <z-offset-m archive="y">-5</z-offset-m>
-                <pitch-offset-deg>-14.7</pitch-offset-deg>
-                <default-field-of-view-deg>55</default-field-of-view-deg>
-                <!--<limits>
+                <pitch-offset-deg>-15.3</pitch-offset-deg>
+                <default-field-of-view-deg>85</default-field-of-view-deg>
+                <limits>
                     <enabled type="bool">true</enabled>
                     <left>
-                        <heading-max-deg type="double">140</heading-max-deg>
-                        <x-offset-max-m type="double">0.20</x-offset-max-m>
+                        <heading-max-deg type="double">180</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
                         <x-offset-threshold-deg type="double">25</x-offset-threshold-deg>
                     </left>
                     <right>
-                        <heading-max-deg type="double">140</heading-max-deg>
-                        <x-offset-max-m type="double">0.20</x-offset-max-m>
+                        <heading-max-deg type="double">180</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
                         <x-offset-threshold-deg type="double">25</x-offset-threshold-deg>
                     </right>
-                </limits>-->
+                </limits>
             </config>
         </view>
         <view n="1">

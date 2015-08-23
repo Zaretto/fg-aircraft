@@ -374,7 +374,7 @@ setlistener("/sim/signals/fdm-initialized", startProcess);
 #----------------------------------------------------------------------------
 
 var CurrentView_Num = props.globals.getNode("sim/current-view/view-number");
-var backseat_view_num = view.indexof("Backset View");
+var backseat_view_num = view.indexof("Backseat View");
 
 var toggle_cockpit_views = func() {
 	cur_v = CurrentView_Num.getValue();
@@ -412,7 +412,7 @@ var quickstart = func() {
     setprop("sim/model/f15/controls/MPCD/mode",2);
     setprop("sim/model/f15/lights/radio2-brightness",0.6);
 
-setprop("sim/model/f15/controls/windshield-heat",1);
+#    setprop("sim/model/f15/controls/windshield-heat",1);
     setprop("sim/model/f15/controls/electrics/emerg-flt-hyd-switch",0);
     setprop("sim/model/f15/controls/electrics/emerg-gen-guard-lever",0);
 	setprop("sim/model/f15/controls/electrics/emerg-gen-switch",1);

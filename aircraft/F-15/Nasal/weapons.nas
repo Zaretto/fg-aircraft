@@ -316,7 +316,7 @@ var demand_weapons_refresh = func {
 var arm_selector = func() {
 	update_gun_ready();
 	var weapon_s = WeaponSelector.getValue();
-    print("arm stick selector ",weapon_s);
+#    print("arm stick selector ",weapon_s);
     setprop("sim/model/f15/systems/armament/launch-light",false);
 	if ( weapon_s == 0 ) 
     {
@@ -374,3 +374,58 @@ var arm_selector = func() {
     setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
 }
 
+setlistener("/payload/weight[0]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[1]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[2]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[3]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[4]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[5]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[6]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[7]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[8]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[9]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[10]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});

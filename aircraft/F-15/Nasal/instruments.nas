@@ -341,7 +341,10 @@ aircraft.data.add(
     "instrumentation/transponder/inputs/digit[0]", 
     "instrumentation/transponder/inputs/digit[1]", 
     "instrumentation/transponder/inputs/digit[2]", 
-    "instrumentation/transponder/inputs/digit[3]"
+    "instrumentation/transponder/inputs/digit[3]",
+    "sim/model/hide-pilot",
+    "sim/model/hide-backseater",
+    "sim/model/hide-pilots-auto"
     );
 
 var g_max   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-max", 1);
