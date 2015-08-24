@@ -1176,17 +1176,17 @@
         <pre-stall>
             <name>pre-stall</name>
             <mode>looped</mode>
-            <path>Sounds/900hz-intermittent.wav</path>
+            <path>Sounds/warning-high-aoa.wav</path>
             <type>avionics</type>
             <condition>
                 <greater-than>
-                    <property>orientation/alpha-deg</property>
-                    <value>18</value>
+                    <property>fdm/jsbsim/aero/alpha-indicated-deg</property>
+                    <value>25</value>
                 </greater-than>
-                <less-than-equals>
-                    <property>orientation/alpha-deg</property>
+                <!--<less-than-equals>
+                    <property>fdm/jsbsim/aero/alpha-indicated-deg</property>
                     <value>22.5</value>
-                </less-than-equals>
+                </less-than-equals>-->
                 <greater-than>
                     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
                     <value>10</value>
@@ -1201,20 +1201,27 @@
             </volume>
             <max-dist>5</max-dist>
         </pre-stall>
-        <stall>
-            <name>stall</name>
+ 
+        <gear-aoa>
+            <name>gear-aoa</name>
             <mode>looped</mode>
             <type>avionics</type>
-            <path>Sounds/900hz-continuous.wav</path>
+            <path>Sounds/gear-aoa-warning.wav</path>
             <condition>
                 <greater-than>
                     <property>orientation/alpha-deg</property>
-                    <value>22.5</value>
+                    <value>30</value>
                 </greater-than>
                 <greater-than>
-                    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
-                    <value>10</value>
+                    <property>gear/gear[0]/position-norm</property>
+                    <value>0.9</value>
                 </greater-than>
+                <not>
+                    <or>
+                        <property>fdm/jsbsim/contact/unit[3]/WOW</property>
+                        <property>fdm/jsbsim/contact/unit[4]/WOW</property>
+                    </or>
+                </not>
                 <greater-than>
                     <property>sim/current-view/internal</property>
                     <value>0</value>
@@ -1224,7 +1231,7 @@
                 <value>0.6</value>
             </volume>
             <max-dist>5</max-dist>
-        </stall>
+        </gear-aoa>
         <gear-warning>
             <name>gear-warning</name>
             <mode>looped</mode>
@@ -1236,22 +1243,22 @@
                     <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
-                                <greater-than>
+                <greater-than>
                     <property>sim/current-view/internal</property>
                     <value>0</value>
                 </greater-than>
-
             </condition>
             <volume>
                 <value>0.6</value>
             </volume>
             <max-dist>5</max-dist>
         </gear-warning>
+
         <ows-overload-85>
             <name>ows-overload-85</name>
             <mode>looped</mode>
             <type>avionics</type>
-            <path>Sounds/betty-ows-overload-85.wav</path>
+            <path>Sounds/ows-overload-85.wav</path>
             <condition>
                 <greater-than>
                     <property>/fdm/jsbsim/systems/cadc/ows-overg-85</property>
@@ -1277,7 +1284,7 @@
             <name>ows-overload-92</name>
             <mode>looped</mode>
             <type>avionics</type>
-            <path>Sounds/betty-ows-overload-92.wav</path>
+            <path>Sounds/ows-overload-92.wav</path>
             <condition>
                 <greater-than>
                     <property>/fdm/jsbsim/systems/cadc/ows-overg-92</property>
@@ -1303,7 +1310,7 @@
             <name>ows-overload-96</name>
             <mode>looped</mode>
             <type>avionics</type>
-            <path>Sounds/betty-ows-overload-96.wav</path>
+            <path>Sounds/ows-overload-96.wav</path>
             <condition>
                 <greater-than>
                     <property>/fdm/jsbsim/systems/cadc/ows-overg-96</property>
@@ -1324,6 +1331,7 @@
             </volume>
             <max-dist>5</max-dist>
         </ows-overload-96>
+
         <ows-overload>
             <name>ows-overload</name>
             <mode>looped</mode>
