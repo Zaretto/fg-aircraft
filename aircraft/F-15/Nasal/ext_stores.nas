@@ -294,6 +294,7 @@ var ext_loads_set = func(s)
     }
     update_dialog_checkboxes();
 	update_wpstring();
+    arm_selector();
 }
 
 # Empties (or loads) corresponding Yasim tanks when de-selecting (or selecting)

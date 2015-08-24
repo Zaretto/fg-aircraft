@@ -53,6 +53,7 @@ setprop("sim/model/f15/controls/electrics/l-gen-switch",1);
 setprop("sim/model/f15/controls/electrics/r-gen-switch",1);
 
 var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/F-15/Dialogs/ground-services.xml");
+var dlg_lighting  = gui.Dialog.new("dialog[3]","Aircraft/F-15/Dialogs/lighting.xml");
 
     ## initialise the electrics / hyds
     setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
@@ -101,15 +102,6 @@ var runEMMISC = func {
 	    {
 		    ca_start_valve.setBoolValue(0);
         }
-    }
-
-    if(getprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus") < 5)
-    {
-        setprop("sim/hud/visibility[1]",0);
-    }
-    else
-    {
-        setprop("sim/hud/visibility[1]",getprop("sim/model/f15/controls/hud/on-off"));
     }
 
 #
@@ -505,7 +497,8 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-cas-pitch",0);
         }
     }
-
+#anti skid will indicate when the parking brake is on.
+    setprop("sim/model/f15/lights/ca-anti-skid", getprop("/controls/gear/brake-parking"));
 
     if (canopy.getValue() > 0)
     {

@@ -1,12 +1,17 @@
 #
-# F-15 AWG-9 Radar routines.
+# F-15 Radar routines. 
+# The F-15 doesn't have an awg_9, however this isn't an accurate simulation
+# of the radar so it works fine.
 # ---------------------------
 # RWR (Radar Warning Receiver) is computed in the radar loop for better performance
 # AWG-9 Radar computes the nearest target for AIM-9.
 # Provides the 'tuned carrier' tacan channel support for ARA-63 emulation
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
-#
+# - 2015-07 : Modified to have target selection - nearest_u is retained
+#             however active_u is the currently active target which mostly
+#             should be the same as nearest_u - but use active_u instead in 
+#             most of the code. nearest_u is kept for compatibility.
 # 
 
 var ElapsedSec        = props.globals.getNode("sim/time/elapsed-sec");
@@ -371,35 +376,79 @@ active_u = nil;
     {
         if (tgt_cmd > 0)
             awg_9.sel_next_target=1;
-        else if (tgt_cmd > 0)
+        else if (tgt_cmd < 0)
             awg_9.sel_prev_target=1;
-#print("tgt cmd ",tgt_cmd);
     }
 
-    if (awg_9.sel_next_target)
+    if (awg_9.sel_prev_target)
     {
         var dist  = 0;
         if (awg_9.active_u != nil)
         {
-            dist = awg_9.nearest_u.get_range();
+            dist = awg_9.active_u.get_range();
         }
-#            active_u = tgts_list[0];
-        print("Sel next target: dist=",dist);
+#        print("Sel prev target:");
+
+        var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
+        var prv=nil;
+        foreach (var u; sorted_dist) 
+        {
+#            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            if(u.Callsign.getValue() == active_u_callsign)
+            {
+#                if (prv != nil)
+#                    print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
+#                else
+#                    print("first in list");
+                break;
+            }
+            prv = u;
+        }
+        if (prv == nil)
+        {
+            var idx = size(sorted_dist)-1;
+            if (idx > 0)
+            {
+                prv = sorted_dist[idx];
+#                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+            }
+        }
+
+        if (prv != nil)
+        {
+            active_u = nearest_u = tmp_nearest_u = prv;
+            if (tmp_nearest_u.Callsign != nil)
+                active_u_callsign = tmp_nearest_u.Callsign.getValue();
+            else
+                active_u_callsign = nil;
+                
+#            printf("prv: %s %3.1f", prv.Callsign.getValue(), prv.get_range());
+        }
+        awg_9.sel_prev_target =0;
+    }
+    else if (awg_9.sel_next_target)
+    {
+        var dist  = 0;
+        if (awg_9.active_u != nil)
+        {
+            dist = awg_9.active_u.get_range();
+        }
+#        print("Sel next target: dist=",dist);
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
         foreach (var u; sorted_dist) 
         {
-            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+#            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(u.Callsign.getValue() == active_u_callsign)
             {
-                print("Skipping active target ",active_u_callsign);
+#                print("Skipping active target ",active_u_callsign);
                 continue;
 }
             if(u.get_range() > dist)
             {
                 nxt = u;
-                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
+#                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
                 break;
             }
         }
@@ -417,7 +466,7 @@ if(size(sorted_dist)>0)
             else
                 active_u_callsign = nil;
                 
-            printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
+#            printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
         }
         awg_9.sel_next_target =0;
     }
@@ -431,19 +480,19 @@ if(size(sorted_dist)>0)
 
 var hud_nearest_tgt = func() {
 	# Computes nearest_u position in the HUD
-	if ( nearest_u != nil ) {
-		SWTgtRange.setValue(nearest_u.get_range());
+	if ( active_u != nil ) {
+		SWTgtRange.setValue(active_u.get_range());
 		var our_pitch = OurPitch.getValue();
-		#var u_dev_deg = (90 - nearest_u.get_deviation(our_true_heading));
-		#var u_elev_deg = (90 - nearest_u.get_total_elevation(our_pitch));
-		var u_dev_rad = (90 - nearest_u.get_deviation(our_true_heading)) * D2R;
-		var u_elev_rad = (90 - nearest_u.get_total_elevation(our_pitch)) * D2R;
-#print("nearest_u ",wcs_mode, nearest_u.get_range()," Display", nearest_u.get_display(), "dev ",nearest_u.deviation," ",l_az_fld," ",r_az_fld);
+		#var u_dev_deg = (90 - active_u.get_deviation(our_true_heading));
+		#var u_elev_deg = (90 - active_u.get_total_elevation(our_pitch));
+		var u_dev_rad = (90 - active_u.get_deviation(our_true_heading)) * D2R;
+		var u_elev_rad = (90 - active_u.get_total_elevation(our_pitch)) * D2R;
+#print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
 		if (
 			wcs_mode == "tws-auto"
-			and nearest_u.get_display()
-			and nearest_u.deviation > l_az_fld
-			and nearest_u.deviation < r_az_fld
+			and active_u.get_display()
+			and active_u.deviation > l_az_fld
+			and active_u.deviation < r_az_fld
 		) {
 			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
 			var combined_dev_deg = devs[0];
@@ -456,7 +505,7 @@ var hud_nearest_tgt = func() {
 			}
 
 			# Clamp closure rate from -200 to +1,000 Kts.
-			var cr = nearest_u.ClosureRate.getValue();
+			var cr = active_u.ClosureRate.getValue();
 
 			if (cr != nil)
             {
@@ -470,15 +519,15 @@ var hud_nearest_tgt = func() {
 			HudTgtTDeg.setValue(combined_dev_deg);
 			HudTgtTDev.setValue(combined_dev_length);
 			HudTgtHDisplay.setBoolValue(1);
-            HudTgtDistance.setValue(nearest_u.get_range());
+            HudTgtDistance.setValue(active_u.get_range());
 
-			var u_target = nearest_u.type ~ "[" ~ nearest_u.index ~ "]";
+			var u_target = active_u.type ~ "[" ~ active_u.index ~ "]";
 
-            var callsign = nearest_u.Callsign.getValue();
+            var callsign = active_u.Callsign.getValue();
             var model = "";
 
-            if (nearest_u.Model != nil)
-                model = nearest_u.Model.getValue();
+            if (active_u.Model != nil)
+                model = active_u.Model.getValue();
 
             var target_id = "";
             if(callsign != nil)

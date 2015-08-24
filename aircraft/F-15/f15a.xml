@@ -197,7 +197,7 @@
             <rolling_friction>0.02</rolling_friction>
             <spring_coeff unit="LBS/FT">25200</spring_coeff>
             <damping_coeff unit="LBS/FT/SEC">1400</damping_coeff>
-            <max_steer unit="DEG">89</max_steer>
+            <max_steer unit="DEG">35</max_steer>
             <brake_group>NOSE</brake_group>
             <retractable>1</retractable>
         </contact>
@@ -463,8 +463,8 @@
         <tank type="FUEL">
             <!--5: Left External Wing Tank-->
             <location unit="IN">
-                <x>450</x>
-                <y>0</y>
+                <x>420</x>
+                <y>-108</y>
                 <z>-7.83</z>
             </location>
             <capacity unit="LBS">3950</capacity>
@@ -475,8 +475,8 @@
         <tank type="FUEL">
             <!--6: Right External Wing Tank-->
             <location unit="IN">
-                <x>450</x>
-                <y>0</y>
+                <x>420</x>
+                <y>108</y>
                 <z>-7.83</z>
             </location>
             <capacity unit="LBS">3950</capacity>
@@ -560,7 +560,42 @@
         </force>
     </external_reactions>
 
-    <flight_control name="FCS"></flight_control>
+    <flight_control name="FCS">
+        <channel name="Nose Wheel Steering">
+            <switch name="systems/NWS/engaged">
+                <default value="0"/>
+                <test value="1">
+                    gear/unit[0]/wheel-speed-fps le 221
+                    systems/hydraulics/combined-system-pressure ne 0
+                    position/aircraft-on-ground ne 0
+                    systems/holdback/launchbar-engaged eq 0
+                    fcs/steer-maneuver ne 0
+                </test>
+                <test value="2">
+                    gear/unit[0]/wheel-speed-fps le 221
+                    systems/hydraulics/combined-system-pressure ne 0
+                    position/aircraft-on-ground ne 0
+                    systems/holdback/launchbar-engaged eq 0
+                </test>
+                <output>systems/NWS/engaged</output>
+            </switch>
+
+            <scheduled_gain name="fcs/steer-pos-deg">
+                <input>fcs/steer-cmd-norm</input>
+                <table>
+                    <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
+                    <independentVar lookup="column">systems/NWS/engaged</independentVar>
+                    <tableData>
+                        0   1    2
+                        0   0   35   15
+                        40   0   35   15
+                        300 0   0    0
+                    </tableData>
+                </table>
+                <output>fcs/steer-pos-deg</output>
+            </scheduled_gain>
+        </channel>
+    </flight_control>
     <system file="f-15-hydraulic"/>
     <system file="f-15-electrics"/>
     <system file="catapult"/>

@@ -25,24 +25,6 @@ aircraft.data.add("sim/model/f15/controls/hud/intens", "sim/hud/current-color");
 
 hud_alpha.setDoubleValue(0);
 
-var update_hud = func {
-		hud_alpha.setDoubleValue(0);
-return;
-	var v = view.getValue();
-#	if (v == "Cockpit View" || ) {
-    if (getprop("sim/current-view/internal"))
-    {
-		var h_intens = hud_intens_control.getValue();
-		var h_alpha  = hud_alpha.getValue();
-		var g_alpha  = pilot_g_alpha.getValue();
-		hud_alpha.setDoubleValue(h_intens - g_alpha);
-
-	} else {
-		hud_alpha.setDoubleValue(0);
-	}
-}
-
-
 
 
 var develev_to_devroll = func(dev_rad, elev_rad) {

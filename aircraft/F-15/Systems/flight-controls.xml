@@ -9,6 +9,7 @@
             <input>fcs/pitch-trim-cmd-norm</input>
             <input>fcs/pitch-damper-rate</input>
             <input>systems/afcs/elevator-cmd-delta</input>
+            <input>systems/cadc/pitch-trim-compensation</input>
             <clipto>
                 <min> -1 </min>
                 <max>  1 </max>
@@ -38,7 +39,6 @@
             <output>fcs/elevator-pos-demand</output>
         </pure_gain >
 
-        <!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
         <kinematic name="elevator position">
             <input>fcs/elevator-pos-demand</input>
             <traverse>
@@ -121,7 +121,6 @@
                         </tableData>-->
                     </table>
                 </product>
-            <gain>0.3</gain>
             </function>
         </fcs_function>
 
@@ -505,6 +504,20 @@
             <output>gear/gear-pos-norm</output>
         </kinematic>
 
+        <!--<kinematic name="fcs/steer-pos-deg">
+            <input>fcs/steer-cmd-norm</input>
+            <traverse>
+                <setting>
+                    <position>-35</position>
+                    <time>1.1</time>
+                </setting>
+                <setting>
+                    <position>35</position>
+                    <time>1.1</time>
+                </setting>
+            </traverse>
+            <output>fcs/steer-pos-deg</output>
+        </kinematic>-->
     </channel>
 
     <channel name="Speedbrake">

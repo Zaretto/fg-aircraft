@@ -100,6 +100,10 @@
             </key>
             <line>__________________________________________________</line>
             <key>
+                <name>*</name>
+                <desc>Toggle maneuvering nose wheel steering (15/45 deg)</desc>
+            </key>
+            <key>
                 <name>a</name>
                 <desc>Toggle Autothrottle</desc>
             </key>
@@ -110,10 +114,6 @@
             <key>
                 <name>Ctrl-a</name>
                 <desc>Enable AFCS Altitude Mode</desc>
-            </key>
-            <key>
-                <name>*</name>
-                <desc>Engage AFCS Altitude Mode</desc>
             </key>
             <key>
                 <name>Ctrl-h</name>
@@ -323,9 +323,12 @@
 
         <model>
             <path>Aircraft/F-15/Models/f15c.xml</path>
+            <hide-pilot type="bool">false</hide-pilot >
+            <hide-backseater type="bool">false</hide-backseater>
+            <hide-pilots-auto type="bool">true</hide-pilots-auto>
             <f15>
                 <controls>
-                    <windshield-heat type="int">1</windshield-heat>
+                    <windshield-heat type="int">0</windshield-heat>
                     <AFCS>
                         <engage type="bool">false</engage>
                         <vec-acl type="int">0</vec-acl>
@@ -883,7 +886,7 @@
                 <!-- instruments -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
-            <default-model>Aircraft/F-15/Models/f15c.ac</default-model>
+            <!--<default-model>Aircraft/F-15/Models/f15c.ac</default-model>-->
         </multiplay>
 
         <rendering>
@@ -892,8 +895,10 @@
             </camera-group>
             <redout>
                 <parameters>
-                    <blackout-complete-g>7.9</blackout-complete-g>
-                    <blackout-onset-g>5.5</blackout-onset-g>
+                    <blackout-complete-g>10</blackout-complete-g>
+                    <blackout-onset-g>6.5</blackout-onset-g>
+                    <redout-onset-g type="double">-2.5</redout-onset-g>
+                    <redout-complete-g type="double">-3.5</redout-complete-g>
                 </parameters>
             </redout>
         </rendering>
@@ -952,6 +957,13 @@
                             <script>aircraft.dlg_ground_services.open()</script>
                         </binding>
                     </item>
+                    <item n="8">
+                        <label>Aircraft Lighting</label>
+                        <binding>
+                            <command>nasal</command>
+                            <script>aircraft.dlg_lighting.open()</script>
+                        </binding>
+                    </item>
                 </menu>
             </default>
         </menubar>
@@ -1002,21 +1014,21 @@
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <y-offset-m archive="y">1.457499884</y-offset-m>
                 <z-offset-m archive="y">-5</z-offset-m>
-                <pitch-offset-deg>-14.7</pitch-offset-deg>
-                <default-field-of-view-deg>55</default-field-of-view-deg>
-                <!--<limits>
+                <pitch-offset-deg>-15.3</pitch-offset-deg>
+                <default-field-of-view-deg>85</default-field-of-view-deg>
+                <limits>
                     <enabled type="bool">true</enabled>
                     <left>
-                        <heading-max-deg type="double">140</heading-max-deg>
-                        <x-offset-max-m type="double">0.20</x-offset-max-m>
+                        <heading-max-deg type="double">180</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
                         <x-offset-threshold-deg type="double">25</x-offset-threshold-deg>
                     </left>
                     <right>
-                        <heading-max-deg type="double">140</heading-max-deg>
-                        <x-offset-max-m type="double">0.20</x-offset-max-m>
+                        <heading-max-deg type="double">180</heading-max-deg>
+                        <x-offset-max-m type="double">0.25</x-offset-max-m>
                         <x-offset-threshold-deg type="double">25</x-offset-threshold-deg>
                     </right>
-                </limits>-->
+                </limits>
             </config>
         </view>
         <view n="1">
@@ -1321,56 +1333,46 @@
     <consumables>
         <fuel>
             <tank n="0">
-                <name>FWD fuselage</name>
+                <name>L Feed</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="1">
-                <name>AFT fuselage</name>
+                <name>R Feed</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="2">
-                <name>l beam box</name>
+                <name>Tank 1</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="3">
-                <name>L sump</name>
+                <name>Internal Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="4">
-                <name>R beam box</name>
+                <name>Internal Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="5">
-                <name>R sump</name>
+                <name>External Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="6">
-                <name>L wing</name>
+                <name>External Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="7">
-                <name>R wing</name>
+                <name>Centre External</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
             </tank>
             <tank n="8">
-                <name>L external</name>
+                <name>L feed line</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
                 <selected type="bool">false</selected>
             </tank>
             <tank n="9">
-                <name>R external</name>
-                <kill-when-empty type="bool">false</kill-when-empty>
-                <selected type="bool">false</selected>
-            </tank>
-            <tank n="10">
-                <name>L feed line</name>
-                <kill-when-empty type="bool">false</kill-when-empty>
-                <!--<dump-rate-lbs-hr type="double">90000</dump-rate-lbs-hr>-->
-            </tank>
-            <tank n="11">
                 <name>R feed line</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
-                <!--<dump-rate-lbs-hr type="double">90000</dump-rate-lbs-hr>-->
+                <selected type="bool">false</selected>
             </tank>
         </fuel>
     </consumables>
@@ -1378,6 +1380,9 @@
     <controls>
         <armament>
             <trigger type="bool">false</trigger>
+            <cycle-mode type="bool">false</cycle-mode>
+            <master-arm type="bool">false</master-arm>
+            <selected-armament type="string"/>
         </armament>
         <lighting>
             <anti-collision-switch type="bool">true</anti-collision-switch>
@@ -1409,18 +1414,12 @@
             <console-red type="double">0.1000</console-red>
             <console-green type="double">0.0576</console-green>
             <console-blue type="double">0.0161</console-blue>
-
-            <!--<storm-flood archive="y" type="int">1</storm-flood>-->
-            <!-- using controls/lighting/panel-norm for storm-flood -->
         </lighting>
-        <flight>
+        <!--<flight>
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
-            <fake>0.0</fake>
-            <DLC-engaged type="bool">false</DLC-engaged>
-        </flight>
+        </flight>-->
         <gear>
-            <!-- Start with the Parking Brake on -->
-            <!--			<brake-parking type="double">1.0</brake-parking> -->
+            <nws-maneuvering type="bool">false</nws-maneuvering>
         </gear>
     </controls>
 
@@ -1537,13 +1536,22 @@
 
             <key n="42">
                 <name>*</name>
-                <desc>Nose wheel steering or Autopilot selected mode</desc>
+                <desc>Nose wheel steering maneuvering toggle</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>
-                        if (! aircraft.wow) {
-                        aircraft.afcs_engage_selected_mode()
-                        }
+                    <script type="string">
+                        <![CDATA[ 
+                            if (getprop("/fdm/jsbsim/fcs/steer-maneuver"))
+                            {
+                                gui.popupTip("Maneuver NWS disabled");
+                                setprop("/fdm/jsbsim/fcs/steer-maneuver",0)
+                            }
+                            else
+                            {
+                                gui.popupTip("Maneuver NWS enabled");
+                                setprop("/fdm/jsbsim/fcs/steer-maneuver",1)
+                            }
+                    ]]>
                     </script>
                 </binding>
             </key>
@@ -1619,13 +1627,25 @@
                     <script>aircraft.lowerFlaps();</script>
                 </binding>
             </key>
-
             <key n="104">
                 <name>h</name>
-                <desc>HSD cycle modes</desc>
+                <desc>HUD Cycle</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>aircraft.select_key_ecm_nav();</script>
+                    <script type="string">
+                        <![CDATA[ 
+                        if(getprop("sim/hud/visibility[1]"))
+                        {
+                            setprop("sim/hud/visibility[0]",0);
+                            setprop("sim/hud/visibility[1]",0);
+                        }
+                        else
+                        {
+                            setprop("sim/hud/visibility[0]",1);
+                            setprop("sim/hud/visibility[1]",1);
+                        }
+                        ]]>
+                    </script>
                 </binding>
             </key>
 
@@ -1666,10 +1686,6 @@
                     <max>3</max>
                     <repeat>false</repeat>
                     <wrap>true</wrap>
-                </binding>
-                <binding>
-                    <command>nasal</command>
-                    <script>aircraft.arm_selector();</script>
                 </binding>
             </key>
             <key n="121">
@@ -1779,7 +1795,6 @@
             <file>Aircraft/F-15/Nasal/gear.nas</file>
             <file>Aircraft/F-15/Nasal/hud.nas</file>
             <file>Aircraft/F-15/Nasal/engines.nas</file>
-            <file>Aircraft/F-15/Nasal/spoilers.nas</file>
             <file>Aircraft/F-15/Nasal/adverse.nas</file>
             <file>Aircraft/F-15/Nasal/fuel-system.nas</file>
             <file>Aircraft/F-15/Nasal/electrics.nas</file>

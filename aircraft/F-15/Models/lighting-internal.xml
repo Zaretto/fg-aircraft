@@ -32,6 +32,7 @@
                 <!-- electrics -->
                 <value>0</value>
             </greater-than>
+            <property>sim/current-view/internal</property>
         </condition>
         <object-name>lgt-aux-inst</object-name>
         <object-name>lgt-pilot-flood</object-name>
@@ -103,15 +104,20 @@
     <!-- Pilot's consoles -->
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
+        <light-type>spot</light-type>
         <name>lgt-pilot-console-L</name>
         <object-name>lgt-pilot-console-L</object-name>
         <nopreview/>
         <position>
-            <x>-4.8920</x>
-            <y>-0.42</y>
-            <z>0.90</z>
+            <x>-5.5</x>
+            <y>-0.72</y>
+            <z>0.6</z>
         </position>
+        <direction>
+            <x>0</x>
+            <y>2</y>
+            <z>-1</z>
+        </direction>
         <ambient>
             <r>1</r>
             <g>0.576</g>
@@ -135,29 +141,30 @@
             <factor>0.1</factor>
         </dim-factor>
         <attenuation>
-            <c>0.8</c>
-            <l>2</l>
-            <q>1</q>
+            <c>1.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
-        <cutoff>0.9</cutoff>
+        <exponent>1</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>0.9</far-m>
     </animation>
     <animation>
         <type>light</type>
-        <light-type>point</light-type>
+        <light-type>spot</light-type>
         <name>lgt-pilot-console-R</name>
         <object-name>lgt-pilot-console-R</object-name>
         <nopreview/>
         <position>
-            <x>-4.8920</x>
-            <y>0.42</y>
-            <z>0.90</z>
+            <x>-5.5</x>
+            <y>0.72</y>
+            <z>0.6</z>
         </position>
         <direction>
             <x>0</x>
-            <y>0</y>
-            <z>0</z>
+            <y>-2</y>
+            <z>1</z>
         </direction>
         <ambient>
             <r>1</r>
@@ -182,11 +189,12 @@
             <factor>0.1</factor>
         </dim-factor>
         <attenuation>
-            <c>0.8</c>
-            <l>2</l>
-            <q>1</q>
+            <c>1.0</c>
+            <l>0.2</l>
+            <q>0.8</q>
         </attenuation>
-        <cutoff>0.9</cutoff>
+        <exponent>1</exponent>
+        <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>0.9</far-m>
     </animation>

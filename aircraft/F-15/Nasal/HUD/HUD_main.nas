@@ -237,7 +237,9 @@ obj.target_locked.setVisible(0);
         }
 
         me.window7.setText(hdp.window7);
-        me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
+
+#        me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
+        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("/fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
 
 #heading tape
         if (hdp.heading < 180)
@@ -363,9 +365,12 @@ var HUD_DataProvider  = {
             me.window5 = "";
         }
 
-        if(getprop("controls/gear/gear-down") or me.alpha > 20)
-        me.window7 = sprintf("AOA %d",me.alpha);
-        else me.window7 = sprintf(" %1.3f",me.mach);
+        if(getprop("/controls/gear/brake-parking"))
+            me.window7 = "BRAKES";
+        else if(getprop("controls/gear/gear-down") or me.alpha > 20)
+            me.window7 = sprintf("AOA %d",me.alpha);
+        else
+            me.window7 = sprintf(" %1.3f",me.mach);
 
         me.roll_rad = 0.0;
 

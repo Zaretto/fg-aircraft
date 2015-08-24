@@ -337,7 +337,14 @@ aircraft.data.add(
     "/payload/weight[8]/selected",
     "/payload/weight[9]/selected",
     "/payload/weight[10]/selected",
-    "sim/model/f15/systems/external-loads/external-load-set"
+    "sim/model/f15/systems/external-loads/external-load-set",
+    "instrumentation/transponder/inputs/digit[0]", 
+    "instrumentation/transponder/inputs/digit[1]", 
+    "instrumentation/transponder/inputs/digit[2]", 
+    "instrumentation/transponder/inputs/digit[3]",
+    "sim/model/hide-pilot",
+    "sim/model/hide-backseater",
+    "sim/model/hide-pilots-auto"
     );
 
 var g_max   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-max", 1);
@@ -577,7 +584,6 @@ var main_loop = func {
 		# done each 0.1 sec, cnt even.
 		tacan_update();
         ara_63_update();
-		update_hud();
 		g_min_max();
 		f15_chronograph.update_chrono();
 
@@ -728,6 +734,9 @@ var common_carrier_init = func {
 var common_init = func {
 
         print("Setting replay medium res to 50hz");
+setprop("sim/hud/visibility[0]",0);
+setprop("sim/hud/visibility[1]",0);
+
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
         setprop("/controls/flight/SAS-roll",0);
         setprop("sim/model/f15/controls/AFCS/altitude",0);

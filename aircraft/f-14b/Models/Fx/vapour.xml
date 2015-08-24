@@ -39,6 +39,15 @@ based on standard FG wingtip contrail example; but modified condition params
            <property>orientation/alpha-indicated-deg</property>
            <value>15</value>
        </greater-than>
+       <!-- no vapour trails if a wing is torn -->
+       <equals>
+            <property>sim/model/f-14b/wings/left-wing-torn</property>
+			<value>0</value>
+		</equals>
+		<equals>
+            <property>sim/model/f-14b/wings/right-wing-torn</property>
+			<value>0</value>
+		</equals>
      </and>
    </condition>
  

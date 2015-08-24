@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+    <name>lighting</name>
+    <layout>vbox</layout>
+    <default-padding>1</default-padding>
+    <modal>false</modal>
+    <width>350</width>
+
+    <empty>
+        <pref-height>6</pref-height>
+    </empty>
+
+    <text>
+        <label>Lighting</label>
+    </text>
+
+    <empty>
+        <pref-height>4</pref-height>
+    </empty>
+
+    <hrule/>
+
+    <group>
+        <layout>hbox</layout>
+
+        <group>
+            <!-- Labels -->
+            <layout>vbox</layout>
+            <halign>left</halign>
+            <text>
+                <label>Left Console</label>
+            </text>
+            <text>
+                <label>Right Console</label>
+            </text>
+            <text>
+                <label>Light Test</label>
+            </text>
+            <text>
+                <label>Auxiliary Instruments</label>
+            </text>
+            <text>
+                <label>Standby Instruments</label>
+            </text>
+            <text>
+                <label>Flight Instruments</label>
+            </text>
+            <text>
+                <label>Engine Instruments</label>
+            </text>
+            <text>
+                <label>Warning Caution</label>
+            </text>
+            <text>
+                <label>Storm / Flood</label>
+            </text>
+            <hrule/>
+            <text>
+                <label>Taxi / Landing</label>
+            </text>
+            <text>
+                <label>Formation</label>
+            </text>
+            <text>
+                <label>Anti Collision</label>
+            </text>
+            <text>
+                <label>Position</label>
+            </text>
+            <text>
+                <label>Vertical Tail Flood</label>
+            </text>
+        </group>
+        <group>
+            <layout>vbox</layout>
+            <halign>right</halign>
+            <slider>
+                <name>LeftConsole</name>
+                <property>controls/lighting/l-console</property>
+                <live>1</live>
+                <min>0</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <slider>
+                <name>RightConsole</name>
+                <property>controls/lighting/r-console</property>
+                <live>1</live>
+                <min>0</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <checkbox>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <live>true</live>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f15/lights/master-test-lights</property>
+                </binding>
+            </checkbox>
+            <slider>
+                <name>AuxInst</name>
+                <property>controls/lighting/aux-inst</property>
+                <live>1</live>
+                <min>0</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <checkbox>
+                <property>controls/lighting/stby-inst</property>
+                <live>true</live>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>controls/lighting/stby-inst</property>
+                </binding>
+            </checkbox>
+            <slider>
+                <name>FltInst</name>
+                <property>controls/lighting/flt-inst</property>
+                <live>1</live>
+                <min>0</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <slider>
+                <name>EngInst</name>
+                <property>controls/lighting/eng-inst</property>
+                <live>1</live>
+                <min>0</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <slider>
+                <name>WarnCaution</name>
+                <property>controls/lighting/warn-caution</property>
+                <live>1</live>
+                <min>0</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <slider>
+                <name>StormFlood</name>
+                <property>controls/lighting/panel-norm</property>
+                <live>1</live>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <hrule/>
+            <slider>
+                <name>TaxiLanding</name>
+                <property>sim/multiplay/generic/int[6]</property>
+                <live>1</live>
+                <step>1</step>
+                <min>0</min>
+                <max>2</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <slider>
+                <name>Formation</name>
+                <property>sim/multiplay/generic/int[1]</property>
+                <live>1</live>
+                <min>0</min>
+                <max>5</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <checkbox>
+                <name>AntiCollision</name>
+                <property>sim/multiplay/generic/int[3]</property>
+                <live>true</live>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>sim/multiplay/generic/int[3]</property>
+                </binding>
+            </checkbox>
+            <slider>
+                <name>Position</name>
+                <property>sim/multiplay/generic/int[4]</property>
+                <live>1</live>
+                <min>0</min>
+                <max>5</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+            <slider>
+                <name>VertTail</name>
+                <property>sim/multiplay/generic/int[5]</property>
+                <live>1</live>
+                <min>0</min>
+                <max>2</max>
+                <binding>
+                    <command>dialog-apply</command>
+                </binding>
+            </slider>
+        </group>
+    </group>
+    <hrule/>
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <legend>Day</legend>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">
+                    <![CDATA[ 
+                        setprop("controls/lighting/l-console", 0);
+                        setprop("controls/lighting/r-console", 0);
+                        setprop("sim/model/f15/lights/master-test-lights", 0);
+                        setprop("controls/lighting/aux-inst", 0);
+                        setprop("controls/lighting/stby-inst", 0);
+                        setprop("controls/lighting/stby-inst", 0);
+                        setprop("controls/lighting/flt-inst", 0);
+                        setprop("controls/lighting/eng-inst", 0);
+                        setprop("controls/lighting/warn-caution", 6);
+                        setprop("controls/lighting/panel-norm", 0);
+                        setprop("sim/multiplay/generic/int[6]", 0);
+                        setprop("sim/multiplay/generic/int[1]", 0);
+                        setprop("sim/multiplay/generic/int[3]", 1);
+                        setprop("sim/multiplay/generic/int[4]", 5);
+                        setprop("sim/multiplay/generic/int[5]", 0);
+    setprop("sim/model/f15/controls/HUD/brightness",0.4);
+    setprop("sim/model/f15/controls/VSD/brightness",1);
+    setprop("sim/model/f15/controls/TEWS/brightness",1);
+    setprop("sim/model/f15/controls/MPCD/brightness",1);
+    setprop("sim/model/f15/controls/MPCD/mode",2);
+]]>
+                </script>
+            </binding>
+        </button>
+        <button>
+            <legend>Night</legend>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">
+                    <![CDATA[ 
+                        setprop("controls/lighting/l-console", 5);
+                        setprop("controls/lighting/r-console", 5);
+                        setprop("sim/model/f15/lights/master-test-lights", 0);
+                        setprop("controls/lighting/aux-inst", 5);
+                        setprop("controls/lighting/stby-inst",5);
+                        setprop("controls/lighting/stby-inst", 5);
+                        setprop("controls/lighting/flt-inst", 5);
+                        setprop("controls/lighting/eng-inst", 5);
+                        setprop("controls/lighting/warn-caution", 3);
+                        setprop("controls/lighting/panel-norm", 0);
+                        setprop("sim/multiplay/generic/int[6]", 1);
+                        setprop("sim/multiplay/generic/int[1]", 3);
+                        setprop("sim/multiplay/generic/int[3]", 1);
+                        setprop("sim/multiplay/generic/int[4]", 3);
+                        setprop("sim/multiplay/generic/int[5]", 1);
+    setprop("sim/model/f15/controls/HUD/brightness",0.7);
+    setprop("sim/model/f15/controls/VSD/brightness",0.4);
+    setprop("sim/model/f15/controls/TEWS/brightness",0.4);
+    setprop("sim/model/f15/controls/MPCD/brightness",0.4);
+    setprop("sim/model/f15/controls/MPCD/mode",1);
+]]>
+                </script>
+            </binding>
+        </button>
+        <button>
+            <legend>Dark </legend>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">
+                    <![CDATA[ 
+                        setprop("controls/lighting/l-console", 0);
+                        setprop("controls/lighting/r-console", 0);
+                        setprop("sim/model/f15/lights/master-test-lights", 0);
+                        setprop("sim/model/f15/lights/master-test-lights", 0);
+                        setprop("controls/lighting/aux-inst", 0);
+                        setprop("controls/lighting/stby-inst", 0);
+                        setprop("controls/lighting/flt-inst", 0);
+                        setprop("controls/lighting/eng-inst", 0);
+                        setprop("controls/lighting/warn-caution", 0);
+                        setprop("controls/lighting/panel-norm", 0);
+                        setprop("sim/multiplay/generic/int[6]", 0);
+                        setprop("sim/multiplay/generic/int[1]", 0);
+                        setprop("sim/multiplay/generic/int[3]", 0);
+                        setprop("sim/multiplay/generic/int[4]", 0);
+                        setprop("sim/multiplay/generic/int[5]", 0);
+    setprop("sim/model/f15/controls/HUD/brightness",0);
+    setprop("sim/model/f15/controls/VSD/brightness",0);
+    setprop("sim/model/f15/controls/TEWS/brightness",0);
+    setprop("sim/model/f15/controls/MPCD/brightness",0);
+    setprop("sim/model/f15/controls/MPCD/mode",0);
+]]>
+                </script>
+            </binding>
+        </button>
+        <button>
+            <legend>Close</legend>
+            <default>true</default>
+            <key>Esc</key>
+            <binding>
+                <command>dialog-close</command>
+            </binding>
+        </button>
+    </group>
+
+</PropertyList>
+
