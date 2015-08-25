@@ -17,13 +17,18 @@ hud_alpha.setDoubleValue(0);
 
 var update_hud = func {
 	var v = view.getValue();
-	if (v == "Cockpit View") {
+	if (v == "Cockpit View")
+	{
 		var h_intens = hud_intens_control.getValue();
 		var h_alpha  = hud_alpha.getValue();
 		var g_alpha  = pilot_g_alpha.getValue();
-		hud_alpha.setDoubleValue(h_intens - g_alpha);
-
-	} else {
+        if(g_alpha != nil)
+		    hud_alpha.setDoubleValue(h_intens - g_alpha);
+        else
+    		hud_alpha.setDoubleValue(h_intens);
+	}
+	else
+	{
 		hud_alpha.setDoubleValue(0);
 	}
 }
