@@ -1195,6 +1195,13 @@
                     <property>sim/current-view/internal</property>
                     <value>0</value>
                 </greater-than>
+                <not>
+                    <or>
+                        <property>gear/gear[0]/wow</property>
+                        <property>gear/gear[1]/wow</property>
+                        <property>gear/gear[2]/wow</property>
+                    </or>
+                </not>
             </condition>
             <volume>
                 <value>0.4</value>
@@ -1218,8 +1225,9 @@
                 </greater-than>
                 <not>
                     <or>
-                        <property>fdm/jsbsim/contact/unit[3]/WOW</property>
-                        <property>fdm/jsbsim/contact/unit[4]/WOW</property>
+                        <property>gear/gear[0]/wow</property>
+                        <property>gear/gear[1]/wow</property>
+                        <property>gear/gear[2]/wow</property>
                     </or>
                 </not>
                 <greater-than>
