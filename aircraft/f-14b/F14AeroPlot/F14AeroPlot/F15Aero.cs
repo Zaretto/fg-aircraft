@@ -373,13 +373,13 @@ namespace F14AeroPlot
             aerodata.AircraftType = "F-15 (all variants)";
             aerodata.Systems.Add("f-15-hydraulic");
             aerodata.Systems.Add("f-15-electrics");
-            aerodata.Systems.Add("f-15-engines");
+            aerodata.Systems.Add("catapult");
             aerodata.Systems.Add("f-15-cadc");
             aerodata.Systems.Add("f-15-apc");
             aerodata.Systems.Add("f-15-ecs");
+            aerodata.Systems.Add("f-15-engines");
             aerodata.Systems.Add("hook");
-            aerodata.Systems.Add("catapult");
-            aerodata.Systems.Add("holdback");
+            //aerodata.Systems.Add("holdback");
             aerodata.Systems.Add("flight-controls");
             //aerodata.Systems.Add("f15-config");
 
@@ -426,6 +426,14 @@ namespace F14AeroPlot
             });
             aerodata.References.Add(new ReferenceDocument
             {
+                Id = "NASA-TM-72861",
+                Author = "Thomas R. Sisk and Neil W. Matheny",
+                Date = "May 1979",
+                Title = "Precision Controllability of the F-15 Airplane",
+                Url = "http://www.zaretto.com/sites/zaretto.com/files/F-15-data/88414main_H-2048.pdf",
+            });
+            aerodata.References.Add(new ReferenceDocument
+            {
                 Id = "95-fuel-dumping-system",
                 Author = "Sabc",
                 Date = "08 September 2010",
@@ -434,6 +442,8 @@ namespace F14AeroPlot
             });
             
             aerodata.Title = "F-15 Aerodynamic data from  (AFIT/GAE/ENY/90D-16); CG 25.65%";
+            aerodata.SubTitle = String.Format("Richard Harrison, rjh@zaretto.com, ZDAT/AED/2014/12-2, {0}", DateTime.Now.ToLongDateString());
+
             aerodata.Notes.Add(@"Aircraft origin for measurements is the nose");
             aerodata.Notes.Add(@"F-15C in the critical aft c.g. configuration has a weight of 33,467
             pounds and a c.g. location at 563.1 inches (6:12). To
@@ -469,12 +479,6 @@ namespace F14AeroPlot
             });
             aerodata.Mass.Add(new PointMassElement(aerodata)
             {
-                Name="Station2-1",
-                Location = new Location(1.7844, -3.8325, 0.288, "M")
-
-            });
-            aerodata.Mass.Add(new PointMassElement(aerodata)
-            {
                 Name="Station2-2",
                 Location = new Location(1.4077, -3.3034, 1.4077, "M")
             });
@@ -488,13 +492,13 @@ namespace F14AeroPlot
             aerodata.Mass.Add(new PointMassElement(aerodata)
             {
                 Name="Station3",
-                Location = new Location(-0.3003, 1.611, 0.567, "M"),
+                Location = new Location(-0.3003, -1.611, 0.567, "M"),
             });
 
             aerodata.Mass.Add(new PointMassElement(aerodata)
             {
                 Name="Station4",
-                Location = new Location(3.5918, 1.611, 0.567, "M"),
+                Location = new Location(3.5918, -1.611, 0.567, "M"),
             });
 
             aerodata.Mass.Add(new PointMassElement(aerodata)
@@ -542,7 +546,7 @@ namespace F14AeroPlot
             {
                 Name = "NOSE_LG",
                 Location = new Location(197, 0, -77.6496063, "IN"),
-                MaxSteer = new DenominatedAmount(89, "DEG"),
+                MaxSteer = new DenominatedAmount(35, "DEG"),
                 BrakeGroup = "NOSE"
             });
 
@@ -612,14 +616,14 @@ namespace F14AeroPlot
             });
             aerodata.Engines.Add(new Engine
             {
-                Name = "F100-PW-229",
+                Name = "F100-PW-100",
 
                 Location = new Location(682, -12, 0, "IN"),
                 Orient = new Location(0, 0, 0, "DEG"),
             });
             aerodata.Engines.Add(new Engine
             {
-                Name = "F100-PW-229",
+                Name = "F100-PW-100",
 
                 Location = new Location(682, 12, 0, "IN"),
                 Orient = new Location(0, 0, 0, "DEG"),
@@ -638,11 +642,11 @@ namespace F14AeroPlot
             aerodata.Engines[0].AddFeed(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Right External Wing Tank", 450, 0, -7.83, "IN", 4, 3950, "LBS", 100);
+            t = new Tank("Right External Wing Tank", 420, 108, -7.83, "IN", 4, 3950, "LBS", 100);
             aerodata.AddTank(t);
             aerodata.Engines[1].AddFeed(t);
 
-            t = new Tank("Left External Wing Tank", 450, 0, -7.83, "IN", 5, 3950, "LBS", 100);
+            t = new Tank("Left External Wing Tank", 420, -108, -7.83, "IN", 5, 3950, "LBS", 100);
             aerodata.AddTank(t);
             aerodata.Engines[0].AddFeed(t);
 
@@ -746,7 +750,8 @@ namespace F14AeroPlot
             CYDRD.AddFactor("DRUDD,DRFLX5,EPA43");
 
             var CYDTD = aerodata.Add("SIDE FORCE DUE TO DIFFERETIAL TAIL DEFLECTION - CYDTD", "CYDTD", "alpha", "elevator");
-            CYDTD.AddFactor("DTFLX5,0.3,DTALD");
+//            CYDTD.AddFactor("DTFLX5,0.3,DTALD");
+            CYDTD.AddFactor("DTFLX5,DTALD"); // 0.3 is handling by the flight controls
 
             var CYRB = aerodata.Add("ASYMMETRIC CY AT HIGH ALPHA", "CYRB", "alpha", "beta");
             // CLM
@@ -766,7 +771,8 @@ namespace F14AeroPlot
             CLDRD.AddFactor("DRUDD,DRFLX1,EPA43");
 
             var CLDTD = aerodata.Add("ROLLING MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION - CLDD", "CMLDTD", "alpha", "elevator");
-            CLDTD.AddFactor("DTFLX1,0.3,DTALD");
+//            CLDTD.AddFactor("DTFLX1,0.3,DTALD");
+            CLDTD.AddFactor("DTFLX1,DTALD");
 
             var DCLB = aerodata.Add("DELTA CLB DUE TO 2-PLACE CANOPY", "CMLDCLB", "alpha");
             DCLB.AddFactor("BETA");
@@ -794,7 +800,8 @@ namespace F14AeroPlot
             CMNR.AddFactor("RB");
 
             var CNDTD = aerodata.Add("YAWING MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION - CNDDT", "CMNDTD", "alpha", "elevator");
-            CNDTD.AddFactor("DTFLX3,0.3,DTALD");
+//            CNDTD.AddFactor("DTFLX3,0.3,DTALD");
+            CNDTD.AddFactor("DTFLX3,DTALD");
             //            var CNDAD = aerodata.Add("", "CNDAD", "alpha", "aileron");
             var CNDAD = aerodata.Add("YAWING MOMENT DUE TO AILERON DEFLECTION -CNDA", "CMNDAD", "alpha");
             CNDAD.AddFactor("DDA");
@@ -1435,7 +1442,7 @@ namespace F14AeroPlot
         }
         private static double incelevator(double deflection)
         {
-//            return deflection + 5;
+            return deflection + 5;
             if (deflection == 15) return 16;
             if (deflection <= -20) return deflection + 5;
             if (deflection >= 20) return deflection + 5;
@@ -1455,5 +1462,7 @@ namespace F14AeroPlot
         public string Description { get; set; }
 
         public decimal? FuelDumpRate { get; set; }
+
+        public string SubTitle { get; set; }
     }
 }

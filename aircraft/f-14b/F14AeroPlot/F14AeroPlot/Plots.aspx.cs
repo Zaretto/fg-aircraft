@@ -37,6 +37,7 @@ namespace F14AeroPlot
 <link href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css' rel='stylesheet'>
   </head><body>",aero.Title);
             writer.Write("<h1>{0}</h1>", aero.Title);
+            writer.Write("<legend>{0}</legend>", aero.SubTitle);
             int PlotLineThickness = 2;
 
             foreach (var axis in aero.Data.GroupBy(xx=>xx.Value.Axis))

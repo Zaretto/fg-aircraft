@@ -291,7 +291,7 @@ namespace F14AeroPlot
                         15	0.01520	0.00456	0.00649	0.01045	0.00798	0.00342
                         35	0.01696	0.01523	0.01355	0.01092	0.01148	0.01148");
 
-        }
+        
 
 
 //            ad = aero.Add("Engine 0 EGT Rankine", "propulsion/engine[0]/EGT-R", "propulsion/engine[0]/n1");
