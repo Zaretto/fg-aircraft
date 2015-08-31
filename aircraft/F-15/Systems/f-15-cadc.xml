@@ -688,7 +688,7 @@
         <!-- timer for the gear extension time to fire the warning-->
         <switch name="systems/cadc/gear-transit-timer-delta">
             <default value="0"/>
-            <test value="simulation/dt" logic="AND">
+            <test value="0.00833333333333333333333333333333" logic="AND">
                 /gear/gear[0]/position-norm gt 0
                 /gear/gear[0]/position-norm lt 1
                 /gear/gear[1]/position-norm gt 0

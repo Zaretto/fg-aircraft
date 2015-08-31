@@ -151,8 +151,8 @@ obj.target_locked.setVisible(0);
 #            print(id," using clip element ",clip_rect, " trans(",tran_rect[0],",",tran_rect[1],"  ",tran_rect[2],",",tran_rect[3],")");
 #   see line 621 of simgear/canvas/CanvasElement.cxx
 #   not sure why the coordinates are in this order but are top,right,bottom,left (ys, xe, ye, xs)
-            el.set("clip", clip_rect);
-            el.set("clip-frame", canvas.Element.PARENT);
+#            el.set("clip", clip_rect);
+#            el.set("clip-frame", 1);
         }
         return el;
     },

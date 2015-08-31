@@ -711,7 +711,7 @@ var setup_als_lights = func
         return;
     }
 
-    if (light_setting & 2)
+    if (light_setting == 2)
     {
 # put both lights at the same place and brighter for the landing light
         setprop("sim/rendering/als-secondary-lights/landing-light1-offset-deg", 0);
@@ -721,7 +721,7 @@ var setup_als_lights = func
         return;
     }
     
-    if (light_setting & 1)
+    if (light_setting == 1)
     {
 # spread the  lights for the taxi light
         setprop("sim/rendering/als-secondary-lights/landing-light1-offset-deg", 4);
