@@ -301,6 +301,60 @@
                     <type>float</type>
                     <property type="string">sim/multiplay/generic/float[15]</property>
                 </signal>
+
+                <!-- sound system -->
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/cabin-adjusted-external-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/cockpit-effects-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-efflux-l-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-efflux-r-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-jet-intake-l-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-jet-intake-r-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-n2-l-volume</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/sound/engine-n2-r-volume</property>
+                </signal>
             </config>
         </flight-recorder>
 
@@ -311,9 +365,6 @@
         <systems>
             <autopilot>
                 <path>Aircraft/F-15/Systems/f-15-AFCS.xml</path>
-            </autopilot>
-            <autopilot>
-                <path>Aircraft/F-15/Systems/canopy.xml</path>
             </autopilot>
         </systems>
 
@@ -1598,7 +1649,7 @@
                 <desc>Open canopy</desc>
                 <binding>
                     <command>property-toggle</command>
-                    <property>sim/model/f15/controls/canopy/canopy-switch</property>
+                    <property>fdm/jsbsim/systems/ecs/canopy-position-dmd</property>
                 </binding>
             </key>
 

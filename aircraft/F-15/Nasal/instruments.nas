@@ -518,6 +518,17 @@ var SteerModeTcn = props.globals.getNode("sim/model/f15/controls/pilots-displays
 var SteerModeVec = props.globals.getNode("sim/model/f15/controls/pilots-displays/steer/vec-bt", 1);
 var SteerModeCode = props.globals.getNode("sim/model/f15/controls/pilots-displays/steer-submode-code", 1);
 
+#setprop("/fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
+#setprop("/fdm/jsbsim/systems/sound/engine-efflux-r-volume",0.3);
+#setprop("/fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",0);
+#setprop("/fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",0);
+#setprop("/fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",0.3);
+#setprop("/fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",0.3);
+#setprop("/fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",0.8);
+#setprop("/fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",0.8);
+#setprop("/fdm/jsbsim/systems/sound/engine-n2-l-volume",0.4);
+#setprop("/fdm/jsbsim/systems/sound/engine-n2-r-volume",0.4);
+
 instruments_data_export = func {
 	# Air Speed indicator.
 	var ias            = sprintf( "%01.1f", IAS.getValue());

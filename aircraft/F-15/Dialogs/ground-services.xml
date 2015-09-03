@@ -69,21 +69,25 @@
                     </binding>
                 </checkbox>
             </group>
+
             <group>
                 <layout>hbox</layout>
 
                 <text>
-                    <label>Extended HUD</label>
+                    <label>Pilot Helment Sound Proofing</label>
                 </text>
 
-                <checkbox>
-                    <property>sim/hud/extended-mode</property>
-                    <live>true</live>
+                <slider>
+                    <name>PilotHelmentSoundProofing</name>
+                    <property>/fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation</property>
+                    <live>1</live>
+                    <min>0</min>
+                    <max>0.3</max>
                     <binding>
-                        <command>property-toggle</command>
-                        <property>sim/hud/extended-mode</property>
+                        <command>dialog-apply</command>
+                        <object-name>PilotHelmentSoundProofing</object-name>
                     </binding>
-                </checkbox>
+                </slider>
             </group>
         </group>
 

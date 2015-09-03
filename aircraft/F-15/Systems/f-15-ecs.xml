@@ -16,30 +16,35 @@
   <property value="1">systems/ecs/pressurisation-active</property>
   <property value="0">systems/ecs/emerg-vent</property>
 
-  <!--0 : BOTH
+  <!-- ECS bleed air source: 
+    0 : BOTH
     1 : Right
     2 : Off
-    3 : Left -->
-  <property value="0">systems/ecs/bleed-air-source</property>
+    3 : Left
+    -->
+    <property value="0">systems/ecs/bleed-air-source</property>
 
-  <property value="0">systems/ecs/liquid-oxygen-activated</property>
-  <property value="0">systems/ecs/oxygen-qty-test</property>
-  <!-- 0 off, 1 normal, 2 emerg-->
-  <property value="0">systems/ecs/oxygen-supply-mode</property>
-  <property value="0">systems/ecs/anti-fog</property>
-  <property value="0">systems/ecs/windshield-heat</property>
-  <property>systems/ecs/oxygen-quantity-liters</property>
-  <property>systems/ecs/cabin-altitude-ft</property>
-  <property>systems/ecs/oxygen-pressure-psi</property>
-<!--Windscreen Heating-->
-  <property value="6750">systems/ecs/windscreen-factor1</property>
-  <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
+    <property value="0">systems/ecs/canopy-position-dmd</property>
+    <property value="0">systems/ecs/pilot-helmet-volume-attenuation</property>
+    <property value="0">systems/ecs/liquid-oxygen-activated</property>
+    <!-- oxygen qty; 0 off, 1 normal, 2 emerg-->
+    <property value="0">systems/ecs/oxygen-qty-test</property>
+    <property value="0">systems/ecs/oxygen-supply-mode</property>
+    <property value="0">systems/ecs/anti-fog</property>
+    <property value="0">systems/ecs/windshield-heat</property>
+    <property>systems/ecs/oxygen-quantity-liters</property>
+    <property>systems/ecs/cabin-altitude-ft</property>
+    <property>systems/ecs/oxygen-pressure-psi</property>
+    <!--Windscreen Heating-->
+    <property value="6750">systems/ecs/windscreen-factor1</property>
+    <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
+    <property value="46">systems/ecs/windscreen-heater-watts-second</property>
+    <!--Watts per second ramp up on heater input consumption-->
+    <property value="290">systems/ecs/windscreen-temperature-k</property>
+    <property>systems/ecs/windscreen-heater-power-watts</property>
 
-  <property value="46">systems/ecs/windscreen-heater-watts-second</property> <!--Watts per second ramp up on heater input consumption-->
-  <property value="290">systems/ecs/windscreen-temperature-k</property>
-  <property>systems/ecs/windscreen-heater-power-watts</property>
 
-  <channel name="Oxygen">
+    <channel name="Oxygen">
 
     <switch name="systems/ecs/oxygen-converter-qty-dmd">
       <default value="1000"/>
@@ -115,42 +120,239 @@
   </channel>
   <channel name="Pressurisation">
 
-    <switch name="systems/ecs/pressurisation-active">
+      <!-- Canopy open/close operation. Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25 (about 5 seconds)-->
+    <kinematic name="systems/ecs/canopy-position">
+          <input>systems/ecs/canopy-position-dmd</input>
+          <traverse>
+              <setting>
+                  <position>0</position>
+                  <time>4</time>
+              </setting>
+              <setting>
+                  <position>1</position>
+                  <time>5</time>
+              </setting>
+          </traverse>
+          <output>/canopy/position-norm</output>
+      </kinematic>
+
+      <!-- volume for inside view, takes into account canopy position and the sound deadening of the pilot's helment. -->
+      <fcs_function name="systems/sound/cockpit-adjusted-external-volume">
+          <function>
+              <ifthen>
+                  <gt>
+                      <property>/sim/current-view/internal</property>
+                      <value>0</value>
+                  </gt>
+<!--then -->
+                  <difference>
+                      <sum>
+                          <value>0.2</value>
+                          <product>
+                              <property>/canopy/position-norm</property>
+                              <value>1.0</value>
+                          </product>
+                      </sum>
+                      <property>systems/ecs/pilot-helmet-volume-attenuation</property>
+
+                  </difference>
+                  <!-- else -->
+                  <value>1.0</value>
+              </ifthen>
+          </function>
+          <clipto>
+              <min> 0.02 </min>
+              <max> 1.0  </max>
+          </clipto>
+      </fcs_function>
+
+      <fcs_function name="systems/sound/cockpit-effects-volume">
+          <function>
+              <difference>
+                  <value>0.3</value>
+                  <property>systems/ecs/pilot-helmet-volume-attenuation</property>
+              </difference>
+          </function>
+          <clipto>
+              <min>0</min>
+              <max> 1.0  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-jet-intake-l-volume">
+          <function>
+              <product>
+                  <value>0.01333333333333333</value>
+                  <property>propulsion/engine[0]/n2</property>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 1.0  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-jet-intake-r-volume">
+          <function>
+              <product>
+                  <value>0.01333333333333333</value>
+                  <property>propulsion/engine[1]/n2</property>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 1.0  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-n2-l-volume">
+          <function>
+              <product>
+                  <value>0.01</value>
+                  <property>propulsion/engine[0]/n2</property>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.4  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-n2-r-volume">
+          <function>
+              <product>
+                  <value>0.01</value>
+                  <property>propulsion/engine[1]/n2</property>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.4  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-jet-exhaust-l-volume">
+          <function>
+              <product>
+                  <value>0.2</value>
+                  <sum>
+                      <property>propulsion/engine[0]/PB</property>
+                      <value>-1.2</value>
+                  </sum>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.6  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-jet-exhaust-r-volume">
+          <function>
+              <product>
+                  <value>0.2</value>
+                  <sum>
+                      <property>propulsion/engine[1]/PB</property>
+                      <value>-1.2</value>
+                  </sum>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.6  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-efflux-l-volume">
+          <function>
+              <product>
+                  <value>0.1</value>
+                  <sum>
+                      <property>propulsion/engine[0]/PB</property>
+                      <value>-1.2</value>
+                  </sum>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.4  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-efflux-r-volume">
+          <function>
+              <product>
+                  <value>0.1</value>
+                  <sum>
+                      <property>propulsion/engine[1]/PB</property>
+                      <value>-1.2</value>
+                  </sum>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.4  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-jet-augmentation-l-volume">
+          <function>
+              <product>
+                  <value>0.06</value>
+                  <property>propulsion/engine[0]/augmentation-alight</property>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.4  </max>
+          </clipto>
+      </fcs_function>
+      <fcs_function name="systems/sound/engine-jet-augmentation-r-volume">
+          <function>
+              <product>
+                  <value>0.06</value>
+                  <property>propulsion/engine[1]/augmentation-alight</property>
+                  <property>systems/sound/cockpit-adjusted-external-volume</property>
+              </product>
+          </function>
+          <clipto>
+              <max> 0.4  </max>
+          </clipto>
+      </fcs_function>
+
+      <switch name="systems/ecs/pressurisation-active">
       <default value="0.0"/>
-      <test value="0">
-        systems/ecs/emerg-vent ne 0
+      <test value="0" logic="OR">
+          systems/ecs/emerg-vent ne 0
+          /canopy/position-norm gt 0.1
       </test>
       <test value="0">
         systems/ecs/bleed-air-source eq 2
       </test>
       <test value="1" logic="AND">
-        propulsion/engine[0]/set-running ne 0
-        systems/ecs/emerg-vent eq 0
-        systems/ecs/bleed-air-source eq 3
+          propulsion/engine[0]/set-running ne 0
+          systems/ecs/emerg-vent eq 0
+          /canopy/position-norm le 0.1
+          systems/ecs/bleed-air-source eq 3
       </test>
       <test value="1" logic="AND">
-        propulsion/engine[1]/set-running ne 0
-        systems/ecs/emerg-vent eq 0
-        systems/ecs/bleed-air-source eq 1
+          propulsion/engine[1]/set-running ne 0
+          systems/ecs/emerg-vent eq 0
+          /canopy/position-norm le 0.1
+          systems/ecs/bleed-air-source eq 1
       </test>
       <test value="1" logic="AND">
-        propulsion/engine[0]/set-running ne 0
-        systems/ecs/emerg-vent eq 0
-        systems/ecs/bleed-air-source eq 0
+          propulsion/engine[0]/set-running ne 0
+          systems/ecs/emerg-vent eq 0
+          /canopy/position-norm le 0.1
+          systems/ecs/bleed-air-source eq 0
       </test>
       <test value="1" logic="AND">
-        propulsion/engine[1]/set-running ne 0
-        systems/ecs/emerg-vent eq 0
-        systems/ecs/bleed-air-source eq 0
+          propulsion/engine[1]/set-running ne 0
+          systems/ecs/emerg-vent eq 0
+          /canopy/position-norm le 0.1
+          systems/ecs/bleed-air-source eq 0
       </test>
     </switch>
 
     <!-- rate of change - these values are guesstimated -->
     <switch name="systems/ecs/cabin-altitude-change-rate">
       <default value="100"/>
-      <test value="5500">
+      <test value="5500" logic="OR">
         <!-- rapid when dump vent open-->
-        systems/ecs/emerg-vent ne 0
+          systems/ecs/emerg-vent ne 0
+          /canopy/position-norm gt 0.1
       </test>
       <test value="5500">
         <!-- assuming that outside to inside will be also quick when descending -->
@@ -188,8 +390,9 @@
 
     <switch name="systems/ecs/cabin-altitude-ft-dmd">
       <default value="0"/>
-      <test value="position/h-sl-ft">
-        systems/ecs/emerg-vent gt 0
+      <test value="position/h-sl-ft" logic="OR">
+          systems/ecs/emerg-vent gt 0
+          /canopy/position-norm gt 0.1
       </test>
       <test value="position/h-sl-ft">
         systems/ecs/pressurisation-active eq 0
