@@ -118,198 +118,26 @@
     </actuator>
 
   </channel>
-  <channel name="Pressurisation">
+    <channel name="Canopy">
+        <!-- Canopy open/close operation. Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25 (about 5 seconds)-->
+        <kinematic name="systems/ecs/canopy-position">
+            <input>systems/ecs/canopy-position-dmd</input>
+            <traverse>
+                <setting>
+                    <position>0</position>
+                    <time>2</time>
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>3</time>
+                </setting>
+            </traverse>
+            <output>/canopy/position-norm</output>
+        </kinematic>
+    </channel>
 
-      <!-- Canopy open/close operation. Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25 (about 5 seconds)-->
-    <kinematic name="systems/ecs/canopy-position">
-          <input>systems/ecs/canopy-position-dmd</input>
-          <traverse>
-              <setting>
-                  <position>0</position>
-                  <time>4</time>
-              </setting>
-              <setting>
-                  <position>1</position>
-                  <time>5</time>
-              </setting>
-          </traverse>
-          <output>/canopy/position-norm</output>
-      </kinematic>
 
-      <!-- volume for inside view, takes into account canopy position and the sound deadening of the pilot's helment. -->
-      <fcs_function name="systems/sound/cockpit-adjusted-external-volume">
-          <function>
-              <ifthen>
-                  <gt>
-                      <property>/sim/current-view/internal</property>
-                      <value>0</value>
-                  </gt>
-<!--then -->
-                  <difference>
-                      <sum>
-                          <value>0.2</value>
-                          <product>
-                              <property>/canopy/position-norm</property>
-                              <value>1.0</value>
-                          </product>
-                      </sum>
-                      <property>systems/ecs/pilot-helmet-volume-attenuation</property>
-
-                  </difference>
-                  <!-- else -->
-                  <value>1.0</value>
-              </ifthen>
-          </function>
-          <clipto>
-              <min> 0.02 </min>
-              <max> 1.0  </max>
-          </clipto>
-      </fcs_function>
-
-      <fcs_function name="systems/sound/cockpit-effects-volume">
-          <function>
-              <difference>
-                  <value>0.3</value>
-                  <property>systems/ecs/pilot-helmet-volume-attenuation</property>
-              </difference>
-          </function>
-          <clipto>
-              <min>0</min>
-              <max> 1.0  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-jet-intake-l-volume">
-          <function>
-              <product>
-                  <value>0.01333333333333333</value>
-                  <property>propulsion/engine[0]/n2</property>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 1.0  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-jet-intake-r-volume">
-          <function>
-              <product>
-                  <value>0.01333333333333333</value>
-                  <property>propulsion/engine[1]/n2</property>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 1.0  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-n2-l-volume">
-          <function>
-              <product>
-                  <value>0.01</value>
-                  <property>propulsion/engine[0]/n2</property>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.4  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-n2-r-volume">
-          <function>
-              <product>
-                  <value>0.01</value>
-                  <property>propulsion/engine[1]/n2</property>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.4  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-jet-exhaust-l-volume">
-          <function>
-              <product>
-                  <value>0.2</value>
-                  <sum>
-                      <property>propulsion/engine[0]/PB</property>
-                      <value>-1.2</value>
-                  </sum>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.6  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-jet-exhaust-r-volume">
-          <function>
-              <product>
-                  <value>0.2</value>
-                  <sum>
-                      <property>propulsion/engine[1]/PB</property>
-                      <value>-1.2</value>
-                  </sum>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.6  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-efflux-l-volume">
-          <function>
-              <product>
-                  <value>0.1</value>
-                  <sum>
-                      <property>propulsion/engine[0]/PB</property>
-                      <value>-1.2</value>
-                  </sum>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.4  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-efflux-r-volume">
-          <function>
-              <product>
-                  <value>0.1</value>
-                  <sum>
-                      <property>propulsion/engine[1]/PB</property>
-                      <value>-1.2</value>
-                  </sum>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.4  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-jet-augmentation-l-volume">
-          <function>
-              <product>
-                  <value>0.06</value>
-                  <property>propulsion/engine[0]/augmentation-alight</property>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.4  </max>
-          </clipto>
-      </fcs_function>
-      <fcs_function name="systems/sound/engine-jet-augmentation-r-volume">
-          <function>
-              <product>
-                  <value>0.06</value>
-                  <property>propulsion/engine[1]/augmentation-alight</property>
-                  <property>systems/sound/cockpit-adjusted-external-volume</property>
-              </product>
-          </function>
-          <clipto>
-              <max> 0.4  </max>
-          </clipto>
-      </fcs_function>
+    <channel name="Pressurisation">
 
       <switch name="systems/ecs/pressurisation-active">
       <default value="0.0"/>

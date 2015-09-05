@@ -74,6 +74,18 @@ setprop("/environment/aircraft-effects/use-reflection",1);
 setprop("/environment/aircraft-effects/reflection-strength",0.25);
 
 
+#
+#
+# setprop within range
+var  setprop_inrange = func(p,v,mn,mx)
+{
+    if (mn != nil and v < mn)
+        v = mn;
+    if (mx != nil and  v > mx)
+        v = mx;
+    setprop(p,v);
+};
+
 var position_switch = func(n) {
 	var sw_pos = sw_pos_prop.getValue();
 	if (n == 1) {
@@ -224,6 +236,73 @@ else
 splash_vec_loop();
 
 #
+# Sound volumes; need to do it here because the sound calculation methods are not capable of this.
+
+var updateVolume = func
+{
+    print("calc sound",getprop("/sim/time/gmt"));
+    if(getprop("sim/current-view/internal"))
+        setprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume",
+                0.2
+                + getprop("canopy/position-norm")-getprop("fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation"));
+    else
+        setprop("systems/sound/cockpit-adjusted-external-volume",1);
+
+
+    setprop_inrange("fdm/jsbsim/systems/sound/cockpit-effects-volume", 
+             0.3
+             - getprop("fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation"),0,1);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",
+             0.0133
+             * getprop("engines/engine[0]/n2")
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,1);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",
+             0.0133
+             * getprop("engines/engine[1]/n2")
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,1);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-n2-l-volume",
+             0.015
+             * getprop("engines/engine[0]/n2")
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-n2-r-volume",
+             0.015
+             * getprop("engines/engine[1]/n2")
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",
+             0.2
+             * (getprop("engines/engine[0]/PB")-1)
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.6);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",
+             0.2
+             * (getprop("engines/engine[1]/PB")-1)
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.6);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-efflux-l-volume",
+             0.1
+             *(getprop("engines/engine[0]/PB")-1)
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"), nil, 0.4);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-efflux-r-volume",
+             0.1
+             *(getprop("engines/engine[1]/PB")-1)
+             *getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",
+             0.06*getprop("engines/engine[0]/afterburner")
+             *getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+
+    setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",
+             0.06
+             * getprop("engines/engine[1]/afterburner")
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+}
+
+#
 # --------------------------
 # Frame adapative update - two methods either rate 2 or rate 4.
 # RJH: 2015-08-16
@@ -259,8 +338,12 @@ var rate4modules = func {
     aircraft.electricsFrame();
 	aircraft.computeNWS ();
 aircraft.update_weapons_over_mp();
+updateVolume();
 #	settimer (rate4modules, 0.20);
 }
+#
+#
+# rate 2 modules; nominally at half rate.
 var rate2modules = func {
     r2_count = r2_count - 1;
     if (r2_count > 0)
@@ -287,7 +370,7 @@ var rate2modules = func {
 var updateFCS = func {
 	 aircraft.rain.update();
 
-	#Fectch most commonly used values
+	#Fetch most commonly used values
 	CurrentIAS = getprop ("/velocities/airspeed-kt");
 	CurrentMach = getprop ("/velocities/mach");
 	CurrentAlt = getprop ("/position/altitude-ft");

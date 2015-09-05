@@ -79,7 +79,8 @@ var runEMMISC = func {
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
     set_console_lighting();
-        
+    setup_als_lights();
+
     setprop("systems/electrical/outputs/DG", getprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus"));
 
     var masterCaution =  masterCaution_light_set.getValue();
@@ -703,8 +704,12 @@ var setup_als_lights = func
 #
 # gear needs to be extended (not just commanded)
 # view needs to be internal (otherwise geometry of the shader is wrong).
-
-    if (!getprop("sim/current-view/internal") or getprop("gear/gear[0]/position-norm") == nil or getprop("gear/gear[0]/position-norm") < 0.6  or !light_setting)
+# needs electrical power
+    if (!getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered") 
+        or !getprop("sim/current-view/internal") 
+        or getprop("gear/gear[0]/position-norm") == nil 
+        or getprop("gear/gear[0]/position-norm") < 0.6  
+        or !light_setting)
     {
         setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
         setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 0);
@@ -733,20 +738,22 @@ var setup_als_lights = func
     }
 }
 
-setlistener("sim/current-view/internal", func {
-    aircraft.setup_als_lights();
-}, 1, 0);
-
-setlistener("sim/multiplay/generic/int[6]", func
-{
-    aircraft.setup_als_lights();
-
-}, 1, 0);
-
-setlistener("gear/gear[0]/position-norm", func
-{
-    aircraft.setup_als_lights();
-}, 1, 0);
+# only need this if we can get the bus-essential-powered as a listener too, otherwise the setup_als_lights is
+# called in the main EMMISC loop
+#setlistener("sim/current-view/internal", func {
+#    aircraft.setup_als_lights();
+#}, 1, 0);
+#
+#setlistener("sim/multiplay/generic/int[6]", func
+#{
+#    aircraft.setup_als_lights();
+#
+#}, 1, 0);
+#
+#setlistener("gear/gear[0]/position-norm", func
+#{
+#    aircraft.setup_als_lights();
+#}, 1, 0);
 
 setlistener("sim/model/f15/controls/windshield-heat", func {
 setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));

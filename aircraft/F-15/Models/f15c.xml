@@ -12,6 +12,8 @@
 
     <nasal>
         <load>
+            <![CDATA[ 
+
             var self = cmdarg();
             print("LOAD F-15 ", self.getPath());
 
@@ -22,18 +24,32 @@
             {
             print("LOAD F-15 mp network", self.getPath());
             var fn_net = resolvepath("Nasal/mp-network.nas");
-            
+
             if (io.stat(fn_net) == nil)
             fn_net = resolvepath("/Aircraft/F-15/Nasal/mp-network.nas");
-            
+
             if (io.stat(fn_net) == nil)
             fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
 
             io.load_nasal(fn_net, "f15_net");
-            
+
             # Initialize network as observer.
             f15_net.mp_network_init(0);
             }
+            # set reasonable values for sound volumes
+            setprop("fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-efflux-r-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",0);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",0);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",0.8);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",0.8);
+            setprop("fdm/jsbsim/systems/sound/engine-n2-l-volume",0.4);
+            setprop("fdm/jsbsim/systems/sound/engine-n2-r-volume",0.4);
+
+                    ]]>
+
         </load>
 
         <unload>
@@ -1554,7 +1570,7 @@
         <path>Effects/Engines/AfterBurner.xml</path>
         <offsets>
             <x-m>  6.188</x-m>
-            <y-m>   -0.7164</y-m>
+            <y-m>   -0.6904</y-m>
             <z-m>   0.0704</z-m>
         </offsets>
         <overlay>
@@ -1571,7 +1587,7 @@
         <path>Effects/Engines/AfterBurner.xml</path>
         <offsets>
             <x-m>  6.188</x-m>
-            <y-m>  0.7096</y-m>
+            <y-m>  0.7336</y-m>
             <z-m>  0.0704</z-m>
         </offsets>
         <overlay>
