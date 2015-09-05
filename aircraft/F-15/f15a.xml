@@ -192,6 +192,9 @@
         </pointmass>
     </mass_balance>
 
+    <!--  Tire on concrete 1.00, ref: http://ffden-2.phys.uaf.edu/211_fall2002.web.dir/ben_townsend/staticandkineticfriction.htm
+          also refs: http://www.altraliterature.com/pdfs/P-1648-pages41-44.pdf http://seniorphysics.com/physics/static_friction_time_dependence.pdf
+       -->
     <ground_reactions>
         <contact type="BOGEY" name="NOSE_LG">
             <location unit="IN">
@@ -199,7 +202,7 @@
                 <y>0</y>
                 <z>-77.6496063</z>
             </location>
-            <static_friction>0.8</static_friction>
+            <static_friction>1.0</static_friction>
             <dynamic_friction>0.5</dynamic_friction>
             <rolling_friction>0.02</rolling_friction>
             <spring_coeff unit="LBS/FT">25200</spring_coeff>
@@ -214,7 +217,7 @@
                 <y>-98</y>
                 <z>-84.3385827</z>
             </location>
-            <static_friction>0.8</static_friction>
+            <static_friction>1.0</static_friction>
             <dynamic_friction>0.5</dynamic_friction>
             <rolling_friction>0.02</rolling_friction>
             <spring_coeff unit="LBS/FT">25200</spring_coeff>
@@ -229,7 +232,7 @@
                 <y>98</y>
                 <z>-84.3385827</z>
             </location>
-            <static_friction>0.8</static_friction>
+            <static_friction>1.0</static_friction>
             <dynamic_friction>0.5</dynamic_friction>
             <rolling_friction>0.02</rolling_friction>
             <spring_coeff unit="LBS/FT">25200</spring_coeff>
