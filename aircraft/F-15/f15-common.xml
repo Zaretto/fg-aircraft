@@ -6,7 +6,16 @@
    | Enrique Laso: Original external 3d model.
    | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work is largely unchanged.
 -->
-<PropertyList>
+<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
+
+    <engines>
+        <engine n="0">
+            <PB>0</PB>
+        </engine>
+        <engine n="1">
+            <PB>0</PB>
+        </engine>
+    </engines>
 
     <fdm>
         <jsbsim>
@@ -232,6 +241,14 @@
                     <type>float</type>
                     <property type="string">engines/engine[1]/afterburner</property>
                 </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">engines/engine[0]/PB</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">engines/engine[1]/PB</property>
+                </signal>
                 <!-- Canopy -->
                 <signal>
                     <type>float</type>
@@ -302,11 +319,44 @@
                     <property type="string">sim/multiplay/generic/float[15]</property>
                 </signal>
 
-                <!-- sound system -->
+                <!-- engines -->
+<!--
                 <signal>
                     <type>float</type>
-                    <property type="string">fdm/jsbsim/systems/sound/cabin-adjusted-external-volume</property>
+                    <property type="string">fdm/jsbsim/propulsion/engine[0]/n1</property>
                 </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[1]/n1</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[0]/n2</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[1]/n2</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[0]/PB</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[1]/PB</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[0]/augmentation-alight</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/propulsion/engine[1]/augmentation-alight</property>
+                </signal>
+-->
+
+                <!-- sound system -->
+<!--
                 <signal>
                     <type>float</type>
                     <property type="string">fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
@@ -355,6 +405,57 @@
                     <type>float</type>
                     <property type="string">fdm/jsbsim/systems/sound/engine-n2-r-volume</property>
                 </signal>
+-->
+<!-- tanker position -->
+                <!--<signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[0]/orientation/pitch-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[0]/orientation/roll-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[0]/orientation/true-heading-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[0]/position/altitude-ft</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[0]/position/latitude-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[0]/position/longitude-deg</property>
+                </signal>
+
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[1]/orientation/pitch-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[1]/orientation/roll-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[1]/orientation/true-heading-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[1]/position/altitude-ft</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[1]/position/latitude-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/ai-reply/tanker[1]/position/longitude-deg</property>
+                </signal>-->
             </config>
         </flight-recorder>
 
@@ -377,6 +478,12 @@
             <hide-pilot type="bool">false</hide-pilot >
             <hide-backseater type="bool">false</hide-backseater>
             <hide-pilots-auto type="bool">true</hide-pilots-auto>
+		<map>
+			<default_exit>
+				<x-offset-m type ="float">-5</x-offset-m>
+				<y-offset-m type ="float">-3.55</y-offset-m>
+			</default_exit>
+		</map>
             <f15>
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
