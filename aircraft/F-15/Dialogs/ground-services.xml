@@ -24,6 +24,22 @@
                 <layout>hbox</layout>
 
                 <text>
+                    <label>Ground Power Unit</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
                     <label>External Electrical Power Connected</label>
                 </text>
 
@@ -39,7 +55,6 @@
 
             <group>
                 <layout>hbox</layout>
-
                 <text>
                     <label>External Air Connected</label>
                 </text>
@@ -53,6 +68,7 @@
                     </binding>
                 </checkbox>
             </group>
+            <hrule/>
             <group>
                 <layout>hbox</layout>
 
