@@ -57,7 +57,9 @@
                 </equals>
             </condition>
             <volume>
-                <factor>0.4</factor>
+                <factor>0.01</factor>
+                <property>sim/time/elapsed-sec</property>
+                <max>0.4</max>
             </volume>
             <reference-dist>20</reference-dist>
             <max-dist>1000</max-dist>
@@ -997,7 +999,11 @@
                 </less-than-equals>
             </condition>
             <volume>
-                <factor>0.3</factor>
+                <volume>
+                    <factor>0.1</factor>
+                    <property>sim/time/elapsed-sec</property>
+                    <max>0.3</max>
+                </volume>
             </volume>
         </canopy-close>
 
@@ -1294,5 +1300,179 @@
                 <value>1</value>
             </volume>
         </gun>
+
+        <!-- gpu -->
+        <gpu-start>
+            <name>gpu-start</name>
+            <mode>once</mode>
+            <path>Sounds/gpu-startup.wav</path>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <volume>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+
+            <position>
+                <x>6</x>
+                <y>-6.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </gpu-start>
+
+        <gpu-running>
+            <name>gpu-running</name>
+            <mode>looped</mode>
+            <path>Sounds/gpu-running.wav</path>
+            <delay-sec>5.979</delay-sec>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <not>
+                    <property>sim/model/f15/sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                    <value>0</value>
+                </greater-than>
+                <not>
+                    <greater-than>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                        <value>0</value>
+                    </greater-than>
+                </not>
+            </condition>
+            <volume>
+                <factor>0.5</factor>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+
+            <position>
+                <x>6</x>
+                <y>-6.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </gpu-running>
+        <gpu-running-with-compressor>
+            <name>gpu-running-with-compressor</name>
+            <mode>looped</mode>
+            <path>Sounds/gpu-running-compressor.wav</path>
+            <delay-sec>5.979</delay-sec>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <not>
+                    <property>sim/model/f15/sound-freeze</property>
+                </not>
+                <and>
+                    <greater-than>
+                        <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                        <value>0</value>
+                    </greater-than>
+                    <greater-than>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                        <value>0</value>
+                    </greater-than>
+                </and>
+            </condition>
+            <volume>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+            <position>
+                <x>6</x>
+                <y>-6.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </gpu-running-with-compressor>
+        <fuel-bowser>
+            <name>fuel-bowser</name>
+            <mode>looped</mode>
+            <path>Sounds/gpu-running.wav</path>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <not>
+                    <property>sim/model/f15/sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>sim/model/f15/controls/fuel/refuel-probe-switch</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <volume>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+
+            <pitch>
+                <factor>0.5</factor>
+            </pitch>
+            <position>
+                <x>2</x>
+                <y>-8.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>0</y>
+                <z>0</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </fuel-bowser>
+
     </fx>
 </PropertyList>

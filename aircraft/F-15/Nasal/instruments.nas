@@ -797,7 +797,7 @@ var init = func {
 	awg_9.init();
 #	an_arc_182v.init();
 #	an_arc_159v1.init();
-    aircraft.setup_als_lights();
+    aircraft.setup_als_lights(getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"));
 
 	setprop("controls/switches/radar_init", 0);
 	# properties to be stored

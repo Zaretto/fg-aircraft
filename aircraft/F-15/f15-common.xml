@@ -113,7 +113,7 @@
                 <desc>Toggle maneuvering nose wheel steering (15/45 deg)</desc>
             </key>
             <key>
-                <name>a</name>
+                <name>Ctrl-s</name>
                 <desc>Toggle Autothrottle</desc>
             </key>
             <key>
@@ -133,16 +133,16 @@
                 <desc>Toggle Radar Standby Mode</desc>
             </key>
             <key>
-                <name>m</name>
-                <desc>Cycle pylons selection</desc>
+                <name>u</name>
+                <desc>Cycle through the 3 refuelling probe switch positions</desc>
             </key>
             <key>
-                <name>w</name>
+                <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
             </key>
             <key>
                 <name>Ctrl-w</name>
-                <desc>Cycle through MasterArm modes</desc>
+                <desc>Cycle through Master Arm modes</desc>
             </key>
             <key>
                 <name>Ctrl-n</name>
@@ -157,8 +157,8 @@
                 <desc>Back to Pilot's View or toggle Pilot's and Backseat View.</desc>
             </key>
             <key>
-                <name>y</name>
-                <desc>Select next target (by distance).</desc>
+                <name>y/Y</name>
+                <desc>Select next/prev target (by distance).</desc>
             </key>
             <line>JFS start: select JFS switch on engine panel; pull JFS lever and JFS will start providing there is enough pressure. 3 start attempts are possible.</line>
             <line>Engine start: Either start JFS or external air. Ensure both engines shutoff on engines panel. Start L engine then R engine.</line>
@@ -456,6 +456,86 @@
                     <type>float</type>
                     <property type="string">sim/ai-reply/tanker[1]/position/longitude-deg</property>
                 </signal>-->
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-essential-bus2</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-right-main-bus</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/dc-essential-bus1</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/dc-essential-bus2</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/dc-main-bus</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/egenerator-kva</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/emerg-generator-status</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/lgenerator-kva</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/rgenerator-kva</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/transrect-online</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/hydraulics/combined-system-psi</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/hydraulics/flight-system-psi</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/dc-main-bus-powered</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/dc-essential-bus1-powered</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/dc-essential-bus2-powered</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-right-main-bus-powered</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-left-main-bus-powered</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">fdm/jsbsim/systems/electrics/ac-essential-bus1-powered</property>
+                </signal>
             </config>
         </flight-recorder>
 
@@ -1109,13 +1189,20 @@
                         </binding>
                     </item>
                     <item n="7">
+                        <label>Cold and Dark</label>
+                        <binding>
+                            <command>nasal</command>
+                            <script>aircraft.cold_and_dark()</script>
+                        </binding>
+                    </item>
+                    <item n="8">
                         <label>Ground Services</label>
                         <binding>
                             <command>nasal</command>
                             <script>aircraft.dlg_ground_services.open()</script>
                         </binding>
                     </item>
-                    <item n="8">
+                    <item n="9">
                         <label>Aircraft Lighting</label>
                         <binding>
                             <command>nasal</command>
@@ -1595,49 +1682,6 @@
         <keyboard n="0" >
             <multikey include="Systems/instruments-multikey.xml"/>
 
-            <!-- map keys for launch-bar -->
-            <key n="76">
-                <name>L</name>
-                <desc>Launch-bar engage.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                        print("Disengage launchbar");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        setprop("/controls/gear/brake-parking",1);
-                        }
-                        else
-                        {
-                        print("Engage launchbar");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
-                        setprop("/controls/gear/brake-parking",0);
-                        }
-                    </script>
-                </binding>
-            </key>
-            <!-- map keys for catapult launch -->
-            <key n="67">
-                <name>C</name>
-                <desc>Catapult Launch Command.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                        print("Catapult launch");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        }
-                        else
-                        {
-                        }
-                    </script>
-                </binding>
-            </key>
             <key n="1">
                 <name>CTRL-a</name>
                 <desc>Toggle autopilot altitude mode.</desc>
@@ -1662,6 +1706,15 @@
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.wcs_mode_toggle()</script>
+                </binding>
+            </key>
+
+            <key n="19">
+                <name>Ctrl-s</name>
+                <desc>Toggle Auto Throttle hold</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>aircraft.toggleAPC();</script>
                 </binding>
             </key>
 
@@ -1715,7 +1768,26 @@
             </key>
 
 
-            <key n="69">
+                      <!-- map keys for catapult launch -->
+            <key n="67">
+                <name>C</name>
+                <desc>Catapult Launch Command.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+                        {
+                        print("Catapult launch");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+                        }
+                        else
+                        {
+                        }
+                    </script>
+                </binding>
+            </key>
+                <key n="69">
                 <name>E</name>
                 <desc>Decrease Radar Range</desc>
                 <binding>
@@ -1733,21 +1805,36 @@
                 </binding>
             </key>
 
-            <key n="82">
+  <!-- map keys for launch-bar -->
+            <key n="76">
+                <name>L</name>
+                <desc>Launch-bar engage.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+                        {
+                        print("Disengage launchbar");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+                        setprop("/controls/gear/brake-parking",1);
+                        }
+                        else
+                        {
+                        print("Engage launchbar");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
+                        setprop("/controls/gear/brake-parking",0);
+                        }
+                    </script>
+                </binding>
+            </key>
+                <key n="82">
                 <name>R</name>
                 <desc>Increase Radar Range</desc>
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.range_control(1);</script>
-                </binding>
-            </key>
-
-            <key n="97">
-                <name>a</name>
-                <desc>toggle APC</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>aircraft.toggleAPC();</script>
                 </binding>
             </key>
 
@@ -1833,8 +1920,8 @@
                 </binding>
             </key>
 
-            <key n="119">
-                <name>w</name>
+            <key n="109">
+                <name>m</name>
                 <desc>Cycle Weapon Mode Selector</desc>
                 <binding>
                     <command>property-adjust</command>
@@ -1883,8 +1970,6 @@
                     <script>aircraft.trimDown();</script>
                 </binding>
             </key>
-
-
         </keyboard>
     </input>
 

@@ -247,20 +247,17 @@ setlistener("sim/model/f15/controls/fuel/dump-switch", func(v) {
     {
         if (v.getValue())
         {
-            print("Start  dump");
             setprop("sim/multiplay/generic/int[0]", 1);
             setprop("fdm/jsbsim/propulsion/fuel_dump",1);
         }
         else
         { 
-            print("Stop dump");
             setprop("sim/multiplay/generic/int[0]", 0);
             setprop("fdm/jsbsim/propulsion/fuel_dump",0);
         } 
     }
     else 
     { 
-        print("no value");
         setprop("sim/multiplay/generic/int[0]", 0);
         setprop("fdm/jsbsim/propulsion/fuel_dump",0);
     }
@@ -279,9 +276,18 @@ setlistener("sim/model/f15/controls/fuel/refuel-probe-switch", func {
         if (v == 0)
         {
             r_probe.close();
+            setprop("fdm/jsbsim/propulsion/refuel",0);
+            setprop("fdm/jsbsim/propulsion/ground-refuel",0);
         }
         else
+        {
             r_probe.open();
+            if (wow)
+            {
+                setprop("fdm/jsbsim/propulsion/refuel",0);
+                setprop("fdm/jsbsim/propulsion/ground-refuel",1);
+            }
+        }
     }
 });
 

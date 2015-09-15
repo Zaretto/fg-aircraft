@@ -79,7 +79,16 @@ var runEMMISC = func {
 #	if ( getprop("sim/replay/time") > 0 ) { return }
 
     set_console_lighting();
-    setup_als_lights();
+#
+# all spring loaded switches
+    if (!getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"))
+    {
+        setprop("sim/model/f15/controls/windshield-heat",0);
+        setup_als_lights(0);
+    }
+    else
+        setup_als_lights(1);
+
 
     setprop("systems/electrical/outputs/DG", getprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus"));
 
@@ -697,7 +706,7 @@ setprop("sim/model/f15/lights/master-test-go",0);
 # also remember that these only illuminate the runway as proper lighting calculating is not done; this is a shader
 # level implementation that is fast rather than accurate.
 # ref: http://wiki.flightgear.org/ALS_technical_notes#ALS_secondary_lights
-var setup_als_lights = func
+var setup_als_lights = func(dc_power)
 {
     var light_setting=getprop("sim/multiplay/generic/int[6]");
 
@@ -705,8 +714,13 @@ var setup_als_lights = func
 # gear needs to be extended (not just commanded)
 # view needs to be internal (otherwise geometry of the shader is wrong).
 # needs electrical power
-    if (!getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered") 
-        or !getprop("sim/current-view/internal") 
+    if (dc_power != nil and dc_power == 0)
+    {
+        setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
+        setprop("sim/rendering/als-secondary-lights/use-alt-landing-light", 0);
+        return;
+    }
+    if (!getprop("sim/current-view/internal") 
         or getprop("gear/gear[0]/position-norm") == nil 
         or getprop("gear/gear[0]/position-norm") < 0.6  
         or !light_setting)
@@ -741,21 +755,22 @@ var setup_als_lights = func
 # only need this if we can get the bus-essential-powered as a listener too, otherwise the setup_als_lights is
 # called in the main EMMISC loop
 #setlistener("sim/current-view/internal", func {
-#    aircraft.setup_als_lights();
+#    aircraft.setup_als_lights(getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"));
 #}, 1, 0);
 #
 #setlistener("sim/multiplay/generic/int[6]", func
 #{
-#    aircraft.setup_als_lights();
+#    aircraft.setup_als_lights(getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"));
 #
 #}, 1, 0);
 #
 #setlistener("gear/gear[0]/position-norm", func
 #{
-#    aircraft.setup_als_lights();
+#    aircraft.setup_als_lights(getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"));
 #}, 1, 0);
 
-setlistener("sim/model/f15/controls/windshield-heat", func {
-setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+setlistener("sim/model/f15/controls/windshield-heat", func 
+{
+    setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
 }, 1, 0);
 

@@ -240,66 +240,115 @@ splash_vec_loop();
 
 var updateVolume = func
 {
-    print("calc sound",getprop("/sim/time/gmt"));
+#var n1_l = getprop("engines/engine[0]/n1");
+#var n1_r = getprop("engines/engine[1]/n1");
+var n2_l = getprop("engines/engine[0]/n2");
+var n2_r = getprop("engines/engine[1]/n2");
+
     if(getprop("sim/current-view/internal"))
         setprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume",
                 0.2
                 + getprop("canopy/position-norm")-getprop("fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation"));
     else
-        setprop("systems/sound/cockpit-adjusted-external-volume",1);
+        setprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume",1);
 
 
     setprop_inrange("fdm/jsbsim/systems/sound/cockpit-effects-volume", 
              0.3
              - getprop("fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation"),0,1);
 
+#
+# cold end of the engines
     setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",
              0.0133
-             * getprop("engines/engine[0]/n2")
+             * n2_l
              * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,1);
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",
              0.0133
-             * getprop("engines/engine[1]/n2")
+             * n2_r
              * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,1);
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-n2-l-volume",
              0.015
-             * getprop("engines/engine[0]/n2")
+             * n2_l
              * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
     setprop_inrange("fdm/jsbsim/systems/sound/engine-n2-r-volume",
              0.015
-             * getprop("engines/engine[1]/n2")
+             * n2_r
              * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
 
+#
+# hot end of the engines.
+# using PB (the gasgen based pressure at the burner) for this is more accurate
+# however it doesn't produce the right sort of levels for external in-air (and flyby) views
+# - the physics for sound volume is (a more complex version) of pressure and velocity - however
+#   PB is relative to the engine so at speed the velocity of the aircraft isn't going to be added in
+#   to produce realistic levels for an observer. I could take PB and add back in velocity but that would
+#   effectively be the same as n2 as PB is based on N2 and mach.
+
+#
+#
+# this is the fade out as the engines spool down. the noise from the stuff coming out the back
+# decreases quite rapidly ; so I'm using ln(n) based on 40% n2.
+# previous I did math.ln((getprop("engines/engine[0]/PB"))) but that doesn't work well at higher speeds
+# as PB drops with forward velocity (because of the decreased resistance behind the engine).
+#             math.ln((getprop("engines/engine[1]/PB")))
+
+#var n2_r_f = 1;
+#if (n2_r < 40)
+#{
+#    var v1 = 1-n2_r/40;
+#    if (v1 != 0)
+#        n2_r_f = math.ln(v1)/-3.82970;
+#    else
+#        n2_r_f = 0;
+#}
+
+#var n2_l_f = 1;
+#if (n2_l < 40)
+#{
+#    var v1 = 1-n2_l/40;
+#    if (v1 != 0)
+#        n2_l_f = math.ln(v1)/-3.82970;
+#    else
+#        n2_l_f = 0;
+#}
+#=math.ln(math.max(0.01,n2_l*0.01))/4.605*5*(n2_l-30);
+
     setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",
-             0.2
-             * (getprop("engines/engine[0]/PB")-1)
-             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.6);
+             (n2_l-30)/70
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"), 0, 1.0);
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",
-             0.2
-             * (getprop("engines/engine[1]/PB")-1)
-             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.6);
+             (n2_r-30)/70
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"), 0, 1.0);
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-efflux-l-volume",
-             0.1
-             *(getprop("engines/engine[0]/PB")-1)
-             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"), nil, 0.4);
+             (n2_l-30)/70
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"), 0, 1.0);
+
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-efflux-r-volume",
-             0.1
-             *(getprop("engines/engine[1]/PB")-1)
-             *getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+             (n2_r-30)/70
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),0, 1.0);
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",
-             0.06*getprop("engines/engine[0]/afterburner")
-             *getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+             0.06
+             * getprop("engines/engine[0]/afterburner")
+             * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
 
     setprop_inrange("fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",
              0.06
              * getprop("engines/engine[1]/afterburner")
              * getprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume"),nil,0.4);
+
+#efflux was: 
+# cond  : engines/engine[0]/thrust_lb > 200 and instrumentation/airspeed-indicator/indicated-speed-kt > 100
+# volume: 0.4
+#
+#exhaust was 
+# volume: -0.3 + 0.01 * engines/engine[0]/n2
 }
 
 #
@@ -340,6 +389,15 @@ var rate4modules = func {
 aircraft.update_weapons_over_mp();
 updateVolume();
 #	settimer (rate4modules, 0.20);
+
+#
+# ensure that we're not ground refuelling in air...
+if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 0))
+{
+setprop("fdm/jsbsim/propulsion/refuel",0);
+setprop("fdm/jsbsim/propulsion/ground-refuel",0);
+}
+
 }
 #
 #
@@ -451,6 +509,7 @@ var toggle_cockpit_views = func() {
 }
 
 
+
 var quickstart = func() {
 #    setprop("controls/electric/engine[0]/generator",1);
 #    setprop("controls/electric/engine[1]/generator",1);
@@ -500,8 +559,113 @@ setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
 setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
 setprop("/fdm/jsbsim/propulsion/set-running",1);
 setprop("/fdm/jsbsim/propulsion/set-running",0);
+
+    setprop("sim/model/f15/controls/engines/l-ramp-switch", 1);
+    setprop("sim/model/f15/controls/engines/r-ramp-switch", 1);
+    setprop("sim/model/f15/controls/fuel/dump-switch",0);
+    setprop("sim/model/f15/controls/fuel/refuel-probe-switch",0);
+
+    setprop("sim/model/f15/controls/engines/l-eec-switch",1);
+    setprop("sim/model/f15/controls/engines/r-eec-switch",1);
+    setprop("sim/model/f15/controls/electrics/emerg-gen-switch",1);
+    setprop("sim/model/f15/controls/engs/l-eng-master-guard",0);
+    setprop("sim/model/f15/controls/engs/r-eng-master-guard",0);
  }, 0.2);
+}
+
+var cold_and_dark = func()
+{
+	setprop("sim/model/f15/controls/electrics/emerg-gen-switch",9);
+	setprop("sim/model/f15/controls/electrics/r-gen-switch",0);
+
+    setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+    setprop("controls/engines/engine[1]/cutoff",1-getprop("controls/engines/engine[1]/cutoff"));
+    
+    setprop("controls/lighting/aux-inst", 0);
+    setprop("controls/lighting/eng-inst", 0);
+    setprop("controls/lighting/flt-inst", 0);
+    setprop("controls/lighting/instruments-norm",0);
+    setprop("controls/lighting/l-console", 0);
+    setprop("controls/lighting/panel-norm", 0);
+    setprop("controls/lighting/panel-norm",0);
+    setprop("controls/lighting/r-console", 0);
+    setprop("controls/lighting/stby-inst", 0);
+    setprop("controls/lighting/warn-caution", 0);
+
+    setprop("fdm/jsbsim/fcs/pitch-damper-enable",0);
+    setprop("fdm/jsbsim/fcs/roll-damper-enable",0);
+    setprop("fdm/jsbsim/fcs/yaw-damper-enable",0);
+
+    setprop("sim/model/f15/controls/HUD/brightness",0);
+    setprop("sim/model/f15/controls/HUD/on-off",false);
+    setprop("sim/model/f15/controls/MPCD/brightness",0);
+    setprop("sim/model/f15/controls/MPCD/on-off",0);
+    setprop("sim/model/f15/controls/TEWS/brightness",0);
+    setprop("sim/model/f15/controls/VSD/on-off",false);
+    setprop("sim/model/f15/controls/VSD/brightness",0);
+
+    setprop("sim/model/f15/controls/electrics/emerg-flt-hyd-switch",0);
+    setprop("sim/model/f15/controls/electrics/emerg-gen-guard-lever",0);
+    setprop("sim/model/f15/controls/electrics/l-gen-switch",0);
+    setprop("sim/model/f15/controls/electrics/master-test-switch",0);
+
+    setprop("sim/model/f15/lights/master-test-lights", 0);
+    setprop("sim/model/f15/lights/radio2-brightness",0);
+
+    setprop("sim/multiplay/generic/int[1]", 0);
+    setprop("sim/multiplay/generic/int[3]", 0);
+    setprop("sim/multiplay/generic/int[4]", 0);
+    setprop("sim/multiplay/generic/int[5]", 0);
+    setprop("sim/multiplay/generic/int[6]", 0);
+    setprop("sim/model/f15/controls/windshield-heat",0);
+
+    setprop("sim/model/f15/controls/engines/l-ramp-switch", 0);
+    setprop("sim/model/f15/controls/engines/r-ramp-switch", 0);
+    setprop("sim/model/f15/controls/fuel/dump-switch",0);
+    setprop("sim/model/f15/controls/fuel/refuel-probe-switch",0);
+
+    setprop("sim/model/f15/controls/engines/l-eec-switch",0);
+    setprop("sim/model/f15/controls/engines/r-eec-switch",0);
+    setprop("sim/model/f15/controls/electrics/emerg-gen-switch",0);
+    setprop("sim/model/f15/controls/engs/l-eng-master-guard",1);
+    setprop("sim/model/f15/controls/engs/r-eng-master-guard",1);
+    setprop("sim/model/f15/controls/electrics/jfs-starter",0);
+
+    setprop("fdm/jsbsim/systems/electrics/ground-power",0);
+
 }
 
 
 
+setlistener("sim/walker/outside", func
+{
+#    if (getprop("sim/walker/outside") and getprop("sim/walker/outfit") == 1)
+    if (getprop("sim/walker/outside"))
+    {
+        setprop("sim/model/hide-pilot",1);
+        if (two_seater)
+            setprop("sim/model/hide-backseater",1);
+    }
+    else
+    {
+        setprop("sim/model/hide-pilot",0);
+        if (two_seater)
+            setprop("sim/model/hide-backseater",0);
+    }
+});
+setlistener("sim/walker/outfit", func
+{
+#    if (getprop("sim/walker/outside") and getprop("sim/walker/outfit") == 1)
+    if (getprop("sim/walker/outside"))
+    {
+        setprop("sim/model/hide-pilot",1);
+        if (two_seater)
+            setprop("sim/model/hide-backseater",1);
+    }
+    else
+    {
+        setprop("sim/model/hide-pilot",0);
+        if (two_seater)
+            setprop("sim/model/hide-backseater",0);
+    }
+});
