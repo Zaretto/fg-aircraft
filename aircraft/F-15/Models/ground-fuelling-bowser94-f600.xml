@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+    <path>ground-fuelling-bowser94-f600.ac</path>
+    <nopreview/>
+
+    <animation>
+        <type>range</type>
+        <min-m>0</min-m>
+        <max-property>sim/rendering/static-lod/bare</max-property>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>refuel-truck-f600-paint</object-name>
+        <object-name>refuel-truck-f600</object-name>
+        <condition>
+            <or>
+                <property>gear/gear[0]/wow</property>
+                <property>gear/gear[1]/wow</property>
+                <property>gear/gear[2]/wow</property>
+            </or>
+            <less-than>
+                <property>fdm/jsbsim/gear/unit[2]/wheel-speed-fps</property>
+                <value>1</value>
+            </less-than>
+            <greater-than>
+                <property>sim/model/f15/controls/fuel/refuel-probe-switch</property>
+                <value>0.9</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>timed</type>
+        <object-name>flashing-light</object-name>
+        <object-name>flashing-light-off</object-name>
+        <use-personality type="bool">true</use-personality>
+        <branch-duration-sec>
+            <random>
+                <min>0.2</min>
+                <max>0.2</max>
+            </random>
+        </branch-duration-sec>
+        <branch-duration-sec>
+            <random>
+                <min>0.8</min>
+                <max>0.9</max>
+            </random>
+        </branch-duration-sec>
+    </animation>
+    <animation>
+        <type>material</type>
+        <object-name>lights</object-name>
+        <condition>
+            <greater-than>
+                <property>/sim/time/sun-angle-rad</property>
+                <value>1.60</value>
+            </greater-than>
+        </condition>
+        <emission>
+            <red>1</red>
+            <green>0.5</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>lights</object-name>
+        <condition>
+            <less-than-equals>
+                <property>/sim/time/sun-angle-rad</property>
+                <value>1.60</value>
+            </less-than-equals>
+        </condition>
+        <emission>
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+</PropertyList>
