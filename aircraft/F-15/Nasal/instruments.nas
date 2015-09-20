@@ -426,7 +426,10 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "fdm/jsbsim/fcs/yaw-damper-enable",
                   "sim/model/f15/controls/MPCD/mode",
                   "sim/model/f15/controls/windshield-heat",
-                  "controls/pilots-displays/hsd-mode-nav");
+                  "controls/pilots-displays/hsd-mode-nav",
+                  "engines/engine[0]/running",
+                  "engines/engine[1]/running"
+);
 
 
 # Air Speed Indicator #####
