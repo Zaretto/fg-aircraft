@@ -19,20 +19,21 @@ based on standard FG wingtip contrail example; but modified condition params
 
        <greater-than>
          <property>velocities/airspeed-kt</property>
-         <value>120</value>
+         <value>60</value>
        </greater-than>
        <greater-than>
-         <property>environment/relative-humidity</property>
+          <property>/environment/relative-humidity</property>
          <value>50</value>
        </greater-than>
-       <or>
+         <!-- 2015-09-20: RJH I've removed this as I'm not sure it is a valid condition. -->
+       <!--<or> 
          <less-than>
-           <property>/position/altitude-ft</property>
+           <property>position/altitude-ft</property>
            <value>33800</value>
          </less-than>
-       </or>
+       </or>-->
        <less-than>
-         <property>environment/temperature-degc</property>
+         <property>/environment/temperature-degc</property>
          <value>20</value>
        </less-than>
        <greater-than>
@@ -91,10 +92,10 @@ based on standard FG wingtip contrail example; but modified condition params
          <red><expression><product><value>1.0</value><property>/rendering/scene/diffuse/red</property></product></expression></red>
          <green><expression><product><value>1.0</value><property>/rendering/scene/diffuse/red</property></product></expression></green>
          <blue><expression><product><value>1.0</value><property>/rendering/scene/diffuse/red</property></product></expression></blue>
-         <alpha><value> 0.5 </value></alpha>
+         <alpha><value> 0.05 </value></alpha>
        </color>
        <size>
-         <value>0.1655</value>
+         <value>0.1</value>
        </size>
      </start>
  
@@ -103,10 +104,10 @@ based on standard FG wingtip contrail example; but modified condition params
          <red><expression><product><value>1.0</value><property>/rendering/scene/diffuse/red</property></product></expression></red>
          <green><expression><product><value>1.0</value><property>/rendering/scene/diffuse/red</property></product></expression></green>
          <blue><expression><product><value>1.0</value><property>/rendering/scene/diffuse/red</property></product></expression></blue>
-         <alpha><value> 0.1 </value></alpha>
+         <alpha><value> 0.01 </value></alpha>
        </color>
        <size>
-         <value>0.05</value>
+         <value>1</value>
        </size>
      </end>
  
