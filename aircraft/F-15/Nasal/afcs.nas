@@ -372,9 +372,9 @@ setlistener("autopilot/route-manager/current-wp", func {
                 if (demalt > 0)
                 {
                     if (demalt > groundElev)
-                        setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
+                        setprop("fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
                     else
-                        setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",getprop("position/ground-elev-ft") + demalt);
+                        setprop("fdm/jsbsim/systems/afcs/target-altitude-ft",getprop("position/ground-elev-ft") + demalt);
                 }
                 else
                 {
@@ -387,13 +387,13 @@ setlistener("autopilot/route-manager/current-wp", func {
                             demalt = cruiseAlt;
                         }
                         else
-                            demalt = getprop("/autopilot/settings/target-altitude-ft");
+                            demalt = getprop("autopilot/settings/target-altitude-ft");
 
-                        setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
-                        setprop("/autopilot/settings/target-altitude-ft", demalt);
+                        setprop("fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
+                        setprop("autopilot/settings/target-altitude-ft", demalt);
                     }
                 }
-#                print(legalt," = ",demalt, ": ",getprop("/fdm/jsbsim/systems/afcs/target-altitude-ft"));
+#                print(legalt," = ",demalt, ": ",getprop("fdm/jsbsim/systems/afcs/target-altitude-ft"));
                 if(legid != nil)
                 {
 #                    print("Leg ID ",legid,substr(legid, size(legid)-3,3));
@@ -409,7 +409,7 @@ setlistener("autopilot/route-manager/current-wp", func {
             else
             {
                 current_leg_is_gs = 0;
-                demalt = getprop("/autopilot/settings/target-altitude-ft");
+                demalt = getprop("autopilot/settings/target-altitude-ft");
                 if (demalt < groundElev + 200)
                 {
                     demalt = demalt + 1000;

@@ -38,7 +38,7 @@ var click = func {
 
 var update_chrono = func {
 
-    if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
+    if ( getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
     {
         var on = chrono_onoff.getBoolValue();
         if ( on ) {

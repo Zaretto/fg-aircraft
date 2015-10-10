@@ -151,7 +151,7 @@ var fuel_update = func {
 	neg_g.update();
 	calc_levels();
 
-	if ( getprop("/sim/freeze/fuel") or getprop("sim/replay/time") > 0 ) { return }
+	if ( getprop("/sim/freeze/fuel") or getprop("/sim/replay/time") > 0 ) { return }
 
 	LBS_HOUR2GALS_PERIOD = LBS_HOUR2GALS_SEC * fuel_dt;
 	max_flow85000 = 85000 * LBS_HOUR2GALS_PERIOD; 

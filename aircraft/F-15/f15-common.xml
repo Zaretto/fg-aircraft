@@ -7,16 +7,6 @@
    | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work is largely unchanged.
 -->
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
-
-    <engines>
-        <engine n="0">
-            <PB>0</PB>
-        </engine>
-        <engine n="1">
-            <PB>0</PB>
-        </engine>
-   </engines>
-
     <fdm>
         <jsbsim>
             <metrics>
@@ -1668,8 +1658,19 @@
         </gear>
     </controls>
 
+    <engines>
+        <engine n="0">
+            <running>true</running>
+            <PB>0</PB>
+        </engine>
+        <engine n="1">
+            <running>true</running>
+            <PB>0</PB>
+        </engine>
+    </engines>
 
     <input>
+        <!--		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml"> -->
         <keyboard n="0" >
             <multikey include="Systems/instruments-multikey.xml"/>
 
@@ -1743,15 +1744,15 @@
                     <command>nasal</command>
                     <script type="string">
                         <![CDATA[ 
-                            if (getprop("/fdm/jsbsim/fcs/steer-maneuver"))
+                            if (getprop("fdm/jsbsim/fcs/steer-maneuver"))
                             {
                                 gui.popupTip("Maneuver NWS disabled");
-                                setprop("/fdm/jsbsim/fcs/steer-maneuver",0)
+                                setprop("fdm/jsbsim/fcs/steer-maneuver",0)
                             }
                             else
                             {
                                 gui.popupTip("Maneuver NWS enabled");
-                                setprop("/fdm/jsbsim/fcs/steer-maneuver",1)
+                                setprop("fdm/jsbsim/fcs/steer-maneuver",1)
                             }
                     ]]>
                     </script>
@@ -1808,14 +1809,14 @@
                         print("Disengage launchbar");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        setprop("/controls/gear/brake-parking",1);
+                        setprop("controls/gear/brake-parking",1);
                         }
                         else
                         {
                         print("Engage launchbar");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
-                        setprop("/controls/gear/brake-parking",0);
+                        setprop("controls/gear/brake-parking",0);
                         }
                     </script>
                 </binding>

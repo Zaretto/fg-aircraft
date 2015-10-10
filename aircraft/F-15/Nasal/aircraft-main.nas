@@ -55,7 +55,7 @@ var position_flash_sw = props.globals.getNode("sim/model/f15/controls/lighting/p
 # Navigation lights steady/flash dimmed/bright
 var position_flash_sw = props.globals.getNode("sim/model/f15/controls/lighting/position-flash-switch");
 var position = aircraft.light.new("sim/model/f15/lighting/position", [0.08, 1.15]);
-setprop("/sim/model/f15/lighting/position/enabled", 1);
+setprop("sim/model/f15/lighting/position/enabled", 1);
 setprop("sim/model/f15/fx/smoke",0);
 
 var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
@@ -170,8 +170,8 @@ var carrier_heading = nil;
 var carrier_ara_63_heading = nil;
 
 var wow = 1;
-setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
-setprop("/controls/flight/SAS-roll",0);
+setprop("fdm/jsbsim/fcs/roll-trim-actuator",0) ;
+setprop("controls/flight/SAS-roll",0);
 var registerFCS = func {settimer (updateFCS, 0);}
 
 #
@@ -179,13 +179,13 @@ var registerFCS = func {settimer (updateFCS, 0);}
 # set the splash vector for the new canopy rain.
 
 # for tuning the vector; these will be baked in once finished
-setprop("/sim/model/f15/sfx1",-0.1);
-setprop("/sim/model/f15/sfx2",4);
-setprop("/sim/model/f15/sf-x-max",400);
-setprop("/sim/model/f15/sfy1",0);
-setprop("/sim/model/f15/sfy2",0.1);
-setprop("/sim/model/f15/sfz1",1);
-setprop("/sim/model/f15/sfz2",-0.1);
+#setprop("sim/model/f15/sfx1",-0.1);
+#setprop("sim/model/f15/sfx2",4);
+#setprop("sim/model/f15/sf-x-max",400);
+#setprop("sim/model/f15/sfy1",0);
+#setprop("sim/model/f15/sfy2",0.1);
+#setprop("sim/model/f15/sfz1",1);
+#setprop("sim/model/f15/sfz2",-0.1);
 
 #var vl_x = 0;
 #var vl_y = 0;
@@ -193,13 +193,14 @@ setprop("/sim/model/f15/sfz2",-0.1);
 #var vsplash_precision = 0.001;
 var splash_vec_loop = func
 {
-    var v_x = getprop("/fdm/jsbsim/velocities/u-aero-fps");
-    var v_y = getprop("/fdm/jsbsim/velocities/v-aero-fps");
-    var v_z = getprop("/fdm/jsbsim/velocities/w-aero-fps");
-#    var v_x = getprop("/velocities/uBody-fps");
-#    var v_y = getprop("/velocities/vBody-fps");
-#    var v_z = getprop("/velocities/wBody-fps");
-    var v_x_max = getprop("/sim/model/f15/sf-x-max");
+    var v_x = getprop("fdm/jsbsim/velocities/u-aero-fps");
+    var v_y = getprop("fdm/jsbsim/velocities/v-aero-fps");
+    var v_z = getprop("fdm/jsbsim/velocities/w-aero-fps");
+#    var v_x = getprop("velocities/uBody-fps");
+#    var v_y = getprop("velocities/vBody-fps");
+#    var v_z = getprop("velocities/wBody-fps");
+#    var v_x_max = getprop("sim/model/f15/sf-x-max");
+    var v_x_max =400;
  
     if (v_x > v_x_max) 
         v_x = v_x_max;
@@ -209,10 +210,13 @@ var splash_vec_loop = func
 #var splash_x = -0.1 - 2.0 * v_x;
 #var splash_y = 0.0;
 #var splash_z = 1.0 - 1.35 * v_x;
+#    var splash_x = getprop("sim/model/f15/sfx1") - getprop("sim/model/f15/sfx2") * v_x;
+#    var splash_y = getprop("sim/model/f15/sfy1") - getprop("sim/model/f15/sfy2") * v_y;
+#    var splash_z = getprop("sim/model/f15/sfz1") - getprop("sim/model/f15/sfz2") * v_z;
 
-    var splash_x = getprop("/sim/model/f15/sfx1") - getprop("/sim/model/f15/sfx2") * v_x;
-    var splash_y = getprop("/sim/model/f15/sfy1") - getprop("/sim/model/f15/sfy2") * v_y;
-    var splash_z = getprop("/sim/model/f15/sfz1") - getprop("/sim/model/f15/sfz2") * v_z;
+    var splash_x = -0.1 - 4   * v_x;
+    var splash_y =  0   - 0.1 * v_y;
+    var splash_z =  1   - 0.1 * v_z;
 
 #if (math.abs(vl_x - v_x) >  vsplash_precision)
     setprop("/environment/aircraft-effects/splash-vector-x", splash_x);
@@ -415,7 +419,7 @@ var rate2modules = func {
 
     aircraft.updateHUD();
 #	settimer (rate2modules, 0.1);
-    setprop("environment/aircraft-effects/frost-level", getprop("/fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
+    setprop("/environment/aircraft-effects/frost-level", getprop("fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
 }
 #
 # launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
@@ -429,14 +433,14 @@ var updateFCS = func {
 	 aircraft.rain.update();
 
 	#Fetch most commonly used values
-	CurrentIAS = getprop ("/velocities/airspeed-kt");
-	CurrentMach = getprop ("/velocities/mach");
-	CurrentAlt = getprop ("/position/altitude-ft");
-	wow = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
+	CurrentIAS = getprop("velocities/airspeed-kt");
+	CurrentMach = getprop("velocities/mach");
+	CurrentAlt = getprop("position/altitude-ft");
+	wow = getprop("gear/gear[1]/wow") or getprop("gear/gear[2]/wow");
 
-	Alpha = getprop ("/orientation/alpha-indicated-deg");
-	Throttle = getprop ("/controls/engines/engine/throttle");
-	e_trim = getprop ("/controls/flight/elevator-trim");
+	Alpha = getprop("orientation/alpha-indicated-deg");
+	Throttle = getprop("controls/engines/engine/throttle");
+	e_trim = getprop("controls/flight/elevator-trim");
 	deltaT = getprop ("sim/time/delta-sec");
 
     # the FDM has a combined aileron deflection so split this for animation purposes.
@@ -449,7 +453,7 @@ var updateFCS = func {
     currentG = getprop ("accelerations/pilot-gdamped");
     # use interpolate to make it take 1.2seconds to affect the demand
 
-    var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
+    var dmd_afcs_roll = getprop("controls/flight/SAS-roll");
     var roll_mode = getprop("autopilot/locks/heading");
 
     if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
@@ -460,7 +464,7 @@ var updateFCS = func {
         if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
         else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
 
-#print("AFCS ",roll," DMD ",dmd_afcs_roll, " SAS=", getprop("/controls/flight/SAS-roll"), " cur=",getprop("fdm/jsbsim/fcs/roll-trim-cmd-norm"));
+#print("AFCS ",roll," DMD ",dmd_afcs_roll, " SAS=", getprop("controls/flight/SAS-roll"), " cur=",getprop("fdm/jsbsim/fcs/roll-trim-cmd-norm"));
         if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
         if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
 
@@ -552,13 +556,13 @@ var quickstart = func() {
     setprop("fdm/jsbsim/fcs/roll-damper-enable",1);
     setprop("fdm/jsbsim/fcs/yaw-damper-enable",1);
 
-setprop("/engines/engine[1]/cutoff",0);
-setprop("/engines/engine[0]/cutoff",0);
+setprop("engines/engine[1]/cutoff",0);
+setprop("engines/engine[0]/cutoff",0);
 
-setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
-setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
-setprop("/fdm/jsbsim/propulsion/set-running",1);
-setprop("/fdm/jsbsim/propulsion/set-running",0);
+setprop("fdm/jsbsim/propulsion/starter_cmd",1);
+setprop("fdm/jsbsim/propulsion/cutoff_cmd",1);
+setprop("fdm/jsbsim/propulsion/set-running",1);
+setprop("fdm/jsbsim/propulsion/set-running",0);
 
     setprop("sim/model/f15/controls/engines/l-ramp-switch", 1);
     setprop("sim/model/f15/controls/engines/r-ramp-switch", 1);

@@ -146,7 +146,7 @@
                 <command>nasal</command>
                 <script>
                     var np = geo.Coord.new().set_xyz(aircraft.carrier_ara_63_position.x(), aircraft.carrier_ara_63_position.y(), aircraft.carrier_ara_63_position.z());
-                    var magvar=getprop("/orientation/local-mag-dev");
+                    var magvar=getprop("orientation/local-mag-dev");
                     var dist_m = 11000;
                     if (getprop("sim/presets/carrier-approach-dist-m") != nil)
                     dist_m  = getprop("sim/presets/carrier-approach-dist-m");
@@ -189,11 +189,11 @@
                     var np = geo.Coord.new().set_xyz(aircraft.carrier_ara_63_position.x(), aircraft.carrier_ara_63_position.y(), aircraft.carrier_ara_63_position.z());
                     var dist_m = 7;
                     np.apply_course_distance(aircraft.carrier_ara_63_heading,-dist_m);
-                    setprop("sim/presets/latitude-deg",np.lat());
-                    setprop("sim/presets/longitude-deg",np.lon());
-                    setprop("sim/presets/altitude-ft",65.2);
-                    setprop("sim/presets/airspeed-kt",0);
-                    setprop("sim/presets/pitch-deg",0);
+                    setprop("/sim/presets/latitude-deg",np.lat());
+                    setprop("/sim/presets/longitude-deg",np.lon());
+                    setprop("/sim/presets/altitude-ft",65.2);
+                    setprop("/sim/presets/airspeed-kt",0);
+                    setprop("/sim/presets/pitch-deg",0);
                     setprop("/sim/presets/carrier",aircraft.tuned_carrier_name);
                     fgcommand("reposition");
                 </script>

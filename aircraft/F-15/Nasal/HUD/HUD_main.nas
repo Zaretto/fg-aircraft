@@ -192,7 +192,7 @@ var F15HUD = {
             var txt = "";
             if (w_s == 0)
             {
-                txt = sprintf("%3d",getprop("/sim/model/f15/systems/gun/rounds"));
+                txt = sprintf("%3d",getprop("sim/model/f15/systems/gun/rounds"));
             }
             else if (w_s == 1)
             {
@@ -239,7 +239,7 @@ var F15HUD = {
         me.window7.setText(hdp.window7);
 
 #        me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
-        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("/fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
+        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
 
 #heading tape
         if (hdp.heading < 180)
@@ -333,7 +333,7 @@ var HUD_DataProvider  = {
         me.IAS = getprop("velocities/airspeed-kt");
         me.Nz = getprop("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
         me.WOW = getprop ("gear/gear[1]/wow") or getprop ("gear/gear[2]/wow");
-        me.alpha = getprop ("fdm/jsbsim/aero/alpha-indicated-deg");
+        me.alpha = getprop("orientation/alpha-indicated-deg");
         me.beta = getprop("orientation/side-slip-deg");
         me.altitude_ft =  getprop ("position/altitude-ft");
         me.heading =  getprop("orientation/heading-deg");

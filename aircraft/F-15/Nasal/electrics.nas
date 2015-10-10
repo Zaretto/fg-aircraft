@@ -56,18 +56,18 @@ var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/F-15/Dialogs/gro
 var dlg_lighting  = gui.Dialog.new("dialog[3]","Aircraft/F-15/Dialogs/lighting.xml");
 
     ## initialise the electrics / hyds
-    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
-    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",75); 
-    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",75);
-    setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",75);
-    setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",28);
-    setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",28);
-    setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",28);
-    setprop("/fdm/jsbsim/systems/electrics/egenerator-kva",0);
-    setprop("/fdm/jsbsim/systems/electrics/emerg-generator-status",0);
-    setprop("/fdm/jsbsim/systems/electrics/lgenerator-kva",75);
-    setprop("/fdm/jsbsim/systems/electrics/rgenerator-kva",75);
-    setprop("/fdm/jsbsim/systems/electrics/transrect-online",2);
+    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
+    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus2",75); 
+    setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",75);
+    setprop("fdm/jsbsim/systems/electrics/ac-right-main-bus",75);
+    setprop("fdm/jsbsim/systems/electrics/dc-essential-bus1",28);
+    setprop("fdm/jsbsim/systems/electrics/dc-essential-bus2",28);
+    setprop("fdm/jsbsim/systems/electrics/dc-main-bus",28);
+    setprop("fdm/jsbsim/systems/electrics/egenerator-kva",0);
+    setprop("fdm/jsbsim/systems/electrics/emerg-generator-status",0);
+    setprop("fdm/jsbsim/systems/electrics/lgenerator-kva",75);
+    setprop("fdm/jsbsim/systems/electrics/rgenerator-kva",75);
+    setprop("fdm/jsbsim/systems/electrics/transrect-online",2);
     setprop("fdm/jsbsim/systems/hydraulics/combined-system-psi",2398);
     setprop("fdm/jsbsim/systems/hydraulics/flight-system-psi",2396);
     setprop("engines/engine[0]/oil-pressure-psi", 28);
@@ -90,7 +90,7 @@ var runEMMISC = func {
         setup_als_lights(1);
 
 
-    setprop("systems/electrical/outputs/DG", getprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus"));
+    setprop("systems/electrical/outputs/DG", getprop("fdm/jsbsim/systems/electrics/ac-left-main-bus"));
 
     var masterCaution =  masterCaution_light_set.getValue();
     var master_caution_active  = 0;
@@ -201,7 +201,7 @@ var runEMMISC = func {
         }
     }
 
-    if(getprop("/fdm/jsbsim/systems/electrics/lgenerator-kva") < 50)
+    if(getprop("fdm/jsbsim/systems/electrics/lgenerator-kva") < 50)
     {
         if (!ca_l_gen_light.getBoolValue())
         {
@@ -253,7 +253,7 @@ var runEMMISC = func {
         }
     }
 
-    if(getprop("/fdm/jsbsim/systems/electrics/rgenerator-kva") < 50)
+    if(getprop("fdm/jsbsim/systems/electrics/rgenerator-kva") < 50)
     {
         if (!ca_r_gen_light.getBoolValue())
         {
@@ -304,7 +304,7 @@ var runEMMISC = func {
 		}
 	}
 
-	if (getprop("/gear/tailhook/position-norm") > 0.2)
+	if (getprop("gear/tailhook/position-norm") > 0.2)
     {
         if (!getprop("sim/model/f15/lights/ca-hook"))
         {
@@ -373,7 +373,7 @@ var runEMMISC = func {
     }
 
 
-	if (getprop("/fdm/jsbsim/systems/electrics/transrect-online") < 2)
+	if (getprop("fdm/jsbsim/systems/electrics/transrect-online") < 2)
     {
         if (!getprop("sim/model/f15/lights/ca-trans-rect"))
         {
@@ -441,7 +441,7 @@ var runEMMISC = func {
         }
     }
 
-    if  (getprop("/fdm/jsbsim/systems/cadc/roll-ratio-emergency"))
+    if  (getprop("fdm/jsbsim/systems/cadc/roll-ratio-emergency"))
     {
         if (!getprop("sim/model/f15/lights/ca-roll-ratio"))
         {
@@ -457,7 +457,7 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-roll-ratio",0);
         }
     }
-    if  (getprop("/fdm/jsbsim/systems/cadc/pitch-ratio-emergency"))
+    if  (getprop("fdm/jsbsim/systems/cadc/pitch-ratio-emergency"))
     {
         if (!getprop("sim/model/f15/lights/ca-pitch-ratio"))
         {
@@ -508,7 +508,7 @@ var runEMMISC = func {
         }
     }
 #anti skid will indicate when the parking brake is on.
-    setprop("sim/model/f15/lights/ca-anti-skid", getprop("/controls/gear/brake-parking"));
+    setprop("sim/model/f15/lights/ca-anti-skid", getprop("controls/gear/brake-parking"));
 
     if (canopy.getValue() > 0)
     {
@@ -577,14 +577,14 @@ var set_console_lighting = func
 {
     var v = getprop("controls/lighting/l-console");
     setprop("controls/lighting/l-console-norm", v/10);
-    if (getprop("/fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
+    if (getprop("fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
         setprop("controls/lighting/l-console-eff-norm", v/10);
     else
         setprop("controls/lighting/l-console-eff-norm", 0);
 
     v = getprop("controls/lighting/r-console");
     setprop("controls/lighting/r-console-norm", v/10);
-    if (getprop("/fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
+    if (getprop("fdm/jsbsim/systems/electrics/dc-main-bus-powered") and v > 0)
         setprop("controls/lighting/r-console-eff-norm", v/10);
     else
         setprop("controls/lighting/r-console-eff-norm", 0);

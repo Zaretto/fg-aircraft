@@ -115,6 +115,106 @@ display : func
 
 };
 
+var MPCD_Device =
+{
+    new : func(svg)
+    {
+		var obj = {parents : [MPCD_Device] };
+        obj.svg = svg;
+        obj.current_page = nil;
+        obj.pages = [];
+        obj.buttons = setsize([], 20);
+        # 4 sets of 5 buttons. this is hardcoded but then so is the device...
+        for(var idx = 0; idx < 20; idx += 1)
+        {
+            var label_name = sprintf("MI_%d",idx);
+            var msvg = obj.svg.getElementById(label_name);
+            if (msvg == nil)
+                printf("Failed to load  %s",label_name);
+            else
+            {
+                obj.buttons[idx] = msvg;
+                obj.buttons[idx].setText(sprintf("M",idx));
+            }
+        }
+#        for(var idx = 0; idx < size(obj.buttons); idx += 1)
+#        {
+#            printf("Button %d %s",idx,obj.buttons[idx]);
+#        }
+        return obj;
+    },
+    notifyButton : func(button_id)
+    {
+        #
+        #
+# by convention the buttons we have are 0 based; however externally 0 is used
+# to indicate no button pushed.
+        if (button_id > 0)
+        {
+            button_id = button_id - 1;
+            if (me.current_page != nil)
+            {
+#                printf("Button routing to %s",me.current_page.title);
+                me.current_page.notifyButton(button_id);
+            }
+        }
+    },
+    addPage : func(title, layer_id)
+    {
+        var np = MPCD_Page.new(title, layer_id, me);
+        append(me.pages, np);
+        np.setVisible(0);
+        return np;
+    },
+    update : func
+    {
+        if (me.current_page != nil)
+            me.current_page.update();
+    },
+    selectPage : func(p)
+    {
+        if (me.current_page != nil)
+            me.current_page.setVisible(0);
+        if (me.buttons != nil)
+        {
+            foreach(var mb ; me.buttons)
+                if (mb != nil)
+                    mb.setVisible(0);
+
+            foreach(var mi ; p.menus)
+            {
+#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
+                if (me.buttons[mi.menu_id] != nil)
+                {
+                    me.buttons[mi.menu_id].setText(mi.title);
+                    me.buttons[mi.menu_id].setVisible(1);
+                }
+                else
+                    printf("No corresponding item '%s'",mi.menu_id);
+            }
+        }
+        p.setVisible(1);
+        me.current_page = p;
+    },
+    updateMenus : func{
+            foreach(var mi ; me.current_page.menus)
+            {
+#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
+                if (me.buttons[mi.menu_id] != nil)
+                {
+                    me.buttons[mi.menu_id].setText(mi.title);
+                    me.buttons[mi.menu_id].setVisible(1);
+                }
+                else
+                    printf("No corresponding item '%s'",mi.menu_id);
+            }
+    },
+};
+
+#
+#
+#
+
 var MPCD_Station = {
 	new : func (svg, ident)
     {
@@ -222,102 +322,6 @@ var MPCD_Station = {
     },
 };
 
-var MPCD_Device =
-{
-    new : func(svg)
-    {
-		var obj = {parents : [MPCD_Device] };
-        obj.svg = svg;
-        obj.current_page = nil;
-        obj.pages = [];
-        obj.buttons = setsize([], 20);
-        # 4 sets of 5 buttons. this is hardcoded but then so is the device...
-        for(var idx = 0; idx < 20; idx += 1)
-        {
-            var label_name = sprintf("MI_%d",idx);
-            var msvg = obj.svg.getElementById(label_name);
-            if (msvg == nil)
-                printf("Failed to load  %s",label_name);
-            else
-            {
-                obj.buttons[idx] = msvg;
-                obj.buttons[idx].setText(sprintf("M",idx));
-            }
-        }
-#        for(var idx = 0; idx < size(obj.buttons); idx += 1)
-#        {
-#            printf("Button %d %s",idx,obj.buttons[idx]);
-#        }
-        return obj;
-    },
-    notifyButton : func(button_id)
-    {
-        #
-        #
-# by convention the buttons we have are 0 based; however externally 0 is used
-# to indicate no button pushed.
-        if (button_id > 0)
-        {
-            button_id = button_id - 1;
-            if (me.current_page != nil)
-            {
-#                printf("Button routing to %s",me.current_page.title);
-                me.current_page.notifyButton(button_id);
-            }
-        }
-    },
-    addPage : func(title, layer_id)
-    {
-        var np = MPCD_Page.new(title, layer_id, me);
-        append(me.pages, np);
-        np.setVisible(0);
-        return np;
-    },
-    update : func
-    {
-        if (me.current_page != nil)
-            me.current_page.update();
-    },
-    selectPage : func(p)
-    {
-        if (me.current_page != nil)
-            me.current_page.setVisible(0);
-        if (me.buttons != nil)
-        {
-            foreach(var mb ; me.buttons)
-                if (mb != nil)
-                    mb.setVisible(0);
-
-            foreach(var mi ; p.menus)
-            {
-#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
-                if (me.buttons[mi.menu_id] != nil)
-                {
-                    me.buttons[mi.menu_id].setText(mi.title);
-                    me.buttons[mi.menu_id].setVisible(1);
-                }
-                else
-                    printf("No corresponding item '%s'",mi.menu_id);
-            }
-        }
-        p.setVisible(1);
-        me.current_page = p;
-    },
-    updateMenus : func{
-            foreach(var mi ; me.current_page.menus)
-            {
-#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
-                if (me.buttons[mi.menu_id] != nil)
-                {
-                    me.buttons[mi.menu_id].setText(mi.title);
-                    me.buttons[mi.menu_id].setVisible(1);
-                }
-                else
-                    printf("No corresponding item '%s'",mi.menu_id);
-            }
-    },
-};
-
 var MPCD =  MPCD_Device.new(MPCDsvg);
 
 setlistener("sim/model/f15/controls/MPCD/button-pressed", func(v)
@@ -416,8 +420,8 @@ p1_2.addMenuItem(3, "CBT JETT", p1_3);
 p1_2.addMenuItem(4, "WPN LOAD", p1_3);
 p1_2.addMenuItem(9, "M", p1_1);
 
-p1_3.gun_rounds = p1_3.addMenuItem(1, sprintf("HIGH\n%dM",getprop("/sim/model/f15/systems/gun/rounds")), p1_3);
-setlistener("/sim/model/f15/systems/gun/rounds", func(v) {
+p1_3.gun_rounds = p1_3.addMenuItem(1, sprintf("HIGH\n%dM",getprop("sim/model/f15/systems/gun/rounds")), p1_3);
+setlistener("sim/model/f15/systems/gun/rounds", func(v) {
                 if (v != nil)
                 {
                     p1_3.gun_rounds.title = sprintf("HIGH\n%dM",v.getValue());

@@ -23,10 +23,13 @@
             if (!contains(globals, "f15_net"))
             {
                 print("LOAD F-15 mp network", self.getPath());
-                var fn_net = resolvepath("Nasal/mp-network.nas");
+                var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
 
                 if (io.stat(fn_net) == nil)
-                fn_net = resolvepath("/Aircraft/F-15/Nasal/mp-network.nas");
+                    fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+
+                if (io.stat(fn_net) == nil)
+                    fn_net = resolvepath("Aircraft/F-15/Nasal") ~ "/mp-network.nas";
 
                 if (io.stat(fn_net) == nil)
                 fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
