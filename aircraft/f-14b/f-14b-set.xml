@@ -3,19 +3,27 @@
 <PropertyList>
 
 	<sim>
+		
+		<description>Grumman F-14B</description>
+		<author>Richard Harrison, Enrique Laso - Alexis Bory</author>
+		<status>production</status>
 
-		<description>Grumman F-14B (yasim)</description>
-		<author>Enrique Laso, Alexis Bory, Richard Harrison</author>
-		<status>early production</status>
+		<tags>
+		    <tag>fighter</tag>
+		    <tag>jet</tag>
+            <tag>twin-engine</tag>
+            <tag>retractable-gear</tag>
+            <tag>ifr</tag>
+        </tags>
 		<rating>
-			<FDM type="int">3</FDM>
-			<systems type="int">3</systems>
+			<FDM type="int">5</FDM>
+			<systems type="int">5</systems>
 			<cockpit type="int">5</cockpit>
 			<model type="int">5</model>
 		</rating>
 
-		<flight-model>yasim</flight-model>
-		<aero>f-14b-yasim</aero>
+        <flight-model>jsb</flight-model>
+        <aero>f-14b</aero>
 		<fuel-fraction>0.1</fuel-fraction>
 
 		<systems>
@@ -30,7 +38,7 @@
 		<flight-recorder>
 			<replay-config type="int">0</replay-config>
 				<config n="0">
-				<name type="string">f-14b Flight Recorder</name>
+				<name type="string">f-14a Flight Recorder</name>
 				<signals include="/Aircraft/Generic/flightrecorder/components/environment.xml"/>
 				<signals include="/Aircraft/Generic/flightrecorder/components/position.xml"/>
 				<signals include="/Aircraft/Generic/flightrecorder/components/controls.xml"/>
@@ -93,7 +101,7 @@
 
 
 		<startup>
-			<splash-texture>Aircraft/f-14b/f-14b-splash.rgb</splash-texture>
+			<splash-texture>Aircraft/f-14b/f-14b-splash.jpg</splash-texture>
 		</startup>
 
 		<gui>
@@ -135,6 +143,10 @@
 				<name>E</name>
 				<desc>Decrease Radar Range</desc>
 			</key>
+   <key>
+    <name>o</name>
+    <desc>toggle arrester hook</desc>
+   </key>
 			<key>
 				<name>R</name>
 				<desc>Increase Radar Range</desc>
@@ -160,7 +172,7 @@
 				<name>a</name>
 				<desc>Toggle APC (Landing Automatic Power control)</desc>
 			</key>
-			<key>
+			<!--<key>
 				<name>Ctrl-d</name>
 				<desc>Toggle DLC (Landing Direct Lift Control)</desc>
 			</key>
@@ -171,7 +183,7 @@
 			<key>
 				<name>D</name>
 				<desc>DLC decrease</desc>
-			</key>
+			</key>-->
 			<key>
 				<name>Ctrl-t</name>
 				<desc>Toggle AFCS (Attitude Mode)</desc>
@@ -220,39 +232,56 @@
 				<name>Ctrl-v</name>
 				<desc>Back to Pilot's View or toggle Pilot's and RIO View.</desc>
 			</key>
-			<line>FUEL: First time you fly the f-14b, the tanks have a 10% level. When exiting, the fuel level will be stored for the next session. </line>
+			<key>
+				<name>&gt;</name>
+				<desc>Wing Sweep increase.</desc>
+			</key>
+			<key>
+				<name>&lt;</name>
+				<desc>Wing Sweep decrease.</desc>
+			</key>
+			<key>
+				<name>=</name>
+				<desc>Wing Sweep auto mode.</desc>
+			</key>
+			<key>
+				<name>Ctrl-v</name>
+				<desc>Back to Pilot's View or toggle Pilot's and RIO View.</desc>
+			</key>
 			<line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
 			<line>__________________________________________________</line>
-			<line>Take off:</line>
-			<line>Check fuel, Full Flaps, 100% rpm, rotation @ 150Kts. Depending on the grossweight, you will have to pull slightly on the stick in order to</line>
-			<line>keep a reasonable pitch.</line>
+            <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
+            <line>              Repeat procedure for L engine, you can use quickstart from the menu once you have fuel loaded.</line>
+			<line>Take off: MILthrust, rotate at 130-160Kts depending on configuration. Do not exceed 10 degrees of pitch</line>
 			<line>__________________________________________________</line>
 			<line>Autopilot:</line>
-			<line>The main mode is Attitude Hold Mode (Ctrl-t). Other Modes need this main mode activated before being selected. Switching off Attitude</line>
-			<line>Mode disables all other modes. When in Attitude Mode, the autopilot disengages whenever a certain pressure is put on the stick and it</line>
-			<line>reengages when the stick is back in the center position (Try hiting 5 on the numeric keyboard). Attitude Hold Mode will hold pitch</line>
-			<line>attitudes up to +/- 30° and bank angles up to +/- 60°. It shall be switched off for acrobatics and inverted flight...  and it is still</line>
-			<line>on beta test.</line>
+            <line>SAS: Pitch, Roll, Yaw damping controlled by AFCS STAB AUG switches underneath engine controls</line>
+            <line>     Yaw damper must be on over Mach 0.8; Roll damper usually off when maneouvering. All dampers only active at AOA less than +/- 15 deg</line>
+			<line>Main AFCS mode is Attitude Hold Mode (Ctrl-t). Other Modes need this main mode activated before being selected. Switching off Attitude Mode disables all other modes. </line>
+			<line>When in Attitude Mode, the autopilot disengages whenever a certain pressure is put on the stick and it reengages when the stick is back in the center position. Attitude Hold Mode will hold pitch</line>
+			<line>attitudes up to +/- 30&#x2103; and bank angles up to +/- 60&#x2103;;</line>
 			<line></line>
-			<line>Altitude Mode:</line>
-			<line>Once in Attitude Mode, you can select Altitude Mode by hitting Ctrl-a, then the AP REF indicator (left of the VDI) will illuminate, when</line>
-			<line>at the desired altitude (using normal stick control) engage by hitting * (star symbol). The autopilot will then maintain your altitude.</line>
-			<line>WARNING: at high speeds, it is imperative to stabilize the aircraft prior to engage Altitude Mode.</line>
+			<line>Altitude Mode (keyboard CTRL-A):</line>
+			<line>     Once in Attitude Mode the AP REF indicator (left of the VDI) illuminates engage at desired altitude keybaord  *. The autopilot will then maintain your altitude.</line>
 			<line></line>
 			<line>Heading Mode:</line>
-			<line>Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h. After manoeuvering the aircraft to the desired reference heading,</line>
-			<line>release the control stick at a bank angle of less than +/- 5°. The autopilot will then hold the aircraft on the desired Heading.</line>
+			<line>     Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h. After manoeuvering the aircraft to the desired reference heading,</line>
+			<line>     release the control stick at a bank angle of less than +/- 5°. The autopilot will then hold the aircraft on the desired Heading.</line>
 			<line></line>
-			<line>Autopilot need SAS channels to be engaged (which is the default). SAS Pitch and Roll channels may be disengaged by actuating switches</line>
-			<line>located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
-			<line>catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
+			<line>     Autopilot need SAS channels to be engaged (which is the default). SAS Pitch and Roll channels may be disengaged by actuating switches</line>
+			<line>     located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
+			<line>     catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
 			<line>__________________________________________________</line>
-			<line>Landing Automatic Power Control (APC) Operation:</line>
-			<line>The APC is a closed loop system that automaticaly regulates basic engine thrust to maintain the aircraft at an optimum approach angle of</line>
-			<line>attack for landing. Prior to engage APC, gear handle must be down with weight off wheels, and the throttles must be set between 98% and</line>
-			<line>68% rpm (as shown on the panel gauges). Type "a" to toggle the APC on/off. APC is also disengaged by setting the throttles to MIL (98% rpm)</line>
-			<line>or iddle (68% rpm) or raising the landig gear handle or when weight on wheels.</line>
-			<line>When disengaged the AUTO THROT caution light (on the left side of the HUD) illuminates for 10 seconds.</line>
+			<line>Automatic Power Control (APC) (keyboard "a" toggle):</line>
+			<line>     APC regulates engine thrust to maintain thean optimum approach angle of attack for landing. </line>
+			<line>     To engage APC, gear must be down, in air, throttles between 98% and 68% rpm (as shown on the panel gauges)</line>
+			<line>     Abnormal disengagement will cause the AUTO THROT caution light on the left side of the HUD to illuminate for 10 seconds.</line>
+			<line>__________________________________________________</line>
+			<line>Wing sweep</line>
+<line>     Wing sweep can be control automatically or manually with the CADC. When using manual control the auto control be</line>
+<line>     reactivated when CADC values require more sweep than is demanded by the pilot. Keys: "&gt;" "&lt;" manual sweep; '=' for</line>
+<line>     auto mode. The mode can be selected by clicking on the indicator on the gauge and position by using the mouse wheel over</line>
+<line>     the indicator</line>
 			<line>__________________________________________________</line>
 			<line>VHF: Located on the RIO's left console, 3 bands: 30-88 Mhz, 108-174 Mhz, 225-400 Mhz. Modes TR and TR-G set COMM1. Mode DF sets NAV1,</line>
 			<line>that is Direction Finder displayed with the single needle in both BDHIs. You have Comm *or* DF. Storing frequencies (up to 20 channels) a- PRESET</line>
@@ -289,7 +318,7 @@
 					<blue type="float">0.0</blue>
 				</color>
 			</palette>
-            <extended-mode>1</extended-mode>
+            <extended-mode type="bool">true</extended-mode>
             <font>
                 <size>7</size>
             </font>
@@ -303,35 +332,35 @@
 
 		<model>
 			<path>Aircraft/f-14b/Models/f-14b.xml</path>
-		<livery>
+			<livery>
 			<name type="string">nasa</name>
-			<index type="int">0</index>
+				<index type="int">0</index>
 			<texture>Liveries/side1.nasa.png</texture>
-		</livery>
+			</livery>
 
-		<livery-side2>
+			<livery-side2>
 			<name type="string">nasa</name>
-			<index type="int">0</index>
+				<index type="int">0</index>
 			<texture>Liveries/side2.nasa.png</texture>
-		</livery-side2>
+			</livery-side2>
 
-		<livery-topbottom1>
+			<livery-topbottom1>
 			<name type="string">nasa</name>
-			<index type="int">0</index>
+				<index type="int">0</index>
 			<texture>Liveries/topbottom1.nasa.png</texture>
-		</livery-topbottom1>
+			</livery-topbottom1>
 
-		<livery-topbottom2>
+			<livery-topbottom2>
 			<name type="string">nasa</name>
-			<index type="int">0</index>
+				<index type="int">0</index>
 			<texture>Liveries/topbottom2.nasa.png</texture>
-		</livery-topbottom2>
+			</livery-topbottom2>
 
-		<livery-patch>
+			<livery-patch>
 			<name type="string">nasa</name>
-			<index type="int">0</index>
+				<index type="int">0</index>
 			<texture>Liveries/patch.nasa.png</texture>
-		</livery-patch>
+			</livery-patch>
 
 			<f-14b>
 				<controls>
@@ -377,7 +406,7 @@
 						<tanks-ground-sound type="bool">0</tanks-ground-sound>
 					</armament>
 					<fuel>
-						<bingo type="int">11500</bingo>
+						<bingo type="int">4500</bingo>
 						<dump-switch type="bool">false</dump-switch>
 						<feed-guard-lever type="bool">false</feed-guard-lever>
 						<qty-sel-switch type="int">0</qty-sel-switch>
@@ -456,7 +485,7 @@
 						</frequencies>
 						<preset type="int">0</preset>
 						<presets>
-							<frequency n="0" type="double">115.80</frequency><!-- KSFO ATIS VOR-DME-->
+							<frequency n="0" type="double">115.80</frequency><!-- KSFO ATIS VOR-DME--> 
 							<frequency n="1" type="double">120.50</frequency><!-- KSFO TWR -->
 							<frequency n="2" type="double">124.17</frequency><!-- KNUQ ATIS -->
 							<frequency n="3" type="double">119.55</frequency><!-- KNUQ TWR -->
@@ -518,15 +547,15 @@
 						<!--<selected-channel type="int">1</selected-channel>-->
 					</an-arc-159v1>
 					<aoa-indexer>
-						<!-- target was 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
+						<!-- target = 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
                         <!-- F-14AAD-1 Figure 2-124; Angle-of-Attack Displays -->
 
-						<fast-deg-end>12</fast-deg-end>			
-						<optimum-deg-end>13.3</optimum-deg-end>		
-						<optimum-deg-start>11.3</optimum-deg-start>
-						<slow-deg-start>13.1</slow-deg-start>
+						<fast-deg-end>14.5</fast-deg-end>			
+						<optimum-deg-end>15.5</optimum-deg-end>		
+						<optimum-deg-start>14.5</optimum-deg-start>
+						<slow-deg-start>15.5</slow-deg-start>
 
-                        <target-deg>11.3</target-deg>		<!-- target (AFCS)-->
+                        <target-deg>15</target-deg>		<!-- target (AFCS)-->
 
 					</aoa-indexer>
 					<acls>
@@ -600,7 +629,7 @@
 							<fov-deg type="int">25</fov-deg>                     <!-- seeker optical FOV -->
 							<detection-fov-deg type="int">60</detection-fov-deg> <!-- Search pattern diameter (rosette scan) -->
 							<track-max-deg type="int">110</track-max-deg>        <!-- Seeker max total angular rotation -->
-							<max-g type="int">21</max-g>                         <!-- In turn -->
+							<max-g type="int">21</max-g>                         <!-- In turn --> 
 							<thrust-lbs type="double">230</thrust-lbs>           <!-- guess -->
 							<thrust-duration-sec type="int">30</thrust-duration-sec><!-- Mk.36 Mod.7,8 -->
 							<weight-launch-lbs>191</weight-launch-lbs>
@@ -737,6 +766,7 @@
 				<wings>
 					<left-wing-torn type="bool">false</left-wing-torn>
 					<right-wing-torn type="bool">false</right-wing-torn>
+                    <damage-enabled type="bool">false</damage-enabled>
 				</wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
@@ -744,6 +774,7 @@
                 <overrides>
                     <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
                     <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
+<!--                    <init-delay type="int">0.1</init-delay> -->
                 </overrides>
 			</f-14b>
 		</model>
@@ -757,12 +788,11 @@
 				<float n="4">0</float><!-- left elevator  -->
 				<float n="5">0</float><!-- right elevator -->
 				<float n="6">0</float><!-- refuel probe   -->
-                <float n="8" alias="/engines/engine[0]/augmentation-burner" />
-                <float n="9" alias="/engines/engine[1]/augmentation-burner" />
-                <float n="10" alias="/engines/engine[0]/nozzle-pos-norm" />
-                <float n="11" alias="/engines/engine[1]/nozzle-pos-norm" />
-
-				<int n="0" type="int">0</int>    <!-- fuel dump      -->
+                <float n="8">0</float><!-- /engines/engine[0]/augmentation-burner" -->
+                <float n="9">0</float><!-- /engines/engine[1]/augmentation-burner" -->
+                <float n="10">0</float><!-- /fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" -->
+                <float n="11">0</float><!-- /fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" -->
+                <int n="0" type="int">0</int>    <!-- fuel dump      -->
 				<int n="1" type="int">0</int>    <!-- formation slimmers -->
 				<int n="2" type="int">0</int>    <!-- radar-standby -->
 				<int n="3" type="int">0</int>    <!-- collision lights -->
@@ -770,12 +800,12 @@
 				<int n="5" type="int">0</int>    <!-- left wing torn -->
 				<int n="6" type="int">0</int>    <!-- right wing torn -->
 				<int n="7" type="int">0</int>    <!-- external weapons layout and pylons details -->
-                <int n="8" alias="/engines/engine[0]/afterburner-stage" />
-                <int n="9" alias="/engines/engine[1]/afterburner-stage" />
 				<string n="0" type="string"></string>       <!-- mp-network -->
 				<string n="1" type="string">xxx</string>    <!-- instruments -->
 				<!-- <string n="2" type="string">50</string>      free -->
 			</generic>
+            <!-- set default aircaft model to us; I find it hard to see the glider. -->
+            <!--<default-model>Aircraft/f-14b/Models/f14.ac</default-model>-->
 		</multiplay>
 
 		<rendering>
@@ -932,7 +962,7 @@
 				<y-offset-m archive="y">0.43</y-offset-m>
 				<z-offset-m archive="y">-3.58</z-offset-m>
 				<pitch-offset-deg>-23</pitch-offset-deg>
-				<default-field-of-view-deg>55</default-field-of-view-deg>
+				<default-field-of-view-deg>90</default-field-of-view-deg>
 				<limits>
 					<enabled type="bool">true</enabled>
 					<left>
@@ -983,11 +1013,23 @@
 		</weight>
 
 	</sim>
+    <environment>
+        <aircraft-effects>
+            <overlay-alpha type="float">0.45</overlay-alpha>
+            <use-overlay type="bool">1</use-overlay>
+        </aircraft-effects>
+    </environment>
+ <fdm>
+  <jsbsim>
+   <systems>
+    <hook>
+     <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
+    </hook>
+   </systems>
+  </jsbsim>
+ </fdm>
 
 	<systems>
-		<electrical>
-			<path>Aircraft/f-14b/Systems/f-14b-electrical.xml</path>
-		</electrical>
 		<refuel>
 			<type>probe</type>
 			<serviceable type="bool">true</serviceable>
@@ -997,6 +1039,21 @@
 			<offset-z-m>0.04</offset-z-m>
 		</refuel>
 	</systems>
+
+    <limits>
+        <mass-and-balance>
+            <!-- Reference: https://en.wikipedia.org/wiki/Grumman_F-14_Tomcat#Specifications_.28F-14D.29 -->
+            <maximum-takeoff-mass-lbs>74350</maximum-takeoff-mass-lbs>
+        </mass-and-balance>
+
+        <vne>850</vne>
+
+        <max-gear-extension-speed>300</max-gear-extension-speed>
+        <max-flap-extension-speed>
+            <flaps>0.4857142857142857</flaps>
+            <speed>245</speed>
+        </max-flap-extension-speed>
+    </limits>
 
 	<consumables>
 		<fuel>
@@ -1056,7 +1113,9 @@
 	</consumables>
 
 	<controls>
-		<armament>
+        <windshield-heat type="int">1</windshield-heat>
+
+        <armament>
 			<trigger type="bool">false</trigger>
 		</armament>
 		<lighting>
@@ -1086,18 +1145,18 @@
             <console-blue type="double">0.161</console-blue>
 
 
-		</lighting>
-		<flight>
+        </lighting>
+        <flight>
 			<ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
 			<fake>0.0</fake>
 			<DLC-engaged type="bool">false</DLC-engaged>
 		</flight>
 		<gear>
 			<!-- Start with the Parking Brake on -->
-			<brake-parking type="double">1.0</brake-parking>
+<!--			<brake-parking type="double">1.0</brake-parking> -->
 		</gear>
    
-	</controls>
+    </controls>
 
 	<engines>
 		<engine n="0">
@@ -1109,9 +1168,53 @@
 	</engines>
 
 	<input>
-		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml">
+<!--		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml"> -->
+		<keyboard n="0" >
 			<multikey include="Systems/instruments-multikey.xml"/>
 
+ <!-- map keys for launch-bar -->
+ <key n="76">
+   <name>L</name>
+   <desc>Launch-bar engage.</desc>
+<binding>
+					<command>nasal</command>
+					<script>
+if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+{
+print("Disengage launchbar");
+setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+setprop("/controls/gear/brake-parking",1);
+}
+else
+{
+print("Engage launchbar");
+setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
+setprop("/controls/gear/brake-parking",0);
+}
+					</script>
+				</binding>
+ </key>
+ <!-- map keys for catapult launch -->
+ <key n="67">
+   <name>C</name>
+   <desc>Catapult Launch Command.</desc>
+<binding>
+					<command>nasal</command>
+					<script>
+if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+{
+print("Catapult launch");
+setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
+setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+}
+else
+{
+}
+					</script>
+				</binding>
+ </key>
 			<key n="1">
 				<name>CTRL-a</name>
 				<desc>Toggle autopilot altitude mode.</desc>
@@ -1208,11 +1311,35 @@
 				<binding>
 					<command>nasal</command>
 					<script>
-					var wow = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
-					if (! wow) {
+					if (! f14.wow) {
 						f14_afcs.afcs_engage_selected_mode()
 					}
 					</script>
+				</binding>
+			</key>
+
+			<key n="60">
+				<name>&lt;</name>
+				<desc>Decrease Sweep</desc>
+				<binding>
+					<command>nasal</command>
+					<script>f14.move_wing_sweep(-1)</script>
+				</binding>
+			</key>
+			<key n="61">
+				<name>=</name>
+				<desc>Wing Sweep Automatic</desc>
+				<binding>
+					<command>nasal</command>
+					<script>f14.set_sweep(0)</script>
+				</binding>
+			</key>
+			<key n="62">
+				<name>&gt;</name>
+				<desc>Increase Sweep</desc>
+				<binding>
+					<command>nasal</command>
+					<script>f14.move_wing_sweep(1)</script>
 				</binding>
 			</key>
 
@@ -1318,6 +1445,14 @@
 				</binding>
 			</key>
 
+    <key n="111">
+     <name>o</name>
+     <desc>Toggle arrester hook</desc>
+     <binding>
+      <command>property-toggle</command>
+      <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+     </binding>
+    </key>
 			<key n="113">
 				<name>q</name>
 				<desc>Toggle radar standby mode</desc>
@@ -1404,6 +1539,9 @@
 		<aar>
 			<file>Aircraft/Generic/aar.nas</file>
 		</aar>
+        <limits>
+			<file>Aircraft/Generic/limits.nas</file>
+        </limits>
 		<radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
 		</radardist>
