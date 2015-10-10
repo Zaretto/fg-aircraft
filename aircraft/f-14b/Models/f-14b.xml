@@ -9,6 +9,7 @@
 <!-- ******************************************************************* -->
 	<nasal>
 		<load>
+        <![CDATA[ 
 			var self = cmdarg();
 			print("LOAD f-14b ", self.getPath());
 
@@ -21,23 +22,26 @@
 			# f14_net handles broadcast of:
 			#   - external load set.
 			if (!contains(globals, "f14_net")) {
-            var fn_net = resolvepath("Nasal/mp-network.nas");
+            var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
             
             if (io.stat(fn_net) == nil)
-            fn_net = resolvepath("/Aircraft/f-14b/Nasal/mp-network.nas");
-            
+                fn_net = resolvepath("Aircraft/f-14b/Nasal") ~ "/mp-network.nas";
+
             if (io.stat(fn_net) == nil)
             fn_net = getprop("/sim/fg-root") ~ "/Aircraft/f-14b/Nasal/mp-network.nas";
 
+            print("Loading F-14 mp network from ",fn_net);
             io.load_nasal(fn_net, "f14_net");
 				f14_net.mp_network_init(0);
 			}
+        ]]>
 		</load>
-
 		<unload>
+        <![CDATA[ 
 			print("UNLOAD f-14b ", self.getPath());
 			cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
 			livery_update.stop();
+        ]]>
 		</unload>
 	</nasal>
 
