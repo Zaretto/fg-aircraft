@@ -67,78 +67,67 @@ controls.applyBrakes = func(v, which = 0)  {
         setprop("controls/flight/speedbrake", v);
     }
 }
-# Hijack the generic flaps command so joystick flap command works
-# for the F-14 too. 
-controls.flapsDown = func(s) {
-	if (s == 1) {
-		lowerFlaps();
-	} elsif (s == -1) {
-		raiseFlaps();
-	} else {
-		return;
-	}
-}
 
 
-var lowerFlaps = func {
-    var flaps_cmd = FlapsCmd.getValue();
-    var demandedFlaps = 0;
-
-	if (usingJSBSim)
-    {
-		if (flaps_cmd < 0.5)
-        {
-			demandedFlaps = 0.5;
-        }
-		else if (flaps_cmd < 1)
-        {
-            demandedFlaps = flaps_cmd + flapDemandIncrement;
-        }
-        else
-        {
-			demandedFlaps = 1.0;
-        }
-
-        FlapsCmd.setValue(demandedFlaps);
-        setprop("controls/flight/flapscommand", demandedFlaps);
-    }
-    else
-    {
-    	if ( WingSweep < maxSweepAuxFlaps and FlapsCmd.getValue() < 1 ) 
-        {
-	    	FlapsCmd.setValue(1); # Landing.
-        }
-    }
-    print("F14: lower flaps ",demandedFlaps," ",WingSweep);
-}
-
-var raiseFlaps = func {
-    var flaps_cmd = FlapsCmd.getValue();
-    var demandedFlaps = flaps_cmd;
-    if (usingJSBSim)
-    {
-
-        if (flaps_cmd > 0.5)
-            demandedFlaps = flaps_cmd - flapDemandIncrement;
-        else
-            demandedFlaps = 0; # Clean.
-
-        FlapsCmd.setValue(demandedFlaps); 
-        DLCactive = false;
-        DLC_Engaged.setBoolValue(0);
-
-        print("F14: raise flaps ",demandedFlaps);
-
-        setprop("controls/flight/flapscommand", demandedFlaps);
-    }
-    else
-    {
-        if ( FlapsCmd.getValue() > 0 ) {
-            FlapsCmd.setValue(0); # Clean.
-        }
-    }
-    setprop("controls/flight/DLC", 0);
-}
+#var lowerFlaps = func {
+#    var flaps_cmd = FlapsCmd.getValue();
+#    var demandedFlaps = 0;
+#
+#	if (usingJSBSim)
+#    {
+#		if (flaps_cmd < 0.5)
+#        {
+#			demandedFlaps = 0.5;
+#        }
+#		else if (flaps_cmd < 1)
+#        {
+#            demandedFlaps = flaps_cmd + flapDemandIncrement;
+#        }
+#        else
+#        {
+#			demandedFlaps = 1.0;
+#        }
+#
+#        FlapsCmd.setValue(demandedFlaps);
+#        setprop("controls/flight/flapscommand", demandedFlaps);
+#    }
+#    else
+#    {
+#    	if ( WingSweep < maxSweepAuxFlaps and FlapsCmd.getValue() < 1 ) 
+#        {
+#	    	FlapsCmd.setValue(1); # Landing.
+#        }
+#    }
+#    print("F14: lower flaps ",demandedFlaps," ",WingSweep);
+#}
+#
+#var raiseFlaps = func {
+#    var flaps_cmd = FlapsCmd.getValue();
+#    var demandedFlaps = flaps_cmd;
+#    if (usingJSBSim)
+#    {
+#
+#        if (flaps_cmd > 0.5)
+#            demandedFlaps = flaps_cmd - flapDemandIncrement;
+#        else
+#            demandedFlaps = 0; # Clean.
+#
+#        FlapsCmd.setValue(demandedFlaps); 
+#        DLCactive = false;
+#        DLC_Engaged.setBoolValue(0);
+#
+#        print("F14: raise flaps ",demandedFlaps);
+#
+#        setprop("controls/flight/flapscommand", demandedFlaps);
+#    }
+#    else
+#    {
+#        if ( FlapsCmd.getValue() > 0 ) {
+#            FlapsCmd.setValue(0); # Clean.
+#        }
+#    }
+#    setprop("controls/flight/DLC", 0);
+#}
 
 var computeFlaps = func {
 
