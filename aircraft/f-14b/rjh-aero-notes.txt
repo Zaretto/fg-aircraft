@@ -2,8 +2,7 @@
 F14 Aero notes: (rjh@zaretto.com)
 
 Estimated
-* All negative alpha values have been estimated; generally using NASA CR-1756 747-100 (Boeing D6039643 VolII) and data from F15 (flightgear Erik Hofman) been used as a guide and to calculate typical coefficient increments where no data is available; so for flaps I've taken the 747 coefficient increments; scaled them accordingly (for flap angle and a slight tuning factor) to get values that I think are applicable for an F14. Also 
-* Flap increments
+* All negative alpha values have been estimated; generally using NASA CR-1756 747-100 (Boeing D6039643 VolII) and data from F15 (flightgear Erik Hofman) been used as a guide and to calculate typical coefficient increments where no data is available; so for flaps I've taken the 747 coefficient increments; scaled them accordingly (for flap angle and a slight tuning factor) to get values that I think are applicable for an F14. * Flap increments
 * Gear increments
 * Speedbrake.
 * Stores coefficients
@@ -11,10 +10,19 @@ Estimated
 * Slats based on (Cl,Cd,CM)  - based loosely on adg.stanford.edu/aa241/highlift/clmaxest.html with some tuning and guesstimation
 * Mach number affects are applied as a simple factor (based on Cl value differences) and applied to all forces/moments. This doesn't accurately model the transonic region and probably isn't accurate for each invdividual coefficient group but until I find some more data it is all I've got to work with.
 * Ground spoilers use estimated and tuned values.
+* Spoilers are aerodynamically modelled for Lift,Drag,Roll. Differential spoilers are used below wingsweep of 57degrees to augment the roll performance. The spoilers are currently modelled per wing surface, whereas the aircraft can deploy these in pairs per wing, which is used for DLC (the inboard spoilers are used to control descent/ascent, and the outboard spoilers are used for roll). This model is as per AFC 735, i.e. engaging DLC uses the inboard two spoilers for descent control, prior to AFC 735 all spoilers were used for DLC, however two spoilers moving full deflection was found to be more effective than the four spoilers going to 17 degrees, which is why it was changed in AFC 735 (see http://www.bobistheoilguy.com/forums/ubbthreads.php/topics/3867303/Re:_F-14_Questions_Answered_-_#Post3867303)
 
 Things that are definitely missing;
 * PQR Cross coupling (CNP, CNR etc) effects does not take into account flap deflection
-* Spoilers; the original F14b model has visual representation of these moving due to aileron deflection - I'm not sure if this is correct or how it is modelled in terms of the data that I have from the original report so I will leave in-air deflection of spoilers with no aerodynamic effect on the assumption that it is already in the coefficients.
 
 
+The YASim model was removed October, 2015 to allow for the correct JSBSim model names (and also because the YASim was becoming more time consuming to support and a consensus was achieved with consultation (xii,flying_toaster,Richard) that it could be removed)
 
+---------------------------------------
+F-14A (TF-30) October, 2015
+
+The F-14B JSBSim version that was using the f-14a aircraft name is now f-14b (YASim version removed).
+
+The new F-14A JSBSim has the TF-30 engines fitted. As part of this change a basic compressor stall model was added (as these engines are famous for this). The model attempts to follow the documentation in the released MIR (Lt. Hultgreen, F-14A) and information in NATOPS.
+
+A compressor stall or surge is basically a difference in pressures between the LPC and HPC usually caused or related to disruptions in the axial flow. To model this I've added P0(alpha,beta) (we already had PB (which is more like P8 or P12)) and DP3(N1) (based on the UH-1 Blackwhawk gas generator model). These are then used together with some constants to come up with a model that will likely induce a compressor stall below 80% N1 (as per NATOPS) at alpha starting >5 degrees, beta > 0 degrees, with a lag filter to fudge the lack of different HPC/LPC speeds (the JSBSim turbine model does not use gasgen so as such the HPC/LPC will always follow each other which requires a this fudge). 
