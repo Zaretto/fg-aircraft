@@ -156,157 +156,7 @@ namespace F14AeroPlot
                         if (!aero.IsUsed(aero_element))
                             writer.Write("    <!--\n");
 
-                        if (aero.Is3d(aero_element))
-                        {
-
-                            writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
-                            writer.Write("    <description>{0}</description>\n", aerodat_item.Title);
-                            if (aero_element.Components.Any())
-                            {
-                                writer.Write("    <sum>\n");
-                                foreach (var c in aero_element.Components)
-                                    writer.Write("    <property>{0}</property>\n",c);
-                            }
-
-                            writer.Write("    <product>\n");
-                            OutputExtraIndependentVariables(aero, writer, aero_element);
-                            writer.Write("          <table>\n");
-                            writer.Write("            <independentVar lookup=\"row\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[0]));
-                            writer.Write("            <independentVar lookup=\"column\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[1]));
-                            writer.Write("            <independentVar lookup=\"table\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[2]));
-                            var table_data_element = aero_element.data.GroupBy(xx => xx.iv3).Select(xx => new { Key = xx.Key, Values = xx });
-                            foreach (var table in table_data_element)
-                            {
-                                writer.Write("              <tableData breakPoint=\"{0}\">", table.Key);
-                                var leading = "                 ";
-                                var aero_data_element = table.Values.GroupBy(xx => xx.iv1).Select(xx => new { Key = xx.Key, Values = xx });
-
-                                writer.Write("\n" + leading);
-                                writer.Write("{0,6}"," ");
-                                foreach (var iv2 in aero_data_element.First().Values)
-                                {
-                                    writer.Write(FormatIntValue(iv2.iv2,10));
-                                }
-
-
-                                foreach (var iv1 in aero_data_element)
-                                {
-                                    writer.Write("\n" + leading);
-                                    writer.Write(FormatIntValue(iv1.Key,6));
-
-                                    foreach (var vv in iv1.Values)
-                                    {
-                                        writer.Write(FormatValue(vv.Value,10));
-                                    }
-                                }
-                                writer.Write("\n              </tableData>\n");
-                            }
-                            writer.Write("          </table>\n");
-                            writer.Write("       </product>\n");
-                            if (aero_element.Components.Any())
-                            {
-                                writer.Write("    </sum>\n");
-                            }
-                            writer.Write("    </function>\n");
-
-                            //                      writer.Write("<pre>\n");
-
-                        }
-                        else if (aero.Is2d(aero_element))
-                        {
-                            //                          writer.Write("<h2>{0}</h2>", aero_element);
-                            //                          writer.Write("<pre>\n");
-
-                            writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
-                            writer.Write("    <description>{0}</description>\n", aerodat_item.Title);
-                            if (aero_element.Components.Any())
-                            {
-                                writer.Write("    <sum>\n");
-                                foreach (var c in aero_element.Components)
-                                    writer.Write("    <property>{0}</property>\n",c);
-                            }
-                            writer.Write("    <product>\n");
-                            OutputExtraIndependentVariables(aero, writer, aero_element);
-                            writer.Write("          <table>\n");
-                            writer.Write("            <independentVar lookup=\"row\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[0]));
-                            writer.Write("            <independentVar lookup=\"column\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[1]));
-                            writer.Write("            <tableData>");
-                            var leading = "                 ";
-                            var aero_data_element = aero_element.data.GroupBy(xx => xx.iv1).Select(xx => new { Key = xx.Key, Values = xx });
-
-                            writer.Write("\n" + leading);
-                            writer.Write("       ");
-                            foreach (var iv2 in aero_data_element.First().Values)
-                            {
-                                writer.Write(" {0,10}\t", iv2.iv2);
-                            }
-
-
-                            foreach (var iv1 in aero_data_element)
-                            {
-                                writer.Write("\n{0}{1}", leading, FormatIntValue(iv1.Key, 6));
-                                foreach (var vv in iv1.Values)
-                                {
-                                           writer.Write(FormatValue(vv.Value,10));
-                                }
-                            }
-                            writer.Write("\n            </tableData>\n");
-                            writer.Write("          </table>\n");
-                            writer.Write("       </product>\n");
-                            if (aero_element.Components.Any())
-                            {
-                                writer.Write("    </sum>\n");
-                            }
-                            writer.Write("    </function>\n");
-
-                            //                      writer.Write("<pre>\n");
-                        }
-                        else if (aero_element.IndependentVars.Count == 1)
-                        {
-
-                            var aero_data_element = aero_element.data.Select(xx => new { Key = xx.iv1, Value = xx.Value });
-                            if (aero_data_element != null)
-                                if (aero_data_element != null)
-                                {
-                                    //                        writer.Write("<h2>{0}</h2>", aero_element);
-                                    //                        writer.Write("<pre>\n");
-
-                                    writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
-                                    writer.Write("    <description>{0}</description>\n", aero_element.Title);
-                                    if (aero_element.Components.Any())
-                                    {
-                                        writer.Write("    <sum>\n");
-                                        foreach (var c in aero_element.Components)
-                                            writer.Write("    <property>{0}</property>\n",c);
-                                    }
-                                    writer.Write("    <product>\n");
-                                    OutputExtraIndependentVariables(aero, writer, aero_element);
-                                    writer.Write("          <table>\n");
-                                    writer.Write("            <independentVar lookup=\"row\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[0]));
-                                    writer.Write("            <tableData>\n");
-                                    var leading = "                 ";
-                                    foreach (var q in aero_data_element)
-                                    {
-                                        writer.Write("{0}{1}\t{2}\n", leading, FormatIntValue(q.Key,6), FormatValue(q.Value,10));
-                                    }
-                                    writer.Write("            </tableData>\n");
-                                    writer.Write("          </table>\n");
-                                    writer.Write("       </product>\n");
-                                    if (aero_element.Components.Any())
-                                    {
-                                        writer.Write("    </sum>\n");
-                                    }
-                                    writer.Write("    </function>\n");
-                                    //                        writer.Write("<pre>\n");
-                                }
-                        }
-                        else
-                        {
-                            writer.Write("    <!-- cannot handle {0} -->", aero_element.Variable);
-                        }
-
-                        if (!aero.IsUsed(aero_element))
-                            writer.Write("    -->\n");
+                        WriteFunctionDataToWriter(aero, writer, aero_element, aerodat_item);
                     }
                 }
 
@@ -345,6 +195,161 @@ namespace F14AeroPlot
                 writer.Write("</fdm_config>");
             }
 //            writer.Write("</pre>\n");
+        }
+
+        private void WriteFunctionDataToWriter(Aerodata aero, HtmlTextWriter writer, DataElement aero_element, DataElement aerodat_item)
+        {
+            if (aero.Is3d(aero_element))
+            {
+
+                writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
+                writer.Write("    <description>{0}</description>\n", aerodat_item.Title);
+                if (aero_element.Components.Any())
+                {
+                    writer.Write("    <sum>\n");
+                    foreach (var c in aero_element.Components)
+                        writer.Write("    <property>{0}</property>\n", c);
+                }
+
+                writer.Write("    <product>\n");
+                OutputExtraIndependentVariables(aero, writer, aero_element);
+                writer.Write("          <table>\n");
+                writer.Write("            <independentVar lookup=\"row\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[0]));
+                writer.Write("            <independentVar lookup=\"column\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[1]));
+                writer.Write("            <independentVar lookup=\"table\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[2]));
+                var table_data_element = aero_element.data.GroupBy(xx => xx.iv3).Select(xx => new { Key = xx.Key, Values = xx });
+                foreach (var table in table_data_element)
+                {
+                    writer.Write("              <tableData breakPoint=\"{0}\">", table.Key);
+                    var leading = "                 ";
+                    var aero_data_element = table.Values.GroupBy(xx => xx.iv1).Select(xx => new { Key = xx.Key, Values = xx });
+
+                    writer.Write("\n" + leading);
+                    writer.Write("{0,6}", " ");
+                    foreach (var iv2 in aero_data_element.First().Values)
+                    {
+                        writer.Write(FormatIntValue(iv2.iv2, 10));
+                    }
+
+
+                    foreach (var iv1 in aero_data_element)
+                    {
+                        writer.Write("\n" + leading);
+                        writer.Write(FormatIntValue(iv1.Key, 6));
+
+                        foreach (var vv in iv1.Values)
+                        {
+                            writer.Write(FormatValue(vv.Value, 10));
+                        }
+                    }
+                    writer.Write("\n              </tableData>\n");
+                }
+                writer.Write("          </table>\n");
+                writer.Write("       </product>\n");
+                if (aero_element.Components.Any())
+                {
+                    writer.Write("    </sum>\n");
+                }
+                writer.Write("    </function>\n");
+
+                //                      writer.Write("<pre>\n");
+
+            }
+            else if (aero.Is2d(aero_element))
+            {
+                //                          writer.Write("<h2>{0}</h2>", aero_element);
+                //                          writer.Write("<pre>\n");
+
+                writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
+                writer.Write("    <description>{0}</description>\n", aerodat_item.Title);
+                if (aero_element.Components.Any())
+                {
+                    writer.Write("    <sum>\n");
+                    foreach (var c in aero_element.Components)
+                        writer.Write("    <property>{0}</property>\n", c);
+                }
+                writer.Write("    <product>\n");
+                OutputExtraIndependentVariables(aero, writer, aero_element);
+                writer.Write("          <table>\n");
+                writer.Write("            <independentVar lookup=\"row\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[0]));
+                writer.Write("            <independentVar lookup=\"column\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[1]));
+                writer.Write("            <tableData>");
+                var leading = "                 ";
+                var aero_data_element = aero_element.data.GroupBy(xx => xx.iv1).Select(xx => new { Key = xx.Key, Values = xx });
+
+                writer.Write("\n" + leading);
+                writer.Write("       ");
+                foreach (var iv2 in aero_data_element.First().Values)
+                {
+                    writer.Write(" {0,10}\t", iv2.iv2);
+                }
+
+
+                foreach (var iv1 in aero_data_element)
+                {
+                    writer.Write("\n{0}{1}", leading, FormatIntValue(iv1.Key, 6));
+                    foreach (var vv in iv1.Values)
+                    {
+                        writer.Write(FormatValue(vv.Value, 10));
+                    }
+                }
+                writer.Write("\n            </tableData>\n");
+                writer.Write("          </table>\n");
+                writer.Write("       </product>\n");
+                if (aero_element.Components.Any())
+                {
+                    writer.Write("    </sum>\n");
+                }
+                writer.Write("    </function>\n");
+
+                //                      writer.Write("<pre>\n");
+            }
+            else if (aero_element.IndependentVars.Count == 1)
+            {
+
+                var aero_data_element = aero_element.data.Select(xx => new { Key = xx.iv1, Value = xx.Value });
+                if (aero_data_element != null)
+                    if (aero_data_element != null)
+                    {
+                        //                        writer.Write("<h2>{0}</h2>", aero_element);
+                        //                        writer.Write("<pre>\n");
+
+                        writer.Write("    <function name=\"{0}\">\n", aerodat_item.GetVariable());
+                        writer.Write("    <description>{0}</description>\n", aero_element.Title);
+                        if (aero_element.Components.Any())
+                        {
+                            writer.Write("    <sum>\n");
+                            foreach (var c in aero_element.Components)
+                                writer.Write("    <property>{0}</property>\n", c);
+                        }
+                        writer.Write("    <product>\n");
+                        OutputExtraIndependentVariables(aero, writer, aero_element);
+                        writer.Write("          <table>\n");
+                        writer.Write("            <independentVar lookup=\"row\">{0}</independentVar>\n", aero.Lookup(aero_element.IndependentVars[0]));
+                        writer.Write("            <tableData>\n");
+                        var leading = "                 ";
+                        foreach (var q in aero_data_element)
+                        {
+                            writer.Write("{0}{1}\t{2}\n", leading, FormatIntValue(q.Key, 6), FormatValue(q.Value, 10));
+                        }
+                        writer.Write("            </tableData>\n");
+                        writer.Write("          </table>\n");
+                        writer.Write("       </product>\n");
+                        if (aero_element.Components.Any())
+                        {
+                            writer.Write("    </sum>\n");
+                        }
+                        writer.Write("    </function>\n");
+                        //                        writer.Write("<pre>\n");
+                    }
+            }
+            else
+            {
+                writer.Write("    <!-- cannot handle {0} -->", aero_element.Variable);
+            }
+
+            if (!aero.IsUsed(aero_element))
+                writer.Write("    -->\n");
         }
 
         private string prettify(XmlDocument doc)
