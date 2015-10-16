@@ -48,6 +48,7 @@ setprop("sim/model/f-14b/controls/electrics/l-gen-switch",1);
 setprop("sim/model/f-14b/controls/electrics/r-gen-switch",1);
 
 var dlg_ground_services  = gui.Dialog.new("dialog[2]","Aircraft/f-14b/Dialogs/ground-services.xml");
+var dlg_malfunctions  = gui.Dialog.new("dialog[3]","Aircraft/f-14b/Dialogs/malfunctions.xml");
 
 if(!usingJSBSim)
 {
