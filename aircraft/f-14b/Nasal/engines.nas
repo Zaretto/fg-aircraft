@@ -167,6 +167,8 @@ var computeNozzles = func {
 #        gui.popupTip("Compressor stall "~comp_stall_message);
 
         }
+       setprop("sim/multiplay/generic/int[8]", getprop("engines/engine[0]/afterburner"));
+       setprop("sim/multiplay/generic/int[9]", getprop("engines/engine[1]/afterburner"));
     }
     else
     {
