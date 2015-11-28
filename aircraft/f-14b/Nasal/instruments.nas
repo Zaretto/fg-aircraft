@@ -362,11 +362,11 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
     "sim/model/f-14b/wings/damage-enabled",
     "sim/model/f-14b/controls/windshield-heat",
 	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav",
-"sim/model/f-14b/wings/damage-enabled",
-"fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount",
-"fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount",
-"fdm/jsbsim/propulsion/engine[0]/mcb-failed",
-"fdm/jsbsim/propulsion/engine[1]/mcb-failed"
+	"sim/model/f-14b/wings/damage-enabled",
+	"fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount",
+	"fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount",
+	"fdm/jsbsim/propulsion/engine[0]/mcb-failed",
+	"fdm/jsbsim/propulsion/engine[1]/mcb-failed"
 );
 
 var inc_ticker = func {
