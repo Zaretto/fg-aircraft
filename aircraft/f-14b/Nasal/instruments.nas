@@ -732,8 +732,8 @@ var common_carrier_init = func {
 var common_init = func {
     if(f14.usingJSBSim)
     {
-        if (getprop("sim/model/f15/controls/windshield-heat") != nil)
-            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+        if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
+            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
         print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 

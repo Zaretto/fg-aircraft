@@ -17,6 +17,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
 -->
 <PropertyList>
 
+    <nopreview/> 
     <path>flame.ac</path>
 
     <params>
@@ -86,6 +87,10 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
                 <property alias="/params/augmentation-ignition"/>
                 <value>0</value>
             </greater-than>
+            <not>
+                <property>/sim/rendering/shaders/skydome</property>
+            </not>
+
         </condition>
     </animation>
 
@@ -188,7 +193,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
     <animation>
         <type>textranslate</type>
         <object-name>FlameModel</object-name>
-        <property>sim/model/f15/fx/flame-number</property>
+        <property>sim/model/f-14b/fx/flame-number</property>
         <factor>-0.107421875</factor>
         <axis>
             <x>0</x>
@@ -199,7 +204,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
     <animation>
         <type>textranslate</type>
         <object-name>FlameTrail</object-name>
-        <property>sim/model/f15/fx/flame-number</property>
+        <property>sim/model/f-14b/fx/flame-number</property>
         <factor>-0.004</factor>
         <axis>
             <x>1</x>
@@ -255,5 +260,4 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
             <property alias="/params/augmentation-alight"/>
         </emission>
     </animation>
-
 </PropertyList>
