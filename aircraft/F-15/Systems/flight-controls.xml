@@ -1,7 +1,9 @@
 <system  name="FCS F15">
 <!-- F-15 Flight controls 
    |  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
+   Longitudinal travel: -10 to 15cm
 -->
+    <property value="1">fcs/ari-lateral-enabled</property>
 
     <channel name="Pitch">
         <summer name="Pitch Trim Sum">
@@ -334,22 +336,31 @@
             </clipto>
         </fcs_function>-->
         <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
+            <!--This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
+                The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.-->
             <description>ARI</description>
             <function>
-                <table>
-                    <independentVar lookup="row">fcs/aileron-pos-deg</independentVar>
-                    <tableData>
-                        -30     0.1
-                        0     0
-                        30     -0.1
-                    </tableData>
-                </table>
+                <product>
+                    <property>fcs/aileron-cmd-norm</property>
+                    <property>fcs/ari-lateral-enabled</property>
+                    <table>
+                        <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
+                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                            0	30
+                            -24	-0.923	-0.818
+                            0	-0.105	0.000
+                            15	0.406	0.511
+                        </tableData>
+                    </table>
+                </product>
             </function>
             <clipto>
-                <min> -0.1 </min>
-                <max>  0.1 </max>
+                <min> -1.0 </min>
+                <max>  1.0 </max>
             </clipto>
         </fcs_function>
+
         <!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
         <switch name="fcs/ari-lateral-rudder-pos-norm">
             <default value="fcs/ari-lateral-rudder-demand-norm"/>
@@ -365,7 +376,7 @@
         <summer name="fcs/rudder-command-raw-sum">
             <input>fcs/rudder-cmd-norm</input>
             <input>fcs/yaw-trim-cmd-norm</input>
-            <input>fcs/ari-lateral-rudder-demand-norm</input>
+            <input>fcs/ari-lateral-rudder-pos-norm</input>
             <clipto>
                 <min> -1 </min>
                 <max>  1 </max>

@@ -12,34 +12,54 @@
 
     <nasal>
         <load>
+        <![CDATA[ 
+
             var self = cmdarg();
-            print("LOAD F-15 ", self.getPath());
+            print("Model load F-15 ", self.getPath());
 
             var livery_update = aircraft.livery_update.new("Aircraft/F-15/Models/Liveries", 10 );
 
             # Load the needed modules if it hasn't been done yet.
             if (!contains(globals, "f15_net"))
             {
-            print("LOAD F-15 mp network", self.getPath());
-            var fn_net = resolvepath("Nasal/mp-network.nas");
-            
-            if (io.stat(fn_net) == nil)
-            fn_net = resolvepath("/Aircraft/F-15/Nasal/mp-network.nas");
-            
-            if (io.stat(fn_net) == nil)
-            fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+                print("LOAD F-15 mp network", self.getPath());
+                var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
 
-            io.load_nasal(fn_net, "f15_net");
-            
-            # Initialize network as observer.
-            f15_net.mp_network_init(0);
+                if (io.stat(fn_net) == nil)
+                    fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+
+                if (io.stat(fn_net) == nil)
+                    fn_net = resolvepath("Aircraft/F-15/Nasal") ~ "/mp-network.nas";
+
+                if (io.stat(fn_net) == nil)
+                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+
+                print("Loading F-15 mp network from ",fn_net);
+                io.load_nasal(fn_net, "f15_net");
+
+                # Initialize network as observer.
+                f15_net.mp_network_init(0);
             }
+            # set reasonable values for sound volumes
+            setprop("fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-efflux-r-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",0);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",0);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",0.8);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",0.8);
+            setprop("fdm/jsbsim/systems/sound/engine-n2-l-volume",0.4);
+            setprop("fdm/jsbsim/systems/sound/engine-n2-r-volume",0.4);
+        ]]>
         </load>
 
         <unload>
+            <![CDATA[ 
             print("UNLOAD F-15 ", self.getPath());
             #cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
             livery_update.stop();
+            ]]>
         </unload>
     </nasal>
 
@@ -1142,7 +1162,7 @@
         <offsets>
             <x-m>  7.7 </x-m>
             <y-m>   -0.7</y-m>
-            <z-m>   0.1</z-m>
+            <z-m>   -0.4</z-m>
         </offsets>
     </model>
 
@@ -1161,10 +1181,9 @@
     <model>
         <path>Effects/tiptrail/tiptrail.xml</path>
         <offsets>
-            <x-m>  3.6 </x-m>
-            <y-m> -6.2 </y-m>
-            <z-m> 0.2</z-m>
-
+            <x-m>  4.70 </x-m>
+            <y-m> -6.13 </y-m>
+            <z-m> 0.46</z-m>
         </offsets>
     </model>
 
@@ -1172,9 +1191,9 @@
     <model>
         <path>Effects/tiptrail/tiptrail.xml</path>
         <offsets>
-            <x-m>  3.6 </x-m>
-            <y-m> 6.2 </y-m>
-            <z-m> 0.2</z-m>
+            <x-m>  4.70 </x-m>
+            <y-m>  6.13 </y-m>
+            <z-m> 0.46</z-m>
         </offsets>
     </model>
 
@@ -1182,7 +1201,7 @@
     <model>
         <path>Effects/trail/trailL.xml</path>
         <offsets>
-            <x-m>  7.7 </x-m>
+            <x-m>50.0</x-m>
             <y-m>   -0.7</y-m>
             <z-m>   0.1</z-m>
         </offsets>
@@ -1192,7 +1211,7 @@
     <model>
         <path>Effects/trail/trailR.xml</path>
         <offsets>
-            <x-m>  7.7</x-m>
+            <x-m>50.0</x-m>
             <y-m>  0.7</y-m>
             <z-m>  0.1</z-m>
         </offsets>
@@ -1554,7 +1573,7 @@
         <path>Effects/Engines/AfterBurner.xml</path>
         <offsets>
             <x-m>  6.188</x-m>
-            <y-m>   -0.7164</y-m>
+            <y-m>   -0.6904</y-m>
             <z-m>   0.0704</z-m>
         </offsets>
         <overlay>
@@ -1571,7 +1590,7 @@
         <path>Effects/Engines/AfterBurner.xml</path>
         <offsets>
             <x-m>  6.188</x-m>
-            <y-m>  0.7096</y-m>
+            <y-m>  0.7336</y-m>
             <z-m>  0.0704</z-m>
         </offsets>
         <overlay>
@@ -1879,6 +1898,72 @@
             <y>0.0</y>
             <z>0.0</z>
         </axis>
+    </animation>
+    <!-- should probably be Stewart & Stevenson Ground Power Unit Model TM4900D 
+         or Hobart GPU 60CUa
+    -->
+    <model>
+        <path>generic-trailer-GPU.xml</path>
+        <name>GPU</name>
+        <offsets>
+            <x-m>6</x-m>
+            <y-m>-6</y-m>
+            <z-m>-2.1</z-m>
+            <heading-deg>60</heading-deg>
+            <roll-deg>    0 </roll-deg>
+            <pitch-deg>   0 </pitch-deg>
+        </offsets>>
+    </model>
+    <model>
+        <path>ground-fuelling-bowser94-f600.xml</path>
+        <name>GroundRefuellingBowser</name>
+    </model>
+    <animation>
+        <type>select</type>
+        <object-name>aircraft-ladder</object-name>
+        <condition>
+            <and>
+                <property>sim/walker/outside</property>
+                <!--<equals>
+                    <property>sim/walker/outfit</property>
+                    <value>1</value>
+                </equals>-->
+                <greater-than>
+                    <property>canopy/position-norm</property>
+                    <value>0.5</value>
+                </greater-than>
+                <greater-than>
+                    <property>gear/gear[1]/wow</property>
+                    <value>0</value>
+                </greater-than>
+            </and>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>aircraft-ladder</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/walker/key-triggers/outside-toggle</property>
+            </binding>
+        </action>
+    </animation>
+    
+    <animation>
+        <type>pick</type>
+        <visible>false</visible>
+        <object-name>canopy-outside-handle</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/ecs/canopy-position-dmd</property>
+            </binding>
+        </action>
     </animation>
 
 </PropertyList>

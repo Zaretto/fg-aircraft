@@ -144,7 +144,7 @@
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
                             0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                            0	1.10000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                            0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
                             8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
                             16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
                             24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
@@ -379,6 +379,7 @@
             <test value="1.0" logic="OR">
                 propulsion/engine[0]/augmentation-alight gt 0
                 propulsion/engine[0]/augmentation-ignition gt 0.4
+                propulsion/engine[0]/n2 lt 60
             </test>
         </switch>
         <kinematic name="propulsion/engine[0]/alt/nozzle-pos-norm">
@@ -488,7 +489,7 @@
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
                             0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                            0	1.10000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                            0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
                             8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
                             16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
                             24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
@@ -707,7 +708,7 @@
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
                 <product>
                     <table>
-                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
+                        <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
                         <tableData>
                             0.0 	0.81807
                             0.2235	0.81807
@@ -723,6 +724,7 @@
             <test value="1.0" logic="OR">
                 propulsion/engine[1]/augmentation-alight gt 0
                 propulsion/engine[1]/augmentation-ignition gt 0.4
+                propulsion/engine[1]/n2 lt 60
             </test>
         </switch>
         <kinematic name="propulsion/engine[1]/alt/nozzle-pos-norm">

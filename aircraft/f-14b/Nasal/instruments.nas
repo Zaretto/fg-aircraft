@@ -361,7 +361,13 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/pilots-displays/mode/to-bt",
     "sim/model/f-14b/wings/damage-enabled",
     "sim/model/f-14b/controls/windshield-heat",
-	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav");
+	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav",
+	"sim/model/f-14b/wings/damage-enabled",
+	"fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount",
+	"fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount",
+	"fdm/jsbsim/propulsion/engine[0]/mcb-failed",
+	"fdm/jsbsim/propulsion/engine[1]/mcb-failed"
+);
 
 var inc_ticker = func {
 	# ticker used for VDI background continuous translation animation
@@ -726,8 +732,8 @@ var common_carrier_init = func {
 var common_init = func {
     if(f14.usingJSBSim)
     {
-        if (getprop("sim/model/f15/controls/windshield-heat") != nil)
-            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+        if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
+            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
         print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 

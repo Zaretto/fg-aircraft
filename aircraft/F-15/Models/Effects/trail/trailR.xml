@@ -12,18 +12,20 @@
 
     <condition>
       <and>
+          <not>
+              <property>sim/model/f15/fx/smoke</property>
+          </not>
         <greater-than>
-          <property>/engines/engine[1]/n2</property>
-          <value>50</value>
+                    <property>engines/engine[1]/PB</property>
+                    <value>1.1</value>
         </greater-than>
         <greater-than>
-          <property>/position/altitude-ft</property>
-          <value>3000</value>
+                    <property>/position/altitude-ft</property>
+                    <value>19000</value>
         </greater-than>
-          <equals>
-              <property>position/aircraft-on-ground</property>
-              <value>0</value>
-          </equals>
+                <not>
+              <property>fdm/jsbsim/wow</property>
+                </not>
       </and>
     </condition>
 
@@ -54,7 +56,7 @@
 
     <counter>
       <particles-per-sec>
-        <value>35</value>
+                <value>55</value>
         <spread>0</spread>
       </particles-per-sec>
     </counter>
@@ -64,22 +66,68 @@
     <particle>
       <start>
         <color>
-          <red><value>   0.7 </value></red>
-          <green><value> 0.7 </value></green>
-          <blue><value>  0.7 </value></blue>
-          <alpha><value> 0.3 </value></alpha>
+                    <red>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>/rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </red>
+                    <green>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>/rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </green>
+                    <blue>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>/rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </blue>
+                    <alpha>
+                        <value> 0.05 </value>
+                    </alpha>
         </color>
         <size>
-          <value>0.25</value>
+                    <value>2.45</value>
         </size>
       </start>
 
       <end>
         <color>
-          <red><value>   1.0 </value></red>
-          <green><value> 1.0 </value></green>
-          <blue><value>  1.0 </value></blue>
-          <alpha><value> 1.0 </value></alpha>
+                    <red>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>/rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </red>
+                    <green>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>/rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </green>
+                    <blue>
+                        <expression>
+                            <product>
+                                <value>1.0</value>
+                                <property>/rendering/scene/diffuse/red</property>
+                            </product>
+                        </expression>
+                    </blue>
+                    <alpha>
+                        <value> 0.2 </value>
+                    </alpha>
         </color>
         <size>
           <value>4</value>
@@ -103,4 +151,3 @@
   </particlesystem>
 
 </PropertyList>
-

@@ -81,6 +81,73 @@
             <max-dist>3000</max-dist>
         </engine-jfs-running>
 
+        <engine-compressor-stall-l>
+            <name>engine-compressor-stall-l</name>
+            <mode>once</mode>
+            <path>Aircraft/f-14b/Sounds/engine-tf-30-compressor-stall.wav</path>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>engines/engine[0]/stalled</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <position>
+                <x>-1.0</x>
+                <y>-1.0</y>
+                <z>-0.2</z>
+            </position>
+            <orientation>
+                <x>-0.98</x>
+                <y>0</y>
+                <z>0</z>
+                <inner-angle>170</inner-angle>
+                <outer-angle>360</outer-angle>
+                <outer-gain>0.905</outer-gain>
+            </orientation>
+            <reference-dist>100</reference-dist>
+            <volume>
+                <factor>1</factor>
+            </volume>
+            <reference-dist>400</reference-dist>
+            <max-dist>3000</max-dist>
+        </engine-compressor-stall-l>
+        <engine-compressor-stall-r>
+            <name>engine-compressor-stall-r</name>
+            <mode>once</mode>
+            <path>Aircraft/f-14b/Sounds/engine-tf-30-compressor-stall.wav</path>
+            <condition>
+                <not>
+                    <property>sim/model/f-14b/engine-sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>engines/engine[1]/stalled</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <position>
+                <x>-1.0</x>
+                <y>1.0</y>
+                <z>-0.2</z>
+            </position>
+            <orientation>
+                <x>-0.98</x>
+                <y>0</y>
+                <z>0</z>
+                <inner-angle>170</inner-angle>
+                <outer-angle>360</outer-angle>
+                <outer-gain>0.905</outer-gain>
+            </orientation>
+            <reference-dist>100</reference-dist>
+            <volume>
+                <factor>1</factor>
+            </volume>
+            <reference-dist>400</reference-dist>
+            <max-dist>3000</max-dist>
+        </engine-compressor-stall-r>
+
         <engine-jet-intake-l>
             <name>engine-jet-intake-l</name>
             <path>Aircraft/f-14b/Sounds/jet-intake-air.wav</path>

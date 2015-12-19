@@ -15,21 +15,20 @@
       <condition>
           <and>
               <greater-than>
-                  <property>/engines/engine[0]/n2</property>
-                  <value>75</value>
+                  <property>engines/engine[0]/PB</property>
+                  <value>2.1</value>
               </greater-than>
-              <greater-than>
+              <!--<greater-than>
                   <property>velocities/airspeed-kt</property>
                   <value>100</value>
-              </greater-than>
+              </greater-than>-->
               <less-than>
                   <property>/position/altitude-ft</property>
-                  <value>3000</value>
+                  <value>19000</value>
               </less-than>
-              <equals>
-                  <property>position/aircraft-on-ground</property>
-                  <value>0</value>
-              </equals>
+              <not>
+                  <property>fdm/jsbsim/wow</property>
+              </not>
           </and>
       </condition>
 
@@ -45,7 +44,7 @@
       <phi-min-deg>-1.5</phi-min-deg>
       <phi-max-deg>1.5</phi-max-deg>
       <speed-mps>
-        <property>engines/engine/n1</property>
+        <property>engines/engine[0]/n1</property>
         <factor>5</factor>
       </speed-mps>
       <rotation-speed>
@@ -60,7 +59,7 @@
 
     <counter>
       <particles-per-sec>
-        <property>engines/engine/n1</property>
+        <property>engines/engine[0]/n1</property>
         <factor>1</factor>
         <spread>20</spread>
       </particles-per-sec>
@@ -74,7 +73,7 @@
           <red><value>   0.980 </value></red>
           <green><value> 0.970 </value></green>
           <blue><value>  0.950 </value></blue>
-          <alpha><value> 0.025 </value></alpha>
+          <alpha><value> 0.015 </value></alpha>
         </color>
         <size>
           <value>0.75</value>
@@ -86,15 +85,15 @@
           <red><value>   0.9500 </value></red>
           <green><value> 0.9500 </value></green>
           <blue><value>  0.9500 </value></blue>
-          <alpha><value> 0.0125 </value></alpha>
+          <alpha><value> 0.00 </value></alpha>
         </color>
         <size>
-          <value>7.5</value>
+            <value>0.85</value>
         </size>
       </end>
 
       <life-sec>
-        <value>5.0</value>
+        <value>2</value>
       </life-sec>
 
       <mass-kg>0.05</mass-kg>

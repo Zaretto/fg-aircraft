@@ -123,7 +123,7 @@ var updateTEWS = func ()
 {  
 if(!tews_on)
 return;
-    var 	heading = getprop("/orientation/heading-deg");
+    var 	heading = getprop("orientation/heading-deg");
     var target_idx = 0;
     var radar_range = getprop("instrumentation/radar/radar2-range");
 

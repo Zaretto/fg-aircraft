@@ -82,7 +82,7 @@ var ara_63_update = func {
         var deviation = bearing_to - carrier_ara_63_heading;
         deviation = deviation *0.1;
 
-        if(getprop("/instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < range)
+        if(getprop("instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < range)
         {
 # Use the standard civilian ILS as it is closer.
             setprop("sim/model/f15/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
@@ -116,7 +116,7 @@ var ara_63_update = func {
             setprop("sim/model/f15/instrumentation/nav/signal-quality-norm",1);
             setprop("sim/model/f15/instrumentation/nav/gs-distance", range);
 
-            var u_fps = getprop("/velocities/uBody-fps");
+            var u_fps = getprop("velocities/uBody-fps");
             var eta = range / (u_fps / 3.281);
 
 #            print (" range ",range," bearing to ",deviation," eta ",eta," gsheight ", gs_height, "gsdev ",gs_deviation);
@@ -426,7 +426,10 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "fdm/jsbsim/fcs/yaw-damper-enable",
                   "sim/model/f15/controls/MPCD/mode",
                   "sim/model/f15/controls/windshield-heat",
-                  "controls/pilots-displays/hsd-mode-nav");
+                  "controls/pilots-displays/hsd-mode-nav",
+                  "engines/engine[0]/running",
+                  "engines/engine[1]/running"
+);
 
 
 # Air Speed Indicator #####
@@ -540,7 +543,7 @@ instruments_data_export = func {
 	var cdi = sprintf( "%01.2f", HsdCdiDeflection.getValue());
 	var radial = VtcRadialDeg.getValue();
 var powered="0";
-    if ( getprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
+    if ( getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1") > 0)
         powered="1";
 	var l_s = [ias, s_mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial, powered,
 sprintf("%d",getprop("engines/engine[0]/egt-degC")),
@@ -576,9 +579,9 @@ var main_loop = func {
 	BurnerN.setValue(burner);
 
 	if ( getprop("sim/replay/time") > 0 ) 
-        setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+        setprop("orientation/alpha-indicated-deg", (getprop("orientation/alpha-deg") - 0.797) / 0.8122);
     else
-    	setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+    	setprop("orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
 
 	if ( ( a ) == int( a )) {
 		# done each 0.1 sec, cnt even.
@@ -628,8 +631,8 @@ var common_carrier_init = func {
     if (!getprop("sim/model/f15/overrides/special-carrier-handling"))
         return ;
 
-    var lat = getprop("/position/latitude-deg");
-    var lon = getprop("/position/longitude-deg");
+    var lat = getprop("position/latitude-deg");
+    var lon = getprop("position/longitude-deg");
     var info = geodinfo(lat, lon);
 
     var carrier = getprop("/sim/presets/carrier");
@@ -646,20 +649,20 @@ var common_carrier_init = func {
 
     if(on_carrier)
     {
-        var ground_elevation = getprop("/position/ground-elev-ft");
+        var ground_elevation = getprop("position/ground-elev-ft");
         if (ground_elevation == nil)
             ground_elevation = 65.2;
 
-        if (carrier != nil and carrier != "" ) # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
+        if (carrier != nil and carrier != "" ) # and substr(getprop("sim/presets/parkpos"),0,4) == "cat-")
         {
             if (carrier_ara_63_position == nil or geo.aircraft_position().distance_to(carrier_ara_63_position) < 200)
             {
                 print("Special init for Carrier cat launch");
-                setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
+                setprop("fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
                 setprop("gear/launchbar/position-norm",1);
             }
 
-            var current_pos = geo.Coord.new().set_latlon(getprop("/position/latitude-deg"), getprop("/position/longitude-deg"));
+            var current_pos = geo.Coord.new().set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
 
 #
 # Locate the carrier in case it has moved from the stated initial position.
@@ -714,19 +717,19 @@ var common_carrier_init = func {
                 }
             }
                    
-            setprop("/controls/gear/gear-down", 1);
+            setprop("controls/gear/gear-down", 1);
 
             if (current_pos != nil)
             {
                 print("Adjusting launch position by 7meters");
                 current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),7);
             }
-            setprop("/position/latitude-deg", current_pos.lat());
-            setprop("/position/longitude-deg", current_pos.lon());
+            setprop("position/latitude-deg", current_pos.lat());
+            setprop("position/longitude-deg", current_pos.lon());
 
             print("Moving the aircraft into the launch position properly... for ",carrier, " alt ",ground_elevation," lat ", current_pos.lat(), " lon ",current_pos.lon());
 
-            setprop("/position/altitude-ft", ground_elevation+getprop("sim/model/f15/overrides/aircraft-agl-height"));
+            setprop("position/altitude-ft", ground_elevation+getprop("sim/model/f15/overrides/aircraft-agl-height"));
         }
     }
 
@@ -738,7 +741,7 @@ setprop("sim/hud/visibility[0]",0);
 setprop("sim/hud/visibility[1]",0);
 
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
-        setprop("/controls/flight/SAS-roll",0);
+        setprop("controls/flight/SAS-roll",0);
         setprop("sim/model/f15/controls/AFCS/altitude",0);
         setprop("sim/model/f15/controls/AFCS/heading-gt",0);
         setprop("sim/model/f15/controls/AFCS/engage",0);
@@ -751,32 +754,32 @@ setprop("sim/hud/visibility[1]",0);
         settimer(func {
                      setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); 
                         }, 4);
-        if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
+        if (getprop("fdm/jsbsim/position/h-agl-ft") != nil)
         {
-            if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
+            if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) 
             {
                 print("Starting with gear down as below 500 ft");
-                setprop("/controls/gear/gear-down", 1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+                setprop("controls/gear/gear-down", 1);
+                setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
+                setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
+                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
 
-                if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
+                if (getprop("fdm/jsbsim/position/h-agl-ft") < 50) 
                 {
-                    setprop("/controls/gear/brake-parking",1);
+                    setprop("controls/gear/brake-parking",1);
                     print("--> Set parking brake as below 50 ft");
                 }
             }
             else 
             {
                 print("Starting with gear up as above 500 ft");
-                setprop("/controls/gear/gear-down", 0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("/controls/gear/brake-parking",0);
+                setprop("controls/gear/gear-down", 0);
+                setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
+                setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
+                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+                setprop("controls/gear/brake-parking",0);
             }
         }
         common_carrier_init();
@@ -797,7 +800,7 @@ var init = func {
 	awg_9.init();
 #	an_arc_182v.init();
 #	an_arc_159v1.init();
-    aircraft.setup_als_lights();
+    aircraft.setup_als_lights(getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"));
 
 	setprop("controls/switches/radar_init", 0);
 	# properties to be stored

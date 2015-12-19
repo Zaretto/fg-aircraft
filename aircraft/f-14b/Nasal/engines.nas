@@ -134,13 +134,41 @@ var computeNozzles = func {
         }
         else
         {
-# not in replay so copy the properties;
-# 
+            # not in replay so copy the properties;
+            # 
             setprop("engines/engine[0]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
             setprop("engines/engine[1]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
             setprop("engines/engine[0]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
             setprop("engines/engine[1]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
+
+
+            #
+            #
+            # engine stall is detected in the engines system.
+            var comp_stall_message="";
+            if (getprop("fdm/jsbsim/propulsion/engine[0]/P0-stall") > 0.98 and !getprop("fdm/jsbsim/propulsion/engine[0]/stalled"))
+            {
+#        print("Compressor stall left engine");
+                comp_stall_message = "Left ";
+                setprop("fdm/jsbsim/propulsion/engine[0]/stalled",1);
+            }
+            if (getprop("fdm/jsbsim/propulsion/engine[1]/P0-stall") > 0.98 and !getprop("fdm/jsbsim/propulsion/engine[1]/stalled"))
+            {
+                comp_stall_message = comp_stall_message ~ "Right";
+                setprop("fdm/jsbsim/propulsion/engine[1]/stalled",1);
+            }
+            setprop("engines/engine[0]/stalled", getprop("fdm/jsbsim/propulsion/engine[0]/stalled"));
+            setprop("engines/engine[1]/stalled", getprop("fdm/jsbsim/propulsion/engine[1]/stalled"));
+
+# there will be a pop/bang when the compressor stalls; I did have a popup message but that
+# spoils the realism as if the pilot misses the sound they should still notice the gauges in their
+# scan and if they don't notice that's when there's likely to be a MIR.
+#    if (comp_stall_message != "")
+#        gui.popupTip("Compressor stall "~comp_stall_message);
+
         }
+       setprop("sim/multiplay/generic/int[8]", getprop("engines/engine[0]/afterburner"));
+       setprop("sim/multiplay/generic/int[9]", getprop("engines/engine[1]/afterburner"));
     }
     else
     {

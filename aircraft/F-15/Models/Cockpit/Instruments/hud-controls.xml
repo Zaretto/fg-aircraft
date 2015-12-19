@@ -526,6 +526,32 @@
     </animation>
     <animation>
         <type>knob</type>
+        <object-name>hud-switch-sym</object-name>
+        <property>sim/model/f15/controls/HUD/sym-rej</property>
+        <factor>20</factor>
+        <center>
+            <x-m>-5.5978</x-m>
+            <y-m>-0.0212</y-m>
+            <z-m>1.1593</z-m>
+        </center>
+        <axis>
+            <y>1</y>
+        </axis>
+
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/HUD/sym-rej</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
         <object-name>hud-display-brt-symbol</object-name>
         <property>sim/model/f15/controls/HUD/brightness</property>
         <factor>-110</factor>

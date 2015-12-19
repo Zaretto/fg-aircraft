@@ -85,6 +85,7 @@
                     </binding>
                 </checkbox>
             </group>
+            <hrule/>
             <group>
                 <layout>hbox</layout>
 
@@ -100,6 +101,104 @@
                         <property>sim/model/f-14b/wings/damage-enabled</property>
                     </binding>
                 </checkbox>
+            </group>
+            <hrule/>
+            <group>
+                <layout>hbox</layout>
+                <text>
+                    <label>Compressor Stall Parameters</label>
+                </text>
+            </group>
+            <group>
+                <layout>hbox</layout>
+                <group>
+                    <layout>vbox</layout>
+
+                    <text>
+                        <label>Left</label>
+                    </text>
+                    <group>
+                        <layout>vbox</layout>
+                        <group>
+                            <layout>hbox</layout>
+                            <slider>
+                                <name>LengStall</name>
+                                <property>fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount</property>
+                                <live>1</live>
+                                <min>0</min>
+                                <max>2</max>
+                                <binding>
+                                    <command>dialog-apply</command>
+                                    <object-name>LengStall</object-name>
+                                </binding>
+                            </slider>
+                            <text>
+                                <halign>right</halign>
+                                <label>xxxxxxxx</label>
+                                <live>true</live>
+                                <format>%.2f</format>
+                                <property>fdm/jsbsim/propulsion/engine[0]/P0-k3</property>
+                            </text>
+                        </group>
+                        <text>
+                            <label>MCB failed</label>
+                        </text>
+
+                    <checkbox>
+                        <property>fdm/jsbsim/propulsion/engine[0]/mcb-failed</property>
+                        <live>true</live>
+                        <binding>
+                            <command>property-toggle</command>
+                            <property>fdm/jsbsim/propulsion/engine[0]/mcb-failed</property>
+                        </binding>
+                    </checkbox>
+                </group>
+
+            </group>
+                <group>
+                    <layout>vbox</layout>
+
+                    <text>
+                        <label>Right</label>
+                    </text>
+
+                    <group>
+                        <layout>vbox</layout>
+                        <group>
+                            <layout>hbox</layout>
+                            <slider>
+                                <name>RengStall</name>
+                                <property>fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount</property>
+                                <live>1</live>
+                                <min>0</min>
+                                <max>2</max>
+                                <binding>
+                                    <command>dialog-apply</command>
+                                    <object-name>RengStall</object-name>
+                                </binding>
+                            </slider>
+                            <text>
+                                <halign>right</halign>
+                                <label>xxxxxxxx</label>
+                                <live>true</live>
+                                <format>%.2f</format>
+                                <property>fdm/jsbsim/propulsion/engine[1]/P0-k3</property>
+                            </text>
+                        </group>
+                        <text>
+                            <label>MCB failed</label>
+                        </text>
+
+                        <checkbox>
+                            <property>fdm/jsbsim/propulsion/engine[1]/mcb-failed</property>
+                            <live>true</live>
+                            <binding>
+                                <command>property-toggle</command>
+                                <property>fdm/jsbsim/propulsion/engine[1]/mcb-failed</property>
+                            </binding>
+                        </checkbox>
+                    </group>
+                </group>
             </group>
         </group>
 

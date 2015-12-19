@@ -21,7 +21,7 @@ var current_flame_number = 0;
 var computeEngines = func {
    current_flame_number = (current_flame_number + 1);        
    if (current_flame_number > 3) current_flame_number = 0;
-   setprop("sim/model/f15/fx/flame-number",current_flame_number);
+   setprop("sim/model/f-14b/fx/flame-number",current_flame_number);
 }
 
 -->
@@ -31,34 +31,26 @@ var computeEngines = func {
         <path>Afterburners/AfterBurner.xml</path>
         <offsets>
             <x-m>7.1603</x-m>
-            <y-m>1.4827</y-m>
+            <y-m>-1.4827</y-m>
             <z-m>-1.2534</z-m>
         </offsets>
-        <overlay>
+        <!--<overlay>
             <params>
-                <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
-                <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
+                <augmentation-alight>engines/engine[0]/afterburner</augmentation-alight>
+                <augmentation-ignition>sim/multiplay/generic/float[8]</augmentation-ignition>
                 <flame-number>sim/model/f-14b/fx/flame-number</flame-number>
             </params>
-        </overlay>
+        </overlay>-->
     </model>
 
     <model>
         <nopreview/>
-        <path>Afterburners/AfterBurner.xml</path>
+        <path>Afterburners/AfterBurnerR.xml</path>
         <offsets>
             <x-m>7.1603</x-m>
-            <y-m>-1.4827</y-m>
+            <y-m>1.4827</y-m>
             <z-m>-1.2534</z-m>
         </offsets>
-
-        <overlay>
-            <params>
-                <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
-                <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
-                <flame-number>sim/model/f-14b/fx/flame-number</flame-number>
-            </params>
-        </overlay>
     </model>
 
 </PropertyList>

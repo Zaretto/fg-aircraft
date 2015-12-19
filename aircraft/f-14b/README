@@ -1,0 +1,22 @@
+Realistic windtunnel based aerodynamic model of an F-14A and F-14B for FlightGear. See http://zaretto.com/f-14
+
+Models an F14 with GE-110 or TF-30 engines. TF-30 engines have compressor stall simulated, GE-110 do not.
+
+Low speed clean should be exactly as an F-14 
+
+The aerodata used is from AFWAL-TR-80-3141, Part I and III. See http://zaretto.com/content/f-14-aerodynamic-data-sources
+The windtunnel aerodyanmics are for sweep of 22degrees, positive alpha, clean, low speed 
+so various data have been extrapolated estimated based on best  available data where 
+I cannot find specific details for F14 other aero models that I can find (often using NASA
+CR-1756 as guidance for general trends) are guidance or starting point for each value.
+
+The estimation of negative alpha values follows CR-1756 trends with values based on F14 data for positive values.
+
+Engine Thrust are based on NASA-TM-104326 tables 4-6 adjusted for altitude and with augmentation figures based on that of the mil thrust.
+
+The flaps and auxiliary flaps coefficients are modelled based on tuning to meet F-14AAD-1 as no data
+is currently available. The proportions assigned are relative to their surface area (as measured roughly 64% main, 36% aux) 
+- the values assigned are 0.7 and 0.3 based on this and applies to ClDFM, CdDFM and CMDFM
+
+rjh@zaretto.com
+October,2015

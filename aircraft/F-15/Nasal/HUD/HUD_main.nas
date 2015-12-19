@@ -25,13 +25,14 @@ var ht_debug = 0;
 #pixels per deg = 21.458507963
 
 # paste into nasal console for debugging
-#aircraft.HUDcanvas._node.setValues({
+#aircraft.UpperHUD.canvas._node.setValues({
 #                           "name": "F-15 HUD",
 #                           "size": [1024,1024], 
-#                           "view": [256,256],                       
+#                           "view": [276,106],                       
 #                           "mipmapping": 0     
 #  });
-#aircraft.svg.setTranslation (-6.0, 37.0);
+#aircraft.UpperHUD.svg.setTranslation (-21.0, 37.0);
+#aircraft.LowerHUD.svg.setTranslation (-21.0, -106);
 
 var pitch_offset = 12;
 var pitch_factor = 19.8;
@@ -59,17 +60,15 @@ var F15HUD = {
 # Parse an SVG file and add the parsed elements to the given group
         print("HUD Parse SVG ",canvas.parsesvg(obj.svg, svgname));
 
-        obj.svg.setTranslation (-20.0, 37.0);
-
-#        print("HUD INIT");
- 
         obj.canvas._node.setValues({
                 "name": "F-15 HUD",
                     "size": [1024,1024], 
                     "view": [276,106],                       
                     "mipmapping": 0     
                     });
+
         obj.svg.setTranslation (tran_x,tran_y);
+
         obj.ladder = obj.get_element("ladder");
         obj.VV = obj.get_element("VelocityVector");
         obj.heading_tape = obj.get_element("heading-scale");
@@ -77,8 +76,8 @@ var F15HUD = {
         obj.alt_range = obj.get_element("alt_range");
         obj.ias_range = obj.get_element("ias_range");
 
-obj.target_locked = obj.get_element("target_locked");
-obj.target_locked.setVisible(0);
+        obj.target_locked = obj.get_element("target_locked");
+        obj.target_locked.setVisible(0);
 
         obj.window1 = obj.get_text("window1", "condensed.txf",9,1.4);
         obj.window2 = obj.get_text("window2", "condensed.txf",9,1.4);
@@ -100,6 +99,7 @@ obj.target_locked.setVisible(0);
 # Load the target symbosl.
         obj.max_symbols = 10;
         obj.tgt_symbols =  setsize([],obj.max_symbols);
+
         for (var i = 0; i < obj.max_symbols; i += 1)
         {
             var name = "target_"~i;
@@ -192,7 +192,7 @@ obj.target_locked.setVisible(0);
             var txt = "";
             if (w_s == 0)
             {
-                txt = sprintf("%3d",getprop("/sim/model/f15/systems/gun/rounds"));
+                txt = sprintf("%3d",getprop("sim/model/f15/systems/gun/rounds"));
             }
             else if (w_s == 1)
             {
@@ -239,7 +239,7 @@ obj.target_locked.setVisible(0);
         me.window7.setText(hdp.window7);
 
 #        me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
-        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("/fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
+        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
 
 #heading tape
         if (hdp.heading < 180)
@@ -292,7 +292,13 @@ obj.target_locked.setVisible(0);
                             me.target_locked.setVisible(1);
                             me.target_locked.setTranslation (xc, yc);
                         }
-
+                        else
+                        {
+                            #
+                            # if in symbol reject mode then only show the active target.
+                            if(hdp.symbol_reject)
+                                tgt.setVisible(0);
+                        }
                         tgt.setTranslation (xc, yc);
 
                         if (ht_debug)
@@ -324,22 +330,23 @@ var HUD_DataProvider  = {
         return obj;
     },
     update : func() {
-        me.IAS = getprop("/velocities/airspeed-kt");
+        me.IAS = getprop("velocities/airspeed-kt");
         me.Nz = getprop("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
-        me.WOW = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
-        me.alpha = getprop ("fdm/jsbsim/aero/alpha-indicated-deg");
-        me.beta = getprop("/orientation/side-slip-deg");
-        me.altitude_ft =  getprop ("/position/altitude-ft");
-        me.heading =  getprop("/orientation/heading-deg");
-        me.mach = getprop ("/velocities/mach");
-        me.measured_altitude = getprop("/instrumentation/altimeter/indicated-altitude-ft");
+        me.WOW = getprop ("gear/gear[1]/wow") or getprop ("gear/gear[2]/wow");
+        me.alpha = getprop("orientation/alpha-indicated-deg");
+        me.beta = getprop("orientation/side-slip-deg");
+        me.altitude_ft =  getprop ("position/altitude-ft");
+        me.heading =  getprop("orientation/heading-deg");
+        me.mach = getprop ("velocities/mach");
+        me.measured_altitude = getprop("instrumentation/altimeter/indicated-altitude-ft");
         me.pitch =  getprop ("orientation/pitch-deg");
         me.roll =  getprop ("orientation/roll-deg");
-        me.speed = getprop("/fdm/jsbsim/velocities/vt-fps");
-        me.v = getprop("/fdm/jsbsim/velocities/v-fps");
-        me.w = getprop("/fdm/jsbsim/velocities/w-fps");
+        me.speed = getprop("fdm/jsbsim/velocities/vt-fps");
+        me.v = getprop("fdm/jsbsim/velocities/v-fps");
+        me.w = getprop("fdm/jsbsim/velocities/w-fps");
+        me.symbol_reject = getprop("sim/model/f15/controls/HUD/sym-rej");
         me.range_rate = "0";
-        if (getprop("/autopilot/route-manager/active"))
+        if (getprop("autopilot/route-manager/active"))
         {
             var rng = getprop("autopilot/route-manager/wp/dist");
             var eta_s = getprop("autopilot/route-manager/wp/eta-seconds");
@@ -365,7 +372,7 @@ var HUD_DataProvider  = {
             me.window5 = "";
         }
 
-        if(getprop("/controls/gear/brake-parking"))
+        if(getprop("controls/gear/brake-parking"))
             me.window7 = "BRAKES";
         else if(getprop("controls/gear/gear-down") or me.alpha > 20)
             me.window7 = sprintf("AOA %d",me.alpha);
@@ -374,54 +381,6 @@ var HUD_DataProvider  = {
 
         me.roll_rad = 0.0;
 
-#velocity vector 
-##
-
-#        var Vxx = getprop("/velocities/uBody-fps");
-#        var Vyy = getprop("/velocities/vBody-fps"); 
-#        var Vzz = getprop("/velocities/wBody-fps");
-#        var Axx = getprop("/accelerations/pilot/x-accel-fps_sec");
-#        var Ayy = getprop("/accelerations/pilot/y-accel-fps_sec");
-#        var Azz = getprop("/accelerations/pilot/z-accel-fps_sec");
-#        var psi = getprop("/orientation/heading-deg") * D2R;
-
-#        var total_vel = math.sqrt(Vxx * Vxx + Vyy * Vyy + Vzz * Vzz);
-#        var ground_vel = math.sqrt(Vxx * Vxx + Vyy * Vyy);
-#        var up_vel = Vzz;
-
-#        if (ground_vel < 2.0)
-#        {
-#            if (math.abs(up_vel) < 2.0)
-#                actslope = 0.0;
-#            else
-#                actslope = (up_vel / math.abs(up_vel)) * 90.0;
-#
-#        }
-#        else
-#        {
-#            actslope = math.atan2(up_vel, ground_vel) / D2R;
-#        }
-#        var _compression = 1;
-#        var view_aspect_ratio = 1;
-#        xvvr = (-me.beta * (_compression / view_aspect_ratio));
-#        vel_y = -me.alpha * _compression;
-#        vel_x = -me.beta * (_compression / view_aspect_ratio);
-
-#        var sin_x = me.v/me.speed;
-#        if (sin_x < -1) 
-#            sin_x = -1;
-#        else if (sin_x > 1)
-#            sin_x = 1;
-
-#        var sin_y =me.w/me.speed;
-#        if (sin_y < -1)
-#            sin_y = -1;
-#        else if (sin_y > 1) 
-#            sin_y = 1;
-
-#        me.VV_x = math.asin (sin_x) * pitch_factor_2;
-#        me.VV_y = math.asin (sin_y) * pitch_factor_2;
-#        printf("VV: %d,%d : %d,%d",me.VV_x, me.VV_y, vel_x, vel_y);
         me.VV_x = -me.beta*10; # adjust for view
         me.VV_y = me.alpha*10; # adjust for view
 
@@ -435,8 +394,8 @@ var hud_data_provider = HUD_DataProvider.new();
 # 2015-01-27: Note that the geometry isn't right and the projection needs to be adjusted (somehow) as the
 # image elements in the 3d model are correctly angled and this results in trapezoidal distortion
 
-var UpperHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1", 0,0);
-var LowerHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage2", 0, -106);
+var UpperHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1", -7,0);
+var LowerHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage2", -7, -106);
 
 var updateHUD = func ()
 {  

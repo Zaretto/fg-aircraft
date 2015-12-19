@@ -14,7 +14,7 @@ var computeNWS = func {
 
     NWS_light = getprop("fdm/jsbsim/systems/NWS/engaged");
     setprop("controls/flight/NWS", getprop("fdm/jsbsim/fcs/steer-pos-deg")/85.0);
-    if(getprop("/fdm/jsbsim/systems/holdback/launchbar-engaged"))
+    if(getprop("fdm/jsbsim/systems/holdback/launchbar-engaged"))
     {
         setprop("gear/launchbar/position-norm",1);
         setprop("gear/launchbar/state","Engaged");
@@ -37,9 +37,9 @@ var computeNWS = func {
 
 controls.gearDown = func(v) {
     if (v < 0 and ! wow) {
-        setprop("/controls/gear/gear-down", 0);
+        setprop("controls/gear/gear-down", 0);
     } elsif (v > 0) {
-        setprop("/controls/gear/gear-down", 1);
+        setprop("controls/gear/gear-down", 1);
     }
 } 
 

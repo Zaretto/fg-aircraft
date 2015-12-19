@@ -20,11 +20,12 @@
                 </greater-than>
             </condition>
             <volume>
-                <factor>0.05</factor>
+                <property>fdm/jsbsim/systems/sound/cockpit-effects-volume</property>
+                <factor>0.04</factor>
             </volume>
         </avionics-hum>
 
-        <!-- Engines -->
+        <!-- JFS -->
         <engine-jfs-start>
             <name>engine-jfs-start</name>
             <mode>once</mode>
@@ -35,15 +36,14 @@
                     <value>9</value>
                 </greater-than>
             </condition>
-            <reference-dist>100</reference-dist>
             <volume>
                 <factor>0.4</factor>
             </volume>
-            <reference-dist>800</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>20</reference-dist>
+            <max-dist>1000</max-dist>
         </engine-jfs-start>
-        <engine-jfs-shutdown>
 
+        <engine-jfs-shutdown>
             <name>engine-jfs-shutdown</name>
             <mode>once</mode>
             <path>Sounds/jfs-shutdown.wav</path>
@@ -56,12 +56,13 @@
                     <value>1</value>
                 </equals>
             </condition>
-            <reference-dist>100</reference-dist>
             <volume>
-                <factor>0.4</factor>
+                <factor>0.01</factor>
+                <property>sim/time/elapsed-sec</property>
+                <max>0.4</max>
             </volume>
-            <reference-dist>800</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>20</reference-dist>
+            <max-dist>1000</max-dist>
         </engine-jfs-shutdown>
 
         <engine-jfs-running>
@@ -81,10 +82,11 @@
             <volume>
                 <factor>0.3</factor>
             </volume>
-            <reference-dist>800</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>20</reference-dist>
+            <max-dist>1000</max-dist>
         </engine-jfs-running>
 
+        <!-- Engines -->
         <engine-jet-intake-l>
             <name>engine-jet-intake-l</name>
             <path>Sounds/jet-intake-air.wav</path>
@@ -93,9 +95,6 @@
                 <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
                 </not>
-<not>
-                <property>sim/current-view/internal-canopy-closed</property>
-</not>
             </condition>
             <position>
                 <x>-1.0</x>
@@ -111,14 +110,13 @@
                 <outer-gain>0.05</outer-gain>
             </orientation>
             <pitch>
-                <factor>0.01</factor>
+                <factor>0.05</factor>
                 <property>engines/engine[0]/n1</property>
             </pitch>
             <volume>
-                <factor>0.0333333333333333</factor>
-                <property>engines/engine[0]/n2</property>
+                <property>fdm/jsbsim/systems/sound/engine-jet-intake-l-volume</property>
             </volume>
-            <reference-dist>400</reference-dist>
+            <reference-dist>10</reference-dist>
             <max-dist>4000</max-dist>
         </engine-jet-intake-l>
 
@@ -130,9 +128,6 @@
                 <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
                 </not>
-<not>
-                <property>sim/current-view/internal-canopy-closed</property>
-</not>
             </condition>
             <position>
                 <x>-1.0</x>
@@ -148,14 +143,13 @@
                 <outer-gain>0.05</outer-gain>
             </orientation>
             <pitch>
-                <factor>0.01</factor>
+                <factor>0.05</factor>
                 <property>engines/engine[1]/n1</property>
             </pitch>
             <volume>
-                <factor>0.0333333333333333</factor>
-                <property>engines/engine[1]/n2</property>
+                <property>fdm/jsbsim/systems/sound/engine-jet-intake-r-volume</property>
             </volume>
-            <reference-dist>400</reference-dist>
+            <reference-dist>10</reference-dist>
             <max-dist>4000</max-dist>
         </engine-jet-intake-r>
 
@@ -175,9 +169,7 @@
                 <factor>0.01</factor>
             </pitch>
             <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[0]/n2</property>
-                <max>0.4</max>
+                <property>fdm/jsbsim/systems/sound/engine-n2-l-volume</property>
             </volume>
             <position>
                 <x>-0.6</x>
@@ -192,8 +184,8 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.2</outer-gain>
             </orientation>
-            <reference-dist>400</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>10</reference-dist>
+            <max-dist>4000</max-dist>
         </engine-jet-whine-n1-l>
 
         <engine-jet-whine-n2-l1>
@@ -211,9 +203,7 @@
                 <factor>0.01</factor>
             </pitch>
             <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[0]/n2</property>
-                <max>0.4</max>
+                <property>fdm/jsbsim/systems/sound/engine-n2-l-volume</property>
             </volume>
             <position>
                 <x>-0.6</x>
@@ -228,8 +218,8 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.2</outer-gain>
             </orientation>
-            <reference-dist>400</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>10</reference-dist>
+            <max-dist>4000</max-dist>
         </engine-jet-whine-n2-l1>
 
         <engine-jet-whine-n1-r>
@@ -247,9 +237,7 @@
                 <factor>0.01</factor>
             </pitch>
             <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[1]/n2</property>
-                <max>0.4</max>
+                <property>fdm/jsbsim/systems/sound/engine-n2-r-volume</property>
             </volume>
             <position>
                 <x>-0.6</x>
@@ -264,8 +252,8 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.2</outer-gain>
             </orientation>
-            <reference-dist>400</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>10</reference-dist>
+            <max-dist>4000</max-dist>
         </engine-jet-whine-n1-r>
 
         <engine-jet-whine-n2-r1>
@@ -283,9 +271,7 @@
                 <factor>0.01</factor>
             </pitch>
             <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[1]/n2</property>
-                <max>0.4</max>
+                <property>fdm/jsbsim/systems/sound/engine-n2-r-volume</property>
             </volume>
             <position>
                 <x>-0.6</x>
@@ -300,72 +286,9 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.2</outer-gain>
             </orientation>
-            <reference-dist>400</reference-dist>
-            <max-dist>3000</max-dist>
+            <reference-dist>10</reference-dist>
+            <max-dist>4000</max-dist>
         </engine-jet-whine-n2-r1>
-
-        <engine-jet-exhaust-inside-l>
-            <name>engine-jet-exhaust-inside-l</name>
-            <path>Sounds/engine-jet-exhaust.wav</path>
-            <mode>looped</mode>
-            <condition>
-                <not>
-                    <property>sim/model/f15/engine-sound-freeze</property>
-                </not>
-                <property>sim/current-view/internal-canopy-closed</property>
-            </condition>
-            <volume>
-                <factor>0.0015</factor>
-                <property>engines/engine[0]/n1</property>
-<max>0.4</max>
-            </volume>
-            <position>
-                <x>3</x>
-                <y>-1.0</y>
-                <z>-0.37</z>
-            </position>
-            <orientation>
-                <x>1.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-                <inner-angle>200.0</inner-angle>
-                <outer-angle>360.0</outer-angle>
-                <outer-gain>0.2</outer-gain>
-            </orientation>
-            <reference-dist>800</reference-dist>
-            <max-dist>6000</max-dist>
-        </engine-jet-exhaust-inside-l>
-
-        <engine-jet-exhaust-inside-r>
-            <name>engine-jet-exhaust-inside-r</name>
-            <path>Sounds/engine-jet-exhaust.wav</path>
-            <mode>looped</mode>
-            <condition>
-                <not>
-                    <property>sim/model/f15/engine-sound-freeze</property>
-                </not>
-                <property>sim/current-view/internal-canopy-closed</property>
-            </condition>
-            <volume>
-                <factor>0.0015</factor>
-                <property>engines/engine[1]/n1</property>
-            </volume>
-            <position>
-                <x>3</x>
-                <y>-1.0</y>
-                <z>-0.37</z>
-            </position>
-            <orientation>
-                <x>1.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-                <inner-angle>200.0</inner-angle>
-                <outer-angle>360.0</outer-angle>
-                <outer-gain>0.2</outer-gain>
-            </orientation>
-            <reference-dist>800</reference-dist>
-            <max-dist>6000</max-dist>
-        </engine-jet-exhaust-inside-r>
 
         <engine-jet-efflux-velocity-blast-l>
             <name>engine-jet-efflux-velocity-blast-l</name>
@@ -375,20 +298,21 @@
                 <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
                 </not>
-                <not>
-                    <property>sim/current-view/internal-canopy-closed</property>
-                </not>
-<greater-than>
-	<property>engines/engine[0]/thrust_lb</property>
-    <value>200</value>
-</greater-than>
-<greater-than>
-    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
-    <value>100</value>
-</greater-than>
+                <greater-than>
+                    <property>engines/engine[0]/thrust_lb</property>
+                    <value>200</value>
+                </greater-than>
+                <less-than>
+                    <property>sim/current-view/internal</property>
+                    <value>1</value>
+                </less-than>
+                <greater-than>
+                    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+                    <value>100</value>
+                </greater-than>
             </condition>
             <volume>
-                <factor>0.4</factor>
+                <property>fdm/jsbsim/systems/sound/engine-efflux-l-volume</property>
             </volume>
             <position>
                 <x>3</x>
@@ -403,7 +327,7 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.188</outer-gain>
             </orientation>
-            <reference-dist>1000</reference-dist>
+            <reference-dist>1</reference-dist>
             <max-dist>12000</max-dist>
         </engine-jet-efflux-velocity-blast-l>
 
@@ -413,26 +337,27 @@
             <mode>looped</mode>
             <condition>
                 <not>
-                    <property>sim/current-view/internal-canopy-closed</property>
-                </not>
-                <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
                 </not>
-<greater-than>
-	<property>engines/engine[1]/thrust_lb</property>
-    <value>200</value>
-</greater-than>
-<greater-than>
-    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
-    <value>100</value>
-</greater-than>
+                <greater-than>
+                    <property>engines/engine[1]/thrust_lb</property>
+                    <value>200</value>
+                </greater-than>
+                <greater-than>
+                    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+                    <value>100</value>
+                </greater-than>
+                <less-than>
+                    <property>sim/current-view/internal</property>
+                    <value>1</value>
+                </less-than>
             </condition>
             <volume>
-                <factor>0.4</factor>
+                <property>fdm/jsbsim/systems/sound/engine-efflux-r-volume</property>
             </volume>
             <position>
                 <x>3</x>
-                <y>-1.0</y>
+                <y>1.0</y>
                 <z>-0.37</z>
             </position>
             <orientation>
@@ -443,11 +368,11 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.188</outer-gain>
             </orientation>
-            <reference-dist>1000</reference-dist>
+            <reference-dist>1</reference-dist>
             <max-dist>12000</max-dist>
         </engine-jet-efflux-velocity-blast-r>
 
-       <engine-jet-exhaust-l>
+        <engine-jet-exhaust-l>
             <name>engine-jet-exhaust-l</name>
             <path>Sounds/engine-jet-exhaust.wav</path>
             <mode>looped</mode>
@@ -455,14 +380,9 @@
                 <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
                 </not>
-                <not>
-                    <property>sim/current-view/internal-canopy-closed</property>
-                </not>
             </condition>
             <volume>
-                <offset>-0.3</offset>
-                <factor>0.01</factor>
-                <property>engines/engine[0]/n2</property>
+                <property>fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume</property>
             </volume>
             <position>
                 <x>3</x>
@@ -477,8 +397,8 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.188</outer-gain>
             </orientation>
-            <reference-dist>1000</reference-dist>
-            <max-dist>9000</max-dist>
+            <reference-dist>50</reference-dist>
+            <max-dist>2000</max-dist>
         </engine-jet-exhaust-l>
 
         <engine-jet-exhaust-r>
@@ -487,19 +407,15 @@
             <mode>looped</mode>
             <condition>
                 <not>
-                    <property>sim/current-view/internal-canopy-closed</property>
-                </not>
-                <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
                 </not>
             </condition>
             <volume>
-                <factor>0.01</factor>
-                <property>engines/engine[1]/n2</property>
+                <property>fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume</property>
             </volume>
             <position>
                 <x>3</x>
-                <y>-1.0</y>
+                <y>1.0</y>
                 <z>-0.37</z>
             </position>
             <orientation>
@@ -510,84 +426,15 @@
                 <outer-angle>200.0</outer-angle>
                 <outer-gain>0.188</outer-gain>
             </orientation>
-            <reference-dist>1000</reference-dist>
-            <max-dist>9000</max-dist>
+            <reference-dist>50</reference-dist>
+            <max-dist>2000</max-dist>
         </engine-jet-exhaust-r>
-
-        <engine-jet-afterburner-inside-l>
-           <name>engine-jet-afterburner-inside-l</name>
-            <path>Sounds/engine-jet-afterburner-inside.wav</path>
-            <mode>looped</mode>
-            <condition>
-                <property>sim/current-view/internal-canopy-closed</property>
-                <property>engines/engine[0]/augmentation</property>
-                <property>engines/engine[0]/running</property>
-                <not>
-                    <property>sim/model/f15/engine-sound-freeze</property>
-                </not>
-            </condition>
-            <volume>
-                <property>engines/engine[0]/augmentation</property>
-                <factor>0.8</factor>
-            </volume>
-            <position>
-                <x>3</x>
-                <y>1.0</y>
-                <z>-0.37</z>
-            </position>
-            <orientation>
-                <x>1.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-                <inner-angle>90.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
-                <outer-gain>0.15</outer-gain>
-            </orientation>
-            <reference-dist>900</reference-dist>
-            <max-dist>6000</max-dist>
-        </engine-jet-afterburner-inside-l>
-
-        <engine-jet-afterburner-inside-r>
-            <name>engine-jet-afterburner-inside-r</name>
-            <path>Sounds/engine-jet-afterburner-inside.wav</path>
-            <mode>looped</mode>
-            <condition>
-                <property>sim/current-view/internal-canopy-closed</property>
-                <property>engines/engine[1]/augmentation</property>
-                <not>
-                    <property>sim/model/f15/engine-sound-freeze</property>
-                </not>
-                <property>engines/engine[1]/running</property>
-            </condition>
-            <volume>
-                <property>engines/engine[1]/augmentation</property>
-                <factor>0.8</factor>
-            </volume>
-            <position>
-                <x>3</x>
-                <y>1.0</y>
-                <z>-0.37</z>
-            </position>
-            <orientation>
-                <x>1.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-                <inner-angle>90.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
-                <outer-gain>0.15</outer-gain>
-            </orientation>
-            <reference-dist>900</reference-dist>
-            <max-dist>9000</max-dist>
-        </engine-jet-afterburner-inside-r>
 
         <engine-jet-afterburner-l>
            <name>engine-jet-afterburner-l</name>
             <path>Sounds/engine-jet-afterburner.wav</path>
             <mode>looped</mode>
             <condition>
-                <not>
-                    <property>sim/current-view/internal-canopy-closed</property>
-                </not>
                 <property>engines/engine[0]/augmentation</property>
                 <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
@@ -595,16 +442,8 @@
                 <property>engines/engine[0]/running</property>
             </condition>
             <volume>
-                <property>engines/engine[0]/augmentation</property>
-                <factor>0.5</factor>
+                <property>fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume</property>
             </volume>
-<!--
-            <volume>
-                <offset>0.4</offset>
-                <factor>-0.2</factor>
-                <property>sim/current-view/internal</property>
-            </volume>
--->
             <position>
                 <x>3</x>
                 <y>1.0</y>
@@ -612,14 +451,14 @@
             </position>
             <orientation>
                 <x>1.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-                <inner-angle>90.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
-                <outer-gain>0.15</outer-gain>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
             </orientation>
-            <reference-dist>900</reference-dist>
-            <max-dist>6000</max-dist>
+            <reference-dist>100</reference-dist>
+            <max-dist>2000</max-dist>
         </engine-jet-afterburner-l>
 
         <engine-jet-afterburner-r>
@@ -627,9 +466,6 @@
             <path>Sounds/engine-jet-afterburner.wav</path>
             <mode>looped</mode>
             <condition>
-                <not>
-                    <property>sim/current-view/internal-canopy-closed</property>
-                </not>
                 <property>engines/engine[1]/augmentation</property>
                 <not>
                     <property>sim/model/f15/engine-sound-freeze</property>
@@ -637,8 +473,7 @@
                 <property>engines/engine[1]/running</property>
             </condition>
             <volume>
-                <property>engines/engine[1]/augmentation</property>
-                <factor>0.5</factor>
+                <property>fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume</property>
             </volume>
             <position>
                 <x>3</x>
@@ -647,14 +482,14 @@
             </position>
             <orientation>
                 <x>1.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
-                <inner-angle>90.0</inner-angle>
-                <outer-angle>200.0</outer-angle>
-                <outer-gain>0.15</outer-gain>
+                <y>1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
             </orientation>
-            <reference-dist>900</reference-dist>
-            <max-dist>9000</max-dist>
+            <reference-dist>100</reference-dist>
+            <max-dist>2000</max-dist>
         </engine-jet-afterburner-r>
 
         <!-- Wheel Rumble -->
@@ -693,6 +528,7 @@
             <reference-dist>220.0</reference-dist>
             <max-dist>300.0</max-dist>
         </fuselage-scrape>
+        
         <fuselage-strike>
             <name>fuselage-strike</name>
             <path>Sounds/fuselage-strike.wav</path>
@@ -721,6 +557,7 @@
             <reference-dist>220.0</reference-dist>
             <max-dist>300.0</max-dist>
         </fuselage-strike>
+        
         <rumble>
             <name>rumble</name>
             <mode>looped</mode>
@@ -743,6 +580,7 @@
             <reference-dist>60.0</reference-dist>
             <max-dist>300.0</max-dist>
         </rumble>
+        
         <rattle-front>
             <!--wheel-speed-fps-->
             <name>nose wheel rumble</name>
@@ -754,21 +592,15 @@
                     <property>sim/model/f15/gear-sound-freeze</property>
                 </not>
                 <property>gear/gear[0]/wow</property>
-                                <greater-than>
+                <greater-than>
                     <property>sim/current-view/internal</property>
                     <value>0</value>
                 </greater-than>
 
-<greater-than>
-    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
-    <value>20</value>
-</greater-than>
-<!--
                 <greater-than>
-                    <property>fdm/jsbsim/gear/unit[0]/compression-velocity-fps</property>
-                    <value>0.02</value>
+                    <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+                    <value>20</value>
                 </greater-than>
--->
             </condition>
             <position>
                 <x>-22</x>
@@ -786,9 +618,9 @@
 
         <flaps-wind>
             <condition>
-                <!--<not>
+                <not>
                     <property>sim/model/f15/gear-sound-freeze</property>
-                </not>-->
+                </not>
                 <greater-than>
                     <property>fdm/jsbsim/fcs/flap-windfx-volume</property>
                     <value>0</value>
@@ -801,15 +633,10 @@
                 <property>fdm/jsbsim/fcs/flap-windfx-volume</property>
                 <factor>0.002</factor>
             </volume>
-            <!--<volume>
-        <offset>1</offset>
-        <property>gear/gear[0]/position-norm</property>
-        <factor>-1</factor>
-      </volume>-->
-            <!--<max-dist>5</max-dist>-->
-            <reference-dist>450.0</reference-dist>
-            <max-dist>2900.0</max-dist>
+            <reference-dist>60.0</reference-dist>
+            <max-dist>300.0</max-dist>
         </flaps-wind>
+
         <!-- Gears -->
         <gear-0-wind>
             <condition>
@@ -827,12 +654,11 @@
             <volume>
                 <property>fdm/jsbsim/fcs/gear-windfx-volume</property>
                 <factor>0.005</factor>
-                <!--<property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
-        <factor>0.005</factor>-->
             </volume>
             <reference-dist>450.0</reference-dist>
             <max-dist>2900.0</max-dist>
         </gear-0-wind>
+
         <gear-0-transit>
             <name>gear-0-transit</name>
             <mode>in-transit</mode>
@@ -848,6 +674,7 @@
             <reference-dist>15.0</reference-dist>
             <max-dist>30.0</max-dist>
         </gear-0-transit>
+
         <gear-0-lock>
             <name>gear-0-lock</name>
             <path>Sounds/gear-door-close.wav</path>
@@ -869,6 +696,7 @@
             <reference-dist>15.0</reference-dist>
             <max-dist>30.0</max-dist>
         </gear-0-lock>
+
         <!-- wind -->
         <wind>
             <name>wind</name>
@@ -894,6 +722,7 @@
             <reference-dist>750.0</reference-dist>
             <max-dist>4900.0</max-dist>
         </wind>
+
         <!-- buffet -->
         <high-alpha-airflow>
             <name>high-alpha-airflow</name>
@@ -926,7 +755,7 @@
             <reference-dist>450.0</reference-dist>
             <max-dist>2900.0</max-dist>
         </high-alpha-airflow>
-        <!-- Air-brakes -->
+
         <air-brakes>
             <name>air-brakes</name>
             <mode>looped</mode>
@@ -1045,7 +874,7 @@
             </condition>
             <position>
                 <x>1.2</x>
-                <y>1.0</y>
+                <y>0</y>
                 <z>-0.6</z>
             </position>
             <pitch>
@@ -1149,13 +978,14 @@
                 <value>0.5</value>
             </volume>
         </flap-in-transit>
+
         <canopy>
             <name>canopy</name>
             <mode>in-transit</mode>
             <path>Sounds/canopy-trans.wav</path>
             <property>canopy/position-norm</property>
             <volume>
-                <value>0.6</value>
+                <factor>0.3</factor>
             </volume>
         </canopy>
         <canopy-close>
@@ -1165,13 +995,18 @@
             <condition>
                 <less-than-equals>
                     <property>canopy/position-norm</property>
-                    <value>0.2</value>
+                    <value>0.15</value>
                 </less-than-equals>
             </condition>
             <volume>
-                <value>0.3</value>
+                <volume>
+                    <factor>0.1</factor>
+                    <property>sim/time/elapsed-sec</property>
+                    <max>0.3</max>
+                </volume>
             </volume>
         </canopy-close>
+
         <!-- stall warnings -->
         <pre-stall>
             <name>pre-stall</name>
@@ -1180,11 +1015,11 @@
             <type>avionics</type>
             <condition>
                 <greater-than>
-                    <property>fdm/jsbsim/aero/alpha-indicated-deg</property>
+                    <property>orientation/alpha-indicated-deg</property>
                     <value>25</value>
                 </greater-than>
                 <!--<less-than-equals>
-                    <property>fdm/jsbsim/aero/alpha-indicated-deg</property>
+                    <property>orientation/alpha-indicated-deg</property>
                     <value>22.5</value>
                 </less-than-equals>-->
                 <greater-than>
@@ -1195,6 +1030,13 @@
                     <property>sim/current-view/internal</property>
                     <value>0</value>
                 </greater-than>
+                <not>
+                    <or>
+                        <property>gear/gear[0]/wow</property>
+                        <property>gear/gear[1]/wow</property>
+                        <property>gear/gear[2]/wow</property>
+                    </or>
+                </not>
             </condition>
             <volume>
                 <value>0.4</value>
@@ -1218,8 +1060,9 @@
                 </greater-than>
                 <not>
                     <or>
-                        <property>fdm/jsbsim/contact/unit[3]/WOW</property>
-                        <property>fdm/jsbsim/contact/unit[4]/WOW</property>
+                        <property>gear/gear[0]/wow</property>
+                        <property>gear/gear[1]/wow</property>
+                        <property>gear/gear[2]/wow</property>
                     </or>
                 </not>
                 <greater-than>
@@ -1457,5 +1300,179 @@
                 <value>1</value>
             </volume>
         </gun>
+
+        <!-- gpu -->
+        <gpu-start>
+            <name>gpu-start</name>
+            <mode>once</mode>
+            <path>Sounds/gpu-startup.wav</path>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <volume>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+
+            <position>
+                <x>6</x>
+                <y>-6.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </gpu-start>
+
+        <gpu-running>
+            <name>gpu-running</name>
+            <mode>looped</mode>
+            <path>Sounds/gpu-running.wav</path>
+            <delay-sec>5.979</delay-sec>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <not>
+                    <property>sim/model/f15/sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                    <value>0</value>
+                </greater-than>
+                <not>
+                    <greater-than>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                        <value>0</value>
+                    </greater-than>
+                </not>
+            </condition>
+            <volume>
+                <factor>0.5</factor>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+
+            <position>
+                <x>6</x>
+                <y>-6.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </gpu-running>
+        <gpu-running-with-compressor>
+            <name>gpu-running-with-compressor</name>
+            <mode>looped</mode>
+            <path>Sounds/gpu-running-compressor.wav</path>
+            <delay-sec>5.979</delay-sec>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <not>
+                    <property>sim/model/f15/sound-freeze</property>
+                </not>
+                <and>
+                    <greater-than>
+                        <property>fdm/jsbsim/systems/electrics/ground-power-gpu</property>
+                        <value>0</value>
+                    </greater-than>
+                    <greater-than>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                        <value>0</value>
+                    </greater-than>
+                </and>
+            </condition>
+            <volume>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+            <position>
+                <x>6</x>
+                <y>-6.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>-1.0</y>
+                <z>-0.37</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </gpu-running-with-compressor>
+        <fuel-bowser>
+            <name>fuel-bowser</name>
+            <mode>looped</mode>
+            <path>Sounds/gpu-running.wav</path>
+            <condition>
+                <or>
+                    <property>gear/gear[0]/wow</property>
+                    <property>gear/gear[1]/wow</property>
+                    <property>gear/gear[2]/wow</property>
+                </or>
+                <not>
+                    <property>sim/model/f15/sound-freeze</property>
+                </not>
+                <greater-than>
+                    <property>sim/model/f15/controls/fuel/refuel-probe-switch</property>
+                    <value>0</value>
+                </greater-than>
+            </condition>
+            <volume>
+                <property>fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume</property>
+                <max>0.6</max>
+            </volume>
+
+            <pitch>
+                <factor>0.5</factor>
+            </pitch>
+            <position>
+                <x>2</x>
+                <y>-8.0</y>
+                <z>-1</z>
+            </position>
+            <orientation>
+                <x>1.0</x>
+                <y>0</y>
+                <z>0</z>
+                <inner-angle>180.0</inner-angle>
+                <outer-angle>360.0</outer-angle>
+                <outer-gain>0.5</outer-gain>
+            </orientation>
+            <reference-dist>1</reference-dist>
+            <max-dist>200</max-dist>
+        </fuel-bowser>
+
     </fx>
 </PropertyList>

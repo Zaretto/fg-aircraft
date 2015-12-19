@@ -22,8 +22,8 @@ setprop("sim/model/f15/gear-sound-freeze",0);
 setprop("sim/model/f15/engine-sound-freeze",0);
 setprop("sim/model/f15/controls/engines/switch-backup-ignition",0);
 
-setprop("/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm",1);
-setprop("/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm",1);
+setprop("fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm",1);
+setprop("fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm",1);
 
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f15/fx/engine/l-engine-pitch-n1",1);
 #var l_engine_pitch_n1  = props.globals.getNode("sim/model/f15/fx/engine/l-engine-pitch-n2",1);
@@ -45,10 +45,10 @@ var jfs_start = props.globals.getNode("sim/model/f15/controls/jfs",1);
 var jfs_running_lamp = props.globals.getNode("sim/model/f15/lights/jfs-ready",1);
 jfs_start.setValue(0);
 jfs_running_lamp.setValue(0);
-setprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight",0);
-setprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight",0);
-setprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner",0);
-setprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner",0);
+setprop("fdm/jsbsim/propulsion/engine[0]/augmentation-alight",0);
+setprop("fdm/jsbsim/propulsion/engine[1]/augmentation-alight",0);
+setprop("fdm/jsbsim/propulsion/engine[0]/augmentation-burner",0);
+setprop("fdm/jsbsim/propulsion/engine[1]/augmentation-burner",0);
 
 var jfs_set_running_active = 0;
 
@@ -99,9 +99,9 @@ var computeEngines = func {
     #
     # EGT Hot is used to control the red colour on the drums
     if(egt1v >= 2180) # ~940 degc
-        setprop("/engines/engine[0]/egt-hot",1);
+        setprop("engines/engine[0]/egt-hot",1);
     else
-        setprop("/engines/engine[0]/egt-hot",0);
+        setprop("engines/engine[0]/egt-hot",0);
 
     #
     #
@@ -118,9 +118,9 @@ var computeEngines = func {
     # EGT Hot is used to control the red colour on the drums
 
     if(egt2v >= 2180) # ~940 degc
-        setprop("/engines/engine[1]/egt-hot",1);
+        setprop("engines/engine[1]/egt-hot",1);
     else
-        setprop("/engines/engine[1]/egt-hot",0);
+        setprop("engines/engine[1]/egt-hot",0);
 
     if ( getprop("sim/replay/time") > 0 ) 
     { 
@@ -131,13 +131,16 @@ var computeEngines = func {
     {
 # not in replay so copy the properties;
         # 
-        setprop("engines/engine[0]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
-        setprop("engines/engine[1]/afterburner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
-        setprop("engines/engine[0]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
-        setprop("engines/engine[1]/augmentation-burner", getprop("/fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
+        setprop("engines/engine[0]/PB",getprop("fdm/jsbsim/propulsion/engine[0]/PB"));
+        setprop("engines/engine[1]/PB",getprop("fdm/jsbsim/propulsion/engine[1]/PB"));
 
-        setprop("surface-positions/l-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
-        setprop("surface-positions/r-ramp1-position-deg",getprop("/fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
+        setprop("engines/engine[0]/afterburner", getprop("fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
+        setprop("engines/engine[1]/afterburner", getprop("fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
+        setprop("engines/engine[0]/augmentation-burner", getprop("fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
+        setprop("engines/engine[1]/augmentation-burner", getprop("fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
+
+        setprop("surface-positions/l-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
+        setprop("surface-positions/r-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
     }
 }
 
@@ -163,7 +166,7 @@ var engineControls = func {
         var l_n1 = r_n1_prop.getValue();
         #
         # need to use JFS when no external air.
-        if (!(l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air")))
+        if (!(l_running or r_running or getprop("fdm/jsbsim/systems/electrics/ground-air")))
         {
             if (l_starter or r_starter){
                 if (jfs_start.getValue() <= 1)
@@ -189,7 +192,7 @@ var engineControls = func {
         }
     }
 
-    var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
+    var bleed_air_available = jfs_running or l_running or r_running or getprop("fdm/jsbsim/systems/electrics/ground-air");
 
     if (engine_crank_switch_pos_prop.getValue() > 0 
             and l_starter == 0 
@@ -417,7 +420,7 @@ var engine_crank_switch = func(n) {
     #
 # If no source of bleed air (external or other engine running) then fire up JFS
 
-    var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
+    var bleed_air_available = jfs_running or l_running or r_running or getprop("fdm/jsbsim/systems/electrics/ground-air");
 
     engine_start_initiated = 1;
 

@@ -97,9 +97,22 @@
     <!-- tacan distance digital display -->
     <animation>
         <type>textranslate</type>
+        <object-name>miles-drum-0</object-name>
+        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <factor>1</factor>
+        <offset>-0.1</offset>
+        <step>0.1</step>
+        <scroll>0.01</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
         <object-name>miles-drum-1</object-name>
         <property>instrumentation/tacan/indicated-distance-nm</property>
         <factor>0.1</factor>
+        <step>1</step>
         <offset>-1</offset>
         <axis>
             <y>-1</y>

@@ -21,8 +21,8 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
     <path>flame.ac</path>
 
     <params>
-        <augmentation-alight>/sim/multiplay/generic/int[8]</augmentation-alight>
-        <augmentation-ignition>/sim/multiplay/generic/float[8]</augmentation-ignition>
+        <augmentation-alight>sim/multiplay/generic/int[8]</augmentation-alight>
+        <augmentation-ignition>sim/multiplay/generic/float[8]</augmentation-ignition>
     </params>
 
     <model>
@@ -87,7 +87,11 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
                 <property alias="/params/augmentation-ignition"/>
                 <value>0</value>
             </greater-than>
-        </condition>
+            <not>
+                <property>/sim/rendering/shaders/skydome</property>
+            </not>
+
+            </condition>
     </animation>
 
     <animation>

@@ -188,7 +188,7 @@ active_u = nil;
             if (tchan != nil and !we_are_bs)
             {
                 tchan = tchan.getValue();
-                if (tchan == getprop("/instrumentation/tacan/display/channel"))
+                if (tchan == getprop("instrumentation/tacan/display/channel"))
                 {
                     # Tuned into this carrier (node) so use the offset.
                     # Get the position of the glideslope; this is offset from the carrier position by

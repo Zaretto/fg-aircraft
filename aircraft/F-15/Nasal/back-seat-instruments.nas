@@ -75,13 +75,13 @@ instruments_data_import = func
 			if (size(l) > 11)
 			{
 			    var ac_powered = l[10] != nil and l[10] == "1";
-			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",ac_powered);
-			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",ac_powered); 
-			    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
+			    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",ac_powered);
+			    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus2",ac_powered); 
+			    setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",ac_powered);
+		        setprop("fdm/jsbsim/systems/electrics/ac-right-main-bus",ac_powered);
+		        setprop("fdm/jsbsim/systems/electrics/dc-essential-bus1",ac_powered);
+		        setprop("fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered);
+		        setprop("fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
 		    }
 			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
             Pilot.getNode("engines/engine[0]/egt-degC").setValue(l[11]);
@@ -152,18 +152,18 @@ var init = func {
     #
     #
     # Set the electrics for yasim (basic electrical model)
-    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
-    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",75); 
-    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",75);
-    setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",75);
-    setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",28);
-    setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",28);
-    setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",28);
-    setprop("/fdm/jsbsim/systems/electrics/egenerator-kva",0);
-    setprop("/fdm/jsbsim/systems/electrics/emerg-generator-status",0);
-    setprop("/fdm/jsbsim/systems/electrics/lgenerator-kva",75);
-    setprop("/fdm/jsbsim/systems/electrics/rgenerator-kva",75);
-    setprop("/fdm/jsbsim/systems/electrics/transrect-online",2);
+    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",75);
+    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus2",75); 
+    setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",75);
+    setprop("fdm/jsbsim/systems/electrics/ac-right-main-bus",75);
+    setprop("fdm/jsbsim/systems/electrics/dc-essential-bus1",28);
+    setprop("fdm/jsbsim/systems/electrics/dc-essential-bus2",28);
+    setprop("fdm/jsbsim/systems/electrics/dc-main-bus",28);
+    setprop("fdm/jsbsim/systems/electrics/egenerator-kva",0);
+    setprop("fdm/jsbsim/systems/electrics/emerg-generator-status",0);
+    setprop("fdm/jsbsim/systems/electrics/lgenerator-kva",75);
+    setprop("fdm/jsbsim/systems/electrics/rgenerator-kva",75);
+    setprop("fdm/jsbsim/systems/electrics/transrect-online",2);
     setprop("fdm/jsbsim/systems/hydraulics/combined-system-psi",2398);
     setprop("fdm/jsbsim/systems/hydraulics/flight-system-psi",2396);
     setprop("engines/engine[0]/oil-pressure-psi", 28);
