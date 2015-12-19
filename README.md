@@ -1,7 +1,7 @@
-fg-aircraft
-===========
+Zaretto FlightGear Aircraft Models
+-----------------------------------------------
 
-Flightgear aircraft models by Richard Harrison
+Aircraft directory contains the FlightGear aircraft models by Richard Harrison
 
 F-14B - see http://zaretto.com/f-14. JSBSim aero model and improvements to original f-14b by xii, flying_toaster;
 
