@@ -287,7 +287,7 @@ var AIM9 = {
 		me.latN.setDoubleValue(me.coord.lat());
 		me.lonN.setDoubleValue(me.coord.lon());
 		me.altN.setDoubleValue(alt_ft);
-		me.coord.set_alt(alt_ft);
+		me.coord.set_alt(alt_ft * FT2M);
 		me.pitchN.setDoubleValue(pitch_deg);
 		me.hdgN.setDoubleValue(hdg_deg);
 
@@ -367,7 +367,7 @@ var AIM9 = {
 
 			# Get target position.
 			var t_alt = me.TgtAlt_prop.getValue();
-			me.t_coord.set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), t_alt);
+			me.t_coord.set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), t_alt * FT2M);
 
 			# Calculate current target elevation and azimut deviation.
 			var t_dist_m = me.coord.distance_to(me.t_coord);
@@ -445,7 +445,20 @@ var AIM9 = {
 				var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
 				print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
 				impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug,(speed_mps)
-				var phrase = sprintf( "%01.0f", me.direct_dist_m) ~ "meters";
+
+				var min_distance = me.direct_dist_m;
+				var explosion_coord = me.last_coord;
+				for (var i = 0.1; i < 1; i += 0.1) {
+					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
+					var coord = me.interpolate(me.last_coord, me.coord, i);
+					var dist = coord.direct_distance_to(t_coord);
+					if (dist < min_distance) {
+						min_distance = dist;
+						explosion_coord = coord;
+					}
+				}
+
+				var phrase = sprintf( "%01.1f", min_distance) ~ "meters";
 				if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
 					setprop("/sim/multiplay/chat", phrase);
 				} else {
@@ -459,6 +472,17 @@ var AIM9 = {
 		me.last_t_coord = me.t_coord;
 		me.direct_dist_m = cur_dir_dist_m;
 		return(1);
+	},
+
+	interpolate: func (start, end, fraction) {
+		var x = (start.x()*(1-fraction)+end.x()*fraction);
+		var y = (start.y()*(1-fraction)+end.y()*fraction);
+		var z = (start.z()*(1-fraction)+end.z()*fraction);
+
+		var c = geo.Coord.new();
+		c.set_xyz(x,y,z);
+
+		return c;
 	},
 
 
@@ -608,7 +632,7 @@ var impact_report = func(pos, mass_slug, string) {
 			break;
 	var impact = n.getChild(string, i, 1);
 
-	impact.getNode("impact/elevation-m", 1).setValue(pos.alt()*FT2M);
+	impact.getNode("impact/elevation-m", 1).setValue(pos.alt());
 	impact.getNode("impact/latitude-deg", 1).setValue(pos.lat());
 	impact.getNode("impact/longitude-deg", 1).setValue(pos.lon());
 	impact.getNode("mass-slug", 1).setValue(mass_slug);
