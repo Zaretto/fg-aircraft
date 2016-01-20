@@ -165,7 +165,7 @@ var AIM9 = {
 		me.pitchN.setDoubleValue(ac_pitch);
 		me.rollN.setDoubleValue(ac_roll);
 
-		me.coord.set_latlon(alat, alon, me.ac.alt());
+		me.coord.set_latlon(alat, alon, aalt * FT2M);
 
 		me.model.getNode("latitude-deg-prop", 1).setValue(me.latN.getPath());
 		me.model.getNode("longitude-deg-prop", 1).setValue(me.lonN.getPath());

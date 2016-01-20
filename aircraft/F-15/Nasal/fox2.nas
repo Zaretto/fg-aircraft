@@ -191,7 +191,7 @@ print("Model ",missile_model);
 		me.pitchN.setDoubleValue(ac_pitch);
 		me.rollN.setDoubleValue(ac_roll);
 
-		me.coord.set_latlon(alat, alon, me.ac.alt());
+		me.coord.set_latlon(alat, alon, aalt * FT2M);
 
 		me.model.getNode("latitude-deg-prop", 1).setValue(me.latN.getPath());
 		me.model.getNode("longitude-deg-prop", 1).setValue(me.lonN.getPath());
@@ -767,13 +767,6 @@ steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, mass, dt) {
 # HUD clamped target blinker
 SW_reticle_Blinker = aircraft.light.new("sim/model/f15/lighting/hud-sw-reticle-switch", [0.1, 0.1]);
 setprop("sim/model/f15/lighting/hud-sw-reticle-switch/enabled", 1);
-
-
-
-
-
-
-
 
 
 
