@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<PropertyList>
+<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <sim>
         <description>Grumman F-14A</description>
         <author>Richard Harrison, Enrique Laso - Alexis Bory</author>
@@ -270,6 +270,10 @@
                 <desc>Decrease Radar Range</desc>
             </key>
             <key>
+                <name>y Shift-y</name>
+                <desc>Next / Previous target</desc>
+            </key>
+            <key>
                 <name>o</name>
                 <desc>toggle arrester hook</desc>
             </key>
@@ -278,7 +282,7 @@
                 <desc>Increase Radar Range</desc>
             </key>
             <key>
-                <name>Ctrl-s</name>
+                <name>Ctrl-y</name>
                 <desc>Toggle ground spoilers armed</desc>
             </key>
             <key>
@@ -295,7 +299,7 @@
             </key>
             <line>__________________________________________________</line>
             <key>
-                <name>a</name>
+                <name>Ctrl-S</name>
                 <desc>Toggle APC (Landing Automatic Power control)</desc>
             </key>
             <!--<key>
@@ -339,7 +343,7 @@
                 <desc>Cycle pylons selection</desc>
             </key>
             <key>
-                <name>w</name>
+                <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
             </key>
             <key>
@@ -398,7 +402,7 @@
             <line>     located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
             <line>     catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
             <line>__________________________________________________</line>
-            <line>Automatic Power Control (APC) (keyboard "a" toggle):</line>
+            <line>Automatic Power Control (APC) (keyboard "ctrl-s" toggle):</line>
             <line>     APC regulates engine thrust to maintain thean optimum approach angle of attack for landing. </line>
             <line>     To engage APC, gear must be down, in air, throttles between 98% and 68% rpm (as shown on the panel gauges)</line>
             <line>     Abnormal disengagement will cause the AUTO THROT caution light on the left side of the HUD to illuminate for 10 seconds.</line>
@@ -1366,49 +1370,6 @@
         <keyboard n="0" >
             <multikey include="Systems/instruments-multikey.xml"/>
 
-            <!-- map keys for launch-bar -->
-            <key n="76">
-                <name>L</name>
-                <desc>Launch-bar engage.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                        print("Disengage launchbar");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        setprop("/controls/gear/brake-parking",1);
-                        }
-                        else
-                        {
-                        print("Engage launchbar");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
-                        setprop("/controls/gear/brake-parking",0);
-                        }
-                    </script>
-                </binding>
-            </key>
-            <!-- map keys for catapult launch -->
-            <key n="67">
-                <name>C</name>
-                <desc>Catapult Launch Command.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                        print("Catapult launch");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        }
-                        else
-                        {
-                        }
-                    </script>
-                </binding>
-            </key>
             <key n="1">
                 <name>CTRL-a</name>
                 <desc>Toggle autopilot altitude mode.</desc>
@@ -1418,6 +1379,7 @@
                 </binding>
             </key>
 
+<!--
             <key n="4">
                 <name>CTRL-d</name>
                 <desc>DLC toggle</desc>
@@ -1426,6 +1388,7 @@
                     <script>f14.toggleDLC();</script>
                 </binding>
             </key>
+-->
 
             <key n="8">
                 <name>CTRL-h</name>
@@ -1433,15 +1396,6 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14_afcs.afcs_heading_switch(0);</script>
-                </binding>
-            </key>
-
-            <key n="13">
-                <name>Ctrl-m</name>
-                <desc>Toggle AIM-9 selection</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>f14.station_selector_cycle()</script>
                 </binding>
             </key>
 
@@ -1463,12 +1417,12 @@
                 </binding>
             </key>
 
-            <key n="19">
-                <name>Ctrl-s</name>
-                <desc>Toggle ground spoilers armed</desc>
+		   <key n="19">
+                <name>CTRL-S</name>
+                <desc>toggle APC</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>f14.toggleGroundSpoilers();</script>
+                    <script>f14.toggleAPC();</script>
                 </binding>
             </key>
 
@@ -1496,6 +1450,15 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14.master_arm_cycle();</script>
+                </binding>
+            </key>
+
+            <key n="25">
+                <name>Ctrl-y</name>
+                <desc>Toggle ground spoilers armed</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggleGroundSpoilers();</script>
                 </binding>
             </key>
 
@@ -1537,6 +1500,26 @@
                 </binding>
             </key>
 
+            <!-- map keys for catapult launch -->
+            <key n="67">
+                <name>C</name>
+                <desc>Catapult Launch Command.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+                        {
+                        print("Catapult launch");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+                        }
+                        else
+                        {
+                        }
+                    </script>
+                </binding>
+            </key>
+<!--
             <key n="68">
                 <name>D</name>
                 <desc>DLC decrease</desc>
@@ -1547,6 +1530,7 @@
                     <min>0</min>
                 </binding>
             </key>
+-->
 
             <key n="69">
                 <name>E</name>
@@ -1566,21 +1550,37 @@
                 </binding>
             </key>
 
+            <!-- map keys for launch-bar -->
+            <key n="76">
+                <name>L</name>
+                <desc>Launch-bar engage.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+                        {
+                        print("Disengage launchbar");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+                        setprop("/controls/gear/brake-parking",1);
+                        }
+                        else
+                        {
+                        print("Engage launchbar");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
+                        setprop("/controls/gear/brake-parking",0);
+                        }
+                    </script>
+                </binding>
+            </key>
+
             <key n="82">
                 <name>R</name>
                 <desc>Increase Radar Range</desc>
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.range_control(1);</script>
-                </binding>
-            </key>
-
-            <key n="97">
-                <name>a</name>
-                <desc>toggle APC</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>f14.toggleAPC();</script>
                 </binding>
             </key>
 
@@ -1593,6 +1593,7 @@
                 </binding>
             </key>
 
+<!--
             <key n="100">
                 <name>d</name>
                 <desc>DLC increase</desc>
@@ -1603,6 +1604,7 @@
                     <max>1.0</max>
                 </binding>
             </key>
+-->
 
             <key n="101">
                 <name>e</name>
@@ -1665,8 +1667,8 @@
                 </binding>
             </key>
 
-            <key n="119">
-                <name>w</name>
+            <key n="109">
+                <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
                 <binding>
                     <command>property-adjust</command>
@@ -1677,6 +1679,26 @@
                     <repeat>false</repeat>
                     <wrap>true</wrap>
                 </binding>
+            <key n="121">
+                <name>y</name>
+                <desc>Next target select</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <key n="89">
+                <name>Y</name>
+                <desc>Previous target select</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>-1</value>
+                </binding>
+            </key>
+
                 <binding>
                     <command>nasal</command>
                     <script>f14.arm_selector();</script>
@@ -1700,7 +1722,6 @@
                     <script>f14.trimDown();</script>
                 </binding>
             </key>
-
 
         </keyboard>
     </input>
@@ -1777,6 +1798,7 @@
             <file>Aircraft/f-14b/Nasal/fuel-system.nas</file>
             <file>Aircraft/f-14b/Nasal/weapons.nas</file>
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
+            <file>Aircraft/f-14b/Nasal/bombable_integration.nas</file>
         </f14>
         <f14_hud>
             <file>Aircraft/f-14b/Nasal/hud.nas</file>
@@ -1786,7 +1808,7 @@
         </f14_chronograph>
         <f14_instruments>
             <file>Aircraft/f-14b/Nasal/instruments.nas</file>
-        </f14_instruments>
+         </f14_instruments>
         <f14_afcs>
             <file>Aircraft/f-14b/Nasal/afcs.nas</file>
         </f14_afcs>
