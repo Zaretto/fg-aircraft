@@ -174,7 +174,7 @@ var release_aim9 = func() {
 		if ( Current_aim9.status == 1 ) {
 			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
 			if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", phrase);
+				setprop("/sim/multiplay/chat", fox2.defeatSpamFilter(phrase));
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
