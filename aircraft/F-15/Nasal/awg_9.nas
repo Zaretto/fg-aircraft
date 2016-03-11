@@ -42,7 +42,7 @@ var r_az_fld          = 0;
 var swp_fac           = nil;    # Scan azimuth deviation, normalized (-1 --> 1).
 var swp_deg           = nil;    # Scan azimuth deviation, in degree.
 var swp_deg_last      = 0;      # Used to get sweep direction.
-var swp_spd           = 1.7; 
+var swp_spd           = 0.5; 
 var swp_dir           = nil;    # Sweep direction, 0 to left, 1 to right.
 var swp_dir_last      = 0;
 var ddd_screen_width  = 0.0844; # 0.0844m : length of the max azimuth range on the DDD screen.
@@ -137,7 +137,7 @@ var az_scan = func() {
 # be ok; the values (distance etc) will be read from the target list so these will be accurate
 # which isn't quite how radar works but it will be good enough for us.
 
-	if (swp_dir != swp_dir_last)
+    if (1==1 or swp_dir != swp_dir_last)
     {
 #print("Sweep ",active_u, active_u_callsign);
 		# Antena scan direction change (at max: more or less every 2 seconds). Reads the whole MP_list.
@@ -173,7 +173,7 @@ active_u = nil;
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (!c.getNode("valid", 1).getValue()) {
+            if (c.getNode("valid") == nil or !c.getNode("valid").getValue() or isNotBehindTerrain(c) == 0) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
@@ -357,14 +357,14 @@ active_u = nil;
         {
             if (nearest_u != nil)
             {
-                active_u_callsign = nearest_u.Callsign.getValue();
+#                active_u_callsign = nearest_u.Callsign.getValue();
             }
             if (tmp_nearest_u != nil)
             {
-                if (tmp_nearest_u.Callsign != nil)
-                    active_u_callsign = tmp_nearest_u.Callsign.getValue();
-                else
-                    active_u_callsign = nil;
+#                if (tmp_nearest_u.Callsign != nil)
+#                    active_u_callsign = tmp_nearest_u.Callsign.getValue();
+#                else
+#                    active_u_callsign = nil;
 
             }
         }
@@ -475,6 +475,133 @@ if(size(sorted_dist)>0)
 	swp_dir_last = swp_dir;
 
     cnt += 0.05;
+
+    if (!containsV(tgts_list, active_u)) {
+        active_u = nil;
+        #active_u_callsign = nil;
+    }
+}
+
+var containsV = func (vector, content) {
+    if (content == nil) {
+        return 0;
+    }
+    foreach(var vari; vector) {
+        if (vari.string == content.string) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+#
+# The following 1 methods is from Mirage 2000-5
+#
+var isNotBehindTerrain = func(node) {
+    var SelectCoord = geo.Coord.new();
+    var x = nil;
+    var y = nil;
+    var z = nil;
+    call(func {
+        x = node.getNode("position/global-x").getValue();
+        y = node.getNode("position/global-y").getValue();
+        z = node.getNode("position/global-z").getValue(); },
+        nil, var err = []);
+    if(x == nil or y == nil or z == nil) {
+        return 1;
+    }
+    var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
+
+    var isVisible = 0;
+    var MyCoord = geo.aircraft_position();
+    
+    # Because there is no terrain on earth that can be between these 2
+    if(MyCoord.alt() < 8900 and SelectCoord.alt() < 8900)
+    {
+        # Temporary variable
+        # A (our plane) coord in meters
+        var a = MyCoord.x();
+        var b = MyCoord.y();
+        var c = MyCoord.z();
+        # B (target) coord in meters
+        var d = SelectCoord.x();
+        var e = SelectCoord.y();
+        var f = SelectCoord.z();
+        var x = 0;
+        var y = 0;
+        var z = 0;
+        var RecalculatedL = 0;
+        var difa = d - a;
+        var difb = e - b;
+        var difc = f - c;
+        # direct Distance in meters
+        var myDistance = SelectCoord.direct_distance_to(MyCoord);
+        var Aprime = geo.Coord.new();
+        
+        # Here is to limit FPS drop on very long distance
+        var L = 1000;
+        if(myDistance > 50000)
+        {
+            L = myDistance / 15;
+        }
+        var step = L;
+        var maxLoops = int(myDistance / L);
+        
+        isVisible = 1;
+        # This loop will make travel a point between us and the target and check if there is terrain
+        for(var i = 0 ; i < maxLoops ; i += 1)
+        {
+            L = i * step;
+            var K = (L * L) / (1 + (-1 / difa) * (-1 / difa) * (difb * difb + difc * difc));
+            var DELTA = (-2 * a) * (-2 * a) - 4 * (a * a - K);
+            
+            if(DELTA >= 0)
+            {
+                # So 2 solutions or 0 (1 if DELTA = 0 but that 's just 2 solution in 1)
+                var x1 = (-(-2 * a) + math.sqrt(DELTA)) / 2;
+                var x2 = (-(-2 * a) - math.sqrt(DELTA)) / 2;
+                # So 2 y points here
+                var y1 = b + (x1 - a) * (difb) / (difa);
+                var y2 = b + (x2 - a) * (difb) / (difa);
+                # So 2 z points here
+                var z1 = c + (x1 - a) * (difc) / (difa);
+                var z2 = c + (x2 - a) * (difc) / (difa);
+                # Creation Of 2 points
+                var Aprime1  = geo.Coord.new();
+                Aprime1.set_xyz(x1, y1, z1);
+                
+                var Aprime2  = geo.Coord.new();
+                Aprime2.set_xyz(x2, y2, z2);
+                
+                # Here is where we choose the good
+                if(math.round((myDistance - L), 2) == math.round(Aprime1.direct_distance_to(SelectCoord), 2))
+                {
+                    Aprime.set_xyz(x1, y1, z1);
+                }
+                else
+                {
+                    Aprime.set_xyz(x2, y2, z2);
+                }
+                var AprimeLat = Aprime.lat();
+                var Aprimelon = Aprime.lon();
+                var AprimeTerrainAlt = geo.elevation(AprimeLat, Aprimelon);
+                if(AprimeTerrainAlt == nil)
+                {
+                    AprimeTerrainAlt = 0;
+                }
+                
+                if(AprimeTerrainAlt > Aprime.alt())
+                {
+                    isVisible = 0;
+                }
+            }
+        }
+    }
+    else
+    {
+        isVisible = 1;
+    }
+    return isVisible;
 }
 
 
