@@ -744,10 +744,11 @@ else
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
         obj.propNode = c;
+        obj.TgTCoord  = geo.Coord.new();
         if (c.getNode("position/latitude-deg") != nil)
-            obj.lat = c.getNode("position/latitude-deg").getValue();
+            obj.lat = c.getNode("position/latitude-deg");
         if (c.getNode("position/longitude-deg") != nil)
-            obj.lon = c.getNode("position/longitude-deg").getValue();
+            obj.lon = c.getNode("position/longitude-deg");
  
         if (obj.type == "multiplayer" or obj.type == "tanker" or obj.type == "aircraft" and obj.RdrProp != nil) 
             obj.airbone = 1;
@@ -958,6 +959,11 @@ else
         }
         return 0;
     },
+    get_Coord: func(){
+        me.TgTCoord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
+        return me.TgTCoord;
+    },
+
 	get_closure_rate : func() {
         #
         # calc closure using trig as the elapsed time method is not really accurate enough and jitters considerably
@@ -967,20 +973,31 @@ else
             var our_hdg = getprop("orientation/heading-deg");
             if(our_hdg != nil)
             {
-                var bearing = me.get_deviation(our_hdg);
+                var myCoord = me.get_Coord();
+                var bearing = 0;
+                if(myCoord.is_defined())
+                {
+                    bearing = aircraft.ownship_pos.course_to(myCoord);
+                    bearing_ = myCoord.course_to(aircraft.ownship_pos);
+                }
                 var vtrue_kts = getprop("fdm/jsbsim/velocities/vtrue-kts");
                 if (vtrue_kts != nil)
                 {
-                    var vec1 = vtrue_kts * math.cos( (bearing - our_hdg) / 57.29577950560105);
-                    var vec2 = tas * math.cos( (bearing - me.get_bearing()) / 57.29577950560105);
-                    return vec1-vec2;
+                    #
+                    # Closure rate is a doppler thing. see figure 4 http://www.tscm.com/doppler.pdf
+                    # closing velocity = OwnshipVelocity * cos(target_bearing) + TargetVelocity*cos(ownship_bearing);
+                    var vec_ownship = vtrue_kts * math.cos( (bearing - our_hdg) / 57.29577950560105);
+                    var vec_target = tas * math.cos( (bearing_ - me.get_bearing()) / 57.29577950560105);
+                    return vec_ownship+vec_target;
                 }
             }
         }
         else
             print("NO TAS ",me.type," ",u.get_range(),u.Model, u.Callsign.getValue());
         return 0;
-
+#
+# this is the old way of calculating closure; it's wrong because this isn't what it actually is in
+# radar terms.
 		var dt = ElapsedSec.getValue() - me.TimeLast.getValue();
 		var rng = me.Range.getValue();
 		var lrng = me.RangeLast.getValue();
