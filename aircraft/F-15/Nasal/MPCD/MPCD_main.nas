@@ -2,11 +2,13 @@
 # ---------------------------
 # MPCD has many pages; the classes here support multiple pages, menu
 # operation and the update loop.
+# Uses the canvas nav display for the sit page. This may need more customisations as 
+# it's a bit "airliner" at the moment.
 # ---------------------------
 # Richard Harrison: 2015-01-23 : rjh@zaretto.com
 # ---------------------------
 
-setprop ("/sim/startup/terminal-ansi-colors",0);
+#for debug: setprop ("/sim/startup/terminal-ansi-colors",0);
 
 var MPCDcanvas= canvas.new({
                            "name": "F-15 MPCD",
@@ -72,7 +74,7 @@ var MPCD_Page = {
         if(me.svg != nil)
             me.svg.setVisible(vis);
 #        print("Set visible ",me.layer_id);
-
+        me.display();
         if (vis)
         {
             foreach(mi ;  me.menus)
@@ -117,10 +119,11 @@ display : func
 
 var MPCD_Device =
 {
-    new : func(svg)
+    new : func(canvas_root, svg)
     {
 		var obj = {parents : [MPCD_Device] };
         obj.svg = svg;
+        obj.canvas = canvas_root;
         obj.current_page = nil;
         obj.pages = [];
         obj.buttons = setsize([], 20);
@@ -322,7 +325,95 @@ var MPCD_Station = {
     },
 };
 
-var MPCD =  MPCD_Device.new(MPCDsvg);
+#
+# Add a canvas nav display page to the MPCD.
+#e.g var pjitds_1 =  MPCD_Sit.new(MPCD,"Situation", "mpcd-sit", "pjitds_1", "jtids_main");
+var MPCD_Sit =
+{
+#
+# Instantiate parameters:
+# 1. mpcd (instance of MPCD_Device)
+# 2. instrument display ident (e.g. mpcd-sit, or mpcd-sit-left mpcd-sit-right for multiple displays)
+#    (this is used to map to the property tree)
+# 3. layer_id: main layer  in the SVG
+# 4. nd_group_ident : group (usually within the main layer) to place the NavDisplay
+# 5. switches - used to connect the property tree to the nav display. see the canvas nav display
+#    documentation
+	new : func (mpcd, title, instrument_ident, layer_id, nd_group_ident, switches=nil)
+    {
+# inherits from mpcd page; so construct using the addPage methods and then override the methods.
+		var obj = mpcd.addPage(title, layer_id);
+
+        # if no switches given then use a default set.
+        if (switches != nil)
+            obj.switches = switches;
+        else
+            obj.switches = {
+                'toggle_range':         { path: '/inputs/range-nm',    value: 50,    type: 'INT' },
+                'toggle_weather':       { path: '/inputs/wxr',         value: 0,     type: 'BOOL' },
+                'toggle_airports':      { path: '/inputs/arpt',        value: 1,     type: 'BOOL' },
+                'toggle_stations':      { path: '/inputs/sta',         value: 1,     type: 'BOOL' },
+                'toggle_waypoints':     { path: '/inputs/wpt',         value: 1,     type: 'BOOL' },
+                'toggle_position':      { path: '/inputs/pos',         value: 0,     type: 'BOOL' },
+                'toggle_data':          { path: '/inputs/data',        value: 0,     type: 'BOOL' },
+                'toggle_terrain':       { path: '/inputs/terr',        value: 0,     type: 'BOOL' },
+                'toggle_traffic':       { path: '/inputs/tfc',         value: 1,     type: 'BOOL' },
+                'toggle_centered':      { path: '/inputs/nd-centered', value: 1,     type: 'BOOL' },
+                'toggle_lh_vor_adf':    { path: '/inputs/lh-vor-adf',  value: 1,     type: 'INT' },
+                'toggle_rh_vor_adf':    { path: '/inputs/rh-vor-adf',  value: 1,     type: 'INT' },
+                'toggle_display_mode':  { path: '/mfd/display-mode',   value: 'MAP', type: 'STRING' },
+                'toggle_display_type':  { path: '/mfd/display-type',   value: 'LCD', type: 'STRING' },
+                'toggle_true_north':    { path: '/mfd/true-north',     value: 0,     type: 'BOOL' },
+                'toggle_rangearc':      { path: '/mfd/rangearc',       value: 0,     type: 'BOOL' },
+                'toggle_track_heading': { path: '/hdg-trk-selected',   value: 1,     type: 'BOOL' },
+            };
+
+        obj.nd_initialised = 0;
+        obj.nd_placeholder_ident = nd_group_ident;
+        obj.nd_ident = instrument_ident;
+
+# use the radar range as the ND range.
+        setprop("instrumentation/"~obj.nd_ident~"/inputs/range-nm", getprop("instrumentation/radar/radar2-range"));
+        setlistener("instrumentation/radar/radar2-range", func(v)
+                    {
+                        setprop("instrumentation/"~obj.nd_ident~"/inputs/range-nm", v.getValue());
+                    });
+
+# Method overrides
+        obj.nd_init = func
+        {
+            me.ND = canvas.NavDisplay;
+            if (!me.nd_initialised)
+            {
+                me.nd_initialised = 1;
+    
+                me.NDCpt = me.ND.new("instrumentation/"~me.nd_ident, me.switches);
+    
+                me.group = mpcd.svg.getElementById(me.nd_placeholder_ident);
+                me.group.setScale(0.37,0.45);
+                me.group.setTranslation(40,-20);
+                me.NDCpt.newMFD(me.group, mpcd.canvas);
+            }
+            me.NDCpt.update();
+        };
+        # called when the page goes on display. This causes a "wobble" the first time - so it could
+        # be pre-initialized - however it seems to depend on other things so this can't be done directly
+        # within the constructor.
+        obj.display = func
+        {
+            if (!me.nd_initialised)
+                me.nd_init();
+        };
+        #
+        # most updates performed by the canvas nav display directly.
+        obj.update = func
+        {
+        };        
+        return obj;
+    },
+};
+
+var MPCD =  MPCD_Device.new(MPCDcanvas, MPCDsvg);
 
 setlistener("sim/model/f15/controls/MPCD/button-pressed", func(v)
             {
@@ -367,7 +458,8 @@ p1_3.S8 = MPCD_Station.new(MPCDsvg, 8);
 #9 droptank
 p1_3.S10 = MPCD_Station.new(MPCDsvg, 10);
 
-var pjitds_1 = MPCD.addPage("JITDS Decentered", "pjitds_1");
+var pjitds_1 =  MPCD_Sit.new(MPCD,"Situation", "mpcd-sit", "pjitds_1", "jtids_main");
+
 var p_spin_recovery = MPCD.addPage("Spin recovery", "p_spin_recovery");
 p_spin_recovery.cur_page = nil;
 
