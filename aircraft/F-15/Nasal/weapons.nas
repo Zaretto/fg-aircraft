@@ -31,6 +31,12 @@ var sel_missile_count = 0;
 
 aircraft.data.add( WeaponSelector, ArmSwitch );
 
+setlistener("sim/model/f15/controls/armament/weapon-selector", func(v)
+{
+    aircraft.arm_selector();
+    aircraft.demand_weapons_refresh();
+});
+
 
 # Init
 var weapons_init = func()
