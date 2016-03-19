@@ -488,6 +488,9 @@
                 <!-- always force gear down when on ground - to prevent inadvertant retraction -->
                 position/aircraft-on-ground ne 0
             </test>
+            <test value="gear/gear-pos-norm">
+                /gear/serviceable ne 1
+            </test>
             <test value="gear/gear-dmd-norm">
                 systems/hydraulics/combined-system-pressure ne 1
             </test>
