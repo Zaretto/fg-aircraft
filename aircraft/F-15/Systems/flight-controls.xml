@@ -4,6 +4,7 @@
    Longitudinal travel: -10 to 15cm
 -->
     <property value="1">fcs/ari-lateral-enabled</property>
+    <property value="1">gear/serviceable</property>
 
     <channel name="Pitch">
         <summer name="Pitch Trim Sum">
@@ -489,7 +490,7 @@
                 position/aircraft-on-ground ne 0
             </test>
             <test value="gear/gear-pos-norm">
-                /gear/serviceable ne 1
+                gear/serviceable ne 1
             </test>
             <test value="gear/gear-dmd-norm">
                 systems/hydraulics/combined-system-pressure ne 1
