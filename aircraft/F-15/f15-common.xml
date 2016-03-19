@@ -13,10 +13,6 @@
                 <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
 
-            <instrumentation>
-                <path>Systems/instrumentation.xml</path>
-            </instrumentation>
-
             <systems>
                 <hydraulics>
                     <combined-system-psi type="int">2200</combined-system-psi>
@@ -1070,16 +1066,17 @@
                 <float n="13" alias="/surface-positions/r-ramp1-position-deg" />
                 <float n="14" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1" />
                 <float n="15" alias="/fdm/jsbsim/systems/electrics/ac-left-main-bus" />
-                <int n="0" type="int">0</int> <!-- fuel dump      -->
-                <int n="1" type="int">0</int> <!-- formation slimmers -->
-                <int n="2" type="int">0</int> <!-- radar-standby -->
-                <int n="3" type="int">0</int> <!-- collision lights -->
-                <int n="4" type="int">0</int> <!-- position lights -->
-                <int n="5" type="int">0</int> <!-- tail flood  -->
-                <int n="6" type="int">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
-                <int n="7" type="int">0</int> <!-- weapons load -->
-                <int n="8" alias="/engines/engine[0]/afterburner" />
-                <int n="9" alias="/engines/engine[1]/afterburner" />
+                <float n="16" alias="/engines/engine[0]/afterburner"/>
+                <float n="17" alias="/engines/engine[1]/afterburner"/>
+
+                <int n="0">0</int> <!-- fuel dump      -->
+                <int n="1">0</int> <!-- formation slimmers -->
+                <int n="2">0</int> <!-- radar-standby -->
+                <int n="3">0</int> <!-- collision lights -->
+                <int n="4">0</int> <!-- position lights -->
+                <int n="5">0</int> <!-- tail flood  -->
+                <int n="6">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
+                <int n="7">0</int> <!-- weapons load -->
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
