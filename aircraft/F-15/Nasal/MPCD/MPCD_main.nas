@@ -390,8 +390,8 @@ var MPCD_Sit =
                 me.NDCpt = me.ND.new("instrumentation/"~me.nd_ident, me.switches);
     
                 me.group = mpcd.svg.getElementById(me.nd_placeholder_ident);
-                me.group.setScale(0.37,0.45);
-                me.group.setTranslation(40,-20);
+                me.group.setScale(0.39,0.45);
+                me.group.setTranslation(45,0);
                 me.NDCpt.newMFD(me.group, mpcd.canvas);
             }
             me.NDCpt.update();
