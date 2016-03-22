@@ -482,6 +482,8 @@ if(size(sorted_dist)>0)
     }
 }
 
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~"r"~"f");
+
 var containsV = func (vector, content) {
     if (content == nil) {
         return 0;
