@@ -290,7 +290,7 @@ var az_scan = func() {
 
 }
 
-
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~"r"~"f");
 var hud_nearest_tgt = func() {
 	# Computes nearest_u position in the HUD
 	if ( nearest_u != nil ) {
