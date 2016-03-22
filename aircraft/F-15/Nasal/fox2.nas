@@ -380,7 +380,7 @@ print("Model ",missile_model);
 			
 			me.rail_pos = me.rail_pos + movement_on_rail;
 			me.x = me.x - (movement_on_rail * FT2M);# negative cause positive is rear in body coordinates
-			print("rail pos "~(me.rail_pos*FT2M));
+			#print("rail pos "~(me.rail_pos*FT2M));
 		}
 
 		# Get air density and speed of sound (fps):
@@ -552,7 +552,7 @@ print("Model ",missile_model);
 
 		if (me.rail_pos > me.rail_dist_m * M2FT) {
 			me.rail_passed = TRUE;
-			print("rail passed");
+			#print("rail passed");
 		}
 
 		settimer(func me.update(), 0);
