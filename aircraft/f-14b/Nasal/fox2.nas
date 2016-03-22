@@ -222,9 +222,9 @@ var AIM9 = {
 		# Compute missile initial position relative to A/C center,
 		# following Vivian's code in AIModel/submodel.cxx .
 
-		me.x = me.pylon_prop.getNode("offsets/x-m").getValue() * M2FT;
-		me.y = me.pylon_prop.getNode("offsets/y-m").getValue() * M2FT;
-		me.z = me.pylon_prop.getNode("offsets/z-m").getValue() * M2FT;
+		me.x = me.pylon_prop.getNode("offsets/x-m").getValue();
+		me.y = me.pylon_prop.getNode("offsets/y-m").getValue();
+		me.z = me.pylon_prop.getNode("offsets/z-m").getValue();
 		
 		var init_coord = me.getGPS(me.x, me.y, me.z);
 

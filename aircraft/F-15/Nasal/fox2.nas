@@ -243,9 +243,9 @@ print("Model ",missile_model);
 		
         if (me.pylon_prop.getNode("offsets/x-m") != nil)
         {
-            me.x = me.pylon_prop.getNode("offsets/x-m").getValue() * M2FT;
-            me.y = me.pylon_prop.getNode("offsets/y-m").getValue() * M2FT;
-            me.z = me.pylon_prop.getNode("offsets/z-m").getValue() * M2FT;
+            me.x = me.pylon_prop.getNode("offsets/x-m").getValue();
+            me.y = me.pylon_prop.getNode("offsets/y-m").getValue();
+            me.z = me.pylon_prop.getNode("offsets/z-m").getValue();
         }
         else
             print("ERROR pylon prop not setup correctly ",me.pylon_prop_name);
