@@ -661,7 +661,21 @@
 
         <gear-0-transit>
             <name>gear-0-transit</name>
-            <mode>in-transit</mode>
+            <mode>looped</mode>
+            <condition>
+                <not>
+                    <property>sim/model/f15/gear-sound-freeze</property>
+                </not>
+                <equals>
+                    <property>fdm/jsbsim/gear/emergency-handle</property>
+                    <value>0</value>
+                </equals>
+                <equals>
+                    <property>fdm/jsbsim/gear/unit[0]/locked</property>
+                    <value>0</value>
+                </equals>
+                <property>gear/serviceable</property>
+            </condition>
             <path>Sounds/gear-transit.wav</path>
             <property>gear/gear[0]/position-norm</property>
             <volume>
@@ -679,6 +693,14 @@
             <name>gear-0-lock</name>
             <path>Sounds/gear-door-close.wav</path>
             <condition>
+                <not>
+                    <property>sim/model/f15/gear-sound-freeze</property>
+                </not>
+                <equals>
+                    <property>fdm/jsbsim/gear/emergency-handle</property>
+                    <value>0</value>
+                </equals>
+                <property>gear/serviceable</property>
                 <or>
                     <equals>
                         <property>gear/gear[0]/position-norm</property>
