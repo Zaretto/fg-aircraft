@@ -6,6 +6,7 @@
     <property value="1">fcs/ari-lateral-enabled</property>
     <property value="1">gear/serviceable</property>
     <property value="0">gear/emergency-handle</property>
+    <property value="0">systems/hydraulics/emerg-gear-bleed</property>
 
     <channel name="Pitch">
         <summer name="Pitch Trim Sum">
@@ -518,11 +519,32 @@ emerg operation.
             <input>gear/gear-pos-norm</input>
             <gain> 1</gain>
         </pure_gain>-->
+
+        <!-- Deplete the JFS store-->
+        <switch name="systems/hydraulics/emerg-gear-unlocked">
+            <default value="0"/>
+            <test value="1">
+                systems/hydraulics/util-system-accumulator-psi gt 200
+                gear/emergency-handle gt 0.7
+                gear/unit[0]/locked ne 0
+            </test>
+            <test value="systems/hydraulics/emerg-gear-unlocked">
+                gear/emergency-handle gt 0.7
+            </test>            
+        </switch>
+        <switch name="systems/hydraulics/emerg-gear-bleed">
+            <default value="0"/>
+            <test value="10000">
+                systems/hydraulics/emerg-gear-unlocked ne 0
+                gear/unit[0]/locked ne 0
+            </test>
+        </switch>
+
         <switch name="gear/unit[0]/locked">
             <default value="-1"/>
             <test value="0">
+                systems/hydraulics/emerg-gear-unlocked ne 0
                 <!-- unlocked when handle pulled -->
-                <!-- should deplete the JFS store-->
                 gear/emergency-handle gt 0.7
                 gear/emerg-pos lt 1
             </test>
