@@ -1841,14 +1841,15 @@
                 <script>
                     if(getprop("sim/model/f15/controls/engs/l-eng-master-guard"))
                     {
-                    if (!getprop("engines/engine[0]/running") and  getprop("controls/engines/engine[0]/cutoff"))
+                    if ( (!getprop("engines/engine[0]/running") or getprop("engines/engine[0]/running")=="false") and  getprop("controls/engines/engine[0]/cutoff"))
                     {
                     setprop("controls/engines/engine[0]/starter",1);
-                    print("Set crank L");
                     settimer(func { setprop("controls/engines/engine[0]/cutoff",0) }, 0.2);
-
                     }
-                    else setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    else
+                    {
+                    setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    }
                     }
                 </script>
             </binding>
@@ -1916,12 +1917,10 @@
                 <script>
                     if(getprop("sim/model/f15/controls/engs/r-eng-master-guard"))
                     {
-                    if (!getprop("engines/engine[1]/running") and  getprop("controls/engines/engine[1]/cutoff"))
+                    if ( (!getprop("engines/engine[1]/running") or getprop("engines/engine[1]/running")=="false") and  getprop("controls/engines/engine[1]/cutoff"))
                     {
                     setprop("controls/engines/engine[1]/starter",1);
-                    print("Set crank 1");
                     settimer(func { setprop("controls/engines/engine[1]/cutoff",0) }, 0.2);
-
                     }
                     else setprop("controls/engines/engine[1]/cutoff",1-getprop("controls/engines/engine[1]/cutoff"));
                     }
