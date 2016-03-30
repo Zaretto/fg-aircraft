@@ -15,9 +15,11 @@ var warhead_lbs = {
     "R74":                  16.0,
     "MATRA-R530":           55.0,
     "Meteor":               55.0,
-    "AIM-54":               135.0,
+    "AIM-54":              135.0,
     "Matra R550 Magic 2":   27.0,
     "Matra MICA":           30.0,
+    "RB-15F":             440.92,
+    "SCALP":              992.00,
 };
 
 var incoming_listener = func {
@@ -36,7 +38,10 @@ var incoming_listener = func {
         # a m2000 is firing at us
         m2000 = TRUE;
       }
-      if (last_vector[1] == " FOX2 at" or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at" or last_vector[1] == " aim120 at" or last_vector[1] == " RB-24J fired at" or last_vector[1] == " RB-74 fired at" or last_vector[1] == " RB-71 fired at" or last_vector[1] == " RB-99 fired at" or m2000 == TRUE) {
+      if (last_vector[1] == " FOX2 at" or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at"
+          or last_vector[1] == " aim120 at" or last_vector[1] == " RB-24J fired at" or last_vector[1] == " RB-74 fired at"
+          or last_vector[1] == " RB-71 fired at" or last_vector[1] == " RB-15F fired at"
+          or last_vector[1] == " RB-99 fired at" or m2000 == TRUE) {
         # air2air being fired
         if (size(last_vector) > 2 or m2000 == TRUE) {
           #print("Missile launch detected at"~last_vector[2]~" from "~author);
@@ -131,7 +136,7 @@ var incoming_listener = func {
               print("Took "~percent~"% damage from "~type~" missile at "~distance~" meters distance! "~failed~" systems was hit.");
             }
           } 
-        } elsif (last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit") {
+        } elsif (last_vector[1] == " M70 rocket hit" or last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit") {
           # cannon hitting someone
           #print("cannon");
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
@@ -139,7 +144,7 @@ var incoming_listener = func {
             #print("hitting me");
 
             var probability = 0.20; # take 20% damage from each hit
-            if (last_vector[1] == " Gun Splash On ") {
+            if (last_vector[1] == " M70 rocket hit" or last_vector[1] == " Gun Splash On ") {
               probability = 0.30;
             }
             var failed = fail_systems(probability);
@@ -200,6 +205,7 @@ var processCallsigns = func () {
 
 processCallsigns();
 
+
 #f14b
 var sendMis = func () {
   var mkeys = keys(fox2.AIM9.active);
@@ -223,6 +229,17 @@ var sendMis = func () {
   settimer(sendMis,0.05);
 }
 
+
+var logTime = func{
+  #log time and date for outputing ucsv files for converting into KML files for google earth.
+  if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
+    var date = getprop("sim/time/utc/year")~"/"~getprop("sim/time/utc/month")~"/"~getprop("sim/time/utc/day");
+    var time = getprop("sim/time/utc/hour")~":"~getprop("sim/time/utc/minute")~":"~getprop("sim/time/utc/second");
+
+    setprop("logging/date-log", date);
+    setprop("logging/time-log", time);
+  }
+}
 
 sendMis();
 
