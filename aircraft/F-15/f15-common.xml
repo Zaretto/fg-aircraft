@@ -1090,6 +1090,7 @@
                 <string n="1" type="string">xxx</string>
                 <string n="2" type="string" alias="/sim/model/f15/variant"/>
                 <string n="13" type="string"></string>
+                <string n="15" type="string"></string>
                 <!-- instruments -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
@@ -1122,7 +1123,7 @@
                         <label>Repair Airframe</label>
                         <binding>
                             <command>nasal</command>
-                            <script>aircraft.fixAirframe();</script>
+                            <script>aircraft.fixAirframe();aircraft.ct("rp");</script>
                         </binding>
                     </item>
                     <item n="1">
@@ -1941,6 +1942,51 @@
                     <script>aircraft.trimDown();</script>
                 </binding>
             </key>
+
+            <key n="21">
+              <name>Ctrl-U</name>
+              <desc>[Cheat] Add 1000ft of emergency altitude</desc>
+              <binding>
+               <command>property-adjust</command>
+               <property>/position/altitude-ft</property>
+               <step type="double">1000.0</step>
+              </binding>
+              <binding>
+               <command>property-assign</command>
+               <property>/sim/startup/onground</property>
+               <value type="bool">false</value>
+              </binding>
+              <binding>
+               <command>nasal</command>
+               <script>aircraft.ct("c-u")</script>
+              </binding>
+             </key>
+
+             <key n="97">
+              <name>a</name>
+              <desc>Increase speed-up</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>controls.speedup(1);</script>
+                </binding>
+                <binding>
+               <command>nasal</command>
+               <script>aircraft.ct("a")</script>
+              </binding>
+             </key>
+
+             <key n="65">
+              <name>A</name>
+              <desc>Decrease speed-up</desc>
+              <binding>
+                <command>nasal</command>
+                <script>controls.speedup(-1);</script>
+              </binding>
+              <binding>
+               <command>nasal</command>
+               <script>aircraft.ct("a")</script>
+              </binding>
+             </key>
         </keyboard>
     </input>
 
