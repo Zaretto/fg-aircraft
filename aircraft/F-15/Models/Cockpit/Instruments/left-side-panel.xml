@@ -504,8 +504,202 @@
         </action>
     </animation>
 
+    <!-- Radar Panel-->
+    <animation>
+        <type>knob</type>
+        <object-name>radar-power-knob</object-name>
+        <property>sim/multiplay/generic/int[17]</property>
+        <!--Radar Status	
+                000	high	0
+                001	on	1
+                010	standby	2
+                011	off	3
+        -->
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-90</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>-60</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>3</ind>
+                <dep>30</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.4842</x-m>
+            <y-m>-0.5109</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
 
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/multiplay/generic/int[17]</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
 
+    
+    <animation>
+        <type>knob</type>
+        <object-name>radar-el-scan-knob</object-name>
+        <property>instrumentation/radar/el-scan</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.4859</x-m>
+            <y-m>-0.4529</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/el-scan</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>4</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>radar-gmtr-knob</object-name>
+        <property>instrumentation/radar/gmtr</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.4391</x-m>
+            <y-m>-0.4534</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/gmtr</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>radar-spl-mode-knob</object-name>
+        <property>instrumentation/radar/spl-mode</property>
+        <factor>-30</factor>
+        <offset-deg>60</offset-deg>
+        <center>
+            <x-m>-5.367</x-m>
+            <y-m>-0.4547</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/spl-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>7</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    
+    <animation>
+        <type>knob</type>
+        <object-name>radar-mode-knob</object-name>
+        <property>instrumentation/radar/mode</property>
+        <factor>-30</factor>
+        <offset-deg>70</offset-deg>
+        <center>
+            <x-m>-5.3644</x-m>
+            <y-m>-0.5113</y-m>
+            <z-m> 0.6674</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>7</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>radar-framestore-knob</object-name>
+        <property>instrumentation/radar/framestore</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.4366</x-m>
+            <y-m>-0.5113</y-m>
+            <z-m> 0.6674</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/framestore</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
     <!-- EXT LT Panel-->
 
     <animation>
@@ -1647,14 +1841,15 @@
                 <script>
                     if(getprop("sim/model/f15/controls/engs/l-eng-master-guard"))
                     {
-                    if (!getprop("engines/engine[0]/running") and  getprop("controls/engines/engine[0]/cutoff"))
+                    if ( (!getprop("engines/engine[0]/running") or getprop("engines/engine[0]/running")=="false") and  getprop("controls/engines/engine[0]/cutoff"))
                     {
                     setprop("controls/engines/engine[0]/starter",1);
-                    print("Set crank L");
                     settimer(func { setprop("controls/engines/engine[0]/cutoff",0) }, 0.2);
-
                     }
-                    else setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    else
+                    {
+                    setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    }
                     }
                 </script>
             </binding>
@@ -1722,12 +1917,10 @@
                 <script>
                     if(getprop("sim/model/f15/controls/engs/r-eng-master-guard"))
                     {
-                    if (!getprop("engines/engine[1]/running") and  getprop("controls/engines/engine[1]/cutoff"))
+                    if ( (!getprop("engines/engine[1]/running") or getprop("engines/engine[1]/running")=="false") and  getprop("controls/engines/engine[1]/cutoff"))
                     {
                     setprop("controls/engines/engine[1]/starter",1);
-                    print("Set crank 1");
                     settimer(func { setprop("controls/engines/engine[1]/cutoff",0) }, 0.2);
-
                     }
                     else setprop("controls/engines/engine[1]/cutoff",1-getprop("controls/engines/engine[1]/cutoff"));
                     }

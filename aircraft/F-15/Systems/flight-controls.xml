@@ -5,6 +5,8 @@
 -->
     <property value="1">fcs/ari-lateral-enabled</property>
     <property value="1">gear/serviceable</property>
+    <property value="0">gear/emergency-handle</property>
+    <property value="0">systems/hydraulics/emerg-gear-bleed</property>
 
     <channel name="Pitch">
         <summer name="Pitch Trim Sum">
@@ -483,14 +485,183 @@
     </channel>
 
     <channel name="Landing Gear">
+<!-- landing gear;
+1. Switch up down
+2. emergency handle
+
+- normal operation (emergency handle retracted).
+  : requires hyds
+  : cannot retract on ground
+  
+  parts:
+    uplock
+    downlock
+    door
+    bogeys
+    
+    uplock downlock modelled as single lock -ve for downlock 0 for unlocked, 1 for uplocked
+    
+emerg operation.
+: handle pulled. hyds & electrics cut
+-->
+        <!--<pure_gain name="gear/unit[0]/pos-norm">
+            <description>Landing gear unit 0 position</description>
+            <input>gear/gear-pos-norm</input>
+            <gain> 1</gain>
+        </pure_gain>
+        <pure_gain name="gear/unit[1]/pos-norm">
+            <description>Landing gear unit 0 position</description>
+            <input>gear/gear-pos-norm</input>
+            <gain> 1</gain>
+        </pure_gain>
+        <pure_gain name="gear/unit[2]/pos-norm">
+            <description>Landing gear unit 0 position</description>
+            <input>gear/gear-pos-norm</input>
+            <gain> 1</gain>
+        </pure_gain>-->
+
+        <!-- Deplete the JFS store-->
+        <switch name="systems/hydraulics/emerg-gear-unlocked">
+            <default value="0"/>
+            <test value="1">
+                systems/hydraulics/util-system-accumulator-psi gt 200
+                gear/emergency-handle gt 0.7
+                gear/unit[0]/locked ne 0
+            </test>
+            <test value="systems/hydraulics/emerg-gear-unlocked">
+                gear/emergency-handle gt 0.7
+            </test>            
+        </switch>
+        <switch name="systems/hydraulics/emerg-gear-bleed">
+            <default value="0"/>
+            <test value="10000">
+                systems/hydraulics/emerg-gear-unlocked ne 0
+                gear/unit[0]/locked ne 0
+            </test>
+        </switch>
+
+        <switch name="gear/unit[0]/locked">
+            <default value="-1"/>
+            <test value="0">
+                systems/hydraulics/emerg-gear-unlocked ne 0
+                <!-- unlocked when handle pulled -->
+                gear/emergency-handle gt 0.7
+                gear/emerg-pos lt 1
+            </test>
+            <test value="0">
+                <!-- unlocked. -->
+               gear/gear-pos-norm gt 0
+               gear/gear-pos-norm lt 1
+            </test>
+            <test value="1">
+               gear/gear-pos-norm le 0
+            </test>
+            <test value="-1">
+               gear/gear-pos-norm ge 1
+            </test>
+        </switch>
+        <switch name="gear/unit[1]/locked">
+            <default value="-1"/>
+            <test value="0">
+                <!-- unlocked when handle pulled -->
+                <!-- should deplete the JFS store-->
+                gear/emergency-handle gt 0.7
+                gear/emerg-pos lt 1
+            </test>
+            <test value="0">
+                <!-- unlocked. -->
+               gear/gear-pos-norm gt 0
+               gear/gear-pos-norm lt 1
+            </test>
+            <test value="1">
+               gear/gear-pos-norm le 0
+            </test>
+            <test value="-1">
+               gear/gear-pos-norm ge 1
+            </test>
+        </switch>
+        <switch name="gear/unit[2]/locked">
+            <default value="-1"/>
+            <test value="0">
+                <!-- unlocked when handle pulled -->
+                <!-- should deplete the JFS store-->
+                gear/emergency-handle gt 0.7
+                gear/emerg-pos lt 1
+            </test>
+            <test value="0">
+                <!-- unlocked. -->
+               gear/gear-pos-norm gt 0
+               gear/gear-pos-norm lt 1
+            </test>
+            <test value="1">
+               gear/gear-pos-norm le 0
+            </test>
+            <test value="-1">
+               gear/gear-pos-norm ge 1
+            </test>
+        </switch>
+        <switch name="gear/emerg-pos">
+            <default value="gear/emerg-pos-dmd"/>
+        </switch>
+        <fcs_function name="gear/emerg-pos-dmd">
+            <function>
+                <ifthen>
+                    <and>
+                        <ge>
+                            <property>gear/emergency-handle</property>
+                            <value>0.9</value>
+                        </ge>
+                        <or>
+                            <eq>
+                                <property>gear/unit[0]/locked</property>
+                                <value>-1.0</value>
+                            </eq>
+                            <and>
+                                <eq>
+                                    <property>contact/unit[9]/WOW</property>
+                                    <value>0</value>
+                                </eq>
+                                <eq>
+                                    <property>contact/unit[10]/WOW</property>
+                                    <value>0</value>
+                                </eq>
+                            </and>
+                        </or>
+                    </and>
+                    <sum>
+                        <property>gear/emerg-pos</property>
+                        <ifthen><not><property>gear/unit[0]/locked</property><value>1.0</value></not>
+                            <table>
+                                <independentVar lookup="row">gear/emerg-pos</independentVar>
+                                <independentVar lookup="column">accelerations/Nz</independentVar>
+                                <tableData>
+                                               -3.0     0.0     0.5     1.0     1.2     2.0     5.0    10.0
+                                   -0.00001  0.00000 0.00100 0.00000 0.00090 0.00090 0.00090 0.00090 0.00400
+                                    0.0     -0.00400 0.00000 0.00000 0.00090 0.00090 0.00090 0.00090 0.00400
+                                    0.90     0.00000 0.00000 0.00000 0.00090 0.00090 0.00090 0.00090 0.00400
+                                    0.98     0.11000 0.00000 0.00000 0.00000 0.00000 0.09000 0.11090 0.00400
+                                    1.0      0.00000 0.00000 0.00000 0.00090 0.00090 0.00090 0.00090 0.00400
+                                </tableData>
+                            </table>
+                            <value>0</value>
+                    </ifthen>
+                    </sum>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
         <switch name="gear/gear-dmd-norm">
             <default value="1"/>
             <test value="1">
                 <!-- always force gear down when on ground - to prevent inadvertant retraction -->
                 position/aircraft-on-ground ne 0
             </test>
+            <test value="gear/emerg-pos">
+                gear/emergency-handle ne 0
+            </test>
             <test value="gear/gear-pos-norm">
                 gear/serviceable ne 1
+                gear/emergency-handle lt 1
             </test>
             <test value="gear/gear-dmd-norm">
                 systems/hydraulics/combined-system-pressure ne 1

@@ -44,7 +44,14 @@ DC Main Bus 28 V DC
 -->
   <channel name="electrical-system">
 
-    <switch name="systems/electrics/lgenerator-kva">
+      <switch name="systems/electrics/ground-power-available">
+          <default value="0"/>
+          <test logic="AND" value="1">
+              systems/electrics/ground-power ne 0
+              velocities/u-fps lt 1
+          </test>
+      </switch>
+      <switch name="systems/electrics/lgenerator-kva">
           <default value="0"/>
           <test  logic="AND" value="75">
             propulsion/engine[0]/n2 ge 55
@@ -77,9 +84,9 @@ DC Main Bus 28 V DC
     <switch name="systems/electrics/ac-essential-bus1">
           <default value="0"/>
           <test  logic="OR" value="75">
-            systems/electrics/lgenerator-kva ne 0
-            systems/electrics/rgenerator-kva ne 0
-            systems/electrics/ground-power ne 0
+              systems/electrics/lgenerator-kva ne 0
+              systems/electrics/rgenerator-kva ne 0
+              systems/electrics/ground-power-available ne 0
           </test>
           <test  logic="AND" value="systems/electrics/egenerator-kva">
             systems/electrics/egenerator-kva ne 0
@@ -89,9 +96,9 @@ DC Main Bus 28 V DC
     <switch name="systems/electrics/ac-essential-bus2">
           <default value="0"/>
           <test  logic="OR" value="75">
-            systems/electrics/lgenerator-kva ne 0
-            systems/electrics/rgenerator-kva ne 0
-            systems/electrics/ground-power ne 0
+              systems/electrics/lgenerator-kva ne 0
+              systems/electrics/rgenerator-kva ne 0
+              systems/electrics/ground-power-available ne 0
           </test>
           <test  logic="AND" value="systems/electrics/egenerator-kva">
             systems/electrics/egenerator-kva ne 0
@@ -102,9 +109,9 @@ DC Main Bus 28 V DC
     <switch name="systems/electrics/ac-left-main-bus">
           <default value="0"/>
           <test  logic="OR" value="75">
-            systems/electrics/lgenerator-kva ne 0
-            systems/electrics/rgenerator-kva ne 0
-            systems/electrics/ground-power ne 0
+              systems/electrics/lgenerator-kva ne 0
+              systems/electrics/rgenerator-kva ne 0
+              systems/electrics/ground-power-available ne 0
           </test>
           <test  logic="AND" value="systems/electrics/egenerator-kva">
             systems/electrics/egenerator-kva gt 1
@@ -114,9 +121,9 @@ DC Main Bus 28 V DC
     <switch name="systems/electrics/ac-right-main-bus">
           <default value="0"/>
           <test  logic="OR" value="75">
-            systems/electrics/lgenerator-kva ne 0
-            systems/electrics/rgenerator-kva ne 0
-            systems/electrics/ground-power ne 0
+              systems/electrics/lgenerator-kva ne 0
+              systems/electrics/rgenerator-kva ne 0
+              systems/electrics/ground-power-available ne 0
           </test>
           <test  logic="AND" value="systems/electrics/egenerator-kva">
             systems/electrics/egenerator-kva gt 1
@@ -130,7 +137,7 @@ DC Main Bus 28 V DC
                 systems/electrics/rgenerator-kva ne 0
           </test>
           <test  logic="AND" value="2">
-            systems/electrics/ground-power ne 0
+              systems/electrics/ground-power-available ne 0
           </test>
           <test  logic="AND" value="2">
                 systems/electrics/egenerator-kva gt 0
@@ -152,7 +159,7 @@ DC Main Bus 28 V DC
           <test logic="OR" value="28">
                 systems/electrics/lgenerator-kva gt 0
                 systems/electrics/rgenerator-kva gt 0
-                systems/electrics/ground-power ne 0
+                systems/electrics/ground-power-available ne 0
                 systems/electrics/egenerator-kva gt 0
           </test>
     </switch>
@@ -163,10 +170,10 @@ DC Main Bus 28 V DC
             systems/electrics/transrect-online eq 0
           </test>
           <test logic="OR" value="28">
-                systems/electrics/lgenerator-kva gt 0
-                systems/electrics/rgenerator-kva gt 0
-                systems/electrics/ground-power ne 0
-                systems/electrics/egenerator-kva gt 0
+              systems/electrics/lgenerator-kva gt 0
+              systems/electrics/rgenerator-kva gt 0
+              systems/electrics/ground-power-available ne 0
+              systems/electrics/egenerator-kva gt 0
           </test>
     </switch>
 
@@ -176,9 +183,9 @@ DC Main Bus 28 V DC
             systems/electrics/transrect-online eq 0
           </test>
           <test logic="OR" value="28">
-                systems/electrics/lgenerator-kva gt 0
-                systems/electrics/rgenerator-kva gt 0
-                systems/electrics/ground-power ne 0
+              systems/electrics/lgenerator-kva gt 0
+              systems/electrics/rgenerator-kva gt 0
+              systems/electrics/ground-power-available ne 0
           </test>
           <test  logic="AND" value="28">
             systems/electrics/egenerator-kva gt 1

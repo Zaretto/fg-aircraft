@@ -83,6 +83,68 @@
             </or>
         </condition>
     </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>emerg-lg-handle</object-name>
+        <property>fdm/jsbsim/gear/emergency-handle</property>
+        <factor>-20</factor>
+        <center>
+            <x-m>-5.7092</x-m>
+            <y-m>-0.4654</y-m>
+            <z-m> 0.767</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/gear/emergency-handle</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <!--<release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/electrics/emerg-lg-handle</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>-->
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>emerg-lg-handle</object-name>
+        <property>sim/model/f15/controls/electrics/emerg-lg-handle</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.02</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.7092</x-m>
+            <y-m>-0.4654</y-m>
+            <z-m> 0.767</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
 
 
     <!-- Lighting -->
