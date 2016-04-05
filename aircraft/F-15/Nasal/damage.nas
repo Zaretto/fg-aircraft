@@ -261,10 +261,10 @@ var ct = func (type) {
   if (type == "c-u") {
     setprop("sim/ct/c-u", 1);
   }
-  if (type == "rl" and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (type == "rl" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     setprop("sim/ct/rl", 1);
   }
-  if (type == "rp" and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (type == "rp" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     setprop("sim/ct/rp", 1);
   }
   if (type == "a") {
@@ -273,10 +273,10 @@ var ct = func (type) {
   if (type == "lst") {
     setprop("sim/ct/list", 1);
   }
-  if (type == "ifa" and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (type == "ifa" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     setprop("sim/ct/ifa", 1);
   }
-  if (type == "sf" and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (type == "sf" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     setprop("sim/ct/sf", 1);
   }
 }
@@ -309,7 +309,7 @@ var code_ct = func () {
            +getprop("payload/weight[6]/weight-lb")+getprop("payload/weight[7]/weight-lb")
            +getprop("payload/weight[8]/weight-lb")+getprop("payload/weight[9]/weight-lb")
            +getprop("payload/weight[10]/weight-lb");
-  if (cl > (ll*1.05) and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (cl > (ll*1.05) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     setprop("sim/ct/rl", 1);
   }
   ll = cl;
@@ -331,7 +331,7 @@ var code_ct = func () {
             +getprop("/consumables/fuel/tank[7]/level-gal_us")
             +getprop("/consumables/fuel/tank[8]/level-gal_us")
             +getprop("/consumables/fuel/tank[9]/level-gal_us");
-  if (cf != nil and lf != -1 and cf > (lf*1.1) and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (cf != nil and lf != -1 and cf > (lf*1.1) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     setprop("sim/ct/rf", 1);
   }
   var rf = getprop("sim/ct/rf");
@@ -369,7 +369,7 @@ var code_ct = func () {
 }
 
 var not = func {
-  if (getprop("sim/model/f15/systems/armament/mp-messaging") == TRUE and getprop("/gear/gear[0]/wow") != TRUE) {
+  if (getprop("sim/model/f15/systems/armament/mp-messaging") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     var ct = getprop("sim/multiplay/generic/string[15]") ;
     var msg = "I might be chea"~"ting..";
     if (ct != nil) {
