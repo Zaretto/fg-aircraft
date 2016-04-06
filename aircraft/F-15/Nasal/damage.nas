@@ -480,5 +480,5 @@ setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 changeGuiLoad();
-settimer(code_ct, 60);
-settimer(not, 60);
+settimer(code_ct, 10);
+settimer(not, 11);
