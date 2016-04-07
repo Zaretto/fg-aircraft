@@ -482,3 +482,16 @@ setprop("/sim/failure-manager/display-on-screen", FALSE);
 changeGuiLoad();
 settimer(code_ct, 10);
 settimer(not, 11);
+
+var re_init = func {
+  # repair the aircraft
+
+  var failure_modes = FailureMgr._failmgr.failure_modes;
+  var mode_list = keys(failure_modes);
+
+  foreach(var failure_mode_id; mode_list) {
+    FailureMgr.set_failure_level(failure_mode_id, 0);
+  }
+}
+
+setlistener("/sim/signals/reinit", re_init, 0, 0);
