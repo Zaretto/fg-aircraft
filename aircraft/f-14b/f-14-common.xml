@@ -1030,7 +1030,7 @@
                         <label>Repair Airframe</label>
                         <binding>
                             <command>nasal</command>
-                            <script>f14.fixAirframe();</script>
+                            <script>f14.fixAirframe();fox2.ct("rp");</script>
                         </binding>
                     </item>
                     <item n="1">
@@ -1710,6 +1710,50 @@
                 </binding>
             </key>
 
+            <key n="21">
+              <name>Ctrl-U</name>
+              <desc>[Cheat] Add 1000ft of emergency altitude</desc>
+              <binding>
+               <command>property-adjust</command>
+               <property>/position/altitude-ft</property>
+               <step type="double">1000.0</step>
+              </binding>
+              <binding>
+               <command>property-assign</command>
+               <property>/sim/startup/onground</property>
+               <value type="bool">false</value>
+              </binding>
+              <binding>
+               <command>nasal</command>
+               <script>fox2.ct("c-u")</script>
+              </binding>
+             </key>
+
+             <key n="97">
+              <name>a</name>
+              <desc>Increase speed-up</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>controls.speedup(1);</script>
+                </binding>
+                <binding>
+               <command>nasal</command>
+               <script>fox2.ct("a")</script>
+              </binding>
+             </key>
+
+             <key n="65">
+              <name>A</name>
+              <desc>Decrease speed-up</desc>
+              <binding>
+                <command>nasal</command>
+                <script>controls.speedup(-1);</script>
+              </binding>
+              <binding>
+               <command>nasal</command>
+               <script>fox2.ct("a")</script>
+              </binding>
+             </key>
 
         </keyboard>
     </input>
