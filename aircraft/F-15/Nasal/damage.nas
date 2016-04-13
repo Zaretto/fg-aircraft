@@ -112,9 +112,10 @@ var incoming_listener = func {
               }
             }
             var number = split(" ", last_vector[2]);
-            var distance = clamp(num(number[1])-3, 0, 1000000);
+            var distance = num(number[1]);
             #print(type~"|");
             if(distance != nil) {
+              distance = clamp(distance-3, 0, 1000000);
               var maxDist = 0;
 
               if (contains(warhead_lbs, type)) {
