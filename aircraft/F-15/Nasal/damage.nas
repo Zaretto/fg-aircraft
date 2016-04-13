@@ -20,6 +20,7 @@ var warhead_lbs = {
     "Matra MICA":           30.0,
     "RB-15F":             440.92,
     "SCALP":              992.00,
+    "KN-06":              315.00,
 };
 
 var incoming_listener = func {
