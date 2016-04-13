@@ -732,6 +732,7 @@ var AIM9 = {
 						me.last_t_elev_norm_speed          = t_LOS_elev_norm_speed;
 
 						var acc_upwards_ftps2 = proportionality_constant*line_of_sight_rate_up_rps*vert_closing_rate_fps+proportionality_constant*t_LOS_elev_norm_acc/2;
+						velocity_vector_length_fps = me.old_speed_fps;
 						var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt;
 						dev_e = math.atan2(commanded_upwards_vector_length_fps, velocity_vector_length_fps)*R2D;
 						#print(sprintf("vert leading by %.1f deg", me.curr_tgt_e));
