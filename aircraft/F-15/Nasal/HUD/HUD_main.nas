@@ -381,7 +381,7 @@ var HUD_DataProvider  = {
 
         me.roll_rad = 0.0;
 
-        me.VV_x = -me.beta*10; # adjust for view
+        me.VV_x = me.beta*10; # adjust for view
         me.VV_y = me.alpha*10; # adjust for view
 
     },
