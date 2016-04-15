@@ -1136,9 +1136,6 @@ var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, dt, gMax) {
 SW_reticle_Blinker = aircraft.light.new("sim/model/f15/lighting/hud-sw-reticle-switch", [0.1, 0.1]);
 setprop("sim/model/f15/lighting/hud-sw-reticle-switch/enabled", 1);
 
-setprop("sim/model/f15/systems/armament/mp-messaging",1);
-
-
 var spams = 0;
 
 var defeatSpamFilter = func (str) {
