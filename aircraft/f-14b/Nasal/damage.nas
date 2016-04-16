@@ -340,7 +340,7 @@ var code_ct = func () {
             +getprop("/consumables/fuel/tank[9]/level-gal_us")
             +getprop("/consumables/fuel/tank[10]/level-gal_us")
             +getprop("/consumables/fuel/tank[11]/level-gal_us");
-  if (cf != nil and lf != -1 and cf > (lf*1.1) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+  if (cf != nil and lf != -1 and cf > (lf*1.1) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE and getprop("/systems/refuel/contact") == FALSE) {
     setprop("sim/ct/rf", 1);
   }
   var rf = getprop("sim/ct/rf");
