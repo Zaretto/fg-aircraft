@@ -649,7 +649,7 @@ var AIM9 = {
 			var cruise_minimum = 7.5;# miles
 			var cruise_or_loft = 0;
 			if ( t_dist_m * M2NM > loft_minimum
-				 and t_elev_deg < loft_angle and t_elev_deg > -7.5
+				 and t_elev_deg < loft_angle #and t_elev_deg > -7.5
 				 and me.dive_token == FALSE) {
 				# stage 1 lofting: due to target is more than 10 miles out and we havent reached 
 				# our desired cruising alt, and the elevation to target is less than lofting angle.
