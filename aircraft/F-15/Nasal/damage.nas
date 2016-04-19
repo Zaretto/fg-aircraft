@@ -345,7 +345,7 @@ var code_ct = func () {
     rf = 0;
   }
   lf = cf == nil?0:cf;
-  var dm = 0;#!getprop("payload/armament/damage");
+  var dm = !getprop("sim/model/f15/systems/armament/mp-messaging");
   if (dm == nil or dm != 1) {
     dm = 0;
   }
