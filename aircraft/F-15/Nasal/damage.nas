@@ -110,7 +110,7 @@ var incoming_listener = func {
           if (size(last_vector) > 3 and last_vector[3] == " "~callsign) {
             #print("that someone is me!");
             var type = last1[1];
-            if (type == "Matra") {
+            if (type == "Matra" or type == "Sea") {
               for (var i = 2; i < size(last1)-1; i += 1) {
                 type = type~" "~last1[i];
               }
@@ -119,6 +119,7 @@ var incoming_listener = func {
             var distance = num(number[1]);
             #print(type~"|");
             if(distance != nil) {
+              var dist = distance;
               distance = clamp(distance-3, 0, 1000000);
               var maxDist = 0;
 
@@ -139,7 +140,7 @@ var incoming_listener = func {
 
               var failed = fail_systems(probability);
               var percent = 100 * probability;
-              print("Took "~percent~"% damage from "~type~" missile at "~distance~" meters distance! "~failed~" systems was hit.");
+              print(sprintf("Took %.1f", percent)~"% damage from "~type~" missile at "~dist~" meters distance! "~failed~" systems was hit.");
               nearby_explosion();
             }
           } 
