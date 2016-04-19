@@ -288,16 +288,20 @@ var AIM9 = {
 	},
 
 	drag: func (mach) {
+		# Nikolai V. Chr.: Made the drag calc more in line with big missiles as opposed to small bullets.
+		# 
+		# The old equations were based on curves for a conventional shell/bullet (no boat-tail),
+		# and derived from Davic Culps code in AIBallistic.
 		var Cd = 0;
 		if (mach < 0.7) {
-			Cd = 0.0125 * mach + me.Cd_base;
+			Cd = (0.0125 * mach + 0.20) * 5 * me.Cd_base;
 		} elsif (mach < 1.2 ) {
-			Cd = 0.3742 * math.pow(mach, 2) - 0.252 * mach + 0.0021 + me.Cd_base;
+			Cd = (0.3742 * math.pow(mach, 2) - 0.252 * mach + 0.0021 + 0.2 ) * 5 * me.Cd_base;
 		} else {
-			Cd = 0.2965 * math.pow(mach, -1.1506) + me.Cd_base;
+			Cd = (0.2965 * math.pow(mach, -1.1506) + 0.2) * 5 * me.Cd_base;
 		}
 
-		 return Cd;
+		return Cd;
 	},
 
 	update: func {
