@@ -140,7 +140,7 @@ var incoming_listener = func {
 
               var failed = fail_systems(probability);
               var percent = 100 * probability;
-              print(sprintf("Took %.1f", percent)~"% damage from "~type~" missile at "~dist~" meters distance! "~failed~" systems was hit.");
+              printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
               nearby_explosion();
             }
           } 
@@ -156,7 +156,7 @@ var incoming_listener = func {
               probability = 0.30;
             }
             var failed = fail_systems(probability);
-            print("Took "~probability*100~"% damage from cannon! "~failed~" systems was hit.");
+            printf("Took %.1f%% damage from cannon! %s systems was hit.", probability*100, failed);
             nearby_explosion();
           }
         }
