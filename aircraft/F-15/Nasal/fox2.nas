@@ -153,6 +153,7 @@ print("Model ",missile_model);
 		m.old_speed_fps = 0;
 		m.last_t_norm_speed = nil;
 		m.last_t_elev_norm_speed = nil;
+		m.last_dt = 0;
 
 		m.dive_token = FALSE;
 
@@ -558,7 +559,7 @@ print("Model ",missile_model);
 			me.rail_passed = TRUE;
 			#print("rail passed");
 		}
-
+		me.last_dt = dt;
 		settimer(func me.update(), 0);
 		
 	},
@@ -622,10 +623,13 @@ print("Model ",missile_model);
 
 			# Calculate current target elevation and azimut deviation.
 			var t_dist_m = me.coord.distance_to(me.t_coord);
+			var dist_curr = t_dist_m;
+			var dist_curr_direct = me.coord.distance_to(me.t_coord);
 			var t_alt_delta_m = (t_alt - me.alt) * FT2M;
 			var t_elev_deg =  math.atan2( t_alt_delta_m, t_dist_m ) * R2D;
 			me.curr_tgt_e = t_elev_deg - me.pitch;
-			var (t_course, dst) = courseAndDistance(me.coord, me.t_coord);
+			#var (t_course, dst) = courseAndDistance(me.coord, me.t_coord);
+			var	t_course = me.coord.course_to(me.t_coord);
 			#var t_course = me.coord.course_to(me.t_coord);
 			me.curr_tgt_h = t_course - me.hdg;
 
@@ -646,10 +650,10 @@ print("Model ",missile_model);
 				me.init_tgt_h = last_tgt_h;			
 			}
 
-			if(me.curr_tgt_h < -180) {
+			while(me.curr_tgt_h < -180) {
 				me.curr_tgt_h += 360;
 			}
-			if(me.curr_tgt_h > 180) {
+			while(me.curr_tgt_h > 180) {
 				me.curr_tgt_h -= 360;
 			}
 
@@ -663,8 +667,8 @@ print("Model ",missile_model);
 			}
 			
 
-			var dev_e = me.curr_tgt_e;#
-			var dev_h = me.curr_tgt_h;#
+			var dev_e = 0;#me.curr_tgt_e;
+			var dev_h = 0;#me.curr_tgt_h;
 
 			#print(sprintf("curr: elev=%.1f", dev_e)~sprintf(" head=%.1f", dev_h));
 			if (me.last_deviation_e != nil) {
@@ -673,8 +677,8 @@ print("Model ",missile_model);
 
 				# missile own movement is subtracted from this change due to seeker being on gyroscope
 				
-				var dve_dist = dev_e - me.last_deviation_e + me.last_track_e;
-				var dvh_dist = dev_h - me.last_deviation_h + me.last_track_h;
+				var dve_dist = me.curr_tgt_e - me.last_deviation_e + me.last_track_e;
+				var dvh_dist = me.curr_tgt_h - me.last_deviation_h + me.last_track_h;
 				var deviation_per_sec = math.sqrt(dve_dist*dve_dist+dvh_dist*dvh_dist)/dt_;
 
 				if (deviation_per_sec > me.angular_speed) {
@@ -689,12 +693,12 @@ print("Model ",missile_model);
 				}
 			}
 
-			me.last_deviation_e = dev_e;
-			me.last_deviation_h = dev_h;
+			me.last_deviation_e = me.curr_tgt_e;
+			me.last_deviation_h = me.curr_tgt_h;
 
 			var loft_angle = 15;
 			var loft_minimum = 10;# miles
-			var cruise_minimum = 7.5;# miles
+			var cruise_minimum = 10;# miles
 			var cruise_or_loft = 0;
 			if (t_dist_m * M2NM > loft_minimum
 				 and t_elev_deg < loft_angle #and t_elev_deg > -7.5
@@ -721,16 +725,14 @@ print("Model ",missile_model);
 			###########################
 			# proportional navigation #
 			###########################
-			var dist_curr = me.coord.distance_to(me.t_coord);
-			var dist_curr_direct = me.coord.direct_distance_to(me.t_coord);
-			if (h_gain != 0 and me.dist_last != nil) {
-					var horz_closing_rate_fps = (me.dist_last - dist_curr)*M2FT/dt_;
+			if (h_gain != 0 and me.dist_last != nil and me.last_dt != 0) {
+					var horz_closing_rate_fps = (me.dist_last - dist_curr)*M2FT/me.last_dt;
 					var proportionality_constant = 3;
 					var c_dv = t_course-me.last_t_course;
-					if(c_dv < -180) {
+					while(c_dv < -180) {
 						c_dv += 360;
 					}
-					if(c_dv > 180) {
+					while(c_dv > 180) {
 						c_dv -= 360;
 					}
 					var line_of_sight_rate_rps = D2R*c_dv/dt_;
@@ -766,7 +768,7 @@ print("Model ",missile_model);
 					#print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_tgt_h, dev_h));
 
 					if (cruise_or_loft == 0 and me.last_cruise_or_loft == 0) {
-						var vert_closing_rate_fps = (me.dist_direct_last - dist_curr_direct)*M2FT/dt_;
+						var vert_closing_rate_fps = (me.dist_direct_last - dist_curr_direct)*M2FT/me.last_dt;
 						var line_of_sight_rate_up_rps = D2R*(t_elev_deg-me.last_t_elev_deg)/dt_;#((me.curr_tgt_e-me.last_tgt_e)*D2R)/dt;
 						# calculate target acc as normal to LOS line: (up acc is positive)
 						var t_approach_bearing             = t_course + 180;
