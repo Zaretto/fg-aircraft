@@ -406,6 +406,8 @@ var AIM9 = {
 		var drag_acc = (Cd * q * me.eda) / mass;
 		var speed_fps = old_speed_fps - drag_acc*dt + acc*dt;
 
+		# Get target position.
+		me.t_coord.set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue() * FT2M);
 		
 		#### Guidance.
 
@@ -510,6 +512,10 @@ var AIM9 = {
 				}
 			}
 		}
+
+		me.before_last_t_coord = geo.Coord.new(me.last_t_coord);
+		me.last_t_coord = geo.Coord.new(me.t_coord);
+
 		# record the velocities for the next loop.
 		me.s_north = speed_north_fps;
 		me.s_east = speed_east_fps;
@@ -523,6 +529,7 @@ var AIM9 = {
 			#print("rail passed");
 		}
 		me.last_dt = dt;
+
 		settimer(func me.update(), 0);
 		
 	},
@@ -570,8 +577,7 @@ var AIM9 = {
 			# Status = launched. Compute target position relative to seeker head.
 
 			# Get target position.
-			var t_alt = me.TgtAlt_prop.getValue();
-			me.t_coord.set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), t_alt * FT2M);
+			var t_alt = me.t_coord.alt()*M2FT;
 
 			# Calculate current target elevation and azimut deviation.
 			var t_dist_m = me.coord.distance_to(me.t_coord);
@@ -668,16 +674,26 @@ var AIM9 = {
 				#print(sprintf("Lofting %.1f degs", loft_angle));
 			} elsif (t_elev_deg < 0 and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time and t_dist_m * M2NM > cruise_minimum) {
 				# stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
-				var attitude = math.asin((g_fps * dt)/me.old_speed_fps)*R2D;
+				
+				var ratio = (g_fps * dt_)/me.old_speed_fps;
+                var attitude = 0;
+
+                if (ratio < 1 and ratio > -1) {
+                    attitude = math.asin(ratio)*R2D;
+                }
 
 				dev_e = -me.pitch + attitude;
 				cruise_or_loft = 1;
 				#print("Cruising");
+			} elsif (me.last_cruise_or_loft == TRUE and math.abs(me.curr_tgt_e) > 2.5) {
+				# after cruising, point the missile in the general direction of the target, before APN starts guiding.
+				dev_e = me.curr_tgt_e;
+				cruise_or_loft = TRUE;
 			}
 
-			###########################
-			# proportional navigation #
-			###########################
+			###########################################
+			### augmented proportional navigation   ###
+			###########################################
 			if (h_gain != 0 and me.dist_last != nil and me.last_dt != 0) {
 					var horz_closing_rate_fps = (me.dist_last - dist_curr)*M2FT/me.last_dt;
 					var proportionality_constant = 3;
@@ -704,7 +720,7 @@ var AIM9 = {
 						me.last_t_norm_speed = t_LOS_norm_speed;
 					}
 
-					var t_LOS_norm_acc   = (t_LOS_norm_speed - me.last_t_norm_speed)/dt;
+					var t_LOS_norm_acc   = (t_LOS_norm_speed - me.last_t_norm_speed)/dt_;
 
 					me.last_t_norm_speed = t_LOS_norm_speed;
 
@@ -715,12 +731,12 @@ var AIM9 = {
 
 					# now translate that sideways acc to an angle:
 					var velocity_vector_length_fps = me.old_speed_horz_fps;
-					var commanded_sideways_vector_length_fps = acc_sideways_ftps2*dt;
+					var commanded_sideways_vector_length_fps = acc_sideways_ftps2*dt_;
 					dev_h = math.atan2(commanded_sideways_vector_length_fps, velocity_vector_length_fps)*R2D;
 					
 					#print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_tgt_h, dev_h));
 
-					if (cruise_or_loft == 0 and me.last_cruise_or_loft == 0) {
+					if (cruise_or_loft == 0) {
 						var vert_closing_rate_fps = (me.dist_direct_last - dist_curr_direct)*M2FT/me.last_dt;
 						var line_of_sight_rate_up_rps = D2R*(t_elev_deg-me.last_t_elev_deg)/dt_;#((me.curr_tgt_e-me.last_tgt_e)*D2R)/dt;
 						# calculate target acc as normal to LOS line: (up acc is positive)
@@ -734,12 +750,12 @@ var AIM9 = {
 							me.last_t_elev_norm_speed = t_LOS_elev_norm_speed;
 						}
 
-						var t_LOS_elev_norm_acc            = (t_LOS_elev_norm_speed - me.last_t_elev_norm_speed)/dt;
+						var t_LOS_elev_norm_acc            = (t_LOS_elev_norm_speed - me.last_t_elev_norm_speed)/dt_;
 						me.last_t_elev_norm_speed          = t_LOS_elev_norm_speed;
 
 						var acc_upwards_ftps2 = proportionality_constant*line_of_sight_rate_up_rps*vert_closing_rate_fps+proportionality_constant*t_LOS_elev_norm_acc/2;
 						velocity_vector_length_fps = me.old_speed_fps;
-						var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt;
+						var commanded_upwards_vector_length_fps = acc_upwards_ftps2*dt_;
 						dev_e = math.atan2(commanded_upwards_vector_length_fps, velocity_vector_length_fps)*R2D;
 						#print(sprintf("vert leading by %.1f deg", me.curr_tgt_e));
 					}
@@ -866,8 +882,7 @@ var AIM9 = {
 				return(0);
 			}
 		}
-		me.before_last_t_coord = geo.Coord.new(me.last_t_coord);
-		me.last_t_coord = geo.Coord.new(me.t_coord);
+		
 		me.direct_dist_m = cur_dir_dist_m;
 		return(1);
 	},
