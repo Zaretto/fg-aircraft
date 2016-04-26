@@ -687,7 +687,7 @@ print("Model ",missile_model);
 			# Calculate current target elevation and azimut deviation.
 			var t_dist_m = me.coord.distance_to(me.t_coord);
 			var dist_curr = t_dist_m;
-			var dist_curr_direct = me.coord.distance_to(me.t_coord);
+			var dist_curr_direct = me.coord.direct_distance_to(me.t_coord);
 			var t_alt_delta_m = (t_alt - me.alt) * FT2M;
 			var t_elev_deg =  math.atan2( t_alt_delta_m, t_dist_m ) * R2D;
 			me.curr_tgt_e = t_elev_deg - me.pitch;
