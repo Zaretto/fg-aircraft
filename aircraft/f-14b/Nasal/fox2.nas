@@ -137,6 +137,8 @@ var AIM9 = {
 		m.last_t_elev_norm_speed = nil;
 		m.last_dt = 0;
 
+		m.g = 0;
+
 		m.dive_token = FALSE;
 
 		#rail
@@ -305,6 +307,51 @@ var AIM9 = {
 		return Cd;
 	},
 
+    energyBleed: func (gForce, altitude, dt) {
+        # Bleed of energy from pulling Gs.
+        # This is very inaccurate, but better than nothing.
+        #
+        # First we get the speedloss including loss due to normal drag:
+        var b300 = me.bleed32800at0g(dt);
+        var b325 = me.bleed32800at25g(dt)-b300;
+        #
+        # We then subtract the normal drag.
+        var b000 = me.bleed0at0g(dt);
+        var b025 = me.bleed0at25g(dt)-b000;
+        b300 = 0;
+        b000 = 0;
+        #
+        # We now find what the speedloss will be at sealevel and 32800 ft.
+        var speedLoss32800 = b300 + ((gForce-0)/(25-0))*(b325 - b300);
+        var speedLoss0 = b000 + ((gForce-0)/(25-0))*(b025 - b000);
+        #
+        # We then inter/extra-polate that to the currect density-altitude.
+        var speedLoss = speedLoss0 + ((altitude-0)/(32800-0))*(speedLoss32800-speedLoss0);
+        #
+        # For good measure the result is clamped to below zero.
+        return clamp(speedLoss, -100000, 0);
+    },
+
+	bleed32800at0g: func (dt) {
+		var loss_fps = 0 + ((dt - 0)/(15 - 0))*(-330 - 0);
+		return loss_fps*M2FT;
+	},
+
+	bleed32800at25g: func (dt) {
+		var loss_fps = 0 + ((dt - 0)/(3.5 - 0))*(-240 - 0);
+		return loss_fps*M2FT;
+	},
+
+	bleed0at0g: func (dt) {
+		var loss_fps = 0 + ((dt - 0)/(22 - 0))*(-950 - 0);
+		return loss_fps*M2FT;
+	},
+
+	bleed0at25g: func (dt) {
+		var loss_fps = 0 + ((dt - 0)/(7 - 0))*(-750 - 0);
+		return loss_fps*M2FT;
+	},
+
 	update: func {
 		var dt = getprop("sim/time/delta-sec");
 		var init_launch = 0;
@@ -406,6 +453,10 @@ var AIM9 = {
 		var drag_acc = (Cd * q * me.eda) / mass;
 		var speed_fps = old_speed_fps - drag_acc*dt + acc*dt;
 
+		if (me.last_dt != 0) {
+			speed_fps = speed_fps + me.energyBleed(me.g, me.altN.getValue(), me.last_dt);
+		}
+
 		# Get target position.
 		me.t_coord.set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue() * FT2M);
 		
@@ -505,12 +556,16 @@ var AIM9 = {
 
 			#### If not exploded, check if the missile can keep the lock.
  			if ( me.free == 0 ) {
-				var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), dt);
-				if ( g > me.max_g_current ) {
+				me.g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), dt);
+				if ( me.g > me.max_g_current ) {
 					# Target unreachable, fly free.
 					me.free = 1;
 				}
+			} else {
+				me.g = 0;
 			}
+		} else {
+			me.g = 0;
 		}
 
 		me.before_last_t_coord = geo.Coord.new(me.last_t_coord);
