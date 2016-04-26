@@ -892,7 +892,7 @@ var AIM9 = {
 
 		        var min_distance = me.direct_dist_m;
 				var explosion_coord = me.last_coord;
-				for (var i = 0.05; i < 1; i += 0.05) {
+				for (var i = 0.00; i <= 1; i += 0.05) {
 					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
 					var coord = me.interpolate(me.last_coord, me.coord, i);
 					var dist = coord.direct_distance_to(t_coord);
@@ -902,7 +902,7 @@ var AIM9 = {
 					}
 				}
 				if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
-					for (var i = 0.05; i < 1; i += 0.05) {
+					for (var i = 0.00; i <= 1; i += 0.05) {
 						var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
 						var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
 						var dist = coord.direct_distance_to(t_coord);
