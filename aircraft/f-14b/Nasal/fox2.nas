@@ -955,7 +955,7 @@ var AIM9 = {
 			var t_heading        = me.TgtHdg_prop.getValue();
 			var t_pitch          = me.TgtPitch_prop.getValue();
 			var t_speed          = me.TgtSpeed_prop.getValue()*KT2FPS;#true airspeed
-			var t_horz_speed     = t_speed - math.abs(math.sin(t_pitch*D2R)*t_speed);
+			var t_horz_speed     = math.abs(math.cos(t_pitch*D2R)*t_speed);
 			var t_LOS_norm_head  = me.t_course + 90;
 			var t_LOS_norm_speed = math.cos((t_LOS_norm_head - t_heading)*D2R)*t_horz_speed;
 
