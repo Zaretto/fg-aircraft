@@ -1098,14 +1098,19 @@ print("Model ",missile_model);
 
 				var phrase = sprintf( me.variant~" exploded: %01.1f", min_distance) ~ " meters from: " ~ ident;
 
-				if(min_distance < 65) {
-					if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-						setprop("/sim/multiplay/chat", defeatSpamFilter(phrase));
-					} else {
-						setprop("/sim/messages/atc", phrase);
-					}
+				var reason = "Passed target.";
+				if (groundhit == 1) {
+					reason = "Hit terrain.";
+				} elsif (me.life_time > me.selfdestruct_time) {
+					reason = "Selfdestructed.";
 				}
-				print(phrase~", hit ground: "~groundhit);
+
+				if(min_distance < 65) {
+					me.sendMessage(phrase);
+				} else {
+					me.sendMessage(me.type~" missed "~ident~": "~reason);
+				}
+				print(phrase~", reason: "~reason);
 
 				# Create impact coords from this previous relative position applied to target current coord.
 				me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
@@ -1121,6 +1126,14 @@ print("Model ",missile_model);
 		}
 		me.direct_dist_m = cur_dir_dist_m;
 		return(1);
+	},
+
+	sendMessage: func (str) {
+		if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
+			setprop("/sim/multiplay/chat", defeatSpamFilter(str));
+		} else {
+			setprop("/sim/messages/atc", str);
+		}
 	},
 
 	interpolate: func (start, end, fraction) {
