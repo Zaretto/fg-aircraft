@@ -450,6 +450,18 @@ print("Model ",missile_model);
 	},
 
 	update: func {
+
+		if ( me.Tgt == nil ) {
+			settimer(func me.del(), 2);
+			return(1);
+		}
+		
+		if (!me.Tgt.Valid.getValue()) {
+			# Lost of lock due to target disapearing:
+			settimer(func me.del(), 2);
+			return(1);
+		}
+
 		me.dt = getprop("sim/time/delta-sec");
 		var init_launch = 0;
 		if ( me.life_time > 0 ) { init_launch = 1 }
@@ -666,50 +678,13 @@ print("Model ",missile_model);
 
 	update_track: func(dt_) {
 
-		if ( me.Tgt == nil ) 
-        {
-            if (me.status != 2)
-                setprop("sim/model/f15/systems/armament/launch-light",false);
-            return(1); 
-        }
-# do not set launch light when missile tracking.
-        if (me.status != 2)
-            setprop("sim/model/f15/systems/armament/launch-light",me.status == 1);
-
-		if (me.status == 0) {
-			# Status = searching.
-			me.reset_seeker();
-			SwSoundVol.setValue(vol_search);
-			settimer(func me.search(), 0.1);
-			return(1);
-		}
-		if ( me.status == -1 ) {
-			# Status = stand-by.
-			me.reset_seeker();
-			SwSoundVol.setValue(0);
-			return(1);
-		}
-		if (!me.Tgt.Valid.getValue()) {
-			# Lost of lock due to target disapearing:
-			# return to search mode.
-			me.status = 0;
-			me.reset_seeker();
-			SwSoundVol.setValue(vol_search);
-			settimer(func me.search(), 0.1);
-			return(1);
-		}
+		
 		# Time interval since lock time or last track loop.
 		var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
 		var dt = time - me.update_track_time;
 		me.update_track_time = time;
-		var last_tgt_e = me.curr_tgt_e;
-		var last_tgt_h = me.curr_tgt_h;
 
-		if (me.status == 1) {		
-			# Status = locked. Get target position relative to our aircraft.
-			me.curr_tgt_e = me.Tgt.get_total_elevation(OurPitch.getValue());
-			me.curr_tgt_h = me.Tgt.get_deviation(OurHdg.getValue());
-		} elsif (dt_ != nil) {
+		if (dt_ != nil) {
 			# Status = launched. Compute target position relative to seeker head.
 
 			#
@@ -774,6 +749,59 @@ print("Model ",missile_model);
 			me.last_t_elev_deg     = me.t_elev_deg;
 			me.last_cruise_or_loft = me.cruise_or_loft;
 		}
+		return(1);
+	},
+
+	update_lock: func() {
+
+		if ( me.Tgt == nil ) 
+        {
+            if (me.status != 2)
+                setprop("sim/model/f15/systems/armament/launch-light",false);
+            return(1); 
+        }
+# do not set launch light when missile tracking.
+        if (me.status != 2) {
+            setprop("sim/model/f15/systems/armament/launch-light",me.status == 1);
+        } else {
+        	#missile is flying, quit locking loop
+        	return (1);
+        }
+
+		if (me.status == 0) {
+			# Status = searching.
+			me.reset_seeker();
+			SwSoundVol.setValue(vol_search);
+			settimer(func me.search(), 0.1);
+			return(1);
+		}
+		if ( me.status == -1 ) {
+			# Status = stand-by.
+			me.reset_seeker();
+			SwSoundVol.setValue(0);
+			return(1);
+		}
+		if (!me.Tgt.Valid.getValue()) {
+			# Lost of lock due to target disapearing:
+			# return to search mode.
+			me.status = 0;
+			me.reset_seeker();
+			SwSoundVol.setValue(vol_search);
+			settimer(func me.search(), 0.1);
+			return(1);
+		}
+		# Time interval since lock time or last track loop.
+		var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
+		var dt = time - me.update_track_time;
+		me.update_track_time = time;
+		var last_tgt_e = me.curr_tgt_e;
+		var last_tgt_h = me.curr_tgt_h;
+
+		if (me.status == 1) {		
+			# Status = locked. Get target position relative to our aircraft.
+			me.curr_tgt_e = me.Tgt.get_total_elevation(OurPitch.getValue());
+			me.curr_tgt_h = me.Tgt.get_deviation(OurHdg.getValue());
+		}
 		# Compute HUD reticle position.
 		if ( me.status == 1 ) {
 			var h_rad = (90 - me.curr_tgt_h) * D2R;
@@ -791,7 +819,7 @@ print("Model ",missile_model);
 			me.check_t_in_fov();
 			# We are not launched yet: update_track() loops by itself at 10 Hz.
 			SwSoundVol.setValue(vol_track);
-			settimer(func me.update_track(nil), 0.1);
+			settimer(func me.update_lock(), 0.1);
 		}
 		return(1);
 	},
@@ -1203,7 +1231,7 @@ print("Model ",missile_model);
 				me.TgtPitch_prop     = props.globals.getNode(t_ori_str).getChild("pitch-deg");
 				me.TgtSpeed_prop     = props.globals.getNode(t_vel_str).getChild("true-airspeed-kt");
 				me.TgtBearing_prop   = props.globals.getNode("radar/bearing-deg");
-				settimer(func me.update_track(nil), 0.1);
+				settimer(func me.update_lock(), 0.1);
 				return;
 			}
 		}
