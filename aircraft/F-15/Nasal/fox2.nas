@@ -85,6 +85,7 @@ var AIM9 = {
         m.rail              = getprop("sim/model/f15/systems/armament/"~m.type~"/rail");
         m.rail_dist_m       = getprop("sim/model/f15/systems/armament/"~m.type~"/rail-length-m");
         m.rail_forward      = getprop("sim/model/f15/systems/armament/"~m.type~"/rail-point-forward");
+        m.guidance          = getprop("sim/model/f15/systems/armament/"~m.type~"/guidance");
 
 		# Find the next index for "models/model" and create property node.
 		# Find the next index for "ai/models/aim-9" and create property node.
@@ -142,6 +143,7 @@ print("Model ",missile_model);
 		m.old_speed_fps	     = 0;
 		m.dt                 = 0;
 		m.g = 0;
+		m.elapsed_last           = 0;
 
 		# navigation and guidance
 		m.last_deviation_e       = nil;
@@ -288,9 +290,9 @@ print("Model ",missile_model);
 			var alpha = getprop("orientation/alpha-deg");
 			var beta = getprop("orientation/side-slip-deg");# positive is air from right
 
-			var alpha_diff = alpha * math.cos(ac_roll*D2R) * ((ac_roll > 90 or ac_roll < -90)?-1:1) + beta * math.sin(ac_roll*D2R);
-			#alpha_diff = alpha > 0?alpha_diff:0;# not using alpha if its negative to avoid missile flying through aircraft.
-			#ac_pitch = ac_pitch - alpha_diff;
+			var alpha_diff = alpha * math.cos(ac_roll*D2R) + beta * math.sin(ac_roll*D2R);
+			alpha_diff = alpha > 0?alpha_diff:0;# not using alpha if its negative to avoid missile flying through aircraft.
+			ac_pitch = ac_pitch - alpha_diff;
 			
 			var beta_diff = beta * math.cos(ac_roll*D2R) * ((ac_roll > 90 or ac_roll < -90)?-1:1) - alpha * math.sin(ac_roll*D2R);
 			#ac_hdg = ac_hdg + beta_diff;
@@ -430,22 +432,22 @@ print("Model ",missile_model);
     },
 
 	bleed32800at0g: func () {
-		var loss_fps = 0 + ((me.dt - 0)/(15 - 0))*(-330 - 0);
+		var loss_fps = 0 + ((me.last_dt - 0)/(15 - 0))*(-330 - 0);
 		return loss_fps*M2FT;
 	},
 
 	bleed32800at25g: func () {
-		var loss_fps = 0 + ((me.dt - 0)/(3.5 - 0))*(-240 - 0);
+		var loss_fps = 0 + ((me.last_dt - 0)/(3.5 - 0))*(-240 - 0);
 		return loss_fps*M2FT;
 	},
 
 	bleed0at0g: func () {
-		var loss_fps = 0 + ((me.dt - 0)/(22 - 0))*(-950 - 0);
+		var loss_fps = 0 + ((me.last_dt - 0)/(22 - 0))*(-950 - 0);
 		return loss_fps*M2FT;
 	},
 
 	bleed0at25g: func () {
-		var loss_fps = 0 + ((me.dt - 0)/(7 - 0))*(-750 - 0);
+		var loss_fps = 0 + ((me.last_dt - 0)/(7 - 0))*(-750 - 0);
 		return loss_fps*M2FT;
 	},
 
@@ -463,6 +465,19 @@ print("Model ",missile_model);
 		}
 
 		me.dt = getprop("sim/time/delta-sec");
+
+		var elapsed = systime();
+
+		if (me.elapsed_last != 0) {
+			me.dt = (elapsed - me.elapsed_last)*getprop("sim/speed-up");
+			if(me.dt <= 0) {
+				# to prevent pow floating point error in line:cdm = 0.2965 * math.pow(me.speed_m, -1.1506) + me.cd;
+				# could happen if the OS adjusts the clock backwards
+				me.dt = 0.00001;
+			}
+		}
+		me.elapsed_last = elapsed;
+
 		var init_launch = 0;
 		if ( me.life_time > 0 ) { init_launch = 1 }
 		me.life_time += me.dt;
@@ -528,7 +543,7 @@ print("Model ",missile_model);
 #var ns = speed_change_fps + me.old_speed_fps;
 
 		if (me.last_dt != 0) {
-			speed_change_fps = speed_change_fps + me.energyBleed(me.g, me.altN.getValue() + me.density_alt_diff,me.last_dt);
+			speed_change_fps = speed_change_fps + me.energyBleed(me.g, me.altN.getValue() + me.density_alt_diff);
 		}
 
 #var nsb = speed_change_fps + me.old_speed_fps;
@@ -538,7 +553,7 @@ print("Model ",missile_model);
 		var grav_bomb = FALSE;
 		if (me.force_lbs_1 == 0 and me.force_lbs_2 == 0) {
 			# for now gravity bombs cannot be guided.
-			grav_bomb == TRUE;
+			grav_bomb = TRUE;
 		}
 
 		# Get target position.
@@ -838,7 +853,7 @@ print("Model ",missile_model);
 	},
 
 	canSeekerKeepUp: func () {
-		if (me.last_deviation_e != nil) {
+		if (me.last_deviation_e != nil and me.guidance == "heat") {
 			# calculate if the seeker can keep up with the angular change of the target
 			#
 			# missile own movement is subtracted from this change due to seeker being on gyroscope
