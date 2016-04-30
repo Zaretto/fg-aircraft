@@ -305,6 +305,15 @@ var AIM9 = {
 
 		me.density_alt_diff = getprop("fdm/jsbsim/atmosphere/density-altitude") - aalt;
 
+		if (me.loft_alt > 10000) {
+			#
+			# adjust the snap-up altitude to initial distance of target.
+			#
+			var dst = me.coord.distance_to(geo.Coord.new().set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue()*FT2M)) * M2NM;
+			me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*1000;
+			me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
+		}
+
 		me.smoke_prop.setBoolValue(1);
 		SwSoundVol.setValue(0);
 		settimer(func { HudReticleDeg.setValue(0) }, 2);
