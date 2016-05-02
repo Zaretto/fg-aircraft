@@ -333,7 +333,7 @@ print("Model ",missile_model);
 			# adjust the snap-up altitude to initial distance of target.
 			#
 			var dst = me.coord.distance_to(geo.Coord.new().set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue()*FT2M)) * M2NM;
-			me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*1000;
+			me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*500;
 			me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
 		}
 
@@ -990,7 +990,7 @@ print("Model ",missile_model);
 				me.dive_token = TRUE;
 				#print("Is last turn, APN takes it from here..")
 			}
-		} elsif (me.t_elev_deg < 0 and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
+		} elsif (me.t_elev_deg < 0 #and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
 		         and me.dist_curr * M2NM > cruise_minimum) {
 			# stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
 
