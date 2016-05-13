@@ -44,8 +44,6 @@ var AIM9 = {
 		m.update_track_time = 0;
 		m.seeker_dev_e      = 0; # Seeker elevation, deg.
 		m.seeker_dev_h      = 0; # Seeker horizon, deg.
-		m.curr_tgt_e        = 0;
-		m.curr_tgt_h        = 0;
 		m.direct_dist_m     = nil;
 
 		# AIM-9L specs:
@@ -133,8 +131,6 @@ var AIM9 = {
 		m.last_deviation_h       = nil;
 		m.last_track_e           = 0;
 		m.last_track_h           = 0;
-		m.last_tgt_h             = nil;
-		m.last_tgt_e             = nil;
 		m.guiding                = TRUE;
 		m.t_alt                  = 0;
 		m.dist_curr              = 0;
@@ -153,8 +149,8 @@ var AIM9 = {
 		m.raw_steer_signal_elev  = 0;
 		m.raw_steer_signal_head  = 0;
 		m.cruise_or_loft         = FALSE;
-		m.curr_tgt_e             = 0;
-		m.curr_tgt_h             = 0;
+		m.curr_deviation_e       = 0;
+		m.curr_deviation_h       = 0;
 		m.track_signal_e         = 0;
 		m.track_signal_h         = 0;
 
@@ -295,8 +291,13 @@ var AIM9 = {
 		me.speed_east_fps = getprop("velocities/speed-east-fps");
 		me.speed_north_fps = getprop("velocities/speed-north-fps");
 		if (me.rail == TRUE) {
-			var u = getprop("velocities/uBody-fps");# wind from nose
-			me.rail_speed_into_wind = u;
+			if (me.rail_forward == FALSE) {
+				# rail is actually a tube pointing upward
+				me.rail_speed_into_wind = -getprop("velocities/wBody-fps");# wind from below
+			} else {
+				# rail is pointing forward
+				me.rail_speed_into_wind = getprop("velocities/uBody-fps");# wind from nose
+			}
 		}
 
 		me.alt_ft = aalt;
@@ -581,7 +582,7 @@ var AIM9 = {
 		if (grav_bomb == TRUE) {
 			# true gravity acc
 			me.speed_down_fps += g_fps * me.dt;
-			me.pitch = math.atan2( me.speed_down_fps, speed_horizontal_fps ) * R2D;
+			me.pitch = math.atan2(-me.speed_down_fps, speed_horizontal_fps ) * R2D;
 		}
 		
 		me.alt_ft = me.alt_ft - ((me.speed_down_fps + g_fps * me.dt * !grav_bomb) * me.dt);
@@ -701,8 +702,8 @@ var AIM9 = {
 			me.dist_curr_direct = me.coord.direct_distance_to(me.t_coord);
 			me.t_elev_deg       = math.atan2( t_alt_delta_m, me.dist_curr ) * R2D;
 			me.t_course         = me.coord.course_to(me.t_coord);
-			me.curr_tgt_e       = me.t_elev_deg - me.pitch;
-			me.curr_tgt_h       = me.t_course - me.hdg;
+			me.curr_deviation_e       = me.t_elev_deg - me.pitch;
+			me.curr_deviation_h       = me.t_course - me.hdg;
 
 
 			#
@@ -718,11 +719,11 @@ var AIM9 = {
 
 			#printf("Altitude above launch platform = %.1f ft", M2FT * (me.coord.alt()-me.ac.alt()));
 
-			while(me.curr_tgt_h < -180) {
-				me.curr_tgt_h += 360;
+			while(me.curr_deviation_h < -180) {
+				me.curr_deviation_h += 360;
 			}
-			while(me.curr_tgt_h > 180) {
-				me.curr_tgt_h -= 360;
+			while(me.curr_deviation_h > 180) {
+				me.curr_deviation_h -= 360;
 			}
 
 			me.checkForGuidance();
@@ -742,8 +743,6 @@ var AIM9 = {
 			# record some variables for next loop:
 			me.dist_last           = me.dist_curr;
 			me.dist_direct_last    = me.dist_curr_direct;
-			me.last_tgt_h          = me.curr_tgt_h;
-			me.last_tgt_e          = me.curr_tgt_e;
 			me.last_t_course       = me.t_course;
 			me.last_t_elev_deg     = me.t_elev_deg;
 			me.last_cruise_or_loft = me.cruise_or_loft;
@@ -782,17 +781,15 @@ var AIM9 = {
 		var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
 		var dt = time - me.update_track_time;
 		me.update_track_time = time;
-		var last_tgt_e = me.curr_tgt_e;
-		var last_tgt_h = me.curr_tgt_h;
 		if (me.status == 1) {		
 			# Status = locked. Get target position relative to our aircraft.
-			me.curr_tgt_e = me.Tgt.get_total_elevation(OurPitch.getValue());
-			me.curr_tgt_h = me.Tgt.get_deviation(OurHdg.getValue());
+			me.curr_deviation_e = me.Tgt.get_total_elevation(OurPitch.getValue());
+			me.curr_deviation_h = me.Tgt.get_deviation(OurHdg.getValue());
 		}
 		# Compute HUD reticle position.
 		if ( me.status == 1 ) {
-			var h_rad = (90 - me.curr_tgt_h) * D2R;
-			var e_rad = (90 - me.curr_tgt_e) * D2R; 
+			var h_rad = (90 - me.curr_deviation_h) * D2R;
+			var e_rad = (90 - me.curr_deviation_e) * D2R; 
 			var devs = f14_hud.develev_to_devroll(h_rad, e_rad);
 			var combined_dev_deg = devs[0];
 			var combined_dev_length =  devs[1];
@@ -820,8 +817,8 @@ var AIM9 = {
 			# if its semi-radar guided and the target is no longer painted
 			me.guiding = FALSE;
 			print("Not guiding (lost radar reflection, trying to reaquire)");
-		} elsif (me.curr_tgt_e > me.max_seeker_dev or me.curr_tgt_e < (-1 * me.max_seeker_dev)
-			  or me.curr_tgt_h > me.max_seeker_dev or me.curr_tgt_h < (-1 * me.max_seeker_dev)) {
+		} elsif (me.curr_deviation_e > me.max_seeker_dev or me.curr_deviation_e < (-1 * me.max_seeker_dev)
+			  or me.curr_deviation_h > me.max_seeker_dev or me.curr_deviation_h < (-1 * me.max_seeker_dev)) {
 			# target is not in missile seeker view anymore
 			print("Target is not in missile seeker view anymore");
 			me.free = TRUE;
@@ -834,8 +831,8 @@ var AIM9 = {
 			#
 			# missile own movement is subtracted from this change due to seeker being on gyroscope
 			#
-			var dve_dist = me.curr_tgt_e - me.last_deviation_e + me.last_track_e;
-			var dvh_dist = me.curr_tgt_h - me.last_deviation_h + me.last_track_h;
+			var dve_dist = me.curr_deviation_e - me.last_deviation_e + me.last_track_e;
+			var dvh_dist = me.curr_deviation_h - me.last_deviation_h + me.last_track_h;
 			var deviation_per_sec = math.sqrt(dve_dist*dve_dist+dvh_dist*dvh_dist)/me.dt;
 
 			if (deviation_per_sec > me.angular_speed) {
@@ -847,8 +844,8 @@ var AIM9 = {
 			}
 		}
 
-		me.last_deviation_e = me.curr_tgt_e;
-		me.last_deviation_h = me.curr_tgt_h;
+		me.last_deviation_e = me.curr_deviation_e;
+		me.last_deviation_h = me.curr_deviation_h;
 	},
 
 
@@ -953,7 +950,7 @@ var AIM9 = {
 			me.raw_steer_signal_elev = -me.pitch + me.t_elev_deg;
 			#print("Turning, desire "~me.t_elev_deg~" degs pitch.");
 			me.cruise_or_loft = TRUE;
-			if (math.abs(me.curr_tgt_e) < 5) {
+			if (math.abs(me.curr_deviation_e) < 5) {
 				me.dive_token = TRUE;
 				#print("Is last turn, APN takes it from here..")
 			}
@@ -972,9 +969,9 @@ var AIM9 = {
 			#print("Cruising, desire "~attitude~" degs pitch.");
 			me.cruise_or_loft = TRUE;
 			me.dive_token = TRUE;
-		} elsif (me.last_cruise_or_loft == TRUE and math.abs(me.curr_tgt_e) > 2.5) {
+		} elsif (me.last_cruise_or_loft == TRUE and math.abs(me.curr_deviation_e) > 2.5) {
 			# after cruising, point the missile in the general direction of the target, before APN starts guiding.
-			me.raw_steer_signal_elev = me.curr_tgt_e;
+			me.raw_steer_signal_elev = me.curr_deviation_e;
 			me.cruise_or_loft = TRUE;
 		}
 	},
@@ -983,7 +980,7 @@ var AIM9 = {
 		#
 		# augmented proportional navigation
 		#
-		if (me.guiding == TRUE and me.free == FALSE and me.dist_last != nil and me.last_dt != 0 and me.last_tgt_h != nil) {
+		if (me.guiding == TRUE and me.free == FALSE and me.dist_last != nil and me.last_dt != 0) {
 			# augmented proportional navigation for heading #
 			#################################################
 
@@ -1027,7 +1024,7 @@ var AIM9 = {
 
 			#print(sprintf("LOS-rate=%.2f rad/s - closing-rate=%.1f ft/s",line_of_sight_rate_rps,horz_closing_rate_fps));
 			#print(sprintf("commanded-perpendicular-acceleration=%.1f ft/s^2", acc_sideways_ftps2));
-			#print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_tgt_h, me.raw_steer_signal_head));
+			#print(sprintf("horz leading by %.1f deg, commanding %.1f deg", me.curr_deviation_h, me.raw_steer_signal_head));
 
 			if (me.cruise_or_loft == FALSE) {# and me.last_cruise_or_loft == FALSE
 				# augmented proportional navigation for elevation #
@@ -1182,7 +1179,7 @@ var AIM9 = {
 		var e_u = me.seeker_dev_e + me.aim9_fov;
 		var h_l = me.seeker_dev_h - me.aim9_fov;
 		var h_r = me.seeker_dev_h + me.aim9_fov;
-		if ( me.curr_tgt_e < e_d or me.curr_tgt_e > e_u or me.curr_tgt_h < h_l or me.curr_tgt_h > h_r ) {		
+		if ( me.curr_deviation_e < e_d or me.curr_deviation_e > e_u or me.curr_deviation_h < h_l or me.curr_deviation_h > h_r ) {		
 			# Target out of FOV while still not launched, return to search loop.
 			me.status = 0;
 			settimer(func me.search(), 0.1);
@@ -1244,8 +1241,8 @@ var AIM9 = {
 
 
 	reset_seeker: func {
-		me.curr_tgt_e     = 0;
-		me.curr_tgt_h     = 0;
+		me.curr_deviation_e     = 0;
+		me.curr_deviation_h     = 0;
 		me.seeker_dev_e   = 0;
 		me.seeker_dev_h   = 0;
 		settimer(func { HudReticleDeg.setValue(0) }, 2);
@@ -1351,10 +1348,6 @@ var steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, dt) {
 	# dv/dt=a
 	var g = (dv/dt) / g_fps;
 
-	# old calc with circle:
-	#var radius_ft = math.abs(s_fps / math.sin(steer_deg*D2R));
-	#var g = ( (s_fps * s_fps) / radius_ft ) / g_fps;
-	#print("#### R = ", radius_ft, " G = ", g); ##########################################################
 	return g;
 }
 
