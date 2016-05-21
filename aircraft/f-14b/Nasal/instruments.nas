@@ -62,127 +62,115 @@ var nav1_freq_update = func {
 var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
 
 #
+# AN/SPN 46 transmits - this receives.
+var ARA63Recipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.ansn46_expiry = 0;
+        new_class.Receive = func(notification)
+        {
+            if (notification.NotificationType == "ANSPN46ActiveNotification")
+            {
+                print(" :: Recvd lat=",notification.Position.lat(), " lon=",notification.Position.lon(), " alt=",notification.Position.alt(), " chan=",notification.Channel);
+                var response_msg = me.Response.Respond(notification);
+#
+# We cannot decide if in range as it is the AN/SPN system to decide if we are within range
+# However we will tell the AN/SPN system if we are tuned (and powered on)
+                if(notification.Channel == getprop("sim/model/f-14b/controls/electrics/ara-63-channel") and getprop("sim/model/f-14b/controls/electrics/ara-63-power-off") == 0)
+                    response_msg.Tuned = 1;
+                else
+                    response_msg.Tuned = 0;
+
+# normalised value based on RCS beam power etc.
+# we could do this using a factor.
+                response_msg.RadarReturnStrength = 1; # possibly response_msg.RadarReturnStrength*RCS_FACTOR
+
+                emesary.GlobalTransmitter.NotifyAll(response_msg);
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+#---------------------
+# we will only receive one of these messages when within range of the carrier (and when the ARA-63 is powered up and has the correct channel set)
+#
+            else if (notification.NotificationType == "ANSPN46CommunicationNotification")
+            {
+                me.ansn46_expiry = getprop("/sim/time/elapsed-sec") + 10;
+# Use the standard civilian ILS if it is closer.
+        print("rcvd ANSPN46CommunicationNotification =",notification.InRange, " dev=",notification.LateralDeviation, ",", notification.VerticalDeviation, " dist=",notification.Distance);
+                if(getprop("instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < notification.Distance)
+                {
+                    me.ansn46_expiry=0;
+                    return emesary.Transmitter.ReceiptStatus_OK;
+                }
+                else if (notification.InRange)
+                {
+                    setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 1);
+                    setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",notification.VerticalAdjustmentCommanded);
+                    setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",notification.HorizontalAdjustmentCommanded);
+                    setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",notification.SignalQualityNorm);
+                    setprop("sim/model/f-14b/instrumentation/nav/gs-distance", notification.Distance);
+                    setprop("sim/model/f-14b/lights/light-10-seconds",notification.TenSeconds);
+                    setprop("sim/model/f-14b/lights/light-wave-off",notification.WaveOff);
+
+# Set these lights on when in range and within altitude.
+# the lights come on but it is unspecified when they go off.
+# Ref: F-14AAD-1 Figure 17-4, p17-11 (pdf p685)
+                    if (notification.Distance < 11000) 
+                    {
+                        if (notification.ReturnPosition.alt() > 300 and notification.ReturnPosition.alt() < 425 and abs(notification.LateralDeviation) < 1 )
+                        {
+                            setprop("sim/model/f-14b/lights/acl-ready-light", 1);
+                            setprop("sim/model/f-14b/lights/ap-cplr-light",1);
+                        }
+                        if (notification.Distance > 8000)  # extinguish at roughly 4.5nm from fix.
+                        {
+                            setprop("sim/model/f-14b/lights/landing-chk-light", 1);
+                        }
+                        else
+                        {
+                            setprop("sim/model/f-14b/lights/landing-chk-light", 0);
+                        }
+                    }
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        new_class.Response = ANSPN46ActiveResponseNotification.new("ARA-63");
+        return new_class;
+    },
+};
+
+var ara63 = ARA63Recipient.new("F-14/ARA-63");
+emesary.GlobalTransmitter.Register(ara63);
+#
 # ARA 63 (Military ILS type of system). This is a bit hardwired to
 # work with the tuned carrier based on the TACAN channel which isn't
 # right - but it is good enough.
-var ara_63_update = func {
-    if (f14.carrier_ara_63_position != nil and f14.carrier_ara_63_heading != nil)
-    {
-        var our_pos = geo.aircraft_position();
-        range = our_pos.distance_to(f14.carrier_ara_63_position);
-        var bearing_to = our_pos.course_to(f14.carrier_ara_63_position);
-        var deviation = bearing_to - f14.carrier_ara_63_heading;
-        deviation = deviation *0.1;
-
-        if(getprop("/instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < range)
-        {
-# Use the standard civilian ILS as it is closer.
-            setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
-            setprop("sim/model/f-14b/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
-            setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
-            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
-            setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
-            setprop("sim/model/f-14b/lights/acl-ready-light", 0);
-            setprop("sim/model/f-14b/lights/ap-cplr-light",0);
-            setprop("sim/model/f-14b/lights/light-wave-off",0);
-            setprop("sim/model/f-14b/lights/light-10-seconds",0);
-            setprop("sim/model/f-14b/lights/landing-chk-light", 0);
-            return;
-        }
-        else if (range < 37000 and abs(deviation) < 3) # 20nm range F14-AAD-1 17.3.2
-        {
-            var deck_height=20; # the height of the MRC is included in the offset of the position + 2.93218; # 20 meters + height from MRC.
-
-            var gs_height = ((range*FD_TAN3DEG)) + deck_height;
-            var gs_deviation = (gs_height - our_pos.alt()) / 42.0; 
-
-            if (gs_deviation > 1) gs_deviation = 1;
-            else if (gs_deviation < -1) gs_deviation = -1;
-
-            setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 1);
-            setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",gs_deviation);
-# VOR_FULL_ARC = 20.0
-# 17.3.2 localizer width 6 deg
-# factor = 3.33
-            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",deviation);
-            setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",1);
-            setprop("sim/model/f-14b/instrumentation/nav/gs-distance", range);
-
-            var u_fps = getprop("/velocities/uBody-fps");
-            var eta = range / (u_fps / 3.281);
-
-#            print (" range ",range," bearing to ",deviation," eta ",eta," gsheight ", gs_height, "gsdev ",gs_deviation);
-
-            if(eta <= 10 and range < 800 and range > 150)
-            {
-                setprop("sim/model/f-14b/lights/light-10-seconds",1);
-                if(math.abs(deviation) > 0.2 or math.abs(gs_deviation) > 0.2)
-                {
-                    setprop("sim/model/f-14b/lights/light-wave-off",1);
-                }
-                else
-                {
-                    setprop("sim/model/f-14b/lights/light-wave-off",0);
-                }
-
-            }
-            else
-            {
-                setprop("sim/model/f-14b/lights/light-10-seconds",0);
-                setprop("sim/model/f-14b/lights/light-wave-off",0);
-            }
-            # Set these lights on when in range and within altitude.
-            # the lights come on but it is unspecified when they go off.
-            # Ref: F-14AAD-1 Figure 17-4, p17-11 (pdf p685)
-            if (range < 11000) 
-            {
-                if (our_pos.alt() > 300 and our_pos.alt() < 425 and abs(deviation) < 1 )
-                {
-                    setprop("sim/model/f-14b/lights/acl-ready-light", 1);
-                    setprop("sim/model/f-14b/lights/ap-cplr-light",1);
-                }
-                if (range > 8000)  # extinguish at roughly 4.5nm from fix.
-                {
-                    setprop("sim/model/f-14b/lights/landing-chk-light", 1);
-                }
-                else
-                {
-                    setprop("sim/model/f-14b/lights/landing-chk-light", 0);
-                }
-            }
-            else
-            {
-                setprop("sim/model/f-14b/lights/landing-chk-light", 0);
-                setprop("sim/model/f-14b/lights/acl-ready-light", 0);
-                setprop("sim/model/f-14b/lights/ap-cplr-light",0);
-                setprop("sim/model/f-14b/lights/light-10-seconds",0);
-                setprop("sim/model/f-14b/lights/light-wave-off",0);
-            }
-        }
-        else
-        {
-            setprop("sim/model/f-14b/lights/landing-chk-light", 0);
-            setprop("sim/model/f-14b/lights/light-10-seconds",0);
-            setprop("sim/model/f-14b/lights/light-wave-off",0);
-            setprop("sim/model/f-14b/lights/acl-ready-light", 0);
-            setprop("sim/model/f-14b/lights/ap-cplr-light",0);
-            setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", 0);
-            setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",1);
-            setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",1);
-            setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",0);
-            setprop("sim/model/f-14b/instrumentation/nav/gs-distance", 0);
-        }
+var ara_63_update = func
+{
+#
+# do not do anything whilst the AN/SPN 46 is within expiry time. 
+    if(getprop("/sim/time/elapsed-sec") < ara63.ansn46_expiry)
         return;
-    }
+
 #
 # Use the standard civilian ILS
-    setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
-    setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
-    setprop("sim/model/f-14b/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
-    setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
-    setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
+    setprop("sim/model/f-14b/lights/landing-chk-light", 0);
+    setprop("sim/model/f-14b/lights/light-10-seconds",0);
+    setprop("sim/model/f-14b/lights/light-wave-off",0);
     setprop("sim/model/f-14b/lights/acl-ready-light", 0);
     setprop("sim/model/f-14b/lights/ap-cplr-light",0);
+
+    if (getprop("instrumentation/nav/gs-in-range") != nil)
+    {
+        setprop("sim/model/f-14b/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
+        setprop("sim/model/f-14b/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
+        setprop("sim/model/f-14b/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
+        setprop("sim/model/f-14b/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
+        setprop("sim/model/f-14b/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
+    }
 }
 
 var tacan_update = func {
