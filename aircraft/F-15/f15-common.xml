@@ -1056,10 +1056,6 @@
 
         <multiplay>
             <generic>
-                <float n="0">0</float> <!-- free     -->
-                <float n="1">0</float> <!-- free     -->
-                <float n="2">0</float> <!-- free     -->
-                <float n="3">0</float> <!-- wing torn, 1 = left, 2 = right, 3 = both(!)-->
                 <float n="4">0</float> <!-- left elevator  -->
                 <float n="5">0</float> <!-- right elevator -->
                 <float n="6">0</float> <!-- refuel probe/door -->
@@ -1076,18 +1072,26 @@
 
                 <int n="0">0</int> <!-- fuel dump      -->
                 <int n="1">0</int> <!-- formation slimmers -->
-                <int n="2">0</int> <!-- radar-standby -->
                 <int n="3">0</int> <!-- collision lights -->
                 <int n="4">0</int> <!-- position lights -->
                 <int n="5">0</int> <!-- tail flood  -->
                 <int n="6">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
                 <int n="7">0</int> <!-- weapons load -->
+                <int n="8" alias="/consumables/fuel/total-fuel-lbs"/>
+                <int n="9" alias="/engines/engine[0]/egt-degC" />
+                <int n="10" alias="/engines/engine[0]/fuel-flow_pph" />
+                <int n="11" alias="/engines/engine[1]/egt-degC" />
+                <int n="12" alias="/engines/engine[1]/fuel-flow_pph" />
+                <int n="13" alias="/instrumentation/airspeed-indicator/indicated-speed-kt" />
+                <int n="14" alias="/instrumentation/radar/radar2-range" />
+                <int n="15" alias="/sim/model/f15/instrumentation/fuel-gauges/total" />
+                <int n="16" alias="/velocities/mach" />
+                <int n="17">0</int> <!-- Radar Status -->
+                <int n="18">0</int> <!-- Total Weight (lbs) -->
                 <string n="0" type="string"></string>
-                <!-- mp-network -->
-                <string n="1" type="string">xxx</string>
-                <string n="2" type="string" alias="/sim/model/f15/variant"/>
                 <string n="13" type="string"></string>
-                <!-- instruments -->
+                <!-- Emesary multiplayer bridge -->
+                <!--<string n="19" type="string"></string> -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
             <!--<default-model>Aircraft/F-15/Models/f15c.ac</default-model>-->
@@ -1589,6 +1593,9 @@
     </consumables>
 
     <controls>
+        <seat>
+            <pilot-helmet-volume-attenuation type="int">0</pilot-helmet-volume-attenuation>
+        </seat>
         <armament>
             <trigger type="bool">false</trigger>
             <cycle-mode type="bool">false</cycle-mode>
@@ -1999,6 +2006,9 @@
             <file>Aircraft/F-15/Nasal/chronograph.nas</file>
         </f15_chronograph>
         <aircraft>
+            <file>Nasal/canvas/MFD_Generic.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/F-15/Nasal/liveries.nas</file>
             <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
             <file>Aircraft/F-15/Nasal/flaps_computer.nas</file>

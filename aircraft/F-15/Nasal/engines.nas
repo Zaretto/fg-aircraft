@@ -142,10 +142,6 @@ var computeEngines = func {
         setprop("surface-positions/l-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
         setprop("surface-positions/r-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
     }
-#
-# copy for MP.
-    setprop("sim/multiplay/generic/int[8]", getprop("/engines/engine[0]/afterburner"));
-    setprop("sim/multiplay/generic/int[9]", getprop("/engines/engine[1]/afterburner"));
 }
 
 # JFS Startup / running noises

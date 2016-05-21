@@ -58,7 +58,7 @@
         <object-name>light-locked-nose</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -75,7 +75,7 @@
         <object-name>light-locked-left</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -92,7 +92,7 @@
         <object-name>light-locked-right</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -110,12 +110,12 @@
         <object-name>landing-gear-handle-lit</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
-                <property>/fdm/jsbsim/systems/cadc/gear-warning</property>
+                <property>fdm/jsbsim/systems/cadc/gear-warning</property>
             </or>
         </condition>
     </animation>
@@ -126,7 +126,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -134,13 +134,13 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
             <red>  1.000</red>
             <green>0.576</green>
             <blue> 0.161</blue>
-            <red-prop>controls/lighting/panel-red</red-prop>
-            <green-prop>controls/lighting/panel-green</green-prop>
-            <blue-prop>controls/lighting/panel-blue</blue-prop>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
         </emission>
     </animation>
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->

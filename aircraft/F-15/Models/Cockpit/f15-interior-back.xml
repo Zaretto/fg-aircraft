@@ -8,7 +8,7 @@
         <type>select</type>
         <condition>
             <equals>
-                <property>sim/multiplay/generic/string[2]</property>
+                <property>sim/model/f15/variant</property>
                 <value>D</value>
             </equals>
         </condition>
@@ -331,7 +331,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -339,13 +339,13 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
             <red>  1.000</red>
             <green>0.576</green>
             <blue> 0.161</blue>
-            <red-prop>controls/lighting/panel-red</red-prop>
-            <green-prop>controls/lighting/panel-green</green-prop>
-            <blue-prop>controls/lighting/panel-blue</blue-prop>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
         </emission>
     </animation>
 

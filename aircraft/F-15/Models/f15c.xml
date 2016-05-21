@@ -140,8 +140,23 @@
                 print("Loading F-15 mp network from ",fn_net);
                 io.load_nasal(fn_net, "f15_net");
 
+var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
+
+                if (io.stat(fn_vsd) == nil)
+                    fn_vsd = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/VSD/VSD_main.nas";
+
+                if (io.stat(fn_vsd) == nil)
+                    fn_vsd = resolvepath("Aircraft/F-15/Nasal") ~ "/VSD/VSD_main.nas";
+
+                if (io.stat(fn_vsd) == nil)
+                fn_vsd = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/VSD/VSD_main.nas";
+
+                print("Loading F-15 VSD from ",fn_vsd);
+                io.load_nasal(fn_vsd, "f15vsd");
+
                 # Initialize network as observer.
                 f15_net.mp_network_init(0);
+                emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Model", _module_id));
             }
             # set reasonable values for sound volumes
             setprop("fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
@@ -154,6 +169,7 @@
             setprop("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",0.8);
             setprop("fdm/jsbsim/systems/sound/engine-n2-l-volume",0.4);
             setprop("fdm/jsbsim/systems/sound/engine-n2-r-volume",0.4);
+
         ]]>
         </load>
 
@@ -162,6 +178,7 @@
             print("UNLOAD F-15 ", self.getPath());
             #cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
             livery_update.stop();
+            emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15ModelUnload", _module_id));
             ]]>
         </unload>
     </nasal>
@@ -1157,7 +1174,7 @@
         <condition>
             <and>
                 <equals>
-                    <property>sim/multiplay/generic/string[2]</property>
+                    <property>sim/model/f15/variant</property>
                     <value>D</value>
                 </equals>
                 <not>
@@ -1743,7 +1760,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -1769,7 +1786,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <greater-than>
