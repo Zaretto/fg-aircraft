@@ -1263,15 +1263,32 @@
         <aim9-signal>
             <name>aim9-signal</name>
             <mode>looped</mode>
+            <type>avionics</type><!-- headphones -->
             <path>Aircraft/f-14b/Sounds/115hz-square.wav</path>
             <condition>
-                <property>sim/model/f-14b/systems/armament/aim9/sound-on-off</property>
+                <property>payload/armament/aim-9/sound-on-off</property>
             </condition>
             <volume>
-                <property>sim/model/f-14b/systems/armament/aim9/sound-volume</property>
+                <property>payload/armament/aim-9/sound-volume</property>
             </volume>
             <max-dist>5</max-dist>
         </aim9-signal>
+        <aim54-signal>
+            <name>aim54-signal</name>
+            <mode>looped</mode>
+            <type>avionics</type><!-- headphones -->
+            <path>Aircraft/f-14b/Sounds/115hz-square.wav</path>
+            <condition>
+                <property>payload/armament/aim-54/sound-on-off</property>
+            </condition>
+            <pitch>
+                <factor>1.8</factor><!-- changes it to beep -->
+                <max>2</max>
+            </pitch>
+            <volume>
+                <property>payload/armament/aim-54/sound-volume</property>
+            </volume>
+        </aim54-signal>
         <!--ACM jettison lever -->
         <acm-jett-lever-on>
             <name>acm-jett-lever-on</name>

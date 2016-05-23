@@ -101,7 +101,7 @@ var incoming_listener = func {
             }
           }
         }
-      } elsif (getprop("sim/model/f-14b/systems/armament/mp-messaging") == 1) { # mirage: getprop("/controls/armament/mp-messaging")
+      } elsif (getprop("payload/armament/msg") == 1) { # mirage: getprop("/controls/armament/mp-messaging")
         # latest version of failure manager and taking damage enabled
         #print("damage enabled");
         var last1 = split(" ", last_vector[1]);
@@ -231,11 +231,11 @@ processCallsigns();
 
 #f14b
 var sendMis = func () {
-  var mkeys = keys(fox2.AIM9.active);
+  var mkeys = keys(armament.AIM9.active);
   var str = "";
   foreach(var m; mkeys) {
     var mid = m;
-    m = fox2.AIM9.active[m];
+    m = armament.AIM.active[m];
     if (m.status == 2) {
       var lat = m.latN.getValue();
       var lon = m.lonN.getValue();
@@ -264,7 +264,7 @@ var logTime = func{
   }
 }
 
-sendMis();
+#sendMis(); use emmisary for this
 
 var ct = func (type) {
   if (type == "c-u") {
@@ -349,7 +349,7 @@ var code_ct = func () {
     rf = 0;
   }
   lf = cf == nil?0:cf;
-  var dm = !getprop("sim/model/f-14b/systems/armament/mp-messaging");
+  var dm = !getprop("payload/armament/msg");
   if (dm == nil or dm != 1) {
     dm = 0;
   }
@@ -379,7 +379,7 @@ var code_ct = func () {
 }
 
 var not = func {
-  if (getprop("sim/model/f-14b/systems/armament/mp-messaging") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+  if (getprop("payload/armament/msg") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
     var ct = getprop("sim/multiplay/generic/string[15]") ;
     var msg = "I might be chea"~"ting..";
     if (ct != nil) {
@@ -454,18 +454,18 @@ var changeGuiLoad = func()
                     #item.getNode("binding").remove();
                     #item.getNode("name",1).setValue(searchname1);
                     item.getNode("binding/command").setValue("nasal");
-                    item.getNode("binding/script").setValue("fox2.loadMPList()");
+                    item.getNode("binding/script").setValue("armament.loadMPList()");
                     #item.getNode("enabled",1).setBoolValue(TRUE);
                 }
                 if(name.getValue() == searchname2) {
                     item.getNode("binding/command").setValue("nasal");
                     item.getNode("binding/dialog-name").remove();
-                    item.getNode("binding/script",1).setValue("fox2.loadIFail()");
+                    item.getNode("binding/script",1).setValue("armament.loadIFail()");
                 }
                 if(name.getValue() == searchname3) {
                     item.getNode("binding/command").setValue("nasal");
                     item.getNode("binding/dialog-name").remove();
-                    item.getNode("binding/script",1).setValue("fox2.loadSysFail()");
+                    item.getNode("binding/script",1).setValue("armament.loadSysFail()");
                 }
             }
         }
@@ -505,3 +505,17 @@ var re_init = func {
 }
 
 setlistener("/sim/signals/reinit", re_init, 0, 0);
+
+var spams = 0;
+
+var defeatSpamFilter = func (str) {
+  spams += 1;
+  if (spams == 15) {
+    spams = 1;
+  }
+  str = str~":";
+  for (var i = 1; i <= spams; i+=1) {
+    str = str~".";
+  }
+  return str;
+}

@@ -121,6 +121,7 @@ var az_scan = func() {
 		if ( range_radar2 == 0 ) { range_radar2 = 0.00000001 }
 		# Reset nearest_range score
 		nearest_u = tmp_nearest_u;
+		armament.contact = nearest_u;
 		nearest_rng = tmp_nearest_rng;
 		tmp_nearest_rng = nil;
 		tmp_nearest_u = nil;
@@ -273,6 +274,7 @@ var az_scan = func() {
 				if ( tmp_nearest_rng == nil or u_rng < tmp_nearest_rng)
                 {
 					tmp_nearest_u = u;
+					armament.contact = nearest_u;
 					tmp_nearest_rng = u_rng;
 				}
 			}
@@ -509,7 +511,8 @@ wcs_mode_update = func() {
 
 
 
-
+var TRUE = 1;
+var FALSE = 0;
 
 # Target class
 # ---------------------------------------------------------------------
@@ -519,10 +522,13 @@ var Target = {
 		obj.RdrProp = c.getNode("radar");
 		obj.Heading = c.getNode("orientation/true-heading-deg");
 		obj.Alt = c.getNode("position/altitude-ft");
+		obj.speed           = c.getNode("velocities/true-airspeed-kt");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
 		obj.Valid = c.getNode("valid");
 		obj.Callsign = c.getNode("callsign");
+		obj.name            = c.getNode("name");
+        obj.sign            = c.getNode("sign",1);
         obj.Model = c.getNode("model-short");
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
@@ -583,6 +589,12 @@ var Target = {
 		obj.TimeLast       = obj.TgtsFiles.getNode("closure-last-time", 1);
 		obj.RangeLast      = obj.TgtsFiles.getNode("closure-last-range-nm", 1);
 		obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
+		
+		obj.pitch          = c.getNode("orientation/pitch-deg");
+        obj.lat            = c.getNode("position/latitude-deg");
+        obj.lon            = c.getNode("position/longitude-deg");
+		obj.coord          = geo.Coord.new();
+		obj.coord.set_latlon(obj.lat.getValue(), obj.lon.getValue(), obj.Alt.getValue() * FT2M);
 
 		obj.TimeLast.setValue(ElapsedSec.getValue());
 		obj.RangeLast.setValue(obj.Range.getValue());
@@ -590,6 +602,8 @@ var Target = {
 		obj.RadarStandby = c.getNode("sim/multiplay/generic/int[2]");
 
 		obj.deviation = nil;
+
+		obj.unique = rand();
 
 		return obj;
 	},
@@ -696,6 +710,93 @@ var Target = {
 		me.RangeLast.setValue(rng);
 		return(cr);
 	},
+	getFlareNode: func () {
+		# for now, no flare implementation in the F14, until the F14 can fire flares of its own.
+		return nil; 
+	},
+	get_type: func () {
+		# for now, just interpret all as air targets
+		var AIR = 0;
+		var MARINE = 1;
+		var SURFACE = 2;
+		var ORDNANCE = 3;
+		return AIR;
+	},
+	getUnique: func () {
+		# the use of this has to be investigated more, until then, just give each target its own code.
+		return me.unique;
+	},
+	isValid: func () {
+      var valid = nil;
+      if (me.Valid == nil) {
+        valid = FALSE;
+      }
+      valid = me.Valid.getValue();
+      if (valid == nil) {
+        valid = FALSE;
+      }
+      return valid;
+    },
+    getElevation: func() {
+        var e = 0;
+        e = me.Elevation.getValue();
+        if(e == nil or e == 0) {
+            # AI/MP has no radar properties
+            var self = geo.aircraft_position();
+            me.get_Coord();
+            var angleInv = ja37.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
+            e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+        }
+        return e;
+    },
+    get_Callsign: func(){
+        var n = me.Callsign.getValue();
+        if(n != "" and n != nil) {
+            return n;
+        }
+        if (me.name == nil) {
+          me.name = me.getNode().getNode("name");
+        }
+        if (me.name == nil) {
+          n = "";
+        } else {
+          n = me.name.getValue();
+        }
+        if(n != "" and n != nil) {
+            return n;
+        }
+        n = me.sign.getValue();
+        if(n != "" and n != nil) {
+            return n;
+        }
+        return "UFO";
+    },
+    get_Coord: func(){
+        me.coord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
+        var TgTCoord  = geo.Coord.new(me.coord);
+        return TgTCoord;
+    },
+    get_Longitude: func(){
+        var n = me.lon.getValue();
+        return n;
+    },
+    get_Latitude: func(){
+        var n = me.lat.getValue();
+        return n;
+    },
+    get_Pitch: func(){
+        var n = me.pitch.getValue();
+        return n;
+    },
+    isPainted: func() {
+    	# Tells if this is the target that are being tracked, only used in semi-radar guided missiles.
+    	return TRUE;
+    },
+    get_Speed: func(){
+        # return true airspeed
+        var n = me.speed.getValue();
+        return n;
+    },
 	list : [],
 };
 

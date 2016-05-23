@@ -1,91 +1,160 @@
+###########################################################################
+#######	
+####### Guided missiles code for Flightgear. 
+#######
+####### License: GPL 2
+#######
+####### Authors:
+#######  XIII, 5N1N0B1, Nikolai V. Chr.
+####### 
+####### In addition, some code is derived from work by:
+#######  David Culp, Vivian Meazza
+#######
+###########################################################################
 
 
-var AcModel        = props.globals.getNode("sim/model/f-14b");
+var AcModel        = props.globals.getNode("payload");
 var OurHdg         = props.globals.getNode("orientation/heading-deg");
 var OurRoll        = props.globals.getNode("orientation/roll-deg");
 var OurPitch       = props.globals.getNode("orientation/pitch-deg");
-var HudReticleDev  = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-deviation", 1);
-var HudReticleDeg  = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-angle", 1);
-var aim_9_model    = "Aircraft/f-14b/Models/Stores/aim-9/aim-9-";
-var SwSoundOnOff   = AcModel.getNode("systems/armament/aim9/sound-on-off");
-var SwSoundVol     = AcModel.getNode("systems/armament/aim9/sound-volume");
-var vol_search     = 0.12;
-var vol_weak_track = 0.20;
-var vol_track      = 0.45;
+var HudReticleDev  = props.globals.getNode("payload/armament/hud/reticle-total-deviation", 1);#polar coords
+var HudReticleDeg  = props.globals.getNode("payload/armament/hud/reticle-total-angle", 1);
+var update_loop_time = 0.000;
+
+var SIM_TIME = 0;
+var REAL_TIME = 1;
 
 var TRUE = 1;
 var FALSE = 0;
 
+var use_fg_default_hud = FALSE;
+
+var MISSILE_STANDBY = -1;
+var MISSILE_SEARCH = 0;
+var MISSILE_LOCK = 1;
+var MISSILE_FLYING = 2;
+
+var AIR = 0;
+var MARINE = 1;
+var SURFACE = 2;
+var ORDNANCE = 3;
+
 var g_fps        = 9.80665 * M2FT;
 var slugs_to_lbs = 32.1740485564;
 
+#
+# The radar will make sure to keep this variable updated.
+# Whatever is targeted and ready to be fired upon, should be set here.
+#
+var contact = nil;
+#
+# Contact should implement the following interface:
+#
+# get_type()      - (AIR, MARINE, SURFACE or ORDNANCE)
+# getUnique()     - Used when comparing 2 targets to each other and determining if they are the same target.
+# isValid()       - If this target is valid
+# getElevation()
+# get_bearing()
+# get_Callsign()
+# get_range()
+# get_Coord()
+# get_Latitude()
+# get_Longitude()
+# get_altitude()
+# get_Pitch()
+# get_heading()
+# getFlareNode()  - Used for flares.
+# isPainted()     - Tells if this is the target that are being tracked, only used in semi-radar guided missiles.
 
-var AIM9 = {
-	new : func (p) {
-		var m = { parents : [AIM9]};
+var AIM = {
+	#done
+	new : func (p, type = "AIM-9", sign = "Sidewinder") {
+		if(AIM.active[p] != nil) {
+			#do not make new missile logic if one exist for this pylon.
+			return -1;
+		}
+		var m = { parents : [AIM]};
 		# Args: p = Pylon.
 
-		m.status            = 0; # -1 = stand-by, 0 = searching, 1 = locked, 2 = fired.
-		m.free              = 0; # 0 = status fired with lock, 1 = status fired but having lost lock.
+		m.type_lc = string.lc(type);
+		m.type = type;
 
-		m.prop              = AcModel.getNode("systems/armament/aim9/").getChild("msl", 0 , 1);
+		m.deleted = FALSE;
+
+		m.status            = MISSILE_STANDBY; # -1 = stand-by, 0 = searching, 1 = locked, 2 = fired.
+		m.free              = 0; # 0 = status fired with lock, 1 = status fired but having lost lock.
+		m.trackWeak         = 1;
+
+		m.prop              = AcModel.getNode("armament/"~m.type_lc~"/").getChild("msl", 0 , 1);
+		m.SwSoundOnOff      = AcModel.getNode("armament/"~m.type_lc~"/sound-on-off");
+        m.SwSoundVol        = AcModel.getNode("armament/"~m.type_lc~"/sound-volume");
 		m.PylonIndex        = m.prop.getNode("pylon-index", 1).setValue(p);
 		m.ID                = p;
-		m.pylon_prop        = props.globals.getNode("sim/model/f-14b/systems/external-loads/").getChild("station", p);
+		m.pylon_prop        = props.globals.getNode("controls/armament").getChild("station", p+1);
 		m.Tgt               = nil;
-		m.TgtValid          = nil;
-		m.TgtLon_prop       = nil;
-		m.TgtLat_prop       = nil;
-		m.TgtAlt_prop       = nil;
-		m.TgtHdg_prop       = nil;
-		m.TgtSpeed_prop     = nil;
-		m.TgtPitch_prop     = nil;
-		m.TgtBearing_prop   = nil;
+		m.callsign          = "Unknown";
 		m.update_track_time = 0;
-		m.seeker_dev_e      = 0; # Seeker elevation, deg.
-		m.seeker_dev_h      = 0; # Seeker horizon, deg.
 		m.direct_dist_m     = nil;
+		m.speed_m           = 0;
 
-		# AIM-9L specs:
-		m.aim9_fov_diam     = getprop("sim/model/f-14b/systems/armament/aim9/fov-deg");
-		m.aim9_fov          = m.aim9_fov_diam / 2;
-		m.max_detect_rng    = getprop("sim/model/f-14b/systems/armament/aim9/max-detection-rng-nm");
-		m.max_seeker_dev    = getprop("sim/model/f-14b/systems/armament/aim9/track-max-deg") / 2;
-		m.force_lbs_1       = getprop("sim/model/f-14b/systems/armament/aim9/thrust-lbs-stage-1");
-		m.force_lbs_2       = getprop("sim/model/f-14b/systems/armament/aim9/thrust-lbs-stage-2");
-		m.stage_1_duration  = getprop("sim/model/f-14b/systems/armament/aim9/stage-1-duration-sec");
-		m.stage_2_duration  = getprop("sim/model/f-14b/systems/armament/aim9/stage-2-duration-sec");
-		m.weight_launch_lbs = getprop("sim/model/f-14b/systems/armament/aim9/weight-launch-lbs");
-		m.weight_whead_lbs  = getprop("sim/model/f-14b/systems/armament/aim9/weight-warhead-lbs");
-		m.Cd_base           = getprop("sim/model/f-14b/systems/armament/aim9/drag-coeff");
-		m.eda               = getprop("sim/model/f-14b/systems/armament/aim9/drag-area");
-		m.max_g             = getprop("sim/model/f-14b/systems/armament/aim9/max-g");
-		m.selfdestruct_time = getprop("sim/model/f-14b/systems/armament/aim9/self-destruct-time-sec");
-		m.angular_speed     = getprop("sim/model/f-14b/systems/armament/aim9/seeker-angular-speed-dps");
-        m.loft_alt          = getprop("sim/model/f-14b/systems/armament/aim9/loft-altitude");
-        m.min_speed_for_guiding = getprop("sim/model/f-14b/systems/armament/aim9/min-speed-for-guiding-mach");
-        m.arm_time          = getprop("sim/model/f-14b/systems/armament/aim9/arming-time-sec");
-        m.rail              = getprop("sim/model/f-14b/systems/armament/aim9/rail");
-        m.rail_dist_m       = getprop("sim/model/f-14b/systems/armament/aim9/rail-length-m");
-        m.rail_forward      = getprop("sim/model/f-14b/systems/armament/aim9/rail-point-forward");
-        m.guidance          = getprop("sim/model/f-14b/systems/armament/aim9/guidance");
-
+		# AIM specs:
+		m.aim9_fov_diam         = getprop("payload/armament/"~m.type_lc~"/FCS-field-deg");
+		m.aim9_fov              = m.aim9_fov_diam / 2;
+		m.max_detect_rng        = getprop("payload/armament/"~m.type_lc~"/max-fire-range-nm");
+		m.max_seeker_dev        = getprop("payload/armament/"~m.type_lc~"/seeker-field-deg") / 2;
+		m.force_lbs_1           = getprop("payload/armament/"~m.type_lc~"/thrust-lbf-stage-1");
+		m.force_lbs_2           = getprop("payload/armament/"~m.type_lc~"/thrust-lbf-stage-2");
+		m.stage_1_duration      = getprop("payload/armament/"~m.type_lc~"/stage-1-duration-sec");
+		m.stage_2_duration      = getprop("payload/armament/"~m.type_lc~"/stage-2-duration-sec");
+		m.weight_launch_lbs     = getprop("payload/armament/"~m.type_lc~"/weight-launch-lbs");
+		m.weight_whead_lbs      = getprop("payload/armament/"~m.type_lc~"/weight-warhead-lbs");
+		m.Cd_base               = getprop("payload/armament/"~m.type_lc~"/drag-coeff");
+		m.eda                   = getprop("payload/armament/"~m.type_lc~"/drag-area");
+		m.max_g                 = getprop("payload/armament/"~m.type_lc~"/max-g");
+		#m.searcher_beam_width   = getprop("payload/armament/"~m.type_lc~"/searcher-beam-width");
+		m.arming_time           = getprop("payload/armament/"~m.type_lc~"/arming-time-sec");
+		m.min_speed_for_guiding = getprop("payload/armament/"~m.type_lc~"/min-speed-for-guiding-mach");
+		m.selfdestruct_time     = getprop("payload/armament/"~m.type_lc~"/self-destruct-time-sec");
+		m.guidance              = getprop("payload/armament/"~m.type_lc~"/guidance");
+		m.all_aspect            = getprop("payload/armament/"~m.type_lc~"/all-aspect");
+		m.vol_search            = getprop("payload/armament/"~m.type_lc~"/vol-search");
+		m.vol_track             = getprop("payload/armament/"~m.type_lc~"/vol-track");
+		m.vol_track_weak        = getprop("payload/armament/"~m.type_lc~"/vol-track-weak");
+		m.angular_speed         = getprop("payload/armament/"~m.type_lc~"/seeker-angular-speed-dps");
+        m.loft_alt              = getprop("payload/armament/"~m.type_lc~"/loft-altitude");
+        m.min_dist              = getprop("payload/armament/"~m.type_lc~"/min-fire-range-nm");
+        m.rail                  = getprop("payload/armament/"~m.type_lc~"/rail");
+        m.rail_dist_m           = getprop("payload/armament/"~m.type_lc~"/rail-length-m");
+        m.rail_forward          = getprop("payload/armament/"~m.type_lc~"/rail-point-forward");
+        m.class                 = getprop("payload/armament/"~m.type_lc~"/class");
+		m.aim_9_model           = getprop("payload/armament/models")~type~"/"~m.type_lc~"-";
+		m.elapsed_last          = 0;
 		# Find the next index for "models/model" and create property node.
 		# Find the next index for "ai/models/aim-9" and create property node.
 		# (M. Franz, see Nasal/tanker.nas)
 		var n = props.globals.getNode("models", 1);
-		for (var i = 0; 1; i += 1)
-			if (n.getChild("model", i, 0) == nil)
+		var i = 0;
+		for (i = 0; 1==1; i += 1) {
+			if (n.getChild("model", i, 0) == nil) {
 				break;
+			}
+		}
 		m.model = n.getChild("model", i, 1);
-		var n = props.globals.getNode("ai/models", 1);
-		for (var i = 0; 1; i += 1)
-			if (n.getChild("aim-9", i, 0) == nil)
+		
+		n = props.globals.getNode("ai/models", 1);
+		for (i = 0; 1==1; i += 1) {
+			if (n.getChild(m.type_lc, i, 0) == nil) {
 				break;
-		m.ai = n.getChild("aim-9", i, 1);
+			}
+		}
+		m.ai = n.getChild(m.type_lc, i, 1);
 
 		m.ai.getNode("valid", 1).setBoolValue(1);
-		var id_model = aim_9_model ~ m.ID ~ ".xml";
+		m.ai.getNode("name", 1).setValue(type);
+		m.ai.getNode("sign", 1).setValue(sign);
+		#m.model.getNode("collision", 1).setBoolValue(0);
+		#m.model.getNode("impact", 1).setBoolValue(0);
+		var id_model = m.aim_9_model ~ m.ID ~ ".xml";
 		m.model.getNode("path", 1).setValue(id_model);
 		m.life_time = 0;
 
@@ -118,13 +187,14 @@ var AIM9 = {
 		# Due to garbage collector.
 		#
 
+
 		m.density_alt_diff   = 0;
 		m.max_g_current      = m.max_g;
 		m.old_speed_horz_fps = nil;
+		m.paused             = 0;
 		m.old_speed_fps	     = 0;
 		m.dt                 = 0;
-		m.g = 0;		
-		m.elapsed_last           = 0;
+		m.g                  = 0;
 
 		# navigation and guidance
 		m.last_deviation_e       = nil;
@@ -154,7 +224,7 @@ var AIM9 = {
 		m.track_signal_e         = 0;
 		m.track_signal_h         = 0;
 
-		# cruise missiles
+		# cruise-missiles
 		m.nextGroundElevation = 0; # next Ground Elevation
 		m.nextGroundElevationMem = [-10000, -1];
 
@@ -167,17 +237,32 @@ var AIM9 = {
 		m.rail_pos = 0;
 		m.rail_speed_into_wind = 0;
 
-		SwSoundOnOff.setValue(1);
+		# stats
+		m.maxMach     = 0;
+		m.energyBleedKt = 0;
 
-		settimer(func { SwSoundVol.setValue(vol_search); m.search() }, 1);
-		return AIM9.active[m.ID] = m;
+		m.lastFlare = 0;
 
+		m.SwSoundOnOff.setBoolValue(FALSE);
+		m.SwSoundVol.setDoubleValue(m.vol_search);
+		#me.trackWeak = 1;
+
+		return AIM.active[m.ID] = m;
 	},
+	#done
 	del: func {
+		#print("deleted");
 		me.model.remove();
 		me.ai.remove();
-		delete(AIM9.active, me.ID);
+		if (me.status == MISSILE_FLYING) {
+			delete(AIM.flying, me.flyID);
+		} else {
+			delete(AIM.active, me.ID);
+		}
+		me.SwSoundVol.setDoubleValue(0);
+		me.deleted = TRUE;
 	},
+
 	getGPS: func(x, y, z) {
 		#
 		# get Coord from body position. x,y,z must be in meters.
@@ -231,33 +316,38 @@ var AIM9 = {
 
 		return c;
 	},
+
 	release: func() {
-		me.status = 2;
+		# Release missile/bomb from its pylon/rail/tube and send it away.
+		#
+		me.status = MISSILE_FLYING;
+		me.flyID = rand();
+		AIM.flying[me.flyID] = me;
+		delete(AIM.active, me.ID);
 		me.animation_flags_props();
 
 		# Get the A/C position and orientation values.
 		me.ac = geo.aircraft_position();
-		var ac_roll  = getprop("orientation/roll-deg");
+		me.ac_init = geo.Coord.new(me.ac);
+		var ac_roll = getprop("orientation/roll-deg");# positive is banking right
 		var ac_pitch = getprop("orientation/pitch-deg");
 		var ac_hdg   = getprop("orientation/heading-deg");
 
-		# Compute missile initial position relative to A/C center,
-		# following Vivian's code in AIModel/submodel.cxx .
-
+		# Compute missile initial position relative to A/C center
 		me.x = me.pylon_prop.getNode("offsets/x-m").getValue();
 		me.y = me.pylon_prop.getNode("offsets/y-m").getValue();
 		me.z = me.pylon_prop.getNode("offsets/z-m").getValue();
-		
 		var init_coord = me.getGPS(me.x, me.y, me.z);
 
 		# Set submodel initial position:
-		var alat = init_coord.lat();
-		var alon = init_coord.lon();
-		var aalt = init_coord.alt() * M2FT;
-		me.latN.setDoubleValue(alat);
-		me.lonN.setDoubleValue(alon);
-		me.altN.setDoubleValue(aalt);
+		var mlat = init_coord.lat();
+		var mlon = init_coord.lon();
+		var malt = init_coord.alt() * M2FT;
+		me.latN.setDoubleValue(mlat);
+		me.lonN.setDoubleValue(mlon);
+		me.altN.setDoubleValue(malt);
 		me.hdgN.setDoubleValue(ac_hdg);
+
 		if (me.rail == FALSE) {
 			# align into wind (commented out since heavy wind make missiles lose sight of target.)
 			var alpha = getprop("orientation/alpha-deg");
@@ -273,10 +363,11 @@ var AIM9 = {
 			# drop distance in time
 			me.drop_time = math.sqrt(2*7/g_fps);# time to fall 7 ft to clear aircraft
 		}
+
 		me.pitchN.setDoubleValue(ac_pitch);
 		me.rollN.setDoubleValue(ac_roll);
-		#print("roll "~ac_roll~" on "~me.rollN.getPath());
-		me.coord.set_latlon(alat, alon, aalt * FT2M);
+
+		me.coord.set_latlon(mlat, mlon, malt * FT2M);
 
 		me.model.getNode("latitude-deg-prop", 1).setValue(me.latN.getPath());
 		me.model.getNode("longitude-deg-prop", 1).setValue(me.lonN.getPath());
@@ -284,7 +375,8 @@ var AIM9 = {
 		me.model.getNode("heading-deg-prop", 1).setValue(me.hdgN.getPath());
 		me.model.getNode("pitch-deg-prop", 1).setValue(me.pitchN.getPath());
 		me.model.getNode("roll-deg-prop", 1).setValue(me.rollN.getPath());
-		me.model.getNode("load", 1);
+		var loadNode = me.model.getNode("load", 1);
+		loadNode.setBoolValue(1);
 
 		# Get initial velocity vector (aircraft):
 		me.speed_down_fps = getprop("velocities/speed-down-fps");
@@ -300,27 +392,33 @@ var AIM9 = {
 			}
 		}
 
-		me.alt_ft = aalt;
+		me.alt_ft = malt;
 		me.pitch = ac_pitch;
 		me.hdg = ac_hdg;
 
-		me.density_alt_diff = getprop("fdm/jsbsim/atmosphere/density-altitude") - aalt;
+		if (getprop("sim/flight-model") == "jsb") {
+			# currently not supported in Yasim
+			me.density_alt_diff = getprop("fdm/jsbsim/atmosphere/density-altitude") - me.ac.alt()*M2FT;
+		}
 
 		if (me.loft_alt > 10000) {
 			#
 			# adjust the snap-up altitude to initial distance of target.
 			#
-			var dst = me.coord.distance_to(geo.Coord.new().set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue()*FT2M)) * M2NM;
+			var dst = me.coord.distance_to(me.Tgt.get_Coord()) * M2NM;
 			me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*500;
 			me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
 		}
 
-		me.smoke_prop.setBoolValue(1);
-		SwSoundVol.setValue(0);
-		settimer(func { HudReticleDeg.setValue(0) }, 2);
-		interpolate(HudReticleDev, 0, 2);
-		me.update();
+		me.SwSoundVol.setDoubleValue(0);
+		me.trackWeak = 1;
+		#settimer(func { HudReticleDeg.setValue(0) }, 2);
+		#interpolate(HudReticleDev, 0, 2);
 
+		printf("Launch %s at %s, %.1f Mach, %5d ft.", me.type, me.callsign, getprop("velocities/mach"), getprop("position/altitude-ft"));
+
+		me.flight();
+		loadNode.remove();
 	},
 
 	drag: func (mach) {
@@ -415,7 +513,9 @@ var AIM9 = {
         var speedLoss = speedLoss0 + ((altitude-0)/(32800-0))*(speedLoss32800-speedLoss0);
         #
         # For good measure the result is clamped to below zero.
-        return me.clamp(speedLoss, -100000, 0);
+        speedLoss = me.clamp(speedLoss, -100000, 0);
+        me.energyBleedKt += speedLoss * FPS2KT;
+        return speedLoss;
     },
 
 	bleed32800at0g: func () {
@@ -438,25 +538,36 @@ var AIM9 = {
 		return loss_fps*M2FT;
 	},
 
-	update: func {
-
-		if ( me.Tgt == nil ) {
-			settimer(func me.del(), 2);
-			return(1);
+	flight: func {
+		if (me.Tgt.isValid() == FALSE) {
+			print("Target went away, deleting missile.");
+			me.del();
+			return;
 		}
-		
-		if (!me.Tgt.Valid.getValue()) {
-			# Lost of lock due to target disapearing:
-			settimer(func me.del(), 2);
-			return(1);
+		me.dt = getprop("sim/time/delta-sec");#TODO: find out more about how this property works (most likely time since last time nasal timers were called)
+		if (me.dt == 0) {
+			#FG is likely paused
+			me.paused = 1;
+			settimer(func me.flight(), 0.00);
+			return;
 		}
-
-		me.dt = getprop("sim/time/delta-sec");
-
+		#if just called from release() then dt is almost 0 (cannot be zero as we use it to divide with)
+		# It can also not be too small, then the missile will lag behind aircraft and seem to be fired from behind the aircraft.
+		#dt = dt/2;
 		var elapsed = systime();
-
+		if (me.paused == 1) {
+			# sim has been unpaused lets make sure dt becomes very small to let elapsed time catch up.
+			me.paused = 0;
+			me.elapsed_last = elapsed-0.02;
+		}
+		var init_launch = 0;
 		if (me.elapsed_last != 0) {
-			me.dt = (elapsed - me.elapsed_last)*getprop("sim/speed-up");
+			#if (getprop("sim/speed-up") == 1) {
+				me.dt = (elapsed - me.elapsed_last)*getprop("sim/speed-up");
+			#} else {
+			#	dt = getprop("sim/time/delta-sec")*getprop("sim/speed-up");
+			#}
+			init_launch = 1;
 			if(me.dt <= 0) {
 				# to prevent pow floating point error in line:cdm = 0.2965 * math.pow(me.speed_m, -1.1506) + me.cd;
 				# could happen if the OS adjusts the clock backwards
@@ -465,21 +576,20 @@ var AIM9 = {
 		}
 		me.elapsed_last = elapsed;
 
-		var init_launch = 0;
-		if ( me.life_time > 0 ) { init_launch = 1 }
+		
 		me.life_time += me.dt;
 		# record coords so we can give the latest nearest position for impact.
 		me.before_last_coord = geo.Coord.new(me.last_coord);
 		me.last_coord = geo.Coord.new(me.coord);
 
+		var thrust_lbf = me.thrust();# pounds force (lbf)
 
 		#### Calculate speed vector before steering corrections.
-
-		var thrust_lbf = me.thrust();# pounds force (lbf)
 
 		# Get total old speed.
 		me.old_speed_horz_fps = math.sqrt((me.speed_east_fps*me.speed_east_fps)+(me.speed_north_fps*me.speed_north_fps));
 		me.old_speed_fps = math.sqrt((me.old_speed_horz_fps*me.old_speed_horz_fps)+(me.speed_down_fps*me.speed_down_fps));
+
 
 		if (me.rail == TRUE and me.rail_passed == FALSE) {
 			var u = getprop("velocities/uBody-fps");# airstream from nose
@@ -509,7 +619,7 @@ var AIM9 = {
 		}
 
 		# Get air density and speed of sound (fps):
-		var rs = environment.rho_sndspeed(me.altN.getValue() + me.density_alt_diff);
+		var rs = rho_sndspeed(me.altN.getValue() + me.density_alt_diff);
 		var rho = rs[0];
 		var sound_fps = rs[1];
 
@@ -522,19 +632,18 @@ var AIM9 = {
 
 		me.speed_m = me.old_speed_fps / sound_fps;
 
+		if (me.speed_m > me.maxMach) {
+			me.maxMach = me.speed_m;
+		}
+
 		var Cd = me.drag(me.speed_m);
 
 		var speed_change_fps = me.speedChange(thrust_lbf, rho, Cd);
 		
-#var ns = speed_change_fps + me.old_speed_fps;
 
 		if (me.last_dt != 0) {
 			speed_change_fps = speed_change_fps + me.energyBleed(me.g, me.altN.getValue() + me.density_alt_diff);
 		}
-
-#var nsb = speed_change_fps + me.old_speed_fps;
-#printf("Percent speed due to G bleed %.1f", 100*nsb/ns);
-
 
 		var grav_bomb = FALSE;
 		if (me.force_lbs_1 == 0 and me.force_lbs_2 == 0) {
@@ -543,18 +652,27 @@ var AIM9 = {
 		}
 
 		# Get target position.
-		me.t_coord.set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue() * FT2M);
-		
-		#### Guidance.
+		me.t_coord.set_latlon(me.Tgt.get_Latitude(), me.Tgt.get_Longitude(), me.Tgt.get_altitude() * FT2M);
 
-		if ( me.status == 2 and me.free == FALSE and me.life_time > me.drop_time and grav_bomb == FALSE
+		###################
+		#### Guidance.#####
+		###################
+		if (me.free == FALSE and me.life_time > me.drop_time and grav_bomb == FALSE
 			and (me.rail == FALSE or me.rail_passed == TRUE)) {
-            
-            me.update_track(me.dt);
-            me.limitG();
-
-            me.pitch      += me.track_signal_e;
-            me.hdg        += me.track_signal_h;
+				#
+				# Here we figure out how to guide, navigate and steer.
+				#
+				me.guide();
+				me.limitG();
+				if (me.all_aspect == FALSE and me.rear_aspect() == FALSE) {
+	            	me.track_signal_e = 0;
+	            	me.track_signal_h = 0;
+	            	print("Heat seeking missile lost lock, attempting to reaquire..");
+	            }
+	            me.pitch      += me.track_signal_e;
+            	me.hdg        += me.track_signal_h;
+	            #printf("%.1f deg elevation command done, new pitch: %.1f deg", me.track_signal_e, pitch_deg);
+	            #printf("%.1f deg bearing command done, new heading: %.1f", me.last_track_h, hdg_deg);
 		} else {
 			me.track_signal_e = 0;
 			me.track_signal_h = 0;
@@ -562,6 +680,12 @@ var AIM9 = {
        	me.last_track_e = me.track_signal_e;
 		me.last_track_h = me.track_signal_h;
 
+
+		# Nikolai V. Chr.:
+		# If we add gravity while the missile is guiding, the gravity speed will be added to total speed,
+		# which next update will be added in the direction the missile points, which we do not want.
+		# therefore only real gravity drop is added to gravity bombs.
+		
 		var new_speed_fps        = speed_change_fps + me.old_speed_fps;
 		if (new_speed_fps < 0) {
 			# drag and bleed can theoretically make the speed less than 0, this will prevent that from happening.
@@ -584,8 +708,15 @@ var AIM9 = {
 			me.speed_down_fps += g_fps * me.dt;
 			me.pitch = math.atan2(-me.speed_down_fps, speed_horizontal_fps ) * R2D;
 		}
+
+		# Calculate altitude and elevation velocity vector (no incidence here).
 		
-		me.alt_ft = me.alt_ft - ((me.speed_down_fps + g_fps * me.dt * !grav_bomb) * me.dt);
+		# The missile just falls due to gravity, it doesn't pitch
+		# a real missile would pitch ofc. but then have to calc how fuel affects CoG and its inertia/momentum
+
+		me.alt_ft = me.alt_ft - ((me.speed_down_fps + g_fps * me.dt * (!grav_bomb)) * me.dt);
+
+		#printf("down_s=%.1f grav=%.1f", me.speed_down_fps*me.dt, g_fps * me.dt * !grav_bomb * me.dt);
 
 		if (me.rail == FALSE or me.rail_passed == TRUE) {
 			# misssile not on rail, lets move it to next waypoint
@@ -599,41 +730,68 @@ var AIM9 = {
 			me.alt_ft = me.coord.alt() * M2FT;
 		}
 
+
+		# performance logging:
+		#
+		#var q = 0.5 * rho * me.old_speed_fps * me.old_speed_fps;
+		#setprop("logging/missile/dist-nm", me.ac_init.distance_to(me.coord)*M2NM);
+		#setprop("logging/missile/alt-m", me.alt_ft * FT2M);
+		#setprop("logging/missile/speed-m", me.speed_m*1000);
+		#setprop("logging/missile/drag-lbf", Cd * q * me.eda);
+		#setprop("logging/missile/thrust-lbf", thrust_lbf);
+
 		me.latN.setDoubleValue(me.coord.lat());
 		me.lonN.setDoubleValue(me.coord.lon());
 		me.altN.setDoubleValue(me.alt_ft);
 		me.pitchN.setDoubleValue(me.pitch);
 		me.hdgN.setDoubleValue(me.hdg);
 
+		# log missiles to unicsv for visualizing flightpath in Google Earth
+		#
+		#setprop("/logging/missile/latitude-deg", me.coord.lat());
+		#setprop("/logging/missile/longitude-deg", me.coord.lon());
+		#setprop("/logging/missile/altitude-ft", alt_ft);
+		#setprop("/logging/missile/t-latitude-deg", me.t_coord.lat());
+		#setprop("/logging/missile/t-longitude-deg", me.t_coord.lon());
+		#setprop("/logging/missile/t-altitude-ft", me.t_coord.alt()*M2FT);
+
 		me.setRadarProperties(new_speed_fps);
 
-
-		#### Proximity detection.
-		if (me.status == 2 and (me.rail == FALSE or me.rail_passed == TRUE)) {
+		##############################
+		#### Proximity detection.#####
+		##############################
+		if (me.rail == FALSE or me.rail_passed == TRUE) {
  			if ( me.free == FALSE ) {
  				# check if the missile overloaded with G force.
 				me.g = steering_speed_G(me.track_signal_e, me.track_signal_h, me.old_speed_fps, me.dt);
 
-				if ( me.g > me.max_g_current) {
+				if ( me.g > me.max_g_current and init_launch != 0) {
 					me.free = TRUE;
 					print("Missile attempted to pull too many G, it broke.");
 				}
 			} else {
 				me.g = 0;
 			}
-        
-            var v = me.poximity_detection();
-            if ( ! v ) 
-            {
-                # We exploded, but need a few more secs to spawn the explosion animation.
-                settimer(func { me.del(); }, 4 );
-                #print("booom");
-                return;
-            }            
-        } else {
-        	me.g = 0;
-        }
+#
+# Uncomment the following lines to check stats while flying:
+#
+#printf("Mach %02.1f , time %03.1f s , thrust %03.1f lbf , G-force %02.2f", me.speed_m, me.life_time, thrust_lbf, me.g);
+#printf("Alt %05.1f ft", alt_ft);
 
+			var exploded = me.poximity_detection();
+			
+			if (exploded == TRUE) {
+				printf("%s max speed was %.1f Mach, bleed %4d kt.", me.type, me.maxMach, me.energyBleedKt);
+				# We exploded, and start the sound propagation towards the plane
+				me.sndSpeed = sound_fps;
+				me.sndDistance = 0;
+				me.elapsed_last = systime();
+				me.sndPropagate();
+				return;
+			}
+		} else {
+			me.g = 0;
+		}
 		me.before_last_t_coord = geo.Coord.new(me.last_t_coord);
 		me.last_t_coord = geo.Coord.new(me.t_coord);
 
@@ -642,8 +800,7 @@ var AIM9 = {
 			#print("rail passed");
 		}
 		me.last_dt = me.dt;
-		settimer(func me.update(), 0);
-		
+		settimer(func me.flight(), update_loop_time, SIM_TIME);		
 	},
 
 	limitG: func () {
@@ -674,138 +831,147 @@ var AIM9 = {
 		me.ai.getNode("velocities/true-airspeed-kt",1).setDoubleValue(new_speed_fps * FPS2KT);
 	},
 
+	rear_aspect: func () {
+		#
+		# If is heat-seeking rear-aspect-only missile, check if it has good view on engine(s) and can keep lock.
+		#
+		var offset = me.aspect();
 
-
-
-	update_track: func(dt_) {
-		
-		# Time interval since lock time or last track loop.
-		var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
-		var dt = time - me.update_track_time;
-		me.update_track_time = time;
-
-		if (dt_ != nil) {
-			# Status = launched. Compute target position relative to seeker head.
-
-			#
-			# navigation and guidance
-			#
-			me.raw_steer_signal_elev = 0;
-			me.raw_steer_signal_head = 0;
-
-			me.guiding = TRUE;
-
-			# Calculate current target elevation and azimut deviation.
-			me.t_alt            = me.t_coord.alt()*M2FT;
-			var t_alt_delta_m   = (me.t_alt - me.alt_ft) * FT2M;
-			me.dist_curr        = me.coord.distance_to(me.t_coord);
-			me.dist_curr_direct = me.coord.direct_distance_to(me.t_coord);
-			me.t_elev_deg       = math.atan2( t_alt_delta_m, me.dist_curr ) * R2D;
-			me.t_course         = me.coord.course_to(me.t_coord);
-			me.curr_deviation_e       = me.t_elev_deg - me.pitch;
-			me.curr_deviation_h       = me.t_course - me.hdg;
-
-
-			#
-			# So is course_to() or courseAndDistance() most precise? People said the latter,
-			# but my experiments said it differs. The latter seems to be influenced by altitude differences,
-			# which is not good for cruise-missiles, but it seems better for long distances.
-			# While the former seems better for short distances.
-			# ..strange
-			#
-			#var (t_course, me.dist_curr_direct) = courseAndDistance(me.coord, me.t_coord);
-			#me.dist_curr_direct = me.dist_curr_direct * NM2M;
-		
-
-			#printf("Altitude above launch platform = %.1f ft", M2FT * (me.coord.alt()-me.ac.alt()));
-
-			while(me.curr_deviation_h < -180) {
-				me.curr_deviation_h += 360;
-			}
-			while(me.curr_deviation_h > 180) {
-				me.curr_deviation_h -= 360;
-			}
-
-			me.checkForGuidance();
-
-			me.canSeekerKeepUp();
-
-			me.cruiseAndLoft();
-
-			me.APN();# Proportional navigation
-
-			me.track_signal_e = me.raw_steer_signal_elev * !me.free * me.guiding;
-			me.track_signal_h = me.raw_steer_signal_head * !me.free * me.guiding;
-
-			#printf("%.1f deg elevate command desired", me.track_signal_e);
-			#printf("%.1f deg heading command desired", me.track_signal_h);
-
-			# record some variables for next loop:
-			me.dist_last           = me.dist_curr;
-			me.dist_direct_last    = me.dist_curr_direct;
-			me.last_t_course       = me.t_course;
-			me.last_t_elev_deg     = me.t_elev_deg;
-			me.last_cruise_or_loft = me.cruise_or_loft;
+		if (offset < 45) {
+			# clear view of engine heat, keep the lock
+			rearAspect = 1;
+		} else {
+			# the greater angle away from clear engine view the greater chance of losing lock.
+			var offset_away = offset - 45;
+			var probability = offset_away/135;
+			rearAspect = rand() > probability;
 		}
-		return(1);
+
+		#print ("RB-24J deviation from full rear-aspect: "~sprintf("%01.1f", offset)~" deg, keep IR lock on engine: "~rearAspect);
+
+		return rearAspect;# 1: keep lock, 0: lose lock
 	},
 
-	update_lock: func() {
-		if ( me.Tgt == nil ) { return(1); }
-		if (me.status == 0) {
-			# Status = searching.
-			me.reset_seeker();
-			SwSoundVol.setValue(vol_search);
-			settimer(func me.search(), 0.1);
-			return(1);
+	aspect: func () {
+		var rearAspect = 0;
+
+		var t_dist_m = me.coord.distance_to(me.t_coord);
+		var alt_delta_m = me.coord.alt() - me.t_coord.alt();
+		var elev_deg =  math.atan2( alt_delta_m, t_dist_m ) * R2D;
+		var elevation_offset = elev_deg - me.Tgt.get_Pitch();
+
+		var course = me.t_coord.course_to(me.coord);
+		var heading_offset = course - me.Tgt.get_heading();
+
+		#
+		while (heading_offset < -180) {
+			heading_offset += 360;
 		}
-		if ( me.status == -1 ) {
-			# Status = stand-by.
-			me.reset_seeker();
-			SwSoundVol.setValue(0);
-			return(1);
+		while (heading_offset > 180) {
+			heading_offset -= 360;
 		}
-		if (!me.Tgt.Valid.getValue()) {
-			# Lost of lock due to target disapearing:
-			# return to search mode.
-			me.status = 0;
-			me.reset_seeker();
-			SwSoundVol.setValue(vol_search);
-			settimer(func me.search(), 0.1);
-			return(1);
+		while (elevation_offset < -180) {
+			elevation_offset += 360;
 		}
-		if (me.status == 2) {
-			return (1);
+		while (elevation_offset > 180) {
+			elevation_offset -= 360;
 		}
-		# Time interval since lock time or last track loop.
-		var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
-		var dt = time - me.update_track_time;
-		me.update_track_time = time;
-		if (me.status == 1) {		
-			# Status = locked. Get target position relative to our aircraft.
-			me.curr_deviation_e = me.Tgt.get_total_elevation(OurPitch.getValue());
-			me.curr_deviation_h = me.Tgt.get_deviation(OurHdg.getValue());
+		elevation_offset = math.abs(elevation_offset);
+		heading_offset = 180 - math.abs(heading_offset);
+
+		var offset = math.max(elevation_offset, heading_offset);
+
+		return offset;		
+	},
+
+	guide: func() {
+		#
+		# navigation and guidance
+		#
+		me.raw_steer_signal_elev = 0;
+		me.raw_steer_signal_head = 0;
+
+		me.guiding = TRUE;
+
+		# Calculate current target elevation and azimut deviation.
+		me.t_alt            = me.t_coord.alt()*M2FT;
+		var t_alt_delta_m   = (me.t_alt - me.alt_ft) * FT2M;
+		me.dist_curr        = me.coord.distance_to(me.t_coord);
+		me.dist_curr_direct = me.coord.direct_distance_to(me.t_coord);
+		me.t_elev_deg       = math.atan2( t_alt_delta_m, me.dist_curr ) * R2D;
+		me.t_course         = me.coord.course_to(me.t_coord);
+		me.curr_deviation_e = me.t_elev_deg - me.pitch;
+		me.curr_deviation_h = me.t_course - me.hdg;
+
+		#var (t_course, me.dist_curr) = courseAndDistance(me.coord, me.t_coord);
+		#me.dist_curr = me.dist_curr * NM2M;	
+
+		#printf("Altitude above launch platform = %.1f ft", M2FT * (me.coord.alt()-me.ac.alt()));
+
+		while(me.curr_deviation_h < -180) {
+			me.curr_deviation_h += 360;
 		}
-		# Compute HUD reticle position.
-		if ( me.status == 1 ) {
-			var h_rad = (90 - me.curr_deviation_h) * D2R;
-			var e_rad = (90 - me.curr_deviation_e) * D2R; 
-			var devs = f14_hud.develev_to_devroll(h_rad, e_rad);
-			var combined_dev_deg = devs[0];
-			var combined_dev_length =  devs[1];
-			var clamped = devs[2];
-			if ( clamped ) { SW_reticle_Blinker.blink();}
-			else { SW_reticle_Blinker.cont();}
-			HudReticleDeg.setValue(combined_dev_deg);
-			HudReticleDev.setValue(combined_dev_length);
+		while(me.curr_deviation_h > 180) {
+			me.curr_deviation_h -= 360;
 		}
-		if ( me.status != 2 and me.status != -1 ) {
-			me.check_t_in_fov();
-			# We are not launched yet: update_track() loops by itself at 10 Hz.
-			SwSoundVol.setValue(vol_track);
-			settimer(func me.update_lock(), 0.1);
+
+		me.checkForFlare();
+
+		me.checkForGuidance();
+
+		me.canSeekerKeepUp();
+
+		me.cruiseAndLoft();
+
+		me.APN();# Proportional navigation
+
+		me.track_signal_e = me.raw_steer_signal_elev * !me.free * me.guiding;
+		me.track_signal_h = me.raw_steer_signal_head * !me.free * me.guiding;
+
+		#printf("%.1f deg elevate command desired", me.track_signal_e);
+		#printf("%.1f deg heading command desired", me.track_signal_h);
+
+		# record some variables for next loop:
+		me.dist_last           = me.dist_curr;
+		me.dist_direct_last    = me.dist_curr_direct;
+		me.last_t_course       = me.t_course;
+		me.last_t_elev_deg     = me.t_elev_deg;
+		me.last_cruise_or_loft = me.cruise_or_loft;
+	},
+
+	checkForFlare: func () {
+		#
+		# Check for being fooled by flare.
+		#
+		if (me.guidance == "heat") {
+			#
+			# TODO: Use Richards Emissary for this.
+			#
+			var flareNode = me.Tgt.getFlareNode();
+			if (flareNode != nil) {
+				var flareString = flareNode.getValue();
+				if (flareString != nil and flareString != "") {
+					var flareVector = split(":", flareString);
+					if (flareVector != nil and size(flareVector) == 2 and flareVector[1] == "flare") {
+						var flareNumber = num(flareVector[0]);
+						if (flareNumber != nil and flareNumber != me.lastFlare) {
+							# target has released a new flare, lets check if it fools us
+							me.lastFlare = flareNumber;
+							var aspect = me.aspect() / 180;
+							var fooled = rand() < (0.2 + 0.1 * aspect);
+							# 20% chance to be fooled, extra up till 10% chance added if front aspect
+							if (fooled) {
+								# fooled by the flare
+								print("Missile fooled by flare");
+								me.free = TRUE;
+							} else {
+								print("Missile ignored flare");
+							}
+						}
+					}
+				}
+			}
 		}
-		return(1);
 	},
 
 	checkForGuidance: func () {
@@ -999,9 +1165,9 @@ var AIM9 = {
 			#printf("LOS rate: %.4f rad/s", line_of_sight_rate_rps);
 
 			# calculate target acc as normal to LOS line:
-			var t_heading        = me.TgtHdg_prop.getValue();
-			var t_pitch          = me.TgtPitch_prop.getValue();
-			var t_speed          = me.TgtSpeed_prop.getValue()*KT2FPS;#true airspeed
+			var t_heading        = me.Tgt.get_heading();
+			var t_pitch          = me.Tgt.get_Pitch();
+			var t_speed          = me.Tgt.get_Speed()*KT2FPS;#true airspeed
 			var t_horz_speed     = math.abs(math.cos(t_pitch*D2R)*t_speed);
 			var t_LOS_norm_head  = me.t_course + 90;
 			var t_LOS_norm_speed = math.cos((t_LOS_norm_head - t_heading)*D2R)*t_horz_speed;
@@ -1054,103 +1220,107 @@ var AIM9 = {
 		}
 	},
 
+	map: func (value, leftMin, leftMax, rightMin, rightMax) {
+	    # Figure out how 'wide' each range is
+	    var leftSpan = leftMax - leftMin;
+	    var rightSpan = rightMax - rightMin;
+
+	    # Convert the left range into a 0-1 range (float)
+	    var valueScaled = (value - leftMin) / leftSpan;
+
+	    # Convert the 0-1 range into a value in the right range.
+	    return rightMin + (valueScaled * rightSpan);
+	},
 
 	poximity_detection: func {
 		var cur_dir_dist_m = me.coord.direct_distance_to(me.t_coord);
 		# Get current direct distance.
-
-		####Ground interaction
-        var ground = geo.elevation(me.coord.lat(),me.coord.lon());
-        #print("Ground :",ground);
-        var groundhit = 0;
-        if(ground != nil)
-        {
-            if(ground>me.coord.alt()) {
-                print("Missile hit terrain");
-                me.free = 1;
-                groundhit = 1;
-            }
-        }
-
-
-		#print("cur_dir_dist_m = ",cur_dir_dist_m," me.direct_dist_m = ",me.direct_dist_m);
-		if ( me.direct_dist_m != nil ) {
-			if ( (cur_dir_dist_m > me.direct_dist_m and cur_dir_dist_m < 250 and me.life_time > me.arm_time) or me.life_time > me.selfdestruct_time or groundhit == 1) {
+		if ( me.direct_dist_m != nil and me.life_time > me.arming_time) {
+			#print("distance to target_m = "~cur_dir_dist_m~" prev_distance to target_m = "~me.direct_dist_m);
+			if ( cur_dir_dist_m > me.direct_dist_m and cur_dir_dist_m < 250) {
+				#print("passed target");
 				# Distance to target increase, trigger explosion.
-				# Get missile relative position to the target at last frame.
-				var t_bearing_deg = me.last_t_coord.course_to(me.last_coord);
-				var t_delta_alt_m = me.last_coord.alt() - me.last_t_coord.alt();
-				var new_t_alt_m = me.t_coord.alt() + t_delta_alt_m;
-				var t_dist_m  = math.sqrt(math.abs((me.direct_dist_m * me.direct_dist_m)-(t_delta_alt_m * t_delta_alt_m)));
-				
-
-				var ident = "nil";
-				if(me.Tgt.Callsign != nil and me.Tgt.Callsign.getValue() != nil) {
-		          ident = me.Tgt.Callsign.getValue();
-		        }
-
-		        var min_distance = me.direct_dist_m;
-				var explosion_coord = me.last_coord;
-				for (var i = 0.00; i <= 1; i += 0.05) {
-					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
-					var coord = me.interpolate(me.last_coord, me.coord, i);
-					var dist = coord.direct_distance_to(t_coord);
-					if (dist < min_distance) {
-						min_distance = dist;
-						explosion_coord = coord;
-					}
-				}
-				if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
-					for (var i = 0.00; i <= 1; i += 0.05) {
-						var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
-						var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
-						var dist = coord.direct_distance_to(t_coord);
-						if (dist < min_distance) {
-							min_distance = dist;
-							explosion_coord = coord;
-						}
-					}
-				}
-				
-				var phrase = sprintf( "aim-9 exploded: %01.1f", min_distance) ~ " meters from: " ~ ident;
-
-				var reason = "Passed target.";
-				if (groundhit == 1) {
-					reason = "Hit terrain.";
-				} elsif (me.life_time > me.selfdestruct_time) {
-					reason = "Selfdestructed.";
-				}
-
-				if(min_distance < 65) {
-					me.sendMessage(phrase);
-				} else {
-					me.sendMessage(me.type~" missed "~ident~": "~reason);
-				}
-				print(phrase~", reason: "~reason);
-
-
-				# Create impact coords from this previous relative position applied to target current coord.
-				me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
-				me.t_coord.set_alt(new_t_alt_m);		
-				var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
-				#print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
-
-				impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug,(speed_mps)
-
-				
-				me.animate_explosion();
-				me.Tgt = nil;
-				return(0);
+				me.explode("Passed target.");
+				return TRUE;
+			}
+			if (me.life_time > me.selfdestruct_time) {
+				me.explode("Selfdestructed.");
+			    return TRUE;
 			}
 		}
-		
+
+		####Ground interaction
+        var ground = geo.elevation(me.coord.lat(), me.coord.lon());
+        if(ground != nil and me.direct_dist_m != nil)
+        {
+            if(ground > me.coord.alt()) {
+                me.explode("Hit terrain.");
+                return TRUE;
+            }
+        }
 		me.direct_dist_m = cur_dir_dist_m;
-		return(1);
+		return FALSE;
+	},
+
+	explode: func (reason) {
+		# Get missile relative position to the target at last frame.
+		#var t_bearing_deg = me.last_t_coord.course_to(me.last_coord);
+		#var t_delta_alt_m = me.last_coord.alt() - me.last_t_coord.alt();
+		#var new_t_alt_m = me.t_coord.alt() + t_delta_alt_m;
+		#var t_dist_m  = me.direct_dist_m;
+		
+		var min_distance = me.direct_dist_m;
+		var explosion_coord = me.last_coord;
+		#print("min1 "~min_distance);
+		#print("last_t to t    : "~me.last_t_coord.direct_distance_to(me.t_coord));
+		#print("last to current: "~me.last_coord.direct_distance_to(me.coord));
+		for (var i = 0.00; i <= 1; i += 0.05) {
+			var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
+			var coord = me.interpolate(me.last_coord, me.coord, i);
+			var dist = coord.direct_distance_to(t_coord);
+			if (dist < min_distance) {
+				min_distance = dist;
+				explosion_coord = coord;
+			}
+		}
+		#print("min2 "~min_distance);
+		if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
+			for (var i = 0.00; i <= 1; i += 0.05) {
+				var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
+				var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
+				var dist = coord.direct_distance_to(t_coord);
+				if (dist < min_distance) {
+					min_distance = dist;
+					explosion_coord = coord;
+				}
+			}
+		}
+		me.coord = explosion_coord;
+		#print("min3 "~min_distance);
+
+		# Create impact coords from this previous relative position applied to target current coord.
+		#me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
+		#me.t_coord.set_alt(new_t_alt_m);		
+		#var wh_mass = me.weight_whead_lbs / slugs_to_lbs;
+		#print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
+		#impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug,(speed_mps)
+
+		var phrase = sprintf( me.type~" exploded: %01.1f", min_distance) ~ " meters from: " ~ me.callsign;
+		print(phrase~"  Reason: "~reason~sprintf(" time %.1f", me.life_time));
+		if (min_distance < 65) {
+			me.sendMessage(phrase);
+		} else {
+			me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
+		}
+		
+		me.ai.getNode("valid", 1).setBoolValue(0);
+		me.animate_explosion();
+		me.Tgt = nil;
 	},
 
 	sendMessage: func (str) {
-		if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
-			setprop("/sim/multiplay/chat", defeatSpamFilter(str));
+		if (getprop("payload/armament/msg")) {
+			setprop("/sim/multiplay/chat", armament.defeatSpamFilter(str));
 		} else {
 			setprop("/sim/messages/atc", str);
 		}
@@ -1167,90 +1337,184 @@ var AIM9 = {
 		return c;
 	},
 
-	check_t_in_fov: func {
-		# Used only when not launched.
-		# Compute seeker total angular position clamped to seeker max total angular rotation.
-		me.seeker_dev_e += me.track_signal_e;
-		me.seeker_dev_e = me.clamp_min_max(me.seeker_dev_e, me.max_seeker_dev);
-		me.seeker_dev_h += me.track_signal_h;
-		me.seeker_dev_h = me.clamp_min_max(me.seeker_dev_h, me.max_seeker_dev);
-		# Check target signal inside seeker FOV.
-		var e_d = me.seeker_dev_e - me.aim9_fov;
-		var e_u = me.seeker_dev_e + me.aim9_fov;
-		var h_l = me.seeker_dev_h - me.aim9_fov;
-		var h_r = me.seeker_dev_h + me.aim9_fov;
-		if ( me.curr_deviation_e < e_d or me.curr_deviation_e > e_u or me.curr_deviation_h < h_l or me.curr_deviation_h > h_r ) {		
-			# Target out of FOV while still not launched, return to search loop.
-			me.status = 0;
-			settimer(func me.search(), 0.1);
-			me.Tgt = nil;
-			SwSoundVol.setValue(vol_search);
-			me.reset_seeker();
-		}
-		return(1);
-	},
-
-
+	# aircraft searching for lock
 	search: func {
-		if ( me.status == -1 ) {
-			# Stand by.
-			SwSoundVol.setValue(0);
+		if ( me.status == MISSILE_FLYING ) {
+			me.SwSoundVol.setDoubleValue(0);
+			me.SwSoundOnOff.setBoolValue(FALSE);
 			return;
-		} elsif ( me.status > 0 ) {
+		} elsif ( me.status == MISSILE_STANDBY ) {
+			# Stand by.
+			me.SwSoundVol.setDoubleValue(0);
+			me.SwSoundOnOff.setBoolValue(FALSE);
+			me.trackWeak = 1;
+			return;
+		} elsif ( me.status > MISSILE_SEARCH) {
 			# Locked or fired.
 			return;
+		} elsif (me.deleted == TRUE) {
+			return;
 		}
+		#print("search");
 		# search.
-		if ( awg_9.nearest_u != nil and awg_9.nearest_u.Valid.getValue()) {
-			var tgt = awg_9.nearest_u; # In the AWG-9 radar range and horizontal field.
-			var rng = tgt.get_range();
-			var total_elev  = tgt.get_total_elevation(OurPitch.getValue()); # deg.
-			var total_horiz = tgt.get_deviation(OurHdg.getValue());         # deg.
-			# Check if in range and in the (square shaped here) seeker FOV.
-			var abs_total_elev = math.abs(total_elev);
-			var abs_dev_deg = math.abs(total_horiz);
-			if (rng < me.max_detect_rng and abs_total_elev < me.aim9_fov_diam and abs_dev_deg < me.aim9_fov_diam ) {
-				me.status = 1;
-				SwSoundVol.setValue(vol_weak_track);
-				me.Tgt = tgt;
-				var t_pos_str = me.Tgt.string ~ "/position";
-				var t_ori_str = me.Tgt.string ~ "/orientation";
-				var t_vel_str = me.Tgt.string ~ "/velocities";
-				me.TgtLon_prop       = props.globals.getNode(t_pos_str).getChild("longitude-deg");
-				me.TgtLat_prop       = props.globals.getNode(t_pos_str).getChild("latitude-deg");
-				me.TgtAlt_prop       = props.globals.getNode(t_pos_str).getChild("altitude-ft");
-				me.TgtHdg_prop       = props.globals.getNode(t_ori_str).getChild("true-heading-deg");
-				me.TgtPitch_prop     = props.globals.getNode(t_ori_str).getChild("pitch-deg");
-				me.TgtSpeed_prop     = props.globals.getNode(t_vel_str).getChild("true-airspeed-kt");
-				me.TgtBearing_prop   = props.globals.getNode("radar/bearing-deg");
-				settimer(func me.update_lock(), 0.1);
-				return;
+		if (1==1 or contact != me.Tgt) {
+			#print("search2");
+			if (contact != nil and contact.isValid() == TRUE and
+				(  (contact.get_type() == SURFACE and me.class == "A/G")
+                or (contact.get_type() == AIR and me.class == "A/A")
+                or (contact.get_type() == MARINE and me.class == "A/G"))) {
+				#print("search3");
+				var tgt = contact; # In the radar range and horizontal field.
+				var rng = tgt.get_range();
+				var total_elev  = deviation_normdeg(OurPitch.getValue(), tgt.getElevation()); # deg.
+				var total_horiz = deviation_normdeg(OurHdg.getValue(), tgt.get_bearing());         # deg.
+				# Check if in range and in the (square shaped here) seeker FOV.
+				var abs_total_elev = math.abs(total_elev);
+				var abs_dev_deg = math.abs(total_horiz);
+				if ((me.guidance != "semi-radar" or me.is_painted(tgt) == TRUE)
+				    and rng < me.max_detect_rng and abs_total_elev < me.aim9_fov and abs_dev_deg < me.aim9_fov ) {
+					#print("search4");
+					me.status = MISSILE_LOCK;
+					me.SwSoundOnOff.setBoolValue(TRUE);
+					me.SwSoundVol.setDoubleValue(me.vol_track_weak);
+					me.trackWeak = 1;
+					me.Tgt = tgt;
+
+			        me.callsign = me.Tgt.get_Callsign();
+
+					var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
+					me.update_track_time = time;
+
+					settimer(func me.update_lock(), 0.1);
+					return;
+				} else {
+					me.Tgt = nil;
+				}
+			} else {
+				me.Tgt = nil;
 			}
 		}
-		SwSoundVol.setValue(vol_search);
+		me.SwSoundVol.setDoubleValue(me.vol_search);
+		me.SwSoundOnOff.setBoolValue(TRUE);
+		me.trackWeak = 1;
 		settimer(func me.search(), 0.1);
 	},
 
+	update_lock: func() {
+		#
+		# Missile locked on target
+		#
+		if ( me.Tgt == nil or me.status == MISSILE_FLYING) {
+			return TRUE;
+		}
+		if (me.status == MISSILE_SEARCH) {
+			# Status = searching.
+			#print("search commanded");
+			me.return_to_search();
+			return TRUE;
+		} elsif ( me.status == MISSILE_STANDBY ) {
+			# Status = stand-by.
+			me.reset_seeker();
+			me.SwSoundOnOff.setBoolValue(FALSE);
+			me.SwSoundVol.setDoubleValue(0);
+			me.trackWeak = 1;
+			return TRUE;
+		} elsif (!me.Tgt.isValid()) {
+			# Lost of lock due to target disapearing:
+			# return to search mode.
+			#print("invalid");
+			me.return_to_search();
+			return TRUE;
+		} elsif (me.deleted == TRUE) {
+			return;
+		}
+		#print("lock");
+		# Time interval since lock time or last track loop.
+		
+		if (me.status == MISSILE_LOCK) {		
+			# Status = locked. Get target position relative to our aircraft.
+			me.curr_deviation_e = - deviation_normdeg(OurPitch.getValue(), me.Tgt.getElevation());
+			me.curr_deviation_h = - deviation_normdeg(OurHdg.getValue(), me.Tgt.get_bearing());
+		}
 
+		var time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
 
-	reset_steering: func {
-		me.track_signal_e = 0;
-		me.track_signal_h = 0;
+		# Compute HUD reticle position.
+		if ( use_fg_default_hud == TRUE and me.status == MISSILE_LOCK ) {
+			var h_rad = (90 - me.curr_deviation_h) * D2R;
+			var e_rad = (90 - me.curr_deviation_e) * D2R; 
+			var devs = develev_to_devroll(h_rad, e_rad);
+			var combined_dev_deg = devs[0];
+			var combined_dev_length =  devs[1];
+			var clamped = devs[2];
+			if ( clamped ) { SW_reticle_Blinker.blink();}
+			else { SW_reticle_Blinker.cont();}
+			HudReticleDeg.setDoubleValue(combined_dev_deg);
+			HudReticleDev.setDoubleValue(combined_dev_length);
+		}
+		if (me.status != MISSILE_STANDBY ) {
+			var in_view = me.check_t_in_fov();
+			if (in_view == FALSE) {
+				#print("out of view");
+				me.return_to_search();
+				return TRUE;
+			}
+			# We are not launched yet: update_track() loops by itself at 10 Hz.
+			var dist = geo.aircraft_position().direct_distance_to(me.Tgt.get_Coord());
+			if (time - me.update_track_time > 1 and dist != nil and dist > (me.min_dist * NM2M)) {
+				# after 1 second we get solid track if target is further than minimum distance.
+				me.SwSoundOnOff.setBoolValue(TRUE);
+				me.SwSoundVol.setDoubleValue(me.vol_track);
+				me.trackWeak = 0;
+			} else {
+				me.SwSoundOnOff.setBoolValue(TRUE);
+				me.SwSoundVol.setDoubleValue(me.vol_track_weak);
+				me.trackWeak = 1;
+			}
+			if (contact == nil or (contact.getUnique() != nil and me.Tgt.getUnique() != nil and contact.getUnique() != me.Tgt.getUnique())) {
+				#print("oops ");
+				me.return_to_search();
+				return TRUE;
+			}
+			settimer(func me.update_lock(), 0.1);
+		}
+		return TRUE;
 	},
 
+	return_to_search: func {
+		me.status = MISSILE_SEARCH;
+		me.Tgt = nil;
+		me.SwSoundOnOff.setBoolValue(TRUE);
+		me.SwSoundVol.setDoubleValue(me.vol_search);
+		me.trackWeak = 1;
+		me.reset_seeker();
+		settimer(func me.search(), 0.1);
+	},
 
+	check_t_in_fov: func {
+		var total_elev  = deviation_normdeg(OurPitch.getValue(), me.Tgt.getElevation()); # deg.
+		var total_horiz = deviation_normdeg(OurHdg.getValue(), me.Tgt.get_bearing());         # deg.
+		# Check if in range and in the (square shaped here) seeker FOV.
+		var abs_total_elev = math.abs(total_elev);
+		var abs_dev_deg = math.abs(total_horiz);
+		if (abs_total_elev < me.aim9_fov and abs_dev_deg < me.aim9_fov and me.Tgt.get_range() < me.max_detect_rng) {
+			return TRUE;
+		}
+		# Target out of FOV or range while still not launched, return to search loop.
+		return FALSE;
+	},
+
+	is_painted: func (target) {
+		if(target != nil and target.isPainted() != nil and target.isPainted() == TRUE) {
+			return TRUE;
+		}
+		return FALSE;
+	},
 
 	reset_seeker: func {
-		me.curr_deviation_e     = 0;
-		me.curr_deviation_h     = 0;
-		me.seeker_dev_e   = 0;
-		me.seeker_dev_h   = 0;
-		settimer(func { HudReticleDeg.setValue(0) }, 2);
+		settimer(func { HudReticleDeg.setDoubleValue(0) }, 2);
 		interpolate(HudReticleDev, 0, 2);
-		me.reset_steering()
 	},
-
-
 
 	clamp_min_max: func (v, mm) {
 		if ( v < -mm ) {
@@ -1265,19 +1529,28 @@ var AIM9 = {
 
 	animation_flags_props: func {
 		# Create animation flags properties.
-		var msl_path = "sim/model/f-14b/systems/armament/aim9/flags/msl-id-" ~ me.ID;
-		me.msl_prop = props.globals.initNode( msl_path, 1, "BOOL" );
-		var smoke_path = "sim/model/f-14b/systems/armament/aim9/flags/smoke-id-" ~ me.ID;
-		me.smoke_prop = props.globals.initNode( smoke_path, 0, "BOOL" );
-		var explode_path = "sim/model/f-14b/systems/armament/aim9/flags/explode-id-" ~ me.ID;
-		me.explode_prop = props.globals.initNode( explode_path, 0, "BOOL" );
-		var explode_smoke_path = "sim/model/f-14b/systems/armament/aim9/flags/explode-smoke-id-" ~ me.ID;
-		me.explode_smoke_prop = props.globals.initNode( explode_smoke_path, 0, "BOOL" );
+		var msl_path = "payload/armament/"~me.type_lc~"/flags/msl-id-" ~ me.ID;
+		me.msl_prop = props.globals.initNode( msl_path, 1, "BOOL", 1);
+		var smoke_path = "payload/armament/"~me.type_lc~"/flags/smoke-id-" ~ me.ID;
+		me.smoke_prop = props.globals.initNode( smoke_path, 0, "BOOL", 1);
+		var explode_path = "payload/armament/"~me.type_lc~"/flags/explode-id-" ~ me.ID;
+		me.explode_prop = props.globals.initNode( explode_path, 0, "BOOL", 1);
+		var explode_smoke_path = "payload/armament/"~me.type_lc~"/flags/explode-smoke-id-" ~ me.ID;
+		me.explode_smoke_prop = props.globals.initNode( explode_smoke_path, 0, "BOOL", 1);
+		var explode_sound_path = "payload/armament/flags/explode-sound-on-" ~ me.ID;;
+		me.explode_sound_prop = props.globals.initNode( explode_sound_path, 0, "BOOL", 1);
+		var explode_sound_vol_path = "payload/armament/flags/explode-sound-vol-" ~ me.ID;;
+		me.explode_sound_vol_prop = props.globals.initNode( explode_sound_vol_path, 0, "DOUBLE", 1);
 	},
 
-
-
 	animate_explosion: func {
+		#
+		# a last position update to where the explosion happened:
+		#
+		me.latN.setDoubleValue(me.coord.lat());
+		me.lonN.setDoubleValue(me.coord.lon());
+		me.altN.setDoubleValue(me.coord.alt()*M2FT);
+
 		me.msl_prop.setBoolValue(0);
 		me.smoke_prop.setBoolValue(0);
 		me.explode_prop.setBoolValue(1);
@@ -1286,9 +1559,42 @@ var AIM9 = {
 		settimer( func me.explode_smoke_prop.setBoolValue(0), 3 );
 	},
 
+	sndPropagate: func {
+		var dt = getprop("sim/time/delta-sec");
+		if (dt == 0) {
+			#FG is likely paused
+			settimer(func me.sndPropagate(), 0.01);
+			return;
+		}
+		#dt = update_loop_time;
+		var elapsed = systime();
+		if (me.elapsed_last != 0) {
+			dt = (elapsed - me.elapsed_last) * getprop("sim/speed-up");
+		}
+		me.elapsed_last = elapsed;
 
+		me.ac = geo.aircraft_position();
+		var distance = me.coord.direct_distance_to(me.ac);
+
+		me.sndDistance = me.sndDistance + (me.sndSpeed * dt) * FT2M;
+		if(me.sndDistance > distance) {
+			var volume = math.pow(2.71828,(-.00025*(distance-1000)));
+			#print("explosion heard "~distance~"m vol:"~volume);
+			me.explode_sound_vol_prop.setDoubleValue(volume);
+			me.explode_sound_prop.setBoolValue(1);
+			settimer( func me.explode_sound_prop.setBoolValue(0), 3);
+			settimer( func me.del(), 4);
+			return;
+		} elsif (me.sndDistance > 5000) {
+			settimer(func { me.del(); }, 4 );
+		} else {
+			settimer(func me.sndPropagate(), 0.05);
+			return;
+		}
+	},
 
 	active: {},
+	flying: {},
 };
 
 
@@ -1316,10 +1622,10 @@ var impact_report = func(pos, mass_slug, string) {
 			break;
 	var impact = n.getChild(string, i, 1);
 
-	impact.getNode("impact/elevation-m", 1).setValue(pos.alt());
-	impact.getNode("impact/latitude-deg", 1).setValue(pos.lat());
-	impact.getNode("impact/longitude-deg", 1).setValue(pos.lon());
-	impact.getNode("mass-slug", 1).setValue(mass_slug);
+	impact.getNode("impact/elevation-m", 1).setDoubleValue(pos.alt());
+	impact.getNode("impact/latitude-deg", 1).setDoubleValue(pos.lat());
+	impact.getNode("impact/longitude-deg", 1).setDoubleValue(pos.lon());
+	impact.getNode("mass-slug", 1).setDoubleValue(mass_slug);
 	#impact.getNode("speed-mps", 1).setValue(speed_mps);
 	impact.getNode("valid", 1).setBoolValue(1);
 	impact.getNode("impact/type", 1).setValue("terrain");
@@ -1369,32 +1675,103 @@ var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, dt, gMax) {
 	return lastgoodguess;
 }
 
-
 # HUD clamped target blinker
-SW_reticle_Blinker = aircraft.light.new("sim/model/f-14b/lighting/hud-sw-reticle-switch", [0.1, 0.1]);
-setprop("sim/model/f-14b/lighting/hud-sw-reticle-switch/enabled", 1);
+SW_reticle_Blinker = aircraft.light.new("payload/armament/hud/hud-sw-reticle-switch", [0.1, 0.1]);
+setprop("payload/armament/hud/hud-sw-reticle-switch/enabled", 1);
 
 
 
 
 
+var OurRoll            = props.globals.getNode("orientation/roll-deg");
+var eye_hud_m          = 0.6;#pilot: -3.30  hud: -3.9
+var hud_radius_m       = 0.100;
 
-
-
-
-
-
-
-var spams = 0;
-
-var defeatSpamFilter = func (str) {
-  spams += 1;
-  if (spams == 15) {
-    spams = 1;
-  }
-  str = str~":";
-  for (var i = 1; i <= spams; i+=1) {
-    str = str~".";
-  }
-  return str;
+#was in hud
+var develev_to_devroll = func(dev_rad, elev_rad) {
+	var clamped = 0;
+	# Deviation length on the HUD (at level flight),
+	# 0.6686m = distance eye <-> virtual HUD screen.
+	var h_dev = eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
+	var v_dev = eye_hud_m / ( math.sin(elev_rad) / math.cos(elev_rad) );
+	# Angle between HUD center/top <-> HUD center/symbol position.
+	# -90° left, 0° up, 90° right, +/- 180° down. 
+	var dev_deg =  math.atan2( h_dev, v_dev ) * R2D;
+	# Correction with own a/c roll.
+	var combined_dev_deg = dev_deg - OurRoll.getValue();
+	# Lenght HUD center <-> symbol pos on the HUD:
+	var combined_dev_length = math.sqrt((h_dev*h_dev)+(v_dev*v_dev));
+	# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
+	var abs_combined_dev_deg = math.abs( combined_dev_deg );
+	var clamp = hud_radius_m;
+	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
+		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;
+		if ( coef > 0.050 ) { coef = 0.050 }
+		clamp -= coef; 
+	}
+	if ( combined_dev_length > clamp ) {
+		combined_dev_length = clamp;
+		clamped = 1;
+	}
+	var v = [combined_dev_deg, combined_dev_length, clamped];
+	return(v);
 }
+
+#was in radar
+var deviation_normdeg = func(our_heading, target_bearing) {
+	var dev_norm = our_heading - target_bearing;
+	while (dev_norm < -180) dev_norm += 360;
+	while (dev_norm > 180) dev_norm -= 360;
+	return(dev_norm);
+}
+
+#was environment
+var const_e = 2.71828183;
+
+var rho_sndspeed = func(altitude) {
+	# Calculate density of air: rho
+	# at altitude (ft), using standard atmosphere,
+	# standard temperature T and pressure p.
+
+	var T = 0;
+	var p = 0;
+	if (altitude < 36152) {
+		# curve fits for the troposphere
+		T = 59 - 0.00356 * altitude;
+		p = 2116 * math.pow( ((T + 459.7) / 518.6) , 5.256);
+	} elsif ( 36152 < altitude and altitude < 82345 ) {
+		# lower stratosphere
+		T = -70;
+		p = 473.1 * math.pow( const_e , 1.73 - (0.000048 * altitude) );
+	} else {
+		# upper stratosphere
+		T = -205.05 + (0.00164 * altitude);
+		p = 51.97 * math.pow( ((T + 459.7) / 389.98) , -11.388);
+	}
+
+	var rho = p / (1718 * (T + 459.7));
+
+	# calculate the speed of sound at altitude
+	# a = sqrt ( g * R * (T + 459.7))
+	# where:
+	# snd_speed in feet/s,
+	# g = specific heat ratio, which is usually equal to 1.4
+	# R = specific gas constant, which equals 1716 ft-lb/slug/R
+
+	var snd_speed = math.sqrt( 1.4 * 1716 * (T + 459.7));
+	return [rho, snd_speed];
+
+}
+
+var nextGeoloc = func(lat, lon, heading, speed, dt, alt=100){
+    # lng & lat & heading, in degree, speed in fps
+    # this function should send back the futures lng lat
+    var distance = speed * dt * FT2M; # should be a distance in meters
+    #print("distance ", distance);
+    # much simpler than trigo
+    var NextGeo = geo.Coord.new().set_latlon(lat, lon, alt);
+    NextGeo.apply_course_distance(heading, distance);
+    return NextGeo;
+}
+
+#var AIM_instance = [nil, nil,nil,nil];#init aim-9
