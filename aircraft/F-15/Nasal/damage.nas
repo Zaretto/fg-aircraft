@@ -262,7 +262,7 @@ var logTime = func{
   }
 }
 
-sendMis();
+#sendMis();
 
 var ct = func (type) {
   if (type == "c-u") {
