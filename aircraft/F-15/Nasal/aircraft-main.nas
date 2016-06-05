@@ -673,3 +673,10 @@ setlistener("sim/walker/outfit", func
             setprop("sim/model/hide-backseater",0);
     }
 });
+
+var resetView = func () {
+  setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
+  setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
+  setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
+  setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
+}

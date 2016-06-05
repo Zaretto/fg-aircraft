@@ -151,6 +151,10 @@
                 <name>y/Y</name>
                 <desc>Select next/prev target (by distance).</desc>
             </key>
+            <key>
+                <name>Q</name>
+                <desc>Reset view</desc>
+            </key>
             <line>JFS start: select JFS switch on engine panel; pull JFS lever and JFS will start providing there is enough pressure. 3 start attempts are possible.</line>
             <line>Engine start: Either start JFS or external air. Ensure both engines shutoff on engines panel. Start L engine then R engine.</line>
             <line>Take off: MILthrust, rotate at 130-160Kts depending on configuration. Do not exceed 10 degrees of pitch</line>
@@ -1802,7 +1806,15 @@
                     </script>
                 </binding>
             </key>
-                <key n="82">
+            <key n="81">
+                <name>Q</name>
+                <desc>Reset view</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>aircraft.resetView();</script>
+                </binding>
+            </key>
+            <key n="82">
                 <name>R</name>
                 <desc>Increase Radar Range</desc>
                 <binding>
