@@ -487,11 +487,11 @@ var loadIFail = func () {
 
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 
-setprop("/sim/failure-manager/display-on-screen", FALSE);
+#setprop("/sim/failure-manager/display-on-screen", FALSE);
 
-changeGuiLoad();
-settimer(code_ct, 5);
-settimer(not, 11);
+#changeGuiLoad();
+#settimer(code_ct, 5);
+#settimer(not, 11);
 
 var re_init = func {
   # repair the aircraft
