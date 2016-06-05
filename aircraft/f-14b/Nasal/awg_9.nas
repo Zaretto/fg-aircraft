@@ -135,7 +135,7 @@ var az_scan = func() {
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (!c.getNode("valid", 1).getValue()) {
+			if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
@@ -604,6 +604,7 @@ var Target = {
 		obj.deviation = nil;
 
 		obj.unique = rand();
+		obj.propNode = c;
 
 		return obj;
 	},
