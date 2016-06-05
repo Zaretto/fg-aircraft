@@ -374,6 +374,10 @@
                 <name>Ctrl-v</name>
                 <desc>Back to Pilot's View or toggle Pilot's and RIO View.</desc>
             </key>
+            <key>
+                <name>Q</name>
+                <desc>Reset view</desc>
+            </key>
             <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
             <line>__________________________________________________</line>
             <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
@@ -1646,6 +1650,15 @@
                 <binding>
                     <command>nasal</command>
                     <script>controls.flapsDown(-1);</script>
+                </binding>
+            </key>
+
+            <key n="81">
+                <name>Q</name>
+                <desc>Reset view</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.resetView();</script>
                 </binding>
             </key>
 
