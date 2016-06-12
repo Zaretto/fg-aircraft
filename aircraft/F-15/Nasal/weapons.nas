@@ -461,7 +461,7 @@ var impact_listener = func {
         var selectionPos = geo.Coord.new().set_xyz(x, y, z);
 
         var distance = impactPos.distance_to(selectionPos);
-        if (distance < 50) {
+        if (distance < 125) {
           last_impact = getprop("sim/time/elapsed-sec");
           var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.active_u.Callsign.getValue();
           if (getprop("sim/model/f15/systems/armament/mp-messaging")) {

@@ -386,7 +386,7 @@ var impact_listener = func {
         var selectionPos = awg_9.nearest_u.get_Coord();
 
         var distance = impactPos.distance_to(selectionPos);
-        if (distance < 50) {
+        if (distance < 125) {
           last_impact = getprop("sim/time/elapsed-sec");
           var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.nearest_u.Callsign.getValue();
           if (getprop("payload/armament/msg")) {
