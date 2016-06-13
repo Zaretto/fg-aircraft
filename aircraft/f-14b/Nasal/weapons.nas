@@ -157,7 +157,7 @@ var update_sw_ready = func() {
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
 			var pylon = aim9_seq[sw_count - 1];
 			#print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
-			Current_aim9 = fox2.AIM9.new(pylon.index);
+			Current_aim9 = armament.AIM.new(pylon.index, "AIM-9", "Sidewinder");
 		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	
@@ -173,8 +173,8 @@ var release_aim9 = func() {
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
 			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
-			if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", fox2.defeatSpamFilter(phrase));
+			if (getprop("payload/armament/msg")) {
+				setprop("/sim/multiplay/chat", armament.defeatSpamFilter(phrase));
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
