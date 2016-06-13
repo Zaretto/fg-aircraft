@@ -185,17 +185,17 @@
 		<type>select</type>
 		<object-name>sw-digit</object-name>
 		<condition>
-			<equals>
+			<greater-than>
 				<property>sim/model/f-14b/controls/armament/stick-selector</property>
-				<value>2</value>
-			</equals>
+				<value>1</value>
+			</greater-than>
 			<property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
 		</condition>
 	</animation>
 	<animation>
 		<type>textranslate</type>
 		<object-name>sw-digit</object-name>
-		<property>sim/model/f-14b/systems/armament/aim9/count</property>
+		<property>sim/model/f-14b/systems/armament/selected-missile-count</property>
 		<factor>0.1</factor>
 		<offset>-1</offset>
 		<step>1</step>

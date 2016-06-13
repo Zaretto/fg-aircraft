@@ -42,9 +42,12 @@ aircraft.data.add(VtcRadialDeg, TcModeSwitch);
 var local_mag_deviation = func {
 	var true = TrueHdg.getValue();
 	var mag = MagHdg.getValue();
-	mag_dev = geo.normdeg( mag - true );
-	if ( mag_dev > 180 ) mag_dev -= 360;
-	MagDev.setValue(mag_dev); 
+    if (mag != nil and true != nil)
+    {
+        mag_dev = geo.normdeg( mag - true );
+        if ( mag_dev > 180 ) mag_dev -= 360;
+        MagDev.setValue(mag_dev); 
+    }
 }
 
 
@@ -729,9 +732,16 @@ var common_carrier_init = func {
     }
 
 }
+
 var common_init = func {
     if(f14.usingJSBSim)
     {
+        #
+        # part of the bombable integration. we don't have magnetos so we can use them
+        # to detect damage
+        setprop("controls/engines/engine[0]/magnetos",1);
+        setprop("controls/engines/engine[1]/magnetos",1);
+
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
