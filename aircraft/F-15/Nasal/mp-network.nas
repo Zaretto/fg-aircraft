@@ -15,14 +15,14 @@ var message_id = nil;
 ###############################################################################
 # Send message wrappers.
 var send_wps_state = func (state) {
-	#print("Message to send: ",state);
+#	print("Message to send: ",state);
 	if (typeof(broadcast) != "hash") {
-		#print("Error: typeof(broadcast) != hash");
+		print("Error: send_wps_state: typeof(broadcast) != hash");
 		return;
 	}
 	broadcast.send(message_id["ext_load_state"] ~ Binary.encodeInt(state));
-	#print(message_id["ext_load_state"]," ",Binary.encodeInt(state));
-	#print(message_id["ext_load_state"] ~ Binary.encodeInt(state));
+#	print(message_id["ext_load_state"]," ",Binary.encodeInt(state));
+#	print(message_id["ext_load_state"] ~ Binary.encodeInt(state));
 }
 
 ###############################################################################
@@ -42,11 +42,13 @@ var handle_message = func (sender, msg) {
 # MP Accept and disconnect handlers.
 var listen_to = func (pilot) {
 	if (pilot.getNode("sim/model/path") != nil and
-			streq("Aircraft/F-15/Models/F-15D.xml",
-		pilot.getNode("sim/model/path").getValue())) {
+        find("Aircraft/F-15/Models/F-15", pilot.getNode("sim/model/path").getValue()) != -1)
+    {
 #		print("Accepted ",  pilot.getNode("sim/model/path").getValue());
 		return 1;
-	} else {
+	}
+    else
+    {
 #		print("Not listening to ", pilot.getNode("sim/model/path").getValue());
 		return 0;
 	}
@@ -147,8 +149,9 @@ var update_ext_load = func(sender, state)
 
 ###############################################################################
 # Initialization.
-var mp_network_init = func (active_participant) {
-print("F-15 MP network broadcast init");
+var mp_network_init = func (active_participant)
+{
+    print("F-15 MP network broadcast init");
 	Binary = mp_broadcast.Binary;
 	broadcast =
 		mp_broadcast.BroadcastChannel.new

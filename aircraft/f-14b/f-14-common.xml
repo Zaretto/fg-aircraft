@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<PropertyList>
+<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <sim>
         <description>Grumman F-14A</description>
         <author>Richard Harrison, Enrique Laso - Alexis Bory</author>
@@ -25,7 +25,7 @@
         </rating>
 
         <flight-model>jsb</flight-model>
-        <aero>f-14a</aero>
+        <aero>f-14b</aero>
         <fuel-fraction>0.1</fuel-fraction>
 
         <systems>
@@ -270,6 +270,10 @@
                 <desc>Decrease Radar Range</desc>
             </key>
             <key>
+                <name>y Shift-y</name>
+                <desc>Next / Previous target</desc>
+            </key>
+            <key>
                 <name>o</name>
                 <desc>toggle arrester hook</desc>
             </key>
@@ -278,7 +282,7 @@
                 <desc>Increase Radar Range</desc>
             </key>
             <key>
-                <name>Ctrl-s</name>
+                <name>Ctrl-y</name>
                 <desc>Toggle ground spoilers armed</desc>
             </key>
             <key>
@@ -295,7 +299,7 @@
             </key>
             <line>__________________________________________________</line>
             <key>
-                <name>a</name>
+                <name>Ctrl-S</name>
                 <desc>Toggle APC (Landing Automatic Power control)</desc>
             </key>
             <!--<key>
@@ -336,11 +340,11 @@
             </key>
             <key>
                 <name>m</name>
-                <desc>Cycle pylons selection</desc>
+                <desc>Cycle Stick Weapon Mode Selector</desc>
             </key>
             <key>
-                <name>w</name>
-                <desc>Cycle Stick Weapon Mode Selector</desc>
+                <name>Shift-m</name>
+                <desc>Cycle pylons selection</desc>
             </key>
             <key>
                 <name>Ctrl-w</name>
@@ -398,7 +402,7 @@
             <line>     located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
             <line>     catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
             <line>__________________________________________________</line>
-            <line>Automatic Power Control (APC) (keyboard "a" toggle):</line>
+            <line>Automatic Power Control (APC) (keyboard "ctrl-s" toggle):</line>
             <line>     APC regulates engine thrust to maintain thean optimum approach angle of attack for landing. </line>
             <line>     To engage APC, gear must be down, in air, throttles between 98% and 68% rpm (as shown on the panel gauges)</line>
             <line>     Abnormal disengagement will cause the AUTO THROT caution light on the left side of the HUD to illuminate for 10 seconds.</line>
@@ -530,8 +534,11 @@
                         <station-selector n="6" type="int">0</station-selector>
                         <station-selector n="7" type="int">0</station-selector>
                         <stick-selector type="int">0</stick-selector>
+                        <!-- 0 PH ACT, 1 NRM, 2 SP PD -->
+                        <msl-option-sw type="int">1</msl-option-sw>
                         <!-- 0=OFF, 1=GUN, 2=SW, 3=SP-PH -->
                         <system-on-off type="bool">false</system-on-off>
+                        <weapons-updated type="int">0</weapons-updated>
                         <tanks-ground-sound type="bool">0</tanks-ground-sound>
                     </armament>
                     <fuel>
@@ -798,6 +805,103 @@
                             <drag-area type="double">0.043</drag-area>
                             <!-- sq ft -->
                         </aim9>
+                        <aim54>
+                            <!--Based on values from Fabien's loading_missiles:
+                            AIM 120 max range 1884 km for actual version. ->100 nm.. at mach 5 it's about 108 sec. I put a life of 1120, and thurst duration to 3/4 the travel time.-->
+                            <count type="int">0</count>
+                            <cruisealt type="int">100000</cruisealt>
+                            <nearest-target type="int">-1</nearest-target>
+                            <sound-on-off type="bool">false</sound-on-off>
+                            <sound-volume type="double">0.12</sound-volume>
+                            <target-range-nm type="double">0</target-range-nm>
+                            <max-detection-rng-nm type="int">100</max-detection-rng-nm>
+                            <fov-deg type="int">25</fov-deg>
+                            <detection-fov-deg type="int">180</detection-fov-deg>
+                            <track-max-deg type="int">110</track-max-deg>
+                            <max-g type="int">30</max-g>
+                            <max-speed type="int">30</max-speed>
+                            <thrust-lbs type="double">2722</thrust-lbs>
+                            <thrust-duration-sec type="int">81</thrust-duration-sec>
+                            <weight-launch-lbs>905</weight-launch-lbs>
+                            <weight-warhead-lbs>135</weight-warhead-lbs>
+                            <drag-coeff type="double">0.272</drag-coeff>
+                            <drag-area type="double">0.234</drag-area>
+                        </aim54>
+                        <aim120>
+                            <!--Based on values from Fabien's loading_missiles:
+                            AIM 120 max range 72 km for actual version. ->39 nm.. at mach 4 it's about 53 sec. I put a life of 115, and thurst duration oo 3/4 the travel time.-->
+                            <count type="int">0</count>
+                            <nearest-target type="int">-1</nearest-target>
+                            <sound-on-off type="bool">false</sound-on-off>
+                            <sound-volume type="double">0.12</sound-volume>
+                            <target-range-nm type="double">0</target-range-nm>
+                            <max-detection-rng-nm type="int">38.8</max-detection-rng-nm>
+                            <fov-deg type="int">25</fov-deg>
+                            <detection-fov-deg type="int">180</detection-fov-deg>
+                            <track-max-deg type="int">110</track-max-deg>
+                            <max-g type="int">15</max-g>
+                            <thrust-lbs type="double">701</thrust-lbs>
+                            <thrust-duration-sec type="int">39</thrust-duration-sec>
+                            <weight-launch-lbs>291</weight-launch-lbs>
+                            <weight-warhead-lbs>44</weight-warhead-lbs>
+                            <drag-coeff type="double">0.088</drag-coeff>
+                            <drag-area type="double">0.075</drag-area>
+                        </aim120>
+                        <aim7>
+                            <!-- AIM-7 F/M http://www.hill.af.mil/library/factsheets/factsheet.asp?id=5787
+                                 http://warfare.be/db/lang/rus/catid/348/linkid/2517/
+                                 Power Plant Hercules MK-58 solid-propellant rocket motor
+                                    Thrust Classified
+                                    Speed Classified
+                                    Range approximately 30 nm
+                                    Length 12 feet (3.64 meters)
+                                    Diameter 8 inches (0.20 meters)
+                                    Wingspan 3 feet, 4 inches (1 meter)
+                                    Warhead Annular blast fragmentation warhead
+                                    88 lbs high explosive for AIM-9H
+                                    Launch Weight Approximately 500 pounds (225 kilograms)
+                                    Guidance System Raytheon semiactive on either continuous wave or pulsed Doppler radar energy
+                                    Date Deployed 1976
+                                    Aircraft Platforms Navy: F-14 and F/A-18;
+                                    Air Force: F-4, F-15, and F-16;
+                                    Marine Corps: F-4 and F/A-18
+
+                                    Unit Cost Approximately $125,000
+                                    Inventory Classified
+
+                                    Data for AIM-7A/C/E/F/M/P and RIM-7M/P:
+
+                                    AAM-N-2 (AIM-7A) AIM-7C AIM-7E AIM-7F AIM-7M/P RIM-7M/P
+                                    Length 3.74 m (147.3 in) 3.66 m (144 in)
+                                    Wingspan 0.94 m (37 in) 1.02 m (40 in)
+                                    Finspan 0.88 m (34.8 in) 0.81 m (32 in) 0.62 m (24.3 in)
+                                    Diameter 0.203 m (8 in)
+                                    Weight 143 kg (315 lb) 172 kg (380 lb) 197 kg (435 lb) 231 kg (510 lb)
+                                    Speed Mach 2.5 Mach 4
+                                    Range 10 km (5.4 nm) 11 km (6 nm) 30 km (16 nm) 70 km (38 nm) 26 km (14 nm)
+                                    Propulsion Aerojet 1.8KS7800 solid rocket Rocketdyne MK 38/MK 52
+                                    solid rocket Hercules MK 58 dual-thrust solid rocket
+                                    Warhead 20 kg (45 lb) 30 kg (65 lb) MK 38 continuous rod 39 kg (86 lb) MK 71
+                                    continuous rod 40 kg (88 lb) WDU-27/B
+                                    blast-fragmentation
+                                 -->
+                            <count type="int">0</count>
+                            <nearest-target type="int">-1</nearest-target>
+                            <sound-on-off type="bool">false</sound-on-off>
+                            <sound-volume type="double">0.12</sound-volume>
+                            <target-range-nm type="double">0</target-range-nm>
+                            <max-detection-rng-nm type="int">31</max-detection-rng-nm>
+                            <fov-deg type="int">25</fov-deg>
+                            <detection-fov-deg type="int">140</detection-fov-deg>
+                            <track-max-deg type="int">110</track-max-deg>
+                            <max-g type="int">13</max-g>
+                            <thrust-lbs type="double">745</thrust-lbs> <!-- classified so this is a wild guess; some of that extra weight must be spare fuel.... -->
+                            <thrust-duration-sec type="int">55</thrust-duration-sec>
+                            <weight-launch-lbs>510</weight-launch-lbs>
+                            <weight-warhead-lbs>88</weight-warhead-lbs>
+                            <drag-coeff type="double">0.088</drag-coeff>
+                            <drag-area type="double">0.075</drag-area>
+                        </aim7>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
                     </armament>
@@ -1206,6 +1310,226 @@
         </weight>
 
     </sim>
+    <payload>
+        <weight n="0">
+            <name>Left Wing 1A</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[0]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+        </weight>
+
+        <weight n="1">
+            <name>Left Wing 1B</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-54</name>
+                <lbs>1000</lbs>
+            </opt>
+        </weight>
+
+        <weight n="2">
+            <name>Left External Tank 2</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[2]"/>
+            <tank>8</tank>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>Droptank</name>
+                <lbs>271.0</lbs>
+                <gals>600</gals>
+            </opt>
+        </weight>
+
+
+        <weight n="3">
+            <name>Centre Left 3</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[3]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-54</name>
+                <lbs>1000</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+        <weight n="4">
+            <name>Centre Right Front 4</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[4]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-54</name>
+                <lbs>1000</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+        <weight n="5">
+            <name>Centre Back 5</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[5]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-54</name>
+                <lbs>1000</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+
+        <weight n="6">
+            <name>Centre Back 6</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[6]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-54</name>
+                <lbs>1000</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+        <weight n="7">
+            <name>Right External Tank 7</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[7]"/>
+            <tank>9</tank>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>Droptank</name>
+                <lbs>271.0</lbs>
+                <gals>600</gals>
+            </opt>
+        </weight>
+
+        <weight n="8">
+            <name>Right 8A</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[8]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-54</name>
+                <lbs>1000</lbs>
+            </opt>
+            <opt>
+                <name>AIM-120</name>
+                <lbs>335</lbs>
+            </opt>
+        </weight>
+
+        <weight n="9">
+            <name>Right 8B</name>
+            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[9]"/>
+            <selected>none</selected>
+            <opt>
+                <name>none</name>
+                <lbs>0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-9</name>
+                <lbs>190.0</lbs>
+            </opt>
+            <opt>
+                <name>AIM-7</name>
+                <lbs>500.0</lbs>
+            </opt>
+        </weight>
+    </payload>
+
     <environment>
         <aircraft-effects>
             <overlay-alpha type="float">0.45</overlay-alpha>
@@ -1366,49 +1690,6 @@
         <keyboard n="0" >
             <multikey include="Systems/instruments-multikey.xml"/>
 
-            <!-- map keys for launch-bar -->
-            <key n="76">
-                <name>L</name>
-                <desc>Launch-bar engage.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                        print("Disengage launchbar");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        setprop("/controls/gear/brake-parking",1);
-                        }
-                        else
-                        {
-                        print("Engage launchbar");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
-                        setprop("/controls/gear/brake-parking",0);
-                        }
-                    </script>
-                </binding>
-            </key>
-            <!-- map keys for catapult launch -->
-            <key n="67">
-                <name>C</name>
-                <desc>Catapult Launch Command.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                        print("Catapult launch");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        }
-                        else
-                        {
-                        }
-                    </script>
-                </binding>
-            </key>
             <key n="1">
                 <name>CTRL-a</name>
                 <desc>Toggle autopilot altitude mode.</desc>
@@ -1418,6 +1699,7 @@
                 </binding>
             </key>
 
+<!--
             <key n="4">
                 <name>CTRL-d</name>
                 <desc>DLC toggle</desc>
@@ -1426,6 +1708,7 @@
                     <script>f14.toggleDLC();</script>
                 </binding>
             </key>
+-->
 
             <key n="8">
                 <name>CTRL-h</name>
@@ -1433,15 +1716,6 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14_afcs.afcs_heading_switch(0);</script>
-                </binding>
-            </key>
-
-            <key n="13">
-                <name>Ctrl-m</name>
-                <desc>Toggle AIM-9 selection</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>f14.station_selector_cycle()</script>
                 </binding>
             </key>
 
@@ -1463,12 +1737,12 @@
                 </binding>
             </key>
 
-            <key n="19">
-                <name>Ctrl-s</name>
-                <desc>Toggle ground spoilers armed</desc>
+		   <key n="19">
+                <name>CTRL-S</name>
+                <desc>toggle APC</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>f14.toggleGroundSpoilers();</script>
+                    <script>f14.toggleAPC();</script>
                 </binding>
             </key>
 
@@ -1496,6 +1770,15 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14.master_arm_cycle();</script>
+                </binding>
+            </key>
+
+            <key n="25">
+                <name>Ctrl-y</name>
+                <desc>Toggle ground spoilers armed</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggleGroundSpoilers();</script>
                 </binding>
             </key>
 
@@ -1537,6 +1820,26 @@
                 </binding>
             </key>
 
+            <!-- map keys for catapult launch -->
+            <key n="67">
+                <name>C</name>
+                <desc>Catapult Launch Command.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+                        {
+                        print("Catapult launch");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+                        }
+                        else
+                        {
+                        }
+                    </script>
+                </binding>
+            </key>
+<!--
             <key n="68">
                 <name>D</name>
                 <desc>DLC decrease</desc>
@@ -1547,6 +1850,7 @@
                     <min>0</min>
                 </binding>
             </key>
+-->
 
             <key n="69">
                 <name>E</name>
@@ -1566,21 +1870,46 @@
                 </binding>
             </key>
 
+            <!-- map keys for launch-bar -->
+            <key n="76">
+                <name>L</name>
+                <desc>Launch-bar engage.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
+                        {
+                        print("Disengage launchbar");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
+                        setprop("/controls/gear/brake-parking",1);
+                        }
+                        else
+                        {
+                        print("Engage launchbar");
+                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
+                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
+                        setprop("/controls/gear/brake-parking",0);
+                        }
+                    </script>
+                </binding>
+            </key>
+           <key n="77">
+                <name>M</name>
+                <desc>Toggle AIM-9 selection</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.station_selector_cycle()</script>
+                </binding>
+            </key>
+
+
             <key n="82">
                 <name>R</name>
                 <desc>Increase Radar Range</desc>
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.range_control(1);</script>
-                </binding>
-            </key>
-
-            <key n="97">
-                <name>a</name>
-                <desc>toggle APC</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>f14.toggleAPC();</script>
                 </binding>
             </key>
 
@@ -1593,6 +1922,7 @@
                 </binding>
             </key>
 
+<!--
             <key n="100">
                 <name>d</name>
                 <desc>DLC increase</desc>
@@ -1603,6 +1933,7 @@
                     <max>1.0</max>
                 </binding>
             </key>
+-->
 
             <key n="101">
                 <name>e</name>
@@ -1665,8 +1996,8 @@
                 </binding>
             </key>
 
-            <key n="119">
-                <name>w</name>
+            <key n="109">
+                <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
                 <binding>
                     <command>property-adjust</command>
@@ -1677,9 +2008,24 @@
                     <repeat>false</repeat>
                     <wrap>true</wrap>
                 </binding>
+            </key>
+            <key n="121">
+                <name>y</name>
+                <desc>Next target select</desc>
                 <binding>
-                    <command>nasal</command>
-                    <script>f14.arm_selector();</script>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <key n="89">
+                <name>Y</name>
+                <desc>Previous target select</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>-1</value>
                 </binding>
             </key>
 
@@ -1700,7 +2046,6 @@
                     <script>f14.trimDown();</script>
                 </binding>
             </key>
-
 
         </keyboard>
     </input>
@@ -1777,6 +2122,8 @@
             <file>Aircraft/f-14b/Nasal/fuel-system.nas</file>
             <file>Aircraft/f-14b/Nasal/weapons.nas</file>
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
+            <file>Aircraft/f-14b/Nasal/bombable_integration.nas</file>
+            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
         </f14>
         <f14_hud>
             <file>Aircraft/f-14b/Nasal/hud.nas</file>
@@ -1786,13 +2133,10 @@
         </f14_chronograph>
         <f14_instruments>
             <file>Aircraft/f-14b/Nasal/instruments.nas</file>
-        </f14_instruments>
+         </f14_instruments>
         <f14_afcs>
             <file>Aircraft/f-14b/Nasal/afcs.nas</file>
         </f14_afcs>
-        <fox2>
-            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
-        </fox2>
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>

@@ -35,6 +35,7 @@ var TcModeSwitch     = props.globals.getNode("sim/model/f15/instrumentation/taca
 var TrueHdg          = props.globals.getNode("orientation/heading-deg");
 var MagHdg           = props.globals.getNode("orientation/heading-magnetic-deg");
 var MagDev           = props.globals.getNode("orientation/local-mag-dev", 1);
+var ownship_pos = geo.Coord.new();
 
 var mag_dev = 0;
 var tc_mode = 0;
@@ -420,6 +421,8 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "sim/model/f15/instrumentation/hud/mode-ldg",
                   "instrumentation/nav[0]/frequencies/selected-mhz",
                   "sim/model/f15/instrumentation/ils/volume-norm",
+                  "ai/submodels/submodel[3]/count",
+                  "sim/model/f15/systems/gun/rounds",
                   "sim/model/instrumentation/vhf/mode",
                   "fdm/jsbsim/fcs/pitch-damper-enable",
                   "fdm/jsbsim/fcs/roll-damper-enable",
@@ -573,6 +576,8 @@ var main_loop = func {
 	mach = Mach.getValue();
 	awg_9.rdr_loop();
 	var a = cnt / 2;
+
+    ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
 
 	burner +=1;
 	if ( burner == 3 ) { burner = 0 }
