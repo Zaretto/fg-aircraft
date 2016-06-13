@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+  <path>Light-flash.ac</path>
+
+  <effect>
+   <inherits-from>Effects/model-transparent</inherits-from>
+   <condition>
+    <property>/sim/rendering/rembrandt/enabled</property>
+   </condition>
+   <object-name>flash</object-name> 
+  </effect>
+
+  <animation>
+    <object-name>flash</object-name>
+    <attach>world</attach>
+  <placer>
+    <type>point</type>
+  </placer>
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>flash</object-name>
+  </animation>
+
+  <animation>
+    <type>flash</type>
+    <object-name>flash</object-name>
+    <center>
+      <x-m> 0.000 </x-m>
+      <y-m> 0.000 </y-m>
+      <z-m> 0.000 </z-m>
+    </center>
+    <axis>
+      <x> -1 </x>
+      <y>  0 </y>
+      <z>  0 </z>
+    </axis>
+    <power>15</power>
+    <factor>0.3</factor>
+    <offset>0</offset>
+    <two-sides type="bool">false</two-sides>
+    <min>0.0</min>
+    <max>1</max>
+  </animation>
+  
+  <animation>
+     <type>scale</type>
+     <object-name>flash</object-name>
+     <property>lightpack/taxi-light-intensity</property>
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>flash</object-name>
+    <emission>
+      <red>   1.0 </red>
+      <green> 1.0 </green>
+      <blue>  0.75 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>dist-scale</type>
+    <object-name>flash</object-name>
+    <interpolation>
+      <entry>
+        <ind>0</ind><dep>2</dep>
+      </entry>
+      <entry>
+        <ind>20</ind><dep>2</dep>
+      </entry>
+      <entry>
+        <ind>1500</ind><dep>4</dep>
+      </entry>
+    </interpolation>
+  </animation>
+
+</PropertyList>

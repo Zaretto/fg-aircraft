@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+	<!-- selected active flight recorder configuration for replay system -->
+	<replay-config type="int">0</replay-config>
+
+<config n="0">
+	<name type="string">CH-53E Flight Recorder</name>
+	
+	<!-- include generic stuff -->
+	<signals include="/Aircraft/Generic/flightrecorder/components/position.xml"/>
+	<signals include="/Aircraft/Generic/flightrecorder/components/gear-retractable.xml"/>
+	<signals include="/Aircraft/Generic/flightrecorder/components/controls.xml"/>
+	<signals include="/Aircraft/Generic/flightrecorder/components/environment.xml"/>
+	<signals include="/Aircraft/Generic/flightrecorder/components/tanks.xml">
+		<count type="int">6</count> 
+	</signals>
+	
+	<!--  main rotor -->
+	<signals include="/Aircraft/Generic/flightrecorder/components/rotor.xml">
+		<prefix type="string">/rotors/main</prefix>
+
+		<signal>
+			<type>float</type><property type="string">blade[0]/position-deg</property>
+		</signal>
+
+	</signals>
+	
+	<!--  tail rotor -->
+	<signals include="/Aircraft/Generic/flightrecorder/components/rotor.xml">
+		<prefix type="string">/rotors/tail</prefix>
+
+		<signal>
+			<type>float</type><property type="string">blade[0]/position-deg</property>
+		</signal>
+
+	</signals>
+
+    <signals>
+      <signal>
+        <type>float</type>
+        <property type="string">surface-positions/wing-fold-pos-norm</property>
+      </signal>
+    </signals>
+    
+</config>
+
+</PropertyList>

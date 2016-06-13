@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+  <model>
+    <name>RedLightFlare</name>
+    <path>Aircraft/ch53e/Models/Lights/Flares/RedLight-flare.xml</path>
+  </model>
+
+  <model>
+    <name>RedLightRemb</name>
+    <path>Aircraft/ch53e/Models/Lights/Rembrandt/RedLight-remb.xml</path>
+  </model>
+
+  <animation>
+    <type>select</type>
+    <object-name>RedLightFlare</object-name>
+    <object-name>RedLightRemb</object-name>
+    <condition>
+      <and>
+        <property>lightpack/nav-lights-intensity</property>
+        <not><property>sim/crashed</property></not>
+      </and>
+    </condition>
+  </animation>
+
+</PropertyList>

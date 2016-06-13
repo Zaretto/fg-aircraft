@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+  <path>LightCone.ac</path>
+
+  <animation>
+    <type>blend</type>
+    <expression>
+            <max>
+          <product>
+            <property>lightpack/landing-lights-intensity</property>
+                    <property>/rendering/scene/diffuse/red</property>
+          </product>
+                <value>0.8</value>
+            </max>
+    </expression>
+  </animation>
+  <effect>
+    <inherits-from>Effects/light-cone</inherits-from>
+    <object-name>Cone</object-name>
+  </effect>
+  
+    <animation>
+    <type>select</type>
+    <object-name>Cone</object-name>
+    <object-name>Cone-texture</object-name>
+    <object-name>Light</object-name>
+    <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <less-than>
+                <property>/rendering/scene/diffuse/red</property>
+                <value>0.9</value>
+            </less-than>
+            <not>
+                <property>/sim/rendering/shaders/skydome</property>
+            </not>
+    </condition>
+  </animation>
+  
+ </PropertyList>

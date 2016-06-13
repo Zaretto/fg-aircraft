@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<!-- $Id$ -->
+<!--
+  MD500 multiplayer passenger view.
+
+  Copyright (C) 2009  Anders Gidenstam  (anders(at)gidenstam.org)
+  This file is licensed under the GPL license version 2 or later.
+-->
+<!--
+  Usage: fgfs - -prop:/sim/remote/pilot-callsign="remote pilot callsign" - -aircraft=Fi-156-passenger
+-->
+<PropertyList>
+
+ <sim>
+
+  <description>CH53E Multiplayer crew</description>
+  <author>Anders Gidenstam</author>
+  <status>alpha</status>
+  <aircraft-version>$Id$</aircraft-version>
+  
+  <flight-model>null</flight-model>
+
+  <presets>
+   <onground type="bool">false</onground>
+   <altitude-agl-ft type="double">30.0</altitude-agl-ft>
+  </presets>
+
+  <!-- 3d model -->
+  <model>
+   <path>Aircraft/ch53e/Models/CH53E-crew.xml</path>
+  </model>
+
+  <!-- Views -->
+  <view n="0">
+   <!-- Passenger's position. -->
+   <name>Copilot View</name>
+   <type>lookfrom</type>
+   <config>
+    <internal type="bool">true</internal>
+    <from-model type="bool">false</from-model>
+    <from-model-idx type="int">0</from-model-idx>
+    <eye-lat-deg-path>/position/latitude-deg</eye-lat-deg-path>
+    <eye-lon-deg-path>/position/longitude-deg</eye-lon-deg-path>
+    <eye-alt-ft-path>/position/altitude-ft</eye-alt-ft-path>
+    <eye-heading-deg-path>/orientation/heading-deg</eye-heading-deg-path>
+    <eye-pitch-deg-path>/orientation/pitch-deg</eye-pitch-deg-path>
+    <eye-roll-deg-path>/orientation/roll-deg</eye-roll-deg-path>
+
+    <!-- x/y/z == right/up/back -->
+    <x-offset-m archive="y">  -0.68 </x-offset-m> <!--right-->
+      <y-offset-m archive="y">  2.1 </y-offset-m> <!--up-->
+      <z-offset-m archive="y"> -6.3 </z-offset-m> <!--back-->
+      <default-field-of-view-deg>85</default-field-of-view-deg>
+				<pitch-offset-deg archive="y">-6</pitch-offset-deg>
+    
+   </config>
+  </view>
+  
+  
+  <!-- Views -->
+ <view n="101">
+    <name>Bay View</name>
+    <internal archive="y">true</internal>
+    <type>lookfrom</type>
+    <config>
+      <from-model type="bool">true</from-model>
+      <ground-level-nearplane-m type="double">0.5f</ground-level-nearplane-m>
+      <x-offset-m archive="y" type="double"> 0.3 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y" type="double"> 1.7 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y" type="double"> 5.3 </z-offset-m> <!--Back-->
+      <pitch-offset-deg>-10</pitch-offset-deg>
+      <default-field-of-view-deg>60</default-field-of-view-deg>
+      <dynamic-view type="bool">true</dynamic-view>
+    </config>
+  </view>
+
+  <view n="102">
+    <name>Tail Camera View</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">30</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y">  0.000 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y">  5 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> 16.0 </z-offset-m> <!--Back-->
+    </config>
+  </view>
+  
+   <view n="103">
+    <name>Left Gear view</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">70</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y"> -1.986 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y"> -0.887 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> 5.478 </z-offset-m> <!--Back-->
+    </config>
+  </view>
+  
+   <view n="104">
+    <name>Right Gear view</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">70</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y">  1.986 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y"> -0.887 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> 5.478 </z-offset-m> <!--Back-->
+    </config>
+  </view>
+  
+  <view n="105">
+    <name>Left window view</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">80</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y">  1.157 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y">  1.385 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> -3.858 </z-offset-m> <!--Back-->
+	   <heading-offset-deg>270</heading-offset-deg>
+    </config>
+  </view>
+  
+  <view n="106">
+    <name>Crew Door view</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">80</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y"> -1.157 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y">  1.385 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> -3.858 </z-offset-m> <!--Back-->
+	    <heading-offset-deg>70</heading-offset-deg>
+    </config>
+  </view>
+  
+  <view n="107">
+    <name>Crew Man1 view</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">60</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y"> -0.978 </x-offset-m> <!--Right-->
+      <y-offset-m archive="y">  1.140 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> -2.478 </z-offset-m> <!--Back-->
+	  <heading-offset-deg>270</heading-offset-deg>
+    </config>
+  </view>
+  
+  <view n="108">
+    <name>Crew Man2 view</name>
+    <type>lookfrom</type>
+    <internal archive="y">true</internal>
+    <config>
+      <from-model type="bool">true</from-model>
+      <from-model-idx type="int">0</from-model-idx>
+      <ground-level-nearplane-m type="double">0.01f</ground-level-nearplane-m>
+      <default-field-of-view-deg type="double">60</default-field-of-view-deg>
+      <pitch-offset-deg>-5</pitch-offset-deg>
+      <x-offset-m archive="y">  0.978 </x-offset-m> <!--Right-->
+       <y-offset-m archive="y">  1.140 </y-offset-m> <!--Up-->
+      <z-offset-m archive="y"> -2.478 </z-offset-m> <!--Back-->
+    </config>
+  </view>
+
+ <view n="1">
+			<config>
+				<target-z-offset-m archive="y" type="double">2.5</target-z-offset-m>
+			</config>
+		</view>
+
+		<view n="2">
+			<config>
+				<target-z-offset-m archive="y" type="double">2.5</target-z-offset-m>
+			</config>
+		</view>
+
+		<view n="3">
+			<config>
+				<target-z-offset-m archive="y" type="double">2.5</target-z-offset-m>
+			</config>
+		</view>
+
+		<view n="4">
+			<config>
+				<target-z-offset-m archive="y" type="double">2.5</target-z-offset-m>
+			</config>
+		</view>
+
+		<view n="5">
+			<config>
+				<target-z-offset-m archive="y" type="double">2.5</target-z-offset-m>
+			</config>
+		</view>
+
+		<view n="6">
+			<config>
+				<target-z-offset-m archive="y" type="double">2.5</target-z-offset-m>
+			</config>
+		</view>
+
+
+  <chase-distance-m type="double">-18.0</chase-distance-m>
+
+ 	  <sound>
+            <path>Aircraft/ch53e/Sounds/ch53e-sound.xml</path>
+        </sound>
+  <!-- Aircraft specific help. -->
+  <!-- help include="help.xml"/ -->
+
+  <!-- systems>
+   <electrical>
+    <path/>
+   </electrical>
+  </systems>
+  <instrumentation>
+   <path/>
+  </instrumentation -->
+
+  <menubar>
+   <default>
+    <menu n="100">
+     <label>CH53e</label>
+     <item>
+      <label>Select MP-pilot</label>
+      <binding>
+       <command>nasal</command>
+       <script>
+        dual_control_tools.
+          copilot_dialog.show(aircraft_dual_control.pilot_type);
+       </script>
+      </binding>
+     </item>
+    </menu>
+   </default>
+  </menubar>
+
+ </sim>
+
+ <nasal>
+  <dual_control_tools>
+   <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
+  </dual_control_tools>
+  <aircraft_dual_control>
+   <file>Aircraft/ch53e/Nasal/ch53-dual-control.nas</file>
+  </aircraft_dual_control>
+  <dual_control>
+   <file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
+  </dual_control>
+ </nasal>
+
+</PropertyList>
