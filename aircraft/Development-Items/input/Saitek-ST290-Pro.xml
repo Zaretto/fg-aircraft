@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Saitek ST290 Pro</name>
+  <axis>
+    <desc type="string">Aileron</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/aileron</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="1">
+    <desc type="string">Elevator</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/elevator</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">-1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="2">
+    <desc type="string">Throttle</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.throttleAxis();</script>
+    </binding>
+  </axis>
+  <axis n="3">
+    <desc type="string">Rudder</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/rudder</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="4">
+    <number>
+      <unix type="string">4</unix>
+      <mac type="string">4</mac>
+      <windows type="string">6</windows>
+    </number>
+    <desc type="string">View Direction</desc>
+    <low>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">view.panViewDir(1)</script>
+        <module type="string">__js1</module>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">view.panViewDir(-1)</script>
+        <module type="string">__js1</module>
+      </binding>
+    </high>
+  </axis>
+    <axis n="5">
+        <number>
+            <unix type="string">5</unix>
+            <mac type="string">5</mac>
+            <windows type="string">7</windows>
+        </number>
+        <desc type="string">View Direction</desc>
+        <low>
+            <repeatable type="string">true</repeatable>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">view.panViewPitch(-1)</script>
+                <module type="string">__js1</module>
+            </binding>
+        </low>
+        <high>
+            <repeatable type="string">true</repeatable>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">view.panViewPitch(1)</script>
+                <module type="string">__js1</module>
+            </binding>
+        </high>
+    </axis>
+    <button>
+    <desc type="string">Brakes</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.applyBrakes(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.applyBrakes(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="1">
+    <desc type="string">Custom</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.gearToggle()</script>
+      <module type="string">__js1</module>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <button n="2">
+    <desc type="string">Elevator Trim Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="3">
+    <desc type="string">Flaps Down</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="4">
+    <desc type="string">Elevator Trim Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="5">
+    <desc type="string">Flaps Up</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(-1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+</PropertyList>
