@@ -10,6 +10,7 @@ var warhead_lbs = {
     "aim-7":                88.00,
     "RB-71":                88.00,
     "aim-9":                20.80,
+    "RB-24":                20.80,
     "RB-24J":               20.80,
     "RB-74":                20.80,
     "R74":                  16.00,
@@ -25,6 +26,10 @@ var warhead_lbs = {
     "GBU16":               450.00,
     "Sea Eagle":           505.00,
     "AGM65":               200.00,
+    "RB-04E":              661.00,
+    "RB-05A":              353.00,
+    "RB-75":               126.00,
+    "M90":                 500.00,#cluster bomb, is high so you get hit even from long distance hits. Will fix later.
 };
 
 var incoming_listener = func {
