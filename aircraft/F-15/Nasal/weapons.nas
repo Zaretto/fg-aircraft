@@ -35,7 +35,7 @@ aircraft.data.add( WeaponSelector, ArmSwitch );
 # Init
 var weapons_init = func()
 {
-	print("Initializing f15 weapons system");
+	print("Initializing F-15 weapons system");
 	ArmSwitch.setValue(0);
 	system_stop();
 	SysRunning.setBoolValue(0);
@@ -201,11 +201,13 @@ var update_sw_ready = func()
 
 var release_aim9 = func()
 {
-print("RELEASE AIM-9 status: ");
+#print("RELEASE AIM-9 status: ");
 	if (Current_missile != nil) {
-print(" status: ", Current_missile.status);
+#print(" status: ", Current_missile.status);
 		if ( Current_missile.status == 1 ) {
 			var phrase = Current_missile.type~" at: " ~ Current_missile.Tgt.Callsign.getValue();
+#            var m = notifications.GeoEventNotification.new(Current_missile.type, Current_missile.Tgt.Callsign, 1, 80+Current_missile.intid);
+#emesary.GlobalTransmitter.NotifyAll(m);
 			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
 				setprop("/sim/multiplay/chat", phrase);
 			} else {
@@ -213,9 +215,9 @@ print(" status: ", Current_missile.status);
 			}
 			# Set the pylon empty:
 			var current_pylon = "payload/weight["~Current_missile.ID~"]/selected";
-print("Release ",current_pylon);
+#print("Release ",current_pylon);
 			setprop(current_pylon,"none");
-print("currently ",getprop(current_pylon));
+#print("currently ",getprop(current_pylon));
 			armament_update();
 setprop("sim/model/f15/systems/armament/launch-light",false);
 			Current_missile.release();
@@ -429,3 +431,46 @@ setlistener("/payload/weight[10]/selected", func(v)
     demand_weapons_refresh();
     arm_selector();
 });
+
+  ############ Cannon impact messages #####################
+
+var last_impact = 0;
+
+var hit_count = 0;
+
+var impact_listener = func {
+  if (awg_9.active_u != nil and (getprop("sim/time/elapsed-sec")-last_impact) > 1) {
+    var ballistic_name = props.globals.getNode("/ai/models/model-impact3",1).getValue();
+    var ballistic = props.globals.getNode(ballistic_name, 0);
+    if (ballistic != nil) {
+      var typeNode = ballistic.getNode("impact/type");
+      if (typeNode != nil and typeNode.getValue() != "terrain") {
+        var lat = ballistic.getNode("impact/latitude-deg").getValue();
+        var lon = ballistic.getNode("impact/longitude-deg").getValue();
+        var impactPos = geo.Coord.new().set_latlon(lat, lon);
+
+        var track = awg_9.active_u.propNode;
+
+        var x = track.getNode("position/global-x").getValue();
+        var y = track.getNode("position/global-y").getValue();
+        var z = track.getNode("position/global-z").getValue();
+        var selectionPos = geo.Coord.new().set_xyz(x, y, z);
+
+        var distance = impactPos.distance_to(selectionPos);
+        if (distance < 50) {
+          last_impact = getprop("sim/time/elapsed-sec");
+          var phrase =  aircraft.defeatSpamFilter(ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.active_u.Callsign.getValue());
+          if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
+            setprop("/sim/multiplay/chat", phrase);
+                  #hit_count = hit_count + 1;
+          } else {
+            setprop("/sim/messages/atc", phrase);
+          }
+        }
+      }
+    }
+  }
+}
+
+# setup impact listener
+setlistener("/ai/models/model-impact3", impact_listener, 0, 0);
