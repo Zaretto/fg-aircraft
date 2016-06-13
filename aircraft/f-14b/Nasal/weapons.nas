@@ -1,11 +1,3 @@
-# F-14 Weapons system
-# ---------------------------
-# ---------------------------
-# Created: Alexis Bory
-# Revised for F-15: Richard Harrison (rjh@zaretto.com) Feb  2015
-# backported to F-14: Richard Harrison (rjh@zaretto.com) Jan 2016
-# ---------------------------
-var ac_sim_prop_root = "sim/model/f-14b/";
 var AcModel = props.globals.getNode("sim/model/f-14b");
 var SwCoolOffLight   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var MslPrepOffLight  = AcModel.getNode("controls/armament/acm-panel-lights/msl-prep-off-light");
@@ -225,15 +217,13 @@ var update_sw_ready = func()
 	}
 }
 
-var release_aim9 = func()
-{
-print("RELEASE AIM-9 status: ");
-	if (Current_missile != nil) {
-print(" status: ", Current_missile.status);
-		if ( Current_missile.status == 1 ) {
-			var phrase = Current_missile.type~" at: " ~ Current_missile.Tgt.Callsign.getValue();
-			if (getprop(ac_sim_prop_root~"systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", phrase);
+var release_aim9 = func() {
+	#print("RELEASE AIM-9 status: ", Current_aim9.status);
+	if (Current_aim9 != nil) {
+		if ( Current_aim9.status == 1 ) {
+			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
+			if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
+				setprop("/sim/multiplay/chat", fox2.defeatSpamFilter(phrase));
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}

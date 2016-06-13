@@ -31,6 +31,12 @@ var sel_missile_count = 0;
 
 aircraft.data.add( WeaponSelector, ArmSwitch );
 
+setlistener("sim/model/f15/controls/armament/weapon-selector", func(v)
+{
+    aircraft.arm_selector();
+    aircraft.demand_weapons_refresh();
+});
+
 
 # Init
 var weapons_init = func()
@@ -209,7 +215,7 @@ var release_aim9 = func()
 #            var m = notifications.GeoEventNotification.new(Current_missile.type, Current_missile.Tgt.Callsign, 1, 80+Current_missile.intid);
 #emesary.GlobalTransmitter.NotifyAll(m);
 			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", phrase);
+				setprop("/sim/multiplay/chat", aircraft.defeatSpamFilter(phrase));
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}

@@ -784,8 +784,6 @@ print("Model ",missile_model);
 				}
 
 				var phrase = sprintf( me.variant~" exploded: %01.1f", min_distance) ~ " meters from: " ~ ident;
-#                var m = notifications.GeoEventNotification.new(me.variant, ident, 3, 80+me.intid);
-#emesary.GlobalTransmitter.NotifyAll(m);
 
 				#var phrase = sprintf( "%01.0f", me.direct_dist_m) ~ "meters";
 				if (getprop("sim/model/f15/systems/armament/mp-messaging")) {

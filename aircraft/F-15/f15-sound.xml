@@ -661,7 +661,21 @@
 
         <gear-0-transit>
             <name>gear-0-transit</name>
-            <mode>in-transit</mode>
+            <mode>looped</mode>
+            <condition>
+                <not>
+                    <property>sim/model/f15/gear-sound-freeze</property>
+                </not>
+                <equals>
+                    <property>fdm/jsbsim/gear/emergency-handle</property>
+                    <value>0</value>
+                </equals>
+                <equals>
+                    <property>fdm/jsbsim/gear/unit[0]/locked</property>
+                    <value>0</value>
+                </equals>
+                <property>gear/serviceable</property>
+            </condition>
             <path>Sounds/gear-transit.wav</path>
             <property>gear/gear[0]/position-norm</property>
             <volume>
@@ -679,6 +693,14 @@
             <name>gear-0-lock</name>
             <path>Sounds/gear-door-close.wav</path>
             <condition>
+                <not>
+                    <property>sim/model/f15/gear-sound-freeze</property>
+                </not>
+                <equals>
+                    <property>fdm/jsbsim/gear/emergency-handle</property>
+                    <value>0</value>
+                </equals>
+                <property>gear/serviceable</property>
                 <or>
                     <equals>
                         <property>gear/gear[0]/position-norm</property>
@@ -1081,9 +1103,9 @@
             <type>avionics</type>
             <path>Sounds/f-15-warning-tone.wav</path>
             <condition>
-                <property>/fdm/jsbsim/systems/cadc/gear-warning-tone</property>
+                <property>fdm/jsbsim/systems/cadc/gear-warning-tone</property>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
@@ -1104,11 +1126,11 @@
             <path>Sounds/ows-overload-85.wav</path>
             <condition>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/cadc/ows-overg-85</property>
+                    <property>fdm/jsbsim/systems/cadc/ows-overg-85</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                                 <greater-than>
@@ -1130,11 +1152,11 @@
             <path>Sounds/ows-overload-92.wav</path>
             <condition>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/cadc/ows-overg-92</property>
+                    <property>fdm/jsbsim/systems/cadc/ows-overg-92</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                                 <greater-than>
@@ -1156,11 +1178,11 @@
             <path>Sounds/ows-overload-96.wav</path>
             <condition>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/cadc/ows-overg-96</property>
+                    <property>fdm/jsbsim/systems/cadc/ows-overg-96</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                                 <greater-than>
@@ -1182,11 +1204,11 @@
             <path>Sounds/betty-ows-overload.wav</path>
             <condition>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/cadc/ows-overg</property>
+                    <property>fdm/jsbsim/systems/cadc/ows-overg</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                                 <greater-than>
@@ -1216,7 +1238,7 @@
                     <value>2</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
@@ -1245,7 +1267,7 @@
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
@@ -1275,7 +1297,7 @@
                     <value>0</value>
                 </greater-than>
                 <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </greater-than>
                 <greater-than>
@@ -1473,6 +1495,199 @@
             <reference-dist>1</reference-dist>
             <max-dist>200</max-dist>
         </fuel-bowser>
+        <incoming>
+            <name>incoming</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming</property>
+                <property>sim/current-view/internal</property>
 
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming1</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-01.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming1</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming2</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-02.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming2</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming3</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-03.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming3</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming4</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-04.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming4</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming5</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-05.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming5</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming6</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-06.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming6</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming12</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-12.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming12</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming7</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-07.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming7</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming8</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-08.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming8</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming9</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-09.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming9</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming10</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-10.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming10</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
+
+        <incoming>
+            <name>incoming11</name>
+            <mode>single</mode>
+            <path>Aircraft/F-15/Sounds/incoming-11.wav</path>
+            <type>avionics</type>
+            <condition>
+                <property>sound/incoming11</property>
+                <property>sim/current-view/internal</property>
+                
+            </condition>
+            <volume>
+                <factor>4</factor>
+            </volume>
+        </incoming>
     </fx>
 </PropertyList>

@@ -6,8 +6,44 @@
 <!--
 	Usage: fgfs - -prop:/sim/remote/pilot-callsign="remote pilot callsign" - -aircraft=f15-bs
 -->
-<PropertyList>
+<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
 
+    <controls>
+        <seat>
+            <pilot-helmet-volume-attenuation type="int">0</pilot-helmet-volume-attenuation>
+        </seat>
+        <lighting>
+            <anti-collision-switch type="bool">true</anti-collision-switch>
+            <hook-bypass type="bool">false</hook-bypass>
+            <index-norm type="double">0.3</index-norm>
+            <position-tail-switch type="int">1</position-tail-switch>
+            <position-wing-switch type="int">1</position-wing-switch>
+            <position-flash-switch type="bool">true</position-flash-switch>
+            <l-console userarchive="y" type="double">0.5</l-console>
+            <r-console userarchive="y" type="double">0.5</r-console>
+            <l-console-eff-norm userarchive="y" type="double">0.5</l-console-eff-norm>
+            <r-console-eff-norm userarchive="y" type="double">0.5</r-console-eff-norm>
+            <aux-instr-console type="int">1</aux-instr-console>
+            <standby-inst type="int">1</standby-inst>
+            <flt-inst type="int">3</flt-inst>
+            <eng-inst type="int">3</eng-inst>
+            <warn-caution type="int">5</warn-caution>
+            <radio2-brightness type="double">0.6</radio2-brightness>
+
+            <!-- component values for lighting. these are set for 100W tungsten ref: http://planetpixelemporium.com/tutorialpages/light.html -->
+            <panel-red type="double">1.000</panel-red>
+            <panel-green type="double">0.576</panel-green>
+            <panel-blue type="double">0.161</panel-blue>
+
+            <instrument-red type="double">0.1000</instrument-red>
+            <instrument-green type="double">0.0576</instrument-green>
+            <instrument-blue type="double">0.0161</instrument-blue>
+
+            <console-red type="double">0.1000</console-red>
+            <console-green type="double">0.0576</console-green>
+            <console-blue type="double">0.0161</console-blue>
+        </lighting>
+    </controls>
     <sim>
         <description>F-15D Backseat (multiplayer)</description>
         <author>Richard Harrison, Anders Gidenstam, Alexis Bory</author>
@@ -84,11 +120,20 @@
                 <menu n="50">
                     <label>F-15 Controls</label>
                     <item>
-                        <label>Select MP pilot</label>
+                        <label>Select F-15D pilot</label>
                         <binding>
                             <command>nasal</command>
                             <script>
                                 dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_type);
+                            </script>
+                        </binding>
+                    </item>
+                    <item>
+                        <label>Select F-15C pilot</label>
+                        <binding>
+                            <command>nasal</command>
+                            <script>
+                                dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_typeC);
                             </script>
                         </binding>
                     </item>
@@ -397,9 +442,6 @@
     </instrumentation>
 
     <nasal>
-        <aircraft>
-            <file>Nasal/VSD/VSD_main.nas</file>
-        </aircraft>
         <radardist>
             <file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
         </radardist>

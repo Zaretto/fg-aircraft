@@ -75,8 +75,8 @@
         <delay>0.08</delay>
         <count>-1</count>
         <x-offset>24.0</x-offset>
-        <y-offset>-2.5</y-offset>
-        <z-offset>-4.0</z-offset>
+        <y-offset>1.8</y-offset>
+        <z-offset>0.6</z-offset>
         <yaw-offset>0</yaw-offset>
         <pitch-offset>-20.0</pitch-offset>
         <life>20</life>
@@ -101,8 +101,8 @@
         <count>135</count>
         <!-- that's 68*10 rounds (675 in RL) -->
         <x-offset>24.0</x-offset>
-        <y-offset>-2.5</y-offset>
-        <z-offset>-4.0</z-offset>
+        <y-offset>1.8</y-offset>
+        <z-offset>0.6</z-offset>
         <yaw-offset>0.0</yaw-offset>
         <pitch-offset>1.7</pitch-offset>
         <life>8.0</life>
@@ -115,38 +115,43 @@
         <no-roll>false</no-roll>
         <collision>true</collision>
         <impact>true</impact>
-        <impact-reports>ai/models/model-impact</impact-reports>
+        <impact-reports>ai/models/model-impact2</impact-reports>
         <submodel-path>Models/Stores/M61A1/M61A1-submodels.xml</submodel-path>
     </M61A1>
 
 
 
     <submodel>
-        <name>M61A1 API round 1</name>
-        <model alias ="../../M61A1/model"/>
-        <trigger alias="../../M61A1/trigger"/>
-        <delay alias="../../M61A1/delay"/>
-        <count alias="../../M61A1/count"/>
-        <speed alias="../../M61A1/speed"/>
-        <fuse-range alias="../../M61A1/fuse-range"/>
+        <name>M61A1 shell</name>
+        <model>Models/Stores/M61A1/apibullet-tracer.xml</model>
+        <trigger>sim/model/f15/systems/gun/running</trigger>
+        <speed>3450.0</speed>
+        <fuse-range>0.0</fuse-range>
         <repeat>true</repeat>
-        <x-offset alias="../../M61A1/x-offset"/>
-        <y-offset alias="../../M61A1/y-offset"/>
-        <z-offset alias="../../M61A1/z-offset"/>
-        <yaw-offset alias="../../M61A1/yaw-offset"/>
-        <pitch-offset alias="../../M61A1/pitch-offset"/>
-        <life alias="../../M61A1/life"/>
-        <buoyancy alias="../../M61A1/buoyancy"/>
-        <wind alias="../../M61A1/wind"/>
-        <cd alias="../../M61A1/cd"/>
-        <random alias="../../M61A1/random"/>
-        <eda alias="../../M61A1/eda"/>
-        <weight alias="../../M61A1/weight"/>
-        <no-roll alias="../../M61A1/no-roll"/>
-        <collision alias="../../M61A1/collision"/>
-        <impact alias="../../M61A1/impact"/>
-        <impact-reports alias="../../M61A1/impact-reports"/>
-        <submodel-path alias="../../M61A1/submodel-path"/>
+        <delay>0.05</delay>
+        <!-- 1 submodel each 1/10 sec to simulate 10 rounds -->
+        <count alias="../../M61A1/count"/>
+        <!-- that's 68*10 rounds (675 in RL) -->
+        <x-offset>24.0</x-offset> <!-- starts in front of the aircraft assume this is to make it visible.-->
+        <y-offset>1.8</y-offset>
+        <z-offset>0.6</z-offset>
+        <yaw-offset>0.0</yaw-offset>
+        <pitch-offset>0.0</pitch-offset>
+        <life>8.0</life>
+        <buoyancy>0</buoyancy>
+        <wind>false</wind>
+        <cd>0.193</cd>
+        <random>false</random>
+        <eda>0.007609</eda>
+        <weight>0.9369635</weight>
+        <no-roll>false</no-roll>
+        <collision>true</collision>
+        <impact>true</impact>
+        <expiry>false</expiry>
+        <collision-report>sim/ai/aircraft/collision/bullet</collision-report>
+        <impact-report>sim/ai/aircraft/impact/cannon</impact-report>
+        <impact-reports>ai/models/model-impact3</impact-reports>
+        <submodel-path>Models/Stores/M61A1/M61A1-submodels.xml</submodel-path>
     </submodel>
 
 

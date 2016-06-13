@@ -13,7 +13,11 @@ namespace F14AeroPlot
             MaxSteer = new DenominatedAmount(0, "DEG");
             dynamic_friction = new DenominatedAmount(0.5,null);
             rolling_friction = new DenominatedAmount(0.02,null);
-            static_friction = new DenominatedAmount(0.8, null);
+//Tire on concrete 1.00, ref: http://ffden-2.phys.uaf.edu/211_fall2002.web.dir/ben_townsend/staticandkineticfriction.htm
+//also refs: http://www.altraliterature.com/pdfs/P-1648-pages41-44.pdf http://seniorphysics.com/physics/static_friction_time_dependence.pdf
+            static_friction = new DenominatedAmount(1.0, null, 1);
+            rolling_friction = new DenominatedAmount(0.02, null, 2);
+            dynamic_friction = new DenominatedAmount(0.5, null, 1);
             spring_coeff = new DenominatedAmount(a.EmptyWeight.Amount * 0.9,  "LBS/FT");
             damping_coeff = new DenominatedAmount(a.EmptyWeight.Amount * 0.05, "LBS/FT/SEC");
         }

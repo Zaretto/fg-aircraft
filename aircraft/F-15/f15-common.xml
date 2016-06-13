@@ -7,16 +7,17 @@
    | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work is largely unchanged.
 -->
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
+    <gear>
+        <serviceable type="bool">true</serviceable>
+    </gear>
     <fdm>
         <jsbsim>
             <metrics>
                 <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
-
-            <instrumentation>
-                <path>Systems/instrumentation.xml</path>
-            </instrumentation>
-
+            <gear>
+                <emergency-handle type="double">0</emergency-handle>
+            </gear>
             <systems>
                 <hydraulics>
                     <combined-system-psi type="int">2200</combined-system-psi>
@@ -784,6 +785,7 @@
                     <armament>
                         <aim9>
                             <count type="int">0</count>
+                            <guidance type="string">heat</guidance>
                             <nearest-target type="int">-1</nearest-target>
                             <sound-on-off type="bool">false</sound-on-off>
                             <sound-volume type="double">0.12</sound-volume>
@@ -791,44 +793,58 @@
                             <!-- AIM-9L specs -->
                             <max-detection-rng-nm type="int">10</max-detection-rng-nm>
                             <!--FIXME: up to 10-16 MN with best conditions-->
-                            <fov-deg type="int">25</fov-deg>
+                            <fov-deg type="int">27</fov-deg>
                             <!-- seeker optical FOV -->
                             <detection-fov-deg type="int">60</detection-fov-deg>
                             <!-- Search pattern diameter (rosette scan) -->
-                            <track-max-deg type="int">110</track-max-deg>
+                            <track-max-deg type="int">134</track-max-deg>
                             <!-- Seeker max total angular rotation -->
-                            <max-g type="int">21</max-g>
+                            <max-g type="int">32</max-g>
                             <!-- In turn -->
-                            <thrust-lbs type="double">230</thrust-lbs>
-                            <!-- guess -->
-                            <thrust-duration-sec type="int">30</thrust-duration-sec>
+                            <thrust-lbs-stage-1 type="double">3821.75</thrust-lbs-stage-1><!-- guess -->
+                            <thrust-lbs-stage-2 type="double">0.0</thrust-lbs-stage-2>    <!-- authentic -->
+                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
+                            <stage-2-duration-sec type="double">1.0</stage-2-duration-sec><!-- Aim-9L -->
+                            <self-destruct-time-sec type="double">43</self-destruct-time-sec><!-- guess -->
                             <!-- Mk.36 Mod.7,8 -->
                             <weight-launch-lbs>191</weight-launch-lbs>
                             <weight-warhead-lbs>20.8</weight-warhead-lbs>
-                            <drag-coeff type="double">0.05</drag-coeff>
+                            <drag-coeff type="double">0.5</drag-coeff>
                             <!-- guess -->
-                            <drag-area type="double">0.043</drag-area>
+                            <drag-area type="double">0.143</drag-area>
                             <!-- sq ft -->
+                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
+                            <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                            <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">1.4</arming-time-sec>
                         </aim9>
                         <aim120>
                             <!--Based on values from Fabien's loading_missiles:
                             AIM 120 max range 72 km for actual version. ->39 nm.. at mach 4 it's about 53 sec. I put a life of 115, and thurst duration oo 3/4 the travel time.-->
                             <count type="int">0</count>
+                            <guidance type="string">rdr</guidance>
                             <nearest-target type="int">-1</nearest-target>
                             <sound-on-off type="bool">false</sound-on-off>
                             <sound-volume type="double">0.12</sound-volume>
                             <target-range-nm type="double">0</target-range-nm>
                             <max-detection-rng-nm type="int">38.8</max-detection-rng-nm>
-                            <fov-deg type="int">25</fov-deg>
+                            <fov-deg type="int">30</fov-deg>
                             <detection-fov-deg type="int">180</detection-fov-deg>
                             <track-max-deg type="int">110</track-max-deg>
-                            <max-g type="int">15</max-g>
-                            <thrust-lbs type="double">701</thrust-lbs>
-                            <thrust-duration-sec type="int">39</thrust-duration-sec>
+                            <max-g type="int">30</max-g>
+                            <thrust-lbs-stage-1 type="double">11000</thrust-lbs-stage-1><!-- guess -->
+                            <thrust-lbs-stage-2 type="double">1000</thrust-lbs-stage-2>    <!-- guess -->
+                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
+                            <stage-2-duration-sec type="double">36.0</stage-2-duration-sec><!-- guess -->
+                            <self-destruct-time-sec type="double">80</self-destruct-time-sec><!-- guess -->
                             <weight-launch-lbs>291</weight-launch-lbs>
                             <weight-warhead-lbs>44</weight-warhead-lbs>
-                            <drag-coeff type="double">0.088</drag-coeff>
-                            <drag-area type="double">0.075</drag-area>
+                            <drag-coeff type="double">0.5</drag-coeff>
+                            <drag-area type="double">0.2739</drag-area>
+                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
+                            <loft-altitude>30000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                            <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">2.0</arming-time-sec>
                         </aim120>
                         <aim7>
                             <!-- AIM-7 F/M http://www.hill.af.mil/library/factsheets/factsheet.asp?id=5787
@@ -869,6 +885,7 @@
                                     blast-fragmentation
                                  -->
                             <count type="int">0</count>
+                            <guidance type="string">rdr</guidance>
                             <nearest-target type="int">-1</nearest-target>
                             <sound-on-off type="bool">false</sound-on-off>
                             <sound-volume type="double">0.12</sound-volume>
@@ -877,13 +894,20 @@
                             <fov-deg type="int">25</fov-deg>
                             <detection-fov-deg type="int">140</detection-fov-deg>
                             <track-max-deg type="int">110</track-max-deg>
-                            <max-g type="int">13</max-g>
-                            <thrust-lbs type="double">745</thrust-lbs> <!-- classified so this is a wild guess; some of that extra weight must be spare fuel.... -->
-                            <thrust-duration-sec type="int">55</thrust-duration-sec>
+                            <max-g type="int">30</max-g>
+                            <thrust-lbs-stage-1 type="double">20000</thrust-lbs-stage-1><!-- guess -->
+                            <thrust-lbs-stage-2 type="double">1000</thrust-lbs-stage-2>    <!-- guess -->
+                            <stage-1-duration-sec type="double">2.7</stage-1-duration-sec><!-- guess -->
+                            <stage-2-duration-sec type="double">30</stage-2-duration-sec><!-- guess -->
+                            <self-destruct-time-sec type="double">60</self-destruct-time-sec><!-- guess -->
                             <weight-launch-lbs>510</weight-launch-lbs>
                             <weight-warhead-lbs>88</weight-warhead-lbs>
-                            <drag-coeff type="double">0.088</drag-coeff>
-                            <drag-area type="double">0.075</drag-area>
+                            <drag-coeff type="double">0.5</drag-coeff>
+                            <drag-area type="double">0.3382</drag-area>
+                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
+                            <loft-altitude>30000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                            <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">2.0</arming-time-sec>
                         </aim7>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
@@ -1032,10 +1056,6 @@
 
         <multiplay>
             <generic>
-                <float n="0">0</float> <!-- free     -->
-                <float n="1">0</float> <!-- free     -->
-                <float n="2">0</float> <!-- free     -->
-                <float n="3">0</float> <!-- wing torn, 1 = left, 2 = right, 3 = both(!)-->
                 <float n="4">0</float> <!-- left elevator  -->
                 <float n="5">0</float> <!-- right elevator -->
                 <float n="6">0</float> <!-- refuel probe/door -->
@@ -1047,21 +1067,31 @@
                 <float n="13" alias="/surface-positions/r-ramp1-position-deg" />
                 <float n="14" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1" />
                 <float n="15" alias="/fdm/jsbsim/systems/electrics/ac-left-main-bus" />
-                <int n="0" type="int">0</int> <!-- fuel dump      -->
-                <int n="1" type="int">0</int> <!-- formation slimmers -->
-                <int n="2" type="int">0</int> <!-- radar-standby -->
-                <int n="3" type="int">0</int> <!-- collision lights -->
-                <int n="4" type="int">0</int> <!-- position lights -->
-                <int n="5" type="int">0</int> <!-- tail flood  -->
-                <int n="6" type="int">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
-                <int n="7" type="int">0</int> <!-- weapons load -->
-                <int n="8" alias="/engines/engine[0]/afterburner" />
-                <int n="9" alias="/engines/engine[1]/afterburner" />
+                <float n="16" alias="/engines/engine[0]/afterburner"/>
+                <float n="17" alias="/engines/engine[1]/afterburner"/>
+
+                <int n="0">0</int> <!-- fuel dump      -->
+                <int n="1">0</int> <!-- formation slimmers -->
+                <int n="3">0</int> <!-- collision lights -->
+                <int n="4">0</int> <!-- position lights -->
+                <int n="5">0</int> <!-- tail flood  -->
+                <int n="6">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
+                <int n="7">0</int> <!-- weapons load -->
+                <int n="8" alias="/consumables/fuel/total-fuel-lbs"/>
+                <int n="9" alias="/engines/engine[0]/egt-degC" />
+                <int n="10" alias="/engines/engine[0]/fuel-flow_pph" />
+                <int n="11" alias="/engines/engine[1]/egt-degC" />
+                <int n="12" alias="/engines/engine[1]/fuel-flow_pph" />
+                <int n="13" alias="/instrumentation/airspeed-indicator/indicated-speed-kt" />
+                <int n="14" alias="/instrumentation/radar/radar2-range" />
+                <int n="15" alias="/sim/model/f15/instrumentation/fuel-gauges/total" />
+                <int n="16" alias="/velocities/mach" />
+                <int n="17">0</int> <!-- Radar Status -->
+                <int n="18">0</int> <!-- Total Weight (lbs) -->
                 <string n="0" type="string"></string>
-                <!-- mp-network -->
-                <string n="1" type="string">xxx</string>
-                <string n="2" type="string" alias="/sim/model/f15/variant"/>
-                <!-- instruments -->
+                <string n="13" type="string"></string>
+                <!-- Emesary multiplayer bridge -->
+                <!--<string n="19" type="string"></string> -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
             <!--<default-model>Aircraft/F-15/Models/f15c.ac</default-model>-->
@@ -1073,10 +1103,10 @@
             </camera-group>
             <redout>
                 <parameters>
-                    <blackout-complete-g>10</blackout-complete-g>
-                    <blackout-onset-g>6.5</blackout-onset-g>
-                    <redout-onset-g type="double">-2.5</redout-onset-g>
-                    <redout-complete-g type="double">-3.5</redout-complete-g>
+                    <blackout-complete-g>11</blackout-complete-g>
+                    <blackout-onset-g>8.5</blackout-onset-g>
+                    <redout-onset-g type="double">-3.5</redout-onset-g>
+                    <redout-complete-g type="double">-4.5</redout-complete-g>
                 </parameters>
             </redout>
         </rendering>
@@ -1563,6 +1593,9 @@
     </consumables>
 
     <controls>
+        <seat>
+            <pilot-helmet-volume-attenuation type="int">0</pilot-helmet-volume-attenuation>
+        </seat>
         <armament>
             <trigger type="bool">false</trigger>
             <cycle-mode type="bool">false</cycle-mode>
@@ -1926,6 +1959,7 @@
             <radar2-range type="double">50</radar2-range>
             <radar-standby type="bool">0</radar-standby>
             <symbols-enabled type="bool">true</symbols-enabled>
+            <debug-mode type="bool">true</debug-mode>
         </radar>
         <ecm>
             <enabled type="bool">true</enabled>
@@ -1972,6 +2006,9 @@
             <file>Aircraft/F-15/Nasal/chronograph.nas</file>
         </f15_chronograph>
         <aircraft>
+            <file>Nasal/canvas/MFD_Generic.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/F-15/Nasal/liveries.nas</file>
             <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
             <file>Aircraft/F-15/Nasal/flaps_computer.nas</file>
@@ -1986,6 +2023,7 @@
             <file>Aircraft/F-15/Nasal/instruments.nas</file>
             <file>Aircraft/F-15/Nasal/afcs.nas</file>
             <file>Aircraft/F-15/Nasal/fox2.nas</file>
+            <file>Aircraft/F-15/Nasal/damage.nas</file>
             <file>Nasal/HUD/HUD_main.nas</file>
             <file>Nasal/VSD/VSD_main.nas</file>
             <file>Nasal/TEWS/TEWS_main.nas</file>

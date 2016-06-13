@@ -37,8 +37,9 @@ var fixAirframe = func {
 }
 
 var computeWingBend = func {
-	var av_currentG = getprop ("sim/model/f15/instrumentation/g-meter/g-max-mooving-average") - 1.0;   # adjust to loading
-    if (av_currentG == nil) return;
+	var _av_currentG = getprop ("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
+    if (_av_currentG == nil) return;
+	var av_currentG = _av_currentG - 1.0;   # adjust to loading
 	#effects of normal acceleration
 
 	if (currentG >= MaxGreached) MaxGreached = av_currentG;

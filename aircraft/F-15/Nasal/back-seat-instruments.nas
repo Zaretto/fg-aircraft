@@ -1,154 +1,163 @@
 #
-# F-15 Backsat routines
-# ---------------------------
-# Not currently used as F15-C does not have a backseat
+# F-15D Backseat routines
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
 #
 
-var UPDATE_PERIOD = 0.05;
+var UPDATE_PERIOD = 0.03;
 
 # Check pilot's aircraft path from it's callsign.
 var PilotCallsign = props.globals.getNode("/sim/remote/pilot-callsign");
 var Pilot = nil;
 
-var check_pilot_callsign = func() 
+var set_node_from = func(Pilot, target, source)
 {
-	r_callsign = PilotCallsign.getValue();
-	if ( r_callsign ) {
-		var mpplayers = props.globals.getNode("/ai/models").getChildren("multiplayer");
-		foreach (var p; mpplayers) {
-			if ( p.getChild("callsign").getValue() == r_callsign ) {
-				Pilot = p; 
-			}
-		}
-	} else {
-		Pilot = nil;
-	}
+      var n = Pilot.getNode(source);
+      if (n != nil)
+      {
+          var v = n.getValue();
+          Pilot.getNode(target,1).setDoubleValue(v);
+      }
 }
 
+var check_pilot_callsign = func() 
+{
+    r_callsign = PilotCallsign.getValue();
+    if ( r_callsign )
+    {
+        var mpplayers = props.globals.getNode("/ai/models").getChildren("multiplayer");
+        foreach (var p; mpplayers) 
+        {
+            if ( p.getChild("callsign").getValue() == r_callsign ) 
+            {
+                Pilot = p; 
+            }
+        }
+    } 
+    else 
+    {
+        Pilot = nil;
+    }
+}
 
-var select_ecm_nav = func {
+var two_seater = 1;
+
+var select_ecm_nav = func
+{
 	var ecm_nav_mode = Pilot.getNode("sim/model/f15/controls/rio-ecm-display/mode-ecm-nav");
 	ecm_nav_mode.setBoolValue( ! ecm_nav_mode.getBoolValue());
 }
 
 ##
-
 # Receive basic instruments data over MP from pilot's aircraft.
-var PilotInstrString = nil;
 instruments_data_import = func
 {
-	if ( Pilot == nil ) { return }
-	PilotInstrString = Pilot.getNode("sim/multiplay/generic/string[1]", 1);
-	var str = PilotInstrString.getValue();
+    if (Pilot == nil)
+        return;
+    Pilot.getNode("sim/model/f15/variant",1).setValue("D");
 
-	if ( str != nil )
+    aircraft.ownship_pos.set_latlon(Pilot.getNode("position/latitude-deg").getValue(), Pilot.getNode("position/longitude-deg").getValue());
+
+    if (getprop("/sim/walker/outside"))
     {
-		var l = split(";", str);
-		# Todo: Create the needed nodes only at connection/de-connection time. 
-		# ias, mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial.
-		if ( size(l) > 1 ) {
-			Pilot.getNode("instrumentation/airspeed-indicator/indicated-speed-kt", 1).setValue( l[0] );
-			Pilot.getNode("fdm/jsbsim/velocities/vtrue-kts",1).setValue( l[0] );
-			Pilot.getNode("velocities/mach", 1).setValue( l[1] );
-			Pilot.getNode("sim/model/f15/instrumentation/fuel-gauges/total", 1).setValue( l[2] );
-			Pilot.getNode("sim/model/f15/instrumentation/tacan/mode", 1).setValue( l[3] );
-			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
-			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
-			Pilot.getNode("instrumentation/tacan/indicated-distance-nm", 1).setValue( l[6] );
+        Pilot.getNode("sim/model/hide-pilot",1).setValue(0);
+        Pilot.getNode("sim/model/hide-backseater",1).setValue(0);
+    }
+    else
+    {
+        Pilot.getNode("sim/model/hide-pilot",1).setValue(0);
+        Pilot.getNode("sim/model/hide-backseater",1).setValue(1);
+    }
 
-            var transponder_id =sprintf("%4d",Pilot.getNode("instrumentation/transponder/transmitted-id").getValue());
-            if (transponder_id != nil)
-            {
-                Pilot.getNode("instrumentation/transponder/inputs/digit[0]", 1).setValue( substr(transponder_id,3,1) );
-                Pilot.getNode("instrumentation/transponder/inputs/digit[1]", 1).setValue( substr(transponder_id,2,1) );
-                Pilot.getNode("instrumentation/transponder/inputs/digit[2]", 1).setValue( substr(transponder_id,1,1) );
-                Pilot.getNode("instrumentation/transponder/inputs/digit[3]", 1).setValue( substr(transponder_id,0,1) );
-            }
-			var SteerSubmodeCode = Pilot.getNode("sim/model/f15/controls/pilots-displays/steer-submode-code", 1);
-			SteerSubmodeCode.setValue( l[7] );
+    var total_fuel_lbs = Pilot.getNode("sim/multiplay/generic/int[8]",1).getValue();
+    var engines_engine0_egt_degC = Pilot.getNode("sim/multiplay/generic/int[9]",1).getValue();
+    var engines_engine0_fuel_flow_pph = Pilot.getNode("sim/multiplay/generic/int[10]",1).getValue();
+    var engines_engine1_egt_degC = Pilot.getNode("sim/multiplay/generic/int[11]",1).getValue();
+    var engines_engine1_fuel_flow_pph = Pilot.getNode("sim/multiplay/generic/int[12]",1).getValue();
+    var instrumentation_asi_ias = Pilot.getNode("sim/multiplay/generic/int[13]",1).getValue();
+    var instrumentation_radar_radar2_range = Pilot.getNode("sim/multiplay/generic/int[14]",1).getValue();
+    var fuel_gauges_total = Pilot.getNode("sim/multiplay/generic/int[15]",1).getValue();
+    var velocities_mach = Pilot.getNode("sim/multiplay/generic/int[16]",1).getValue();
 
-			Pilot.getNode("sim/model/f15/instrumentation/hsd/needle-deflection", 1).setValue( l[8] );
-			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
+    if (instrumentation_asi_ias != nil)
+    {
+        Pilot.getNode("instrumentation/airspeed-indicator/indicated-speed-kt", 1).setDoubleValue(instrumentation_asi_ias);
+        Pilot.getNode("fdm/jsbsim/velocities/vtrue-kts",1).setDoubleValue( instrumentation_asi_ias);
+    }
+    if (velocities_mach != nil)
+        Pilot.getNode("velocities/mach", 1).setDoubleValue(velocities_mach);
+    if (fuel_gauges_total != nil)
+        Pilot.getNode("sim/model/f15/instrumentation/fuel-gauges/total", 1).setDoubleValue( fuel_gauges_total);
 
-			if (size(l) > 11)
-			{
-			    var ac_powered = l[10] != nil and l[10] == "1";
-			    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",ac_powered);
-			    setprop("fdm/jsbsim/systems/electrics/ac-essential-bus2",ac_powered); 
-			    setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",ac_powered);
-		        setprop("fdm/jsbsim/systems/electrics/ac-right-main-bus",ac_powered);
-		        setprop("fdm/jsbsim/systems/electrics/dc-essential-bus1",ac_powered);
-		        setprop("fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered);
-		        setprop("fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
-		    }
-			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
-            Pilot.getNode("engines/engine[0]/egt-degC").setValue(l[11]);
-            Pilot.getNode("engines/engine[1]/egt-degC").setValue(l[12]);
-            Pilot.getNode("engines/engine[0]/fuel-flow_pph").setValue(l[13]);
-            Pilot.getNode("engines/engine[1]/fuel-flow_pph").setValue(l[14]);
-            Pilot.getNode("consumables/fuel/total-fuel-lbs").setValue(l[15]);
-		}
-	}
-	#PilotInstrString2 = Pilot.getNode("sim/multiplay/generic/string[2]", 1);
-	#var str2 = PilotInstrString2.getValue();
-	#if ( str2 != nil ) {
-    #Pilot.getNode("instrumentation/radar/radar2-range", 1).setValue(str2);
-	#}
-}
+    var ac_essential = Pilot.getNode("sim/multiplay/generic/float[14]",1).getValue();
+#    print("Ac_essential ",ac_essential," EGT ",engines_engine0_egt_degC," FF ",engines_engine0_fuel_flow_pph);
 
-# Send a/c type over MP for pilot.
-var InstrString = props.globals.getNode("sim/multiplay/generic/string[1]", 1);
-var ACString = props.globals.getNode("sim/aircraft");
-instruments_data_export = func {
-	# Aircraft variant
-	var ac_string = ACString.getValue();
-	var l_s = [ac_string];
-	var str = "";
-	foreach( s ; l_s ) {
-		str = str ~ s ~ ";";
-	}
-	InstrString.setValue(str);
+    if (ac_essential != nil) {
+        Pilot.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus1",1).setValue(ac_essential);
+        Pilot.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus2",1).setValue(ac_essential); 
+        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-essential-bus1",1).setValue(ac_essential);
+        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-essential-bus2",1).setValue(ac_essential);
+    }
+    var ac_main = Pilot.getNode("sim/multiplay/generic/float[15]",1).getValue();
+    if (ac_main != nil) {
+        Pilot.getNode("fdm/jsbsim/systems/electrics/ac-left-main-bus",1).setValue(ac_main);
+        Pilot.getNode("fdm/jsbsim/systems/electrics/ac-right-main-bus",1).setValue(ac_main);
+        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-main-bus",1).setValue(ac_main);
+    }
+    if (engines_engine0_egt_degC != nil)
+      Pilot.getNode("engines/engine[0]/egt-degC",1).setDoubleValue(engines_engine0_egt_degC);
+    if (engines_engine1_egt_degC != nil)
+      Pilot.getNode("engines/engine[1]/egt-degC",1).setDoubleValue(engines_engine1_egt_degC);
+    if (engines_engine0_fuel_flow_pph != nil)
+      Pilot.getNode("engines/engine[0]/fuel-flow_pph",1).setDoubleValue(engines_engine0_fuel_flow_pph);
+    if (engines_engine1_fuel_flow_pph != nil)
+      Pilot.getNode("engines/engine[1]/fuel-flow_pph",1).setDoubleValue(engines_engine1_fuel_flow_pph);
+    if (total_fuel_lbs != nil)
+      Pilot.getNode("consumables/fuel/total-fuel-lbs",1).setDoubleValue(total_fuel_lbs);
+
+    set_node_from(Pilot, "instrumentation/attitude-indicator/indicated-roll-deg", "orientation/roll-deg");
+    set_node_from(Pilot, "instrumentation/attitude-indicator/indicated-roll-deg", "orientation/roll-deg");
+    set_node_from(Pilot, "instrumentation/attitude-indicator/indicated-pitch-deg", "orientation/pitch-deg");
+    set_node_from(Pilot, "instrumentation/heading-indicator-fg/indicated-heading-deg", "orientation/heading-deg");
+    set_node_from(Pilot, "instrumentation/magnetic-compass/indicated-heading-deg", "orientation/heading-deg");
+
+    var transponder_id =sprintf("%4d",Pilot.getNode("instrumentation/transponder/transmitted-id",1).getValue());
+    if (transponder_id != nil)
+    {
+        Pilot.getNode("instrumentation/transponder/inputs/digit[0]", 1).setValue( substr(transponder_id,3,1) );
+        Pilot.getNode("instrumentation/transponder/inputs/digit[1]", 1).setValue( substr(transponder_id,2,1) );
+        Pilot.getNode("instrumentation/transponder/inputs/digit[2]", 1).setValue( substr(transponder_id,1,1) );
+        Pilot.getNode("instrumentation/transponder/inputs/digit[3]", 1).setValue( substr(transponder_id,0,1) );
+    }
+#			Pilot.getNode("sim/model/f15/instrumentation/tacan/mode", 1)
+#			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
+#			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
+#			Pilot.getNode("instrumentation/tacan/indicated-distance-nm", 1).setValue( l[6] );
+#			var SteerSubmodeCode = Pilot.getNode("sim/model/f15/controls/pilots-displays/steer-submode-code", 1);
+#			SteerSubmodeCode.setValue( l[7] );
+#			Pilot.getNode("sim/model/f15/instrumentation/hsd/needle-deflection", 1).setValue( l[8] );
+#			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
+#			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
 }
 
 # Main loop ###############
-var cnt = 0;
 
-var main_loop = func {
-	cnt += 1;
-	# done each 0.05 sec.
+var backseat_update = maketimer(UPDATE_PERIOD, func
+{
 	awg_9.rdr_loop();
-	var a = cnt / 2;
-	if ( ( a ) == int( a )) {
-		# done each 0.1 sec, cnt even.
-		#if (( cnt == 6 ) or ( cnt == 12 )) {
-			# done each 0.3 sec.
-			#if ( cnt == 12 ) {
-				# done each 0.6 sec.
-				#cnt = 0;
-			#}
-		#}
-	} else {
-		# done each 0.1 sec, cnt odd.
-		check_pilot_callsign();
-		instruments_data_import();
-		instruments_data_export();
-		#if (( cnt == 5 ) or ( cnt == 11 )) {
-			# done each 0.3 sec.
-			#if ( cnt == 11 ) {
-				# done each 0.6 sec.
+    check_pilot_callsign();
+    instruments_data_import();
+    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Update4", 1));
 
-			#}
-		#}
-	}
-	settimer(main_loop, UPDATE_PERIOD);
-}
+    #		instruments_data_export();
+    backseat_update.restart(UPDATE_PERIOD);
+});
 
 
 # Init ####################
 var init = func {
 	print("Initializing f15 Back Seat Systems");
+    setprop("/sim/walker/outside",1);
     #
     #
     # Set the electrics for yasim (basic electrical model)
@@ -170,15 +179,12 @@ var init = func {
     setprop("engines/engine[1]/oil-pressure-psi", 28);
 
 	# launch
+    aircraft.ownship_pos = geo.Coord.new();
 	check_pilot_callsign();
 	radardist.init();
 	awg_9.init();
-	settimer(main_loop, 0.5);
+    backseat_update.restart(UPDATE_PERIOD);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
-
-
-
-
 

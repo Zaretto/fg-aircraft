@@ -541,6 +541,10 @@
                         <weapons-updated type="int">0</weapons-updated>
                         <tanks-ground-sound type="bool">0</tanks-ground-sound>
                     </armament>
+                    <electrics>
+                        <ara-63-channel type="int">2</ara-63-channel>
+                        <ara-63-power-off type="int">0</ara-63-power-off>
+                    </electrics>
                     <fuel>
                         <bingo type="int">4500</bingo>
                         <dump-switch type="bool">false</dump-switch>
@@ -779,6 +783,7 @@
                     <armament>
                         <aim9>
                             <count type="int">0</count>
+                            <guidance type="string">heat</guidance>
                             <nearest-target type="int">-1</nearest-target>
                             <sound-on-off type="bool">false</sound-on-off>
                             <sound-volume type="double">0.12</sound-volume>
@@ -786,24 +791,30 @@
                             <!-- AIM-9L specs -->
                             <max-detection-rng-nm type="int">10</max-detection-rng-nm>
                             <!--FIXME: up to 10-16 MN with best conditions-->
-                            <fov-deg type="int">25</fov-deg>
+                            <fov-deg type="int">27</fov-deg>
                             <!-- seeker optical FOV -->
                             <detection-fov-deg type="int">60</detection-fov-deg>
                             <!-- Search pattern diameter (rosette scan) -->
-                            <track-max-deg type="int">110</track-max-deg>
+                            <track-max-deg type="int">134</track-max-deg>
                             <!-- Seeker max total angular rotation -->
-                            <max-g type="int">21</max-g>
+                            <max-g type="int">32</max-g>
                             <!-- In turn -->
-                            <thrust-lbs type="double">230</thrust-lbs>
-                            <!-- guess -->
-                            <thrust-duration-sec type="int">30</thrust-duration-sec>
+                            <thrust-lbs-stage-1 type="double">3821.75</thrust-lbs-stage-1><!-- guess -->
+                            <thrust-lbs-stage-2 type="double">0.0</thrust-lbs-stage-2>    <!-- authentic -->
+                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
+                            <stage-2-duration-sec type="double">1.0</stage-2-duration-sec><!-- Aim-9L -->
+                            <self-destruct-time-sec type="double">43</self-destruct-time-sec><!-- guess -->
                             <!-- Mk.36 Mod.7,8 -->
                             <weight-launch-lbs>191</weight-launch-lbs>
                             <weight-warhead-lbs>20.8</weight-warhead-lbs>
-                            <drag-coeff type="double">0.05</drag-coeff>
+                            <drag-coeff type="double">0.5</drag-coeff>
                             <!-- guess -->
-                            <drag-area type="double">0.043</drag-area>
+                            <drag-area type="double">0.143</drag-area>
                             <!-- sq ft -->
+                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
+                            <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                            <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                            <arming-time-sec type="double">1.4</arming-time-sec>
                         </aim9>
                         <aim54>
                             <!--Based on values from Fabien's loading_missiles:
@@ -1091,6 +1102,7 @@
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
+                <string n="13" type="string"></string>
                 <!-- instruments -->
                 <!-- <string n="2" type="string">50</string>      free -->
             </generic>
@@ -2132,11 +2144,16 @@
             <file>Aircraft/f-14b/Nasal/chronograph.nas</file>
         </f14_chronograph>
         <f14_instruments>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/f-14b/Nasal/instruments.nas</file>
          </f14_instruments>
         <f14_afcs>
             <file>Aircraft/f-14b/Nasal/afcs.nas</file>
         </f14_afcs>
+        <fox2>
+            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
+            <file>Aircraft/f-14b/Nasal/damage.nas</file>
+        </fox2>
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>
