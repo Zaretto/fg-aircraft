@@ -29,8 +29,11 @@ var warhead_lbs = {
     "RB-04E":              661.00,
     "RB-05A":              353.00,
     "RB-75":               126.00,
-    "M90":                 500.00,#cluster bomb, is high so you get hit even from long distance hits. Will fix later.
-};
+    "M90":                 500.00,
+    "M71":                 200.00,
+    "MK-82":               192.00,
+    "LAU-68":               10.00,
+  };
 
 var incoming_listener = func {
   var history = getprop("/sim/multiplay/chat-history");
@@ -125,6 +128,16 @@ var incoming_listener = func {
             #print(type~"|");
             if(distance != nil) {
               var dist = distance;
+
+              if (type == "M90") {
+                var prob = rand()*0.5;
+                var failed = fail_systems(prob);
+                var percent = 100 * prob;
+                printf("Took %.1f%% damage from %s clusterbombs at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+                nearby_explosion();
+                return;
+              }
+
               distance = clamp(distance-3, 0, 1000000);
               var maxDist = 0;
 
@@ -149,7 +162,7 @@ var incoming_listener = func {
               nearby_explosion();
             }
           } 
-        } elsif (last_vector[1] == " M70 rocket hit" or last_vector[1] == " M55 cannon shell hit" or last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit") {
+        } elsif (last_vector[1] == " M70 rocket hit" or last_vector[1] == " M55 cannon shell hit" or last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit" or last_vector[1] == " GAU-8/A hit") {
           # cannon hitting someone
           #print("cannon");
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
@@ -157,7 +170,7 @@ var incoming_listener = func {
             #print("hitting me");
 
             var probability = 0.20; # take 20% damage from each hit
-            if (last_vector[1] == " M70 rocket hit" or last_vector[1] == " Gun Splash On ") {
+            if (last_vector[1] == " M70 rocket hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " GAU-8/A hit") {
               probability = 0.30;
             }
             var failed = fail_systems(probability);
