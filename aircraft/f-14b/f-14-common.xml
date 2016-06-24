@@ -378,6 +378,10 @@
                 <name>Q</name>
                 <desc>Reset view</desc>
             </key>
+            <key>
+                <name>S</name>
+                <desc>Toggle smoke</desc>
+            </key>
             <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
             <line>__________________________________________________</line>
             <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
@@ -613,6 +617,7 @@
                     </VDI>
                 </controls>
                 <fx>
+                    <smoke type="int">0</smoke>
                     <burner type="int">0</burner>
                     <heat-blur-on type="bool">false</heat-blur-on>
                 </fx>
@@ -998,6 +1003,8 @@
                 <int n="8" type="int">0</int>
                 <!--afterburner right-->
                 <int n="9" type="int">0</int>
+                <!--smoke-->
+                <int n="10" alias="/sim/model/f-14b/fx/smoke"/>
                 <!-- external weapons layout and pylons details -->
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
@@ -1749,6 +1756,15 @@
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.toggle_radar_standby();</script>
+                </binding>
+            </key>
+
+            <key n="83">
+                <name>S</name>
+                <desc>smoke</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
                 </binding>
             </key>
 
