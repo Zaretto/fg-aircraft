@@ -33,7 +33,7 @@ var invert = func (acc) {
 
 var blackout_onset      =    5;
 var blackout_fast       =    8;
-var redout_onset        = -0.5;
+var redout_onset        =-1.25;
 var redout_fast         =   -3;
 
 var blackout_onset_time =  300;
