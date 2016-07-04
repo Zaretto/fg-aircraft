@@ -1181,7 +1181,7 @@ print("Model ",missile_model);
 
 	sendMessage: func (str) {
 		if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-			setprop("/sim/multiplay/chat", defeatSpamFilter(str));
+			defeatSpamFilter(str);
 		} else {
 			setprop("/sim/messages/atc", str);
 		}
@@ -1409,6 +1409,7 @@ SW_reticle_Blinker = aircraft.light.new("sim/model/f15/lighting/hud-sw-reticle-s
 setprop("sim/model/f15/lighting/hud-sw-reticle-switch/enabled", 1);
 
 var spams = 0;
+var spamList = [];
 
 var defeatSpamFilter = func (str) {
   spams += 1;
@@ -1419,5 +1420,19 @@ var defeatSpamFilter = func (str) {
   for (var i = 1; i <= spams; i+=1) {
     str = str~".";
   }
-  return str;
+  var newList = [str];
+  for (var i = 0; i < size(spamList); i += 1) {
+    append(newList, spamList[i]);
+  }
+  spamList = newList;  
 }
+
+var spamLoop = func {
+  var spam = pop(spamList);
+  if (spam != nil) {
+    setprop("/sim/multiplay/chat", spam);
+  }
+  settimer(spamLoop, 1.20);
+}
+
+spamLoop();

@@ -174,7 +174,7 @@ var release_aim9 = func() {
 		if ( Current_aim9.status == 1 ) {
 			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
 			if (getprop("payload/armament/msg")) {
-				setprop("/sim/multiplay/chat", armament.defeatSpamFilter(phrase));
+				armament.defeatSpamFilter(phrase);
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
@@ -390,7 +390,7 @@ var impact_listener = func {
           last_impact = getprop("sim/time/elapsed-sec");
           var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.nearest_u.Callsign.getValue();
           if (getprop("payload/armament/msg")) {
-            setprop("/sim/multiplay/chat", armament.defeatSpamFilter(phrase));
+            armament.defeatSpamFilter(phrase);
                   #hit_count = hit_count + 1;
           } else {
             setprop("/sim/messages/atc", phrase);

@@ -1320,7 +1320,7 @@ var AIM = {
 
 	sendMessage: func (str) {
 		if (getprop("payload/armament/msg")) {
-			setprop("/sim/multiplay/chat", armament.defeatSpamFilter(str));
+			armament.defeatSpamFilter(str);
 		} else {
 			setprop("/sim/messages/atc", str);
 		}
