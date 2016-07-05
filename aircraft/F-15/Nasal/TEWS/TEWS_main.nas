@@ -136,7 +136,7 @@ return;
         var factor = 180 - tgt_heading_ideal;
         var tgt_heading = geo.normdeg(tgt_heading + factor);
         var callsign = "XX";
-        if (u.get_range() < radar_range and tgt_heading > 150 and tgt_heading < 210)
+        if (u.get_range() < radar_range and tgt_heading > 120 and tgt_heading < 240)
         {
             if (u.Callsign != nil)
                 callsign = u.Callsign.getValue();
