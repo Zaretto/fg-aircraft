@@ -482,6 +482,8 @@ if(size(sorted_dist)>0)
     }
 }
 
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "op"~"r"~"f");
+
 var containsV = func (vector, content) {
     if (content == nil) {
         return 0;
@@ -592,7 +594,8 @@ var isNotBehindTerrain = func(node) {
                 
                 if(AprimeTerrainAlt > Aprime.alt())
                 {
-                    isVisible = 0;
+                    # This will prevent the rest of the loop to run if a masking high point is found:
+                    return 0;
                 }
             }
         }

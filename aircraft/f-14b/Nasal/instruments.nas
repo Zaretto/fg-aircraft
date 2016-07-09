@@ -667,7 +667,7 @@ var common_carrier_init = func {
 
             foreach( var c; raw_list )
             {
-                if (!c.getNode("valid", 1).getValue()) {
+                if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
                     continue;
                 }
                 if(c.getName() == "carrier")

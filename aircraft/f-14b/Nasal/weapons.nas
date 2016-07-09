@@ -157,7 +157,7 @@ var update_sw_ready = func() {
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
 			var pylon = aim9_seq[sw_count - 1];
 			#print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
-			Current_aim9 = fox2.AIM9.new(pylon.index);
+			Current_aim9 = armament.AIM.new(pylon.index, "AIM-9", "Sidewinder");
 		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	
@@ -173,8 +173,8 @@ var release_aim9 = func() {
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
 			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
-			if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", fox2.defeatSpamFilter(phrase));
+			if (getprop("payload/armament/msg")) {
+				setprop("/sim/multiplay/chat", armament.defeatSpamFilter(phrase));
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
@@ -361,5 +361,46 @@ var station_selector_cycle = func() {
 	armament_update();
 }
 
+  ############ Cannon impact messages #####################
 
+var last_impact = 0;
+
+var hit_count = 0;
+
+var impact_listener = func {
+  if (awg_9.nearest_u != nil and (getprop("sim/time/elapsed-sec")-last_impact) > 1) {
+    var ballistic_name = props.globals.getNode("/ai/models/model-impact3",1).getValue();
+    var ballistic = props.globals.getNode(ballistic_name, 0);
+    if (ballistic != nil) {
+      var typeNode = ballistic.getNode("impact/type");
+      if (typeNode != nil and typeNode.getValue() != "terrain") {
+        var lat = ballistic.getNode("impact/latitude-deg").getValue();
+        var lon = ballistic.getNode("impact/longitude-deg").getValue();
+        var impactPos = geo.Coord.new().set_latlon(lat, lon);
+
+        #var track = awg_9.nearest_u.propNode;
+
+        #var x = track.getNode("position/global-x").getValue();
+        #var y = track.getNode("position/global-y").getValue();
+        #var z = track.getNode("position/global-z").getValue();
+        var selectionPos = awg_9.nearest_u.get_Coord();
+
+        var distance = impactPos.distance_to(selectionPos);
+        if (distance < 50) {
+          last_impact = getprop("sim/time/elapsed-sec");
+          var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.nearest_u.Callsign.getValue();
+          if (getprop("payload/armament/msg")) {
+            setprop("/sim/multiplay/chat", armament.defeatSpamFilter(phrase));
+                  #hit_count = hit_count + 1;
+          } else {
+            setprop("/sim/messages/atc", phrase);
+          }
+        }
+      }
+    }
+  }
+}
+
+# setup impact listener
+setlistener("/ai/models/model-impact3", impact_listener, 0, 0);
 
