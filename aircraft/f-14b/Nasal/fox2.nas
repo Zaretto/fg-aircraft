@@ -1150,7 +1150,7 @@ var AIM = {
 			# augmented proportional navigation for heading #
 			#################################################
 
-			var horz_closing_rate_fps = me.clamp(((me.dist_last - me.dist_curr)*M2FT)/me.last_dt, 1, 1000000);#clamped due to cruise missiles that can fly slower than target.
+			var horz_closing_rate_fps = me.clamp(((me.dist_last - me.dist_curr)*M2FT)/me.dt, 1, 1000000);#clamped due to cruise missiles that can fly slower than target.
 			#printf("Horz closing rate: %5d", horz_closing_rate_fps);
 			var proportionality_constant = 3;
 
@@ -1166,6 +1166,10 @@ var AIM = {
 
 			# calculate target acc as normal to LOS line:
 			var t_heading        = me.Tgt.get_heading();
+			if (me.last_t_coord.direct_distance_to(me.t_coord) != 0) {
+                # taking sideslip and AoA into consideration:
+                t_heading = me.last_t_coord.course_to(me.t_coord);
+            }
 			var t_pitch          = me.Tgt.get_Pitch();
 			var t_speed          = me.Tgt.get_Speed()*KT2FPS;#true airspeed
 			var t_horz_speed     = math.abs(math.cos(t_pitch*D2R)*t_speed);
@@ -1195,7 +1199,7 @@ var AIM = {
 			if (me.cruise_or_loft == FALSE) {# and me.last_cruise_or_loft == FALSE
 				# augmented proportional navigation for elevation #
 				###################################################
-				var vert_closing_rate_fps = me.clamp(((me.dist_direct_last - me.dist_curr_direct)*M2FT)/me.last_dt,1,1000000);
+				var vert_closing_rate_fps = me.clamp(((me.dist_direct_last - me.dist_curr_direct)*M2FT)/me.dt,1,1000000);
 				var line_of_sight_rate_up_rps = (D2R*(me.t_elev_deg-me.last_t_elev_deg))/me.dt;
 
 				# calculate target acc as normal to LOS line: (up acc is positive)
