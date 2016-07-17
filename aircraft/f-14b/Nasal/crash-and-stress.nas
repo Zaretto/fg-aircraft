@@ -564,6 +564,6 @@ var crash_start = func {
 var lsnr = setlistener("sim/signals/fdm-initialized", crash_start);
 
 # test:
-var repair = func {
+var repairMe = func {
 	crashCode.repair();
 };

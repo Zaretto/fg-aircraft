@@ -34,6 +34,7 @@ var fixAirframe = func {
 	FailureAileron = 0.0;
 	setprop ("sim/model/f15/wings/left-wing-torn", LeftWingTorn);
 	setprop ("sim/model/f15/wings/right-wing-torn", RightWingTorn);
+	repairMe();
 }
 
 var computeWingBend = func {
