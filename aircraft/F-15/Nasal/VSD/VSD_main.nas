@@ -68,7 +68,7 @@ morhcue.setVisible(0);
 
 #        var tgt = VSDsvg.getElementById("target_friendly_"~target_idx);
 #        var tgt = VSDsvg.getElementById("target_friendly_0");
-var max_symbols = 10;
+var max_symbols = 21;#Leto: remember when this is changed, also change the number of symbols in the VSD.svg
 var tgt_symbols =  setsize([], max_symbols);
 for (var i = 0; i < max_symbols; i += 1)
 {
@@ -133,44 +133,52 @@ var w1 = "     VS BST   MEM  ";
     var w3_7 = sprintf("T %d",getprop("fdm/jsbsim/velocities/vc-kts"));
     var w2 = "";
     var designated = 0;
+    var active_found = 0;
     foreach( u; awg_9.tgts_list ) 
     {
-        var callsign = "XX";
-        if (u.Callsign != nil)
-            callsign = u.Callsign.getValue();
-        var model = "XX";
-        if (u.ModelType != "")
-            model = u.ModelType;
-        if (target_idx < max_symbols)
-        {
-            tgt = tgt_symbols[target_idx];
-            if (tgt != nil)
+        if (u.get_display() == 1) {
+            var callsign = "XX";
+            if (u.Callsign != nil)
+                callsign = u.Callsign.getValue();
+            var model = "XX";
+            if (u.ModelType != "")
+                model = u.ModelType;
+            if (target_idx < max_symbols)
             {
-#                    if (u.airbone and !designated)
-#                    if (target_idx == 0)
-#                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
-                if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
-#if (u == awg_9.active_u)
+                tgt = tgt_symbols[target_idx];
+                if (tgt != nil)
                 {
-                    designated = 1;
-                    tgt.setVisible(0);
-                    tgt = tgt_symbols[0];
-#                    w2 = sprintf("%-4d", u.get_closure_rate());
-#                    w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
-#                    var aspect = u.get_reciprocal_bearing()/10;
-#                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
+    #                    if (u.airbone and !designated)
+    #                    if (target_idx == 0)
+    #                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                    if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
+    #if (u == awg_9.active_u)
+                    {
+                        designated = 1;
+                        active_found = 1;
+                        tgt.setVisible(0);
+                        tgt = tgt_symbols[0];
+                        tgt.setVisible(1);
+    #                    w2 = sprintf("%-4d", u.get_closure_rate());
+    #                    w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
+    #                    var aspect = u.get_reciprocal_bearing()/10;
+    #                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
+                    }
+                    
+                    var xc = u.get_deviation(heading);
+                    var yc = -u.get_total_elevation(pitch);
+                    #tgt.setVisible(1);
+                    tgt.setTranslation (xc, yc);
+                    tgt.setVisible(1);
+                    tgt.update();
+    #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
+    #tgt.setRotation (roll_rad);
                 }
-                tgt.setVisible(u.get_display());
-                var xc = u.get_deviation(heading);
-                var yc = -u.get_total_elevation(pitch);
-                tgt.setVisible(1);
-                tgt.setTranslation (xc, yc);
-#tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
-#tgt.setRotation (roll_rad);
             }
+            if (!designated)
+                target_idx = target_idx+1;
+            designated = 0;
         }
-        if (!designated)
-            target_idx = target_idx+1;
     }
     if (awg_9.active_u != nil)
     {
@@ -200,5 +208,8 @@ var w1 = "     VS BST   MEM  ";
         {
             tgt.setVisible(0);
         }
+    }
+    if (active_found == 0) {
+        tgt_symbols[0].setVisible(0);
     }
 }
