@@ -286,15 +286,17 @@ active_u = nil;
 
 		if ( u_fading < 0 ) { u_fading = 0 }
 
-		if (( swp_dir and swp_deg_last < u.deviation and u.deviation <= swp_deg )
-			or ( ! swp_dir and swp_deg <= u.deviation and u.deviation < swp_deg_last ))
+		if (u.get_display() == 1)#( swp_dir and swp_deg_last < u.deviation and u.deviation <= swp_deg )
+			#or ( ! swp_dir and swp_deg <= u.deviation and u.deviation < swp_deg_last ))
         {
 			u.get_bearing();
 			u.get_heading();
 			var horizon = u.get_horizon( our_alt );
 			var u_rng = u.get_range();
 
-			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr))
+            #Leto: commented out for OPRF due to that list not being up to date, and plane has no doppler effect, so should see targets below horizon:
+			#if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr))  
+            if(1==1)
             {
 
 # Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
@@ -341,7 +343,8 @@ active_u = nil;
                     }
 				}
 			}
-			u.set_display(u_display);
+            # Leto: commented out since this is taken care if in previous loop
+			#u.set_display(u_display);
 		}
 		u.set_fading(u_fading);
         #
@@ -402,16 +405,37 @@ active_u = nil;
 #                    print("first in list");
                 break;
             }
-            prv = u;
+            if(u.get_display() == 1)
+            {
+                prv = u;
+            }
         }
         if (prv == nil)
         {
-            var idx = size(sorted_dist)-1;
-            if (idx > 0)
+            var passed = 0;
+            foreach (var u; sorted_dist) 
             {
-                prv = sorted_dist[idx];
-#                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+                if(passed == 1 and u.get_display() == 1)
+                {
+                    prv = u;
+                }
+    #            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+                if(u.Callsign.getValue() == active_u_callsign)
+                {
+    #                if (prv != nil)
+    #                    print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
+    #                else
+    #                    print("first in list");
+                    passed = 1;
+                }
+                
             }
+#            var idx = size(sorted_dist)-1;
+#            if (idx > 0)
+#            {
+#                prv = sorted_dist[idx];
+#                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+#            }
         }
 
         if (prv != nil)
@@ -437,15 +461,17 @@ active_u = nil;
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
+        var passed = 0;
         foreach (var u; sorted_dist) 
         {
 #            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(u.Callsign.getValue() == active_u_callsign)
             {
+                passed = 1;
 #                print("Skipping active target ",active_u_callsign);
                 continue;
 }
-            if(u.get_range() > dist)
+            if((passed == 1 or dist == 0) and u.get_display() == 1)
             {
                 nxt = u;
 #                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
@@ -454,8 +480,22 @@ active_u = nil;
         }
         if (nxt == nil)
         {
-if(size(sorted_dist)>0)
-            nxt = sorted_dist[0];
+            foreach (var u; sorted_dist) 
+            {
+    #            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+                if(u.Callsign.getValue() == active_u_callsign)
+                {
+    #                print("Skipping active target ",active_u_callsign);
+                    continue;
+                }
+                if(u.get_display() == 1)
+                {
+                    nxt = u;
+    #                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
+                    break;
+                }
+            }
+
         }
 
         if (nxt != nil)
