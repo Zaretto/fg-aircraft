@@ -136,7 +136,7 @@ return;
         var factor = 180 - tgt_heading_ideal;
         var tgt_heading = geo.normdeg(tgt_heading + factor);
         var callsign = "XX";
-        if (u.get_range() < radar_range and tgt_heading > 120 and tgt_heading < 240)
+        if (u.get_range() < radar_range and (u.get_display() == 1 or (tgt_heading > 120 and tgt_heading < 240)))
         {
             if (u.Callsign != nil)
                 callsign = u.Callsign.getValue();
@@ -157,7 +157,7 @@ return;
     #                    var bearing = u.get_deviation(heading);
                         var bearing = geo.normdeg(u.get_deviation(heading) + tews_alignment_offset);
 
-                        tgt.setVisible(u.get_display());
+                        tgt.setVisible(1);#u.get_display());#Leto: is is only display true when in radar field, so we ignore that.
                         tgt.setCallsign(callsign);
                         var r = (u.get_range()*scale) / radar_range;
                         var xc  = r * math.cos(bearing/57.29577950560105);
