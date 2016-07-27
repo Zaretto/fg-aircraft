@@ -239,7 +239,7 @@ var F15HUD = {
         me.window7.setText(hdp.window7);
 
 #        me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
-        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
+        me.window8.setText(sprintf("%0.1f %0.1f", hdp.Nz, getprop("fdm/jsbsim/systems/cadc/ows-maximum-g")));
 
 #heading tape
         if (hdp.heading < 180)
