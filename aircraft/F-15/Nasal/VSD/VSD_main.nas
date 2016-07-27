@@ -168,7 +168,7 @@ var w1 = "     VS BST   MEM  ";
                     var xc = u.get_deviation(heading);
                     var yc = -u.get_total_elevation(pitch);
                     #tgt.setVisible(1);
-                    tgt.setTranslation (xc*1.55, yc*1.55);#Leto: the factors is to let display correspond to 120 degrees wide.
+                    tgt.setTranslation (xc*1.55, yc*1.85);#Leto: the factors is to let display correspond to 120 degrees wide and height.
                     tgt.setVisible(1);
                     tgt.update();
     #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
