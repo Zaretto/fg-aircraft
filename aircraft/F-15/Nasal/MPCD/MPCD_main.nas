@@ -357,7 +357,7 @@ var MPCD_Sit =
                 'toggle_position':      { path: '/inputs/pos',         value: 0,     type: 'BOOL' },
                 'toggle_data':          { path: '/inputs/data',        value: 0,     type: 'BOOL' },
                 'toggle_terrain':       { path: '/inputs/terr',        value: 0,     type: 'BOOL' },
-                'toggle_traffic':       { path: '/inputs/tfc',         value: 1,     type: 'BOOL' },
+                'toggle_traffic':       { path: '/inputs/tfc',         value: 0,     type: 'BOOL' },
                 'toggle_centered':      { path: '/inputs/nd-centered', value: 1,     type: 'BOOL' },
                 'toggle_lh_vor_adf':    { path: '/inputs/lh-vor-adf',  value: 1,     type: 'INT' },
                 'toggle_rh_vor_adf':    { path: '/inputs/rh-vor-adf',  value: 1,     type: 'INT' },
@@ -388,7 +388,7 @@ var MPCD_Sit =
                 me.nd_initialised = 1;
     
                 me.NDCpt = me.ND.new("instrumentation/"~me.nd_ident, me.switches);
-    
+                
                 me.group = mpcd.svg.getElementById(me.nd_placeholder_ident);
                 me.group.setScale(0.39,0.45);
                 me.group.setTranslation(45,0);
@@ -396,6 +396,7 @@ var MPCD_Sit =
             }
             me.NDCpt.update();
         };
+
         # called when the page goes on display. This causes a "wobble" the first time - so it could
         # be pre-initialized - however it seems to depend on other things so this can't be done directly
         # within the constructor.

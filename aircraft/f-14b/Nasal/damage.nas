@@ -432,7 +432,7 @@ var not = func {
         if (substr(bits,5,1) == "1") {
           msg = msg~"Used time"~"warp..";
         }
-        if (substr(bits,6,1) == "1") {
+        if (getprop("payload/armament/msg") == FALSE and substr(bits,6,1) == "1") {
           msg = msg~"Have dam"~"age off..";
         }
         if (substr(bits,7,1) == "1") {
