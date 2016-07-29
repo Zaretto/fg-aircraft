@@ -79,14 +79,14 @@ var F15HUD = {
         obj.target_locked = obj.get_element("target_locked");
         obj.target_locked.setVisible(0);
 
-        obj.window1 = obj.get_text("window1", "condensed.txf",9,1.4);
-        obj.window2 = obj.get_text("window2", "condensed.txf",9,1.4);
-        obj.window3 = obj.get_text("window3", "condensed.txf",9,1.4);
-        obj.window4 = obj.get_text("window4", "condensed.txf",9,1.4);
-        obj.window5 = obj.get_text("window5", "condensed.txf",9,1.4);
-        obj.window6 = obj.get_text("window6", "condensed.txf",9,1.4);
-        obj.window7 = obj.get_text("window7", "condensed.txf",9,1.4);
-        obj.window8 = obj.get_text("window8", "condensed.txf",9,1.4);
+        obj.window1 = obj.get_text("window1", "condensed.txf",11,1.4);
+        obj.window2 = obj.get_text("window2", "condensed.txf",11,1.4);
+        obj.window3 = obj.get_text("window3", "condensed.txf",11,1.4);
+        obj.window4 = obj.get_text("window4", "condensed.txf",11,1.4);
+        obj.window5 = obj.get_text("window5", "condensed.txf",11,1.4);
+        obj.window6 = obj.get_text("window6", "condensed.txf",11,1.4);
+        obj.window7 = obj.get_text("window7", "condensed.txf",11,1.4);
+        obj.window8 = obj.get_text("window8", "condensed.txf",11,1.4);
 
 
 # A 2D 3x2 matrix with six parameters a, b, c, d, e and f is equivalent to the matrix:
@@ -239,7 +239,7 @@ var F15HUD = {
         me.window7.setText(hdp.window7);
 
 #        me.window8.setText(sprintf("%02d NOWS", hdp.Nz*10));
-        me.window8.setText(sprintf("%0.1f %0.1f", hdp.Nz, getprop("fdm/jsbsim/systems/cadc/ows-maximum-g")));
+        me.window8.setText(sprintf("%02d %02d", hdp.Nz*10, getprop("fdm/jsbsim/systems/cadc/ows-maximum-g")*10));
 
 #heading tape
         if (hdp.heading < 180)
