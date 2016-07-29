@@ -522,7 +522,7 @@ active_u = nil;
     }
 }
 
-setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "op"~"r"~"f");
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~""~"7");
 
 var containsV = func (vector, content) {
     if (content == nil) {
