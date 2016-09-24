@@ -12,12 +12,36 @@
     </gear>
     <fdm>
         <jsbsim>
+            <fcs>
+                <aileron-control  type="double">0</aileron-control>
+                <elevator-control type="double">0</elevator-control>
+                <left-aileron-normalization  type="double">0</left-aileron-normalization>
+            </fcs>
+            <gear>
+                <emergency-handle type="double">0</emergency-handle>
+                <emerg-pos type="double">0</emerg-pos>
+                <emerg-pos-dmd type="double">0</emerg-pos-dmd>
+                <unit n="1">
+                    <locked type="bool">false</locked>
+                </unit>
+                <unit n="2">
+                    <locked type="bool">false</locked>
+                </unit>
+            </gear>
+
             <metrics>
                 <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
-            <gear>
-                <emergency-handle type="double">0</emergency-handle>
-            </gear>
+
+            <propulsion>
+                <engine n="0">
+                    <augmentation-alight type="bool">false</augmentation-alight>
+                </engine>
+                <engine n="1">
+                    <augmentation-alight type="bool">false</augmentation-alight>
+                </engine>
+
+            </propulsion>
             <systems>
                 <hydraulics>
                     <combined-system-psi type="int">2200</combined-system-psi>
@@ -32,7 +56,6 @@
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
                 </catapult>
-
             </systems>
         </jsbsim>
     </fdm>
@@ -1608,14 +1631,17 @@
             <tank n="5">
                 <name>External Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="6">
                 <name>External Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="7">
                 <name>Centre External</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="8">
                 <name>L feed line</name>

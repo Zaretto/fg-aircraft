@@ -1188,6 +1188,39 @@
                 </limits>
             </config>
         </view>
+        <view n="109">
+            <name>Wingman View</name>
+            <type>lookat</type>
+            <internal archive="y">true</internal>
+            <config>
+                <from-model type="bool">false</from-model>
+                <from-model-idx type="int">0</from-model-idx>
+                <eye-lat-deg-path>/position/latitude-deg</eye-lat-deg-path>
+                <eye-lon-deg-path>/position/longitude-deg</eye-lon-deg-path>
+                <eye-alt-ft-path>/position/altitude-ft</eye-alt-ft-path>
+                <eye-heading-deg-path>/orientation/heading-deg</eye-heading-deg-path>
+                <eye-pitch-deg-path>/orientation/pitch-deg</eye-pitch-deg-path>
+                <eye-roll-deg-path>/orientation/roll-deg</eye-roll-deg-path>
+                <at-model type="bool">true</at-model>
+                <at-model-idx type="int">0</at-model-idx>
+                <at-model-roll-damping type="double">2.0</at-model-roll-damping>
+                <at-model-pitch-damping type="double">2.0</at-model-pitch-damping>
+                <at-model-heading-damping type="double">2.0</at-model-heading-damping>
+                <target-x-offset-m type="double">0</target-x-offset-m>
+                <target-y-offset-m type="double">0</target-y-offset-m>
+                <target-z-offset-m type="double">0</target-z-offset-m>
+                <default-field-of-view-deg type="double">55.0</default-field-of-view-deg>
+                <pitch-offset-deg type="double">0</pitch-offset-deg>
+                <heading-offset-deg type="double">0</heading-offset-deg>
+                <roll-offset-deg type="double">0</roll-offset-deg>
+                <x-offset-m type="double">15</x-offset-m>
+                <!-- left(+)/right(-) -->
+                <y-offset-m type="double">0</y-offset-m>
+                <!-- up(+)/down(-) -->
+                <z-offset-m type="double">-13</z-offset-m>
+                <!-- fore(+)/aft(-) -->
+            </config>
+        </view>
 
         <weight n="0">
             <name>left wing pylon</name>
@@ -1235,7 +1268,35 @@
                 <hook>
                     <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
                 </hook>
+                <hydraulics>
+                    <flight-system-psi type="float">0</flight-system-psi>
+                    <combined-system-psi type="float">0</combined-system-psi>
+                </hydraulics>
+                <electrics>
+                    <ac-right-main-bus type="float">0</ac-right-main-bus>
+                </electrics>
+                <afcs>
+                    <altitude-hold-alt-diff-feet type="float">0</altitude-hold-alt-diff-feet>
+                </afcs>
+                <catapult>
+                    <cat-pos-norm type="float">0</cat-pos-norm>
+                </catapult>
             </systems>
+            <fcs>
+                <wing-sweep-cmd type="float">0</wing-sweep-cmd>
+                <wing-sweep-cadc-dmd type="float">0</wing-sweep-cadc-dmd>
+                <aux-flap-pos-deg type="float">0</aux-flap-pos-deg>
+                <roll-trim-actuator type="float">0</roll-trim-actuator>
+            </fcs>
+
+            <propulsion>
+                <engine n="0">
+                    <augmentation-alight type="float">0</augmentation-alight>
+                </engine>
+                <engine n="1">
+                    <augmentation-alight type="float">0</augmentation-alight>
+                </engine>
+            </propulsion>
         </jsbsim>
     </fdm>
 
