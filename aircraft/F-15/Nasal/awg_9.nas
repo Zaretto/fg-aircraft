@@ -537,7 +537,7 @@ var containsV = func (vector, content) {
 }
 
 #
-# The following 1 methods is from Mirage 2000-5
+# The following 1 methods is from Mirage 2000-5 (modified by Pinto)
 #
 var isNotBehindTerrain = func(node) {
     var SelectCoord = geo.Coord.new();
@@ -569,75 +569,54 @@ var isNotBehindTerrain = func(node) {
         var d = SelectCoord.x();
         var e = SelectCoord.y();
         var f = SelectCoord.z();
-        var x = 0;
-        var y = 0;
-        var z = 0;
-        var RecalculatedL = 0;
         var difa = d - a;
         var difb = e - b;
         var difc = f - c;
+    
+    #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
+    #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
+    
         # direct Distance in meters
-        var myDistance = SelectCoord.direct_distance_to(MyCoord);
+        var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
+        #print("myDistance: " ~ myDistance);
         var Aprime = geo.Coord.new();
         
         # Here is to limit FPS drop on very long distance
-        var L = 1000;
+        var L = 500;
         if(myDistance > 50000)
         {
             L = myDistance / 15;
         }
-        var step = L;
         var maxLoops = int(myDistance / L);
         
         isVisible = 1;
         # This loop will make travel a point between us and the target and check if there is terrain
-        for(var i = 0 ; i < maxLoops ; i += 1)
+        for(var i = 1 ; i <= maxLoops ; i += 1)
         {
-            L = i * step;
-            var K = (L * L) / (1 + (-1 / difa) * (-1 / difa) * (difb * difb + difc * difc));
-            var DELTA = (-2 * a) * (-2 * a) - 4 * (a * a - K);
-            
-            if(DELTA >= 0)
-            {
-                # So 2 solutions or 0 (1 if DELTA = 0 but that 's just 2 solution in 1)
-                var x1 = (-(-2 * a) + math.sqrt(DELTA)) / 2;
-                var x2 = (-(-2 * a) - math.sqrt(DELTA)) / 2;
-                # So 2 y points here
-                var y1 = b + (x1 - a) * (difb) / (difa);
-                var y2 = b + (x2 - a) * (difb) / (difa);
-                # So 2 z points here
-                var z1 = c + (x1 - a) * (difc) / (difa);
-                var z2 = c + (x2 - a) * (difc) / (difa);
-                # Creation Of 2 points
-                var Aprime1  = geo.Coord.new();
-                Aprime1.set_xyz(x1, y1, z1);
-                
-                var Aprime2  = geo.Coord.new();
-                Aprime2.set_xyz(x2, y2, z2);
-                
-                # Here is where we choose the good
-                if(math.round((myDistance - L), 2) == math.round(Aprime1.direct_distance_to(SelectCoord), 2))
-                {
-                    Aprime.set_xyz(x1, y1, z1);
-                }
-                else
-                {
-                    Aprime.set_xyz(x2, y2, z2);
-                }
-                var AprimeLat = Aprime.lat();
-                var Aprimelon = Aprime.lon();
-                var AprimeTerrainAlt = geo.elevation(AprimeLat, Aprimelon);
-                if(AprimeTerrainAlt == nil)
-                {
-                    AprimeTerrainAlt = 0;
-                }
-                
-                if(AprimeTerrainAlt > Aprime.alt())
-                {
-                    # This will prevent the rest of the loop to run if a masking high point is found:
-                    return 0;
-                }
-            }
+          #calculate intermediate step
+          #basically dividing the line into maxLoops number of steps, and checking at each step
+          #to ascii-art explain it:
+          #  |us|----------|step 1|-----------|step 2|--------|step 3|----------|them|
+          #there will be as many steps as there is i
+          #every step will be equidistant
+          
+          #also, if i == 0 then the first step will be our plane
+          
+          var x = ((difa/(maxLoops+1))*i)+a;
+          var y = ((difb/(maxLoops+1))*i)+b;
+          var z = ((difc/(maxLoops+1))*i)+c;
+          #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
+          Aprime.set_xyz(x,y,z);
+          var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
+          if(AprimeTerrainAlt == nil)
+          {
+            AprimeTerrainAlt = 0;
+          }
+          
+          if(AprimeTerrainAlt > Aprime.alt())
+          {
+            return 0;
+          }
         }
     }
     else
