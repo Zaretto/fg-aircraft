@@ -131,12 +131,8 @@ return;
 
     foreach( u; awg_9.tgts_list ) 
     {
-        var tgt_heading = u.get_heading();
-        var tgt_heading_ideal = u.get_reciprocal_bearing();
-        var factor = 180 - tgt_heading_ideal;
-        var tgt_heading = geo.normdeg(tgt_heading + factor);
         var callsign = "XX";
-        if (u.get_range() < radar_range and (u.get_display() == 1 or (tgt_heading > 120 and tgt_heading < 240)))
+        if (u.get_range() < radar_range)
         {
             if (u.Callsign != nil)
                 callsign = u.Callsign.getValue();
