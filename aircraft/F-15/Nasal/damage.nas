@@ -4,20 +4,27 @@ var TRUE  = 1;
 var FALSE = 0;
 
 var warhead_lbs = {
-    "aim-120":              44.0,
-    "AIM120":               44.0,
-    "RB-99":                44.0,
-    "aim-7":                88.0,
-    "RB-71":                88.0,
-    "aim-9":                20.8,
-    "RB-24J":               20.8,
-    "RB-74":                20.8,
-    "R74":                  16.0,
-    "MATRA-R530":           55.0,
-    "Meteor":               55.0,
-    "AIM-54":               135.0,
-    "Matra R550 Magic 2":   27.0,
-    "Matra MICA":           30.0,
+    "aim-120":              44.00,
+    "AIM120":               44.00,
+    "RB-99":                44.00,
+    "aim-7":                88.00,
+    "RB-71":                88.00,
+    "aim-9":                20.80,
+    "RB-24J":               20.80,
+    "RB-74":                20.80,
+    "R74":                  16.00,
+    "MATRA-R530":           55.00,
+    "Meteor":               55.00,
+    "AIM-54":              135.00,
+    "Matra R550 Magic 2":   27.00,
+    "Matra MICA":           30.00,
+    "RB-15F":              440.92,
+    "SCALP":               992.00,
+    "KN-06":               315.00,
+    "GBU12":               190.00,
+    "GBU16":               450.00,
+    "Sea Eagle":           505.00,
+    "AGM65":               200.00,
 };
 
 var incoming_listener = func {
@@ -36,7 +43,10 @@ var incoming_listener = func {
         # a m2000 is firing at us
         m2000 = TRUE;
       }
-      if (last_vector[1] == " FOX2 at" or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at" or last_vector[1] == " aim120 at" or last_vector[1] == " RB-24J fired at" or last_vector[1] == " RB-74 fired at" or last_vector[1] == " RB-71 fired at" or last_vector[1] == " RB-99 fired at" or m2000 == TRUE) {
+      if (last_vector[1] == " FOX2 at" or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at"
+          or last_vector[1] == " aim120 at" or last_vector[1] == " RB-24J fired at" or last_vector[1] == " RB-74 fired at"
+          or last_vector[1] == " RB-71 fired at" or last_vector[1] == " RB-15F fired at"
+          or last_vector[1] == " RB-99 fired at" or last_vector[1] == " KN-06 fired at" or m2000 == TRUE) {
         # air2air being fired
         if (size(last_vector) > 2 or m2000 == TRUE) {
           #print("Missile launch detected at"~last_vector[2]~" from "~author);
@@ -91,7 +101,7 @@ var incoming_listener = func {
             }
           }
         }
-      } elsif (1 == 1) { # mirage: getprop("/controls/armament/mp-messaging")
+      } elsif (getprop("sim/model/f15/systems/armament/mp-messaging") == TRUE) { # mirage: getprop("/controls/armament/mp-messaging")
         # latest version of failure manager and taking damage enabled
         #print("damage enabled");
         var last1 = split(" ", last_vector[1]);
@@ -100,7 +110,7 @@ var incoming_listener = func {
           if (size(last_vector) > 3 and last_vector[3] == " "~callsign) {
             #print("that someone is me!");
             var type = last1[1];
-            if (type == "Matra") {
+            if (type == "Matra" or type == "Sea") {
               for (var i = 2; i < size(last1)-1; i += 1) {
                 type = type~" "~last1[i];
               }
@@ -109,6 +119,8 @@ var incoming_listener = func {
             var distance = num(number[1]);
             #print(type~"|");
             if(distance != nil) {
+              var dist = distance;
+              distance = clamp(distance-3, 0, 1000000);
               var maxDist = 0;
 
               if (contains(warhead_lbs, type)) {
@@ -128,10 +140,11 @@ var incoming_listener = func {
 
               var failed = fail_systems(probability);
               var percent = 100 * probability;
-              print("Took "~percent~"% damage from "~type~" missile at "~distance~" meters distance! "~failed~" systems was hit.");
+              printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+              nearby_explosion();
             }
           } 
-        } elsif (last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit") {
+        } elsif (last_vector[1] == " M70 rocket hit" or last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit") {
           # cannon hitting someone
           #print("cannon");
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
@@ -139,11 +152,12 @@ var incoming_listener = func {
             #print("hitting me");
 
             var probability = 0.20; # take 20% damage from each hit
-            if (last_vector[1] == " Gun Splash On ") {
+            if (last_vector[1] == " M70 rocket hit" or last_vector[1] == " Gun Splash On ") {
               probability = 0.30;
             }
             var failed = fail_systems(probability);
-            print("Took "~probability*100~"% damage from cannon! "~failed~" systems was hit.");
+            printf("Took %.1f%% damage from cannon! %s systems was hit.", probability*100, failed);
+            nearby_explosion();
           }
         }
       }
@@ -186,6 +200,20 @@ var getCallsign = func (callsign) {
   return node;
 }
 
+var nearby_explosion = func {
+  setprop("damage/sounds/nearby-explode-on", 0);
+  settimer(nearby_explosion_a, 0);
+}
+
+var nearby_explosion_a = func {
+  setprop("damage/sounds/nearby-explode-on", 1);
+  settimer(nearby_explosion_b, 0.5);
+}
+
+var nearby_explosion_b = func {
+  setprop("damage/sounds/nearby-explode-on", 0);
+}
+
 var processCallsigns = func () {
   callsign_struct = {};
   var players = props.globals.getNode("ai/models").getChildren();
@@ -223,7 +251,254 @@ var sendMis = func () {
   settimer(sendMis,0.05);
 }
 
+var logTime = func{
+  #log time and date for outputing ucsv files for converting into KML files for google earth.
+  if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
+    var date = getprop("sim/time/utc/year")~"/"~getprop("sim/time/utc/month")~"/"~getprop("sim/time/utc/day");
+    var time = getprop("sim/time/utc/hour")~":"~getprop("sim/time/utc/minute")~":"~getprop("sim/time/utc/second");
+
+    setprop("logging/date-log", date);
+    setprop("logging/time-log", time);
+  }
+}
 
 sendMis();
 
+var ct = func (type) {
+  if (type == "c-u") {
+    setprop("sim/ct/c-u", 1);
+  }
+  if (type == "rl" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+    setprop("sim/ct/rl", 1);
+  }
+  if (type == "rp" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+    setprop("sim/ct/rp", 1);
+  }
+  if (type == "a") {
+    setprop("sim/ct/a", 1);
+  }
+  if (type == "lst") {
+    setprop("sim/ct/list", 1);
+  }
+  if (type == "ifa" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+    setprop("sim/ct/ifa", 1);
+  }
+  if (type == "sf" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+    setprop("sim/ct/sf", 1);
+  }
+}
+
+var lf = -1;
+var ll = 0;
+
+var code_ct = func () {
+  var cu = getprop("sim/ct/c-u");
+  if (cu == nil or cu != 1) {
+    cu = 0;
+  }
+  var a = getprop("sim/ct/a");
+  if (a == nil or a != 1) {
+    a = 0;
+  }
+  var ff = getprop("sim/freeze/fuel");
+  if (ff == nil) {
+    ff = 0;
+  } elsif (ff == 1) {
+    setprop("sim/ct/ff", 1);
+  }
+  ff = getprop("sim/ct/ff");
+  if (ff == nil or ff != 1) {
+    ff = 0;
+  }
+  var cl =  getprop("payload/weight[0]/weight-lb")+getprop("payload/weight[1]/weight-lb")
+           +getprop("payload/weight[2]/weight-lb")+getprop("payload/weight[3]/weight-lb")
+           +getprop("payload/weight[4]/weight-lb")+getprop("payload/weight[5]/weight-lb")
+           +getprop("payload/weight[6]/weight-lb")+getprop("payload/weight[7]/weight-lb")
+           +getprop("payload/weight[8]/weight-lb")+getprop("payload/weight[9]/weight-lb")
+           +getprop("payload/weight[10]/weight-lb");
+  if (cl > (ll*1.05) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+    setprop("sim/ct/rl", 1);
+  }
+  ll = cl;
+  var rl = getprop("sim/ct/rl");
+  if (rl == nil or rl != 1) {
+    rl = 0;
+  }
+  var rp = getprop("sim/ct/rp");
+  if (rp == nil or rp != 1) {
+    rp = 0;
+  }
+  var cf =   getprop("/consumables/fuel/tank[0]/level-gal_us")
+            +getprop("/consumables/fuel/tank[1]/level-gal_us")
+            +getprop("/consumables/fuel/tank[2]/level-gal_us")
+            +getprop("/consumables/fuel/tank[3]/level-gal_us")
+            +getprop("/consumables/fuel/tank[4]/level-gal_us")
+            +getprop("/consumables/fuel/tank[5]/level-gal_us")
+            +getprop("/consumables/fuel/tank[6]/level-gal_us")
+            +getprop("/consumables/fuel/tank[7]/level-gal_us")
+            +getprop("/consumables/fuel/tank[8]/level-gal_us")
+            +getprop("/consumables/fuel/tank[9]/level-gal_us");
+  if (cf != nil and lf != -1 and cf > (lf*1.1) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE and getprop("/systems/refuel/contact") == FALSE) {
+    setprop("sim/ct/rf", 1);
+  }
+  var rf = getprop("sim/ct/rf");
+  if (rf == nil or rf != 1) {
+    rf = 0;
+  }
+  lf = cf == nil?0:cf;
+  var dm = !getprop("sim/model/f15/systems/armament/mp-messaging");
+  if (dm == nil or dm != 1) {
+    dm = 0;
+  }
+  var tm = 0;#getprop("sim/ja37/radar/look-through-terrain");
+  if (tm == nil or tm != 1) {
+    tm = 0;
+  }
+  var rd = 0;#!getprop("sim/ja37/radar/doppler-enabled");
+  if (rd == nil or rd != 1) {
+    rd = 0;
+  }  
+  var ml = getprop("sim/ct/list");
+  if (ml == nil or ml != 1) {
+    ml = 0;
+  }
+  var sf = getprop("sim/ct/sf");
+  if (sf == nil or sf != 1) {
+    sf = 0;
+  }
+  var ifa = getprop("sim/ct/ifa");
+  if (ifa == nil or ifa != 1) {
+    ifa = 0;
+  }
+  var final = "ct"~cu~ff~rl~rf~rp~a~dm~tm~rd~ml~sf~ifa;
+  setprop("sim/multiplay/generic/string[15]", final);
+  settimer(code_ct, 2);
+}
+
+var not = func {
+  if (getprop("sim/model/f15/systems/armament/mp-messaging") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
+    var ct = getprop("sim/multiplay/generic/string[15]") ;
+    var msg = "I might be chea"~"ting..";
+    if (ct != nil) {
+      msg = "I might be chea"~"ting.."~ct;
+      var spl = split("ct", ct);
+      if (size(spl) > 1) {
+        var bits = spl[1];
+        msg = "I ";
+        if (bits == "000000000000") {
+          settimer(not, 60);
+          return;
+        }
+        if (substr(bits,0,1) == "1") {
+          msg = msg~"Used CT"~"RL-U..";
+        }
+        if (substr(bits,1,1) == "1") {
+          msg = msg~"Use fuelf"~"reeze..";
+        }
+        if (substr(bits,2,1) == "1") {
+          msg = msg~"Relo"~"aded in air..";
+        }
+        if (substr(bits,3,1) == "1") {
+          msg = msg~"Refue"~"led in air..";
+        }
+        if (substr(bits,4,1) == "1") {
+          msg = msg~"Repa"~"ired not on ground..";
+        }
+        if (substr(bits,5,1) == "1") {
+          msg = msg~"Used time"~"warp..";
+        }
+        if (substr(bits,6,1) == "1") {
+          msg = msg~"Have dam"~"age off..";
+        }
+        if (substr(bits,7,1) == "1") {
+          msg = msg~"Have Ter"~"rain mask. off..";
+        }
+        if (substr(bits,8,1) == "1") {
+          msg = msg~"Have Dop"~"pler off..";
+        }
+        if (substr(bits,9,1) == "1") {
+          msg = msg~"Had mp-l"~"ist on..";
+        }
+        if (substr(bits,10,1) == "1") {
+          msg = msg~"Had s-fai"~"lures open..";
+        }
+        if (substr(bits,11,1) == "1") {
+          msg = msg~"Had i-fa"~"ilures open..";
+        }
+      }
+    }
+    setprop("/sim/multiplay/chat", msg);
+  }
+  settimer(not, 60);
+}
+
+var changeGuiLoad = func()
+{#return;
+    var searchname1 = "mp-list";
+    var searchname2 = "instrument-failures";
+    var searchname3 = "system-failures";
+    var state = 0;
+    
+    foreach(var menu ; props.globals.getNode("/sim/menubar/default").getChildren("menu")) {
+        foreach(var item ; menu.getChildren("item")) {
+            foreach(var name ; item.getChildren("name")) {
+                if(name.getValue() == searchname1) {
+                    #var e = item.getNode("enabled").getValue();
+                    #var path = item.getPath();
+                    #item.remove();
+                    #item = props.globals.getNode(path,1);
+                    #item.getNode("enabled",1).setBoolValue(FALSE);
+                    #item.getNode("binding").remove();
+                    #item.getNode("name",1).setValue(searchname1);
+                    item.getNode("binding/command").setValue("nasal");
+                    item.getNode("binding/script").setValue("aircraft.loadMPList()");
+                    #item.getNode("enabled",1).setBoolValue(TRUE);
+                }
+                if(name.getValue() == searchname2) {
+                    item.getNode("binding/command").setValue("nasal");
+                    item.getNode("binding/dialog-name").remove();
+                    item.getNode("binding/script",1).setValue("aircraft.loadIFail()");
+                }
+                if(name.getValue() == searchname3) {
+                    item.getNode("binding/command").setValue("nasal");
+                    item.getNode("binding/dialog-name").remove();
+                    item.getNode("binding/script",1).setValue("aircraft.loadSysFail()");
+                }
+            }
+        }
+    }
+    fgcommand("reinit", props.Node.new({"subsystem":"gui"}));
+}
+
+var loadMPList = func () {
+  ct("lst");multiplayer.dialog.show();
+}
+
+var loadSysFail = func () {
+  ct("sf");fgcommand("dialog-show", props.Node.new({"dialog-name":"system-failures"}));
+}
+
+var loadIFail = func () {
+  ct("ifa");fgcommand("dialog-show", props.Node.new({"dialog-name":"instrument-failures"}));
+}
+
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
+
+setprop("/sim/failure-manager/display-on-screen", FALSE);
+
+changeGuiLoad();
+settimer(code_ct, 5);
+settimer(not, 11);
+
+var re_init = func {
+  # repair the aircraft
+
+  var failure_modes = FailureMgr._failmgr.failure_modes;
+  var mode_list = keys(failure_modes);
+
+  foreach(var failure_mode_id; mode_list) {
+    FailureMgr.set_failure_level(failure_mode_id, 0);
+  }
+}
+
+setlistener("/sim/signals/reinit", re_init, 0, 0);

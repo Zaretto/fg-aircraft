@@ -147,6 +147,23 @@ var get_sel_missile_count = func()
         setprop(ac_sim_prop_root~"systems/armament/selected-missile-count",rv);
         return rv;
 }
+var update_sw_ready_orf = func() {
+	var sw_count = SwCount.getValue();
+	#print("SIDEWINDER: sw_count - 1 = ", sw_count - 1);
+	if (StickSelector.getValue() == 2 and ArmSwitch.getValue() == 2) {
+		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
+			var pylon = aim9_seq[sw_count - 1];
+			#print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
+			Current_aim9 = armament.AIM.new(pylon.index, "AIM-9", "Sidewinder");
+		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
+			Current_aim9.status = 0;	
+			Current_aim9.search();	
+		}
+	} elsif (Current_aim9 != nil) {
+		Current_aim9.status = -1;	
+		SwSoundVol.setValue(0);
+	}
+}
 var update_sw_ready = func()
 {
 	if (WeaponSelector.getValue() > 1 and ArmSwitch.getValue())
@@ -222,8 +239,8 @@ var release_aim9 = func() {
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
 			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
-			if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", fox2.defeatSpamFilter(phrase));
+			if (getprop("payload/armament/msg")) {
+				setprop("/sim/multiplay/chat", armament.defeatSpamFilter(phrase));
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}

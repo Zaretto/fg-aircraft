@@ -12,12 +12,36 @@
     </gear>
     <fdm>
         <jsbsim>
+            <fcs>
+                <aileron-control  type="double">0</aileron-control>
+                <elevator-control type="double">0</elevator-control>
+                <left-aileron-normalization  type="double">0</left-aileron-normalization>
+            </fcs>
+            <gear>
+                <emergency-handle type="double">0</emergency-handle>
+                <emerg-pos type="double">0</emerg-pos>
+                <emerg-pos-dmd type="double">0</emerg-pos-dmd>
+                <unit n="1">
+                    <locked type="bool">false</locked>
+                </unit>
+                <unit n="2">
+                    <locked type="bool">false</locked>
+                </unit>
+            </gear>
+
             <metrics>
                 <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
-            <gear>
-                <emergency-handle type="double">0</emergency-handle>
-            </gear>
+
+            <propulsion>
+                <engine n="0">
+                    <augmentation-alight type="bool">false</augmentation-alight>
+                </engine>
+                <engine n="1">
+                    <augmentation-alight type="bool">false</augmentation-alight>
+                </engine>
+
+            </propulsion>
             <systems>
                 <hydraulics>
                     <combined-system-psi type="int">2200</combined-system-psi>
@@ -32,7 +56,6 @@
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
                 </catapult>
-
             </systems>
         </jsbsim>
     </fdm>
@@ -783,6 +806,7 @@
                 </instrumentation>
                 <systems>
                     <armament>
+                        <mp-messaging type="bool">false</mp-messaging>
                         <aim9>
                             <count type="int">0</count>
                             <guidance type="string">heat</guidance>
@@ -801,11 +825,11 @@
                             <!-- Seeker max total angular rotation -->
                             <max-g type="int">32</max-g>
                             <!-- In turn -->
-                            <thrust-lbs-stage-1 type="double">3821.75</thrust-lbs-stage-1><!-- guess -->
+                            <thrust-lbs-stage-1 type="double">2660</thrust-lbs-stage-1><!-- guess -->
                             <thrust-lbs-stage-2 type="double">0.0</thrust-lbs-stage-2>    <!-- authentic -->
-                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
-                            <stage-2-duration-sec type="double">1.0</stage-2-duration-sec><!-- Aim-9L -->
-                            <self-destruct-time-sec type="double">43</self-destruct-time-sec><!-- guess -->
+                            <stage-1-duration-sec type="double">5.23</stage-1-duration-sec><!-- guess -->
+                            <stage-2-duration-sec type="double">0.0</stage-2-duration-sec><!-- Aim-9L -->
+                            <self-destruct-time-sec type="double">50</self-destruct-time-sec><!-- guess -->
                             <!-- Mk.36 Mod.7,8 -->
                             <weight-launch-lbs>191</weight-launch-lbs>
                             <weight-warhead-lbs>20.8</weight-warhead-lbs>
@@ -817,6 +841,9 @@
                             <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
                             <arming-time-sec type="double">1.4</arming-time-sec>
+                            <rail type="bool">true</rail>
+                            <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
+                            <rail-point-forward type="bool">true</rail-point-forward>
                         </aim9>
                         <aim120>
                             <!--Based on values from Fabien's loading_missiles:
@@ -830,21 +857,21 @@
                             <max-detection-rng-nm type="int">38.8</max-detection-rng-nm>
                             <fov-deg type="int">30</fov-deg>
                             <detection-fov-deg type="int">180</detection-fov-deg>
-                            <track-max-deg type="int">110</track-max-deg>
+                            <track-max-deg type="int">135</track-max-deg>
                             <max-g type="int">30</max-g>
-                            <thrust-lbs-stage-1 type="double">11000</thrust-lbs-stage-1><!-- guess -->
-                            <thrust-lbs-stage-2 type="double">1000</thrust-lbs-stage-2>    <!-- guess -->
-                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
-                            <stage-2-duration-sec type="double">36.0</stage-2-duration-sec><!-- guess -->
-                            <self-destruct-time-sec type="double">80</self-destruct-time-sec><!-- guess -->
+                            <thrust-lbs-stage-1 type="double">4500</thrust-lbs-stage-1><!-- guess -->
+                            <thrust-lbs-stage-2 type="double">1500</thrust-lbs-stage-2>    <!-- guess -->
+                            <stage-1-duration-sec type="double">8.0</stage-1-duration-sec><!-- guess -->
+                            <stage-2-duration-sec type="double">24.0</stage-2-duration-sec><!-- guess -->
+                            <self-destruct-time-sec type="double">90</self-destruct-time-sec><!-- guess -->
                             <weight-launch-lbs>291</weight-launch-lbs>
                             <weight-warhead-lbs>44</weight-warhead-lbs>
                             <drag-coeff type="double">0.5</drag-coeff>
                             <drag-area type="double">0.2739</drag-area>
-                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
-                            <loft-altitude>30000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                            <loft-altitude>36000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach>
-                            <arming-time-sec type="double">2.0</arming-time-sec>
+                            <arming-time-sec type="double">1.6</arming-time-sec>
+                            <rail type="bool">false</rail>
                         </aim120>
                         <aim7>
                             <!-- AIM-7 F/M http://www.hill.af.mil/library/factsheets/factsheet.asp?id=5787
@@ -890,24 +917,24 @@
                             <sound-on-off type="bool">false</sound-on-off>
                             <sound-volume type="double">0.12</sound-volume>
                             <target-range-nm type="double">0</target-range-nm>
-                            <max-detection-rng-nm type="int">31</max-detection-rng-nm>
+                            <max-detection-rng-nm type="int">32</max-detection-rng-nm><!-- authentic -->
                             <fov-deg type="int">25</fov-deg>
                             <detection-fov-deg type="int">140</detection-fov-deg>
                             <track-max-deg type="int">110</track-max-deg>
                             <max-g type="int">30</max-g>
-                            <thrust-lbs-stage-1 type="double">20000</thrust-lbs-stage-1><!-- guess -->
-                            <thrust-lbs-stage-2 type="double">1000</thrust-lbs-stage-2>    <!-- guess -->
-                            <stage-1-duration-sec type="double">2.7</stage-1-duration-sec><!-- guess -->
-                            <stage-2-duration-sec type="double">30</stage-2-duration-sec><!-- guess -->
-                            <self-destruct-time-sec type="double">60</self-destruct-time-sec><!-- guess -->
-                            <weight-launch-lbs>510</weight-launch-lbs>
+                            <thrust-lbs-stage-1 type="double">5750</thrust-lbs-stage-1><!-- authentic -->
+                            <thrust-lbs-stage-2 type="double">1018</thrust-lbs-stage-2>    <!-- authentic -->
+                            <stage-1-duration-sec type="double">4.5</stage-1-duration-sec><!-- authentic -->
+                            <stage-2-duration-sec type="double">11</stage-2-duration-sec><!-- authentic -->
+                            <self-destruct-time-sec type="double">75</self-destruct-time-sec><!-- authentic -->
+                            <weight-launch-lbs>510</weight-launch-lbs>                       <!-- authentic -->
                             <weight-warhead-lbs>88</weight-warhead-lbs>
-                            <drag-coeff type="double">0.5</drag-coeff>
+                            <drag-coeff type="double">0.6</drag-coeff>
                             <drag-area type="double">0.3382</drag-area>
-                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
-                            <loft-altitude>30000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                            <loft-altitude>36000</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
                             <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach>
-                            <arming-time-sec type="double">2.0</arming-time-sec>
+                            <arming-time-sec type="double">2.5</arming-time-sec>             <!-- authentic -->
+                            <rail type="bool">false</rail>
                         </aim7>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
@@ -1090,6 +1117,7 @@
                 <int n="18">0</int> <!-- Total Weight (lbs) -->
                 <string n="0" type="string"></string>
                 <string n="13" type="string"></string>
+                <string n="15" type="string"></string>
                 <!-- Emesary multiplayer bridge -->
                 <!--<string n="19" type="string"></string> -->
             </generic>
@@ -1123,7 +1151,7 @@
                         <label>Repair Airframe</label>
                         <binding>
                             <command>nasal</command>
-                            <script>aircraft.fixAirframe();</script>
+                            <script>aircraft.fixAirframe();aircraft.ct("rp");</script>
                         </binding>
                     </item>
                     <item n="1">
@@ -1306,6 +1334,39 @@
                 </limits>
             </config>
         </view>-->
+        <view n="109">
+            <name>Wingman View</name>
+            <type>lookat</type>
+            <internal archive="y">true</internal>
+            <config>
+                <from-model type="bool">false</from-model>
+                <from-model-idx type="int">0</from-model-idx>
+                <eye-lat-deg-path>/position/latitude-deg</eye-lat-deg-path>
+                <eye-lon-deg-path>/position/longitude-deg</eye-lon-deg-path>
+                <eye-alt-ft-path>/position/altitude-ft</eye-alt-ft-path>
+                <eye-heading-deg-path>/orientation/heading-deg</eye-heading-deg-path>
+                <eye-pitch-deg-path>/orientation/pitch-deg</eye-pitch-deg-path>
+                <eye-roll-deg-path>/orientation/roll-deg</eye-roll-deg-path>
+                <at-model type="bool">true</at-model>
+                <at-model-idx type="int">0</at-model-idx>
+                <at-model-roll-damping type="double">2.0</at-model-roll-damping>
+                <at-model-pitch-damping type="double">2.0</at-model-pitch-damping>
+                <at-model-heading-damping type="double">2.0</at-model-heading-damping>
+                <target-x-offset-m type="double">0</target-x-offset-m>
+                <target-y-offset-m type="double">0</target-y-offset-m>
+                <target-z-offset-m type="double">0</target-z-offset-m>
+                <default-field-of-view-deg type="double">55.0</default-field-of-view-deg>
+                <pitch-offset-deg type="double">0</pitch-offset-deg>
+                <heading-offset-deg type="double">0</heading-offset-deg>
+                <roll-offset-deg type="double">0</roll-offset-deg>
+                <x-offset-m type="double">15</x-offset-m>
+                <!-- left(+)/right(-) -->
+                <y-offset-m type="double">0</y-offset-m>
+                <!-- up(+)/down(-) -->
+                <z-offset-m type="double">-13</z-offset-m>
+                <!-- fore(+)/aft(-) -->
+            </config>
+        </view>
 
         <instrumentation>
             <path>Aircraft/F-15/Systems/instrumentation.xml</path>
@@ -1570,14 +1631,17 @@
             <tank n="5">
                 <name>External Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="6">
                 <name>External Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="7">
                 <name>Centre External</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="8">
                 <name>L feed line</name>
@@ -1945,6 +2009,51 @@
                     <script>aircraft.trimDown();</script>
                 </binding>
             </key>
+
+            <key n="21">
+              <name>Ctrl-U</name>
+              <desc>[Cheat] Add 1000ft of emergency altitude</desc>
+              <binding>
+               <command>property-adjust</command>
+               <property>/position/altitude-ft</property>
+               <step type="double">1000.0</step>
+              </binding>
+              <binding>
+               <command>property-assign</command>
+               <property>/sim/startup/onground</property>
+               <value type="bool">false</value>
+              </binding>
+              <binding>
+               <command>nasal</command>
+               <script>aircraft.ct("c-u")</script>
+              </binding>
+             </key>
+
+             <key n="97">
+              <name>a</name>
+              <desc>Increase speed-up</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>controls.speedup(1);</script>
+                </binding>
+                <binding>
+               <command>nasal</command>
+               <script>aircraft.ct("a")</script>
+              </binding>
+             </key>
+
+             <key n="65">
+              <name>A</name>
+              <desc>Decrease speed-up</desc>
+              <binding>
+                <command>nasal</command>
+                <script>controls.speedup(-1);</script>
+              </binding>
+              <binding>
+               <command>nasal</command>
+               <script>aircraft.ct("a")</script>
+              </binding>
+             </key>
         </keyboard>
     </input>
 
