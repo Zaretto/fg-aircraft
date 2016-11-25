@@ -215,7 +215,7 @@ var release_aim9 = func()
 #            var m = notifications.GeoEventNotification.new(Current_missile.type, Current_missile.Tgt.Callsign, 1, 80+Current_missile.intid);
 #emesary.GlobalTransmitter.NotifyAll(m);
 			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-				setprop("/sim/multiplay/chat", aircraft.defeatSpamFilter(phrase));
+				aircraft.defeatSpamFilter(phrase);
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
@@ -463,11 +463,11 @@ var impact_listener = func {
         var selectionPos = geo.Coord.new().set_xyz(x, y, z);
 
         var distance = impactPos.distance_to(selectionPos);
-        if (distance < 50) {
+        if (distance < 125) {
           last_impact = getprop("sim/time/elapsed-sec");
-          var phrase =  aircraft.defeatSpamFilter(ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.active_u.Callsign.getValue());
+          var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.active_u.Callsign.getValue();
           if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-            setprop("/sim/multiplay/chat", phrase);
+            aircraft.defeatSpamFilter(phrase);
                   #hit_count = hit_count + 1;
           } else {
             setprop("/sim/messages/atc", phrase);

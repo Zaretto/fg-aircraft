@@ -340,15 +340,17 @@ active_u = nil;
 
 		if ( u_fading < 0 ) { u_fading = 0 }
 
-		if (( swp_dir and swp_deg_last < u.deviation and u.deviation <= swp_deg )
-			or ( ! swp_dir and swp_deg <= u.deviation and u.deviation < swp_deg_last ))
+		if (u.get_display() == 1)#( swp_dir and swp_deg_last < u.deviation and u.deviation <= swp_deg )
+			#or ( ! swp_dir and swp_deg <= u.deviation and u.deviation < swp_deg_last ))
         {
 			u.get_bearing();
 			u.get_heading();
 			var horizon = u.get_horizon( our_alt );
 			var u_rng = u.get_range();
 
-			if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr))
+            #Leto: commented out for OPRF due to that list not being up to date, and plane has no doppler effect, so should see targets below horizon:
+			#if ( u_rng < horizon and radardist.radis(u.string, my_radarcorr))  
+            if(1==1)
             {
 
 # Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
@@ -395,7 +397,8 @@ active_u = nil;
                     }
 				}
 			}
-			u.set_display(u_display);
+            # Leto: commented out since this is taken care if in previous loop
+			#u.set_display(u_display);
 		}
 		u.set_fading(u_fading);
         #
@@ -456,16 +459,37 @@ active_u = nil;
 #                    print("first in list");
                 break;
             }
-            prv = u;
+            if(u.get_display() == 1)
+            {
+                prv = u;
+            }
         }
         if (prv == nil)
         {
-            var idx = size(sorted_dist)-1;
-            if (idx > 0)
+            var passed = 0;
+            foreach (var u; sorted_dist) 
             {
-                prv = sorted_dist[idx];
-#                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+                if(passed == 1 and u.get_display() == 1)
+                {
+                    prv = u;
+                }
+    #            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+                if(u.Callsign.getValue() == active_u_callsign)
+                {
+    #                if (prv != nil)
+    #                    print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
+    #                else
+    #                    print("first in list");
+                    passed = 1;
+                }
+                
             }
+#            var idx = size(sorted_dist)-1;
+#            if (idx > 0)
+#            {
+#                prv = sorted_dist[idx];
+#                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+#            }
         }
 
         if (prv != nil)
@@ -491,15 +515,17 @@ active_u = nil;
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
+        var passed = 0;
         foreach (var u; sorted_dist) 
         {
 #            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(u.Callsign.getValue() == active_u_callsign)
             {
+                passed = 1;
 #                print("Skipping active target ",active_u_callsign);
                 continue;
 }
-            if(u.get_range() > dist)
+            if((passed == 1 or dist == 0) and u.get_display() == 1)
             {
                 nxt = u;
 #                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
@@ -508,8 +534,22 @@ active_u = nil;
         }
         if (nxt == nil)
         {
-if(size(sorted_dist)>0)
-            nxt = sorted_dist[0];
+            foreach (var u; sorted_dist) 
+            {
+    #            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+                if(u.Callsign.getValue() == active_u_callsign)
+                {
+    #                print("Skipping active target ",active_u_callsign);
+                    continue;
+                }
+                if(u.get_display() == 1)
+                {
+                    nxt = u;
+    #                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
+                    break;
+                }
+            }
+
         }
 
         if (nxt != nil)
@@ -549,7 +589,7 @@ var containsV = func (vector, content) {
 }
 
 #
-# The following 1 methods is from Mirage 2000-5
+# The following 1 methods is from Mirage 2000-5 (modified by Pinto)
 #
 var isVisibleByTerrain = func(node) {
     if (node.getNode("callsign").getValue() == "")
@@ -584,24 +624,24 @@ var isVisibleByTerrain = func(node) {
         var d = SelectCoord.x();
         var e = SelectCoord.y();
         var f = SelectCoord.z();
-        var x = 0;
-        var y = 0;
-        var z = 0;
-        var RecalculatedL = 0;
         var difa = d - a;
         var difb = e - b;
         var difc = f - c;
+    
+        #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
+        #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
+    
         # direct Distance in meters
-        var myDistance = SelectCoord.direct_distance_to(MyCoord);
+        var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
+        #print("myDistance: " ~ myDistance);
         var Aprime = geo.Coord.new();
         
         # Here is to limit FPS drop on very long distance
-        var L = 1000;
+        var L = 500;
         if(myDistance > 50000)
         {
             L = myDistance / 15;
         }
-        var step = L;
         var maxLoops = int(myDistance / L);
         
         isVisible = 1;
@@ -614,42 +654,28 @@ var isVisibleByTerrain = func(node) {
             
             if(DELTA >= 0)
             {
-                # So 2 solutions or 0 (1 if DELTA = 0 but that 's just 2 solution in 1)
-                var x1 = (-(-2 * a) + math.sqrt(DELTA)) / 2;
-                var x2 = (-(-2 * a) - math.sqrt(DELTA)) / 2;
-                # So 2 y points here
-                var y1 = b + (x1 - a) * (difb) / (difa);
-                var y2 = b + (x2 - a) * (difb) / (difa);
-                # So 2 z points here
-                var z1 = c + (x1 - a) * (difc) / (difa);
-                var z2 = c + (x2 - a) * (difc) / (difa);
-                # Creation Of 2 points
-                var Aprime1  = geo.Coord.new();
-                Aprime1.set_xyz(x1, y1, z1);
-                
-                var Aprime2  = geo.Coord.new();
-                Aprime2.set_xyz(x2, y2, z2);
-                
-                # Here is where we choose the good
-                if(math.round((myDistance - L), 2) == math.round(Aprime1.direct_distance_to(SelectCoord), 2))
-                {
-                    Aprime.set_xyz(x1, y1, z1);
-                }
-                else
-                {
-                    Aprime.set_xyz(x2, y2, z2);
-                }
-                var AprimeLat = Aprime.lat();
-                var Aprimelon = Aprime.lon();
-                var AprimeTerrainAlt = geo.elevation(AprimeLat, Aprimelon);
+                #calculate intermediate step
+                #basically dividing the line into maxLoops number of steps, and checking at each step
+                #to ascii-art explain it:
+                #  |us|----------|step 1|-----------|step 2|--------|step 3|----------|them|
+                #there will be as many steps as there is i
+                #every step will be equidistant
+          
+                #also, if i == 0 then the first step will be our plane
+          
+                var x = ((difa/(maxLoops+1))*i)+a;
+                var y = ((difb/(maxLoops+1))*i)+b;
+                var z = ((difc/(maxLoops+1))*i)+c;
+                #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
+                Aprime.set_xyz(x,y,z);
+                var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
                 if(AprimeTerrainAlt == nil)
                 {
                     AprimeTerrainAlt = 0;
                 }
-                
+          
                 if(AprimeTerrainAlt > Aprime.alt())
                 {
-                    # This will prevent the rest of the loop to run if a masking high point is found:
                     return 0;
                 }
             }

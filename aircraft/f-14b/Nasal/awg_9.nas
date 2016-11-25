@@ -135,7 +135,7 @@ var az_scan = func() {
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (!c.getNode("valid", 1).getValue()) {
+			if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
@@ -292,7 +292,7 @@ var az_scan = func() {
 
 }
 
-setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "op"~"r"~"f");
+setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~""~"7");
 var hud_nearest_tgt = func() {
 	# Computes nearest_u position in the HUD
 	if ( nearest_u != nil ) {
@@ -604,6 +604,7 @@ var Target = {
 		obj.deviation = nil;
 
 		obj.unique = rand();
+		obj.propNode = c;
 
 		return obj;
 	},

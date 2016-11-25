@@ -62,8 +62,8 @@ var ias_range_factor = (694-191) / 1100;
 #
 #        pitch_offset = -texels_over_middle;
 
-var changeViewX = -1 * (startViewX-getprop(viewX))*getprop(ghosting_x);
-var changeViewY = (startViewY-getprop(viewY))*getprop(ghosting_y);
+#var changeViewX = -1 * (startViewX-getprop(viewX))*getprop(ghosting_x);
+#var changeViewY = (startViewY-getprop(viewY))*getprop(ghosting_y);
 
 var F15HUD = {
 	new : func (svgname, canvas_item,tran_x,tran_y){

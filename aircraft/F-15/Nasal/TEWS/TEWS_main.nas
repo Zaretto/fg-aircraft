@@ -147,25 +147,28 @@ return;
                 var tgt = TEWSSymbol.list[target_idx];
                 if (tgt != nil)
                 {
-# We have a valid target - so display it. Not quite sure why we need to adjust this but we do.
-#                    var bearing = u.get_deviation(heading);
-                    var bearing = geo.normdeg(u.get_deviation(heading) + tews_alignment_offset);
+                    
 
-                    tgt.setVisible(u.get_display());
-                    tgt.setCallsign(callsign);
-                    var r = (u.get_range()*scale) / radar_range;
-                    var xc  = r * math.cos(bearing/57.29577950560105);
-                    var yc = r * math.sin(bearing/57.29577950560105);
+    # We have a valid target - so display it. Not quite sure why we need to adjust this but we do.
+    #                    var bearing = u.get_deviation(heading);
+                        var bearing = geo.normdeg(u.get_deviation(heading) + tews_alignment_offset);
 
-                    tgt.setVisible(1);
+                        tgt.setVisible(1);#u.get_display());#Leto: is is only display true when in radar field, so we ignore that.
+                        tgt.setCallsign(callsign);
+                        var r = (u.get_range()*scale) / radar_range;
+                        var xc  = r * math.cos(bearing/57.29577950560105);
+                        var yc = r * math.sin(bearing/57.29577950560105);
 
-#                    printf("TEWS: %d(%d,%d): %s %s: :R %f B %f %f", target_idx,xc,yc,
-#                           callsign, model, 
-#                           u.get_altitude(), u.get_range(), u.get_bearing());
+                        tgt.setVisible(1);
 
-                    tgt.setTranslation (xc, yc);
-                    tgt.setRotation(geo.normdeg(heading-u.get_bearing())/57.29577950560105);
-                }
+    #                    printf("TEWS: %d(%d,%d): %s %s: :R %f B %f %f", target_idx,xc,yc,
+    #                           callsign, model, 
+    #                           u.get_altitude(), u.get_range(), u.get_bearing());
+
+                        tgt.setTranslation (xc, yc);
+                        tgt.setRotation(geo.normdeg(u.get_heading()-heading)/57.29577950560105);
+                    }
+                
             }
             target_idx = target_idx+1;
         }

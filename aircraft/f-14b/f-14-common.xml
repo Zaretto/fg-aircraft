@@ -378,6 +378,14 @@
                 <name>Ctrl-v</name>
                 <desc>Back to Pilot's View or toggle Pilot's and RIO View.</desc>
             </key>
+            <key>
+                <name>Q</name>
+                <desc>Reset view</desc>
+            </key>
+            <key>
+                <name>S</name>
+                <desc>Toggle smoke</desc>
+            </key>
             <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
             <line>__________________________________________________</line>
             <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
@@ -620,6 +628,7 @@
                     </VDI>
                 </controls>
                 <fx>
+                    <smoke type="int">0</smoke>
                     <burner type="int">0</burner>
                     <heat-blur-on type="bool">false</heat-blur-on>
                 </fx>
@@ -1102,6 +1111,8 @@
                 <int n="8" type="int">0</int>
                 <!--afterburner right-->
                 <int n="9" type="int">0</int>
+                <!--smoke-->
+                <int n="10" alias="/sim/model/f-14b/fx/smoke"/>
                 <!-- external weapons layout and pylons details -->
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
@@ -1847,17 +1858,6 @@
                 </binding>
             </key>
 
-<!--
-            <key n="4">
-                <name>CTRL-d</name>
-                <desc>DLC toggle</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>f14.toggleDLC();</script>
-                </binding>
-            </key>
--->
-
             <key n="8">
                 <name>CTRL-h</name>
                 <desc>Toggle autopilot heading mode.</desc>
@@ -2042,7 +2042,8 @@
                     </script>
                 </binding>
             </key>
-           <key n="77">
+
+            <key n="77">
                 <name>M</name>
                 <desc>Toggle AIM-9 selection</desc>
                 <binding>
@@ -2051,13 +2052,30 @@
                 </binding>
             </key>
 
-
+            <key n="81">
+                <name>Q</name>
+                <desc>Reset view</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.resetView();</script>
+                </binding>
+            </key>
+            
             <key n="82">
                 <name>R</name>
                 <desc>Increase Radar Range</desc>
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.range_control(1);</script>
+                </binding>
+            </key>
+
+            <key n="83">
+                <name>S</name>
+                <desc>smoke</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
                 </binding>
             </key>
 
@@ -2118,6 +2136,20 @@
                 </binding>
             </key>
 
+            <key n="109">
+                <name>m</name>
+                <desc>Cycle Stick Weapon Mode Selector</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>sim/model/f-14b/controls/armament/stick-selector</property>
+                    <step>1</step>
+                    <min>0</min>
+                    <max>4</max>
+                    <repeat>false</repeat>
+                    <wrap>true</wrap>
+                </binding>
+            </key>
+
             <key n="111">
                 <name>o</name>
                 <desc>Toggle arrester hook</desc>
@@ -2144,19 +2176,6 @@
                 </binding>
             </key>
 
-            <key n="109">
-                <name>m</name>
-                <desc>Cycle Stick Weapon Mode Selector</desc>
-                <binding>
-                    <command>property-adjust</command>
-                    <property>sim/model/f-14b/controls/armament/stick-selector</property>
-                    <step>1</step>
-                    <min>0</min>
-                    <max>4</max>
-                    <repeat>false</repeat>
-                    <wrap>true</wrap>
-                </binding>
-            </key>
             <key n="121">
                 <name>y</name>
                 <desc>Next target select</desc>
@@ -2239,7 +2258,6 @@
                <script>armament.ct("a")</script>
               </binding>
              </key>
-
         </keyboard>
     </input>
 
@@ -2387,6 +2405,7 @@
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
             <file>Aircraft/f-14b/Nasal/bombable_integration.nas</file>
             <file>Aircraft/f-14b/Nasal/fox2.nas</file>
+            <file>Aircraft/f-14b/Nasal/crash-and-stress.nas</file>
         </f14>
         <f14_hud>
             <file>Aircraft/f-14b/Nasal/hud.nas</file>
@@ -2408,6 +2427,9 @@
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>
+        <blackout>
+            <file>Aircraft/f-14b/Nasal/blackout.nas</file>
+        </blackout>
     </nasal>
 
 </PropertyList>
