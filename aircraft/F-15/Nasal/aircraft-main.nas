@@ -396,7 +396,7 @@ updateVolume();
 
 #
 # ensure that we're not ground refuelling in air...
-if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 0))
+if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1))
 {
 setprop("fdm/jsbsim/propulsion/refuel",0);
 setprop("fdm/jsbsim/propulsion/ground-refuel",0);
