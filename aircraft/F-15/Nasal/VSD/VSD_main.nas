@@ -220,8 +220,6 @@ var VSD_Device =
     },
         };
 
-# the VSD object really should be called an VSD - we attach the port connections to the IDPs and the selection
-
 var VSD_array = [];
 
 # update only one display per frame to reduce load. This can easily be changed

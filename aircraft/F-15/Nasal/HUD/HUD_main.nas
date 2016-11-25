@@ -40,6 +40,31 @@ var pitch_factor_2 = pitch_factor * 180.0 / 3.14159;
 var alt_range_factor = (9317-191) / 100000; # alt tape size and max value.
 var ias_range_factor = (694-191) / 1100;
 
+#Pinto: if you know starting x (left/right) and z (up/down), then i just do
+#
+#var changeViewX = -1 * (startViewX-getprop(viewX))*getprop(ghosting_x);
+#var changeViewY = (startViewY-getprop(viewY))*getprop(ghosting_y);
+#
+#where ghosting_x and ghosting_y are parallax adjusting. about 7000
+# trial and error can quickly give you the right values. Then I move the canvas elements by however much changeViewX and changeViewY are.
+# calc of pitch_offset (compensates for AC3D model translated and rotated when loaded. Also semi compensates for HUD being at an angle.)
+#        var Hz_b =    0.80643; # HUD position inside ac model after it is loaded translated and rotated.
+#        var Hz_t =    0.96749;
+#        var Vz   =    getprop("sim/current-view/y-offset-m"); # view Z position (0.94 meter per default)
+#
+#        var bore_over_bottom = Vz - Hz_b;
+#        var Hz_height        = Hz_t-Hz_b;
+#        var hozizon_line_offset_from_middle_in_svg = 0.137; #fraction up from middle
+#        var frac_up_the_hud = bore_over_bottom / Hz_height - hozizon_line_offset_from_middle_in_svg;
+#       var texels_up_into_hud = frac_up_the_hud * me.sy;#sy default is 260
+#       var texels_over_middle = texels_up_into_hud - me.sy/2;
+#
+#
+#        pitch_offset = -texels_over_middle;
+
+var changeViewX = -1 * (startViewX-getprop(viewX))*getprop(ghosting_x);
+var changeViewY = (startViewY-getprop(viewY))*getprop(ghosting_y);
+
 var F15HUD = {
 	new : func (svgname, canvas_item,tran_x,tran_y){
 		var obj = {parents : [F15HUD] };
