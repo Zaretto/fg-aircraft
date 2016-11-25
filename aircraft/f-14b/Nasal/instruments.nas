@@ -76,7 +76,7 @@ var ARA63Recipient =
         {
             if (notification.NotificationType == "ANSPN46ActiveNotification")
             {
-                print(" :: Recvd lat=",notification.Position.lat(), " lon=",notification.Position.lon(), " alt=",notification.Position.alt(), " chan=",notification.Channel);
+#                print(" :: Recvd lat=",notification.Position.lat(), " lon=",notification.Position.lon(), " alt=",notification.Position.alt(), " chan=",notification.Channel);
                 var response_msg = me.Response.Respond(notification);
 #
 # We cannot decide if in range as it is the AN/SPN system to decide if we are within range
@@ -100,7 +100,7 @@ var ARA63Recipient =
             {
                 me.ansn46_expiry = getprop("/sim/time/elapsed-sec") + 10;
 # Use the standard civilian ILS if it is closer.
-        print("rcvd ANSPN46CommunicationNotification =",notification.InRange, " dev=",notification.LateralDeviation, ",", notification.VerticalDeviation, " dist=",notification.Distance);
+#        print("rcvd ANSPN46CommunicationNotification =",notification.InRange, " dev=",notification.LateralDeviation, ",", notification.VerticalDeviation, " dist=",notification.Distance);
                 if(getprop("instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < notification.Distance)
                 {
                     me.ansn46_expiry=0;
@@ -773,7 +773,7 @@ var common_init = func {
 
 # Init ####################
 var init = func {
-	print("Initializing F-14B Systems");
+	print("Initializing F-14 Systems");
 	f14.ext_loads_init();
 	f14.init_fuel_system();
 	aircraft.data.load();
