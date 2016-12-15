@@ -491,7 +491,7 @@ var AIM = {
 			me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
 			if (me.loft_alt > 36000) {
 				#for phoenix missile
-				me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*2000;
+				me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*1000;
 				me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
 				me.cruise_minimum = me.loft_alt * .0002777;#36000 = 10 miles
 			}
@@ -504,7 +504,13 @@ var AIM = {
 		#interpolate(HudReticleDev, 0, 2);
 
 		me.startMach = getprop("velocities/mach");
-		printf("Launch %s at %s, %.1f Mach, %5d ft.", me.type, me.callsign, me.startMach, getprop("position/altitude-ft"));
+		me.startAlt  = getprop("position/altitude-ft");
+		me.startDist = 0;
+		me.maxAlt = me.startAlt;
+		if (me.Tgt != nil) {
+			me.startDist = me.ac_init.direct_distance_to(me.Tgt.get_Coord());
+		}
+		printf("Launch %s at %s.", me.type, me.callsign);
 
 		me.mass = me.weight_launch_lbs / slugs_to_lbs;
 
@@ -673,39 +679,10 @@ var AIM = {
 
 		me.thrust_lbf = me.thrust();# pounds force (lbf)
 
-		#### Calculate speed vector before steering corrections.
-
-		# Get total old speed.
-		me.old_speed_horz_fps = math.sqrt((me.speed_east_fps*me.speed_east_fps)+(me.speed_north_fps*me.speed_north_fps));
-		me.old_speed_fps = math.sqrt((me.old_speed_horz_fps*me.old_speed_horz_fps)+(me.speed_down_fps*me.speed_down_fps));
+		
 
 
-		if (me.rail == TRUE and me.rail_passed == FALSE) {
-			me.u = noseAir.getValue();# airstream from nose
-			#var v = getprop("velocities/vBody-fps");# airstream from side
-			me.w = belowAir.getValue();# airstream from below
-
-			me.opposing_wind = me.u;
-
-			if (me.rail_forward == TRUE) {
-				me.pitch = OurPitch.getValue();
-				me.hdg = OurHdg.getValue();
-			} else {
-				me.pitch = 90;
-				me.opposing_wind = -me.w;
-				me.hdg = me.Tgt.get_bearing();
-			}			
-
-			me.speed_on_rail = me.clamp(me.rail_speed_into_wind - me.opposing_wind, 0, 1000000);
-			me.movement_on_rail = me.speed_on_rail * me.dt;
-			
-			me.rail_pos = me.rail_pos + me.movement_on_rail;
-			if (me.rail_forward == TRUE) {
-				me.x = me.x - (me.movement_on_rail * FT2M);# negative cause positive is rear in body coordinates
-			} else {
-				me.z = me.z + (me.movement_on_rail * FT2M);# positive cause positive is up in body coordinates
-			}
-		}
+		
 
 		# Get air density and speed of sound (fps):
 		me.rs = me.rho_sndspeed(me.altN.getValue() + me.density_alt_diff);
@@ -713,11 +690,6 @@ var AIM = {
 		me.sound_fps = me.rs[1];
 
 		me.max_g_current = me.maxG(me.rho, me.max_g);
-
-		if (me.rail == TRUE and me.rail_passed == FALSE) {
-			# if missile is still on rail, we replace the speed, with the speed into the wind from nose on the rail.
-			me.old_speed_fps = me.rail_speed_into_wind;
-		}
 
 		me.speed_m = me.old_speed_fps / me.sound_fps;
 
@@ -762,54 +734,74 @@ var AIM = {
 		me.new_speed_fps        = me.speed_change_fps + me.old_speed_fps;
 		if (me.new_speed_fps < 0) {
 			# drag and bleed can theoretically make the speed less than 0, this will prevent that from happening.
-			me.new_speed_fps = 0;
+			me.new_speed_fps = 0.001;
 		}
 
 		# Break speed change down total speed to North, East and Down components.
-		me.speed_down_fps       = - math.sin(me.pitch * D2R) * me.new_speed_fps;
+		me.speed_down_fps       = -math.sin(me.pitch * D2R) * me.new_speed_fps;
 		me.speed_horizontal_fps = math.cos(me.pitch * D2R) * me.new_speed_fps;
 		me.speed_north_fps      = math.cos(me.hdg * D2R) * me.speed_horizontal_fps;
 		me.speed_east_fps       = math.sin(me.hdg * D2R) * me.speed_horizontal_fps;
+		# todo: do all calc in vector components, that will next loop make grav be applied correct.
+		me.speed_down_fps += g_fps * me.dt;
 
 		if (me.rail == TRUE and me.rail_passed == FALSE) {
 			# missile still on rail, lets calculate its speed relative to the wind coming in from the aircraft nose.
 			me.rail_speed_into_wind = me.rail_speed_into_wind + me.speed_change_fps;
-		}
-
-		# Calculate altitude and elevation velocity vector (no incidence here).
-		if (me.guidance == "unguided" or me.life_time < me.drop_time or me.guiding == FALSE) {
-			# true gravity acc makes the weapon pitch down
-			me.speed_down_fps += g_fps * me.dt;
-			#print("old pitch:"~me.pitch);
-			me.pitch = math.atan2(-me.speed_down_fps, me.speed_horizontal_fps ) * R2D;
-			#print("new pitch:"~me.pitch);
-			me.alt_ft = me.alt_ft - (me.speed_down_fps * me.dt);
 		} else {
-			# The missile just falls due to gravity, it doesn't pitch
-			# If we add gravity while the missile is guiding, the gravity speed will be added to total speed,
-			# which next update will be added in the direction the missile points, which we do not want.
-			# therefore we must accelerate down due to gravity in the down speed component.
-
-			# a real missile would pitch ofc. but then have to calc how fuel affects CoG and its inertia/momentum
-			me.alt_ft = me.alt_ft - ((me.speed_down_fps + g_fps * me.dt) * me.dt);
+			# gravity acc makes the weapon pitch down			
+			me.pitch = math.atan2(-me.speed_down_fps, me.speed_horizontal_fps ) * R2D;
 		}
 
-			
+		
 
 		#printf("down_s=%.1f grav=%.1f", me.speed_down_fps*me.dt, g_fps * me.dt * !grav_bomb * me.dt);
 
+		if (me.rail == TRUE and me.rail_passed == FALSE) {
+			me.u = noseAir.getValue();# airstream from nose
+			#var v = getprop("velocities/vBody-fps");# airstream from side
+			me.w = belowAir.getValue();# airstream from below
+
+			if (me.rail_forward == TRUE) {
+				me.pitch = OurPitch.getValue();
+				me.opposing_wind = me.u;
+				me.hdg = OurHdg.getValue();
+			} else {
+				me.pitch = 90;
+				me.opposing_wind = -me.w;
+				me.hdg = me.Tgt.get_bearing();
+			}			
+
+			me.speed_on_rail = me.clamp(me.rail_speed_into_wind - me.opposing_wind, 0, 1000000);
+			me.movement_on_rail = me.speed_on_rail * me.dt;
+			
+			me.rail_pos = me.rail_pos + me.movement_on_rail;
+			if (me.rail_forward == TRUE) {
+				me.x = me.x - (me.movement_on_rail * FT2M);# negative cause positive is rear in body coordinates
+			} else {
+				me.z = me.z + (me.movement_on_rail * FT2M);# positive cause positive is up in body coordinates
+			}
+		}
+
 		if (me.rail == FALSE or me.rail_passed == TRUE) {
 			# misssile not on rail, lets move it to next waypoint
+			me.alt_ft = me.alt_ft - (me.speed_down_fps * me.dt);
 			me.dist_h_m = me.speed_horizontal_fps * me.dt * FT2M;
 			me.coord.apply_course_distance(me.hdg, me.dist_h_m);
 			me.coord.set_alt(me.alt_ft * FT2M);
 		} else {
 			# missile on rail, lets move it on the rail
-			me.new_speed_fps = me.rail_speed_into_wind;
 			me.coord = me.getGPS(me.x, me.y, me.z);
 			me.alt_ft = me.coord.alt() * M2FT;
+			# find its speed, for used in calc old speed
+			me.speed_down_fps       = -math.sin(me.pitch * D2R) * me.rail_speed_into_wind;
+			me.speed_horizontal_fps = math.cos(me.pitch * D2R) * me.rail_speed_into_wind;
+			me.speed_north_fps      = math.cos(me.hdg * D2R) * me.speed_horizontal_fps;
+			me.speed_east_fps       = math.sin(me.hdg * D2R) * me.speed_horizontal_fps;
 		}
-
+		if (me.alt_ft > me.maxAlt) {
+			me.maxAlt = me.alt_ft;
+		}
 
 		# performance logging:
 		#
@@ -837,7 +829,11 @@ var AIM = {
 		#setprop("/logging/missile/t-longitude-deg", me.t_coord.lon());
 		#setprop("/logging/missile/t-altitude-ft", me.t_coord.alt()*M2FT);
 
-		me.setRadarProperties(me.new_speed_fps);
+		# Get total old speed, thats what we will use in next loop.
+		me.old_speed_horz_fps = math.sqrt((me.speed_east_fps*me.speed_east_fps)+(me.speed_north_fps*me.speed_north_fps));
+		me.old_speed_fps = math.sqrt((me.old_speed_horz_fps*me.old_speed_horz_fps)+(me.speed_down_fps*me.speed_down_fps));
+
+		me.setRadarProperties(me.old_speed_fps);
 
 		##############################
 		#### Proximity detection.#####
@@ -864,7 +860,8 @@ var AIM = {
 #printf("Alt %05.1f ft , distance to target %02.1f NM", me.alt_ft, me.direct_dist_m*M2NM);			
 			
 			if (me.exploded == TRUE) {
-				printf("%s max absolute speed was %.2f Mach. Max relative speed was %.2f Mach.", me.type, me.maxMach, me.maxMach-me.startMach);
+				printf("%s max absolute %.2f Mach. Max relative %.2f Mach. Max alt %6d ft.", me.type, me.maxMach, me.maxMach-me.startMach, me.maxAlt);
+				printf(" It was fired at %s from %.1f Mach, %5d ft at %3d NM distance.", me.callsign, me.startMach, me.startAlt, me.startDist * M2NM);
 				# We exploded, and start the sound propagation towards the plane
 				me.sndSpeed = me.sound_fps;
 				me.sndDistance = 0;
