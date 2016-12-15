@@ -30,7 +30,7 @@
 #   Amraam. Also notice they generally not hit so close against Scenario/AI objects compared to MP aircraft due to the way these are updated.
 # Laser and semi-radar guided munitions need the target to be painted to keep lock. Notice gps guided munition that are all aspect will never lose lock,
 #   whether they can 'see' the target or not.
-# Remotely controlled navigation is not implemented. But the way it flies can be simulated by setting direct navigation with semi-radar or laser guidance.
+# Remotely controlled navigation is not implemented, but the way it flies can be simulated by setting direct navigation with semi-radar or laser guidance.
 # 
 #
 # Limitations:
@@ -1238,7 +1238,7 @@ var AIM = {
 			# stage 1 lofting: due to target is more than 10 miles out and we havent reached 
 			# our desired cruising alt, and the elevation to target is less than lofting angle.
 			# The -7.5 limit, is so the seeker don't lose track of target when lofting.
-			if (me.coord.alt() * M2FT < me.loft_alt) {
+			if (me.coord.alt() * M2FT < me.loft_alt or me.dist_curr * M2NM > me.cruise_minimum) {
 				me.raw_steer_signal_elev = -me.pitch + me.loft_angle;
 				#print(sprintf("Lofting %.1f degs, dev is %.1f", loft_angle, me.raw_steer_signal_elev));
 			} else {
