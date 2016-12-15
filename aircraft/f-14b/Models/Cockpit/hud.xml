@@ -185,10 +185,16 @@
 		<type>select</type>
 		<object-name>sw-digit</object-name>
 		<condition>
-			<equals>
-				<property>sim/model/f-14b/controls/armament/stick-selector</property>
-				<value>2</value>
-			</equals>
+			<or>
+				<equals>
+					<property>sim/model/f-14b/controls/armament/stick-selector</property>
+					<value>2</value>
+				</equals>
+				<equals>
+					<property>sim/model/f-14b/controls/armament/stick-selector</property>
+					<value>3</value>
+				</equals>
+			</or>
 			<property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
 		</condition>
 	</animation>

@@ -94,6 +94,7 @@ var ORDNANCE = 3;
 
 var g_fps        = 9.80665 * M2FT;
 var slugs_to_lbs = 32.1740485564;
+var const_e = 2.71828183;
 
 var first_in_air = FALSE;# first missile is in the air, other missiles should not write to blade[x].
 
@@ -480,6 +481,7 @@ var AIM = {
 			me.density_alt_diff = getprop("fdm/jsbsim/atmosphere/density-altitude") - me.ac.alt()*M2FT;
 		}
 
+		me.cruise_minimum = 10;
 		if (me.loft_alt > 10000) {
 			#
 			# adjust the snap-up altitude to initial distance of target.
@@ -487,7 +489,14 @@ var AIM = {
 			var dst = me.coord.distance_to(me.Tgt.get_Coord()) * M2NM;
 			me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*500;
 			me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
+			if (me.loft_alt > 36000) {
+				#for phoenix missile
+				me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*2000;
+				me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
+				me.cruise_minimum = me.loft_alt * .0002777;#36000 = 10 miles
+			}
 		}
+
 
 		me.SwSoundVol.setDoubleValue(0);
 		me.trackWeak = 1;
@@ -845,13 +854,14 @@ var AIM = {
 			} else {
 				me.g = 0;
 			}
+
+			me.exploded = me.proximity_detection();
+
 #
 # Uncomment the following lines to check stats while flying:
 #
-#printf("Mach %02.1f , time %03.1f s , thrust %03.1f lbf , G-force %02.2f", me.speed_m, me.life_time, thrust_lbf, me.g);
-#printf("Alt %05.1f ft , distance to target %02.1f NM", alt_ft, me.direct_dist_m*M2NM);
-
-			me.exploded = me.proximity_detection();
+#printf("Mach %02.1f , time %03.1f s , thrust %03.1f lbf , G-force %02.2f", me.speed_m, me.life_time, me.thrust_lbf, me.g);
+#printf("Alt %05.1f ft , distance to target %02.1f NM", me.alt_ft, me.direct_dist_m*M2NM);			
 			
 			if (me.exploded == TRUE) {
 				printf("%s max absolute speed was %.2f Mach. Max relative speed was %.2f Mach.", me.type, me.maxMach, me.maxMach-me.startMach);
@@ -1147,7 +1157,6 @@ var AIM = {
 		#
 		me.loft_angle = 15;# notice Shinobi used 26.5651 degs, but Raider1 found a source saying 10-20 degs.
 		me.loft_minimum = 10;# miles
-		me.cruise_minimum = 10;# miles
 		me.cruise_or_loft = FALSE;
 		me.time_before_snap_up = me.drop_time * 3;
 		
@@ -2032,10 +2041,3 @@ var spamLoop = func {
 }
 
 spamLoop();
-
-
-var const_e = 2.71828183;
-
-
-
-#var AIM_instance = [nil, nil,nil,nil];#init aim-9

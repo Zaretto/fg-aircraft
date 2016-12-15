@@ -46,7 +46,7 @@ var weapons_init = func() {
 			} else {
 				GunStop.setBoolValue(1);
 			}
-		} elsif ( stick_s == 2 and Trig.getBoolValue()) {
+		} elsif ( (stick_s == 2 or stick_s == 3) and Trig.getBoolValue()) {
 			release_aim9();
 		}
 	}, 0, 1);
@@ -59,19 +59,28 @@ var armament_update = func {
 
 	# Check AIM-9 selected with armament panel switches 1 and 8.
 	# Note in FAD light config, S1 and S8 also have AIM-9.
+	var stick_s = StickSelector.getValue();
 	aim9_seq = [];
 	aim9_count = 0;
 	if ( S0.get_selected() ) {
 		# Check if at least one AIM-9 present on the pylons.
 		# Build AIM-9 launch sequence. FIXME aim-9s in this order: 9-0-8-1.
-		if ( S0.get_type() == "AIM-9" ) {
+		if ( S0.get_type() == "AIM-9" and stick_s == 2) {
+			append(aim9_seq, S0);
+			S0.set_display(1);
+			aim9_count += 1;
+		} elsif ( S0.get_type() == "AIM-54"  and stick_s == 3) {
 			append(aim9_seq, S0);
 			S0.set_display(1);
 			aim9_count += 1;
 		} else {
 			S0.set_display(0);
 		}
-		if ( S1.get_type() == "AIM-9" ) {
+		if ( S1.get_type() == "AIM-9"  and stick_s == 2) {
+			append(aim9_seq, S1);
+			S1.set_display(1);
+			aim9_count += 1;
+		} elsif ( S1.get_type() == "AIM-54" and stick_s == 3) {
 			append(aim9_seq, S1);
 			S1.set_display(1);
 			aim9_count += 1;
@@ -82,15 +91,66 @@ var armament_update = func {
 		S0.set_display(0);
 		S1.set_display(0);
 	}
+	# in cockpit the switches for these pylons are not movable:
+	if ( S2.get_type() == "AIM-54" and stick_s == 3) {
+		append(aim9_seq, S2);
+		S2.set_display(1);
+		aim9_count += 1;
+	} else {
+		S2.set_display(0);
+	}
+	if ( S3.get_type() == "AIM-54" and stick_s == 3) {
+		append(aim9_seq, S3);
+		S3.set_display(1);
+		aim9_count += 1;
+	} else {
+		S3.set_display(0);
+	}
+	if ( S4.get_type() == "AIM-54" and stick_s == 3) {
+		append(aim9_seq, S4);
+		S4.set_display(1);
+		aim9_count += 1;
+	} else {
+		S4.set_display(0);
+	}
+	if ( S6.get_type() == "AIM-54" and stick_s == 3) {
+		append(aim9_seq, S6);
+		S6.set_display(1);
+		aim9_count += 1;
+	} else {
+		S6.set_display(0);
+	}
+	if ( S5.get_type() == "AIM-54" and stick_s == 3) {
+		append(aim9_seq, S5);
+		S5.set_display(1);
+		aim9_count += 1;
+	} else {
+		S5.set_display(0);
+	}
+	if ( S7.get_type() == "AIM-54" and stick_s == 3) {
+		append(aim9_seq, S7);
+		S7.set_display(1);
+		aim9_count += 1;
+	} else {
+		S7.set_display(0);
+	}
 	if ( S9.get_selected() ) {
-		if ( S8.get_type() == "AIM-9" ) {
+		if ( S8.get_type() == "AIM-9"  and stick_s == 2) {
+			append(aim9_seq, S8);
+			S8.set_display(1);
+			aim9_count += 1;
+		} elsif ( S8.get_type() == "AIM-54" and stick_s == 3) {
 			append(aim9_seq, S8);
 			S8.set_display(1);
 			aim9_count += 1;
 		} else {
 			S8.set_display(0);
 		}
-		if ( S9.get_type() == "AIM-9" ) {
+		if ( S9.get_type() == "AIM-9"  and stick_s == 2) {
+			append(aim9_seq, S9);
+			S9.set_display(1);
+			aim9_count += 1;
+		} elsif ( S9.get_type() == "AIM-54" and stick_s == 3) {
 			append(aim9_seq, S9);
 			S9.set_display(1);
 			aim9_count += 1;
@@ -103,8 +163,10 @@ var armament_update = func {
 	}
 	# Turn sidewinder cooling lights On/Off.
 	if ( aim9_count > 0 ) {
-		SWCoolOn.setBoolValue(1);
-		SWCoolOff.setBoolValue(0);
+		if (stick_s == 2) {
+			SWCoolOn.setBoolValue(1);
+			SWCoolOff.setBoolValue(0);
+		}
 		update_sw_ready();
 	} else {
 		SWCoolOn.setBoolValue(0);
@@ -162,6 +224,14 @@ var update_sw_ready = func() {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	
 		}
+	} elsif (StickSelector.getValue() == 3 and ArmSwitch.getValue() == 2) {
+		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
+			var pylon = aim9_seq[sw_count - 1];
+			Current_aim9 = armament.AIM.new(pylon.index, "AIM-54", "Phoenix");
+		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
+			Current_aim9.status = 0;	
+			Current_aim9.search();	
+		}
 	} elsif (Current_aim9 != nil) {
 		Current_aim9.status = -1;	
 		SwSoundVol.setValue(0);
@@ -172,7 +242,7 @@ var release_aim9 = func() {
 	#print("RELEASE AIM-9 status: ", Current_aim9.status);
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
-			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
+			var phrase = Current_aim9.brevity~" at: " ~ Current_aim9.Tgt.Callsign.getValue();
 			if (getprop("payload/armament/msg")) {
 				armament.defeatSpamFilter(phrase);
 			} else {
@@ -292,6 +362,12 @@ var arm_selector = func() {
 
 		set_status_current_aim9(-1);	
 	} elsif ( stick_s == 2 ) {
+		# AIM-9:
+		if (Current_aim9 != nil and ArmSwitch.getValue() == 2 and aim9_count > 0) {
+			Current_aim9.status = 0;	
+			Current_aim9.search();	
+		}
+	} elsif ( stick_s == 3 ) {
 		# AIM-9:
 		if (Current_aim9 != nil and ArmSwitch.getValue() == 2 and aim9_count > 0) {
 			Current_aim9.status = 0;	
