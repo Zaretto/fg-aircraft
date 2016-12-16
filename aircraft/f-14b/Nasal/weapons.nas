@@ -92,13 +92,6 @@ var armament_update = func {
 		S1.set_display(0);
 	}
 	# in cockpit the switches for these pylons are not movable:
-	if ( S2.get_type() == "AIM-54" and stick_s == 3) {
-		append(aim9_seq, S2);
-		S2.set_display(1);
-		aim9_count += 1;
-	} else {
-		S2.set_display(0);
-	}
 	if ( S3.get_type() == "AIM-54" and stick_s == 3) {
 		append(aim9_seq, S3);
 		S3.set_display(1);
@@ -126,13 +119,6 @@ var armament_update = func {
 		aim9_count += 1;
 	} else {
 		S5.set_display(0);
-	}
-	if ( S7.get_type() == "AIM-54" and stick_s == 3) {
-		append(aim9_seq, S7);
-		S7.set_display(1);
-		aim9_count += 1;
-	} else {
-		S7.set_display(0);
 	}
 	if ( S9.get_selected() ) {
 		if ( S8.get_type() == "AIM-9"  and stick_s == 2) {

@@ -349,11 +349,15 @@ var AIM = {
 		# get Coord from body position. x,y,z must be in meters.
 		# derived from Vivian's code in AIModel/submodel.cxx.
 		#
+		me.ac = geo.aircraft_position();
+
+		if(x == 0 and y==0 and z==0) {
+			return geo.Coord.new(me.ac);
+		}
+
 		me.ac_roll = OurRoll.getValue();
 		me.ac_pitch = OurPitch.getValue();
-		me.ac_hdg   = OurHdg.getValue();
-
-		me.ac = geo.aircraft_position();
+		me.ac_hdg   = OurHdg.getValue();		
 
 		me.in    = [0,0,0];
 		me.trans = [[0,0,0],[0,0,0],[0,0,0]];
@@ -930,8 +934,7 @@ var AIM = {
 		#
 		me.self = geo.aircraft_position();
 		me.ai.getNode("radar/bearing-deg", 1).setDoubleValue(me.self.course_to(me.coord));
-		me.angleInv = me.clamp(me.self.distance_to(me.coord)/me.self.direct_distance_to(me.coord), -1, 1);
-		me.ai.getNode("radar/elevation-deg", 1).setDoubleValue((me.self.alt()>me.coord.alt()?-1:1)*math.acos(me.angleInv)*R2D);
+		me.ai.getNode("radar/elevation-deg", 1).setDoubleValue(me.getPitch(me.self, me.coord));
 		me.ai.getNode("velocities/true-airspeed-kt",1).setDoubleValue(new_speed_fps * FPS2KT);
 	},
 
@@ -1563,10 +1566,16 @@ var AIM = {
 		  me.coord3.set_alt(coord2.alt());
 		  me.d12 = coord1.direct_distance_to(coord2);
 		  me.d32 = me.coord3.direct_distance_to(coord2);
-		  me.altDi = coord1.alt()-me.coord3.alt();
-		  me.y = R2D * math.acos((math.pow(me.d12, 2)+math.pow(me.altDi,2)-math.pow(me.d32, 2))/(2 * me.d12 * me.altDi));
-		  me.pitchC = -1* (90 - me.y);
-		  return me.pitchC;
+		  if (me.d12 > 0.01) {
+		  	me.altDi = coord1.alt()-me.coord3.alt();
+		  	me.y = R2D * math.acos((math.pow(me.d12, 2)+math.pow(me.altDi,2)-math.pow(me.d32, 2))/(2 * me.d12 * me.altDi));
+		  	me.pitchC = -1* (90 - me.y);
+		  	return me.pitchC;
+	  	} else{
+	  		# arccos wont like if the coord are the same
+	  		return 0;
+	  	}
+		  
 	},
 
 	# aircraft searching for lock
