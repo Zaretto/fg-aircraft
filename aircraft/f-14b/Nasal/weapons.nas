@@ -76,6 +76,11 @@ var armament_update = func {
 		} else {
 			S0.set_display(0);
 		}
+		
+	} else {
+		S0.set_display(0);
+	}
+	if ( S1.get_selected() ) {
 		if ( S1.get_type() == "AIM-9"  and stick_s == 2) {
 			append(aim9_seq, S1);
 			S1.set_display(1);
@@ -88,39 +93,53 @@ var armament_update = func {
 			S1.set_display(0);
 		}
 	} else {
-		S0.set_display(0);
 		S1.set_display(0);
 	}
-	# in cockpit the switches for these pylons are not movable:
-	if ( S3.get_type() == "AIM-54" and stick_s == 3) {
-		append(aim9_seq, S3);
-		S3.set_display(1);
-		aim9_count += 1;
+	if ( S3.get_selected() ) {
+		if ( S3.get_type() == "AIM-54" and stick_s == 3) {
+			append(aim9_seq, S3);
+			S3.set_display(1);
+			aim9_count += 1;
+		} else {
+			S3.set_display(0);
+		}
 	} else {
 		S3.set_display(0);
 	}
-	if ( S4.get_type() == "AIM-54" and stick_s == 3) {
-		append(aim9_seq, S4);
-		S4.set_display(1);
-		aim9_count += 1;
+	if ( S4.get_selected() ) {
+		if ( S4.get_type() == "AIM-54" and stick_s == 3) {
+			append(aim9_seq, S4);
+			S4.set_display(1);
+			aim9_count += 1;
+		} else {
+			S4.set_display(0);
+		}
 	} else {
 		S4.set_display(0);
 	}
-	if ( S6.get_type() == "AIM-54" and stick_s == 3) {
-		append(aim9_seq, S6);
-		S6.set_display(1);
-		aim9_count += 1;
-	} else {
-		S6.set_display(0);
-	}
-	if ( S5.get_type() == "AIM-54" and stick_s == 3) {
-		append(aim9_seq, S5);
-		S5.set_display(1);
-		aim9_count += 1;
+	if ( S5.get_selected() ) {
+		if ( S5.get_type() == "AIM-54" and stick_s == 3) {
+			append(aim9_seq, S5);
+			S5.set_display(1);
+			aim9_count += 1;
+		} else {
+			S5.set_display(0);
+		}
 	} else {
 		S5.set_display(0);
 	}
-	if ( S9.get_selected() ) {
+	if ( S6.get_selected() ) {
+		if ( S6.get_type() == "AIM-54" and stick_s == 3) {
+			append(aim9_seq, S6);
+			S6.set_display(1);
+			aim9_count += 1;
+		} else {
+			S6.set_display(0);
+		}
+	} else {
+		S6.set_display(0);
+	}
+	if ( S8.get_selected() ) {
 		if ( S8.get_type() == "AIM-9"  and stick_s == 2) {
 			append(aim9_seq, S8);
 			S8.set_display(1);
@@ -132,6 +151,10 @@ var armament_update = func {
 		} else {
 			S8.set_display(0);
 		}
+	} else {
+		S8.set_display(0);
+	}
+	if ( S9.get_selected() ) {
 		if ( S9.get_type() == "AIM-9"  and stick_s == 2) {
 			append(aim9_seq, S9);
 			S9.set_display(1);
@@ -144,7 +167,6 @@ var armament_update = func {
 			S9.set_display(0);
 		}
 	} else {
-		S8.set_display(0);
 		S9.set_display(0);
 	}
 	# Turn sidewinder cooling lights On/Off.
@@ -377,6 +399,38 @@ var arm_selector = func() {
 
 var station_selector = func(n, v) {
 	# n = station number, v = up (-1) or down (1) or toggle (0) as there is two kinds of switches.
+	if ( n == 3 or n == 4 or n == 5 or n == 6 ) {
+		# Only up/neutral allowed.
+		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
+		var state = getprop(selector);
+		if (state != -1) {
+			state = -1;
+		} else {
+			state = 0;
+		}
+		setprop(selector, state);
+		if ( state == 0 ) {
+			if ( n == 6 ) {
+				f14.S6.set_selected(0);
+			} elsif ( n == 3 ) {
+				f14.S3.set_selected(0);
+			} elsif ( n == 4 ) {
+				f14.S4.set_selected(0);
+			} elsif ( n == 5 ) {
+				f14.S5.set_selected(0);
+			}
+		} elsif ( state == -1 ) {
+			if ( n == 6 ) {
+				f14.S6.set_selected(1);
+			} elsif ( n == 3 ) {
+				f14.S3.set_selected(1);
+			} elsif ( n == 4 ) {
+				f14.S4.set_selected(1);
+			} elsif ( n == 5 ) {
+				f14.S5.set_selected(1);
+			}
+		}
+	}
 	if ( n == 0 or n == 7 ) {
 		# Only up/down allowed.
 		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
