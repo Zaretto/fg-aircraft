@@ -69,7 +69,7 @@ var armament_update = func {
 			append(aim9_seq, S0);
 			S0.set_display(1);
 			aim9_count += 1;
-		} elsif ( S0.get_type() == "AIM-54"  and stick_s == 3) {
+		} elsif ( (S0.get_type() == "AIM-54" or S0.get_type() == "AIM-7")  and stick_s == 3) {
 			append(aim9_seq, S0);
 			S0.set_display(1);
 			aim9_count += 1;
@@ -85,7 +85,7 @@ var armament_update = func {
 			append(aim9_seq, S1);
 			S1.set_display(1);
 			aim9_count += 1;
-		} elsif ( S1.get_type() == "AIM-54" and stick_s == 3) {
+		} elsif ( (S1.get_type() == "AIM-54" or S1.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S1);
 			S1.set_display(1);
 			aim9_count += 1;
@@ -96,7 +96,7 @@ var armament_update = func {
 		S1.set_display(0);
 	}
 	if ( S3.get_selected() ) {
-		if ( S3.get_type() == "AIM-54" and stick_s == 3) {
+		if ( (S3.get_type() == "AIM-54" or S3.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S3);
 			S3.set_display(1);
 			aim9_count += 1;
@@ -107,7 +107,7 @@ var armament_update = func {
 		S3.set_display(0);
 	}
 	if ( S4.get_selected() ) {
-		if ( S4.get_type() == "AIM-54" and stick_s == 3) {
+		if ( (S4.get_type() == "AIM-54" or S4.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S4);
 			S4.set_display(1);
 			aim9_count += 1;
@@ -118,7 +118,7 @@ var armament_update = func {
 		S4.set_display(0);
 	}
 	if ( S5.get_selected() ) {
-		if ( S5.get_type() == "AIM-54" and stick_s == 3) {
+		if ( (S5.get_type() == "AIM-54" or S5.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S5);
 			S5.set_display(1);
 			aim9_count += 1;
@@ -129,7 +129,7 @@ var armament_update = func {
 		S5.set_display(0);
 	}
 	if ( S6.get_selected() ) {
-		if ( S6.get_type() == "AIM-54" and stick_s == 3) {
+		if ( (S6.get_type() == "AIM-54" or S6.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S6);
 			S6.set_display(1);
 			aim9_count += 1;
@@ -144,7 +144,7 @@ var armament_update = func {
 			append(aim9_seq, S8);
 			S8.set_display(1);
 			aim9_count += 1;
-		} elsif ( S8.get_type() == "AIM-54" and stick_s == 3) {
+		} elsif ( (S8.get_type() == "AIM-54" or S8.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S8);
 			S8.set_display(1);
 			aim9_count += 1;
@@ -159,7 +159,7 @@ var armament_update = func {
 			append(aim9_seq, S9);
 			S9.set_display(1);
 			aim9_count += 1;
-		} elsif ( S9.get_type() == "AIM-54" and stick_s == 3) {
+		} elsif ( (S9.get_type() == "AIM-54" or S9.get_type() == "AIM-7") and stick_s == 3) {
 			append(aim9_seq, S9);
 			S9.set_display(1);
 			aim9_count += 1;
@@ -222,9 +222,14 @@ var fire_gun = func {
 
 var update_sw_ready = func() {
 	var sw_count = SwCount.getValue();
+	if (sw_count != size(aim9_seq)) {
+		print("Strange "~size(aim9_seq)~" pylons ready, but only counts "~sw_count);
+		return;
+	}
+	
 	#print("SIDEWINDER: sw_count - 1 = ", sw_count - 1);
 	if (StickSelector.getValue() == 2 and ArmSwitch.getValue() == 2) {
-		if (Current_aim9 != nil and Current_aim9.type == "AIM-54") {
+		if (Current_aim9 != nil and Current_aim9.type != "AIM-9") {
 			Current_aim9.status = -1;
 			Current_aim9.del();
 			Current_aim9 = nil;
@@ -238,14 +243,22 @@ var update_sw_ready = func() {
 			Current_aim9.search();
 		}
 	} elsif (StickSelector.getValue() == 3 and ArmSwitch.getValue() == 2) {
-		if (Current_aim9 != nil and Current_aim9.type == "AIM-9") {
+		var pylon = nil;
+		if (sw_count > 0 and size(aim9_seq) >= sw_count) {
+			pylon = aim9_seq[sw_count - 1];
+		}
+		if (Current_aim9 != nil and pylon != nil and Current_aim9.type != pylon.get_type()) {
 			Current_aim9.status = -1;
 			Current_aim9.del();
 			Current_aim9 = nil;
 		}
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
 			var pylon = aim9_seq[sw_count - 1];
-			Current_aim9 = armament.AIM.new(pylon.index, "AIM-54", "Phoenix");
+			var name = "Phoenix";
+			if (pylon.get_type() == "AIM-7") {
+				name = "Sparrow";
+			}
+			Current_aim9 = armament.AIM.new(pylon.index, pylon.get_type(), name);
 		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	

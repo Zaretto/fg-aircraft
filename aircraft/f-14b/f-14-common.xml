@@ -1926,12 +1926,43 @@
                 <class type="string">A</class>
                 <fire-msg type="string">FOX2</fire-msg>
             </aim-9>
+            <aim-7>          <!-- aim-7f Sparrow -->
+                <sound-on-off type="bool">false</sound-on-off>
+                <sound-volume type="double">0.0</sound-volume>
+                <vol-search type="double">0.00</vol-search>
+                <vol-track type="double">0.20</vol-track>
+                <vol-track-weak type="double">0.10</vol-track-weak>
+                <guidance type="string">semi-radar</guidance>           <!-- heat, radar or semi-radar -->
+                <all-aspect type="bool">true</all-aspect>                         <!-- all or rear-only -->
+                <max-fire-range-nm type="double">23</max-fire-range-nm><!-- authentic 21.5 for 2m2 RCS -->
+                <FCS-field-deg type="int">25</FCS-field-deg>               
+                <seeker-field-deg type="int">110</seeker-field-deg>    
+                <max-g type="int">20</max-g>                                      <!-- guess -->
+                <thrust-lbf-stage-1 type="double">5750</thrust-lbf-stage-1><!-- authentic -->
+                <thrust-lbf-stage-2 type="double">1018</thrust-lbf-stage-2><!-- authentic -->
+                <stage-1-duration-sec type="double">4.5</stage-1-duration-sec> <!-- authentic -->
+                <stage-2-duration-sec type="double">11</stage-2-duration-sec>  <!-- authentic -->
+                <weight-launch-lbs type="double">510</weight-launch-lbs>      
+                <weight-warhead-lbs type="double">88</weight-warhead-lbs>
+                <drag-coeff type="double">0.6</drag-coeff>
+                <drag-area type="double">0.3382</drag-area><!-- sq ft (0.3281 ft radius) authentic -->
+                <arming-time-sec type="double">2.5</arming-time-sec>                       <!-- guess -->
+                <min-speed-for-guiding-mach type="double">0.9</min-speed-for-guiding-mach> <!-- guess -->
+                <self-destruct-time-sec type="double">75</self-destruct-time-sec>         <!-- guess -->
+                <loft-altitude>22000</loft-altitude><!-- in stage 1 it want to climb to this altitude -->
+                <min-fire-range-nm type="double">0.35</min-fire-range-nm>
+                <max-report-distance type="double">65</max-report-distance>
+                <navigation type="string">APN</navigation>
+                <rail type="bool">false</rail>
+                <class type="string">A</class>
+                <fire-msg>FOX1</fire-msg>
+            </aim-7>
             <aim-54><!-- aim-54c Phoenix -->
                 <sound-on-off type="bool">false</sound-on-off>
                 <sound-volume type="double">0.0</sound-volume>
                 <vol-search type="double">0.0</vol-search>
-                <vol-track type="double">0.35</vol-track>
-                <vol-track-weak type="double">0.20</vol-track-weak>
+                <vol-track type="double">0.20</vol-track>
+                <vol-track-weak type="double">0.10</vol-track-weak>
                 <guidance type="string">radar</guidance>
                 <all-aspect type="bool">true</all-aspect>
                 <max-fire-range-nm type="double">80</max-fire-range-nm> 
