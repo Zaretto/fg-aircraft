@@ -58,6 +58,7 @@
 # GPS guided munitions could have waypoints added.
 # Specify terminal manouvres and preferred impact aspect.
 # Limit guiding if needed so that the missile don't lose sight of target.
+# Change flare to use helicopter property double.
 #
 # Please report bugs and features to Nikolai V. Chr. | ForumUser: Necolatis | Callsign: Leto
 
@@ -1227,10 +1228,10 @@ var AIM = {
             if (me.cruise_or_loft == TRUE) {
             	#print(" pitch "~me.pitch~" + me.raw_steer_signal_elev "~me.raw_steer_signal_elev);
             }
-        } elsif (me.loft_alt != 0 and me.absolutePitch > -25
+        } elsif (me.loft_alt != 0 and me.absolutePitch > -25 and me.dist_curr * M2NM > 10
 			 and me.t_elev_deg < me.loft_angle #and me.t_elev_deg > -7.5
 			 and me.dive_token == FALSE) {
-			# stage 1 lofting: due to target is more than 10 miles out and we havent reached 
+			# lofting: due to target is more than 10 miles out and we havent reached 
 			# our desired cruising alt, and the elevation to target is less than lofting angle.
 			# The -7.5 limit, is so the seeker don't lose track of target when lofting.
 			if (me.life_time < me.time_before_snap_up and me.coord.alt() * M2FT < me.loft_alt) {
@@ -1256,8 +1257,8 @@ var AIM = {
 				#print("Is last turn, APN takes it from here..")
 			}
 		} elsif (me.coord.alt() > me.Tgt.get_Coord().alt() and me.last_cruise_or_loft == TRUE
-		         and me.absolutePitch > -25) {
-			# stage 1/2 cruising: keeping altitude since target is below and more than -45 degs down
+		         and me.absolutePitch > -25 and me.dist_curr * M2NM > 10) {
+			# cruising: keeping altitude since target is below and more than -45 degs down
 
 			me.ratio = (g_fps * me.dt)/me.old_speed_fps;
             me.attitude = 0;
