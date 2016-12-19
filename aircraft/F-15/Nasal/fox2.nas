@@ -284,17 +284,6 @@ print("Model ",missile_model);
 		me.altN.setDoubleValue(aalt);
 		me.hdgN.setDoubleValue(ac_hdg);
 		if (me.rail == FALSE) {
-			# align into wind (commented out since heavy wind make missiles lose sight of target.)
-			var alpha = getprop("orientation/alpha-deg");
-			var beta = getprop("orientation/side-slip-deg");# positive is air from right
-
-			var alpha_diff = alpha * math.cos(ac_roll*D2R) + beta * math.sin(ac_roll*D2R);
-			alpha_diff = alpha > 0?alpha_diff:0;# not using alpha if its negative to avoid missile flying through aircraft.
-			ac_pitch = ac_pitch - alpha_diff;
-			
-			var beta_diff = beta * math.cos(ac_roll*D2R) * ((ac_roll > 90 or ac_roll < -90)?-1:1) - alpha * math.sin(ac_roll*D2R);
-			#ac_hdg = ac_hdg + beta_diff;
-
 			# drop distance in time
 			me.drop_time = math.sqrt(2*7/g_fps);# time to fall 7 ft to clear aircraft
 		}
@@ -966,7 +955,7 @@ print("Model ",missile_model);
             	#print(" pitch "~me.pitch~" + me.raw_steer_signal_elev "~me.raw_steer_signal_elev);
             }
         } elsif (me.loft_alt != 0 and me.dist_curr * M2NM > loft_minimum
-			 and me.t_elev_deg < loft_angle #and me.t_elev_deg > -7.5
+			 and me.t_elev_deg < loft_angle and me.t_elev_deg > -25
 			 and me.dive_token == FALSE) {
 			# stage 1 lofting: due to target is more than 10 miles out and we havent reached 
 			# our desired cruising alt, and the elevation to target is less than lofting angle.
@@ -1037,7 +1026,7 @@ print("Model ",missile_model);
 			var t_heading        = me.TgtHdg_prop.getValue();
 			if (me.last_t_coord.direct_distance_to(me.t_coord) != 0) {
                 # taking sideslip and AoA into consideration:
-                t_heading = me.last_t_coord.course_to(me.t_coord);
+                #t_heading = me.last_t_coord.course_to(me.t_coord);
             }
 			var t_pitch          = me.TgtPitch_prop.getValue();
 			var t_speed          = me.TgtSpeed_prop.getValue()*KT2FPS;#true airspeed
