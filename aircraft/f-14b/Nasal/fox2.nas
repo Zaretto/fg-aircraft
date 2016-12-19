@@ -14,7 +14,7 @@
 
 # Some notes about making weapons:
 #
-# Firstly make sure you read the comments (line 165+) below for the properties.
+# Firstly make sure you read the comments (line 180+) below for the properties.
 # For laser/gps guided gravity bombs make sure to set the max G very low, like 0.5G, to simulate them slowly adjusting to hit the target.
 # Remember for air to air missiles the speed quoted in litterature is normally the speed above the launch platform. I usually fly at mach 1+ at 20000 ft,
 #   there I make sure it can reach approx the max relative speed. For older missiles the max speed quoted is sometimes absolute speed though, so beware.
@@ -28,7 +28,7 @@
 # If litterature quotes a max distance for a weapon, its a good bet it is under the condition that the target
 #   is approaching the launch platform with high speed and does not evade, and also if the launch platform is an aircraft,
 #   that it also is approaching the target with high speed. In other words, high closing rate. For example the AIM-7, which can hit bombers out at 32 NM,
-#   will often have to be within 5.5 NM of an escaping target to hit it (official info). Missiles typically have significantly less range against an evading
+#   will often have to be within 3 NM of an escaping target to hit it. Missiles typically have significantly less range against an evading
 #   or escaping target than what is commonly believed. I usually fly at 20000 ft at mach 1, approach a target flying at me with same speed and altitude,
 #   to test max range.
 # When you test missiles against aircraft, be sure to do it with a framerate of 25+, else they will not hit very good, especially high speed missiles like
@@ -40,17 +40,24 @@
 #
 # Usage:
 #
-# To start making the missile try and get a lock, set its status to MISSILE_SEARCH and call search(), the missile will then keep trying to get a lock on 'contact'.
-#   'contact' can be set to nil at any time or changed. To stop the search, just set its status to MISSILE_STANDBY.
+# To create a weapon call AIM.new(pylon, type, description). The pylon is an integer from 0 or higher. When its launched it will read the pylon position in
+#   controls/armament/station[pylon+1]/offsets, where the position properties must be x-m, y-m and z-m. The type is just a string, the description is a string
+#   that is exposed in its radar properties under AI/models during flight.
+# The model that is loaded and shown is located in the aircraft folder at the value of property payload/armament/models in a subfolder with same name as type.
+#   Inside the subfolder the xml file is called [lowercase type]-[pylon].xml
+# To start making the missile try to get a lock, set its status to MISSILE_SEARCH and call search(), the missile will then keep trying to get a lock on 'contact'.
+#   'contact' can be set to nil at any time or changed. To stop the search, just set its status to MISSILE_STANDBY. To resume the search you again have to set
+#   the status and call search().
 # To release the munition at a target call release(), do this only after the missile has set its own status to MISSILE_LOCK.
 # When using weapons without target, call releaseAtNothing() instead of release(), search() does not need to have been called beforehand.
-#   To then find out where it hit the ground check the impact report in AI/models.
+#   To then find out where it hit the ground check the impact report in AI/models. The impact report will contain warhead weight, but that will be zero if
+#   the weapon did not have time to arm before hitting ground.
 # To drop the munition, without arming it nor igniting its engine, call eject().
 # 
 #
 # Limitations:
 # 
-# The weapons use a simplified flight model that does not have AoA or sideslip. Mass balance, rotational inertia,
+# The weapons use a simplified flight model that does not have AoA or sideslip. Mass balance, rotational inertia, wind,
 #   weight change due to fuel consumption is also not implemented. They also do not roll.
 # If you fire a weapon and have HoT enabled in flightgear, they likely will not hit very precise.
 # The weapons are highly dependant on framerate, so low frame rate will make them hit imprecise.
@@ -136,7 +143,7 @@ var contact = nil;
 # get_Pitch()
 # get_heading()
 # getFlareNode()  - Used for flares.
-# isPainted()     - Tells if this is the target that are being tracked, only used in semi-radar guided missiles.
+# isPainted()     - Tells if this target is still being tracked by the launch platform, only used in semi-radar and laser guided missiles.
 
 var AIM = {
 	#done
@@ -773,8 +780,7 @@ var AIM = {
 		me.speed_horizontal_fps = math.cos(me.pitch * D2R) * me.new_speed_fps;
 		me.speed_north_fps      = math.cos(me.hdg * D2R) * me.speed_horizontal_fps;
 		me.speed_east_fps       = math.sin(me.hdg * D2R) * me.speed_horizontal_fps;
-		# todo: do all calc in vector components, that will next loop make grav be applied correct.
-		me.speed_down_fps += g_fps * me.dt;
+		me.speed_down_fps      += g_fps * me.dt;
 
 		if (me.rail == TRUE and me.rail_passed == FALSE) {
 			# missile still on rail, lets calculate its speed relative to the wind coming in from the aircraft nose.
