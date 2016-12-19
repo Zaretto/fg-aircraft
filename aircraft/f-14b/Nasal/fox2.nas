@@ -36,7 +36,16 @@
 # Laser and semi-radar guided munitions need the target to be painted to keep lock. Notice gps guided munition that are all aspect will never lose lock,
 #   whether they can 'see' the target or not.
 # Remotely controlled navigation is not implemented, but the way it flies can be simulated by setting direct navigation with semi-radar or laser guidance.
-# When using weapons without target, call releaseAtNothing() instead of release(). To find out where they hit check the impact report in AI/models.
+#
+#
+# Usage:
+#
+# To start making the missile try and get a lock, set its status to MISSILE_SEARCH and call search(), the missile will then keep trying to get a lock on 'contact'.
+#   'contact' can be set to nil at any time or changed. To stop the search, just set its status to MISSILE_STANDBY.
+# To release the munition at a target call release(), do this only after the missile has set its own status to MISSILE_LOCK.
+# When using weapons without target, call releaseAtNothing() instead of release(), search() does not need to have been called beforehand.
+#   To then find out where it hit the ground check the impact report in AI/models.
+# To drop the munition, without arming it nor igniting its engine, call eject().
 # 
 #
 # Limitations:
@@ -406,6 +415,16 @@ var AIM = {
 		me.c.set_latlon(me.mlat, me.mlon, me.malt * FT2M);
 
 		return me.c;
+	},
+
+	eject: func () {#GCD
+		me.stage_1_duration = 0;
+		me.force_lbs_1      = 0;
+		me.stage_2_duration = 0;
+		me.force_lbs_2      = 0;
+		me.arming_time      = 5000;
+		me.rail             = FALSE;
+		me.releaseAtNothing();
 	},
 
 	releaseAtNothing: func() {#GCD
