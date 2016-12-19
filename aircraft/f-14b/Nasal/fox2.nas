@@ -1845,7 +1845,7 @@ var AIM = {
 		me.latN.setDoubleValue(me.coord.lat());
 		me.lonN.setDoubleValue(me.coord.lon());
 		me.altN.setDoubleValue(me.coord.alt()*M2FT);
-		me.pitchN.setDoubleValue(0);
+		me.pitchN.setDoubleValue(0);# this will make explosions from cluster bombs (like M90) align to ground 'sorta'.
 		me.msl_prop.setBoolValue(FALSE);
 		me.smoke_prop.setBoolValue(FALSE);
 		me.explode_prop.setBoolValue(TRUE);
@@ -1861,7 +1861,7 @@ var AIM = {
 		me.latN.setDoubleValue(me.coord.lat());
 		me.lonN.setDoubleValue(me.coord.lon());
 		me.altN.setDoubleValue(me.coord.alt()*M2FT);
-		me.pitchN.setDoubleValue(0);
+		#me.pitchN.setDoubleValue(0); uncomment this to let it lie flat on ground, instead of sticking its nose in it.
 		me.smoke_prop.setBoolValue(FALSE);
 	},
 
