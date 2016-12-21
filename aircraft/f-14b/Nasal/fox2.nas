@@ -116,7 +116,7 @@ var SURFACE = 2;
 var ORDNANCE = 3;
 
 var g_fps        = 9.80665 * M2FT;
-var slugs_to_lbs = 32.1740485564;
+var slugs_to_lbm = 32.1740485564;
 var const_e = 2.71828183;
 
 var first_in_air = FALSE;# first missile is in the air, other missiles should not write to blade[x].
@@ -180,12 +180,13 @@ var AIM = {
 		m.fcs_fov               = getprop("payload/armament/"~m.type_lc~"/FCS-field-deg") / 2;          # fire control system total field of view
 		m.max_detect_rng        = getprop("payload/armament/"~m.type_lc~"/max-fire-range-nm");          # max range that the FCS allows firing
 		m.max_seeker_dev        = getprop("payload/armament/"~m.type_lc~"/seeker-field-deg") / 2;       # missiles own seekers total FOV
-		m.force_lbs_1           = getprop("payload/armament/"~m.type_lc~"/thrust-lbf-stage-1");         # stage 1 thrust, set both stages to zero to simulate gravity bomb, set them to 1 to simulate glide bomb
-		m.force_lbs_2           = getprop("payload/armament/"~m.type_lc~"/thrust-lbf-stage-2");         # stage 2 thrust
+		m.force_lbf_1           = getprop("payload/armament/"~m.type_lc~"/thrust-lbf-stage-1");         # stage 1 thrust, set both stages to zero to simulate gravity bomb, set them to 1 to simulate glide bomb
+		m.force_lbf_2           = getprop("payload/armament/"~m.type_lc~"/thrust-lbf-stage-2");         # stage 2 thrust
 		m.stage_1_duration      = getprop("payload/armament/"~m.type_lc~"/stage-1-duration-sec");       # stage 1 duration
 		m.stage_2_duration      = getprop("payload/armament/"~m.type_lc~"/stage-2-duration-sec");       # stage 2 duration
-		m.weight_launch_lbs     = getprop("payload/armament/"~m.type_lc~"/weight-launch-lbs");          # total weight of armament
-		m.weight_whead_lbs      = getprop("payload/armament/"~m.type_lc~"/weight-warhead-lbs");         # warhead weight
+		m.weight_launch_lbm     = getprop("payload/armament/"~m.type_lc~"/weight-launch-lbs");          # total weight of armament, including fuel and warhead.
+		m.weight_whead_lbm      = getprop("payload/armament/"~m.type_lc~"/weight-warhead-lbs");         # warhead weight
+		m.weight_fuel_lbm       = getprop("payload/armament/"~m.type_lc~"/weight-fuel-lbm");            # fuel weight [optional]. If this property is not present, it won't lose weight as the fuel is used.
 		m.Cd_base               = getprop("payload/armament/"~m.type_lc~"/drag-coeff");                 # drag coefficient
 		m.eda                   = getprop("payload/armament/"~m.type_lc~"/drag-area");                  # normally is crosssection area of munition (without fins)
 		m.max_g                 = getprop("payload/armament/"~m.type_lc~"/max-g");                      # max G-force the missile can pull at sealevel
@@ -426,9 +427,9 @@ var AIM = {
 
 	eject: func () {#GCD
 		me.stage_1_duration = 0;
-		me.force_lbs_1      = 0;
+		me.force_lbf_1      = 0;
 		me.stage_2_duration = 0;
-		me.force_lbs_2      = 0;
+		me.force_lbf_2      = 0;
 		me.arming_time      = 5000;
 		me.rail             = FALSE;
 		me.releaseAtNothing();
@@ -544,7 +545,19 @@ var AIM = {
 		}
 		printf("Launch %s at %s.", me.type, me.callsign);
 
-		me.mass = me.weight_launch_lbs / slugs_to_lbs;
+		me.weight_current = me.weight_launch_lbm;
+		me.mass = me.weight_launch_lbm / slugs_to_lbm;
+
+		# find the fuel consumption - lbm/sec
+		if (me.weight_fuel_lbm == nil) {
+			me.weight_fuel_lbm = 0;
+		}
+		var energy1 = me.force_lbf_1 * me.stage_1_duration;
+		var energy2 = me.force_lbf_2 * me.stage_2_duration;
+		var energyT = energy1 + energy2;
+		var fuel_per_energy = me.weight_fuel_lbm / energyT;
+		me.fuel_per_sec_1  = (fuel_per_energy * energy1) / me.stage_1_duration;
+		me.fuel_per_sec_2  = (fuel_per_energy * energy2) / me.stage_2_duration;
 
 		me.flight();
 		loadNode.remove();
@@ -591,10 +604,10 @@ var AIM = {
 		#
 		me.thrust_lbf = 0;# pounds force (lbf)
 		if (me.life_time > me.drop_time) {
-			me.thrust_lbf = me.force_lbs_1;
+			me.thrust_lbf = me.force_lbf_1;
 		}
 		if (me.life_time > me.stage_1_duration + me.drop_time) {
-			me.thrust_lbf = me.force_lbs_2;
+			me.thrust_lbf = me.force_lbf_2;
 		}
 		if (me.life_time > (me.drop_time + me.stage_1_duration + me.stage_2_duration)) {
 			me.thrust_lbf = 0;
@@ -919,6 +932,18 @@ var AIM = {
 			me.rail_passed = TRUE;
 			#print("rail passed");
 		}
+
+		# consume fuel
+		if (me.life_time > (me.drop_time + me.stage_1_duration + me.stage_2_duration)) {
+			me.weight_current = me.weight_launch_lbm - me.weight_fuel_lbm;
+		} elsif (me.life_time > (me.drop_time + me.stage_1_duration)) {
+			me.weight_current = me.weight_current - me.fuel_per_sec_2 * me.dt;
+		} elsif (me.life_time > me.drop_time) {
+			me.weight_current = me.weight_current - me.fuel_per_sec_1 * me.dt;
+		}
+		#printf("weight %0.1f", me.weight_current);
+		me.mass = me.weight_current / slugs_to_lbm;		
+
 		me.last_dt = me.dt;
 		settimer(func me.flight(), update_loop_time, SIM_TIME);		
 	},
@@ -1140,10 +1165,18 @@ var AIM = {
 				print(me.type~": Not guiding (lost radar reflection, trying to reaquire)");
 			}
 			me.semiLostLock = TRUE;
-		} elsif ((me.curr_deviation_e > me.max_seeker_dev or me.curr_deviation_e < (-1 * me.max_seeker_dev)
-			  or me.curr_deviation_h > me.max_seeker_dev or me.curr_deviation_h < (-1 * me.max_seeker_dev)) and me.guidance != "gps") {
+		} elsif ((math.abs(me.curr_deviation_e) > me.max_seeker_dev or math.abs(me.curr_deviation_h) > me.max_seeker_dev) and me.guidance != "gps") {
 			# target is not in missile seeker view anymore
-			print(me.type~": Target is not in missile seeker view anymore.");
+			if (me.curr_deviation_e > me.max_seeker_dev) {
+				me.viewLost = "Target is above seeker view.";
+			} elsif (me.curr_deviation_e < (-1 * me.max_seeker_dev)) {
+				me.viewLost = "Target is below seeker view. "~(me.dist_curr*M2NM)~" NM and "~((me.coord.alt()-me.t_coord.alt())*M2FT)~" ft diff.";
+			} elsif (me.curr_deviation_h > me.max_seeker_dev) {
+				me.viewLost = "Target is right of seeker view.";
+			} else {
+				me.viewLost = "Target is left of seeker view.";
+			}
+			print(me.type~": Target is not in missile seeker view anymore. "~me.viewLost);
 			me.free = TRUE;
 		} elsif (me.all_aspect == FALSE and me.rear_aspect() == FALSE) {
 			me.guiding = FALSE;
@@ -1568,7 +1601,7 @@ var AIM = {
 		# Create impact coords from this previous relative position applied to target current coord.
 		#me.t_coord.apply_course_distance(t_bearing_deg, t_dist_m);
 		#me.t_coord.set_alt(new_t_alt_m);		
-		var wh_mass = event == "exploded"?me.weight_whead_lbs:0;#will report 0 mass if did not have time to arm
+		var wh_mass = event == "exploded"?me.weight_whead_lbm:0;#will report 0 mass if did not have time to arm
 		#print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
 		impact_report(me.coord, wh_mass, "munition", me.type); # pos, alt, mass_slug,(speed_mps)
 
