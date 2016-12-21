@@ -80,6 +80,7 @@
 # Specify terminal manouvres and preferred impact aspect.
 # Limit guiding if needed so that the missile don't lose sight of target.
 # Change flare to use helicopter property double.
+# Make check for seeker FOV round instead of square, same with check for lock on sun.
 #
 # Please report bugs and features to Nikolai V. Chr. | ForumUser: Necolatis | Callsign: Leto
 
@@ -200,6 +201,7 @@ var AIM = {
 		m.vol_track             = getprop("payload/armament/"~m.type_lc~"/vol-track");                  # sound volume when having lock
 		m.vol_track_weak        = getprop("payload/armament/"~m.type_lc~"/vol-track-weak");             # sound volume before getting solid lock
 		m.angular_speed         = getprop("payload/armament/"~m.type_lc~"/seeker-angular-speed-dps");   # only for heat/vision seeking missiles. Max angular speed that the target can move as seen from seeker, before seeker loses lock.
+		m.sun_lock              = getprop("payload/armament/"~m.type_lc~"/lock-on-sun-deg");            # only for heat seeking missiles. If it looks at sun within this angle, it will lose lock on target.
         m.loft_alt              = getprop("payload/armament/"~m.type_lc~"/loft-altitude");              # if 0 then no snap up. Below 10000 then cruise altitude above ground. Above 10000 max altitude it will snap up to.
         m.follow                = getprop("payload/armament/"~m.type_lc~"/terrain-follow");             # used for anti-ship missiles that should be able to terrain follow instead of purely sea skimming.
         m.min_dist              = getprop("payload/armament/"~m.type_lc~"/min-fire-range-nm");          # it wont get solid lock before the target has this range
@@ -558,6 +560,17 @@ var AIM = {
 		var fuel_per_energy = me.weight_fuel_lbm / energyT;
 		me.fuel_per_sec_1  = (fuel_per_energy * energy1) / me.stage_1_duration;
 		me.fuel_per_sec_2  = (fuel_per_energy * energy2) / me.stage_2_duration;
+
+		# find the sun:
+		if(me.guidance == "heat") {
+			var sun_x = getprop("ephemeris/sun/local/x");
+			var sun_y = getprop("ephemeris/sun/local/x");
+			var sun_z = getprop("ephemeris/sun/local/x");
+			me.sun_power = getprop("/rendering/scene/diffuse/red");
+			me.sun = geo.Coord.new(me.ac_init);
+			me.sun.set_xyz(me.sun.x()+sun_x*200000, me.sun.y()+sun_y*200000, me.sun.z()+sun_z*200000);#heat seeking missiles don't fly far, so setting it 200Km away is fine.
+		}
+		me.lock_on_sun = FALSE;
 
 		me.flight();
 		loadNode.remove();
@@ -1093,6 +1106,8 @@ var AIM = {
 
 		me.checkForFlare();
 
+		me.checkForSun();
+
 		me.checkForGuidance();
 
 		me.canSeekerKeepUp();
@@ -1146,6 +1161,26 @@ var AIM = {
 						}
 					}
 				}
+			}
+		}
+	},
+
+	checkForSun: func () {
+		if (me.guidance == "heat" and me.sun_power > 0.6) {
+			# heat seeker locked on to sun
+			me.sun_dev_e = me.getPitch(me.coord, me.sun) - me.pitch;
+			me.sun_dev_h = me.coord.course_to(me.sun) - me.hdg;
+			while(me.sun_dev_h < -180) {
+				me.sun_dev_h += 360;
+			}
+			while(me.sun_dev_h > 180) {
+				me.sun_dev_h -= 360;
+			}
+			# now we check if the sun is behind the target, which is the direction the gyro seeker is pointed at:
+			if (math.abs(me.sun_dev_e-me.curr_deviation_e) < me.sun_lock and math.abs(me.sun_dev_h-me.curr_deviation_h) < me.sun_lock) {
+				print(me.type~": Locked onto sun, lost target. ");
+				me.lock_on_sun = TRUE;
+				me.free = TRUE;
 			}
 		}
 	},
@@ -1212,7 +1247,7 @@ var AIM = {
 				#print(sprintf("last-elev=%.1f", me.last_deviation_e)~sprintf(" last-elev-adj=%.1f", me.last_track_e));
 				#print(sprintf("last-head=%.1f", me.last_deviation_h)~sprintf(" last-head-adj=%.1f", me.last_track_h));
 				# lost lock due to angular speed limit
-				printf("%s: %.1f deg/s too big angular change for seeker head.", me.type, me.deviation_per_sec);
+				printf("%s: %.1f deg/s too fast angular change for seeker head.", me.type, me.deviation_per_sec);
 				me.free = TRUE;
 			}
 		}
@@ -1331,7 +1366,7 @@ var AIM = {
 				me.dive_token = TRUE;
 				#print("Is last turn, APN takes it from here..")
 			}
-		} elsif (me.coord.alt() > me.Tgt.get_Coord().alt() and me.last_cruise_or_loft == TRUE
+		} elsif (me.coord.alt() > me.t_coord.alt() and me.last_cruise_or_loft == TRUE
 		         and me.absolutePitch > -25 and me.dist_curr * M2NM > 10) {
 			# cruising: keeping altitude since target is below and more than -45 degs down
 
@@ -1376,8 +1411,8 @@ var AIM = {
 				me.apn = 1;
 			}
 
-			me.horz_closing_rate_fps = me.clamp(((me.dist_last - me.dist_curr)*M2FT)/me.dt, 1, 1000000);#clamped due to cruise missiles that can fly slower than target.
-			#printf("Horz closing rate: %5d", horz_closing_rate_fps);
+			me.horz_closing_rate_fps = me.clamp(((me.dist_last - me.dist_curr)*M2FT)/me.dt, 0.1, 1000000);#clamped due to cruise missiles that can fly slower than target.
+			#printf("Horz closing rate: %5d ft/sec", me.horz_closing_rate_fps);
 			me.proportionality_constant = 3;
 
 			me.c_dv = me.t_course-me.last_t_course;
@@ -1461,7 +1496,8 @@ var AIM = {
 				# augmented proportional navigation for elevation #
 				###################################################
 				#print(me.navigation~" in fully control");
-				me.vert_closing_rate_fps = me.clamp(((me.dist_direct_last - me.dist_curr_direct)*M2FT)/me.dt,1,1000000);
+				me.vert_closing_rate_fps = me.clamp(((me.dist_direct_last - me.dist_curr_direct)*M2FT)/me.dt, 0.1, 1000000);
+				#printf("Vert closing rate: %5d ft/sec", me.vert_closing_rate_fps);
 				me.line_of_sight_rate_up_rps = (D2R*(me.t_elev_deg-me.last_t_elev_deg))/me.dt;
 
 				# calculate target acc as normal to LOS line: (up acc is positive)
@@ -1562,7 +1598,9 @@ var AIM = {
 		#var new_t_alt_m = me.t_coord.alt() + t_delta_alt_m;
 		#var t_dist_m  = me.direct_dist_m;
 
-		if (me.fooled == TRUE) {
+		if (me.lock_on_sun == TRUE) {
+			reason = "Locked onto sun.";
+		} elsif (me.fooled == TRUE) {
 			reason = "Fooled by flare.";
 		}
 		
