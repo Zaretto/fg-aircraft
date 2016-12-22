@@ -74,6 +74,7 @@ var AIM9 = {
 		m.stage_2_duration = getprop("sim/model/f15/systems/armament/"~m.type~"/stage-2-duration-sec");
 		m.weight_launch_lbs = getprop("sim/model/f15/systems/armament/"~m.type~"/weight-launch-lbs");
 		m.weight_whead_lbs  = getprop("sim/model/f15/systems/armament/"~m.type~"/weight-warhead-lbs");
+		m.weight_fuel_lbm   = getprop("sim/model/f15/systems/armament/"~m.type~"/weight-fuel-lbm");
 		m.Cd_base           = getprop("sim/model/f15/systems/armament/"~m.type~"/drag-coeff");
 		m.eda               = getprop("sim/model/f15/systems/armament/"~m.type~"/drag-area");
 		m.max_g             = getprop("sim/model/f15/systems/armament/"~m.type~"/max-g");
@@ -331,6 +332,20 @@ print("Model ",missile_model);
 
 		me.smoke_prop.setBoolValue(1);
 		SwSoundVol.setValue(0);
+
+
+		# find the fuel consumption - lbm/sec
+		if (me.weight_fuel_lbm == nil) {
+			me.weight_fuel_lbm = 0;
+		}
+		var energy1 = me.force_lbs_1 * me.stage_1_duration;
+		var energy2 = me.force_lbs_2 * me.stage_2_duration;
+		var energyT = energy1 + energy2;
+		var fuel_per_energy = me.weight_fuel_lbm / energyT;
+		me.fuel_per_sec_1  = (fuel_per_energy * energy1) / me.stage_1_duration;
+		me.fuel_per_sec_2  = (fuel_per_energy * energy2) / me.stage_2_duration;
+		me.weight_current = me.weight_launch_lbs;
+
 		settimer(func { HudReticleDeg.setValue(0) }, 2);
 		interpolate(HudReticleDev, 0, 2);
 		me.update();
@@ -398,7 +413,7 @@ print("Model ",missile_model);
 		# Calculate speed change from last update.
 		#
 		# Acceleration = thrust/mass - drag/mass;
-		var mass = me.weight_launch_lbs / slugs_to_lbs;
+		var mass = me.weight_current / slugs_to_lbs;
 		var acc = thrust_lbf / mass;
 		var q = 0.5 * rho * me.old_speed_fps * me.old_speed_fps;# dynamic pressure
 		var drag_acc = (Cd * q * me.eda) / mass;
@@ -656,6 +671,17 @@ print("Model ",missile_model);
 			me.rail_passed = TRUE;
 			#print("rail passed");
 		}
+
+		# consume fuel
+		if (me.life_time > (me.drop_time + me.stage_1_duration + me.stage_2_duration)) {
+			me.weight_current = me.weight_launch_lbs - me.weight_fuel_lbm;
+		} elsif (me.life_time > (me.drop_time + me.stage_1_duration)) {
+			me.weight_current = me.weight_current - me.fuel_per_sec_2 * me.dt;
+		} elsif (me.life_time > me.drop_time) {
+			me.weight_current = me.weight_current - me.fuel_per_sec_1 * me.dt;
+		}
+		#printf("weight %0.1f", me.weight_current);
+
 		me.last_dt = me.dt;
 		settimer(func me.update(), 0);
 		
