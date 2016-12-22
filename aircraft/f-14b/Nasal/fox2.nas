@@ -5,7 +5,7 @@
 ####### License: GPL 2
 #######
 ####### Authors:
-#######  XIII, 5N1N0B1, Nikolai V. Chr.
+#######  Alexis Bory, Fabien Barbier, Justin Nicholson, Nikolai V. Chr.
 ####### 
 ####### In addition, some code is derived from work by:
 #######  David Culp, Vivian Meazza, M. Franz
@@ -16,9 +16,11 @@
 #
 # Firstly make sure you read the comments (line 180+) below for the properties.
 # For laser/gps guided gravity bombs make sure to set the max G very low, like 0.5G, to simulate them slowly adjusting to hit the target.
-# Remember for air to air missiles the speed quoted in litterature is normally the speed above the launch platform. I usually fly at mach 1+ at 20000 ft,
+# Remember for air to air missiles the speed quoted in litterature is normally the speed above the launch platform. I usually fly at the typical usage
+#   regime for that missile, so for example for sidewinder it would be mach 1+ at 20000 ft,
 #   there I make sure it can reach approx the max relative speed. For older missiles the max speed quoted is sometimes absolute speed though, so beware.
-#   Speeds quoted in in unofficial sources can be any of them, but if its around mach 5 its a good bet its absolute, only very few missiles are hypersonic.
+#   If it quotes aerodynamic speed then its the absolute speed. Speeds quoted in in unofficial sources can be any of them,
+#   but if its around mach 5 for A/A its a good bet its absolute, only very few A/A missiles are likely hypersonic.
 # Stage durations is allowed to be 0, so can thrust values. If there is no second stage, instead of just setting stage 2 thrust to 0,
 #   set stage 2 duration to 0 also. For unpowered munitions, set all thrusts to 0.
 # For very low sea skimming missiles, be sure to set terrain following to false, you cannot have it both ways.
@@ -28,8 +30,8 @@
 # If litterature quotes a max distance for a weapon, its a good bet it is under the condition that the target
 #   is approaching the launch platform with high speed and does not evade, and also if the launch platform is an aircraft,
 #   that it also is approaching the target with high speed. In other words, high closing rate. For example the AIM-7, which can hit bombers out at 32 NM,
-#   will often have to be within 3 NM of an escaping target to hit it. Missiles typically have significantly less range against an evading
-#   or escaping target than what is commonly believed. I usually fly at 20000 ft at mach 1, approach a target flying at me with same speed and altitude,
+#   will often have to be within 3 NM of an escaping target to hit it (source). Missiles typically have significantly less range against an evading
+#   or escaping target than what is commonly believed. I typically fly at 20000 ft at mach 1, approach a target flying at me with same speed and altitude,
 #   to test max range.
 # When you test missiles against aircraft, be sure to do it with a framerate of 25+, else they will not hit very good, especially high speed missiles like
 #   Amraam or Phoenix. Also notice they generally not hit so close against Scenario/AI objects compared to MP aircraft due to the way these are updated.
@@ -81,6 +83,8 @@
 # Limit guiding if needed so that the missile don't lose sight of target.
 # Change flare to use helicopter property double.
 # Make check for seeker FOV round instead of square, same with check for lock on sun.
+# Consider to average the closing speed in proportional navigation. So get it between second last positions and current, instead of last to currect.
+# Drag coeff due to exhaust.
 #
 # Please report bugs and features to Nikolai V. Chr. | ForumUser: Necolatis | Callsign: Leto
 
@@ -955,7 +959,7 @@ var AIM = {
 			me.weight_current = me.weight_current - me.fuel_per_sec_1 * me.dt;
 		}
 		#printf("weight %0.1f", me.weight_current);
-		me.mass = me.weight_current / slugs_to_lbm;		
+		me.mass = me.weight_current / slugs_to_lbm;
 
 		me.last_dt = me.dt;
 		settimer(func me.flight(), update_loop_time, SIM_TIME);		
@@ -1167,7 +1171,7 @@ var AIM = {
 
 	checkForSun: func () {
 		if (me.guidance == "heat" and me.sun_power > 0.6) {
-			# heat seeker locked on to sun
+			# test for heat seeker locked on to sun
 			me.sun_dev_e = me.getPitch(me.coord, me.sun) - me.pitch;
 			me.sun_dev_h = me.coord.course_to(me.sun) - me.hdg;
 			while(me.sun_dev_h < -180) {
