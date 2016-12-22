@@ -1004,7 +1004,7 @@ print("Model ",missile_model);
 				me.dive_token = TRUE;
 				#print("Is last turn, APN takes it from here..")
 			}
-		} elsif (me.t_elev_deg < 0 #and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
+		} elsif (me.t_elev_deg < 0 and me.t_elev_deg > -25#and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
 		         and me.dist_curr * M2NM > cruise_minimum) {
 			# stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
 
