@@ -59,11 +59,11 @@
 #
 # Limitations:
 # 
-# The weapons use a simplified flight model that does not have AoA or sideslip. Mass balance, rotational inertia, wind,
-#   weight change due to fuel consumption is also not implemented. They also do not roll.
+# The weapons use a simplified flight model that does not have AoA or sideslip. Mass balance, rotational inertia, wind is also not implemented. They also do not roll.
 # If you fire a weapon and have HoT enabled in flightgear, they likely will not hit very precise.
 # The weapons are highly dependant on framerate, so low frame rate will make them hit imprecise.
 # APN does not take target sideslip and AoA into account when considering the targets acceleration. It assumes the target flies in the direction its pointed.
+# The drag curves are tailored for sizable munitions, so it does not work well will bullet or cannon sized munition, submodels are better suited for that.
 #
 #
 # Future features:
@@ -82,7 +82,7 @@
 # Specify terminal manouvres and preferred impact aspect.
 # Limit guiding if needed so that the missile don't lose sight of target.
 # Change flare to use helicopter property double.
-# Make check for seeker FOV round instead of square, same with check for lock on sun.
+# Make check for seeker FOV round instead of square.
 # Consider to average the closing speed in proportional navigation. So get it between second last positions and current, instead of last to currect.
 # Drag coeff due to exhaust.
 #
@@ -1181,7 +1181,8 @@ var AIM = {
 				me.sun_dev_h -= 360;
 			}
 			# now we check if the sun is behind the target, which is the direction the gyro seeker is pointed at:
-			if (math.abs(me.sun_dev_e-me.curr_deviation_e) < me.sun_lock and math.abs(me.sun_dev_h-me.curr_deviation_h) < me.sun_lock) {
+			me.sun_dev = math.sqrt((me.sun_dev_e-me.curr_deviation_e)*(me.sun_dev_e-me.curr_deviation_e)+(me.sun_dev_h-me.curr_deviation_h)*(me.sun_dev_h-me.curr_deviation_h));
+			if (me.sun_dev < me.sun_lock) {
 				print(me.type~": Locked onto sun, lost target. ");
 				me.lock_on_sun = TRUE;
 				me.free = TRUE;
