@@ -321,14 +321,7 @@ print("Model ",missile_model);
 
 		me.density_alt_diff = getprop("fdm/jsbsim/atmosphere/density-altitude") - aalt;
 
-		if (me.loft_alt > 10000) {
-			#
-			# adjust the snap-up altitude to initial distance of target.
-			#
-			var dst = me.coord.distance_to(geo.Coord.new().set_latlon(me.TgtLat_prop.getValue(), me.TgtLon_prop.getValue(), me.TgtAlt_prop.getValue()*FT2M)) * M2NM;
-			me.loft_alt = me.loft_alt - ((me.max_detect_rng - 10) - (dst - 10))*500;
-			me.loft_alt = me.clamp(me.loft_alt, 10000, 200000);
-		}
+		me.snapUp = me.loft_alt > 10000;
 
 		me.smoke_prop.setBoolValue(1);
 		SwSoundVol.setValue(0);
@@ -700,7 +693,13 @@ print("Model ",missile_model);
             #print(sprintf("G1 %.2f", myG));
             var myG2 = steering_speed_G(me.track_signal_e, me.track_signal_h, me.old_speed_fps, me.dt);
             #print(sprintf("G2 %.2f", myG)~sprintf(" - Coeff %.2f", MyCoef));
-            printf("Missile pulling almost max G: %.1f G", myG2);
+            if (me.limitGs == FALSE) {
+            	printf("Missile pulling almost max G: %.1f G", myG2);
+            }
+        }
+        if (me.limitGs == TRUE and myG > me.max_g_current/2) {
+        	# Save the high performance manouving for later
+        	me.track_signal_e = me.track_signal_e /2;
         }
 	},
 
@@ -906,9 +905,11 @@ print("Model ",missile_model);
 		var loft_angle = 15;# notice Shinobi used 26.5651 degs, but Raider1 found a source saying 10-20 degs.
 		var loft_minimum = 10;# miles
 		var cruise_minimum = 10;# miles
+		me.time_before_snap_up = me.drop_time * 3;
 		me.cruise_or_loft = FALSE;
+		me.limitGs = FALSE;
 		
-        if(me.loft_alt != 0 and me.loft_alt < 10000) {
+        if(me.loft_alt != 0 and me.snapUp == FALSE) {
         	# this is for Air to ground/sea cruise-missile (SCALP, Sea-Eagle, Taurus, Tomahawk, RB-15...)
 
         	# detect terrain for use in terrain following
@@ -980,32 +981,36 @@ print("Model ",missile_model);
             if (me.cruise_or_loft == TRUE) {
             	#print(" pitch "~me.pitch~" + me.raw_steer_signal_elev "~me.raw_steer_signal_elev);
             }
-        } elsif (me.loft_alt != 0 and me.dist_curr * M2NM > loft_minimum
+        } elsif (me.snapUp == TRUE and me.dist_curr * M2NM > loft_minimum
 			 and me.t_elev_deg < loft_angle and me.t_elev_deg > -25
 			 and me.dive_token == FALSE) {
 			# stage 1 lofting: due to target is more than 10 miles out and we havent reached 
 			# our desired cruising alt, and the elevation to target is less than lofting angle.
 			# The -7.5 limit, is so the seeker don't lose track of target when lofting.
-			if (me.coord.alt() * M2FT < me.loft_alt) {
+			if (me.life_time < me.time_before_snap_up and me.coord.alt() * M2FT < me.loft_alt) {
+				#print("preparing for lofting");
+				me.cruise_or_loft = TRUE;
+			} elsif (me.coord.alt() * M2FT < me.loft_alt) {
 				me.raw_steer_signal_elev = -me.pitch + loft_angle;
-				#print(sprintf("Lofting %.1f degs, dev is %.1f", loft_angle, me.raw_steer_signal_elev));
+				me.limitGs = TRUE;
+				#print(sprintf("Lofting %.1f degs, dev is %.1f", me.loft_angle, me.raw_steer_signal_elev));
 			} else {
 				me.dive_token = TRUE;
-				#print("Cruise token");
+				#print("Stopped lofting");
 			}
 			me.cruise_or_loft = TRUE;
-		} elsif (me.rail == TRUE and me.rail_forward == FALSE and me.dist_curr * M2NM > cruise_minimum and me.dive_token == FALSE) {
+		} elsif (me.rail == TRUE and me.rail_forward == FALSE and me.dive_token == FALSE) {
 			# tube launched missile turns towards target
 
 			me.raw_steer_signal_elev = -me.pitch + me.t_elev_deg;
 			#print("Turning, desire "~me.t_elev_deg~" degs pitch.");
 			me.cruise_or_loft = TRUE;
-			if (math.abs(me.curr_deviation_e) < 5) {
+			if (math.abs(me.curr_deviation_e) < 7.5) {
 				me.dive_token = TRUE;
 				#print("Is last turn, APN takes it from here..")
 			}
-		} elsif (me.t_elev_deg < 0 and me.t_elev_deg > -25#and me.life_time < me.stage_1_duration+me.stage_2_duration+me.drop_time
-		         and me.dist_curr * M2NM > cruise_minimum) {
+		} elsif (me.snapUp == TRUE and me.coord.alt() > me.t_coord.alt() and me.t_elev_deg > -25
+		         and me.dist_curr * M2NM > cruise_minimum and me.last_cruise_or_loft == TRUE) {
 			# stage 1/2 cruising: keeping altitude since target is below and more than 5 miles out
 
 			var ratio = (g_fps * me.dt)/me.old_speed_fps;
@@ -1018,8 +1023,9 @@ print("Model ",missile_model);
 			me.raw_steer_signal_elev = -me.pitch + attitude;
 			#print("Cruising, desire "~attitude~" degs pitch.");
 			me.cruise_or_loft = TRUE;
+			me.limitGs = TRUE;
 			me.dive_token = TRUE;
-		} elsif (me.last_cruise_or_loft == TRUE and math.abs(me.curr_deviation_e) > 2.5) {
+		} elsif (me.last_cruise_or_loft == TRUE and math.abs(me.curr_deviation_e) > 7.5 and me.life_time > me.time_before_snap_up) {
 			# after cruising, point the missile in the general direction of the target, before APN starts guiding.
 			me.raw_steer_signal_elev = me.curr_deviation_e;
 			me.cruise_or_loft = TRUE;
