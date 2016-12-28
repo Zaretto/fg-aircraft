@@ -189,18 +189,29 @@ var incoming_listener = func {
             }
           } 
         } elsif (cannon_types[last_vector[1]] != nil) {
-          # cannon hitting someone
-          #print("cannon");
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
-            # that someone is me!
-            #print("hitting me");
+            var last3 = split(" ", last_vector[3]);
+            if(size(last3) > 2 and size(last3[2]) > 2 and last3[2] == "hits" ) {
+              var probability = cannon_types[last_vector[1]];
+              var hit_count = num(last3[1]);
+              if (hit_count != nil) {
+                var damaged_sys = 0;
+                for (var i = 1; i <= hit_count; i = i + 1) {
+                  var failed = fail_systems(probability);
+                  damaged_sys = damaged_sys + failed;
+                }
 
-            var probability = cannon_types[last_vector[1]];
-            #print("probability: " ~ probability);
-            
-            var failed = fail_systems(probability);
-            printf("Took %.1f%% damage from cannon! %s systems was hit.", probability*100, failed);
-            nearby_explosion();
+                printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
+                nearby_explosion();
+              }
+            } else {
+              var probability = cannon_types[last_vector[1]];
+              #print("probability: " ~ probability);
+              
+              var failed = fail_systems(probability * 3);# Old messages is assumed to be 3 hits
+              printf("Took %.1f%% x 3 damage from cannon! %s systems was hit.", probability*100, failed);
+              nearby_explosion();
+            }
           }
         }
       }
