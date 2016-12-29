@@ -16,11 +16,12 @@
 #
 # Firstly make sure you read the comments (line 190+) below for the properties.
 # For laser/gps guided gravity bombs make sure to set the max G very low, like 0.5G, to simulate them slowly adjusting to hit the target.
-# Remember for air to air missiles the speed quoted in litterature is normally the speed above the launch platform. I usually fly at the typical usage
-#   regime for that missile, so for example for sidewinder it would be mach 1+ at 20000 ft,
+# Remember for air to air missiles the speed quoted in litterature is normally the speed above the launch platform. I usually fly at the typical max usage
+#   regime for that missile, so for example for AIM-7 it would be at 40000 ft,
 #   there I make sure it can reach approx the max relative speed. For older missiles the max speed quoted is sometimes absolute speed though, so beware.
 #   If it quotes aerodynamic speed then its the absolute speed. Speeds quoted in in unofficial sources can be any of them,
-#   but if its around mach 5 for A/A its a good bet its absolute, only very few A/A missiles are likely hypersonic.
+#   but if its around mach 5 for A/A its a good bet its absolute, only very few A/A missiles are likely hypersonic. (probably due to heat or fuel limitations)
+# If you cannot find fuel weight in litterature, you probably wont go far off with a value that is 1/4 to 1/3 of total launch weight.
 # Stage durations is allowed to be 0, so can thrust values. If there is no second stage, instead of just setting stage 2 thrust to 0,
 #   set stage 2 duration to 0 also. For unpowered munitions, set all thrusts to 0.
 # For very low sea skimming missiles, be sure to set terrain following to false, you cannot have it both ways.
@@ -31,14 +32,14 @@
 #   is approaching the launch platform with high speed and does not evade, and also if the launch platform is an aircraft,
 #   that it also is approaching the target with high speed. In other words, high closing rate. For example the AIM-7, which can hit bombers out at 32 NM,
 #   will often have to be within 3 NM of an escaping target to hit it (source). Missiles typically have significantly less range against an evading
-#   or escaping target than what is commonly believed. I typically fly at 20000 ft at mach 1, approach a target flying at me with same speed and altitude,
+#   or escaping target than what is commonly believed. I typically fly at 40000 ft at mach 2, approach a target flying head-on with same speed and altitude,
 #   to test max range.
 # When you test missiles against aircraft, be sure to do it with a framerate of 25+, else they will not hit very good, especially high speed missiles like
 #   Amraam or Phoenix. Also notice they generally not hit so close against Scenario/AI objects compared to MP aircraft due to the way these are updated.
 # Laser and semi-radar guided munitions need the target to be painted to keep lock. Notice gps guided munition that are all aspect will never lose lock,
 #   whether they can 'see' the target or not.
 # Remotely controlled navigation is not implemented, but the way it flies can be simulated by setting direct navigation with semi-radar or laser guidance.
-#
+# 
 #
 # Usage:
 #
@@ -87,6 +88,7 @@
 # Drag coeff reduction due to exhaust plume.
 # Proportional navigation should use vector math instead decomposite horizontal/vertical navigation.
 # If closing speed is negative, consider to switch to pure pursuit from proportional navigation, the target might turn back into missile.
+# 
 #
 # Please report bugs and features to Nikolai V. Chr. | ForumUser: Necolatis | Callsign: Leto
 
@@ -1521,7 +1523,15 @@ var AIM = {
 				me.acc_upwards_ftps2 = me.proportionality_constant*me.line_of_sight_rate_up_rps*me.vert_closing_rate_fps+me.apn*me.proportionality_constant*me.t_LOS_elev_norm_acc/2;
 				me.velocity_vector_length_fps = me.old_speed_fps;
 				me.commanded_upwards_vector_length_fps = me.acc_upwards_ftps2*me.dt;
+
 				me.raw_steer_signal_elev = math.atan2(me.commanded_upwards_vector_length_fps, me.velocity_vector_length_fps)*R2D;
+
+				# now compensate for the predicted gravity drop of attitude:				
+	            me.attitudePN = math.atan2(-(me.speed_down_fps+g_fps * me.dt), me.speed_horizontal_fps ) * R2D;
+	            me.gravComp = me.pitch - me.attitudePN;
+	            #printf("Gravity compensation %0.2f degs", me.gravComp);
+	            me.raw_steer_signal_elev += me.gravComp;
+
 				#printf("Proportional lead: %0.1f deg elev", -(me.curr_deviation_e-me.raw_steer_signal_elev));
 			}
 		}
