@@ -16,19 +16,19 @@
 #
 # Firstly make sure you read the comments (line 190+) below for the properties.
 # For laser/gps guided gravity bombs make sure to set the max G very low, like 0.5G, to simulate them slowly adjusting to hit the target.
-# Remember for air to air missiles the speed quoted in litterature is normally the speed above the launch platform. I usually fly at the typical max usage
+# Remember for air to air missiles the speed quoted in literature is normally the speed above the launch platform. I usually fly at the typical max usage
 #   regime for that missile, so for example for AIM-7 it would be at 40000 ft,
 #   there I make sure it can reach approx the max relative speed. For older missiles the max speed quoted is sometimes absolute speed though, so beware.
 #   If it quotes aerodynamic speed then its the absolute speed. Speeds quoted in in unofficial sources can be any of them,
 #   but if its around mach 5 for A/A its a good bet its absolute, only very few A/A missiles are likely hypersonic. (probably due to heat or fuel limitations)
-# If you cannot find fuel weight in litterature, you probably wont go far off with a value that is 1/4 to 1/3 of total launch weight.
+# If you cannot find fuel weight in literature, you probably wont go far off with a value that is 1/4 to 1/3 of total launch weight for a A/A missile.
 # Stage durations is allowed to be 0, so can thrust values. If there is no second stage, instead of just setting stage 2 thrust to 0,
 #   set stage 2 duration to 0 also. For unpowered munitions, set all thrusts to 0.
 # For very low sea skimming missiles, be sure to set terrain following to false, you cannot have it both ways.
 #   Since if it goes very low (below 100ft), it cannot navigate terrain reliable.
 # The property terrain following only goes into effect, if a cruise altitude is set below 10000ft and not set to 0.
 #   Cruise missiles against ground targets will always terrain follow, no matter that property.
-# If litterature quotes a max distance for a weapon, its a good bet it is under the condition that the target
+# If literature quotes a max distance for a weapon, its a good bet it is under the condition that the target
 #   is approaching the launch platform with high speed and does not evade, and also if the launch platform is an aircraft,
 #   that it also is approaching the target with high speed. In other words, high closing rate. For example the AIM-7, which can hit bombers out at 32 NM,
 #   will often have to be within 3 NM of an escaping target to hit it (source). Missiles typically have significantly less range against an evading
@@ -84,9 +84,9 @@
 # Limit guiding if needed so that the missile don't lose sight of target.
 # Change flare to use helicopter property double.
 # Make check for seeker FOV round instead of square.
-# Consider to average the closing speed in proportional navigation. So get it between second last positions and current, instead of last to currect.
+# Consider to average the closing speed in proportional navigation. So get it between second last positions and current, instead of last to current.
 # Drag coeff reduction due to exhaust plume.
-# Proportional navigation should use vector math instead decomposite horizontal/vertical navigation.
+# Proportional navigation should use vector math instead decomposition horizontal/vertical navigation.
 # If closing speed is negative, consider to switch to pure pursuit from proportional navigation, the target might turn back into missile.
 # 
 #
@@ -215,7 +215,8 @@ var AIM = {
         m.min_dist              = getprop("payload/armament/"~m.type_lc~"/min-fire-range-nm");          # it wont get solid lock before the target has this range
         m.rail                  = getprop("payload/armament/"~m.type_lc~"/rail");                       # if the weapon is rail or tube fired set to true. If dropped 7ft before ignited set to false.
         m.rail_dist_m           = getprop("payload/armament/"~m.type_lc~"/rail-length-m");              # length of tube/rail
-        m.rail_forward          = getprop("payload/armament/"~m.type_lc~"/rail-point-forward");         # true for rail, false for vertical tube
+        m.rail_forward          = getprop("payload/armament/"~m.type_lc~"/rail-point-forward");         # true for rail, false for rail/tube with a pitch
+        m.rail_pitch_deg        = getprop("payload/armament/"~m.type_lc~"/rail-pitch-deg");             # Only used when rail is not forward. 90 for vertical tube.
         m.class                 = getprop("payload/armament/"~m.type_lc~"/class");                      # put in letters here that represent the types the missile can fire at. A=air, M=marine, G=ground
         m.brevity               = getprop("payload/armament/"~m.type_lc~"/fire-msg");                   # what the pilot will call out over the comm when he fires this weapon
         m.reportDist            = getprop("payload/armament/"~m.type_lc~"/max-report-distance");        # max distance from target the missile will report that it has exploded, instead of just passed.
@@ -377,7 +378,7 @@ var AIM = {
 		me.deleted = TRUE;
 	},
 
-	getGPS: func(x, y, z) {#GCD
+	getGPS: func(x, y, z, pitch) {#GCD
 		#
 		# get Coord from body position. x,y,z must be in meters.
 		# derived from Vivian's code in AIModel/submodel.cxx.
@@ -389,7 +390,7 @@ var AIM = {
 		}
 
 		me.ac_roll = OurRoll.getValue();
-		me.ac_pitch = OurPitch.getValue();
+		me.ac_pitch = pitch;
 		me.ac_hdg   = OurHdg.getValue();
 
 		me.in    = [0,0,0];
@@ -466,11 +467,17 @@ var AIM = {
 		var ac_pitch = OurPitch.getValue();
 		var ac_hdg   = OurHdg.getValue();
 
+		if (me.rail == TRUE) {
+			if (me.rail_forward == FALSE) {
+				ac_pitch = ac_pitch + me.rail_pitch_deg;
+			}
+		}
+
 		# Compute missile initial position relative to A/C center
 		me.x = me.pylon_prop.getNode("offsets/x-m").getValue();
 		me.y = me.pylon_prop.getNode("offsets/y-m").getValue();
 		me.z = me.pylon_prop.getNode("offsets/z-m").getValue();
-		var init_coord = me.getGPS(me.x, me.y, me.z);
+		var init_coord = me.getGPS(me.x, me.y, me.z, ac_pitch);
 
 		# Set submodel initial position:
 		var mlat = init_coord.lat();
@@ -506,8 +513,13 @@ var AIM = {
 		me.speed_north_fps = getprop("velocities/speed-north-fps");
 		if (me.rail == TRUE) {
 			if (me.rail_forward == FALSE) {
-				# rail is actually a tube pointing upward
-				me.rail_speed_into_wind = -getprop("velocities/wBody-fps");# wind from below
+				if (me.rail_pitch_deg == 90) {
+					# rail is actually a tube pointing upward
+					me.rail_speed_into_wind = -getprop("velocities/wBody-fps");# wind from below
+				} else {
+					#does not account for incoming airstream, yet.
+					me.rail_speed_into_wind = 0;
+				}
 			} else {
 				# rail is pointing forward
 				me.rail_speed_into_wind = getprop("velocities/uBody-fps");# wind from nose
@@ -525,6 +537,7 @@ var AIM = {
 
 		# setup lofting and cruising
 		me.snapUp = me.loft_alt > 10000;
+		me.rotate_token = FALSE;
 		#if (me.Tgt != nil and me.snapUp == TRUE) {
 			#var dst = me.coord.distance_to(me.Tgt.get_Coord()) * M2NM;
 			#
@@ -834,8 +847,13 @@ var AIM = {
 				me.opposing_wind = me.u;
 				me.hdg = OurHdg.getValue();
 			} else {
-				me.pitch = 90;
-				me.opposing_wind = -me.w;
+				me.pitch = OurPitch.getValue() + me.rail_pitch_deg;
+				if (me.rail_pitch_deg == 90) {
+					me.opposing_wind = -me.w;
+				} else {
+					# no incoming airstream if not vertical tube
+					me.opposing_wind = 0;
+				}
 				me.hdg = me.Tgt.get_bearing();
 			}			
 
@@ -845,8 +863,10 @@ var AIM = {
 			me.rail_pos = me.rail_pos + me.movement_on_rail;
 			if (me.rail_forward == TRUE) {
 				me.x = me.x - (me.movement_on_rail * FT2M);# negative cause positive is rear in body coordinates
-			} else {
+			} elsif (me.rail_pitch_deg == 90) {
 				me.z = me.z + (me.movement_on_rail * FT2M);# positive cause positive is up in body coordinates
+			} else {
+				me.x = me.x - (me.movement_on_rail * FT2M);
 			}
 		}
 
@@ -858,7 +878,12 @@ var AIM = {
 			me.coord.set_alt(me.alt_ft * FT2M);
 		} else {
 			# missile on rail, lets move it on the rail
-			me.coord = me.getGPS(me.x, me.y, me.z);
+			if (me.rail_pitch_deg == 90 or me.rail_forward == TRUE) {
+				me.coord = me.getGPS(me.x, me.y, me.z, OurPitch.getValue());
+			} else {
+				# kind of a hack, but work
+				me.coord = me.getGPS(me.x, me.y, me.z, OurPitch.getValue()+me.rail_pitch_deg);
+			}
 			me.alt_ft = me.coord.alt() * M2FT;
 			# find its speed, for used in calc old speed
 			me.speed_down_fps       = -math.sin(me.pitch * D2R) * me.rail_speed_into_wind;
@@ -1144,24 +1169,20 @@ var AIM = {
 			#
 			me.flareNode = me.Tgt.getFlareNode();
 			if (me.flareNode != nil) {
-				me.flareString = me.flareNode.getValue();
-				if (me.flareString != nil and me.flareString != "") {
-					me.flareVector = split(":", me.flareString);
-					if (me.flareVector != nil and size(me.flareVector) == 2 and me.flareVector[1] == "flare") {
-						me.flareNumber = num(me.flareVector[0]);
-						if (me.flareNumber != nil and me.flareNumber != me.lastFlare) {
-							# target has released a new flare, lets check if it fools us
-							me.lastFlare = me.flareNumber;
-							me.aspectDeg = me.aspect() / 180;
-							me.fooled = rand() < (0.2 + 0.1 * me.aspectDeg);
-							# 20% chance to be fooled, extra up till 10% chance added if front aspect
-							if (me.fooled == TRUE) {
-								# fooled by the flare
-								print(me.type~": Missile fooled by flare");
-								me.free = TRUE;
-							} else {
-								print(me.type~": Missile ignored flare");
-							}
+				me.flareNumber = me.flareNode.getValue();
+				if (me.flareNumber != nil and me.flareNumber != 0) {
+					if (me.flareNumber != me.lastFlare) {
+						# target has released a new flare, lets check if it fools us
+						me.lastFlare = me.flareNumber;
+						me.aspectDeg = me.aspect() / 180;
+						me.fooled = rand() < (0.15 + 0.15 * me.aspectDeg);
+						# 15% chance to be fooled, extra up till 15% chance added if front aspect
+						if (me.fooled == TRUE) {
+							# fooled by the flare
+							print(me.type~": Missile fooled by flare");
+							me.free = TRUE;
+						} else {
+							print(me.type~": Missile ignored flare");
 						}
 					}
 				}
@@ -1342,7 +1363,18 @@ var AIM = {
             if (me.cruise_or_loft == TRUE) {
             	#print(" pitch "~me.pitch~" + me.raw_steer_signal_elev "~me.raw_steer_signal_elev);
             }
-        } elsif (me.snapUp == TRUE and me.t_elev_deg > -25 and me.dist_curr * M2NM > 10
+        } elsif (me.rail == TRUE and me.rail_forward == FALSE and me.rotate_token == FALSE) {
+			# tube launched missile turns towards target
+
+			me.raw_steer_signal_elev = -me.pitch + me.t_elev_deg;
+			#print("Turning, desire "~me.t_elev_deg~" degs pitch.");
+			me.cruise_or_loft = TRUE;
+			me.limitGs = TRUE;
+			if (math.abs(me.curr_deviation_e) < 7.5) {
+				me.rotate_token = TRUE;
+				#print("Is last turn, snap-up/PN takes it from here..")
+			}
+		} elsif (me.snapUp == TRUE and me.t_elev_deg > -25 and me.dist_curr * M2NM > 10
 			 and me.t_elev_deg < me.loft_angle #and me.t_elev_deg > -7.5
 			 and me.dive_token == FALSE) {
 			# lofting: due to target is more than 10 miles out and we havent reached 
@@ -1360,16 +1392,6 @@ var AIM = {
 				#print("Stopped lofting");
 			}
 			me.cruise_or_loft = TRUE;
-		} elsif (me.rail == TRUE and me.rail_forward == FALSE and me.dive_token == FALSE) {
-			# tube launched missile turns towards target
-
-			me.raw_steer_signal_elev = -me.pitch + me.t_elev_deg;
-			#print("Turning, desire "~me.t_elev_deg~" degs pitch.");
-			me.cruise_or_loft = TRUE;
-			if (math.abs(me.curr_deviation_e) < 7.5) {
-				me.dive_token = TRUE;
-				#print("Is last turn, APN takes it from here..")
-			}
 		} elsif (me.snapUp == TRUE and me.coord.alt() > me.t_coord.alt() and me.last_cruise_or_loft == TRUE
 		         and me.t_elev_deg > -25 and me.dist_curr * M2NM > 10) {
 			# cruising: keeping altitude since target is below and more than -45 degs down
@@ -1407,6 +1429,10 @@ var AIM = {
 				me.raw_steer_signal_head = me.curr_deviation_h;
 				if (me.cruise_or_loft == FALSE) {
 					me.raw_steer_signal_elev = me.curr_deviation_e;
+					me.attitudePN = math.atan2(-(me.speed_down_fps+g_fps * me.dt), me.speed_horizontal_fps ) * R2D;
+		            me.gravComp = me.pitch - me.attitudePN;
+		            #printf("Gravity compensation %0.2f degs", me.gravComp);
+		            me.raw_steer_signal_elev += me.gravComp;
 				}
 				return;
 			} elsif (me.navigation == "PN") {
@@ -1580,8 +1606,10 @@ var AIM = {
             	if(me.life_time < me.arming_time) {
                 	me.event = "landed disarmed";
             	}
-            	me.explode("Hit terrain.", me.event);
-                return TRUE;
+            	if ((me.Tgt != nil and me.direct_dist_m != nil) or me.Tgt == nil) {
+            		me.explode("Hit terrain.", me.event);
+            		return TRUE;
+            	}
             }
         }
 
@@ -2179,6 +2207,10 @@ var defeatSpamFilter = func (str) {
   str = str~":";
   for (var i = 1; i <= spams; i+=1) {
     str = str~".";
+  }
+  var myCallsign = getprop("sim/multiplay/callsign");
+  if (myCallsign != nil and find(myCallsign, str) != -1) {
+  	str = myCallsign~": "~str;
   }
   var newList = [str];
   for (var i = 0; i < size(spamList); i += 1) {
