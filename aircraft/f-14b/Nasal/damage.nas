@@ -60,6 +60,31 @@ var warhead_lbs = {
     "R-27T1":               85.98,
 };
 
+var fireMsgs = {
+  
+    # F14
+    " FOX3 at":       nil, # radar
+    " FOX2 at":       nil, # heat
+    " FOX1 at":       nil, # semi-radar
+
+    # Viggen
+    " Fox 1 at":      nil, # semi-radar
+    " Fox 2 at":      nil, # heat
+    " Fox 3 at":      nil, # radar
+    " Greyhound at":  nil, # cruise missile
+    " Bombs away at": nil, # bombs
+    " Bruiser at":    nil, # anti-ship
+    " Rifle at":      nil, # TV guided
+
+    # SAM and missile frigate
+    " Bird away at":  nil, # G/A
+
+    # F15
+    " aim7 at":       nil,
+    " aim9 at":       nil,
+    " aim120 at":     nil,
+};
+
 var incoming_listener = func {
   var history = getprop("/sim/multiplay/chat-history");
   var hist_vector = split("\n", history);
@@ -76,11 +101,7 @@ var incoming_listener = func {
         # a m2000 is firing at us
         m2000 = TRUE;
       }
-      if (last_vector[1] == " FOX3 at" or last_vector[1] == " FOX1 at" or last_vector[1] == " FOX2 at" or last_vector[1] == " Fox 1 at" or last_vector[1] == " Fox 2 at" or last_vector[1] == " Fox 3 at"
-          or last_vector[1] == " Greyhound at" or last_vector[1] == " Bombs away at" or last_vector[1] == " Bruiser at" or last_vector[1] == " Rifle at" or last_vector[1] == " Bird away at"
-          or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at"
-          or last_vector[1] == " aim120 at"
-          or m2000 == TRUE) {
+      if (contains(fireMsgs, last_vector[1]) or m2000 == TRUE) {
         # air2air being fired
         if (size(last_vector) > 2 or m2000 == TRUE) {
           #print("Missile launch detected at"~last_vector[2]~" from "~author);
