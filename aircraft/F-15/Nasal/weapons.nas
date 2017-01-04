@@ -92,6 +92,21 @@ var armament_update = func {
 		# Turn Current_srm.status to stand by.
 		#set_status_current_aim9(-1);
 	}
+    if (WeaponSelector.getValue() == 1) {
+        if (Current_srm != nil and Current_srm.status == 1) {
+            setprop("sim/model/f15/systems/armament/launch-light",true);
+        } else {
+            setprop("sim/model/f15/systems/armament/launch-light",false);
+        }
+    } elsif (WeaponSelector.getValue() == 2) {
+        if (Current_mrm != nil and Current_mrm.status == 1) {
+            setprop("sim/model/f15/systems/armament/launch-light",true);
+        } else {
+            setprop("sim/model/f15/systems/armament/launch-light",false);
+        }
+    } else {
+        setprop("sim/model/f15/systems/armament/launch-light",false);
+    }
 }
 
 var update_gun_ready = func()
@@ -180,10 +195,13 @@ var update_sw_ready = func()
                 if (S.get_type() == "AIM-9" or S.get_type() == "AIM-7" or S.get_type() == "AIM-120")
                 {
                     print(S.get_type()," new !! ", pylon, " sel_missile_count - 1 = ", sel_missile_count - 1);
-                    if (WeaponSelector.getValue() == 1)
-                        Current_srm = aircraft.AIM9.new(pylon, S.get_type());
-                    else if (WeaponSelector.getValue() == 2)
-                        Current_mrm = aircraft.AIM9.new(pylon, S.get_type());
+                    if (WeaponSelector.getValue() == 1) {
+                        armament.AIM.new(pylon, S.get_type(), S.get_type());
+                        Current_srm = armament.AIM.active[pylon];# if there already was a missile at that pylon, new will return -1, so we just get whatever missile is rdy at that pylon.
+                    } elsif (WeaponSelector.getValue() == 2) {
+                        armament.AIM.new(pylon, S.get_type(), S.get_type());
+                        Current_mrm = armament.AIM.active[pylon];
+                    }
                 }
                 else
                     print ("Cannot fire ",S.get_type());
@@ -211,9 +229,9 @@ print("RELEASE AIM-9 status: ");
 	if (Current_missile != nil) {
 print(" status: ", Current_missile.status);
 		if ( Current_missile.status == 1 ) {
-			var phrase = Current_missile.type~" at: " ~ Current_missile.Tgt.Callsign.getValue();
+			var phrase = Current_missile.brevity~" at: " ~ Current_missile.Tgt.Callsign.getValue();
 			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-				aircraft.defeatSpamFilter(phrase);
+				armament.defeatSpamFilter(phrase);
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
@@ -465,7 +483,7 @@ var impact_listener = func {
           last_impact = getprop("sim/time/elapsed-sec");
           var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.active_u.Callsign.getValue();
           if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-            aircraft.defeatSpamFilter(phrase);
+            armament.defeatSpamFilter(phrase);
                   #hit_count = hit_count + 1;
           } else {
             setprop("/sim/messages/atc", phrase);

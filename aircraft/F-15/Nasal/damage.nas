@@ -303,29 +303,6 @@ var processCallsigns = func () {
 
 processCallsigns();
 
-#f15c
-var sendMis = func () {
-  var mkeys = keys(aircraft.AIM9.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = aircraft.AIM9.active[m];
-    if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
-    }
-  }
-  setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.05);
-}
-
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.
   if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
@@ -336,8 +313,6 @@ var logTime = func{
     setprop("logging/time-log", time);
   }
 }
-
-#sendMis();
 
 var ct = func (type) {
   if (type == "c-u") {

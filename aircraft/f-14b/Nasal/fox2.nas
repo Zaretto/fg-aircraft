@@ -5,7 +5,7 @@
 ####### License: GPL 2
 #######
 ####### Authors:
-#######  Alexis Bory, Fabien Barbier, Justin Nicholson, Nikolai V. Chr.
+#######  Alexis Bory, Fabien Barbier, Richard Harrison, Justin Nicholson, Nikolai V. Chr.
 ####### 
 ####### In addition, some code is derived from work by:
 #######  David Culp, Vivian Meazza, M. Franz

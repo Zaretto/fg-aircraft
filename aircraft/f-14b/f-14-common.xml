@@ -781,41 +781,7 @@
                     <armament>
                         <aim9>
                             <count type="int">0</count>
-                            <guidance type="string">heat</guidance>
                             <nearest-target type="int">-1</nearest-target>
-                            <sound-on-off type="bool">false</sound-on-off>
-                            <sound-volume type="double">0.12</sound-volume>
-                            <target-range-nm type="double">0</target-range-nm>
-                            <!-- AIM-9L specs -->
-                            <max-detection-rng-nm type="int">10</max-detection-rng-nm>
-                            <!--FIXME: up to 10-16 MN with best conditions-->
-                            <fov-deg type="int">27</fov-deg>
-                            <!-- seeker optical FOV -->
-                            <detection-fov-deg type="int">60</detection-fov-deg>
-                            <!-- Search pattern diameter (rosette scan) -->
-                            <track-max-deg type="int">134</track-max-deg>
-                            <!-- Seeker max total angular rotation -->
-                            <max-g type="int">32</max-g>
-                            <!-- In turn -->
-                            <thrust-lbs-stage-1 type="double">3821.75</thrust-lbs-stage-1><!-- guess -->
-                            <thrust-lbs-stage-2 type="double">0.0</thrust-lbs-stage-2>    <!-- authentic -->
-                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
-                            <stage-2-duration-sec type="double">1.0</stage-2-duration-sec><!-- Aim-9L -->
-                            <self-destruct-time-sec type="double">43</self-destruct-time-sec><!-- guess -->
-                            <!-- Mk.36 Mod.7,8 -->
-                            <weight-launch-lbs>191</weight-launch-lbs>
-                            <weight-warhead-lbs>20.8</weight-warhead-lbs>
-                            <drag-coeff type="double">0.5</drag-coeff>
-                            <!-- guess -->
-                            <drag-area type="double">0.143</drag-area>
-                            <!-- sq ft -->
-                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
-                            <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
-                            <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
-                            <arming-time-sec type="double">1.4</arming-time-sec>
-                            <rail type="bool">true</rail>
-                            <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
-                            <rail-point-forward type="bool">true</rail-point-forward>
                         </aim9>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
@@ -1889,6 +1855,8 @@
     <payload>                        
         <armament>
             <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <pylon-offset type="int">1</pylon-offset>
+            <pylon-stations>controls/armament</pylon-stations>
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
             <aim-9>             <!-- aim-9L sidewinder -->
@@ -1947,6 +1915,7 @@
                 <stage-2-duration-sec type="double">11</stage-2-duration-sec>  <!-- authentic -->
                 <weight-launch-lbs type="double">510</weight-launch-lbs>      
                 <weight-warhead-lbs type="double">88</weight-warhead-lbs>
+                <weight-fuel-lbm type="double">135</weight-fuel-lbm>
                 <drag-coeff type="double">0.25</drag-coeff>
                 <drag-area type="double">0.3382</drag-area><!-- sq ft (0.3281 ft radius) authentic -->
                 <arming-time-sec type="double">2.5</arming-time-sec>                       <!-- guess -->

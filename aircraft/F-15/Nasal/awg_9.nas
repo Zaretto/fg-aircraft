@@ -164,7 +164,7 @@ if (active_u != nil)
 #print("active_u ",active_u);
 #print("active_u_callsign ",active_u_callsign);
 #print("Active callsign becomes inactive");
-active_u = nil;
+active_u = nil; armament.contact = active_u;
 }
 
 		foreach( var c; raw_list )
@@ -328,7 +328,7 @@ active_u = nil;
                 {
                     if (active_u_callsign != nil and u.Callsign != nil and u.Callsign.getValue() == active_u_callsign)
                     {
-                        active_u = u;
+                        active_u = u; armament.contact = active_u;
 #                        printf("%2d: found active_u %s %d",idx, callsign, u_rng);
                     }
                 }
@@ -440,7 +440,7 @@ active_u = nil;
 
         if (prv != nil)
         {
-            active_u = nearest_u = tmp_nearest_u = prv;
+            active_u = nearest_u = tmp_nearest_u = prv; armament.contact = active_u;
             if (tmp_nearest_u.Callsign != nil)
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
             else
@@ -500,7 +500,7 @@ active_u = nil;
 
         if (nxt != nil)
         {
-            active_u = nearest_u = tmp_nearest_u = nxt;
+            active_u = nearest_u = tmp_nearest_u = nxt; armament.contact = active_u;
             if (tmp_nearest_u.Callsign != nil)
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
             else
@@ -517,7 +517,7 @@ active_u = nil;
     cnt += 0.05;
 
     if (!containsV(tgts_list, active_u)) {
-        active_u = nil;
+        active_u = nil; armament.contact = active_u;
         #active_u_callsign = nil;
     }
 }
@@ -852,6 +852,7 @@ var Target = {
 		var obj = { parents : [Target]};
 		obj.RdrProp = c.getNode("radar");
 		obj.Heading = c.getNode("orientation/true-heading-deg");
+        obj.pitch   = c.getNode("orientation/pitch-deg");
 		obj.Alt = c.getNode("position/altitude-ft");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
@@ -859,11 +860,15 @@ var Target = {
 		obj.Callsign = c.getNode("callsign");
         obj.TAS = c.getNode("velocities/true-airspeed-kt");
 
+
         if (obj.Callsign == nil or obj.Callsign.getValue() == "")
         {
+            obj.unique = rand();
             var signNode = c.getNode("sign");
             if (signNode != nil)
                 obj.Callsign = signNode;
+        } else {
+            obj.unique = obj.Callsign.getValue();
         }
 
 
@@ -1035,7 +1040,7 @@ else
 
                 var tgt_pos = geo.Coord.new().set_xyz(x, y, z);
 #                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
-                return tgt_pos.distance_to(geo.aircraft_position()) * 0.000539957; # distance in NM
+                return tgt_pos.distance_to(geo.aircraft_position()) * M2NM; # distance in NM
             }
             if (me.Range != nil)
                 return me.Range.getValue();
@@ -1162,6 +1167,51 @@ else
 		me.RangeLast.setValue(rng);
 		return(cr);
 	},
+    isValid: func () {
+      var valid = me.Valid.getValue();
+      if (valid == nil) {
+        valid = FALSE;
+      }
+      return valid;
+    },
+    getUnique: func {
+        return me.unique;
+    },
+    get_type: func {
+        var AIR = 0;
+        var MARINE = 1;
+        var SURFACE = 2;
+        var ORDNANCE = 3;
+        return AIR;
+    },
+    isPainted: func {
+        return 1;
+    },
+    getFlareNode: func {
+        return nil;
+    },
+    getElevation: func() {
+        var e = 0;
+        e = me.Elevation.getValue();
+        if(e == nil or e == 0) {
+            # AI/MP has no radar properties
+            var self = geo.aircraft_position();
+            me.get_Coord();
+            var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
+            e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+        }
+        return e;
+    },
+    get_Callsign: func {
+        return me.Callsign.getValue();
+    },
+    get_Pitch: func(){
+        var n = me.pitch.getValue();
+        return n;
+    },
+    get_Speed: func(){
+        return me.get_TAS();
+    },
 	list : [],
 };
 
