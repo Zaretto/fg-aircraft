@@ -31,8 +31,14 @@ var ht_debug = 0;
 #                           "view": [276,106],                       
 #                           "mipmapping": 0     
 #  });
+#aircraft.UpperHUD.svg.setTranslation (0, 20.0);
+#aircraft.UpperHUD.svg.set("clip", "rect(2,256,276,0)");
 #aircraft.UpperHUD.svg.setTranslation (-21.0, 37.0);
-#aircraft.LowerHUD.svg.setTranslation (-21.0, -106);
+#aircraft.UpperHUD.svg.set("clip", "rect(1,256,276,0)");
+#aircraft.LowerHUD.svg.setVisible(0)
+#aircraft.LowerHUD.svg.setTranslation (-8.0, -106);
+#aircraft.UpperHUD.svg.set("clip", "rect(10,256,276,0)");
+#aircraft.UpperHUD.svg.set("clip-frame", canvas.Element.PARENT);
 
 var pitch_offset = 12;
 var pitch_factor = 19.8;
@@ -88,11 +94,13 @@ var F15HUD = {
         obj.canvas._node.setValues({
                 "name": "F-15 HUD",
                     "size": [1024,1024], 
-                    "view": [276,106],                       
+                    "view": [256,106],
                     "mipmapping": 0     
                     });
 
         obj.svg.setTranslation (tran_x,tran_y);
+        obj.svg.set("clip", "rect(2,256,276,0)");
+        obj.svg.set("clip-frame", canvas.Element.PARENT);
 
         obj.ladder = obj.get_element("ladder");
         obj.VV = obj.get_element("VelocityVector");
@@ -187,7 +195,26 @@ var F15HUD = {
 #
     update : func(hdp) {
         var  roll_rad = -hdp.roll*3.14159/180.0;
+        if (getprop("fdm/jsbsim/systems/electrics/ac-left-main-bus") <= 0 or getprop("sim/model/f15/controls/HUD/brightness") <= 0)
+        {
+            me.svg.setVisible(0);
+            return;
+        } else {
+            me.svg.setVisible(1);
+        }
+
   
+#	var x = getprop("/test/x");	
+#	var y = getprop("/test/y"); # 38
+
+#var current_x = getprop("/sim/current-view/x-offset-m");
+#var current_y = getprop("/sim/current-view/y-offset-m");
+#        var current_z = getprop("/sim/current-view/z-offset-m");
+#        var dx = me.view[0] - current_x;
+#        var dy = me.view[1] - current_y;
+#        printf("current_xy %f,%f  view[%f,%f] dxy %f,%f",current_x,current_y, me.view[0], me.view[1],dx,dy);
+
+#me.svg.setTranslation(dx * x, dy * y);
 #pitch ladder
         me.ladder.setTranslation (0.0, hdp.pitch * pitch_factor+pitch_offset);                                           
         me.ladder.setCenter (118,830 - hdp.pitch * pitch_factor-pitch_offset);
@@ -419,8 +446,10 @@ var hud_data_provider = HUD_DataProvider.new();
 # 2015-01-27: Note that the geometry isn't right and the projection needs to be adjusted (somehow) as the
 # image elements in the 3d model are correctly angled and this results in trapezoidal distortion
 
-var UpperHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1", -7,0);
-var LowerHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage2", -7, -106);
+var UpperHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1", 0, 20);
+var LowerHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage2", -8, -106);
+#UpperHUD.view = [-5.76, -0.00525, 1.4646];
+#LowerHUD.view =  [0, 0, 0];
 
 var updateHUD = func ()
 {  
