@@ -165,7 +165,7 @@
         </fcs_function>
     </channel>
 
-    <channel name="Auxiliary">
+    <channel name="Auxiliary" execrate="4">
         <pure_gain name="Pilot G">
             <input>accelerations/n-pilot-z-norm</input>
             <gain>-1</gain>
@@ -428,7 +428,7 @@
 
   
 
-    <channel name="SoundFX">
+    <channel name="SoundFX" execrate="4">
         <fcs_function name="fcs/flap-windfx-volume">
             <function>
                 <product>
@@ -703,11 +703,11 @@
 
     <!-- gear related operations -->
 
-    <channel name="gear">
+    <channel name="gear" execrate="4">
         <!-- timer for the gear extension time to fire the warning-->
         <switch name="systems/cadc/gear-transit-timer-delta">
             <default value="0"/>
-            <test value="simulation/dt" logic="AND">
+            <test value="simulation/channel-dt" logic="AND">
                 gear/unit[1]/locked eq 0
             </test>
         </switch>
@@ -789,10 +789,9 @@
                 velocities/vc-kts lt 200
             </test>
         </switch>
-
-
     </channel>
-    <channel name="OWS">
+
+    <channel name="OWS" execrate="4">
         <switch name="systems/cadc/ows-config">
             <description>Overload Warning System Config</description>
             <default value="0"/> <!-- Config A-->
