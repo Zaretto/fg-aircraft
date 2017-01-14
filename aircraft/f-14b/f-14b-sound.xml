@@ -1273,6 +1273,22 @@
             </volume>
             <max-dist>5</max-dist>
         </aim9-signal>
+        <aim7-signal>
+            <name>aim7-signal</name>
+            <mode>looped</mode>
+            <type>avionics</type><!-- headphones -->
+            <path>Aircraft/f-14b/Sounds/115hz-square.wav</path>
+            <condition>
+                <property>payload/armament/aim-7/sound-on-off</property>
+            </condition>
+            <pitch>
+                <factor>1.8</factor><!-- changes it to beep -->
+                <max>2</max>
+            </pitch>
+            <volume>
+                <property>payload/armament/aim-7/sound-volume</property>
+            </volume>
+        </aim7-signal>
         <aim54-signal>
             <name>aim54-signal</name>
             <mode>looped</mode>

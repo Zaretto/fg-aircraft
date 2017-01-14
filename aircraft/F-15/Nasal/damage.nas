@@ -3,13 +3,31 @@ var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 var TRUE  = 1;
 var FALSE = 0;
 
+var cannon_types = {
+    " M70 rocket hit":        0.25, #135mm
+    " M55 cannon shell hit":  0.10, # 30mm
+    " KCA cannon shell hit":  0.10, # 30mm
+    " Gun Splash On ":        0.10, # 30mm
+    " M61A1 shell hit":       0.05, # 20mm
+    " GAU-8/A hit":           0.10, # 30mm
+    " BK27 cannon hit":       0.07, # 27mm
+    " GSh-30 hit":            0.10, # 30mm
+    " 7.62 hit":              0.005,# 7.62mm
+    " 50 BMG hit":            0.015,# 12.7mm
+};
+    
+    
+    
 var warhead_lbs = {
     "aim-120":              44.00,
     "AIM120":               44.00,
+    "AIM-120":              44.00,
     "RB-99":                44.00,
     "aim-7":                88.00,
+    "AIM-7":                88.00,
     "RB-71":                88.00,
     "aim-9":                20.80,
+    "AIM9":                 20.80,
     "AIM-9":                20.80,
     "RB-24":                20.80,
     "RB-24J":               20.80,
@@ -32,11 +50,44 @@ var warhead_lbs = {
     "RB-75":               126.00,
     "M90":                 500.00,
     "M71":                 200.00,
+    "M71R":                200.00,
     "MK-82":               192.00,
     "LAU-68":               10.00,
     "M317":                145.00,
     "GBU-31":              945.00,
-  };
+    "AIM132":               22.05,
+    "ALARM":               450.00,
+    "STORMSHADOW":         850.00,
+    "R-60":                  6.60,
+    "R-27R1":               85.98,
+    "R-27T1":               85.98,
+    "FAB-500":             564.00,
+};
+
+var fireMsgs = {
+  
+    # F14
+    " FOX3 at":       nil, # radar
+    " FOX2 at":       nil, # heat
+    " FOX1 at":       nil, # semi-radar
+
+    # Viggen
+    " Fox 1 at":      nil, # semi-radar
+    " Fox 2 at":      nil, # heat
+    " Fox 3 at":      nil, # radar
+    " Greyhound at":  nil, # cruise missile
+    " Bombs away at": nil, # bombs
+    " Bruiser at":    nil, # anti-ship
+    " Rifle at":      nil, # TV guided
+
+    # SAM and missile frigate
+    " Bird away at":  nil, # G/A
+
+    # F15
+    " aim7 at":       nil,
+    " aim9 at":       nil,
+    " aim120 at":     nil,
+};
 
 var incoming_listener = func {
   var history = getprop("/sim/multiplay/chat-history");
@@ -54,11 +105,7 @@ var incoming_listener = func {
         # a m2000 is firing at us
         m2000 = TRUE;
       }
-      if (last_vector[1] == " FOX2 at" or last_vector[1] == " Fox 1 at" or last_vector[1] == " Fox 2 at" or last_vector[1] == " Fox 3 at"
-          or last_vector[1] == " Greyhound at" or last_vector[1] == " Bombs away at" or last_vector[1] == " Bruiser at" or last_vector[1] == " Rifle at" or last_vector[1] == " Bird away at"
-          or last_vector[1] == " aim7 at" or last_vector[1] == " aim9 at"
-          or last_vector[1] == " aim120 at"
-          or m2000 == TRUE) {
+      if (contains(fireMsgs, last_vector[1]) or m2000 == TRUE) {
         # air2air being fired
         if (size(last_vector) > 2 or m2000 == TRUE) {
           #print("Missile launch detected at"~last_vector[2]~" from "~author);
@@ -166,20 +213,30 @@ var incoming_listener = func {
               nearby_explosion();
             }
           } 
-        } elsif (last_vector[1] == " M70 rocket hit" or last_vector[1] == " M55 cannon shell hit" or last_vector[1] == " KCA cannon shell hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " M61A1 shell hit" or last_vector[1] == " GAU-8/A hit") {
-          # cannon hitting someone
-          #print("cannon");
+        } elsif (cannon_types[last_vector[1]] != nil) {
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
-            # that someone is me!
-            #print("hitting me");
+            var last3 = split(" ", last_vector[3]);
+            if(size(last3) > 2 and size(last3[2]) > 2 and last3[2] == "hits" ) {
+              var probability = cannon_types[last_vector[1]];
+              var hit_count = num(last3[1]);
+              if (hit_count != nil) {
+                var damaged_sys = 0;
+                for (var i = 1; i <= hit_count; i = i + 1) {
+                  var failed = fail_systems(probability);
+                  damaged_sys = damaged_sys + failed;
+                }
 
-            var probability = 0.20; # take 20% damage from each hit
-            if (last_vector[1] == " M70 rocket hit" or last_vector[1] == " Gun Splash On " or last_vector[1] == " GAU-8/A hit") {
-              probability = 0.30;
+                printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
+                nearby_explosion();
+              }
+            } else {
+              var probability = cannon_types[last_vector[1]];
+              #print("probability: " ~ probability);
+              
+              var failed = fail_systems(probability * 3);# Old messages is assumed to be 3 hits
+              printf("Took %.1f%% x 3 damage from cannon! %s systems was hit.", probability*100, failed);
+              nearby_explosion();
             }
-            var failed = fail_systems(probability);
-            printf("Took %.1f%% damage from cannon! %s systems was hit.", probability*100, failed);
-            nearby_explosion();
           }
         }
       }
@@ -250,29 +307,6 @@ var processCallsigns = func () {
 
 processCallsigns();
 
-#f15c
-var sendMis = func () {
-  var mkeys = keys(aircraft.AIM9.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = aircraft.AIM9.active[m];
-    if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
-    }
-  }
-  setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.05);
-}
-
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.
   if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
@@ -283,8 +317,6 @@ var logTime = func{
     setprop("logging/time-log", time);
   }
 }
-
-#sendMis();
 
 var ct = func (type) {
   if (type == "c-u") {
