@@ -378,7 +378,7 @@ var update_weapons_over_mp = func
             b = bits.string(S.bcode,S.encode_length);
             b = substr(b, size(b)-S.encode_length, S.encode_length);
 		b_wpstring = b_wpstring ~ b;
-printf("%2d(%d): %-4s = %-32s (%d)    ",S.index,S.encode_length,b, b_wpstring, size(b_wpstring));
+#printf("%2d(%d): %-4s = %-32s (%d)    ",S.index,S.encode_length,b, b_wpstring, size(b_wpstring));
             if (S.get_type() == "AIM-9")
                 aim9_count = aim9_count+1;
             if (S.get_type() == "AIM-7")
@@ -388,7 +388,7 @@ printf("%2d(%d): %-4s = %-32s (%d)    ",S.index,S.encode_length,b, b_wpstring, s
             if (S.get_type() == "AIM-54")
                 aim54_count = aim54_count+1;
         }
-    print("count SW:",aim9_count, " SP :", aim7_count, " 120:",aim120_count, " PH:",aim54_count);
+#    print("count SW:",aim9_count, " SP :", aim7_count, " 120:",aim120_count, " PH:",aim54_count);
     setprop(ac_sim_prop_root~"systems/armament/aim9/count",aim9_count);
     setprop(ac_sim_prop_root~"systems/armament/aim7/count",aim7_count);
     setprop(ac_sim_prop_root~"systems/armament/aim120/count",aim120_count);
