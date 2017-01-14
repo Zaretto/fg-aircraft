@@ -223,7 +223,8 @@ var ara_63_update = func
 # do not do anything whilst the AN/SPN 46 is within expiry time. 
     if(getprop("/sim/time/elapsed-sec") < recipient.ansn46_expiry)
         return;
-
+    if (!getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"))
+      return;
 #
 # Use the standard civilian ILS
     setprop("sim/model/f15/lights/landing-chk-light", 0);
