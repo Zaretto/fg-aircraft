@@ -52,7 +52,7 @@ var VSD_Device =
         dev_canvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 1.00);
 # Create a group for the parsed elements
         obj.VSDsvg = dev_canvas.createGroup();
-        var pres = canvas.parsesvg(obj.VSDsvg, "Nasal/VSD/VSD.svg");
+        var pres = canvas.parsesvg(obj.VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg");
 # Parse an SVG file and add the parsed elements to the given group
         printf("VSD : %s Load SVG %s",designation,pres);
         obj.VSDsvg.setTranslation(10,5);
