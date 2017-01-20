@@ -135,7 +135,7 @@ var az_scan = func() {
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
+			if (c.getNode("valid") == nil or !c.getNode("valid").getValue() or isNotBehindTerrain(c) == 0) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
@@ -509,7 +509,95 @@ wcs_mode_update = func() {
 
 }
 
+#
+# The following 1 methods is from Mirage 2000-5 (modified by Pinto)
+#
+var isNotBehindTerrain = func(node) {
+    var SelectCoord = geo.Coord.new();
+    var x = nil;
+    var y = nil;
+    var z = nil;
+    call(func {
+        x = node.getNode("position/global-x").getValue();
+        y = node.getNode("position/global-y").getValue();
+        z = node.getNode("position/global-z").getValue(); },
+        nil, var err = []);
+    if(x == nil or y == nil or z == nil) {
+        return 1;
+    }
+    var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
 
+    var isVisible = 0;
+    var MyCoord = geo.aircraft_position();
+    
+    # Because there is no terrain on earth that can be between these 2
+    if(MyCoord.alt() < 8900 and SelectCoord.alt() < 8900)
+    {
+        # Temporary variable
+        # A (our plane) coord in meters
+        var a = MyCoord.x();
+        var b = MyCoord.y();
+        var c = MyCoord.z();
+        # B (target) coord in meters
+        var d = SelectCoord.x();
+        var e = SelectCoord.y();
+        var f = SelectCoord.z();
+        var difa = d - a;
+        var difb = e - b;
+        var difc = f - c;
+    
+    #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
+    #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
+    
+        # direct Distance in meters
+        var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
+        #print("myDistance: " ~ myDistance);
+        var Aprime = geo.Coord.new();
+        
+        # Here is to limit FPS drop on very long distance
+        var L = 500;
+        if(myDistance > 50000)
+        {
+            L = myDistance / 15;
+        }
+        var maxLoops = int(myDistance / L);
+        
+        isVisible = 1;
+        # This loop will make travel a point between us and the target and check if there is terrain
+        for(var i = 1 ; i <= maxLoops ; i += 1)
+        {
+          #calculate intermediate step
+          #basically dividing the line into maxLoops number of steps, and checking at each step
+          #to ascii-art explain it:
+          #  |us|----------|step 1|-----------|step 2|--------|step 3|----------|them|
+          #there will be as many steps as there is i
+          #every step will be equidistant
+          
+          #also, if i == 0 then the first step will be our plane
+          
+          var x = ((difa/(maxLoops+1))*i)+a;
+          var y = ((difb/(maxLoops+1))*i)+b;
+          var z = ((difc/(maxLoops+1))*i)+c;
+          #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
+          Aprime.set_xyz(x,y,z);
+          var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
+          if(AprimeTerrainAlt == nil)
+          {
+            AprimeTerrainAlt = 0;
+          }
+          
+          if(AprimeTerrainAlt > Aprime.alt())
+          {
+            return 0;
+          }
+        }
+    }
+    else
+    {
+        isVisible = 1;
+    }
+    return isVisible;
+}
 
 var TRUE = 1;
 var FALSE = 0;
