@@ -40,7 +40,7 @@ VSDcanvas.setColorBackground(0.0039215686274509803921568627451,0.176470588235294
 var VSDsvg = VSDcanvas.createGroup();
  
 # Parse an SVG file and add the parsed elements to the given group
-print("VSD Init: Parse SVG ",canvas.parsesvg(VSDsvg, "Nasal/VSD/VSD.svg"));
+print("VSD Init: Parse SVG ",canvas.parsesvg(VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg"));
 #VSDsvg.setTranslation (-20.0, 37.0);
 VSDsvg.setTranslation(10,5);
  
