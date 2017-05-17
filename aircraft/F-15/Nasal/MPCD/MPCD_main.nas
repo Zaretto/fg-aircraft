@@ -357,7 +357,7 @@ var MPCD_Sit =
                 'toggle_position':      { path: '/inputs/pos',         value: 0,     type: 'BOOL' },
                 'toggle_data':          { path: '/inputs/data',        value: 0,     type: 'BOOL' },
                 'toggle_terrain':       { path: '/inputs/terr',        value: 0,     type: 'BOOL' },
-                'toggle_traffic':       { path: '/inputs/tfc',         value: 0,     type: 'BOOL' },
+                'toggle_traffic':       { path: '/inputs/tfc',         value: 1,     type: 'BOOL' },
                 'toggle_centered':      { path: '/inputs/nd-centered', value: 1,     type: 'BOOL' },
                 'toggle_lh_vor_adf':    { path: '/inputs/lh-vor-adf',  value: 1,     type: 'INT' },
                 'toggle_rh_vor_adf':    { path: '/inputs/rh-vor-adf',  value: 1,     type: 'INT' },
