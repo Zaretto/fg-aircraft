@@ -69,6 +69,16 @@ var u_radar_standby   = 0;
 var u_ecm_type_num    = 0;
 var FD_TAN3DEG = 0.052407779283; # tan(3)
 
+var versionString = getprop("sim/version/flightgear");
+var version = split(".", versionString);
+var major = num(version[0]);
+var minor = num(version[1]);
+var pica  = num(version[2]);
+var pickingMethod = 0;
+if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2) or major > 2017) {
+    pickingMethod = 1;
+}
+
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
     if(our_ac_name == "f-14a") our_ac_name = "f-14b"; # RJH: We are an F14a - but internally we are an F14-B for compatibility with existing model so need to change the aircraft name here otherwise radar won't work
@@ -527,76 +537,102 @@ var isNotBehindTerrain = func(node) {
     }
     var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
 
-    var isVisible = 0;
-    var MyCoord = geo.aircraft_position();
-    
-    # Because there is no terrain on earth that can be between these 2
-    if(MyCoord.alt() < 8900 and SelectCoord.alt() < 8900)
-    {
-        # Temporary variable
-        # A (our plane) coord in meters
-        var a = MyCoord.x();
-        var b = MyCoord.y();
-        var c = MyCoord.z();
-        # B (target) coord in meters
-        var d = SelectCoord.x();
-        var e = SelectCoord.y();
-        var f = SelectCoord.z();
-        var difa = d - a;
-        var difb = e - b;
-        var difc = f - c;
-    
-    #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
-    #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
-    
-        # direct Distance in meters
-        var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
-        #print("myDistance: " ~ myDistance);
-        var Aprime = geo.Coord.new();
-        
-        # Here is to limit FPS drop on very long distance
-        var L = 500;
-        if(myDistance > 50000)
-        {
-            L = myDistance / 15;
-        }
-        var maxLoops = int(myDistance / L);
-        
-        isVisible = 1;
-        # This loop will make travel a point between us and the target and check if there is terrain
-        for(var i = 1 ; i <= maxLoops ; i += 1)
-        {
-          #calculate intermediate step
-          #basically dividing the line into maxLoops number of steps, and checking at each step
-          #to ascii-art explain it:
-          #  |us|----------|step 1|-----------|step 2|--------|step 3|----------|them|
-          #there will be as many steps as there is i
-          #every step will be equidistant
-          
-          #also, if i == 0 then the first step will be our plane
-          
-          var x = ((difa/(maxLoops+1))*i)+a;
-          var y = ((difb/(maxLoops+1))*i)+b;
-          var z = ((difc/(maxLoops+1))*i)+c;
-          #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
-          Aprime.set_xyz(x,y,z);
-          var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
-          if(AprimeTerrainAlt == nil)
-          {
-            AprimeTerrainAlt = 0;
-          }
-          
-          if(AprimeTerrainAlt > Aprime.alt())
-          {
-            return 0;
-          }
-        }
-    }
-    else
-    {
-        isVisible = 1;
-    }
-    return isVisible;
+    if (pickingMethod == 1) {
+      var myPos = geo.aircraft_position();
+
+      var xyz = {"x":myPos.x(),                  "y":myPos.y(),                 "z":myPos.z()};
+      var dir = {"x":SelectCoord.x()-myPos.x(),  "y":SelectCoord.y()-myPos.y(), "z":SelectCoord.z()-myPos.z()};
+
+      # Check for terrain between own aircraft and other:
+      v = get_cart_ground_intersection(xyz, dir);
+      if (v == nil) {
+        return 1;
+        #printf("No terrain, planes has clear view of each other");
+      } else {
+       var terrain = geo.Coord.new();
+       terrain.set_latlon(v.lat, v.lon, v.elevation);
+       var maxDist = myPos.direct_distance_to(SelectCoord);
+       var terrainDist = myPos.direct_distance_to(terrain);
+       if (terrainDist < maxDist) {
+         #print("terrain found between the planes");
+         return 0;
+       } else {
+          return 1;
+          #print("The planes has clear view of each other");
+       }
+      }
+    } else {
+	    var isVisible = 0;
+	    var MyCoord = geo.aircraft_position();
+	    
+	    # Because there is no terrain on earth that can be between these 2
+	    if(MyCoord.alt() < 8900 and SelectCoord.alt() < 8900)
+	    {
+	        # Temporary variable
+	        # A (our plane) coord in meters
+	        var a = MyCoord.x();
+	        var b = MyCoord.y();
+	        var c = MyCoord.z();
+	        # B (target) coord in meters
+	        var d = SelectCoord.x();
+	        var e = SelectCoord.y();
+	        var f = SelectCoord.z();
+	        var difa = d - a;
+	        var difb = e - b;
+	        var difc = f - c;
+	    
+	    #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
+	    #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
+	    
+	        # direct Distance in meters
+	        var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
+	        #print("myDistance: " ~ myDistance);
+	        var Aprime = geo.Coord.new();
+	        
+	        # Here is to limit FPS drop on very long distance
+	        var L = 500;
+	        if(myDistance > 50000)
+	        {
+	            L = myDistance / 15;
+	        }
+	        var maxLoops = int(myDistance / L);
+	        
+	        isVisible = 1;
+	        # This loop will make travel a point between us and the target and check if there is terrain
+	        for(var i = 1 ; i <= maxLoops ; i += 1)
+	        {
+	          #calculate intermediate step
+	          #basically dividing the line into maxLoops number of steps, and checking at each step
+	          #to ascii-art explain it:
+	          #  |us|----------|step 1|-----------|step 2|--------|step 3|----------|them|
+	          #there will be as many steps as there is i
+	          #every step will be equidistant
+	          
+	          #also, if i == 0 then the first step will be our plane
+	          
+	          var x = ((difa/(maxLoops+1))*i)+a;
+	          var y = ((difb/(maxLoops+1))*i)+b;
+	          var z = ((difc/(maxLoops+1))*i)+c;
+	          #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
+	          Aprime.set_xyz(x,y,z);
+	          var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
+	          if(AprimeTerrainAlt == nil)
+	          {
+	            AprimeTerrainAlt = 0;
+	          }
+	          
+	          if(AprimeTerrainAlt > Aprime.alt())
+	          {
+	            return 0;
+	          }
+	        }
+	    }
+	    else
+	    {
+	        isVisible = 1;
+	    }
+	    return isVisible;
+	}
 }
 
 var TRUE = 1;
