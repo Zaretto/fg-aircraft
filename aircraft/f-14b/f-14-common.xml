@@ -1856,13 +1856,21 @@
     <payload>                        
         <armament>
             <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <modelsUseCase type="bool">true</modelsUseCase>
+            <modelsUpperCase type="bool">true</modelsUpperCase>
             <pylon-offset type="int">1</pylon-offset>
             <pylon-stations>controls/armament</pylon-stations>
+            <station-name type="string">station</station-name>
+            <hit-interpolation type="bool">true</hit-interpolation>
+            <MP-lat type="string">rotors/main/blade[0]/flap-deg</MP-lat>
+            <MP-lon type="string">rotors/main/blade[1]/flap-deg</MP-lon>
+            <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
             <aim-9>             <!-- aim-9L sidewinder -->
                 <sound-on-off type="bool">false</sound-on-off>
                 <sound-volume type="double">0.0</sound-volume>
+                <sound-fire-on-off type="bool">false</sound-fire-on-off>
                 <vol-search type="double">0.075</vol-search>
                 <vol-track type="double">0.25</vol-track>
                 <vol-track-weak type="double">0.175</vol-track-weak>
@@ -1901,6 +1909,7 @@
             <aim-7>          <!-- aim-7f Sparrow -->
                 <sound-on-off type="bool">false</sound-on-off>
                 <sound-volume type="double">0.0</sound-volume>
+                <sound-fire-on-off type="bool">false</sound-fire-on-off>
                 <vol-search type="double">0.00</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <vol-track-weak type="double">0.10</vol-track-weak>
@@ -1933,6 +1942,7 @@
             <aim-54><!-- aim-54c Phoenix -->
                 <sound-on-off type="bool">false</sound-on-off>
                 <sound-volume type="double">0.0</sound-volume>
+                <sound-fire-on-off type="bool">false</sound-fire-on-off>
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <vol-track-weak type="double">0.10</vol-track-weak>
