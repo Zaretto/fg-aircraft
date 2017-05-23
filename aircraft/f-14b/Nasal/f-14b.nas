@@ -544,3 +544,7 @@ var resetView = func () {
   setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
   setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
 }
+
+dynamic_view.register(func {
+              me.default_plane(); 
+   });
