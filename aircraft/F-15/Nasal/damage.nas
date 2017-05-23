@@ -103,6 +103,7 @@ var incoming_listener = func {
     var last_vector = split(":", last);
     var author = last_vector[0];
     var callsign = getprop("sim/multiplay/callsign");
+    callsign = size(callsign) < 8 ? callsign : left(callsign,7);
     if (size(last_vector) > 1 and author != callsign) {
       # not myself
       #print("not me");
