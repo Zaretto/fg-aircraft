@@ -1942,6 +1942,16 @@
                 </binding>
             </key>
 
+            <key n="17">
+                <name>ctrl-q</name>
+                <desc>Trigger flare release</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>/ai/submodels/submodel[5]/flare-release-cmd</property>
+                    <value type="bool">true</value>
+                </binding>
+            </key>
+
             <key n="117">
                 <name>u</name>
                 <desc>Cycle through the 3 refuelling probe switch positions</desc>
@@ -2084,6 +2094,9 @@
             </blade>
             <blade n="2">
                 <flap-deg type="double">0</flap-deg>
+            </blade>
+            <blade n="3">
+                <flap-deg type="double">0</flap-deg><!-- used for releasing flares -->
             </blade>
         </main>
     </rotors>

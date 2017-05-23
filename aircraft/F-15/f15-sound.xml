@@ -2039,5 +2039,35 @@
                 <max>1</max>
             </volume>
         </missile3>
+
+        <flare>
+            <name>flare</name>
+            <mode>once</mode>
+            <type>avionics</type>
+            <path>Aircraft/F-15/Sounds/flare.wav</path>
+            <condition>
+                <property>ai/submodels/submodel[5]/flare-release-snd</property>
+                <property>sim/current-view/internal</property>
+            </condition>
+            <volume>
+                <factor>1</factor>
+                <max>1</max>
+            </volume>
+        </flare>
+
+        <flare>
+            <name>flareOut</name>
+            <mode>once</mode>
+            <type>avionics</type>
+            <path>Aircraft/F-15/Sounds/flareOut.wav</path>
+            <condition>
+                <property>ai/submodels/submodel[5]/flare-release-out-snd</property>
+                <property>sim/current-view/internal</property>
+            </condition>
+            <volume>
+                <factor>1</factor>
+                <max>1</max>
+            </volume>
+        </flare>
     </fx>
 </PropertyList>

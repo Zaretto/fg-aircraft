@@ -1225,7 +1225,7 @@ else
         return 1;
     },
     getFlareNode: func {
-        return nil;
+        return me.propNode.getNode("rotors/main/blade[3]/flap-deg");
     },
     getElevation: func() {
         var e = 0;
