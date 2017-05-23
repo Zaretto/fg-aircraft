@@ -140,7 +140,7 @@ if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2
 }
 var offsetMethod = FALSE;
 if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2) or major > 2017) {
-	offsetMethod = TRUE;
+	#offsetMethod = TRUE;
 }
 
 #
