@@ -222,6 +222,11 @@ var incoming_listener = func {
           } 
         } elsif (cannon_types[last_vector[1]] != nil) {
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
+            if (size(last_vector) < 4) {
+              # msg is either missing number of hits, or has no trailing dots from spam filter.
+              print('"'~last~'"   is not a legal hit message, tell the shooter to upgrade his OPRF plane :)')
+              return;
+            }
             var last3 = split(" ", last_vector[3]);
             if(size(last3) > 2 and size(last3[2]) > 2 and last3[2] == "hits" ) {
               var probability = cannon_types[last_vector[1]];
