@@ -224,7 +224,7 @@ var incoming_listener = func {
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
             if (size(last_vector) < 4) {
               # msg is either missing number of hits, or has no trailing dots from spam filter.
-              print('"'~last~'"   is not a legal hit message, tell the shooter to upgrade his OPRF plane :)')
+              print('"'~last~'"   is not a legal hit message, tell the shooter to upgrade his OPRF plane :)');
               return;
             }
             var last3 = split(" ", last_vector[3]);
