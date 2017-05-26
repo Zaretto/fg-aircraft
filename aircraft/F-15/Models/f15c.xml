@@ -24,8 +24,16 @@
 
             var self = cmdarg();
             print("Model load F-15 ", self.getPath());
-
-            var skip = 0;
+if(find("F-15D.xml", getprop("sim/model/path")) != -1)
+{
+setprop("sim/model/f15/variant","D");
+print ("D variant");
+}
+else
+{
+setprop("sim/model/f15/variant","C");
+}
+var skip = 0;
             var str = self.getNode("sim/multiplay/generic/string[13]");
             if (str == nil) {
               skip = 1;
@@ -176,7 +184,7 @@ var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
 
         <unload>
             <![CDATA[ 
-            print("UNLOAD F-15 ", self.getPath());
+            print("UNLOAD F-15 ", getprop("sim/model/path"));
             #cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
             livery_update.stop();
             emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15ModelUnload", _module_id));
