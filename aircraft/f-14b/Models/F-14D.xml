@@ -527,7 +527,7 @@
             </greater-than>
 		</condition>
 		<emission>
-			<factor-prop>sim/multiplay/generic/int[1]</factor-prop>
+			<factor-prop>sim/model/f-14b/controls/lighting/formation</factor-prop>
 				<red>0.091</red>
 				<green>0.098</green>
 				<blue>0.078</blue>
@@ -580,7 +580,7 @@
 		<object-name>Spoiler4L</object-name>  
 		<object-name>LeftWingLight</object-name>
 		<object-name>LWingSlimmer</object-name>
-		<property>sim/multiplay/generic/float[0]</property>
+		<property>surface-positions/wing-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>46</dep></entry>
@@ -654,7 +654,7 @@
 		<object-name>LWingSlimmer</object-name>
 		<condition>
 			<not>
-				<property>sim/multiplay/generic/int[5]</property>
+				<property>sim/model/f-14b/wings/left-wing-torn</property>
 			</not>
 		</condition>
 	</animation>
@@ -681,7 +681,7 @@
 		<object-name>Spoiler4R</object-name> 
 		<object-name>RightWingLight</object-name>
 		<object-name>RWingSlimmer</object-name>
-		<property>sim/multiplay/generic/float[0]</property>
+		<property>surface-positions/wing-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
@@ -757,7 +757,7 @@
 		<object-name>RWingSlimmer</object-name>
 		<condition>
 			<not>
-				<property>sim/multiplay/generic/int[6]</property>
+				<property>sim/model/f-14b/wings/right-wing-torn</property>
 			</not>
 			</condition>
 	</animation>
@@ -770,7 +770,7 @@
 		<object-name>CanvasSeal.005</object-name>
 		<condition>
 			<less-than-equals>
-        		<property>sim/multiplay/generic/float[0]</property>
+        		<property>surface-positions/wing-pos-norm</property>
 				<value>0.1</value>
 			</less-than-equals>
 		</condition>
@@ -782,11 +782,11 @@
 		<object-name>CanvasSeal.004</object-name>
 		<condition>
 			<greater-than>
-                <property>sim/multiplay/generic/float[0]</property>
+                <property>surface-positions/wing-pos-norm</property>
 				<value>0.1</value>
 			</greater-than>
 			<less-than-equals>
-        		<property>sim/multiplay/generic/float[0]</property>
+        		<property>surface-positions/wing-pos-norm</property>
 				<value>0.6</value>
 			</less-than-equals>
 		</condition>
@@ -798,7 +798,7 @@
 		<object-name>CanvasSeal.003</object-name>
 		<condition>
 			<greater-than>
-        		<property>sim/multiplay/generic/float[0]</property>
+        		<property>surface-positions/wing-pos-norm</property>
 				<value>0.6</value>
 			</greater-than>
 		</condition>
@@ -989,7 +989,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>StabilatorL</object-name>
-		<property>sim/multiplay/generic/float[4]</property>
+		<property>surface-positions/left-elevator-pos-norm</property>
 		<factor>19.0</factor>
 		<center>
 			<x-m>6.158</x-m>
@@ -1006,7 +1006,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>StabilatorR</object-name>
-		<property>sim/multiplay/generic/float[5]</property>
+		<property>surface-positions/right-elevator-pos-norm</property>
 		<factor>19.0</factor>
 		<center>
 			<x-m>6.158</x-m>
@@ -1142,7 +1142,7 @@
 		<type>rotate</type>
 		<object-name>Flap3L</object-name>
 		<object-name>Flap3BrowL</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<factor>35</factor>
 		<center>
 			<x-m>2.881</x-m>
@@ -1159,7 +1159,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>FlapSeal3L</object-name>  
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>10</dep></entry>
@@ -1179,7 +1179,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Flap3BrowL</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>-8.78</dep></entry>
@@ -1316,7 +1316,7 @@
 		<type>rotate</type>
 		<object-name>Flap3R</object-name>
 		<object-name>Flap3BrowR</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<factor>-35</factor>
 		<center>
 			<x-m>2.881</x-m>
@@ -1333,7 +1333,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>FlapSeal3R</object-name>  
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>-10</dep></entry>
@@ -1353,7 +1353,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Flap3BrowR</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>8.78</dep></entry>
@@ -1375,7 +1375,7 @@
 	<animation>
 		<type>translate</type>
 		<object-name>Slat1L</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>0.12</factor>
 		<axis>
 			<x>-1</x>
@@ -1387,7 +1387,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat1L</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>12</factor>
 		<center>
 			<x-m>3.078</x-m>
@@ -1404,7 +1404,7 @@
 	<animation>
 		<type>translate</type>
 		<object-name>Slat1R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>0.12</factor>
 		<axis>
 			<x>-1</x>
@@ -1416,7 +1416,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat1R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>-12</factor>
 		<center>
 			<x-m>3.078</x-m>
@@ -1433,7 +1433,7 @@
 <animation>
 	<type>translate</type>
 	<object-name>Slat2L</object-name>
-	<property>sim/multiplay/generic/float[3]</property>
+	<property>surface-positions/slats-pos-norm</property>
 	<factor>0.17</factor>
 	<axis>
 		<x>-1</x>
@@ -1445,7 +1445,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat2L</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>12</factor>
 		<center>
 			<x-m>2.145</x-m>
@@ -1462,7 +1462,7 @@
 	<animation>
 		<type>translate</type>
 		<object-name>Slat2R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>0.17</factor>
 		<axis>
 			<x>-1</x>
@@ -1474,7 +1474,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat2R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>-12</factor>
 		<center>
 			<x-m>2.145</x-m>
@@ -1636,7 +1636,7 @@
 		<type>select</type>
 		<object-name>LandingLight-on</object-name>
 		<condition>
-			<property>sim/multiplay/generic/int[7]</property>
+			<property>controls/lighting/taxi-light</property>
 		</condition>
 	</animation>
 	<animation>
@@ -1644,7 +1644,7 @@
 		<object-name>LandingLight-off</object-name>
 		<condition>
 			<not>
-    			<property>sim/multiplay/generic/int[7]</property>
+    			<property>controls/lighting/taxi-light</property>
 			</not>
 		</condition>
 	</animation>
@@ -2820,7 +2820,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>RefuelProbe</object-name>
-		<property>sim/multiplay/generic/float[6]</property>
+		<property>sim/model/f-14b/refuel/position-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>55</dep></entry>
 			<entry><ind>1.0</ind><dep>0.0</dep></entry>
@@ -2840,7 +2840,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Fuselage.013</object-name>
-		<property>sim/multiplay/generic/float[6]</property>
+		<property>sim/model/f-14b/refuel/position-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
 			<entry><ind>1.0</ind><dep>-55.0</dep></entry>
@@ -2862,7 +2862,7 @@
 		<type>rotate</type>
 		<object-name>Fuselage.006_0</object-name>
 		<object-name>Fuselage.006_1</object-name>
-		<property>sim/multiplay/generic/float[6]</property>
+		<property>sim/model/f-14b/refuel/position-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
 			<entry><ind>0.3</ind><dep>-100.0</dep></entry>

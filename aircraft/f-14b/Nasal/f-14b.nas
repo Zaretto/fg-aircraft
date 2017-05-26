@@ -90,6 +90,7 @@ var pos = props.globals.getNode("canopy/position-norm");
 #
 # cockpit will simply toggle the value of this.
 setlistener("sim/model/f-14b/controls/canopy/canopy-switch", func(v) {
+
 	if (v.getValue()) 
         cnpy.open();
     else
@@ -123,6 +124,8 @@ var SweepSpeed = 0.3;
 var main_flap_output   = props.globals.getNode("surface-positions/main-flap-pos-norm", 1);
 var aux_flap_output    = props.globals.getNode("surface-positions/aux-flap-pos-norm", 1);
 var slat_output        = props.globals.getNode("surface-positions/slats-pos-norm", 1);
+var usingJSBSim = getprop("/sim/flight-model") == "jsb";
+print ("F-14 Using jsbsim = ",usingJSBSim);
 
 if (usingJSBSim){
     aux_flap_output    = props.globals.getNode("/fdm/jsbsim/fcs/aux-flap-pos-norm", 1);
@@ -146,20 +149,20 @@ var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/positio
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn");
 
-var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
-var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
-var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
-var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]",1);
-var left_elev_generic  = props.globals.getNode("sim/multiplay/generic/float[4]",1);
-var right_elev_generic = props.globals.getNode("sim/multiplay/generic/float[5]",1);
-var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1);
-# sim/multiplay/generic/int[1] used by formation slimmers.
-# sim/multiplay/generic/int[2] used by radar standby.
-var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
-var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
-var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
-var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
-var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
+#var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
+#var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
+#var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
+#var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]",1);
+#var left_elev_generic  = props.globals.getNode("sim/multiplay/generic/float[4]",1);
+#var right_elev_generic = props.globals.getNode("sim/multiplay/generic/float[5]",1);
+#var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1);
+# sim/model/f-14b/controls/lighting/formation used by formation slimmers.
+# instrumentation/radar/radar-standby used by radar standby.
+#var lighting_collision_generic = props.globals.getNode("sim/model/f-14b/lighting/anti-collision/state",1);
+#var lighting_position_generic  = props.globals.getNode("sim/model/f-14b/lighting/position/state",1);
+#var left_wing_torn_generic     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn",1);
+#var right_wing_torn_generic    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn",1);
+#var lighting_taxi_generic       = props.globals.getNode("controls/lighting/taxi-light",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
 
@@ -280,15 +283,15 @@ var timedMotions = func {
 	# Copy surfaces animations properties so they are transmited via multiplayer.
     if (usingJSBSim)
     {
-        if (main_flap_generic != nil)
-        {    
-    	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
-        } 
+#        if (main_flap_output != nil)
+#        {    
+#    	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
+#        } 
 
-        if (aux_flap_generic != nil)
-        {
-            aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
-        }
+#        if (aux_flap_generic != nil)
+#        {
+#            aux_flap_generic.setDoubleValue(aux_flap_output.getValue());
+#        }
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var current_aileron = aileron.getValue();
@@ -298,9 +301,9 @@ var timedMotions = func {
             setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
         }
         var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
-    	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
-    	right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
-
+    	left_elev_output.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
+    	right_elev_output.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
+		setprop("surface-positions/aux-flap-pos-norm", aux_flap_output.getValue());
     }
     else
     {
@@ -311,25 +314,97 @@ var timedMotions = func {
     	left_elev_generic.setDoubleValue(left_elev_output.getValue());
     	right_elev_generic.setDoubleValue(right_elev_output.getValue());
     }
-	slat_generic.setDoubleValue(slat_output.getValue());
-    wing_sweep_generic.setDoubleValue(currentSweep);
-	lighting_collision_generic.setIntValue(lighting_collision.getValue());
-	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
-	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
-	right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
-	lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
+	#slat_generic.setDoubleValue(slat_output.getValue());
+    #wing_sweep_generic.setDoubleValue(currentSweep);
+	#lighting_collision_generic.setIntValue(lighting_collision.getValue());
+	#lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
+	#left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
+	#right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
+	#lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
 
-setprop("/sim/multiplay/generic/float[8]", getprop("/engines/engine[0]/augmentation-burner" ));
-setprop("/sim/multiplay/generic/float[9]", getprop("/engines/engine[1]/augmentation-burner" ));
-setprop("/sim/multiplay/generic/float[10]", getprop("/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" ));
-setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" ));
-#setprop("/sim/multiplay/generic/int[8]", getprop("/engines/engine[0]/afterburner" ));
-#setprop("/sim/multiplay/generic/int[9]", getprop("/engines/engine[1]/afterburner" ));
+#setprop("/sim/multiplay/generic/float[8]", getprop("/engines/engine[0]/augmentation-burner" ));
+#setprop("/sim/multiplay/generic/float[9]", getprop("/engines/engine[1]/augmentation-burner" ));
+#setprop("/sim/multiplay/generic/float[10]", getprop("/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" ));
+#setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" ));
+#setprop("/engines/engine[0]/afterburner", getprop("/engines/engine[0]/afterburner" ));
+#setprop("/engines/engine[1]/afterburner", getprop("/engines/engine[1]/afterburner" ));
 
 }
 
+#var routedNotifications = [notifications.Tactical	cation.new(nil), notifications.AircraftEventNotification(nil)];
+var routedNotifications = [notifications.AircraftEventNotification.new(nil), notifications.GeoEventNotification.new(nil)];
+var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp",routedNotifications);
+var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
 
+var f14_aircraft_notification = notifications.AircraftEventNotification.new("F-14"~getprop("/sim/remote/pilot-callsign"));
+setprop("/sim/startup/terminal-ansi-colors",0);
+var get_int_prop = func(s){
+if(getprop(s)!=nil) return getprop(s);
+return 0;
+}
 
+var update_f14_aircraft_notification = func(obj) {
+	var current_aileron = aileron.getValue();
+	var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
+
+obj.Ruddder = getprop("surface-positions/rudder-pos-norm");
+obj.SpeedBrake = getprop("surface-positions/speedbrake-pos-norm");
+obj.Launchbar = getprop("gear/launchbar/position-norm");
+obj.TailHook =  getprop("gear/tailhook/position-norm");
+obj.Canopy = getprop("canopy/position-norm");
+obj.Engine0N1 = getprop("engines/engine[0]/n1");
+obj.Engine0N2 = getprop("engines/engine[0]/n2");
+obj.Engine1N1 = getprop("engines/engine[1]/n1");
+obj.Engine1N2 = getprop("engines/engine[1]/n2");
+obj.GearPosition = getprop("gear/gear[0]/position-norm");
+obj.GearCompression0 = getprop("gear/gear[0]/compression-norm");
+obj.GearCompression1 = getprop("gear/gear[1]/compression-norm");
+obj.GearCompression2 = getprop("gear/gear[2]/compression-norm");
+obj.GearRollspeed = getprop("gear/gear1/rollspeed-ms");
+
+	obj.AuxFlaps = aux_flap_output.getValue();
+	obj.ElectricsEssentialPowered=get_int_prop("fdm/jsbsim/systems/electrics/ac-left-main-bus-powered") or 0;
+	obj.ElectricsMainPowered = get_int_prop("fdm/jsbsim/systems/electrics/ac-main-bus1") or 0;
+	obj.EngineAugmentationBurnerL = get_int_prop("engines/engine[0]/augmentation-burner" ); # 0 to 5
+	obj.EngineAugmentationBurnerR = get_int_prop("engines/engine[1]/augmentation-burner" );; # 0 to 5
+	obj.EngineNozzleL =  get_int_prop("fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" );
+	obj.EngineNozzleR =  get_int_prop("fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" );
+	obj.Flaps = get_int_prop("surface-positions/main-flap-pos-norm");
+	obj.FuelDump = get_int_prop("sim/multiplay/generic/int[0]");
+	obj.FuelTotal = get_int_prop("consumables/fuel/total-fuel-lbs");
+	obj.HsdNeedleDeflection = get_int_prop("sim/model/f-14b/instrumentation/hsd/needle-deflection");
+	obj.LeftElevator = elev_output.getValue() + elevator_deflection_due_to_aileron_deflection;
+	obj.LightingAntiCollision = lighting_collision.getValue();
+	obj.LightingFormation = get_int_prop("sim/model/f-14b/controls/lighting/formation");
+	obj.LightingFormation = lighting_taxi.getValue();
+	obj.LightingPosition = lighting_position.getValue() * position_intens;
+	obj.SpoilerLeft = get_int_prop("surface-positions/left-spoilers");
+	obj.SpoilerRight = get_int_prop("surface-positions/right-spoilers");
+	obj.Nav1RadialSelectedDeg = get_int_prop("instrumentation/nav[1]/radials/selected-deg");
+	obj.RadarMode = 1;
+	obj.Refuel = get_int_prop("sim/model/f-14b/controls/fuel/refuel-probe-switch");
+	obj.RightElevator = elev_output.getValue() -elevator_deflection_due_to_aileron_deflection;
+	obj.Slats = slat_output.getValue();
+	obj.Smoke = get_int_prop("sim/model/f-14b/fx/smoke") ? 1 : 0;
+	obj.SteerSubmodeCode = get_int_prop("sim/model/f-14b/controls/pilots-displays/steer-submode-code");
+	obj.Stores = get_int_weapons();
+	obj.TacanInRange = get_int_prop("instrumentation/tacan/in-range");
+	obj.TacanIndicatedBearing = get_int_prop("instrumentation/tacan/indicated-mag-bearing-deg");
+	obj.TacanIndicatedDistanceNm = get_int_prop("instrumentation/tacan/indicated-distance-nm");
+	obj.TacanMode = get_int_prop("sim/model/f-14b/instrumentation/tacan/mode");
+	obj.WingSweep = currentSweep;
+
+	var lwt = get_int_prop("sim/model/f-14b/wings/left-wing-torn");
+	if (lwt)
+		obj.WingDamage = 1;
+	else
+		obj.WingDamage = 0;
+
+	var rwt = get_int_prop("sim/model/f-14b/wings/right-wing-torn");
+	if (rwt)
+		obj.WingDamage = obj.WingDamage + 2;
+
+}
 #----------------------------------------------------------------------------
 # FCS update
 #----------------------------------------------------------------------------
@@ -403,7 +478,12 @@ var updateFCS = func {
 #
 # slower rate
     f14.update_weapons_over_mp();
-	f14.registerFCS (); # loop, once per frame.
+     
+# emesary notification - basic properties
+     update_f14_aircraft_notification(f14_aircraft_notification);
+     emesary.GlobalTransmitter.NotifyAll(f14_aircraft_notification);
+
+     f14.registerFCS (); # loop, once per frame.
 }
 
 

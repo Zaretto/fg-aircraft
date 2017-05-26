@@ -1,5 +1,12 @@
 var UPDATE_PERIOD = 0.05;
 
+
+
+#
+#
+# var routedNotifications = [notifications.TacticalNotification.new(nil), AircraftEventNotification];
+# var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
+
 # Check pilot's aircraft path from it's callsign.
 var PilotCallsign = props.globals.getNode("/sim/remote/pilot-callsign");
 var Pilot = nil;
@@ -29,6 +36,7 @@ var select_ecm_nav = func {
 # Receive basic instruments data over MP from pilot's aircraft.
 var PilotInstrString = nil;
 instruments_data_import = func {
+return;
 	if ( Pilot == nil ) { return }
 	PilotInstrString = Pilot.getNode("sim/multiplay/generic/string[1]", 1);
 	var str = PilotInstrString.getValue();

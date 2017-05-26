@@ -351,9 +351,20 @@ var update_wpstring = func
 {
     update_wp_requested = true;
 }
+var bitpowers = [0,2,4,8,16,32,64];
+var get_int_weapons = func
+  {
+var i_rv = 0;
+foreach (var S; f14.Station.list)
+        {
+i_rv = i_rv*bitpowers[S.encode_length] + S.bcode;
+        }
+return i_rv;
+}
 
 var update_weapons_over_mp = func
 {
+return;
     var cur_time = getprop("/sim/time/elapsed-sec");
     if (update_wp_requested or cur_time > update_wp_next)
     {

@@ -659,9 +659,9 @@ var fuel_dump_off = func() {
 
 
 var r_probe = aircraft.door.new("sim/model/f-14b/refuel/", 1);
-var RprobePos        = props.globals.getNode("sim/model/f-14b/refuel/position-norm", 1);
-var RprobePosGeneric = props.globals.getNode("sim/multiplay/generic/float[6]");
-RprobePosGeneric.alias(RprobePos);
+#var RprobePos        = props.globals.getNode("sim/model/f-14b/refuel/position-norm", 1);
+#var RprobePosGeneric = props.globals.getNode("sim/multiplay/generic/float[6]");
+#RprobePosGeneric.alias(RprobePos);
 
 var refuel_probe_switch_up = func() {
 	var sw = RprobeSw.getValue();

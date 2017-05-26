@@ -259,19 +259,22 @@ var sendMis = func () {
     var mid = m;
     m = armament.AIM.active[m];
     if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
+      #var lat = m.latN.getValue();
+      #var lon = m.lonN.getValue();
+      #var alt = m.altN.getValue();
       #print();
       #print(mid);
       #print(lat);
       #print(lon);
       #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
+      #str = str~mid~";"~lat~";"~lon~";"~alt~":";
+      var msg = notifications.GeoEventNotification.new(mid, 2, 20+mid);
+      msg.Position.set_latlon(m.latN.getValue(), m.lonN.getValue(), m.altN.getValue());
+      emesary.GlobalTransmitter.NotifyAll(m);
     }
   }
-  setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.05);
+#  setprop("sim/multiplay/generic/string[13]", str);
+  settimer(sendMis,0.1);
 }
 
 
@@ -396,7 +399,7 @@ var code_ct = func () {
     ifa = 0;
   }
   var final = "ct"~cu~ff~rl~rf~rp~a~dm~tm~rd~ml~sf~ifa;
-  setprop("sim/multiplay/generic/string[15]", final);
+#  setprop("sim/multiplay/generic/string[15]", final);
   settimer(code_ct, 2);
 }
 

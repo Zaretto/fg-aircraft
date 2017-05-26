@@ -18,120 +18,142 @@
 	<nasal>
 		<load>
         <![CDATA[ 
-			var self = cmdarg();
-			var skip = 0;
-			var str = self.getNode("sim/multiplay/generic/string[13]");
-	        if (str == nil or str.getValue() == nil) {
-	          skip = 1;
-	        }
+        print("F14- load2");
+        var self = cmdarg();
+        var skip = 0;
+  #      var incomingBridge = nil;
+        var mp_recipient = nil;
 
-	        var objs = {};
 
-	        var loop = func () {
-	          var mp_str = split(":", str.getValue());
+        var MPrecipient =
+        {
+            new: func(_ident, _node)
+            {
+                var new_class = emesary.Recipient.new(_ident);
+                new_class.node = _node;
+                new_class.path = new_class.node.getPath()~"/";
+                new_class.export = func(property, value)
+                {
+#                    print("set ",me.path,property, " to ",value);
+                    setprop(me.path~property, value);
+                };
 
-	          foreach(var mis; mp_str) {
-	            var mis_s = split(";", mis);
-	            if (size(mis_s) == 4) {
-	              var id = mis_s[0];
-	              var objModel = objs[id];
-	              if (objModel == nil) {
-	                # create model
-	                #print("creating "~mis);
-	                var n = props.globals.getNode("models", 1);
-	                var i = 0;
-	                for (i = 0; 1==1; i += 1) {
-	                  if (n.getChild("model", i, 0) == nil) {
-	                    break;
-	                  }
-	                }
-	                objModel = n.getChild("model", i, 1);
+                new_class.Receive = func(notification)
+                {
+                    if(!notification.FromIncomingBridge)
+                        return emesary.Transmitter.ReceiptStatus_NotProcessed;
 
-	                objModel.getNode("elevation",1).setDoubleValue(0);
-	                objModel.getNode("latitude",1).setDoubleValue(0);
-	                objModel.getNode("longitude",1).setDoubleValue(0);
-	                objModel.getNode("elevation-ft-prop",1).setValue(objModel.getPath()~"/elevation");
-	                objModel.getNode("latitude-deg-prop",1).setValue(objModel.getPath()~"/latitude");
-	                objModel.getNode("longitude-deg-prop",1).setValue(objModel.getPath()~"/longitude");
-	                objModel.getNode("heading-deg",1).setDoubleValue(0);
-	                objModel.getNode("pitch-deg",1).setDoubleValue(0);
-	                objModel.getNode("roll-deg",1).setDoubleValue(0);
-	                objModel.getNode("path",1).setValue("Aircraft/f-14b/Models/Stores/MP_missile/mp_missile.xml");
+                    if (notification.NotificationType == "GeoEventNotification")
+                    {
+                        debug.dump(notification);
+                        return emesary.Transmitter.ReceiptStatus_OK;
+                    }
+                    else if (notification.NotificationType == "AircraftEventNotification")
+                    {
+#TODO: liveries; me.export("sim/model/livery/file", 
+#me.export("sim/model/variant",
+me.export("canopy/position-norm",notification.Canopy);
+me.export("consumables/fuel/total-fuel-lbs", notification.FuelTotal );
+me.export("engines/engine[0]/augmentation-burner",  notification.EngineAugmentationBurnerL);
+me.export("engines/engine[0]/n1",notification.Engine0N1);
+me.export("engines/engine[0]/n2",notification.Engine0N2);
+me.export("engines/engine[0]/nozzle-pos-norm",  notification.EngineNozzleL);
+me.export("engines/engine[1]/augmentation-burner",  notification.EngineAugmentationBurnerR);
+me.export("engines/engine[1]/n1", notification.Engine1N1 );
+me.export("engines/engine[1]/n2", notification.Engine1N2 );
+me.export("engines/engine[1]/nozzle-pos-norm",  notification.EngineNozzleR);
+me.export("fdm/jsbsim/systems/electrics/ac-essential-bus1", notification.ElectricsEssentialPowered);
+me.export("fdm/jsbsim/systems/electrics/ac-essential-bus2", notification.ElectricsEssentialPowered); 
+me.export("fdm/jsbsim/systems/electrics/ac-left-main-bus", notification.ElectricsMainPowered);
+me.export("fdm/jsbsim/systems/electrics/ac-left-main-bus-powered", notification.ElectricsEssentialPowered);
+me.export("fdm/jsbsim/systems/electrics/ac-main-bus1", notification.ElectricsMainPowered);
+me.export("fdm/jsbsim/systems/electrics/ac-right-main-bus", notification.ElectricsMainPowered);
+me.export("fdm/jsbsim/systems/electrics/dc-essential-bus1", notification.ElectricsEssentialPowered);
+me.export("fdm/jsbsim/systems/electrics/dc-essential-bus2", notification.ElectricsEssentialPowered);
+me.export("gear/gear[0]/compression-norm", notification.GearCompression0 );
+me.export("gear/gear[0]/position-norm", notification.GearPosition );
+me.export("gear/gear[1]/position-norm", notification.GearPosition );
+me.export("gear/gear[2]/position-norm", notification.GearPosition );
+me.export("gear/gear[1]/compression-norm", notification.GearCompression1 );
+me.export("gear/gear[2]/compression-norm", notification.GearCompression2 );
+me.export("gear/launchbar/position-norm",notification.Launchbar);
+me.export("gear/tailhook/position-norm",notification.SpeedBrake);
+me.export("instrumentation/nav[1]/radials/selected-deg",  notification.Nav1RadialSelectedDeg);
+me.export("instrumentation/tacan/in-range",  notification.TacanInRange);
+me.export("instrumentation/tacan/indicated-distance-nm",  notification.TacanIndicatedDistanceNm);
+me.export("instrumentation/tacan/indicated-mag-bearing-deg",  notification.TacanIndicatedBearing);
+me.export("sim/model/f-14b/controls/fuel/refuel-probe-switch",  notification.Refuel);
+me.export("sim/model/f-14b/controls/lighting/formation",  notification.LightingFormation);
+me.export("sim/model/f-14b/controls/pilots-displays/steer-submode-code",  notification.SteerSubmodeCode);
+me.export("sim/model/f-14b/instrumentation/hsd/needle-deflection",  notification.HsdNeedleDeflection);
+me.export("sim/model/f-14b/instrumentation/tacan/mode",  notification.TacanMode);
+me.export("sim/model/f-14b/lighting/anti-collision/state",  notification.LightingAntiCollision);
+me.export("sim/model/f-14b/lighting/position/state",  notification.LightingPosition);
+me.export("sim/multiplay/generic/int[0]",  notification.FuelDump);
+me.export("surface-positions/aux-flap-pos-norm",  notification.AuxFlaps);
+me.export("surface-positions/inner-left-spoilers", notification.SpoilerLeft);
+me.export("surface-positions/inner-right-spoilers", notification.SpoilerRight);
+me.export("surface-positions/left-elevator-pos-norm",  notification.LeftElevator);
+me.export("surface-positions/left-spoilers", notification.SpoilerLeft);
+me.export("surface-positions/main-flap-pos-norm",  notification.Flaps);
+me.export("surface-positions/right-elevator-pos-norm",  notification.RightElevator);
+me.export("surface-positions/right-spoilers", notification.SpoilerRight);
+me.export("surface-positions/rudder-pos-norm", notification.Ruddder);
+me.export("surface-positions/slats-pos-norm",  notification.Slats);
+me.export("surface-positions/speedbrake-pos-norm", notification.SpeedBrake);
+me.export("surface-positions/wing-pos-norm",  notification.WingSweep);
 
-	                var loadNode = objModel.getNode("load", 1);
-	                loadNode.setBoolValue(1);
+if (notification.WingDamage == 1 or notification.WingDamage==3)
+                            me.export("sim/model/f-14b/wings/left-wing-torn", 1);
+                        else
+                            me.export("sim/model/f-14b/wings/left-wing-torn", 0);
+                        if (notification.WingDamage == 2 or notification.WingDamage==3)
+                            me.export("sim/model/f-14b/wings/right-wing-torn", 1);
+                        else
+                            me.export("sim/model/f-14b/wings/right-wing-torn", 0);
+                        me.export("sim/model/f-14b/fx/smoke", notification.Smoke);
+                        return emesary.Transmitter.ReceiptStatus_OK;
+                    }
+                    return emesary.Transmitter.ReceiptStatus_NotProcessed;
+                }
+                #print ("Create MP recipient : return ", new_class);
+                #debug.dump(new_class);
+                return new_class;
+            }
+        };
+ 
+     
+        print("LOAD f-14b ", self.getPath());
 
-	                objs[id] = objModel;
-	                loadNode.remove();
-	              }
-	            }            
-	          }
+        self.getNode("sim/model/ac-type", 1).setValue("f-14b"); # Dual-control
 
-	          foreach(var obj; keys(objs)) {
-	            var exist = 0;
-	            foreach(var mis; mp_str) {
-	              var mis_s = split(";", mis);
-	              if (size(mis_s) == 4) {
-	                var id = mis_s[0];
-	                var objModel = objs[id];
-	                if (id != obj) {
-	                  continue;
-	                }
-	                #print("found a missile!");
-	                exist = 1;
-	                var lat = num(mis_s[1]);
-	                var lon = num(mis_s[2]);
-	                var alt = num(mis_s[3]);
+        var livery_update = aircraft.livery_update.new(
+            "Aircraft/f-14b/Models/Liveries", 10 );
 
-	                var objModel = objs[id];
-	                if (objModel == nil) {
-	                  print("error: did not find mp missile.");
-	                  return;
-	                }
-	                objModel.getNode("latitude").setDoubleValue(lat);
-	                objModel.getNode("longitude").setDoubleValue(lon);
-	                objModel.getNode("elevation").setDoubleValue(alt);
-	              }
-	            }
-	            if (exist == 0) {
-	              # remove model
-	              var objModel = objs[obj];
-	              objModel.remove();
-	              delete(objs, obj);
-	            }
-	          }
-	          if (self.getNode("valid") == 0 or self.getNode("valid") == nil) {
-	            return;
-	          }
-	          settimer(loop, 0.05);
-	        }
-	        if (skip == 0) {
-	        	loop();
-	        }
-			
-			print("LOAD f-14b ", self.getPath());
-
-			self.getNode("sim/model/ac-type", 1).setValue("f-14b"); # Dual-control
-
-			var livery_update = aircraft.livery_update.new(
-				"Aircraft/f-14b/Models/Liveries", 10 );
-
-			# Load the needed modules if it hasn't been done yet.
-			# f14_net handles broadcast of:
-			#   - external load set.
-			if (!contains(globals, "f14_net")) {
+        # Load the needed modules if it hasn't been done yet.
+        # f14_net handles broadcast of:
+        #   - external load set.
+        if (!contains(globals, "f14_net")) {
             var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
             
             if (io.stat(fn_net) == nil)
                 fn_net = resolvepath("Aircraft/f-14b/Nasal") ~ "/mp-network.nas";
 
             if (io.stat(fn_net) == nil)
-            fn_net = getprop("/sim/fg-root") ~ "/Aircraft/f-14b/Nasal/mp-network.nas";
+                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/f-14b/Nasal/mp-network.nas";
 
             print("Loading F-14 mp network from ",fn_net);
             io.load_nasal(fn_net, "f14_net");
-				f14_net.mp_network_init(0);
-			}
+    		f14_net.mp_network_init(0);
+        }
+        #io.load_nasal(resolvepath("Aircraft/f-14b/Nasal") ~ "/AircraftEventNotification.nas","mp_notifications");
+        
+           mp_recipient = MPrecipient.new("Multiplayer", self);
+#print("recipient");
+debug.dump(mp_recipient);
+#print("6 : ",mp_recipient);
+           emesary.GlobalTransmitter.Register(mp_recipient);
+#print("7");
         ]]>
 		</load>
 		<unload>
@@ -633,7 +655,7 @@
             </greater-than>
 		</condition>
 		<emission>
-			<factor-prop>sim/multiplay/generic/int[1]</factor-prop>
+			<factor-prop>sim/model/f-14b/controls/lighting/formation</factor-prop>
 				<red>0.091</red>
 				<green>0.098</green>
 				<blue>0.078</blue>
@@ -686,7 +708,7 @@
 		<object-name>Spoiler4L</object-name>  
 		<object-name>LeftWingLight</object-name>
 		<object-name>LWingSlimmer</object-name>
-		<property>sim/multiplay/generic/float[0]</property>
+		<property>surface-positions/wing-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>46</dep></entry>
@@ -760,7 +782,7 @@
 		<object-name>LWingSlimmer</object-name>
 		<condition>
 			<not>
-				<property>sim/multiplay/generic/int[5]</property>
+				<property>sim/model/f-14b/wings/left-wing-torn</property>
 			</not>
 		</condition>
 	</animation>
@@ -787,7 +809,7 @@
 		<object-name>Spoiler4R</object-name> 
 		<object-name>RightWingLight</object-name>
 		<object-name>RWingSlimmer</object-name>
-		<property>sim/multiplay/generic/float[0]</property>
+		<property>surface-positions/wing-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
@@ -863,7 +885,7 @@
 		<object-name>RWingSlimmer</object-name>
 		<condition>
 			<not>
-				<property>sim/multiplay/generic/int[6]</property>
+				<property>sim/model/f-14b/wings/right-wing-torn</property>
 			</not>
 			</condition>
 	</animation>
@@ -876,7 +898,7 @@
 		<object-name>CanvasSeal.005</object-name>
 		<condition>
 			<less-than-equals>
-        		<property>sim/multiplay/generic/float[0]</property>
+        		<property>surface-positions/wing-pos-norm</property>
 				<value>0.1</value>
 			</less-than-equals>
 		</condition>
@@ -888,11 +910,11 @@
 		<object-name>CanvasSeal.004</object-name>
 		<condition>
 			<greater-than>
-                <property>sim/multiplay/generic/float[0]</property>
+                <property>surface-positions/wing-pos-norm</property>
 				<value>0.1</value>
 			</greater-than>
 			<less-than-equals>
-        		<property>sim/multiplay/generic/float[0]</property>
+        		<property>surface-positions/wing-pos-norm</property>
 				<value>0.6</value>
 			</less-than-equals>
 		</condition>
@@ -904,7 +926,7 @@
 		<object-name>CanvasSeal.003</object-name>
 		<condition>
 			<greater-than>
-        		<property>sim/multiplay/generic/float[0]</property>
+        		<property>surface-positions/wing-pos-norm</property>
 				<value>0.6</value>
 			</greater-than>
 		</condition>
@@ -1095,7 +1117,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>StabilatorL</object-name>
-		<property>sim/multiplay/generic/float[4]</property>
+		<property>surface-positions/left-elevator-pos-norm</property>
 		<factor>19.0</factor>
 		<center>
 			<x-m>6.158</x-m>
@@ -1112,7 +1134,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>StabilatorR</object-name>
-		<property>sim/multiplay/generic/float[5]</property>
+		<property>surface-positions/right-elevator-pos-norm</property>
 		<factor>19.0</factor>
 		<center>
 			<x-m>6.158</x-m>
@@ -1248,7 +1270,7 @@
 		<type>rotate</type>
 		<object-name>Flap3L</object-name>
 		<object-name>Flap3BrowL</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<factor>35</factor>
 		<center>
 			<x-m>2.881</x-m>
@@ -1265,7 +1287,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>FlapSeal3L</object-name>  
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>10</dep></entry>
@@ -1285,7 +1307,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Flap3BrowL</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>-8.78</dep></entry>
@@ -1422,7 +1444,7 @@
 		<type>rotate</type>
 		<object-name>Flap3R</object-name>
 		<object-name>Flap3BrowR</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<factor>-35</factor>
 		<center>
 			<x-m>2.881</x-m>
@@ -1439,7 +1461,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>FlapSeal3R</object-name>  
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>-10</dep></entry>
@@ -1459,7 +1481,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Flap3BrowR</object-name>
-		<property>sim/multiplay/generic/float[2]</property>
+		<property>surface-positions/aux-flap-pos-norm</property>
 		<interpolation>
 			<entry><ind>0.3</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>8.78</dep></entry>
@@ -1481,7 +1503,7 @@
 	<animation>
 		<type>translate</type>
 		<object-name>Slat1L</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>0.12</factor>
 		<axis>
 			<x>-1</x>
@@ -1493,7 +1515,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat1L</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>12</factor>
 		<center>
 			<x-m>3.078</x-m>
@@ -1510,7 +1532,7 @@
 	<animation>
 		<type>translate</type>
 		<object-name>Slat1R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>0.12</factor>
 		<axis>
 			<x>-1</x>
@@ -1522,7 +1544,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat1R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>-12</factor>
 		<center>
 			<x-m>3.078</x-m>
@@ -1539,7 +1561,7 @@
 <animation>
 	<type>translate</type>
 	<object-name>Slat2L</object-name>
-	<property>sim/multiplay/generic/float[3]</property>
+	<property>surface-positions/slats-pos-norm</property>
 	<factor>0.17</factor>
 	<axis>
 		<x>-1</x>
@@ -1551,7 +1573,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat2L</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>12</factor>
 		<center>
 			<x-m>2.145</x-m>
@@ -1568,7 +1590,7 @@
 	<animation>
 		<type>translate</type>
 		<object-name>Slat2R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>0.17</factor>
 		<axis>
 			<x>-1</x>
@@ -1580,7 +1602,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Slat2R</object-name>
-		<property>sim/multiplay/generic/float[3]</property>
+		<property>surface-positions/slats-pos-norm</property>
 		<factor>-12</factor>
 		<center>
 			<x-m>2.145</x-m>
@@ -1742,7 +1764,7 @@
 		<type>select</type>
 		<object-name>LandingLight-on</object-name>
 		<condition>
-			<property>sim/multiplay/generic/int[7]</property>
+			<property>controls/lighting/taxi-light</property>
 		</condition>
 	</animation>
 	<animation>
@@ -1750,7 +1772,7 @@
 		<object-name>LandingLight-off</object-name>
 		<condition>
 			<not>
-    			<property>sim/multiplay/generic/int[7]</property>
+    			<property>controls/lighting/taxi-light</property>
 			</not>
 		</condition>
 	</animation>
@@ -2926,7 +2948,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>RefuelProbe</object-name>
-		<property>sim/multiplay/generic/float[6]</property>
+		<property>sim/model/f-14b/refuel/position-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>55</dep></entry>
 			<entry><ind>1.0</ind><dep>0.0</dep></entry>
@@ -2946,7 +2968,7 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>Fuselage.013</object-name>
-		<property>sim/multiplay/generic/float[6]</property>
+		<property>sim/model/f-14b/refuel/position-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
 			<entry><ind>1.0</ind><dep>-55.0</dep></entry>
@@ -2968,7 +2990,7 @@
 		<type>rotate</type>
 		<object-name>Fuselage.006_0</object-name>
 		<object-name>Fuselage.006_1</object-name>
-		<property>sim/multiplay/generic/float[6]</property>
+		<property>sim/model/f-14b/refuel/position-norm</property>
 		<interpolation>
 			<entry><ind>0.0</ind><dep>0.0</dep></entry>
 			<entry><ind>0.3</ind><dep>-100.0</dep></entry>

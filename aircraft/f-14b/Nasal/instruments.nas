@@ -481,7 +481,7 @@ var compute_drag = func {
 
 # Send basic instruments data over MP for backseaters.
 var InstrString = props.globals.getNode("sim/multiplay/generic/string[1]", 1);
-var InstrString2 = props.globals.getNode("sim/multiplay/generic/string[2]", 1);
+#var InstrString2 = props.globals.getNode("sim/multiplay/generic/string[2]", 1);
 var IAS = props.globals.getNode("instrumentation/airspeed-indicator/indicated-speed-kt");
 var FuelTotal = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total");
 var TcBearing = props.globals.getNode("instrumentation/tacan/indicated-mag-bearing-deg");
@@ -497,6 +497,7 @@ var SteerModeVec = props.globals.getNode("sim/model/f-14b/controls/pilots-displa
 var SteerModeCode = props.globals.getNode("sim/model/f-14b/controls/pilots-displays/steer-submode-code");
 
 instruments_data_export = func {
+return;
 	# Air Speed indicator.
 	var ias            = sprintf( "%01.1f", IAS.getValue());
 	# Mach
