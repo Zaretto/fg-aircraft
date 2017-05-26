@@ -78,7 +78,7 @@ var VSD_Device =
         obj.morhcue.setFont("condensed.txf").setFontSize(12, 1.2);
         obj.morhcue.setText ("mh");
         obj.morhcue.setVisible(0);
-        obj.max_symbols = 10;
+        obj.max_symbols = 21;
         obj.tgt_symbols =  setsize([], obj.max_symbols);
         obj.horizon_line = obj.VSDsvg.getElementById("horizon_line");
         obj.nofire_cross =  obj.VSDsvg.getElementById("nofire_cross");
@@ -92,6 +92,8 @@ var VSD_Device =
                 obj.tgt_symbols[i] = tgt;
                 tgt.setVisible(0);
             }
+            else
+              print("F-15: VSD: Missing symbol from VSD.svg: "~name);
         }
 
         obj.vsd_on = 1;
