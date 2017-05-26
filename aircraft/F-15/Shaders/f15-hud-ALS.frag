@@ -39,7 +39,7 @@ uniform float osg_SimulationTime;
 
 uniform float sample_res;
 uniform float sample_far;
-uniform float brightness;
+uniform float hud_brightness;
 
 uniform int use_reflection;
 uniform int use_reflection_lightmap;
@@ -89,9 +89,9 @@ texel+= 0.5 * texture2D(texture, vec2 (gl_TexCoord[0].s + sample_res, gl_TexCoor
 
 texel/=10.0;
 
-float threshold_high = max(brightness, 0.05) * 0.7;
-float threshold_low = max(brightness, 0.05) * 0.4;
-float threshold_mid = max(brightness, 0.05) * 0.5;
+float threshold_high = max(hud_brightness, 0.05) * 0.7;
+float threshold_low = max(hud_brightness, 0.05) * 0.4;
+float threshold_mid = max(hud_brightness, 0.05) * 0.5;
 
 texel.rgb = mix(texel.rgb, vec3 (1.0, 1.0, 1.0), smoothstep(threshold_mid, threshold_high, texel.a));
 texel.rgb = mix(texel.rgb, vec3 (0.0, 0.0, 0.0), 1.0 - smoothstep(0.0, threshold_low, texel.a));

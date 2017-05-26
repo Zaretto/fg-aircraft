@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <PropertyList>
-	<name>Effects/glass</name>
+	<name>Effects/f15-hud</name>
 	<inherits-from>Effects/model-default</inherits-from>
 
 <parameters>
@@ -15,7 +14,7 @@
 	</texture>
 	<!-- placeholder for the function texture used for fogging, wiper area,...-->
 	<texture n="2">
-		<image>Models/Cockpit/Effects/hud-glass.rgb</image>
+		<image>hud-glass.png</image>
 		<type>2d</type>
 		<filter>linear-mipmap-linear</filter>
 		<wrap-s>repeat</wrap-s>
@@ -48,15 +47,15 @@
 		</texture>
 	<glass-tint type="vec4d" n="0"> 0.95 1.0 0.95 1.0</glass-tint>
 	<overlay-color type="vec3d" n="0"> 0.8 1.0 0.9</overlay-color>
-	<splash-x><use>/environment/aircraft-effects/splash-vector-x</use></splash-x>
-	<splash-y><use>/environment/aircraft-effects/splash-vector-y</use></splash-y>
-	<splash-z><use>/environment/aircraft-effects/splash-vector-z</use></splash-z>
-	<rnorm><use>/environment/rain-norm</use></rnorm>
-	<gsnorm><use>/environment/aircraft-effects/ground-splash-norm</use></gsnorm>
+	<splash-x>0</splash-x>
+	<splash-y>0</splash-y>
+	<splash-z>0</splash-z>
+	<rnorm>0</rnorm>
+	<gsnorm>0</gsnorm>
 	<frost-level><use>/environment/aircraft-effects/frost-level</use></frost-level>
 	<surface-mapping-scheme type="int">0</surface-mapping-scheme>
 	<fog-level><use>/environment/aircraft-effects/fog-level</use></fog-level>
-	<use-wipers><use>/environment/aircraft-effects/use-wipers</use></use-wipers>
+	<use-wipers>0</use-wipers>
 	<use-overlay>1</use-overlay>
 	<overlay-alpha type="float">0.35</overlay-alpha>
 	<overlay-glare type="float">0.4</overlay-glare>
@@ -75,14 +74,13 @@
 	<lightmap-color type="vec3d" n="3"> 1.0 1.0 1.0 </lightmap-color>
 	<sample-res>0.0006</sample-res>
 	<sample-far>2.5</sample-far>
-	<brightness><use>sim/model/f15/controls/HUD/brightness</use></brightness>
+	<hud-brightness>1.0</hud-brightness>
 </parameters>
 
 <technique n="4">
     <predicate>
       <and>
         <property>/sim/rendering/shaders/skydome</property>
-	<property>/sim/config/hud-filter</property>
         <or>
           <less-equal>
             <value type="float">2.0</value>
@@ -99,6 +97,9 @@
     </predicate>
     <pass>
       <lighting>true</lighting>
+      <depth>
+	<write-mask type="bool">false</write-mask>
+      </depth>
       <material>
         <active><use>material/active</use></active>
         <ambient><use>material/ambient</use></ambient>
@@ -163,8 +164,8 @@
         <use>vertex-program-two-side</use>
       </vertex-program-two-side>
       <program>
-        <vertex-shader>Models/Cockpit/Shaders/hud-ALS.vert</vertex-shader>
-        <fragment-shader>Models/Cockpit/Shaders/hud-ALS.frag</fragment-shader>
+        <vertex-shader>Shaders/f15-hud-ALS.vert</vertex-shader>
+        <fragment-shader>Shaders/f15-hud-ALS.frag</fragment-shader>
         <fragment-shader>Shaders/noise.frag</fragment-shader>
         <fragment-shader>Shaders/filters-ALS.frag</fragment-shader>
       </program>
@@ -222,12 +223,12 @@
      <uniform>
         <name>splash_x</name>
         <type>float</type>
-        <value><use>splash-x</use></value>
+        <value>0</value>
      </uniform>
      <uniform>
         <name>splash_y</name>
         <type>float</type>
-        <value><use>splash-y</use></value>
+        <value>0</value>
      </uniform>
      <uniform>
         <name>splash_z</name>
@@ -237,12 +238,12 @@
       <uniform>
         <name>rain_norm</name>
         <type>float</type>
-        <value><use>rnorm</use></value>
+        <value>0</value>
       </uniform>
       <uniform>
         <name>ground_splash_norm</name>
         <type>float</type>
-        <value><use>gsnorm</use></value>
+        <value>0</value>
       </uniform>
       <uniform>
         <name>frost_level</name>
@@ -265,9 +266,9 @@
         <value><use>sample-far</use></value>
       </uniform>
      <uniform>
-        <name>brightness</name>
+        <name>hud_brightness</name>
         <type>float</type>
-        <value><use>brightness</use></value>
+        <value><use>hud-brightness</use></value>
       </uniform>
       <uniform>
         <name>scattering</name>
@@ -364,6 +365,26 @@
         <name>delta_T</name>
         <type>float</type>
         <value><use>delta_T</use></value>
+      </uniform>
+      <uniform>
+        <name>fact_grey</name>
+        <type>float</type>
+        <value><use>fact_grey</use></value>
+      </uniform>
+      <uniform>
+        <name>fact_black</name>
+        <type>float</type>
+        <value><use>fact_black</use></value>
+      </uniform>
+      <uniform>
+        <name>display_xsize</name>
+        <type>int</type>
+        <value><use>display_xsize</use></value>
+      </uniform>
+      <uniform>
+        <name>display_ysize</name>
+        <type>int</type>
+        <value><use>display_ysize</use></value>
       </uniform>
 
       <uniform>
@@ -517,5 +538,3 @@
 
 
 </PropertyList>
-
-
