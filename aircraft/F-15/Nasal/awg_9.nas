@@ -890,6 +890,7 @@ var Target = {
 		obj.RdrProp = c.getNode("radar");
 		obj.Heading = c.getNode("orientation/true-heading-deg");
         obj.pitch   = c.getNode("orientation/pitch-deg");
+        obj.roll   = c.getNode("orientation/roll-deg");
 		obj.Alt = c.getNode("position/altitude-ft");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
@@ -1227,6 +1228,9 @@ else
     getFlareNode: func {
         return me.propNode.getNode("rotors/main/blade[3]/flap-deg");
     },
+    getChaffNode: func () {
+      return me.propNode.getNode("rotors/main/blade[3]/position-deg");
+    },
     getElevation: func() {
         var e = 0;
         e = me.Elevation.getValue();
@@ -1244,6 +1248,10 @@ else
     },
     get_Pitch: func(){
         var n = me.pitch.getValue();
+        return n;
+    },
+    get_Roll: func(){
+        var n = me.roll.getValue();
         return n;
     },
     get_Speed: func(){

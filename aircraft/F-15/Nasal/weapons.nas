@@ -522,6 +522,7 @@ var flareLoop = func {
       setprop("ai/submodels/submodel[5]/flare-release-snd", TRUE);
       setprop("ai/submodels/submodel[5]/flare-release", TRUE);
       setprop("rotors/main/blade[3]/flap-deg", flareStart);
+      setprop("rotors/main/blade[3]/position-deg", flareStart);
     } else {
       # play the sound for out of flares
       setprop("ai/submodels/submodel[5]/flare-release-out-snd", TRUE);
@@ -530,6 +531,7 @@ var flareLoop = func {
   if (getprop("ai/submodels/submodel[5]/flare-release-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
     setprop("ai/submodels/submodel[5]/flare-release-snd", FALSE);
     setprop("rotors/main/blade[3]/flap-deg", 0);
+    setprop("rotors/main/blade[3]/position-deg", 0);
   }
   if (getprop("ai/submodels/submodel[5]/flare-release-out-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
     setprop("ai/submodels/submodel[5]/flare-release-out-snd", FALSE);
