@@ -646,12 +646,12 @@ var fuel_dump_switch_toggle = func() {
 } 
 var fuel_dump_on = func() {
 	Valve.set("dump_valve",1);
-	setprop("sim/multiplay/generic/int[0]", 1);
+	setprop("controls/fuel/dump-valve", 1);
 }
 var fuel_dump_off = func() {
 	setprop("sim/model/f-14b/controls/fuel/dump-switch", 0);
 	Valve.set("dump_valve",0);
-	setprop("sim/multiplay/generic/int[0]", 0);
+	setprop("controls/fuel/dump-valve", 0);
 }
 
 

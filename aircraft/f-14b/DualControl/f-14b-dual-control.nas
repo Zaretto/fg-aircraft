@@ -21,7 +21,7 @@ props.globals.initNode("/sim/remote/pilot-callsign", "", "STRING");
 # MP enabled properties.
 # NOTE: These must exist very early during startup - put them
 #       in the -set.xml file.
-var bs_switches1_mpp = "sim/multiplay/generic/int[0]";
+var bs_switches1_mpp = "controls/fuel/dump-valve";
 var bs_TDM1_mpp      = "sim/multiplay/generic/string[0]";
 
 

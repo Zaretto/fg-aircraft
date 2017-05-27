@@ -4,7 +4,7 @@ var UPDATE_PERIOD = 0.05;
 
 #
 #
-# var routedNotifications = [notifications.TacticalNotification.new(nil), AircraftEventNotification];
+# var routedNotifications = [notifications.TacticalNotification.new(nil), PropertySyncNotification];
 # var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
 
 # Check pilot's aircraft path from it's callsign.
