@@ -21,41 +21,6 @@
         print("F14- load2");
         var self = cmdarg();
         var skip = 0;
-  #      var incomingBridge = nil;
-        var mp_recipient = nil;
-
-
-        var MPrecipient =
-        {
-            new: func(_ident, _node)
-            {
-                var new_class = emesary.Recipient.new(_ident);
-                new_class.node = _node;
-                new_class.path = new_class.node.getPath()~"/";
-                new_class.export = func(property, value)
-                {
-#                    print("set ",me.path,property, " to ",value);
-                    setprop(me.path~property, value);
-                };
-
-                new_class.Receive = func(notification)
-                {
-                    if(!notification.FromIncomingBridge)
-                        return emesary.Transmitter.ReceiptStatus_NotProcessed;
-
-                    if (notification.NotificationType == "GeoEventNotification")
-                    {
-                        debug.dump(notification);
-                        return emesary.Transmitter.ReceiptStatus_OK;
-                    }
-                    return emesary.Transmitter.ReceiptStatus_NotProcessed;
-                }
-                #print ("Create MP recipient : return ", new_class);
-                #debug.dump(new_class);
-                return new_class;
-            }
-        };
- 
      
         print("LOAD f-14b ", self.getPath());
 
@@ -80,14 +45,7 @@
             io.load_nasal(fn_net, "f14_net");
     		f14_net.mp_network_init(0);
         }
-        #io.load_nasal(resolvepath("Aircraft/f-14b/Nasal") ~ "/AircraftEventNotification.nas","mp_notifications");
         
-           mp_recipient = MPrecipient.new("Multiplayer", self);
-#print("recipient");
-debug.dump(mp_recipient);
-#print("6 : ",mp_recipient);
-           emesary.GlobalTransmitter.Register(mp_recipient);
-#print("7");
         ]]>
 		</load>
 		<unload>

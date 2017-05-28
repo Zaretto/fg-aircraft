@@ -277,6 +277,31 @@ var sendMis = func () {
   settimer(sendMis,0.1);
 }
 
+#
+# Create emesary recipient for handling other craft's missile positioins.
+var DamageRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+
+        new_class.Receive = func(notification)
+        {
+            if (!notification.FromIncomingBridge)
+                return emesary.Transmitter.ReceiptStatus_NotProcessed;
+
+            if (notification.NotificationType == "GeoEventNotification") {
+                debug.dump(notification);
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        }
+        return new_class;
+    }
+};
+
+damage_recipient = DamageRecipient.new("DamageRecipient");
+emesary.GlobalTransmitter.Register(damage_recipient);
 
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.

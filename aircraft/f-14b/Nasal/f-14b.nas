@@ -304,6 +304,7 @@ var timedMotions = func {
     	left_elev_output.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
     	right_elev_output.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
 		setprop("surface-positions/aux-flap-pos-norm", aux_flap_output.getValue());
+		setprop("surface-positions/slats-pos-norm", slat_output.getValue());
     }
     else
     {
@@ -331,13 +332,41 @@ var timedMotions = func {
 
 }
 
-#var routedNotifications = [notifications.Tactical	cation.new(nil), notifications.PropertySyncNotification(nil)];
+#
+#
+# Use Emesary (with bridge notifications) to communicate all of the shared properties over MP.
+
+##
+## These are the notifications that will be bridged.
 var routedNotifications = [notifications.PropertySyncNotification.new(nil), notifications.GeoEventNotification.new(nil)];
 
+# To seperate out the incoming and outgoing we will have a dedicated transmitter for sending notifications over MP.
+# We could bridge GlobalTransmitter - however this way allows us to control what is sent.
 var bridgedTransmitter = emesary.Transmitter.new("outgoingBridge");
+
+#
+# The bridge requires two sides; the outgoing and incoming. The outgoing will forwards all received notifications via 
+# MP; and these will be received by a similarly equipped craft. All received notifications are, by default, sent via the
+# global transmitter; and therefore there needs to be no differentiation (in our code) as to where the notification comes 
+# from.
 var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp",routedNotifications, 19, "", bridgedTransmitter);
 var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
-var f14_aircraft_notification = notifications.PropertySyncNotification.new("F-14"~getprop("/sim/remote/pilot-callsign"));
+
+#
+# This is the notification (derived from Nasal/PropertySyncNotificationBase) that will allow properties to be transmitted over MP
+var f14_aircraft_notification = notifications.PropertySyncNotification.new("F-14"~getprop("/sim/multiplay/callsign"));
+
+#var debugRecipient = emesary.Recipient.new("Debug");
+#debugRecipient.Receive = func(notification)
+#{
+#    if (notification.NotificationType == "PropertySyncNotification")
+#    {
+#        print("recv: ",notification.NotificationType, " ", notification.Ident);
+#		debug.dump(notification);
+#    }
+#    return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
+#}
+#emesary.GlobalTransmitter.Register(debugRecipient);
 
 setprop("/sim/startup/terminal-ansi-colors",0);
 var get_int_prop = func(s){
