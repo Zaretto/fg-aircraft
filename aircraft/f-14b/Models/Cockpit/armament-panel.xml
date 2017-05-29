@@ -75,122 +75,114 @@
 	</animation>
 
     <animation>
-        <type>knob</type>
+		<type>rotate</type>
 		<object-name>sta-3-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
-        <factor>-30</factor>
-        <center>
-            <x-m>-0.0037</x-m>
-            <y-m>-0.0474</y-m>
-            <z-m>-0.0262</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </axis>
-
-        <action>
-            <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <type>knob</type>
-		<object-name>sta-4-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
-        <factor>-30</factor>
+		<factor>-35</factor>
         <center>
-            <x-m>-0.0037</x-m>
-            <y-m>-0.0485</y-m>
-            <z-m>-0.0650</z-m>
+			<x-m>0.00105</x-m>
+			<y-m>0.00862</y-m>
+			<z-m>-0.03725</z-m>
         </center>
-        <axis>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </axis>
-
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sta-3</object-name>
         <action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<interval-sec>0.05</interval-sec>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+				<command>nasal</command>
+				<script>
+					f14.station_selector(3, 0);
+				</script>
             </binding>
         </action>
     </animation>
     <animation>
-        <type>knob</type>
-		<object-name>sta-5-sw</object-name>
+		<type>rotate</type>
+		<object-name>sta-4-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
-        <factor>-30</factor>
+		<factor>-35</factor>
         <center>
-            <x-m>-0.0037</x-m>
-            <y-m>-0.0186</y-m>
-            <z-m>-0.0650</z-m>
+			<x-m>0.00176</x-m>
+			<y-m>0.00906</y-m>
+			<z-m>-0.07668</z-m>
         </center>
-        <axis>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </axis>
-
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sta-4</object-name>
         <action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<interval-sec>0.05</interval-sec>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+				<command>nasal</command>
+				<script>
+					f14.station_selector(4, 0);
+				</script>
             </binding>
         </action>
     </animation>
     <animation>
-        <type>knob</type>
-		<object-name>sta-6-sw</object-name>
+		<type>rotate</type>
+		<object-name>sta-5-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
-        <factor>-30</factor>
+		<factor>-35</factor>
         <center>
-            <x-m>-0.0037</x-m>
-            <y-m>-0.0186</y-m>
-            <z-m>-0.0262</z-m>
+			<x-m>0.00489</x-m>
+			<y-m>0.03834</y-m>
+			<z-m>-0.07693</z-m>
         </center>
-        <axis>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </axis>
-
+		<axis><y>-1</y></axis>
+	</animation>
+	<animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sta-5</object-name>
         <action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<interval-sec>0.05</interval-sec>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+				<command>nasal</command>
+				<script>
+					f14.station_selector(5, 0);
+				</script>
             </binding>
         </action>
     </animation>
     <animation>
-        <type>knob</type>
-		<object-name>msl-option-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/msl-option-sw</property>
-        <offset-deg>30</offset-deg>
-        <factor>-30</factor>
+		<type>rotate</type>
+		<object-name>sta-6-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/station-selector[6]</property>
+		<factor>-35</factor>
         <center>
-            <x-m>-0.0018</x-m>
-            <y-m>-0.0054</y-m>
-            <z-m>-0.1013</z-m>
+			<x-m>0.00176</x-m>
+			<y-m>0.03895</y-m>
+			<z-m>-0.03785</z-m>
         </center>
-        <axis>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </axis>
-
+		<axis><y>-1</y></axis>
+    </animation>
+    <animation>
+		<type>pick</type>
+		<visible>true</visible>
+		<object-name>hotspot-sta-6</object-name>
         <action>
+			<button>0</button>
+			<repeatable>false</repeatable>
+			<interval-sec>0.05</interval-sec>
             <binding>
-                <command>property-adjust</command>
-        		<property>sim/model/f-14b/controls/armament/msl-option-sw</property>
-                <factor>1</factor>
-                <min>0</min>
-                <max>2</max>
-                <wrap>false</wrap>
+				<command>nasal</command>
+				<script>
+					f14.station_selector(6, 0);
+				</script>
             </binding>
         </action>
     </animation>
