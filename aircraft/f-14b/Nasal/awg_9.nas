@@ -12,16 +12,16 @@ var HudTgtTDeg        = props.globals.getNode("sim/model/f-14b/instrumentation/r
 var HudTgtClosureRate = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/closure-rate", 1);
 var HudTgtDistance = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/distance", 1);
 var AzField           = props.globals.getNode("instrumentation/radar/az-field", 1);
-var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range");
-var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby");
-var RadarStandbyMP    = props.globals.getNode("sim/multiplay/generic/int[2]");
-var OurAlt            = props.globals.getNode("position/altitude-ft");
-var OurHdg            = props.globals.getNode("orientation/heading-deg");
-var OurRoll           = props.globals.getNode("orientation/roll-deg");
-var OurPitch          = props.globals.getNode("orientation/pitch-deg");
+var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range", 1);
+var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby", 1);
+var RadarStandbyMP    = props.globals.getNode("sim/multiplay/generic/int[2]", 1);
+var OurAlt            = props.globals.getNode("position/altitude-ft", 1);
+var OurHdg            = props.globals.getNode("orientation/heading-deg", 1);
+var OurRoll           = props.globals.getNode("orientation/roll-deg", 1);
+var OurPitch          = props.globals.getNode("orientation/pitch-deg", 1);
 var EcmOn             = props.globals.getNode("instrumentation/ecm/on-off", 1);
-var WcsMode           = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode");
-var SWTgtRange        = props.globals.getNode("sim/model/f-14b/systems/armament/aim9/target-range-nm");
+var WcsMode           = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", 1);
+var SWTgtRange        = props.globals.getNode("sim/model/f-14b/systems/armament/aim9/target-range-nm", 1);
 
 
 var az_fld            = AzField.getValue();
@@ -191,7 +191,7 @@ var az_scan = func() {
                 }
             }
 
-			if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) {
+			if ((type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") and HaveRadarNode != nil) {
 				var u = Target.new(c);
 				u_ecm_signal      = 0;
 				u_ecm_signal_norm = 0;
