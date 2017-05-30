@@ -447,9 +447,6 @@ var updateFCS = func {
     f14.engineControls();
 	f14.timedMotions ();
     f14.electricsFrame();
-#
-# slower rate
-    f14.update_weapons_over_mp();
      
 # emesary notification - basic properties
      update_f14_aircraft_notification(f14_aircraft_notification);

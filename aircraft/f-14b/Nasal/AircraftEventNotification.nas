@@ -30,7 +30,7 @@ var PropertySyncNotification =
         new_class.addIntProperty("TacanInRange", "instrumentation/tacan/in-range", 1);
         new_class.addIntProperty("TacanDistanceNm", "instrumentation/tacan/indicated-distance-nm", 1);
         new_class.addIntProperty("TacanIndicatedBearingDeg", "instrumentation/tacan/indicated-mag-bearing-deg", 1);
-        new_class.addIntProperty("RefuelProbe", "sim/model/f-14b/controls/fuel/refuel-probe-switch", 1);
+        new_class.addIntProperty("RefuelProbe", "sim/model/f-14b/refuel/position-norm", 1);
         new_class.addIntProperty("LightingFormation", "sim/model/f-14b/controls/lighting/formation", 1);
         new_class.addIntProperty("SteerSubmodeCode", "sim/model/f-14b/controls/pilots-displays/steer-submode-code", 1);
         new_class.addIntProperty("HSDNeedleDeflection", "sim/model/f-14b/instrumentation/hsd/needle-deflection", 1);
