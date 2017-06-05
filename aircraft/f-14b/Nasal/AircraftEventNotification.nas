@@ -9,15 +9,14 @@ var PropertySyncNotification =
     {
         var new_class = notifications.PropertySyncNotificationBase.new(_ident, _name, _kind, _secondary_kind);
 
-        new_class.addIntProperty("TotalFuelLbs", "consumables/fuel/total-fuel-lbs", 1);
+        new_class.addIntProperty("TotalFuelLbs", "consumables/fuel/total-fuel-lbs", 2);
         new_class.addIntProperty("FuelDumpValue", "controls/fuel/dump-valve", 1);
         new_class.addIntProperty("Engine0Augmentation", "engines/engine[0]/augmentation-burner", 1);
         new_class.addIntProperty("Engine0N1","engines/engine[0]/n1", 1);
         new_class.addIntProperty("Engine0N2","engines/engine[0]/n2", 1);
-        new_class.addIntProperty("Engine0Nozzle","engines/engine[0]/nozzle-pos-norm", 1);
-        new_class.addIntProperty("Engine1N1","engines/engine[1]/augmentation-burner", 1);
-        new_class.addIntProperty("Engine1N2","engines/engine[1]/n1", 1);
-        new_class.addIntProperty("Engine1Nozzle","engines/engine[1]/n2", 1);
+        new_class.addIntProperty("Engine1N1","engines/engine[1]/n1", 1);
+        new_class.addIntProperty("Engine1N2","engines/engine[1]/n2", 1);
+        new_class.addIntProperty("Engine1Augmentation", "engines/engine[1]/augmentation-burner", 1);
         new_class.addIntProperty("ElectricsAcEssentialBus1", "fdm/jsbsim/systems/electrics/ac-essential-bus1", 1);
         new_class.addIntProperty("ElectricsAcEssentialBus2", "fdm/jsbsim/systems/electrics/ac-essential-bus2", 1);
         new_class.addIntProperty("ElectricsAcLeftMainBus", "fdm/jsbsim/systems/electrics/ac-left-main-bus", 1);
@@ -26,11 +25,11 @@ var PropertySyncNotification =
         new_class.addIntProperty("ElectricsAcRightMainBus", "fdm/jsbsim/systems/electrics/ac-right-main-bus", 1);
         new_class.addIntProperty("ElectricsDcEssentialBus1", "fdm/jsbsim/systems/electrics/dc-essential-bus1", 1);
         new_class.addIntProperty("ElectricsDcEssentialBus2", "fdm/jsbsim/systems/electrics/dc-essential-bus2", 1);
-        new_class.addIntProperty("NavRadialSelected", "instrumentation/nav[1]/radials/selected-deg", 1);
+        new_class.addIntProperty("NavRadialSelected", "instrumentation/nav[1]/radials/selected-deg", 2);
         new_class.addIntProperty("TacanInRange", "instrumentation/tacan/in-range", 1);
         new_class.addIntProperty("TacanDistanceNm", "instrumentation/tacan/indicated-distance-nm", 1);
-        new_class.addIntProperty("TacanIndicatedBearingDeg", "instrumentation/tacan/indicated-mag-bearing-deg", 1);
-        new_class.addIntProperty("RefuelProbe", "sim/model/f-14b/refuel/position-norm", 1);
+        new_class.addIntProperty("TacanIndicatedBearingDeg", "instrumentation/tacan/indicated-mag-bearing-deg", 2);
+        new_class.addNormProperty("RefuelProbe", "sim/model/f-14b/refuel/position-norm", 1);
         new_class.addIntProperty("LightingFormation", "sim/model/f-14b/controls/lighting/formation", 1);
         new_class.addIntProperty("SteerSubmodeCode", "sim/model/f-14b/controls/pilots-displays/steer-submode-code", 1);
         new_class.addIntProperty("HSDNeedleDeflection", "sim/model/f-14b/instrumentation/hsd/needle-deflection", 1);
@@ -60,7 +59,7 @@ var PropertySyncNotification =
         new_class.addNormProperty("RudderPosNorm","surface-positions/rudder-pos-norm", 1);
         new_class.addNormProperty("SlatsPosNorm","surface-positions/slats-pos-norm", 1);
         new_class.addNormProperty("SpeedbrakePosNorm","surface-positions/speedbrake-pos-norm", 1);
-        new_class.addNormProperty("WingPosNorm","surface-positions/wing-pos-norm", 2);
+        new_class.addNormProperty("WingPosNorm","surface-positions/wing-pos-norm", 1);
 
         return new_class;
     }
