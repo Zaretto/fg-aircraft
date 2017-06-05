@@ -360,7 +360,9 @@ var DamageRecipient =
 # This can replace MP chat for damage notifications 
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
-                debug.dump(notification);
+                print("Event received from ",notification.Callsign, " pos (lat=",notification.Position.lat(), ", lon=",notification.Position.lon(),", ",notification.Position.alt()," ft. Name=",
+                      notification.Name," Kind=",notification.Kind, " SecKind=",notification.SecondaryKind);
+#                debug.dump(notification);
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
