@@ -331,9 +331,9 @@ var sendMis = func () {
       #print(lon);
       #print(alt);
       #str = str~mid~";"~lat~";"~lon~";"~alt~":";
-      var msg = notifications.GeoEventNotification.new(mid, 2, 20+mid);
+      var msg = notifications.GeoEventNotification.new("mis", mid, 2, 20+mid);
       msg.Position.set_latlon(m.latN.getValue(), m.lonN.getValue(), m.altN.getValue());
-      emesary.GlobalTransmitter.NotifyAll(m);
+      geoBridgedTransmitter.GlobalTransmitter.NotifyAll(msg);
     }
   }
 #  setprop("sim/multiplay/generic/string[13]", str);

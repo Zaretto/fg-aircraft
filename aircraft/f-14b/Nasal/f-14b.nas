@@ -338,7 +338,9 @@ var timedMotions = func {
 
 ##
 ## These are the notifications that will be bridged.
-var routedNotifications = [notifications.PropertySyncNotification.new(nil), notifications.GeoEventNotification.new(nil)];
+#var routedNotifications = [notifications.PropertySyncNotification.new(nil), notifications.GeoEventNotification.new(nil)];
+var routedNotifications = [notifications.PropertySyncNotification.new(nil)];
+var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil)];
 
 # To seperate out the incoming and outgoing we will have a dedicated transmitter for sending notifications over MP.
 # We could bridge GlobalTransmitter - however this way allows us to control what is sent.
@@ -350,22 +352,30 @@ var bridgedTransmitter = emesary.Transmitter.new("outgoingBridge");
 # global transmitter; and therefore there needs to be no differentiation (in our code) as to where the notification comes 
 # from.
 var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp",routedNotifications, 19, "", bridgedTransmitter);
-var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
+var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications, 19, emesary.GlobalTransmitter);
 
+var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
+var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
+var geoincomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
 #
 # This is the notification (derived from Nasal/PropertySyncNotificationBase) that will allow properties to be transmitted over MP
 var f14_aircraft_notification = notifications.PropertySyncNotification.new("F-14"~getprop("/sim/multiplay/callsign"));
 
-#var debugRecipient = emesary.Recipient.new("Debug");
-#debugRecipient.Receive = func(notification)
-#{
+var debugRecipient = emesary.Recipient.new("Debug");
+debugRecipient.Receive = func(notification)
+{
+    if (notification.NotificationType == "GeoEventNotification")
+    {
+        print("recv: ",notification.NotificationType, " ", notification.Ident);
+		debug.dump(notification);
+    }
 #    if (notification.NotificationType == "PropertySyncNotification")
 #    {
 #        print("recv: ",notification.NotificationType, " ", notification.Ident);
 #		debug.dump(notification);
 #    }
-#    return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
-#}
+    return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
+}
 #emesary.GlobalTransmitter.Register(debugRecipient);
 
 setprop("/sim/startup/terminal-ansi-colors",0);
