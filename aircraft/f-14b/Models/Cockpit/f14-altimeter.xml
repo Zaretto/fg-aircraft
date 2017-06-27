@@ -17,11 +17,11 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <object-name>needle</object-name>
         <!--<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
         </condition>-->
-        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.36</factor>
         <!--<center>
             <x-m>0.0084</x-m>
@@ -42,11 +42,11 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <object-name>drum-1</object-name>
         <!--<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
         </condition>-->
-        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -63,11 +63,11 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <object-name>drum-2</object-name>
         <!--<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
         </condition>-->
-        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.0001</factor>
         <offset>-1000</offset>
         <step>1000</step>
@@ -84,11 +84,11 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <object-name>drum-3</object-name>
         <!--<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
         </condition>-->
-        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
         <factor>0.00001</factor>
         <offset>-10000</offset>
         <step>10000</step>
@@ -104,7 +104,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <object-name>below-1000-flag</object-name>
         <condition>
             <less-than>
-                <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                <property>/instrumentation/altimeter/indicated-altitude-ft</property>
                 <value>1000</value>
             </less-than>
         </condition>
@@ -114,7 +114,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <object-name>below-10000-flag</object-name>
         <condition>
             <less-than>
-                <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                <property>/instrumentation/altimeter/indicated-altitude-ft</property>
                 <value>10000</value>
             </less-than>
         </condition>
@@ -126,10 +126,10 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <condition>
             <or>
                 <equals>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </equals>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>/instrumentation/altimeter/setting-stby</property>
             </or>
         </condition>
     </animation>
@@ -138,7 +138,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-1</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>10</factor>
         <offset>-0.01</offset>
         <axis>
@@ -151,7 +151,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-2</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>1</factor>
         <offset>-0.1</offset>
         <step>0.1</step>
@@ -166,7 +166,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-3</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -181,7 +181,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-4</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -197,7 +197,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
     <animation>
         <type>knob</type>
         <object-name>barometric-pressure-knob</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0</factor>
         <center>
             <x-m>0.0212</x-m>
@@ -213,19 +213,23 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
-               
+                <property>/instrumentation/altimeter/setting-inhg-demand</property>
+
                 <factor>0.01</factor>
                 <min>27.90</min>
                 <max>31.40</max>
                 <wrap>false</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>f14.notify_prop(f14.altimeter_setting_inhg, "instrumentation/altimeter/setting-inhg-demand")</script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
         <object-name>stby-reset-knob</object-name>
-        <property>instrumentation/altimeter/setting-stby</property>
+        <property>/instrumentation/altimeter/setting-stby-demand</property>
         <factor>-90</factor>
         <center>
             <x-m>0.0197</x-m>
@@ -241,12 +245,16 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>/instrumentation/altimeter/setting-stby-demand</property>
 
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
                 <wrap>false</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>f14.notify_prop(f14.altimeter_setting_stby, "instrumentation/altimeter/setting-stby-demand")</script>
             </binding>
         </action>
     </animation>
@@ -258,7 +266,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -282,7 +290,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <greater-than-equals>
@@ -309,7 +317,7 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <greater-than>

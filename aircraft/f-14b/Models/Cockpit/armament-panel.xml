@@ -10,11 +10,11 @@
 		<condition>
 			<or>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>RIO View</value>
 				</equals>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>Back-seat View</value>
 				</equals>
 			</or>
@@ -49,10 +49,15 @@
 			<button>0</button>
 			<repeatable>false</repeatable>
 			<interval-sec>0.05</interval-sec>
-			<binding>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
+            </binding>
+
+            <binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(0, -1);
+					f14.notify_value(f14.station_selector_0, -1);
 				</script>
 			</binding>
 		</action>
@@ -68,7 +73,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(0, 1);
+					f14.notify_value(f14.station_selector_0, 1);
 				</script>
 			</binding>
 		</action>
@@ -97,7 +102,7 @@
             <binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(3, 0);
+					f14.notify_value(f14.station_selector_3, 0);
 				</script>
             </binding>
         </action>
@@ -125,7 +130,7 @@
             <binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(4, 0);
+					f14.notify_value(f14.station_selector_4, 0);
 				</script>
             </binding>
         </action>
@@ -153,7 +158,7 @@
             <binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(5, 0);
+					f14.notify_value(f14.station_selector_5, 0);
 				</script>
             </binding>
         </action>
@@ -181,7 +186,7 @@
             <binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(6, 0);
+					f14.notify_value(f14.station_selector_6, 0);
 				</script>
             </binding>
         </action>
@@ -210,7 +215,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(7, -1);
+					f14.notify_value(f14.station_selector_7, -1);
 				</script>
 			</binding>
 		</action>
@@ -226,7 +231,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(7, 1);
+					f14.notify_value(f14.station_selector_7, 1);
 				</script>
 			</binding>
 		</action>
@@ -239,7 +244,7 @@
     <type>material</type>
     <condition>
       <greater-than>
-        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
         <value>0</value>
       </greater-than>
       <not>
@@ -291,7 +296,7 @@
 		<type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -310,7 +315,7 @@
 		<type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>

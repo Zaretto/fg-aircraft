@@ -12,16 +12,16 @@
 		<object-name>ddd</object-name>
 		<condition>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 			<or>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>RIO View</value>
 				</equals>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>Back-seat View</value>
 				</equals>
 			</or>
@@ -80,7 +80,7 @@
 		<condition>
 			<property>sim/model/f-14b/controls/radar-awg-9/on-off</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -90,7 +90,7 @@
 		<object-name>screen-bkg-off</object-name>
 		<condition>
             <less-than>
-              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+              <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>1</value>
             </less-than>
 			<not>
@@ -105,7 +105,7 @@
 		<condition>
 			<property>sim/model/f-14b/instrumentation/radar-awg-9/display-rdr</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -167,7 +167,7 @@
 		<object-name>tid</object-name>
 		<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
 			<equals>
@@ -1946,7 +1946,7 @@
 		<object-name>screen-bkg</object-name>
 		<type>material</type>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		<emission>
