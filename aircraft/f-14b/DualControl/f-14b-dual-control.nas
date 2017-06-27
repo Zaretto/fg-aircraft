@@ -88,24 +88,6 @@ var copilot_connect_pilot = func (pilot) {
 	return [
 		# Process received properties.
 
-		# Process properties to send.
-		DCT.SwitchEncoder.new (
-			#  0 - 4: awg9 Controls
-			[
-				awg_9.RadarStandby,
-				awg_9.WcsMode.getNode("pulse-srch"),
-				awg_9.WcsMode.getNode("tws-auto")
-			],
-			props.globals.getNode(bs_switches1_mpp)
-		),
-		DCT.TDMEncoder.new (
-			#  0: awg9 Range
-			[
-				props.globals.getNode("instrumentation/radar/radar2-range")
-			],
-			props.globals.getNode(bs_TDM1_mpp)
-
-		)
 	];
 
 }
@@ -117,47 +99,9 @@ var copilot_disconnect_pilot = func {
 
 # Copilot Nasal wrappers
 var set_copilot_wrappers = func (pilot) {
-	var p = "sim/current-view/name";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/altimeter/indicated-altitude-ft";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/altimeter/setting-inhg";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "orientation/heading-deg";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "orientation/heading-magnetic-deg";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/controls/radar-awg-9/brightness";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/controls/radar-awg-9/on-off";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/radar-awg-9/display-rdr";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/awg-9/sweep-factor";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/controls/TID/brightness";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/controls/TID/on-off";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/radar/az-field";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/ecm/on-off";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/controls/HSD/on-off";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/hsd/needle-deflection";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/nav[1]/radials/selected-deg";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/radar/radar2-range";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/radar/radar-standby";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	pilot.getNode("sim/model/f-14b/controls/TID/brightness", 1).setValue(1);
+	pilot.getNode("sim/model/f-14b/controls/radar-awg-9/brightness", 1).setValue(1);
+	pilot.getNode("sim/model/f-14b/controls/TID/on-off", 1).setValue(1);
+	pilot.getNode("sim/model/f-14b/controls/radar-awg-9/on-off", 1).setValue(1);
 }
 
