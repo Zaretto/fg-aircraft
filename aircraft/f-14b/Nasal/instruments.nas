@@ -301,8 +301,8 @@ aircraft.data.add(	bingo,
 					fwd_lvl_gal_us, aft_lvl_gal_us, Lbb_lvl_gal_us, Lsp_lvl_gal_us,
 					Rbb_lvl_gal_us, Rsp_lvl_gal_us, Lw_lvl_gal_us, Rw_lvl_gal_us,
 					Le_lvl_gal_us, Re_lvl_gal_us,
-					"sim/model/f-14b/systems/external-loads/station[2]/type",
-					"sim/model/f-14b/systems/external-loads/station[7]/type",
+					"sim/model/f-14b/systems/external-loads/station[2]/id",
+					"sim/model/f-14b/systems/external-loads/station[7]/id",
 					"consumables/fuel/tank[8]/selected",
 					"consumables/fuel/tank[9]/selected",
 					"sim/model/f-14b/systems/external-loads/external-tanks",
@@ -796,7 +796,7 @@ var init = func {
     common_init();
     if ( ! main_loop_launched ) {
         settimer(main_loop, 0.5);
-        settimer(f14.external_load_loop, 3);
+#        settimer(f14.external_load_loop, 3);
         main_loop_launched = 1;
     }
 }

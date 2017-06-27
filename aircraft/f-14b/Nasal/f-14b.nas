@@ -606,3 +606,9 @@ var resetView = func () {
   setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
   setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
 }
+model_setprop = func(v){
+# not needed unless in multiplayer backseat.
+#print("Set prop ",v, " ",getprop("/"~v));
+#setprop(v, getprop("/"~v));
+#print(" >> ", getprop(v));
+}

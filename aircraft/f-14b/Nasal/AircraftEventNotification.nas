@@ -36,6 +36,34 @@ var PropertySyncNotification =
         new_class.addIntProperty("TacanMode", "sim/model/f-14b/instrumentation/tacan/mode", 1);
         new_class.addIntProperty("LightingAntiCollision", "sim/model/f-14b/lighting/anti-collision/state", 1);
         new_class.addIntProperty("LightingPosition", "sim/model/f-14b/lighting/position/state", 1);
+        new_class.addIntProperty("IASkt", "instrumentation/airspeed-indicator/indicated-speed-kt", 2);
+        new_class.addIntProperty("FuelTotal", "sim/model/f-14b/instrumentation/fuel-gauges/total", 2);
+        new_class.addIntProperty("CabinAltitde", "fdm/jsbsim/systems/ecs/cabin-altitude-ft", 2);
+        new_class.addIntProperty("RadarRange", "instrumentation/radar/radar2-range", 2);
+        new_class.addIntProperty("RadarStandby", "instrumentation/radar/radar-standby", 1);
+        new_class.addIntProperty("RadarWCSMode", "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", 1);
+        new_class.addIntProperty("TargetRange", "sim/model/f-14b/systems/armament/aim9/target-range-nm", 1);
+
+        new_class.addIntProperty("StationSelector0", "sim/model/f-14b/controls/armament/station-selector[0]", 1);
+        new_class.addIntProperty("StationSelector1", "sim/model/f-14b/controls/armament/station-selector[1]", 1);
+        new_class.addIntProperty("StationSelector2", "sim/model/f-14b/controls/armament/station-selector[2]", 1);
+        new_class.addIntProperty("StationSelector3", "sim/model/f-14b/controls/armament/station-selector[3]", 1);
+        new_class.addIntProperty("StationSelector4", "sim/model/f-14b/controls/armament/station-selector[4]", 1);
+        new_class.addIntProperty("StationSelector5", "sim/model/f-14b/controls/armament/station-selector[5]", 1);
+        new_class.addIntProperty("StationSelector6", "sim/model/f-14b/controls/armament/station-selector[6]", 1);
+        new_class.addIntProperty("StationSelector7", "sim/model/f-14b/controls/armament/station-selector[7]", 1);
+
+        new_class.addIntProperty("StationLoad0", "sim/model/f-14b/systems/external-loads/station[0]/id", 1);
+        new_class.addIntProperty("StationLoad1", "sim/model/f-14b/systems/external-loads/station[1]/id", 1);
+        new_class.addIntProperty("StationLoad2", "sim/model/f-14b/systems/external-loads/station[2]/id", 1);
+        new_class.addIntProperty("StationLoad3", "sim/model/f-14b/systems/external-loads/station[3]/id", 1);
+        new_class.addIntProperty("StationLoad4", "sim/model/f-14b/systems/external-loads/station[4]/id", 1);
+        new_class.addIntProperty("StationLoad5", "sim/model/f-14b/systems/external-loads/station[5]/id", 1);
+        new_class.addIntProperty("StationLoad6", "sim/model/f-14b/systems/external-loads/station[6]/id", 1);
+        new_class.addIntProperty("StationLoad7", "sim/model/f-14b/systems/external-loads/station[7]/id", 1);
+
+
+
 
         new_class.addNormProperty("Canopy", "canopy/position-norm", 1);
         new_class.addNormProperty("Engine0NozzlePosNorm", "engines/engine[0]/nozzle-pos-norm", 1);

@@ -23,6 +23,14 @@ var EcmOn             = props.globals.getNode("instrumentation/ecm/on-off", 1);
 var WcsMode           = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", 1);
 var SWTgtRange        = props.globals.getNode("sim/model/f-14b/systems/armament/aim9/target-range-nm", 1);
 
+var wcs_mode_pd_srch = 1;
+var wcs_mode_pd_stt = 2;
+var wcs_mode_pulse_srch = 3;
+var wcs_mode_pulse_stt = 4;
+var wcs_mode_rws = 5;
+var wcs_mode_tws_auto = 6;
+var wcs_mode_tws_man = 7;
+var wcs_current_mode = wcs_mode_pulse_srch;
 
 var az_fld            = AzField.getValue();
 var l_az_fld          = 0;
@@ -37,7 +45,6 @@ var ddd_screen_width  = 0.0844; # 0.0844m : length of the max azimuth range on t
 var range_radar2      = 0;
 var my_radarcorr      = 0;
 var our_radar_stanby  = 0;
-var wcs_mode          = "pulse-srch";
 var tmp_nearest_rng   = nil;
 var tmp_nearest_u     = nil;
 var nearest_rng       = 0;
@@ -303,7 +310,7 @@ var hud_nearest_tgt = func() {
 		var u_dev_rad = (90 - nearest_u.get_deviation(our_true_heading)) * D2R;
 		var u_elev_rad = (90 - nearest_u.get_total_elevation(our_pitch)) * D2R;
 		if (
-			wcs_mode == "tws-auto"
+			wcs_current_mode == wcs_mode_tws_auto
 			and nearest_u.get_display()
 			and nearest_u.deviation > l_az_fld
 			and nearest_u.deviation < r_az_fld
@@ -432,7 +439,7 @@ var toggle_radar_standby = func() {
 
 var range_control = func(n) {
 	# 1(+), -1(-), 5, 10, 20, 50, 100, 200
-	if ( pilot_lock and ! we_are_bs ) { return }
+#	if ( pilot_lock and ! we_are_bs ) { return }
 	var range_radar = RangeRadar2.getValue();
 	if ( n == 1 ) {
 		if ( range_radar == 5 ) { range_radar = 10 }
@@ -453,15 +460,14 @@ var range_control = func(n) {
 	elsif (n == 100 ) { range_radar = 100 }
 	elsif (n == 200 ) { range_radar = 200 }
 	RangeRadar2.setValue(range_radar);
+    f14.notify_value(f14.set_radar_range, range_radar);
 }
 
 wcs_mode_sel = func(mode) {
-	if ( pilot_lock and ! we_are_bs ) { return }
-	foreach (var n; props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode").getChildren()) {
-		n.setBoolValue(n.getName() == mode);
-		wcs_mode = mode;
-	}
-	if ( wcs_mode == "pulse-srch" ) {
+#	if ( pilot_lock and ! we_are_bs ) { return }
+setprop("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", mode);
+wcs_current_mode == mode;
+	if ( mode == wcs_mode_pulse_srch ) {
 		AzField.setValue(120);
 		ddd_screen_width = 0.0844;
 	} else {
@@ -473,40 +479,34 @@ wcs_mode_sel = func(mode) {
 wcs_mode_toggle = func() {
 	# Temporarely toggles between the first 2 available modes.
 	#foreach (var n; props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode").getChildren()) {
-	if ( pilot_lock and ! we_are_bs ) { return }
-	foreach (var n; WcsMode.getChildren()) {
-		if ( n.getBoolValue() ) { wcs_mode = n.getName() }
-	}
-	if ( wcs_mode == "pulse-srch" ) {
-		WcsMode.getNode("pulse-srch").setBoolValue(0);
-		WcsMode.getNode("tws-auto").setBoolValue(1);
-		wcs_mode = "tws-auto";
+#	if ( pilot_lock and ! we_are_bs ) { return }
+	if ( wcs_current_mode == wcs_mode_pulse_srch ) {
+        wcs_current_mode = wcs_mode_tws_auto;
 		AzField.setValue(60);
 		ddd_screen_width = 0.0422;
-	} elsif ( wcs_mode == "tws-auto" ) {
-		WcsMode.getNode("pulse-srch").setBoolValue(1);
-		WcsMode.getNode("tws-auto").setBoolValue(0);
-		wcs_mode = "pulse-srch";
+	}
+    else #if ( wcs_current_mode == wcs_mode_tws_auto )
+    {
+        wcs_current_mode = wcs_mode_pulse_srch;
 		AzField.setValue(120);
 		ddd_screen_width = 0.0844;
 	}
+    setprop("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", wcs_current_mode);
 }
 
 wcs_mode_update = func() {
-	# Used on pilot's side when WcsMode is updated by the back-seater.
-	foreach (var n; WcsMode.getChildren()) {
-		if ( n.getBoolValue() ) { wcs_mode = n.getName() }
-	}
-	if ( WcsMode.getNode("tws-auto").getBoolValue() ) {
-		wcs_mode = "tws-auto";
+	if ( WcsMode.getValue() ==  wcs_mode_tws_auto) {
+		wcs_current_mode = wcs_mode_tws_auto;
 		AzField.setValue(60);
 		ddd_screen_width = 0.0422;
-	} elsif ( WcsMode.getNode("pulse-srch").getBoolValue() ) {
-		wcs_mode = "pulse-srch";
+	}
+    else #if ( WcsMode.getNode("pulse-srch").getBoolValue() ) 
+    {
+        wcs_current_mode = wcs_mode_pulse_srch;
 		AzField.setValue(120);
 		ddd_screen_width = 0.0844;
 	}
-
+    setprop("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", wcs_current_mode);
 }
 
 
@@ -555,12 +555,12 @@ var Target = {
 		var bs = getprop("sim/aircraft");
 		obj.InstrTgts = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/targets", 1);
 		if ( bs == "f-14b-bs") {
-			if  ( BS_instruments.Pilot != nil ) {
+			if  ( f14.Pilot != nil ) {
 				# Use a different radar-awg-9 folder.
-				obj.InstrTgts = BS_instruments.Pilot.getNode("sim/model/f-14b/instrumentation/radar-awg-9/targets", 1);
+				obj.InstrTgts = f14.Pilot.getNode("sim/model/f-14b/instrumentation/radar-awg-9/targets", 1);
 				# Do not see our pilot's aircraft.
 				var target_callsign = obj.Callsign.getValue();
-				var p_callsign = BS_instruments.Pilot.getNode("callsign").getValue();
+				var p_callsign = f14.Pilot.getNode("callsign").getValue();
 				if ( target_callsign == p_callsign ) {
 					obj.not_acting = 1;
 				}

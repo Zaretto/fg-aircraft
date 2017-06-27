@@ -5,6 +5,7 @@
         <description>Grumman F-14A</description>
         <author>Richard Harrison, Enrique Laso - Alexis Bory</author>
         <status>production</status>
+        <minimum-fg-version>2017.3</minimum-fg-version>
 
         <startup>
             <splash-texture>Aircraft/f-14b/f-14a-splash.jpg</splash-texture>
@@ -600,7 +601,7 @@
                         <hsd-mode-nav type="int">1</hsd-mode-nav>
                         <!-- 1 = NAV, 0 = TID, -1 = ECM -->
                     </pilots-displays>
-                    <radar-awg-9>
+                    <radar-awg-9> <!-- part of the DDD in the backseat -->
                         <on-off type="bool">true</on-off>
                         <brightness type="double">1</brightness>
                     </radar-awg-9>
@@ -750,15 +751,7 @@
                         <rd-rot-light type="bool">false</rd-rot-light>
                         <jat-light type="bool">false</jat-light>
                         <irot-light type="bool">false</irot-light>
-                        <wcs-mode>
-                            <pd-stt type="bool">false</pd-stt>
-                            <pulse-stt type="bool">false</pulse-stt>
-                            <pd-srch type="bool">false</pd-srch>
-                            <rws type="bool">false</rws>
-                            <tws-auto type="bool">false</tws-auto>
-                            <tws-man type="bool">false</tws-man>
-                            <pulse-srch type="bool">true</pulse-srch>
-                        </wcs-mode>
+                        <wcs-mode type="int">3</wcs-mode> <!-- pulse search -->
                     </radar-awg-9>
                     <tacan>
                         <xy-switch type="bool">0</xy-switch>
@@ -825,10 +818,10 @@
                         <numeral-1 type="int">1</numeral-1>
                     </utilities>
                     <external-loads>
-                        <external-load-set type="string">Clean</external-load-set>
+                        <external-load-set type="int">0</external-load-set>
                         <external-tanks type="bool">false</external-tanks>
                         <station n="0">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -837,7 +830,7 @@
                             </offsets>
                         </station>
                         <station n="1">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -846,7 +839,7 @@
                             </offsets>
                         </station>
                         <station n="2">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -855,7 +848,7 @@
                             </offsets>
                         </station>
                         <station n="3">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -864,7 +857,7 @@
                             </offsets>
                         </station>
                         <station n="4">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -873,7 +866,7 @@
                             </offsets>
                         </station>
                         <station n="5">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -882,7 +875,7 @@
                             </offsets>
                         </station>
                         <station n="6">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -891,7 +884,7 @@
                             </offsets>
                         </station>
                         <station n="7">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -900,7 +893,7 @@
                             </offsets>
                         </station>
                         <station n="8">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -909,7 +902,7 @@
                             </offsets>
                         </station>
                         <station n="9">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -1105,7 +1098,7 @@
                 <ground-level-nearplane-m type="double">0.5f</ground-level-nearplane-m>
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <y-offset-m archive="y">0.43</y-offset-m>
-                <z-offset-m archive="y">-3.58</z-offset-m>
+                <z-offset-m archive="y">-3.66</z-offset-m>
                 <pitch-offset-deg>-23</pitch-offset-deg>
                 <default-field-of-view-deg>90</default-field-of-view-deg>
                 <limits>
@@ -2048,6 +2041,8 @@
             <file>Aircraft/f-14b/Nasal/an-arc-159v1.nas</file>
         </an_arc_159v1>
         <f14>
+            <file>Aircraft/f-14b/Nasal/AircraftControlInterface.nas</file>
+            <file>Aircraft/f-14b/Nasal/AircraftControlRecipient.nas</file>
             <file>Aircraft/f-14b/Nasal/liveries.nas</file>
             <file>Aircraft/f-14b/Nasal/f14_globals.nas</file>
             <file>Aircraft/f-14b/Nasal/flaps_computer.nas</file>
