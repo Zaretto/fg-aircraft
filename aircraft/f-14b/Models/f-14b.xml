@@ -29,23 +29,6 @@
         var livery_update = aircraft.livery_update.new(
             "Aircraft/f-14b/Models/Liveries", 10 );
 
-        # Load the needed modules if it hasn't been done yet.
-        # f14_net handles broadcast of:
-        #   - external load set.
-        if (!contains(globals, "f14_net")) {
-            var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
-            
-            if (io.stat(fn_net) == nil)
-                fn_net = resolvepath("Aircraft/f-14b/Nasal") ~ "/mp-network.nas";
-
-            if (io.stat(fn_net) == nil)
-                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/f-14b/Nasal/mp-network.nas";
-
-            print("Loading F-14 mp network from ",fn_net);
-            io.load_nasal(fn_net, "f14_net");
-    		f14_net.mp_network_init(0);
-        }
-        
         ]]>
 		</load>
 		<unload>
@@ -542,7 +525,7 @@
 		<type>material</type>
 		<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
 		</condition>
