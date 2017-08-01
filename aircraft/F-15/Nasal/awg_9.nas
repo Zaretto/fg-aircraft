@@ -107,7 +107,7 @@ our_ac_name = "f15c";
 # Done each 0.05 sec. Called from instruments.nas
 var rdr_loop = func() {
 	var display_rdr = DisplayRdr.getBoolValue();
-	if ( display_rdr ) {
+	if ( display_rdr and getprop("/instrumentation/radar/serviceable") == 1) {
 		az_scan();
 		our_radar_stanby = RadarStandby.getValue();
 #print ("Display radar ",our_radar_stanby, we_are_bs);
@@ -119,6 +119,7 @@ var rdr_loop = func() {
 		foreach( u; tgts_list ) {
 			u.set_display(0);
 		}
+        armament.contact = nil;
 	}
 }
 
