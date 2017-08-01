@@ -2,6 +2,8 @@ var Math = {
     #
     # Author: Nikolai V. Chr.
     #
+    # Version 1.1
+    #
     # When doing euler to cartesian: +x = forw, +y = right, +z = up.
     #
     clamp: func(v, min, max) { v < min ? min : v > max ? max : v },
@@ -61,17 +63,27 @@ var Math = {
     },
 
     getPitch: func (coord1, coord2) {
-      #pitch from c1 to c2 in degrees (takes curvature of earth into effect.)
+      #pitch from coord1 to coord2 in degrees (takes curvature of earth into effect.)
+      if (coord1.lat() == coord2.lat() and coord1.lon() == coord2.lon()) {
+        if (coord2.alt() > coord1.alt()) {
+          return 90;
+        } elsif (coord2.alt() < coord1.alt()) {
+          return -90;
+        } else {
+          return 0;
+        }
+      }
       me.coord3 = geo.Coord.new(coord1);
       me.coord3.set_alt(coord2.alt());
       me.d12 = coord1.direct_distance_to(coord2);
-      if (me.d12 > 0.1 and coord1.alt() != coord2.alt()) {# not sure how to cope with same altitudes.
+      if (me.d12 > 0.1 and coord1.alt() != coord2.alt()) {# this triangle method dont work with same altitudes.
         me.d32 = me.coord3.direct_distance_to(coord2);
         me.altD = coord1.alt()-me.coord3.alt();
         me.y = R2D * math.acos((math.pow(me.d12, 2)+math.pow(me.altD,2)-math.pow(me.d32, 2))/(2 * me.d12 * me.altD));
         me.pitch = -1* (90 - me.y);
         return me.pitch;
       } else {
+        # arccos wont like if the coord are the same
         return 0;
       }
     },
