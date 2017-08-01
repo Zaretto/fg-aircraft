@@ -203,7 +203,7 @@ var az_scan = func() {
 
 			if ((type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") and HaveRadarNode != nil) {
 				var u = Target.new(c);
-				if (rcs.inRadarRange(me.contact, 89, 3.2) == 0) {#F14 AWG-9 = 89NM for 3.2 rcs
+				if (rcs.inRadarRange(u, 89, 3.2) == 0) {#F14 AWG-9 = 89NM for 3.2 rcs
 	            #    continue;
 	            }
 				u_ecm_signal      = 0;
@@ -305,7 +305,7 @@ var az_scan = func() {
 
 }
 
-setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~""~"7");
+#setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~""~"7");
 var hud_nearest_tgt = func() {
 	# Computes nearest_u position in the HUD
 	if ( nearest_u != nil ) {
@@ -866,6 +866,10 @@ var Target = {
 	},
 	getFlareNode: func () {
 		# for now, no flare implementation in the F14, until the F14 can fire flares of its own.
+		return nil; 
+	},
+	getChaffNode: func () {
+		# for now, no chaff implementation in the F14, until the F14 can fire flares of its own.
 		return nil; 
 	},
 	get_type: func () {
