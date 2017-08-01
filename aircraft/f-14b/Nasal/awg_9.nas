@@ -203,6 +203,9 @@ var az_scan = func() {
 
 			if ((type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") and HaveRadarNode != nil) {
 				var u = Target.new(c);
+				if (rcs.inRadarRange(me.contact, 89, 3.2) == 0) {#F14 AWG-9 = 89NM for 3.2 rcs
+	                continue;
+	            }
 				u_ecm_signal      = 0;
 				u_ecm_signal_norm = 0;
 				u_radar_standby   = 0;
@@ -654,6 +657,31 @@ var Target = {
 		obj.name            = c.getNode("name");
         obj.sign            = c.getNode("sign",1);
         obj.Model = c.getNode("model-short");
+
+		var model_short = c.getNode("sim/model/path");
+        if(model_short != nil)
+        {
+            var model_short_val = model_short.getValue();
+            if (model_short_val != nil and model_short_val != "")
+            {
+	            var u = split("/", model_short_val); # give array
+	            var s = size(u); # how many elements in array
+	            var o = u[s-1];	 # the last element
+	            var m = size(o); # how long is this string in the last element
+	            var e = m - 4;   # - 4 chars .xml
+	            obj.ModelType = substr(o, 0, e); # the string without .xml
+			}
+			else
+			{
+	            obj.ModelType = "";
+	        }
+    	}
+		else
+		{
+           	obj.ModelType = "";
+        }
+
+
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
@@ -715,6 +743,7 @@ var Target = {
 		obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
 		
 		obj.pitch          = c.getNode("orientation/pitch-deg");
+		obj.roll           = c.getNode("orientation/roll-deg");
         obj.lat            = c.getNode("position/latitude-deg");
         obj.lon            = c.getNode("position/longitude-deg");
 		obj.coord          = geo.Coord.new();
@@ -913,6 +942,10 @@ var Target = {
         var n = me.pitch.getValue();
         return n;
     },
+    get_Roll: func(){
+        var n = me.roll.getValue();
+        return n;
+    },
     isPainted: func() {
     	# Tells if this is the target that are being tracked, only used in semi-radar guided missiles.
     	return TRUE;
@@ -921,6 +954,9 @@ var Target = {
         # return true airspeed
         var n = me.speed.getValue();
         return n;
+    },
+    get_model: func {
+        return me.ModelType;
     },
 	list : [],
 };

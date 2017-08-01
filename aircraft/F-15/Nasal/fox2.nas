@@ -659,21 +659,21 @@ var AIM = {
 		if (me.weight_fuel_lbm == nil) {
 			me.weight_fuel_lbm = 0;
 		}
-		var energy1 = me.force_lbf_1 * me.stage_1_duration;
-		var energy2 = me.force_lbf_2 * me.stage_2_duration;
-		var energyT = energy1 + energy2;
-		var fuel_per_energy = me.weight_fuel_lbm / energyT;
-		me.fuel_per_sec_1  = (fuel_per_energy * energy1) / me.stage_1_duration;
-		me.fuel_per_sec_2  = (fuel_per_energy * energy2) / me.stage_2_duration;
+		var impulse1 = me.force_lbf_1 * me.stage_1_duration; # lbf*s
+		var impulse2 = me.force_lbf_2 * me.stage_2_duration; # lbf*s
+		var impulseT = impulse1 + impulse2;                  # lbf*s
+		var fuel_per_impulse = me.weight_fuel_lbm / impulseT;# lbm/(lbf*s)
+		me.fuel_per_sec_1  = (fuel_per_impulse * impulse1) / me.stage_1_duration;# lbm/s
+		me.fuel_per_sec_2  = (fuel_per_impulse * impulse2) / me.stage_2_duration;# lbm/s
 
 		# find the sun:
 		if(me.guidance == "heat") {
 			var sun_x = getprop("ephemeris/sun/local/x");
-			var sun_y = getprop("ephemeris/sun/local/x");
-			var sun_z = getprop("ephemeris/sun/local/x");
+			var sun_y = getprop("ephemeris/sun/local/y");# unit vector pointing to sun in geocentric coords
+			var sun_z = getprop("ephemeris/sun/local/z");
 			me.sun_power = getprop("/rendering/scene/diffuse/red");
-			me.sun = geo.Coord.new(me.ac_init);
-			me.sun.set_xyz(me.sun.x()+sun_x*200000, me.sun.y()+sun_y*200000, me.sun.z()+sun_z*200000);#heat seeking missiles don't fly far, so setting it 200Km away is fine.
+			me.sun = geo.Coord.new();
+			me.sun.set_xyz(me.ac_init.x()+sun_x*200000, me.ac_init.y()+sun_y*200000, me.ac_init.z()+sun_z*200000);#heat seeking missiles don't fly far, so setting it 200Km away is fine.
 		}
 		me.lock_on_sun = FALSE;
 
