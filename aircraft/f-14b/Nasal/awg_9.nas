@@ -864,14 +864,12 @@ var Target = {
 		me.RangeLast.setValue(rng);
 		return(cr);
 	},
-	getFlareNode: func () {
-		# for now, no flare implementation in the F14, until the F14 can fire flares of its own.
-		return nil; 
-	},
-	getChaffNode: func () {
-		# for now, no chaff implementation in the F14, until the F14 can fire flares of its own.
-		return nil; 
-	},
+	getFlareNode: func {
+        return me.propNode.getNode("rotors/main/blade[3]/flap-deg");
+    },
+    getChaffNode: func () {
+      return me.propNode.getNode("rotors/main/blade[3]/position-deg");
+    },
 	get_type: func () {
 		# for now, just interpret all as air targets
 		var AIR = 0;

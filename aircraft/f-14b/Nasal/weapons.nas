@@ -26,6 +26,8 @@ Current_aim9   = nil;
 
 aircraft.data.add( StickSelector, ArmLever, ArmSwitch );
 
+var FALSE = 0;
+var TRUE  = 1;
 
 # Init
 var weapons_init = func() {
@@ -543,3 +545,47 @@ var impact_listener = func {
 # setup impact listener
 setlistener("/ai/models/model-impact3", impact_listener, 0, 0);
 
+var flareCount = -1;
+var flareStart = -1;
+
+var flareLoop = func {
+  # Flare release
+  if (getprop("ai/submodels/submodel[4]/flare-release-snd") == nil) {
+    setprop("ai/submodels/submodel[4]/flare-release-snd", FALSE);
+    setprop("ai/submodels/submodel[4]/flare-release-out-snd", FALSE);
+  }
+  var flareOn = getprop("ai/submodels/submodel[4]/flare-release-cmd");
+  if (flareOn == TRUE and getprop("ai/submodels/submodel[4]/flare-release") == FALSE
+      and getprop("ai/submodels/submodel[4]/flare-release-out-snd") == FALSE
+      and getprop("ai/submodels/submodel[4]/flare-release-snd") == FALSE) {
+    flareCount = getprop("ai/submodels/submodel[4]/count");
+    flareStart = getprop("sim/time/elapsed-sec");
+    setprop("ai/submodels/submodel[4]/flare-release-cmd", FALSE);
+    if (flareCount > 0) {
+      # release a flare
+      setprop("ai/submodels/submodel[4]/flare-release-snd", TRUE);
+      setprop("ai/submodels/submodel[4]/flare-release", TRUE);
+      setprop("rotors/main/blade[3]/flap-deg", flareStart);
+      setprop("rotors/main/blade[3]/position-deg", flareStart);
+    } else {
+      # play the sound for out of flares
+      setprop("ai/submodels/submodel[4]/flare-release-out-snd", TRUE);
+    }
+  }
+  if (getprop("ai/submodels/submodel[4]/flare-release-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
+    setprop("ai/submodels/submodel[4]/flare-release-snd", FALSE);
+    setprop("rotors/main/blade[3]/flap-deg", 0);
+    setprop("rotors/main/blade[3]/position-deg", 0);
+  }
+  if (getprop("ai/submodels/submodel[4]/flare-release-out-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
+    setprop("ai/submodels/submodel[4]/flare-release-out-snd", FALSE);
+  }
+  if (flareCount > getprop("ai/submodels/submodel[4]/count")) {
+    # A flare was released in last loop, we stop releasing flares, so user have to press button again to release new.
+    setprop("ai/submodels/submodel[4]/flare-release", FALSE);
+    flareCount = -1;
+  }
+  settimer(flareLoop, 0.1);
+};
+
+flareLoop();
