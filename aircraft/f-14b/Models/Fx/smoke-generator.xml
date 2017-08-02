@@ -10,7 +10,10 @@ based on standard my wingtip contrail:    rjh@zaretto.com
    <lighting type="bool">false</lighting>
  
    <condition>
-      <property>sim/multiplay/generic/int[10]</property>
+      <greater-than>
+        <property>sim/multiplay/generic/float[1]</property>
+        <value>0.0</value>
+      </greater-than>
    </condition>
  
    <attach>world</attach>

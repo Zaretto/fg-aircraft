@@ -282,7 +282,7 @@ var timedMotions = func {
     {
         if (main_flap_generic != nil)
         {    
-    	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
+    	    #main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
         } 
 
         if (aux_flap_generic != nil)

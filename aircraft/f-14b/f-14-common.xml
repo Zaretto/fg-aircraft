@@ -621,7 +621,7 @@
                     </VDI>
                 </controls>
                 <fx>
-                    <smoke type="int">0</smoke>
+                    <smoke type="double">0</smoke>
                     <burner type="int">0</burner>
                     <heat-blur-on type="bool">false</heat-blur-on>
                 </fx>
@@ -935,7 +935,8 @@
             <generic>
                 <float n="0">0</float>
                 <!-- wing-sweep     -->
-                <!-- <float n="1">0</float> free     -->
+                <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
+                <!--smoke-->
                 <float n="2">0</float>
                 <!-- aux flaps      -->
                 <float n="3">0</float>
@@ -974,8 +975,8 @@
                 <int n="8" type="int">0</int>
                 <!--afterburner right-->
                 <int n="9" type="int">0</int>
-                <!--smoke-->
-                <int n="10" alias="/sim/model/f-14b/fx/smoke"/>
+                <!--free-->
+                <!--<int n="10" alias="/sim/model/f-14b/fx/smoke"/>-->
                 <!-- external weapons layout and pylons details -->
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
@@ -1744,9 +1745,16 @@
             <key n="83">
                 <name>S</name>
                 <desc>smoke</desc>
-                <binding>
+                <!--<binding>
                     <command>property-toggle</command>
                     <property>sim/model/f-14b/fx/smoke</property>
+                </binding>-->
+                <binding>
+                    <command>property-cycle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
+                    <value type="double">0.0</value>
+                    <value type="double">1.0</value>
+                    <wrap>true</wrap>
                 </binding>
             </key>
 
