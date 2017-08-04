@@ -184,15 +184,19 @@
         <fcs_function name="aero/alpha-indicated-deg">
             <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
             <function>
-                <product>
-                    <sum>
-                        <property> aero/alpha-deg </property>
-                        <value> -0.797 </value>
-                    </sum>
-                    <value>1.231223836</value>
-                </product>
+                <ifthen><eq><property>position/aircraft-on-ground</property><value>1</value></eq>
+                    <value>0</value>
+                    <product>
+                        <sum>
+                            <property> aero/alpha-deg </property>
+                            <value> -0.797 </value>
+                        </sum>
+                        <value>1.231223836</value>
+                    </product>
+                </ifthen>
             </function>
         </fcs_function>
+        
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach</description>

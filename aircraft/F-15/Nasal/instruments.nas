@@ -392,8 +392,10 @@ aircraft.data.add(
     "sim/model/hide-pilot",
     "sim/model/hide-backseater",
     "sim/model/hide-pilots-auto"
+#    ,"sim/model/f15/instrumentation/aoa/alpha-max-indicated-deg"
     );
 
+var aoa_max = props.globals.getNode("sim/model/f15/instrumentation/aoa/alpha-max-indicated-deg",1);
 var g_max   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-max", 1);
 var g_min   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-min", 1);
 aircraft.data.add( g_min, g_max );
@@ -581,6 +583,11 @@ var main_loop = func {
 		tacan_update();
         ara_63_update();
 		g_min_max();
+if (Alpha > aoa_max.getValue() or 0)
+{
+aoa_max.setDoubleValue(Alpha);
+}
+
 		f15_chronograph.update_chrono();
 
 		if (( cnt == 6 ) or ( cnt == 12 )) {
@@ -732,6 +739,7 @@ var common_init = func {
         print("Setting replay medium res to 50hz");
 setprop("sim/hud/visibility[0]",0);
 setprop("sim/hud/visibility[1]",0);
+aoa_max.setDoubleValue(0);
 
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
         setprop("controls/flight/SAS-roll",0);
