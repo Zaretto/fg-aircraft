@@ -76,10 +76,14 @@ var Math = {
       me.coord3 = geo.Coord.new(coord1);
       me.coord3.set_alt(coord2.alt());
       me.d12 = coord1.direct_distance_to(coord2);
-      if (me.d12 > 0.1 and coord1.alt() != coord2.alt()) {# this triangle method dont work with same altitudes.
+      if (me.d12 != 0 and coord1.alt() != coord2.alt()) {# this triangle method dont work with same altitudes.
         me.d32 = me.coord3.direct_distance_to(coord2);
         me.altD = coord1.alt()-me.coord3.alt();
-        me.y = R2D * math.acos((math.pow(me.d12, 2)+math.pow(me.altD,2)-math.pow(me.d32, 2))/(2 * me.d12 * me.altD));
+        me.len = (math.pow(me.d12, 2)+math.pow(me.altD,2)-math.pow(me.d32, 2))/(2 * me.d12 * me.altD);
+        if (me.len < -1 or me.len > 1) {
+          return 0;
+        }
+        me.y = R2D * math.acos(me.len);
         me.pitch = -1* (90 - me.y);
         return me.pitch;
       } else {
