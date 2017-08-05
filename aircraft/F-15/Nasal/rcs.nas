@@ -28,9 +28,9 @@ var rcs_database = {
     "707-TT":                   100,    #guess
     "EC-137D":                  110,    #guess
     "B-1B":                     10,
-    "Blackbird-SR71A":          0.01,
-    "Blackbird-SR71B":          0.012,
-    "Blackbird-SR71A-BigTail":  0.012,
+    "Blackbird-SR71A":          0.25,
+    "Blackbird-SR71B":          0.30,
+    "Blackbird-SR71A-BigTail":  0.30,
     "ch53e":                    20,     #guess
     "MiG-21bis":                3.5,
     "MQ-9":                     1,      #guess
