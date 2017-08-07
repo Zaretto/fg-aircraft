@@ -1402,7 +1402,7 @@ var AIM = {
 	},
 
 	checkForSun: func () {
-		if (me.sun_enabled == TRUE and me.guidance == "heat" and getprop("/rendering/scene/diffuse/red") > 0.6) {
+		if (me.guidance == "heat" and me.sun_enabled == TRUE and getprop("/rendering/scene/diffuse/red") > 0.6) {
 			# test for heat seeker locked on to sun
 			me.sun_dev_e = me.getPitch(me.coord, me.sun) - me.pitch;
 			me.sun_dev_h = me.coord.course_to(me.sun) - me.hdg;

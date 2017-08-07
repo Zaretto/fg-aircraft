@@ -744,10 +744,23 @@ var Target = {
 		
 		obj.pitch          = c.getNode("orientation/pitch-deg");
 		obj.roll           = c.getNode("orientation/roll-deg");
-        obj.lat            = c.getNode("position/latitude-deg");
-        obj.lon            = c.getNode("position/longitude-deg");
-		obj.coord          = geo.Coord.new();
-		obj.coord.set_latlon(obj.lat.getValue(), obj.lon.getValue(), obj.Alt.getValue() * FT2M);
+        obj.coord          = geo.Coord.new();
+        if (c.getNode("position/latitude-deg") != nil and c.getNode("position/longitude-deg") != nil) {
+            obj.lat = c.getNode("position/latitude-deg");
+            obj.lon = c.getNode("position/longitude-deg");
+            obj.coord.set_latlon(obj.lat.getValue(), obj.lon.getValue(), obj.Alt.getValue() * FT2M);
+        } else {
+            obj.lat = nil;
+            if (c.getNode("position/global-x") != nil)
+            {
+                obj.x = me.propNode.getNode("position/global-x");
+                obj.y = me.propNode.getNode("position/global-y");
+                obj.z = me.propNode.getNode("position/global-z");
+                obj.coord.set_xyz(obj.x.getValue(), obj.y.getValue(), obj.z.getValue() * FT2M);
+            } else {
+                obj.x = nil;
+            }
+        }
 
 		obj.TimeLast.setValue(ElapsedSec.getValue());
 		obj.RangeLast.setValue(obj.Range.getValue());
@@ -789,7 +802,22 @@ var Target = {
 		return me.deviation;
 	},
 	get_range : func {
-		return me.Range.getValue();
+		#
+        # range on carriers (and possibly other items) is always 0 so recalc.
+        if (me.Range == nil or me.Range.getValue() == 0)
+        {
+            var tgt_pos = me.get_Coord();
+#                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
+            if (tgt_pos != nil) {
+                return tgt_pos.distance_to(geo.aircraft_position()) * M2NM; # distance in NM
+            }
+            if (me.Range != nil)
+                return me.Range.getValue();
+        }
+        if (me.Range == nil)
+            return 0;
+        else
+            return me.Range.getValue();
 	},
 	get_horizon : func(own_alt) {
 		var tgt_alt = me.get_altitude();
@@ -928,9 +956,21 @@ var Target = {
         return "UFO";
     },
     get_Coord: func(){
-        me.coord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
-        var TgTCoord  = geo.Coord.new(me.coord);
-        return TgTCoord;
+        if (me.lat != nil) {
+            me.coord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
+        } else {
+            if (me.x != nil)
+            {
+                var x = me.x.getValue();
+                var y = me.y.getValue();
+                var z = me.z.getValue();
+
+                me.coord.set_xyz(x, y, z);
+            } else {
+                return nil;#hopefully wont happen
+            }
+        }
+        return geo.Coord.new(me.coord);#best to pass a copy
     },
     get_Longitude: func(){
         var n = me.lon.getValue();

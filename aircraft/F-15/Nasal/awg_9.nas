@@ -941,11 +941,21 @@ else
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
         obj.propNode = c;
         obj.TgTCoord  = geo.Coord.new();
-        if (c.getNode("position/latitude-deg") != nil)
+        if (c.getNode("position/latitude-deg") != nil and c.getNode("position/longitude-deg") != nil) {
             obj.lat = c.getNode("position/latitude-deg");
-        if (c.getNode("position/longitude-deg") != nil)
             obj.lon = c.getNode("position/longitude-deg");
- 
+        } else {
+            obj.lat = nil;
+            if (c.getNode("position/global-x") != nil)
+            {
+                obj.x = me.propNode.getNode("position/global-x");
+                obj.y = me.propNode.getNode("position/global-y");
+                obj.z = me.propNode.getNode("position/global-z");
+            } else {
+                obj.x = nil;
+            }
+        }
+
         if (obj.type == "multiplayer" or obj.type == "tanker" or obj.type == "aircraft" and obj.RdrProp != nil) 
             obj.airbone = 1;
         else
@@ -1074,14 +1084,9 @@ else
         # range on carriers (and possibly other items) is always 0 so recalc.
         if (me.Range == nil or me.Range.getValue() == 0)
         {
-            if (me.propNode.getNode("position/global-x") != nil)
-            {
-                var x = me.propNode.getNode("position/global-x").getValue();
-                var y = me.propNode.getNode("position/global-y").getValue();
-                var z = me.propNode.getNode("position/global-z").getValue();
-
-                var tgt_pos = geo.Coord.new().set_xyz(x, y, z);
+            var tgt_pos = me.get_Coord();
 #                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
+            if (tgt_pos != nil) {
                 return tgt_pos.distance_to(geo.aircraft_position()) * M2NM; # distance in NM
             }
             if (me.Range != nil)
@@ -1156,8 +1161,21 @@ else
         return 0;
     },
     get_Coord: func(){
-        me.TgTCoord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
-        return me.TgTCoord;
+        if (me.lat != nil) {
+            me.TgTCoord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
+        } else {
+            if (me.x != nil)
+            {
+                var x = me.x.getValue();
+                var y = me.y.getValue();
+                var z = me.z.getValue();
+
+                me.TgTCoord.set_xyz(x, y, z);
+            } else {
+                return nil;#hopefully wont happen
+            }
+        }
+        return geo.Coord.new(me.TgTCoord);#best to pass a copy
     },
 
 	get_closure_rate : func() {
