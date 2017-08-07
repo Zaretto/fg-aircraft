@@ -1248,6 +1248,9 @@ else
         return e;
     },
     get_Callsign: func {
+        if (me.Callsign == nil) {
+            return me.get_model();
+        }
         return me.Callsign.getValue();
     },
     get_Pitch: func(){

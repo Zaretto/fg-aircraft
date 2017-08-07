@@ -65,7 +65,7 @@ var inRadarRange = func (contact, myRadarDistance_nm, myRadarStrength_rcs) {
 
 var wasInRadarRange = func (contact, myRadarDistance_nm, myRadarStrength_rcs) {
     var sign = contact.get_Callsign();
-    if (contains(prevVisible, sign)) {
+    if (sign != nil and contains(prevVisible, sign)) {
         return prevVisible[sign];
     } else {
         return isInRadarRange(contact, myRadarDistance_nm, myRadarStrength_rcs);
