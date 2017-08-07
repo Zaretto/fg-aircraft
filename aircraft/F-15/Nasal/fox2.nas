@@ -1012,7 +1012,21 @@ var AIM = {
 		}
 		# Get target position.
 		if (me.Tgt != nil) {
-			me.t_coord = me.Tgt.get_Coord();
+			if (me.fooled == FALSE) {
+				me.t_coord = me.Tgt.get_Coord();
+			} else {
+				# we are chasing a flare, lets update the flares position.
+				me.flarespeed_fps = me.flarespeed_fps - (25 * me.dt);#deacc. 15 kt per second.
+				if (me.flarespeed_fps < 0) {
+					me.flarespeed_fps = 0;
+				}
+				me.flare_speed_down_fps       = -math.sin(me.flare_pitch * D2R) * me.flarespeed_fps;
+				me.flare_speed_horizontal_fps = math.cos(me.flare_pitch * D2R) * me.flarespeed_fps;
+				me.flare_alt_ft = me.t_coord.alt()*M2FT - (me.flare_speed_down_fps * me.dt);
+				me.flare_dist_h_m = me.flare_speed_horizontal_fps * me.dt * FT2M;
+				me.t_coord.apply_course_distance(me.flare_hdg, me.flare_dist_h_m);
+				me.t_coord.set_alt(me.flare_alt_ft * FT2M);
+			}
 		}
 		# record coords so we can give the latest nearest position for impact.
 		me.before_last_coord   = geo.Coord.new(me.last_coord);
@@ -1313,7 +1327,7 @@ var AIM = {
 		#
 		# Check for being fooled by flare.
 		#
-		if (me.guidance == "heat" and getprop("sim/time/elapsed-sec")-me.flareTime > 1) {
+		if (me.guidance == "heat" and me.fooled == FALSE and getprop("sim/time/elapsed-sec")-me.flareTime > 1) {
 			#
 			# TODO: Use Richards Emissary for this.
 			#
@@ -1330,10 +1344,13 @@ var AIM = {
 						# 15% chance to be fooled, extra up till 15% chance added if front aspect
 						if (me.fooled == TRUE) {
 							# fooled by the flare
-							print(me.type~": Missile fooled by flare");
-							me.free = TRUE;
+							print(me.type~": Missile fooled by flare from "~me.callsign);
+							me.flarespeed_fps = me.Tgt.get_Speed()*KT2FPS;
+							me.flare_hdg      = me.Tgt.get_heading();
+							me.flare_pitch    = me.Tgt.get_Pitch();
+							#me.free = TRUE;
 						} else {
-							print(me.type~": Missile ignored flare");
+							print(me.type~": Missile ignored flare from "~me.callsign);
 						}
 					}
 				}
@@ -1705,11 +1722,10 @@ var AIM = {
 			
 			#var t_pitch      = math.atan2(t_climb,t_dist)*R2D;
 			
-
 			# calculate target acc as normal to LOS line:
-			me.t_heading        = me.Tgt.get_heading();
-			me.t_pitch          = me.Tgt.get_Pitch();
-			me.t_speed_fps      = me.Tgt.get_Speed()*KT2FPS;#true airspeed
+			me.t_heading        = me.fooled == FALSE?me.Tgt.get_heading():me.t_heading;
+			me.t_pitch          = me.fooled == FALSE?me.Tgt.get_Pitch():me.t_pitch;
+			me.t_speed_fps      = me.fooled == FALSE?me.Tgt.get_Speed()*KT2FPS:me.flarespeed_fps;#true airspeed
 
 			#if (me.last_t_coord.direct_distance_to(me.t_coord) != 0) {
 			#	# taking sideslip and AoA into consideration:
@@ -1940,7 +1956,7 @@ var AIM = {
 		if (me.lock_on_sun == TRUE) {
 			reason = "Locked onto sun.";
 		} elsif (me.fooled == TRUE) {
-			reason = "Fooled by flare.";
+			reason = "Locked onto flare.";
 		} elsif (me.chaffFooled == TRUE) {
 			reason = "blinded by chaff.";
 		}
@@ -1976,7 +1992,7 @@ var AIM = {
 		impact_report(me.coord, wh_mass, "munition", me.type, me.new_speed_fps*FT2M);
 
 		if (me.Tgt != nil) {
-			var phrase = sprintf( me.type~" "~event~": %01.1f", min_distance) ~ " meters from: " ~ me.callsign;
+			var phrase = sprintf( me.type~" "~event~": %01.1f", min_distance) ~ " meters from: " ~ (me.fooled == FALSE?me.callsign:me.callsign ~ "'s flare");
 			print(phrase~"  Reason: "~reason~sprintf(" time %.1f", me.life_time));
 			if (min_distance < me.reportDist) {
 				me.sendMessage(phrase);
