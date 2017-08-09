@@ -593,6 +593,8 @@ var re_init = func {
   foreach(var failure_mode_id; mode_list) {
     FailureMgr.set_failure_level(failure_mode_id, 0);
   }
+  setprop("ai/submodels/submodel[4]/count", 100);
+  setprop("ai/submodels/submodel[5]/count", 100);
 }
 
 setlistener("/sim/signals/reinit", re_init, 0, 0);

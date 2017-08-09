@@ -2,7 +2,7 @@ var Math = {
     #
     # Author: Nikolai V. Chr.
     #
-    # Version 1.1
+    # Version 1.2
     #
     # When doing euler to cartesian: +x = forw, +y = right, +z = up.
     #
