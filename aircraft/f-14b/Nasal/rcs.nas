@@ -5,6 +5,8 @@
 #
 # License: GPL 2
 #
+# The file vector.nas needs to be available in namespace 'vector'.
+#
 var test = func (echoHeading, echoPitch, echoRoll, bearing, frontRCS) {
   var myCoord = geo.aircraft_position();
   var echoCoord = geo.Coord.new(myCoord);
@@ -15,7 +17,7 @@ var test = func (echoHeading, echoPitch, echoRoll, bearing, frontRCS) {
 
 var rcs_database = {
     "default":                  200,    #default value if target's model isn't listed
-    "F-14B":                    12,     #guess
+    "f-14b":                    12,     #guess
     "F-15C":                    10,     #low end of sources
     "F-15D":                    11,     #low end of sources
     "JA37-Viggen":              3,      #guess

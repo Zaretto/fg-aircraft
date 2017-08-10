@@ -40,6 +40,11 @@ setlistener("sim/model/f15/controls/armament/weapon-selector", func(v)
 var FALSE = 0;
 var TRUE  = 1;
 
+var getDLZ = func {
+    if (ArmSwitch.getValue() and Current_missile != nil) {
+        return Current_missile.getDLZ();
+    }
+}
 
 # Init
 var weapons_init = func()
