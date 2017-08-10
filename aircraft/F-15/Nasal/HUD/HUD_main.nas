@@ -114,11 +114,11 @@ var F15HUD = {
                 print("HUD: could not locate ",name);
         }
         if (canvas_item == "HUDImage1") {
-            obj.dlzX      = 170;
-            obj.dlzY      =  100;
+            obj.dlzX      =170;
+            obj.dlzY      =100;
             obj.dlzWidth  = 10;
-            obj.dlzHeight =100;
-            obj.dlzLW     = 1;
+            obj.dlzHeight = 90;
+            obj.dlzLW     =  1;
             obj.dlz      = obj.svg.createChild("group");
             obj.dlz2     = obj.dlz.createChild("group");
             obj.dlzArrow = obj.dlz.createChild("path")
@@ -194,6 +194,10 @@ var F15HUD = {
                     .lineTo(0, -me.dlzArray[3]/me.dlzArray[0]*me.dlzHeight)
                     .lineTo(0, -me.dlzArray[1]/me.dlzArray[0]*me.dlzHeight)
                     .lineTo(me.dlzWidth, -me.dlzArray[1]/me.dlzArray[0]*me.dlzHeight)
+                    .moveTo(0, -me.dlzHeight)
+                    .lineTo(me.dlzWidth, -me.dlzHeight-3)
+                    .lineTo(me.dlzWidth, -me.dlzHeight+3)
+                    .lineTo(0, -me.dlzHeight)
                     .setStrokeLineWidth(me.dlzLW)
                     .setColor(0,1,0);
                 me.dlz.show();
