@@ -263,7 +263,7 @@ active_u = nil; armament.contact = active_u;
                     u.set_display(0);
                 }
 #                if (type == "multiplayer" or type == "tanker" or type == "aircraft" and HaveRadarNode != nil) 
-                if (type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") 
+                if (type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle" or type == "aim-120" or type == "aim-7" or type == "aim-9") 
                 {
                     append(tgts_list, u);
                     ecm_on = EcmOn.getValue();
