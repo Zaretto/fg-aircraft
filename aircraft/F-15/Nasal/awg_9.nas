@@ -243,7 +243,7 @@ active_u = nil; armament.contact = active_u;
 
             var u = Target.new(c);
             if (rcs.inRadarRange(u, 80, 3.2) == 0) {#APG-63(v1) = 80NM for 3.2 rcs (guesstimate)
-            #    continue;
+                continue;
             }
             u_ecm_signal      = 0;
             u_ecm_signal_norm = 0;

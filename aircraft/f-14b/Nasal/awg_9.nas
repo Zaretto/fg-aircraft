@@ -204,7 +204,7 @@ var az_scan = func() {
 			if ((type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") and HaveRadarNode != nil) {
 				var u = Target.new(c);
 				if (rcs.inRadarRange(u, 89, 3.2) == 0) {#F14 AWG-9 = 89NM for 3.2 rcs
-	            #    continue;
+	                continue;
 	            }
 				u_ecm_signal      = 0;
 				u_ecm_signal_norm = 0;
