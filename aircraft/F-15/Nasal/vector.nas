@@ -2,7 +2,7 @@ var Math = {
     #
     # Author: Nikolai V. Chr.
     #
-    # Version 1.2
+    # Version 1.3
     #
     # When doing euler to cartesian: +x = forw, +y = right, +z = up.
     #
@@ -73,22 +73,45 @@ var Math = {
           return 0;
         }
       }
-      me.coord3 = geo.Coord.new(coord1);
-      me.coord3.set_alt(coord2.alt());
-      me.d12 = coord1.direct_distance_to(coord2);
-      if (me.d12 != 0 and coord1.alt() != coord2.alt()) {# this triangle method dont work with same altitudes.
-        me.d32 = me.coord3.direct_distance_to(coord2);
-        me.altD = coord1.alt()-me.coord3.alt();
-        me.len = (math.pow(me.d12, 2)+math.pow(me.altD,2)-math.pow(me.d32, 2))/(2 * me.d12 * me.altD);
-        if (me.len < -1 or me.len > 1) {
-          return 0;
+      if (coord1.alt() != coord2.alt()) {
+        me.d12 = coord1.direct_distance_to(coord2);
+        me.coord3 = geo.Coord.new(coord1);
+        me.coord3.set_alt(coord1.alt()-me.d12*0.5);# this will increase the area of the triangle so that rounding errors dont get in the way.
+        me.d13 = coord1.alt()-me.coord3.alt();        
+        if (me.d12 == 0) {
+            # on top of each other, maybe rounding error..
+            return 0;
         }
-        me.y = R2D * math.acos(me.len);
-        me.pitch = -1* (90 - me.y);
+        me.d32 = me.coord3.direct_distance_to(coord2);
+        if (math.abs(me.d13)+me.d32 < me.d12) {
+            # rounding errors somewhere..one triangle side is longer than other 2 sides combined.
+            return 0;
+        }
+        # standard formula for a triangle where all 3 side lengths are known:
+        me.len = (math.pow(me.d12, 2)+math.pow(me.d13,2)-math.pow(me.d32, 2))/(2 * me.d12 * math.abs(me.d13));
+        if (me.len < -1 or me.len > 1) {
+            # something went wrong, maybe rounding error..
+            return 0;
+        }
+        me.angle = R2D * math.acos(me.len);
+        me.pitch = -1* (90 - me.angle);
+        #printf("d12 %.4f  d32 %.4f  d13 %.4f len %.4f pitch %.4f angle %.4f", me.d12, me.d32, me.d13, me.len, me.pitch, me.angle);
         return me.pitch;
       } else {
-        # arccos wont like if the coord are the same
-        return 0;
+        # same altitude
+        me.nc = geo.Coord.new();
+        me.nc.set_xyz(0,0,0);        # center of earth
+        me.radiusEarth = coord1.direct_distance_to(me.nc);# current distance to earth center
+        me.d12 = coord1.direct_distance_to(coord2);
+        # standard formula for a triangle where all 3 side lengths are known:
+        me.len = (math.pow(me.d12, 2)+math.pow(me.radiusEarth,2)-math.pow(me.radiusEarth, 2))/(2 * me.d12 * me.radiusEarth);
+        if (me.len < -1 or me.len > 1) {
+            # something went wrong, maybe rounding error..
+            return 0;
+        }
+        me.angle = R2D * math.acos(me.len);
+        me.pitch = -1* (90 - me.angle);
+        return me.pitch;
       }
     },
 
@@ -117,3 +140,36 @@ var Math = {
       return [v[0]/me.mag, v[1]/me.mag, v[2]/me.mag];
     },
 };
+
+# Fix for geo.Coord:
+geo.Coord.set_x = func(x) { me._cupdate(); me._pdirty = 1; me._x = x; me };
+geo.Coord.set_y = func(y) { me._cupdate(); me._pdirty = 1; me._y = y; me };
+geo.Coord.set_z = func(z) { me._cupdate(); me._pdirty = 1; me._z = z; me };
+geo.Coord.set_lat = func(lat) { me._pupdate(); me._cdirty = 1; me._lat = lat * D2R; me };
+geo.Coord.set_lon = func(lon) { me._pupdate(); me._cdirty = 1; me._lon = lon * D2R; me };
+geo.Coord.set_alt = func(alt) { me._pupdate(); me._cdirty = 1; me._alt = alt; me };
+geo.Coord.apply_course_distance2 = func(course, dist) {# this method in geo is not bad, just wanted to see if this way of doing it worked better.
+        me._pupdate();
+        course *= D2R;
+        var nc = geo.Coord.new();
+        nc.set_xyz(0,0,0);        # center of earth
+        dist /= me.direct_distance_to(nc);# current distance to earth center
+        
+        if (dist < 0.0) {
+          dist = abs(dist);
+          course = course - math.pi;        
+        }
+        
+        me._lat2 = math.asin(math.sin(me._lat) * math.cos(dist) + math.cos(me._lat) * math.sin(dist) * math.cos(course));
+
+        me._lon = me._lon + math.atan2(math.sin(course)*math.sin(dist)*math.cos(me._lat),math.cos(dist)-math.sin(me._lat)*math.sin(me._lat2));
+
+        while (me._lon <= -math.pi)
+            me._lon += math.pi*2;
+        while (me._lon > math.pi)
+            me._lon -= math.pi*2;
+
+        me._lat = me._lat2;
+        me._cdirty = 1;
+        me;
+    };
