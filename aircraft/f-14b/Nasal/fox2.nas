@@ -1,19 +1,12 @@
-#
-# F-14 Missile
-# ---------------------------
-# Richard Harrison (rjh@zaretto.com) Feb  2015 - rework for F-15 based on F-14B version by Alexis Bory
-# Richard Harrison (rjh@zaretto.com) Jan  2016 - reintegrate F-14 changes back into F-14
 
 
-var aircraft_type = "sim/model/f-14b";
-
-var AcModel        = props.globals.getNode(aircraft_type);
+var AcModel        = props.globals.getNode("sim/model/f-14b");
 var OurHdg         = props.globals.getNode("orientation/heading-deg");
 var OurRoll        = props.globals.getNode("orientation/roll-deg");
 var OurPitch       = props.globals.getNode("orientation/pitch-deg");
-var HudReticleDev  = props.globals.getNode(aircraft_type~"/instrumentation/radar-awg-9/hud/reticle-total-deviation", 1);
-var HudReticleDeg  = props.globals.getNode(aircraft_type~"/instrumentation/radar-awg-9/hud/reticle-total-angle", 1);
-#var aim_9_model    = "Models/Stores/aim-9/aim-9-";
+var HudReticleDev  = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-deviation", 1);
+var HudReticleDeg  = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-angle", 1);
+var aim_9_model    = "Aircraft/f-14b/Models/Stores/aim-9/aim-9-";
 var SwSoundOnOff   = AcModel.getNode("systems/armament/aim9/sound-on-off");
 var SwSoundVol     = AcModel.getNode("systems/armament/aim9/sound-volume");
 var vol_search     = 0.12;
@@ -25,31 +18,17 @@ var slugs_to_lbs = 32.1740485564;
 
 
 var AIM9 = {
-	new : func (p, mty) {
+	new : func (p) {
 		var m = { parents : [AIM9]};
-		# Args: 
-        # p = Pylon.
-        # mty = missile type.
-        m.variant =string.lc(mty);
-        if (mty == "AIM-9")
-            mty = "aim9";
-        else if (mty == "AIM-7")
-            mty = "aim7";
-        else if (mty == "AIM-120")
-            mty = "aim120";
-        else if (mty == "AIM-54")
-            mty = "aim54";
-
-        m.type = mty;
+		# Args: p = Pylon.
 
 		m.status            = 0; # -1 = stand-by, 0 = searching, 1 = locked, 2 = fired.
 		m.free              = 0; # 0 = status fired with lock, 1 = status fired but having lost lock.
 
-		m.prop              = AcModel.getNode("systems/armament/"~m.type~"/").getChild("msl", 0 , 1);
+		m.prop              = AcModel.getNode("systems/armament/aim9/").getChild("msl", 0 , 1);
 		m.PylonIndex        = m.prop.getNode("pylon-index", 1).setValue(p);
 		m.ID                = p;
-		m.pylon_prop        = props.globals.getNode(aircraft_type~"/systems/external-loads/").getChild("station", p);
-		m.pylon_prop_name   = aircraft_type~"/systems/external-loads/station["~p~"]";
+		m.pylon_prop        = props.globals.getNode("sim/model/f-14b/systems/external-loads/").getChild("station", p);
 		m.Tgt               = nil;
 		m.TgtValid          = nil;
 		m.TgtLon_prop       = nil;
@@ -69,21 +48,22 @@ var AIM9 = {
 		m.track_signal_h    = 0; #   this is directly used as input signal for the steering command.
 		m.t_coord           = geo.Coord.new().set_latlon(0, 0, 0);
 		m.last_t_coord      = m.t_coord;
+		m.before_last_t_coord = nil;
 		#m.next_t_coord      = m.t_coord;
 		m.direct_dist_m     = nil;
 
 		# AIM-9L specs:
-		m.aim9_fov_diam     = getprop(aircraft_type~"/systems/armament/"~m.type~"/fov-deg");
+		m.aim9_fov_diam     = getprop("sim/model/f-14b/systems/armament/aim9/fov-deg");
 		m.aim9_fov          = m.aim9_fov_diam / 2;
-		m.max_detect_rng    = getprop(aircraft_type~"/systems/armament/"~m.type~"/max-detection-rng-nm");
-		m.max_seeker_dev    = getprop(aircraft_type~"/systems/armament/"~m.type~"/track-max-deg") / 2;
-		m.force_lbs         = getprop(aircraft_type~"/systems/armament/"~m.type~"/thrust-lbs");
-		m.thrust_duration   = getprop(aircraft_type~"/systems/armament/"~m.type~"/thrust-duration-sec");
-		m.weight_launch_lbs = getprop(aircraft_type~"/systems/armament/"~m.type~"/weight-launch-lbs");
-		m.weight_whead_lbs  = getprop(aircraft_type~"/systems/armament/"~m.type~"/weight-warhead-lbs");
-		m.cd                = getprop(aircraft_type~"/systems/armament/"~m.type~"/drag-coeff");
-		m.eda               = getprop(aircraft_type~"/systems/armament/"~m.type~"/drag-area");
-		m.max_g             = getprop(aircraft_type~"/systems/armament/"~m.type~"/max-g");
+		m.max_detect_rng    = getprop("sim/model/f-14b/systems/armament/aim9/max-detection-rng-nm");
+		m.max_seeker_dev    = getprop("sim/model/f-14b/systems/armament/aim9/track-max-deg") / 2;
+		m.force_lbs         = getprop("sim/model/f-14b/systems/armament/aim9/thrust-lbs");
+		m.thrust_duration   = getprop("sim/model/f-14b/systems/armament/aim9/thrust-duration-sec");
+		m.weight_launch_lbs = getprop("sim/model/f-14b/systems/armament/aim9/weight-launch-lbs");
+		m.weight_whead_lbs  = getprop("sim/model/f-14b/systems/armament/aim9/weight-warhead-lbs");
+		m.cd                = getprop("sim/model/f-14b/systems/armament/aim9/drag-coeff");
+		m.eda               = getprop("sim/model/f-14b/systems/armament/aim9/drag-area");
+		m.max_g             = getprop("sim/model/f-14b/systems/armament/aim9/max-g");
 
 		# Find the next index for "models/model" and create property node.
 		# Find the next index for "ai/models/aim-9" and create property node.
@@ -95,15 +75,13 @@ var AIM9 = {
 		m.model = n.getChild("model", i, 1);
 		var n = props.globals.getNode("ai/models", 1);
 		for (var i = 0; 1; i += 1)
-			if (n.getChild(m.variant, i, 0) == nil)
+			if (n.getChild("aim-9", i, 0) == nil)
 				break;
-		m.ai = n.getChild(m.variant, i, 1);
+		m.ai = n.getChild("aim-9", i, 1);
 
 		m.ai.getNode("valid", 1).setBoolValue(1);
-        var missile_model    = sprintf("Models/Stores/%s/%s-%d.xml", m.variant, m.variant, m.ID);
-print("Model ",missile_model);
-
-		m.model.getNode("path", 1).setValue(missile_model);
+		var id_model = aim_9_model ~ m.ID ~ ".xml";
+		m.model.getNode("path", 1).setValue(id_model);
 		m.life_time = 0;
 
 		# Create the AI position and orientation properties.
@@ -116,6 +94,8 @@ print("Model ",missile_model);
 
 		m.ac      = nil;
 		m.coord   = geo.Coord.new().set_latlon(0, 0, 0);
+		m.last_coord = nil;
+		m.before_last_coord = nil;
 		m.s_down  = nil;
 		m.s_east  = nil;
 		m.s_north = nil;
@@ -136,7 +116,6 @@ print("Model ",missile_model);
 	},
 	release: func() {
 		me.status = 2;
-        printf("%s: release %d",me.type,me.ID);
 		me.animation_flags_props();
 
 		# Get the A/C position and orientation values.
@@ -150,16 +129,9 @@ print("Model ",missile_model);
 		var in = [0,0,0];
 		var trans = [[0,0,0],[0,0,0],[0,0,0]];
 		var out = [0,0,0];
-
-        if (me.pylon_prop.getNode("offsets/x-m") != nil)
-        {
 		in[0] = me.pylon_prop.getNode("offsets/x-m").getValue() * M2FT;
 		in[1] = me.pylon_prop.getNode("offsets/y-m").getValue() * M2FT;
 		in[2] = me.pylon_prop.getNode("offsets/z-m").getValue() * M2FT;
-        }
-        else
-            print("ERROR pylon prop not setup correctly ",me.pylon_prop_name);
-
 		# Pre-process trig functions:
 		cosRx = math.cos(-ac_roll * D2R);
 		sinRx = math.sin(-ac_roll * D2R);
@@ -233,7 +205,8 @@ print("Model ",missile_model);
 		if ( me.life_time > 0 ) { init_launch = 1 }
 		me.life_time += dt;
 		# record coords so we can give the latest nearest position for impact.
-		me.last_coord = me.coord;
+		me.before_last_coord = geo.Coord.new(me.last_coord);
+		me.last_coord = geo.Coord.new(me.coord);
 
 
 		#### Calculate speed vector before steering corrections.
@@ -299,34 +272,14 @@ print("Model ",missile_model);
 
 		#### Guidance.
 
-        if ( me.status == 2 and me.free == 0)
-        {
-            if (me.life_time > 1)
-            { 
+		if ( me.status == 2 and me.free == 0) {
 			me.update_track();
-            }
-            #print(me.life_time);
-            if (init_launch == 0 )
-            {
+			if (init_launch == 0 ) {
 				# Use the rail or a/c pitch for the first frame.
 				pitch_deg = getprop("orientation/pitch-deg");
-            } 
-            else
-            {
-                #Here will be set the max angle of pitch and the max angle of heading to avoid G overload
-                var myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-                if(me.max_g < myG)
-                {
-                    #print("MyG");
-                    var MyCoef = max_G_Rotation(me.track_signal_e, me.track_signal_h, total_s_ft, mass, 1,me.max_g);
-                    me.track_signal_e =  me.track_signal_e * MyCoef;
-                    me.track_signal_h =  me.track_signal_h * MyCoef;
-                    myG = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-                }
+			} else {
 				pitch_deg += me.track_signal_e;
 				hdg_deg += me.track_signal_h;
-
-                #print("Still Tracking : Elevation ",me.track_signal_e,"Heading ",me.track_signal_h," Gload : ", myG );
 			}
 		}
 
@@ -345,43 +298,20 @@ print("Model ",missile_model);
 
 		#### Proximity detection.
 
-        if ( me.status == 2 ) 
-        {
+		if ( me.status == 2 ) {
 			var v = me.poximity_detection();
-            if ( ! v ) 
-            {
+			if ( ! v ) {
 				# We exploded, but need a few more secs to spawn the explosion animation.
 				settimer(func { me.del(); }, 4 );
-                print("booom");
 				return;
 			}			
-            if(me.life_time > 3)
-            {
+
 			#### If not exploded, check if the missile can keep the lock.
-                if ( me.free == 0 ) 
-                {
+ 			if ( me.free == 0 ) {
 				var g = steering_speed_G(me.track_signal_e, me.track_signal_h, (total_s_ft / dt), mass, dt);
-                    if ( g > me.max_g ) 
-                    {
+				if ( g > 21 ) {
 					# Target unreachable, fly free.
 					me.free = 1;
-                        printf("%s: Target unreachable would exceed G %d (max=%d)",me.type,g,me.max_g);
-                        #Disable for the moment
-                    }
-                }
-            }
-
-            ####Ground interaction
-            var ground = geo.elevation(me.coord.lat(),me.coord.lon());
-            #print("Ground :",ground);
-            if(ground != nil)
-            {
-                if(ground>alt_ft)
-                {
-                    print("Ground");
-                    me.free = 1;
-                    settimer(func { me.del(); }, 1 );
-                    return;
 				}
 			}
 		}
@@ -403,17 +333,7 @@ print("Model ",missile_model);
 
 
 	update_track: func() {
-
-		if ( me.Tgt == nil ) 
-        {
-            if (me.status != 2)
-                setprop(aircraft_type~"/systems/armament/launch-light",false);
-            return(1); 
-        }
-# do not set launch light when missile tracking.
-        if (me.status != 2)
-            setprop(aircraft_type~"/systems/armament/launch-light",me.status == 1);
-
+		if ( me.Tgt == nil ) { return(1); }
 		if (me.status == 0) {
 			# Status = searching.
 			me.reset_seeker();
@@ -442,7 +362,6 @@ print("Model ",missile_model);
 		me.update_track_time = time;
 		var last_tgt_e = me.curr_tgt_e;
 		var last_tgt_h = me.curr_tgt_h;
-
 		if (me.status == 1) {		
 			# Status = locked. Get target position relative to our aircraft.
 			me.curr_tgt_e = me.Tgt.get_total_elevation(OurPitch.getValue());
@@ -519,6 +438,37 @@ print("Model ",missile_model);
 		if ( me.direct_dist_m != nil ) {
 			if ( cur_dir_dist_m > me.direct_dist_m and me.direct_dist_m < 65 ) {
 				# Distance to target increase, trigger explosion.
+				
+				var min_distance = me.direct_dist_m;
+				var explosion_coord = me.last_coord;
+				for (var i = 0.1; i < 1; i += 0.1) {
+					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
+					var coord = me.interpolate(me.last_coord, me.coord, i);
+					var dist = coord.direct_distance_to(t_coord);
+					if (dist < min_distance) {
+						min_distance = dist;
+						explosion_coord = coord;
+					}
+				}
+				if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
+					for (var i = 0.1; i < 1; i += 0.1) {
+						var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
+						var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
+						var dist = coord.direct_distance_to(t_coord);
+						if (dist < min_distance) {
+							min_distance = dist;
+							explosion_coord = coord;
+						}
+					}
+				}
+
+				var phrase = sprintf( "%01.1f", min_distance) ~ "meters";
+				if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
+					setprop("/sim/multiplay/chat", phrase);
+				} else {
+					setprop("/sim/messages/atc", phrase);
+				}
+
 				# Get missile relative position to the target at last frame.
 				var t_bearing_deg = me.last_t_coord.course_to(me.last_coord);
 				var t_delta_alt_m = me.last_coord.alt() - me.last_t_coord.alt();
@@ -531,31 +481,13 @@ print("Model ",missile_model);
 				print("FOX2: me.direct_dist_m = ",  me.direct_dist_m, " time ",getprop("sim/time/elapsed-sec"));
 				impact_report(me.t_coord, wh_mass, "missile"); # pos, alt, mass_slug,(speed_mps)
 
-				var min_distance = me.direct_dist_m;
-				var explosion_coord = me.last_coord;
-				for (var i = 0.1; i < 1; i += 0.1) {
-					var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
-					var coord = me.interpolate(me.last_coord, me.coord, i);
-					var dist = coord.direct_distance_to(t_coord);
-					if (dist < min_distance) {
-						min_distance = dist;
-						explosion_coord = coord;
-					}
-				}
-
-				var phrase = sprintf( "%01.1f", min_distance) ~ "meters";
-				if (getprop("sim/model/f-14b/systems/armament/mp-messaging")) {
-					setprop("/sim/multiplay/chat", phrase);
-				} else {
-					setprop("/sim/messages/atc", phrase);
-				}
-print(phrase);
 				me.animate_explosion();
 				me.Tgt = nil;
 				return(0);
 			}
 		}
-		me.last_t_coord = me.t_coord;
+		me.before_last_t_coord = geo.Coord.new(me.last_t_coord);
+		me.last_t_coord = geo.Coord.new(me.t_coord);
 		me.direct_dist_m = cur_dir_dist_m;
 		return(1);
 	},
@@ -570,6 +502,8 @@ print(phrase);
 
 		return c;
 	},
+
+
 
 	check_t_in_fov: func {
 		# Used only when not launched.
@@ -605,8 +539,8 @@ print(phrase);
 			return;
 		}
 		# search.
-		if ( awg_9.active_u != nil and awg_9.active_u.Valid.getValue()) {
-			var tgt = awg_9.active_u; # In the AWG-9 radar range and horizontal field.
+		if ( awg_9.nearest_u != nil and awg_9.nearest_u.Valid.getValue()) {
+			var tgt = awg_9.nearest_u; # In the AWG-9 radar range and horizontal field.
 			var rng = tgt.get_range();
 			var total_elev  = tgt.get_total_elevation(OurPitch.getValue()); # deg.
 			var total_horiz = tgt.get_deviation(OurHdg.getValue());         # deg.
@@ -665,17 +599,14 @@ print(phrase);
 
 	animation_flags_props: func {
 		# Create animation flags properties.
-		var msl_path = aircraft_type~"/systems/armament/"~me.type~"/flags/msl-id-" ~ me.ID;
+		var msl_path = "sim/model/f-14b/systems/armament/aim9/flags/msl-id-" ~ me.ID;
 		me.msl_prop = props.globals.initNode( msl_path, 1, "BOOL" );
-		var smoke_path = aircraft_type~"/systems/armament/"~me.type~"/flags/smoke-id-" ~ me.ID;
-		me.smoke_prop = props.globals.initNode( smoke_path, 1, "BOOL" );
-		var explode_path = aircraft_type~"/systems/armament/"~me.type~"/flags/explode-id-" ~ me.ID;
+		var smoke_path = "sim/model/f-14b/systems/armament/aim9/flags/smoke-id-" ~ me.ID;
+		me.smoke_prop = props.globals.initNode( smoke_path, 0, "BOOL" );
+		var explode_path = "sim/model/f-14b/systems/armament/aim9/flags/explode-id-" ~ me.ID;
 		me.explode_prop = props.globals.initNode( explode_path, 0, "BOOL" );
-		var explode_smoke_path = aircraft_type~"/systems/armament/"~me.type~"/flags/explode-smoke-id-" ~ me.ID;
+		var explode_smoke_path = "sim/model/f-14b/systems/armament/aim9/flags/explode-smoke-id-" ~ me.ID;
 		me.explode_smoke_prop = props.globals.initNode( explode_smoke_path, 0, "BOOL" );
-        printf("%s %s", smoke_path, me.smoke_prop.getValue());
-        printf("%s %s", explode_path, me.explode_prop.getValue());
-        printf("%s %s", explode_smoke_path, me.explode_smoke_prop.getValue());
 	},
 
 
@@ -732,45 +663,26 @@ var impact_report = func(pos, mass_slug, string) {
 
 }
 
-var max_G_Rotation = func(steering_e_deg, steering_h_deg, s_fps, mass, dt,gMax) {
+var steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, mass, dt) {
 	# Get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
-        #This function is for calculate the maximum angle without overload G
-
 	var steer_deg = math.sqrt((steering_e_deg*steering_e_deg)+(steering_h_deg*steering_h_deg));
 	var radius_ft = math.abs(s_fps / math.cos(90 - steer_deg));
 	var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
-
-         #Isolation of Radius
-        if(s_fps<1){s_fps=1;}
-        var radius_ft2 =(mass * s_fps * s_fps * dt)/((gMax*0.9) * g_fps);
-        if(math.abs(s_fps/radius_ft2)<1){
-                var steer_rad_theoric = math.acos(math.abs(s_fps/radius_ft2));
-                var steer_deg_theoric = 90 - (steer_rad_theoric * R2D);
-        }else{
-                var steer_rad_theoric = 1;
-                var steer_deg_theoric = 1;
-        }
-
-        var radius_ft_th = math.abs(s_fps / math.cos((90 -steer_deg_theoric)*D2R));
-        var g_th = (mass * s_fps * s_fps / radius_ft_th * dt) / g_fps;
-
-        #print ("Max G ",gMax , " Actual G " , g,"steer_deg_theoric ",steer_deg_theoric);
-
-        return(steer_deg_theoric/steer_deg);
-}
-
-steering_speed_G = func(steering_e_deg, steering_h_deg, s_fps, mass, dt) {
-        # Get G number from steering (e, h) in deg, speed in ft/s and mass in slugs.
-        var steer_deg = math.sqrt((steering_e_deg*steering_e_deg)+(steering_h_deg*steering_h_deg));
-        var radius_ft = math.abs(s_fps / math.cos((90 - steer_deg)*D2R));
-        var g = (mass * s_fps * s_fps / radius_ft * dt) / g_fps;
-        #print("#### R = ", radius_ft, " G = ", g);
-        return(g);
+	#print("#### R = ", radius_ft, " G = ", g);
+	return(g);
 }
 
 
+# HUD clamped target blinker
 SW_reticle_Blinker = aircraft.light.new("sim/model/f-14b/lighting/hud-sw-reticle-switch", [0.1, 0.1]);
 setprop("sim/model/f-14b/lighting/hud-sw-reticle-switch/enabled", 1);
+
+
+
+
+
+
+
 
 
 
