@@ -7,7 +7,8 @@
     <property value="1">gear/serviceable</property>
     <property value="0">systems/hydraulics/emerg-gear-bleed</property>
     <property value="0">gear/damage-reset</property>
-
+    <property value="2">position/aircraft-on-ground-last-value</property>
+    
     <channel name="Pitch">
         <summer name="Pitch Trim Sum">
             <input>fcs/elevator-cmd-norm</input>
@@ -688,7 +689,7 @@ emerg operation.
             </test>
         </switch>
         <switch name="/gear/gear[0]/position-norm">
-            <default value="gear/unit[0]/pos-norm"/>
+            <default value="gear/gear-pos-norm"/>
             <test value="0.5">
                 gear/unit[0]/damaged eq 1
                 gear/unit[0]/pos-norm ge 0.6
@@ -696,7 +697,7 @@ emerg operation.
             <output>/gear/gear[0]/position-norm</output>
         </switch>
         <switch name="/gear/gear[1]/position-norm">
-            <default value="gear/unit[1]/pos-norm"/>
+            <default value="gear/gear-pos-norm"/>
             <test value="0.6">
                 gear/unit[1]/damaged eq 1
                 gear/unit[1]/pos-norm ge 0.6
@@ -704,28 +705,28 @@ emerg operation.
             <output>/gear/gear[1]/position-norm</output>
         </switch>
         <switch name="/gear/gear[2]/position-norm">
-            <default value="gear/unit[2]/pos-norm"/>
+            <default value="gear/gear-pos-norm"/>
             <test value="0.6">
                 gear/unit[2]/damaged eq 1
                 gear/unit[2]/pos-norm ge 0.6
             </test>
             <output>/gear/gear[2]/position-norm</output>
         </switch>
-        <switch name="gear/unit[0]/z-position">
+        <switch name="Gear Unit 0 Z">
             <default value="-77.6496063"/>
             <test value="-20">
                 gear/unit[0]/damaged eq 1
             </test>
             <output>gear/unit[0]/z-position</output>
         </switch>
-        <switch name="gear/unit[1]/z-position">
+        <switch name="Gear Unit 1 Z">
             <default value="-84.3385827"/>
             <test value="-30">
                 gear/unit[1]/damaged eq 1
             </test>
             <output>gear/unit[1]/z-position</output>
         </switch>
-        <switch name="gear/unit[2]/z-position">
+        <switch name="Gear Unit 2 Z">
             <default value="-84.3385827"/>
             <test value="-30">
                 gear/unit[2]/damaged eq 1
@@ -733,35 +734,36 @@ emerg operation.
             <output>gear/unit[2]/z-position</output>
         </switch>
 
-        <switch name="contact/unit[3]/z-position">
+        <switch name="Contact Unit 3 Z nose door">
             <default value="-30.6496063"/>
             <test value="-55">
                 gear/unit[0]/damaged eq 1
             </test>
             <output>contact/unit[3]/z-position</output>
         </switch>
-        <switch name="contact/unit[4]/z-position">
+        <switch name="Contact Unit 4 Z nose door">
             <default value="-30"/>
             <test value="-55">
                 gear/unit[1]/damaged eq 1
             </test>
             <output>contact/unit[4]/z-position</output>
         </switch>
-        <switch name="contact/unit[5]/z-position">
+        <switch name="Contact Unit 5 Z nose door">
             <default value="-30"/>
             <test value="-55">
                 gear/unit[2]/damaged eq 1
             </test>
             <output>contact/unit[5]/z-position</output>
         </switch>
-        <switch name="position/aircraft-on-ground-last-value">
+        <switch>
             <default value="position/aircraft-on-ground"/>
+            <output>position/aircraft-on-ground-last-value</output>
             <!--<test value="1">
             position/aircraft-on-ground ne 0
         </test>-->
         </switch>
 
-        <switch name="gear/gear-dmd-norm">
+        <switch>
             <default value="1"/>
             <test value="1">
                 <!-- always force gear down when on ground - to prevent inadvertant retraction -->
