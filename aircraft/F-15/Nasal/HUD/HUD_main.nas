@@ -147,11 +147,13 @@ var F15HUD = {
             else
                 print("HUD: could not locate ",name);
         }
-        if (canvas_item == "HUDImage1") {
+       
             obj.dlzX      =170;
             obj.dlzY      =100;
             obj.dlzWidth  = 10;
             obj.dlzHeight = 90;
+obj.dlzHeight=60;
+obj.dlzY = 70;
             obj.dlzLW     =  1;
             obj.dlz      = obj.svg.createChild("group");
             obj.dlz2     = obj.dlz.createChild("group");
@@ -162,8 +164,7 @@ var F15HUD = {
                            .lineTo( -5, -4)
                            .setColor(0,1,0)
                            .setStrokeLineWidth(obj.dlzLW);
-        }
-
+        
 		return obj;
 	},
 #
@@ -211,16 +212,16 @@ var F15HUD = {
 #
 #
     update : func(hdp) {
-        if (me == UpperHUD) {
-            me.dlzArray = aircraft.getDLZ();
-            #me.dlzArray =[10,8,6,2,9];#test
-            if (me.dlzArray == nil or size(me.dlzArray) == 0) {
+        
+        me.dlzArray = aircraft.getDLZ();
+#me.dlzArray =[10,8,6,2,9];#test
+        if (me.dlzArray == nil or size(me.dlzArray) == 0) {
                 me.dlz.hide();
-            } else {
-                me.dlz.setTranslation(me.dlzX,me.dlzY);
-                me.dlz2.removeAllChildren();
-                me.dlzArrow.setTranslation(0,-me.dlzArray[4]/me.dlzArray[0]*me.dlzHeight);
-                me.dlzGeom = me.dlz2.createChild("path")
+        } else {
+            me.dlz.setTranslation(me.dlzX,me.dlzY);
+            me.dlz2.removeAllChildren();
+            me.dlzArrow.setTranslation(0,-me.dlzArray[4]/me.dlzArray[0]*me.dlzHeight);
+            me.dlzGeom = me.dlz2.createChild("path")
                     .moveTo(0, -me.dlzArray[3]/me.dlzArray[0]*me.dlzHeight)
                     .lineTo(0, -me.dlzArray[2]/me.dlzArray[0]*me.dlzHeight)
                     .lineTo(me.dlzWidth, -me.dlzArray[2]/me.dlzArray[0]*me.dlzHeight)
@@ -234,11 +235,10 @@ var F15HUD = {
                     .lineTo(0, -me.dlzHeight)
                     .setStrokeLineWidth(me.dlzLW)
                     .setColor(0,1,0);
-                me.dlz.show();
-            }
+            me.dlz.show();
         }
-
-
+        
+        
         var  roll_rad = -hdp.roll*3.14159/180.0;
         if (getprop("fdm/jsbsim/systems/electrics/ac-left-main-bus") <= 0 or getprop("sim/model/f15/controls/HUD/brightness") <= 0) {
             me.svg.setVisible(0);
