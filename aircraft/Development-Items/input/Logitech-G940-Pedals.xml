@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Logitech G940 Pedals</name>
+  <axis n="3">
+    <desc type="string">Rudder</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/rudder</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <button>
+    <desc type="string">Flaps Down</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="1">
+    <desc type="string">Elevator Trim Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="2">
+    <desc type="string">Elevator Trim Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+</PropertyList>

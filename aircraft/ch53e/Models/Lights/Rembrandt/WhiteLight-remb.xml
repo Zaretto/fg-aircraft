@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+  <path>HalfSphere.ac</path>
+  
+  <animation>
+    <type>select</type>
+    <object-name>Sphere</object-name>
+    <condition>
+      <and>
+        <property>/sim/rendering/rembrandt/enabled</property>
+        <greater-than>
+          <property>/sim/rendering/shaders/lights</property>
+          <value>1</value>
+        </greater-than>
+      </and>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>light</type>
+    <light-type>spot</light-type>
+    <name>WhiteR</name>
+    <object-name>Sphere</object-name>
+    <nopreview/>
+    <position>
+      <x>0.0</x>
+      <y>0.0</y>
+      <z>0.0</z>
+    </position>
+    <direction>
+      <x>0.0</x>
+      <y>0.0</y>
+      <z>1.0</z>
+    </direction>
+    <ambient>
+      <r>0.08</r>
+      <g>0.08</g>
+      <b>0.08</b>
+      <a>1.0</a>
+    </ambient>
+    <diffuse>
+      <r>0.80</r>
+      <g>0.80</g>
+      <b>0.80</b>
+      <a>1.0</a>
+    </diffuse>
+    <specular>
+      <r>1.00</r>
+      <g>1.00</g>
+      <b>1.10</b>
+      <a>1.0</a>
+    </specular>
+    <dim-factor>
+      <expression>
+        <product>
+          <value>-1</value>
+          <sum>
+            <product>
+              <max>
+                <pow>
+                  <cos><property>/sim/time/sun-angle-rad</property></cos>
+                  <value>0.3</value>
+                </pow>
+                <value>0</value>
+              </max>
+              <value>0.6</value>
+            </product>
+            <value>-1</value>
+          </sum>
+          <property>lightpack/white-light-intensity</property>
+        </product>
+      </expression>
+    </dim-factor>
+    <attenuation>
+      <c>1.0</c>
+      <l>0.05</l>
+      <q>0.1</q>
+    </attenuation>
+    <exponent>0.6</exponent>
+    <cutoff>90</cutoff>
+    <near-m>0.001</near-m>
+    <far-m>30</far-m>
+  </animation>
+
+</PropertyList>

@@ -1,7 +1,7 @@
 var AcModel = props.globals.getNode("sim/model/f-14b");
 var SwCoolOffLight   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var MslPrepOffLight  = AcModel.getNode("controls/armament/acm-panel-lights/msl-prep-off-light");
-var StickSelector    = AcModel.getNode("controls/armament/stick-selector");
+var WeaponSelector    = AcModel.getNode("controls/armament/stick-selector");
 var ArmSwitch        = AcModel.getNode("controls/armament/master-arm-switch");
 var ArmLever         = AcModel.getNode("controls/armament/master-arm-lever");
 var GrSwitch         = AcModel.getNode("controls/armament/gun-rate-switch");
@@ -19,15 +19,13 @@ var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
-var aim9_seq   = [];
-var aim9_count = 0;
-Current_aim9   = nil;
+var Current_srm   = nil;
+var Current_mrm   = nil;
+var Current_missile   = nil;
+var sel_missile_count = 0;
 
+aircraft.data.add( WeaponSelector, ArmSwitch, ArmLever);
 
-aircraft.data.add( StickSelector, ArmLever, ArmSwitch );
-
-var FALSE = 0;
-var TRUE  = 1;
 
 # Init
 var weapons_init = func() {
@@ -37,157 +35,57 @@ var weapons_init = func() {
 	system_stop();
 	SysRunning.setBoolValue(0);
 	update_gun_ready();
-	setlistener("controls/armament/trigger", func(Trig) {
+	setlistener("controls/armament/trigger", func(Trig)
+                {
 		# Check selected weapon type and set the trigger listeners.
-		var stick_s = StickSelector.getValue();
-		if ( stick_s == 1 ) {
+                    var weapon_s = WeaponSelector.getValue();
+                    print("Trigger ",weapon_s," ",Trig.getBoolValue());
+                    if ( weapon_s == 1 ) {
 			update_gun_ready();
-			if ( Trig.getBoolValue()) {
+                        if ( Trig.getBoolValue())
+                        {
 				GunStop.setBoolValue(0);
 				fire_gun();
-			} else {
+                        }
+                        else
+                        {
 				GunStop.setBoolValue(1);
 			}
-		} elsif ( (stick_s == 2 or stick_s == 3) and Trig.getBoolValue()) {
+                    }
+                    elsif ( weapon_s == 2 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
+                    elsif ( weapon_s == 3 and Trig.getBoolValue())
+                    {
 			release_aim9();
 		}
 	}, 0, 1);
 }
 
 
+
 # Main loop
 var armament_update = func {
 	# Trigered each 0.1 sec by instruments.nas main_loop() if Master Arm Engaged.
 
-	# Check AIM-9 selected with armament panel switches 1 and 8.
-	# Note in FAD light config, S1 and S8 also have AIM-9.
-	var stick_s = StickSelector.getValue();
-	aim9_seq = [];
-	aim9_count = 0;
-	if ( S0.get_selected() ) {
-		# Check if at least one AIM-9 present on the pylons.
-		# Build AIM-9 launch sequence. FIXME aim-9s in this order: 9-0-8-1.
-		if ( S0.get_type() == "AIM-9" and stick_s == 2) {
-			append(aim9_seq, S0);
-			S0.set_display(1);
-			aim9_count += 1;
-		} elsif ( (S0.get_type() == "AIM-54" or S0.get_type() == "AIM-7")  and stick_s == 3) {
-			append(aim9_seq, S0);
-			S0.set_display(1);
-			aim9_count += 1;
-		} else {
-			S0.set_display(0);
-		}
-		
-	} else {
-		S0.set_display(0);
-	}
-	if ( S1.get_selected() ) {
-		if ( S1.get_type() == "AIM-9"  and stick_s == 2) {
-			append(aim9_seq, S1);
-			S1.set_display(1);
-			aim9_count += 1;
-		} elsif ( (S1.get_type() == "AIM-54" or S1.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S1);
-			S1.set_display(1);
-			aim9_count += 1;
-		} else {
-			S1.set_display(0);
-		}
-	} else {
-		S1.set_display(0);
-	}
-	if ( S3.get_selected() ) {
-		if ( (S3.get_type() == "AIM-54" or S3.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S3);
-			S3.set_display(1);
-			aim9_count += 1;
-		} else {
-			S3.set_display(0);
-		}
-	} else {
-		S3.set_display(0);
-	}
-	if ( S4.get_selected() ) {
-		if ( (S4.get_type() == "AIM-54" or S4.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S4);
-			S4.set_display(1);
-			aim9_count += 1;
-		} else {
-			S4.set_display(0);
-		}
-	} else {
-		S4.set_display(0);
-	}
-	if ( S5.get_selected() ) {
-		if ( (S5.get_type() == "AIM-54" or S5.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S5);
-			S5.set_display(1);
-			aim9_count += 1;
-		} else {
-			S5.set_display(0);
-		}
-	} else {
-		S5.set_display(0);
-	}
-	if ( S6.get_selected() ) {
-		if ( (S6.get_type() == "AIM-54" or S6.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S6);
-			S6.set_display(1);
-			aim9_count += 1;
-		} else {
-			S6.set_display(0);
-		}
-	} else {
-		S6.set_display(0);
-	}
-	if ( S8.get_selected() ) {
-		if ( S8.get_type() == "AIM-9"  and stick_s == 2) {
-			append(aim9_seq, S8);
-			S8.set_display(1);
-			aim9_count += 1;
-		} elsif ( (S8.get_type() == "AIM-54" or S8.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S8);
-			S8.set_display(1);
-			aim9_count += 1;
-		} else {
-			S8.set_display(0);
-		}
-	} else {
-		S8.set_display(0);
-	}
-	if ( S9.get_selected() ) {
-		if ( S9.get_type() == "AIM-9"  and stick_s == 2) {
-			append(aim9_seq, S9);
-			S9.set_display(1);
-			aim9_count += 1;
-		} elsif ( (S9.get_type() == "AIM-54" or S9.get_type() == "AIM-7") and stick_s == 3) {
-			append(aim9_seq, S9);
-			S9.set_display(1);
-			aim9_count += 1;
-		} else {
-			S9.set_display(0);
-		}
-	} else {
-		S9.set_display(0);
-	}
+    print("armament upate ",sel_missile_count);
+    sel_missile_count = get_sel_missile_count();
 	# Turn sidewinder cooling lights On/Off.
-	if ( aim9_count > 0 ) {
-		if (stick_s == 2) {
-			SWCoolOn.setBoolValue(1);
-			SWCoolOff.setBoolValue(0);
-		}
+	if ( sel_missile_count > 0 ) {
+		SWCoolOn.setBoolValue(1);
+		SWCoolOff.setBoolValue(0);
 		update_sw_ready();
 	} else {
 		SWCoolOn.setBoolValue(0);
 		SWCoolOff.setBoolValue(1);
-		# Turn Current_aim9.status to stand by.
+		# Turn Current_srm.status to stand by.
 		#set_status_current_aim9(-1);
 	}
-	SwCount.setValue(aim9_count);
 }
 
-var update_gun_ready = func() {
+var update_gun_ready = func()
+ {
 	var ready = 0;
 	if ( ArmSwitch.getValue() == 2 and GunCount.getValue() > 0 ) {
 		ready = 1;
@@ -222,45 +120,41 @@ var fire_gun = func {
 	}
 }
 
-var update_sw_ready = func() {
+var missile_code_from_ident= func(mty)
+{
+        if (mty == "AIM-9")
+            return "aim9";
+        else if (mty == "AIM-7")
+            return "aim7";
+        else if (mty == "AIM-120")
+            return "aim120";
+        else if (mty == "AIM-54")
+            return "aim54";
+}
+var get_sel_missile_count = func()
+{
+    var rv = 0;
+        if (WeaponSelector.getValue() == 2)
+        {
+            Current_missile = Current_srm;
+            rv = getprop(ac_sim_prop_root~"systems/armament/aim9/count");
+        }
+        else if (WeaponSelector.getValue() == 3)
+        {
+            Current_missile = Current_mrm;
+            rv = getprop(ac_sim_prop_root~"systems/armament/aim7/count")+getprop(ac_sim_prop_root~"systems/armament/aim54/count");
+		}
+        setprop(ac_sim_prop_root~"systems/armament/selected-missile-count",rv);
+        return rv;
+}
+var update_sw_ready_orf = func() {
 	var sw_count = SwCount.getValue();
-	if (sw_count != size(aim9_seq)) {
-		print("Strange "~size(aim9_seq)~" pylons ready, but only counts "~sw_count);
-		return;
-	}
-	
 	#print("SIDEWINDER: sw_count - 1 = ", sw_count - 1);
 	if (StickSelector.getValue() == 2 and ArmSwitch.getValue() == 2) {
-		if (Current_aim9 != nil and Current_aim9.type != "AIM-9") {
-			Current_aim9.status = -1;
-			Current_aim9.del();
-			Current_aim9 = nil;
-		}
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
 			var pylon = aim9_seq[sw_count - 1];
 			#print("FOX2 new !! ", pylon.index, " sw_count - 1 = ", sw_count - 1);
 			Current_aim9 = armament.AIM.new(pylon.index, "AIM-9", "Sidewinder");
-		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
-			Current_aim9.status = 0;	
-			Current_aim9.search();
-		}
-	} elsif (StickSelector.getValue() == 3 and ArmSwitch.getValue() == 2) {
-		var pylon = nil;
-		if (sw_count > 0 and size(aim9_seq) >= sw_count) {
-			pylon = aim9_seq[sw_count - 1];
-		}
-		if (Current_aim9 != nil and pylon != nil and Current_aim9.type != pylon.get_type()) {
-			Current_aim9.status = -1;
-			Current_aim9.del();
-			Current_aim9 = nil;
-		}
-		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
-			var pylon = aim9_seq[sw_count - 1];
-			var name = "Phoenix";
-			if (pylon.get_type() == "AIM-7") {
-				name = "Sparrow";
-			}
-			Current_aim9 = armament.AIM.new(pylon.index, pylon.get_type(), name);
 		} elsif (Current_aim9 != nil and Current_aim9.status == -1) {
 			Current_aim9.status = 0;	
 			Current_aim9.search();	
@@ -270,54 +164,137 @@ var update_sw_ready = func() {
 		SwSoundVol.setValue(0);
 	}
 }
+var update_sw_ready = func()
+{
+	if (WeaponSelector.getValue() > 1 and ArmSwitch.getValue())
+    {
+    	sel_missile_count = get_sel_missile_count();
+        var pylon = -1;
+		if ( (WeaponSelector.getValue() == 2 and (Current_srm == nil or Current_srm.status == 2)  and sel_missile_count > 0 )
+             or (WeaponSelector.getValue() == 3 and (Current_mrm == nil or Current_mrm.status == 2)  and sel_missile_count > 0 ))
+        {
+            print("Missile: sel_missile_count = ", sel_missile_count - 1);
+            foreach (var S; Station.list)
+            {
+#                if (S.get_type() == "AIM-9" and S.get_selected())
+                if (S.get_selected())
+                {
+                    printf("AIM[%d]: %s, %s",S.index, S.get_type(), S.get_selected());
+                    var match = 0;
+                    if (WeaponSelector.getValue() == 2)
+                    {
+                        if (S.get_type() == "AIM-9")
+                        {
+                            match = 1;
+                        }
+                    }
+                    else if (WeaponSelector.getValue() == 3)
+                    {
+                        if (S.get_type() == "AIM-7" or S.get_type() == "AIM-54" or S.get_type() == "AIM-120")
+                            match = 1;
+                    }
+                    if (match)
+                    {
+                        print("New AIM idx=",S.index);
+                        pylon = S.index;
+                        break;
+                    }
+                }
+                else
+                    printf("AIM[%d] *NOT SELECTED IN COCKPIT*: %s, %s",S.index, S.get_type(), S.get_selected());
+
+            }
+            if (pylon >= 0)
+            {
+                if (S.get_type() == "AIM-9" or S.get_type() == "AIM-7" or S.get_type() == "AIM-120" or S.get_type() == "AIM-54")
+                {
+                    print(S.get_type()," new !! ", pylon, " sel_missile_count - 1 = ", sel_missile_count - 1);
+                    if (WeaponSelector.getValue() == 2)
+                        Current_srm = f14.AIM9.new(pylon, S.get_type());
+                    else if (WeaponSelector.getValue() == 3)
+                        Current_mrm = f14.AIM9.new(pylon, S.get_type());
+                }
+                else
+                    print ("Cannot locate ",S.get_type());
+
+            }
+            else
+                print("Error no missile available");
+        }
+        elsif (Current_missile != nil and Current_missile.status == -1)
+        {
+            Current_missile.status = 0;	
+            Current_missile.search();	
+        }
+    }
+    elsif (Current_missile != nil)
+    {
+		Current_missile.status = -1;	
+		SwSoundVol.setValue(0);
+	}
+}
 
 var release_aim9 = func() {
 	#print("RELEASE AIM-9 status: ", Current_aim9.status);
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
-			var phrase = Current_aim9.brevity~" at: " ~ Current_aim9.Tgt.Callsign.getValue();
+			var phrase = "FOX2 at: " ~ Current_aim9.Tgt.Callsign.getValue();
 			if (getprop("payload/armament/msg")) {
 				armament.defeatSpamFilter(phrase);
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
 			# Set the pylon empty:
-			var current_pylon = pop(aim9_seq);
-			current_pylon.set_type("-");
+			var current_pylon = "payload/weight["~Current_missile.ID~"]/selected";
+print("Release ",current_pylon);
+			setprop(current_pylon,"none");
+print("currently ",getprop(current_pylon));
 			armament_update();
-			Current_aim9.release();
+setprop(ac_sim_prop_root~"systems/armament/launch-light",false);
+			Current_missile.release();
+            arm_selector();
 		}
 	}
 }
 
-var set_status_current_aim9 = func(n) {
-	if (Current_aim9 != nil) {
-		Current_aim9.status = n;	
+var set_status_current_aim9 = func(n)
+{
+	if (Current_missile != nil) {
+		Current_missile.status = n;	
 	}
 }
 
 # System start and stop.
 # Timers for weapons system status lights.
-var system_start = func {
+var system_start = func
+{
+    print("Weapons System start");
 	settimer (func { GunRateHighLight.setBoolValue(1); }, 0.3);
 	update_gun_ready();
 	SysRunning.setBoolValue(1);
 	settimer (func { SwCoolOffLight.setBoolValue(1); }, 0.6);
 	settimer (func { MslPrepOffLight.setBoolValue(1); }, 2);
 	settimer (func {
-		if (Current_aim9 != nil and StickSelector.getValue() == 2 and aim9_count > 0) {
-			Current_aim9.status = 0;	
-			Current_aim9.search();	
+                  if (Current_missile != nil and WeaponSelector.getValue() and sel_missile_count > 0) {
+                      Current_missile.status = 0;	
+                      Current_missile.search();	
 		}
 	}, 2.5);
 }
-var system_stop = func {
+
+var system_stop = func
+{
+    print("Weapons System stop");
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
-	foreach (var S; Station.list) {
+
+    setprop(ac_sim_prop_root~"systems/armament/launch-light",false);
+	foreach (var S; Station.list)
+    {
 		S.set_display(0); # initialize bcode (showing weapons set over MP).
 	}
-	if (Current_aim9 != nil) {
+	if (Current_missile != nil)
+    {
 		set_status_current_aim9(-1);	
 	}
 	SwSoundVol.setValue(0);
@@ -343,6 +320,7 @@ var master_arm_lever_toggle = func {
 var master_arm_switch = func(a) {
 	var master_arm_lever = ArmLever.getBoolValue();
 	var master_arm_switch = ArmSwitch.getValue(); # 2 = On, 1 = Off, 0 = training (not operational yet).
+print("master arm ",a);
 	if (a == 1) {
 		if (master_arm_switch == 0) {
 			ArmSwitch.setValue(1);
@@ -383,69 +361,78 @@ var master_arm_cycle = func() {
 	}
 }
 
+var demand_weapons_refresh = func {
+    setprop(ac_sim_prop_root~"controls/armament/weapons-updated", getprop(ac_sim_prop_root~"controls/armament/weapons-updated")+1);
+}
+#
+#
 var arm_selector = func() {
+
 	# Checks to do when rotating the wheel on the stick.
 	update_gun_ready();
-	var stick_s = StickSelector.getValue();
-	if ( stick_s == 0 ) {
+	var weapon_s = WeaponSelector.getValue();
+    print("arm stick selector ",weapon_s);
+    setprop(ac_sim_prop_root~"systems/armament/launch-light",false);
+	if ( weapon_s == 0 ) 
+    {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);
-	} elsif ( stick_s == 1 ) {
-		SwSoundVol.setValue(0);	armament_update();
-
-		set_status_current_aim9(-1);	
-	} elsif ( stick_s == 2 ) {
-		# AIM-9:
-		if (Current_aim9 != nil and ArmSwitch.getValue() == 2 and aim9_count > 0) {
-			Current_aim9.status = 0;	
-			Current_aim9.search();	
+    }
+    elsif ( weapon_s == 2 )
+    {
+		# AIM-9: (SRM)
+		if (Current_srm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
+        {
+            Current_missile = Current_srm;
+			Current_missile.status = 0;	
+			Current_missile.search();	
+            SwSoundVol.setValue(0);
+            set_status_current_aim9(-1);	
+        }
+    }
+    elsif ( weapon_s == 3 )
+    {
+        # MRM
+		if (Current_mrm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
+        {
+            Current_missile = Current_mrm;
+			Current_missile.status = 0;	
+			Current_missile.search();	
 		}
-	} elsif ( stick_s == 3 ) {
-		# AIM-9:
-		if (Current_aim9 != nil and ArmSwitch.getValue() == 2 and aim9_count > 0) {
-			Current_aim9.status = 0;	
-			Current_aim9.search();	
-		}
-	} else {
+	} 
+    else
+    {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);	
 	}
+    var sel=true; # only the next will be selected
+	foreach (var S; Station.list)
+    {
+        S.set_selected(false);
+        if (weapon_s == 3)
+        {
+            if (S.bcode == 2 or S.bcode == 3 or S.bcode == 6)
+            {
+                S.set_selected(sel);
+                sel=false;
+            }
+        }
+        else if (weapon_s == 2)
+        {
+            if (S.bcode == 1)
+            {
+                S.set_selected(sel);
+                sel=false;
+            }
+        }
+#        printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
+		S.set_type(S.get_type()); # initialize bcode.
+	}
+    setprop(ac_sim_prop_root~"controls/armament/weapons-updated", getprop(ac_sim_prop_root~"controls/armament/weapons-updated")+1);
 }
 
 var station_selector = func(n, v) {
 	# n = station number, v = up (-1) or down (1) or toggle (0) as there is two kinds of switches.
-	if ( n == 3 or n == 4 or n == 5 or n == 6 ) {
-		# Only up/neutral allowed.
-		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
-		var state = getprop(selector);
-		if (state != -1) {
-			state = -1;
-		} else {
-			state = 0;
-		}
-		setprop(selector, state);
-		if ( state == 0 ) {
-			if ( n == 6 ) {
-				f14.S6.set_selected(0);
-			} elsif ( n == 3 ) {
-				f14.S3.set_selected(0);
-			} elsif ( n == 4 ) {
-				f14.S4.set_selected(0);
-			} elsif ( n == 5 ) {
-				f14.S5.set_selected(0);
-			}
-		} elsif ( state == -1 ) {
-			if ( n == 6 ) {
-				f14.S6.set_selected(1);
-			} elsif ( n == 3 ) {
-				f14.S3.set_selected(1);
-			} elsif ( n == 4 ) {
-				f14.S4.set_selected(1);
-			} elsif ( n == 5 ) {
-				f14.S5.set_selected(1);
-			}
-		}
-	}
 	if ( n == 0 or n == 7 ) {
 		# Only up/down allowed.
 		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
@@ -487,18 +474,57 @@ var station_selector = func(n, v) {
 }
 
 var station_selector_cycle = func() {
+print("Station selector cycle");
 	# Fast selector, selects with one keyb shorcut all AIM-9 or nothing.
 	# Only to choices ATM.
 	var s = 0;
-	var p0 = getprop("sim/model/f-14b/controls/armament/station-selector[0]");
-	var p7 = getprop("sim/model/f-14b/controls/armament/station-selector[7]");
-	if ( p0 < 1 or p7 < 1 ) { s = 1; }
-	setprop("sim/model/f-14b/controls/armament/station-selector[0]", s);
-	setprop("sim/model/f-14b/controls/armament/station-selector[7]", s);
-	f14.S0.set_selected(s);
-	f14.S1.set_selected(0);
-	f14.S8.set_selected(0);
-	f14.S9.set_selected(s);	
+    if (WeaponSelector.getValue() == 2)
+    {
+        var p0 = getprop("sim/model/f-14b/controls/armament/station-selector[0]");
+        var p7 = getprop("sim/model/f-14b/controls/armament/station-selector[7]");
+        if ( !(p0 or p7)) { s = 1; }
+        setprop("sim/model/f-14b/controls/armament/station-selector[0]", s);
+        setprop("sim/model/f-14b/controls/armament/station-selector[7]", s);
+        f14.S0.set_selected(s);
+        f14.S1.set_selected(0);
+
+        f14.S3.set_selected(0);
+        f14.S4.set_selected(0);
+        f14.S5.set_selected(0);
+        f14.S6.set_selected(0);
+
+        f14.S8.set_selected(0);
+        f14.S9.set_selected(s);	
+    }
+    elsif (WeaponSelector.getValue() == 3)
+    {
+        var p0 = getprop("sim/model/f-14b/controls/armament/station-selector[0]");
+        var p3 = getprop("sim/model/f-14b/controls/armament/station-selector[3]");
+        var p4 = getprop("sim/model/f-14b/controls/armament/station-selector[4]");
+        var p5 = getprop("sim/model/f-14b/controls/armament/station-selector[5]");
+        var p6 = getprop("sim/model/f-14b/controls/armament/station-selector[6]");
+        var p7 = getprop("sim/model/f-14b/controls/armament/station-selector[7]");
+        if ( !(p0 or p3 or p4 or p5 or p6 or p7)) { s = 1; }
+        setprop("sim/model/f-14b/controls/armament/station-selector[0]", s);
+        setprop("sim/model/f-14b/controls/armament/station-selector[3]", s);
+        setprop("sim/model/f-14b/controls/armament/station-selector[4]", s);
+        setprop("sim/model/f-14b/controls/armament/station-selector[5]", s);
+        setprop("sim/model/f-14b/controls/armament/station-selector[6]", s);
+        setprop("sim/model/f-14b/controls/armament/station-selector[7]", s);
+#
+#
+# need to do logic with the SP / PH missile switch
+        f14.S0.set_selected_if_mrm(s);
+        f14.S1.set_selected_if_mrm(0);
+
+        f14.S3.set_selected_if_mrm(s);
+        f14.S4.set_selected_if_mrm(s);
+        f14.S5.set_selected_if_mrm(s);
+        f14.S6.set_selected_if_mrm(s);
+
+        f14.S8.set_selected_if_mrm(0);
+        f14.S9.set_selected_if_mrm(s);	
+    }
 	armament_update();
 }
 
@@ -512,7 +538,7 @@ var impact_listener = func {
   if (awg_9.nearest_u != nil and (getprop("sim/time/elapsed-sec")-last_impact) > 1) {
     var ballistic_name = props.globals.getNode("/ai/models/model-impact3",1).getValue();
     var ballistic = props.globals.getNode(ballistic_name, 0);
-    if (ballistic != nil and ballistic.getName() != "munition") {
+    if (ballistic != nil) {
       var typeNode = ballistic.getNode("impact/type");
       if (typeNode != nil and typeNode.getValue() != "terrain") {
         var lat = ballistic.getNode("impact/latitude-deg").getValue();
@@ -545,47 +571,53 @@ var impact_listener = func {
 # setup impact listener
 setlistener("/ai/models/model-impact3", impact_listener, 0, 0);
 
-var flareCount = -1;
-var flareStart = -1;
-
-var flareLoop = func {
-  # Flare release
-  if (getprop("ai/submodels/submodel[4]/flare-release-snd") == nil) {
-    setprop("ai/submodels/submodel[4]/flare-release-snd", FALSE);
-    setprop("ai/submodels/submodel[4]/flare-release-out-snd", FALSE);
-  }
-  var flareOn = getprop("ai/submodels/submodel[4]/flare-release-cmd");
-  if (flareOn == TRUE and getprop("ai/submodels/submodel[4]/flare-release") == FALSE
-      and getprop("ai/submodels/submodel[4]/flare-release-out-snd") == FALSE
-      and getprop("ai/submodels/submodel[4]/flare-release-snd") == FALSE) {
-    flareCount = getprop("ai/submodels/submodel[4]/count");
-    flareStart = getprop("sim/time/elapsed-sec");
-    setprop("ai/submodels/submodel[4]/flare-release-cmd", FALSE);
-    if (flareCount > 0) {
-      # release a flare
-      setprop("ai/submodels/submodel[4]/flare-release-snd", TRUE);
-      setprop("ai/submodels/submodel[4]/flare-release", TRUE);
-      setprop("rotors/main/blade[3]/flap-deg", flareStart);
-      setprop("rotors/main/blade[3]/position-deg", flareStart);
-    } else {
-      # play the sound for out of flares
-      setprop("ai/submodels/submodel[4]/flare-release-out-snd", TRUE);
-    }
-  }
-  if (getprop("ai/submodels/submodel[4]/flare-release-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
-    setprop("ai/submodels/submodel[4]/flare-release-snd", FALSE);
-    setprop("rotors/main/blade[3]/flap-deg", 0);
-    setprop("rotors/main/blade[3]/position-deg", 0);
-  }
-  if (getprop("ai/submodels/submodel[4]/flare-release-out-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
-    setprop("ai/submodels/submodel[4]/flare-release-out-snd", FALSE);
-  }
-  if (flareCount > getprop("ai/submodels/submodel[4]/count")) {
-    # A flare was released in last loop, we stop releasing flares, so user have to press button again to release new.
-    setprop("ai/submodels/submodel[4]/flare-release", FALSE);
-    flareCount = -1;
-  }
-  settimer(flareLoop, 0.1);
-};
-
-flareLoop();
+setlistener("/payload/weight[0]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[1]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[2]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[3]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[4]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[5]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[6]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[7]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[8]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});
+setlistener("/payload/weight[9]/selected", func(v)
+{
+    demand_weapons_refresh();
+    arm_selector();
+});

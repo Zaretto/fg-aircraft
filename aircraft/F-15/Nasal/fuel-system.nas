@@ -284,7 +284,7 @@ setlistener("sim/model/f15/controls/fuel/refuel-probe-switch", func {
             r_probe.open();
             if (wow)
             {
-                setprop("fdm/jsbsim/propulsion/refuel",0);
+                setprop("fdm/jsbsim/propulsion/refuel",1);
                 setprop("fdm/jsbsim/propulsion/ground-refuel",1);
             }
         }

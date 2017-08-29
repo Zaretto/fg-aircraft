@@ -24,42 +24,16 @@
 
             var self = cmdarg();
             print("Model load F-15 ", self.getPath());
-            
-            var livery_update = aircraft.livery_update.new("Aircraft/F-15/Models/Liveries", 10 );
 
-            # Load the needed modules if it hasn't been done yet.
-            if (!contains(globals, "f15_net"))
-            {
-                print("LOAD F-15 mp network", self.getPath());
-                var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
-
-                if (io.stat(fn_net) == nil)
-                    fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
-
-                if (io.stat(fn_net) == nil)
-                    fn_net = resolvepath("Aircraft/F-15/Nasal") ~ "/mp-network.nas";
-
-                if (io.stat(fn_net) == nil)
-                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
-
-                print("Loading F-15 mp network from ",fn_net);
-                io.load_nasal(fn_net, "f15_net");
-
-                # Initialize network as observer.
-                f15_net.mp_network_init(0);
-            }
-            # set reasonable values for sound volumes
-            setprop("fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
-            setprop("fdm/jsbsim/systems/sound/engine-efflux-r-volume",0.3);
-            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",0);
-            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",0);
-            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",0.3);
-            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",0.3);
-            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",0.8);
-            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",0.8);
-            setprop("fdm/jsbsim/systems/sound/engine-n2-l-volume",0.4);
-            setprop("fdm/jsbsim/systems/sound/engine-n2-r-volume",0.4);
-
+if(find("F-15D.xml", getprop("sim/model/path")) != -1)
+{
+setprop("sim/model/f15/variant","D");
+print ("D variant");
+}
+else
+{
+setprop("sim/model/f15/variant","C");
+}
             var skip = 0;
             var lat = self.getNode("rotors/main/blade[0]/flap-deg");
             var lon = self.getNode("rotors/main/blade[1]/flap-deg");
@@ -138,14 +112,66 @@
             if (skip == 0) {
                 loop();
             }
+            
+            var livery_update = aircraft.livery_update.new("Aircraft/F-15/Models/Liveries", 10 );
+
+            # Load the needed modules if it hasn't been done yet.
+            if (!contains(globals, "f15_net"))
+            {
+                print("LOAD F-15 mp network", self.getPath());
+                var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
+
+                if (io.stat(fn_net) == nil)
+                    fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+
+                if (io.stat(fn_net) == nil)
+                    fn_net = resolvepath("Aircraft/F-15/Nasal") ~ "/mp-network.nas";
+
+                if (io.stat(fn_net) == nil)
+                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+
+                print("Loading F-15 mp network from ",fn_net);
+                io.load_nasal(fn_net, "f15_net");
+
+var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
+
+                if (io.stat(fn_vsd) == nil)
+                    fn_vsd = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/VSD/VSD_main.nas";
+
+                if (io.stat(fn_vsd) == nil)
+                    fn_vsd = resolvepath("Aircraft/F-15/Nasal") ~ "/VSD/VSD_main.nas";
+
+                if (io.stat(fn_vsd) == nil)
+                fn_vsd = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/VSD/VSD_main.nas";
+
+                print("Loading F-15 VSD from ",fn_vsd);
+                io.load_nasal(fn_vsd, "f15vsd");
+
+                # Initialize network as observer.
+                f15_net.mp_network_init(0);
+                emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Model", _module_id));
+            }
+            # set reasonable values for sound volumes
+            setprop("fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-efflux-r-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-l-volume",0);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-augmentation-r-volume",0);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-l-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-exhaust-r-volume",0.3);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-l-volume",0.8);
+            setprop("fdm/jsbsim/systems/sound/engine-jet-intake-r-volume",0.8);
+            setprop("fdm/jsbsim/systems/sound/engine-n2-l-volume",0.4);
+            setprop("fdm/jsbsim/systems/sound/engine-n2-r-volume",0.4);
+
         ]]>
         </load>
 
         <unload>
             <![CDATA[ 
-            print("UNLOAD F-15 ", self.getPath());
+            print("UNLOAD F-15 ", getprop("sim/model/path"));
             #cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
             livery_update.stop();
+            emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15ModelUnload", _module_id));
             ]]>
         </unload>
     </nasal>
@@ -1141,7 +1167,7 @@
         <condition>
             <and>
                 <equals>
-                    <property>sim/multiplay/generic/string[2]</property>
+                    <property>sim/model/f15/variant</property>
                     <value>D</value>
                 </equals>
                 <not>
@@ -1727,7 +1753,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -1753,7 +1779,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <greater-than>

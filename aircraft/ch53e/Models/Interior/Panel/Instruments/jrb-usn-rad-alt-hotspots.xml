@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<PropertyList>
+
+<name>Radar Altimeter Hotspots</name>
+<background>Aircraft/ch53e/Models/Interior/Panel/Instruments/transparent.png</background>
+<w>1024</w>
+<h>1024</h>
+<y-offset>0</y-offset>
+
+<instruments>
+	<instrument>
+		<name/>
+		<x>512</x>
+		<y>512</y>
+		<w>1024</w>
+		<h>1024</h>
+		<w-base>1024</w-base>
+		<h-base>1024</h-base>
+		<actions>
+			<action>
+				<name>decDecicionHeight</name>
+				<button>0</button>
+				<x>-415</x>
+				<y>-425</y>
+				<w>70</w>
+				<h>140</h>
+				<binding>
+					<command>property-adjust</command>
+					<property>sim/model/jrb-usn/radar-altitude-decision-height</property>
+					<step>-10</step>
+					<min>0</min>
+					<max>5000</max>
+					<wrap>false</wrap>
+				</binding>
+			</action>
+			<action>
+				<name>incDecicionHeight</name>
+				<button>0</button>
+				<x>-345</x>
+				<y>-425</y>
+				<w>70</w>
+				<h>140</h>
+				<binding>
+					<command>property-adjust</command>
+					<property>sim/model/jrb-usn/radar-altitude-decision-height</property>
+					<step>10</step>
+					<min>0</min>
+					<max>5000</max>
+					<wrap>false</wrap>
+				</binding>
+			</action>
+		</actions>
+	</instrument>
+</instruments>
+
+</PropertyList>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<PropertyList>
+
+<path>jrb-usn-rad-alt.ac</path>
+
+<animation>
+  <type>material</type>
+  <object-name>RadAltBevel</object-name>
+  <object-name>RadAltNeedle</object-name>
+  <object-name>RadAltBug</object-name>
+  <emission>
+  <red>   0.6 </red>
+  <green> 0.3 </green>
+  <blue>  0.3 </blue>
+  <factor-prop>systems/electrical/outputs/instrument-lights</factor-prop>
+  </emission> 
+</animation>
+
+<animation>
+   <type>noshadow</type>
+</animation>
+
+<animation>
+   <type>alpha-test</type>
+   <alpha-factor>0.05</alpha-factor>
+</animation>
+
+<animation>
+   <type>range</type>
+   <min-m>0</min-m>
+   <max-m>5</max-m>
+</animation>
+
+<!--animation>
+   <type>range</type>
+   <object-name>lowres</object-name>
+   <min-m>0</min-m>
+   <max-m>25</max-m>
+</animation-->
+
+<animation>
+   <type>material</type>
+   <property-base>controls/lighting/flight-instruments/emission</property-base>
+   <emission>
+      <red-prop>red</red-prop>
+      <green-prop>green</green-prop>
+      <blue-prop>blue</blue-prop>
+   </emission>
+</animation>
+
+<animation>
+   <type>material</type>
+   <object-name>RadAltBevel</object-name>
+   <property-base>controls/lighting/panel/emission</property-base>
+   <emission>
+      <red-prop>red</red-prop>
+      <green-prop>green</green-prop>
+      <blue-prop>blue</blue-prop>
+   </emission>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>RadAltNeedle</object-name>
+	<property>position/gear-agl-ft</property>
+	<interpolation>
+		<entry> <ind>0</ind> <dep>0</dep> </entry>
+		<entry> <ind>200</ind> <dep>212</dep> </entry>
+		<entry> <ind>1000</ind> <dep>272</dep> </entry>
+		<entry> <ind>5000</ind> <dep>320</dep> </entry>
+	</interpolation>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>RadAltBug</object-name>
+	<property>sim/model/jrb-usn/radar-altitude-decision-height</property>
+	<interpolation>
+		<entry> <ind>0</ind> <dep>0</dep> </entry>
+		<entry> <ind>200</ind> <dep>212</dep> </entry>
+		<entry> <ind>1000</ind> <dep>272</dep> </entry>
+		<entry> <ind>5000</ind> <dep>320</dep> </entry>
+	</interpolation>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>material</type>
+   <object-name>RadAltDHWarn</object-name>
+	<property-base>sim/model/jrb-usn/radar-altitude-warning/emission</property-base>
+	<emission>
+		<red-prop>red</red-prop>
+		<green-prop>green</green-prop>
+		<blue-prop>blue</blue-prop>
+	</emission>
+</animation>
+
+<!--panel>
+   <path>Aircraft/ch53e/Models/Interior/Panel/Instruments/jrb-usn-rad-alt-hotspots.xml</path>
+   <bottom-right>
+      <x-m>0.009</x-m>
+      <y-m>0.041</y-m>
+      <z-m>-0.041</z-m>
+   </bottom-right>
+   <bottom-left>
+      <x-m>0.009</x-m>
+      <y-m>-0.041</y-m>
+      <z-m>-0.041</z-m>
+   </bottom-left>
+   <top-left>
+      <x-m>0.009</x-m>
+      <y-m>-0.041</y-m>
+      <z-m>0.041</z-m>
+   </top-left>
+</panel-->
+
+</PropertyList>

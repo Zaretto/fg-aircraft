@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<PropertyList>
+
+<path>jrb-usn-adi.ac</path>
+
+<animation>
+   <type>noshadow</type>
+</animation>
+
+<animation>
+	<name>Alpha</name>
+   <type>alpha-test</type>
+	<object-name>W</object-name>
+   <alpha-factor>0.05</alpha-factor>
+</animation>
+
+<animation>
+   <type>range</type>
+   <min-m>0</min-m>
+   <max-m>5</max-m>
+</animation>
+
+<!--animation>
+   <type>range</type>
+   <object-name>lowres</object-name>
+   <min-m>0</min-m>
+   <max-m>25</max-m>
+</animation-->
+
+<animation>
+	<name>InsideMaterial</name>
+   <type>material</type>
+	<object-name>ATTFlag</object-name>
+	<object-name>Face</object-name>
+	<object-name>Offset</object-name>
+	<object-name>W</object-name>
+	<object-name>RollIndicator</object-name>
+	<object-name>TurnIndicator</object-name>
+   <property-base>controls/lighting/flight-instruments/emission</property-base>
+   <emission>
+      <red-prop>red</red-prop>
+      <green-prop>green</green-prop>
+      <blue-prop>blue</blue-prop>
+   </emission>
+</animation>
+
+<animation>
+  <type>material</type>
+  <object-name>ATTFlag</object-name>
+	<object-name>Face</object-name>
+	<object-name>Offset</object-name>
+	<object-name>W</object-name>
+	<object-name>RollIndicator</object-name>
+	<object-name>TurnIndicator</object-name>
+	<object-name>Housing</object-name>
+	<object-name>PitchKnob</object-name>
+	<object-name>RollKnob</object-name>
+  <emission>
+  <red>   0.6 </red>
+  <green> 0.3 </green>
+  <blue>  0.3 </blue>
+  <factor-prop>systems/electrical/outputs/instrument-lights</factor-prop>
+  </emission> 
+</animation>
+
+<animation>
+	<name>OutsideMaterial</name>
+   <type>material</type>
+   <object-name>Housing</object-name>
+	<object-name>PitchKnob</object-name>
+	<object-name>RollKnob</object-name>
+   <property-base>controls/lighting/panel/emission</property-base>
+   <emission>
+      <red-prop>red</red-prop>
+      <green-prop>green</green-prop>
+      <blue-prop>blue</blue-prop>
+   </emission>
+</animation>
+
+<instrumentation>
+	<attitude-indicator>
+		<roll-offset-deg type="double">0</roll-offset-deg>
+	</attitude-indicator>
+</instrumentation>
+
+<!-- Hotspots -->
+
+<panel>
+	<path>Aircraft/ch53e/Models/Interior/Panel/Instruments/jrb-usn-adi-hotspots.xml</path>
+	<bottom-right>
+		<x-m>.015</x-m>
+		<y-m>.068</y-m>
+		<z-m>-.07</z-m>
+	</bottom-right>
+	<bottom-left>
+		<x-m>.015</x-m>
+		<y-m>-.068</y-m>
+		<z-m>-.07</z-m>
+	</bottom-left>
+	<top-left>
+		<x-m>.015</x-m>
+		<y-m>-.068</y-m>
+		<z-m>.07</z-m>
+	</top-left>
+</panel>
+
+<!-- Animations -->
+
+<animation>
+	<type>rotate</type>
+	<object-name>Offset</object-name>
+	<property>instrumentation/attitude-indicator/roll-offset-deg</property>
+	<center>
+		<z-m>.003</z-m>
+	</center>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<name>Roll</name>
+	<object-name>Ball</object-name>
+	<object-name>RollIndicator</object-name>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>Roll</object-name>
+	<property>instrumentation/attitude-indicator/indicated-roll-deg</property>
+	<center>
+		<z-m>.003</z-m>
+	</center>
+	<axis>
+		<x>1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>texmultiple</type>
+	<object-name>Ball</object-name>
+	<transform>
+		<subtype>textranslate</subtype>
+		<property>instrumentation/attitude-indicator/indicated-pitch-deg</property>
+		<factor>.0037</factor>
+		<axis>
+			<y>1</y>
+		</axis>
+	</transform>
+	<transform>
+		<subtype>textranslate</subtype>
+		<property>instrumentation/attitude-indicator/horizon-offset-deg</property>
+		<factor>.0074</factor>
+		<axis>
+			<y>1</y>
+		</axis>
+	</transform>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>RollKnob</object-name>
+	<property>instrumentation/attitude-indicator/roll-offset-deg</property>
+	<factor>-6</factor>
+	<center>
+		<y-m>-.05</y-m>
+		<z-m>-.05</z-m>
+	</center>
+	<axis>
+		<x>1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>PitchKnob</object-name>
+	<property>instrumentation/attitude-indicator/horizon-offset-deg</property>
+	<factor>-6</factor>
+	<center>
+		<y-m>.05</y-m>
+		<z-m>-.05</z-m>
+	</center>
+	<axis>
+		<x>1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>ATTFlag</object-name>
+	<property>sim/model/jrb-usn/ATTFlag-pos-norm</property>
+	<offset-deg>-45</offset-deg>
+	<factor>45</factor>
+	<center>
+		<y-m>-.059</y-m>
+		<z-m>-.012</z-m>
+	</center>
+	<axis>
+		<x>1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>translate</type>
+	<object-name>TurnIndicator</object-name>
+	<property>instrumentation/turn-indicator/indicated-turn-rate</property>
+	<factor>.0052</factor>
+	<axis>
+		<y>1</y>
+	</axis>
+</animation>
+    <effect>
+        <name>ch-53e-panel-knob</name>
+        <inherits-from>Models/Effects/interior/ch-53e-panel-knob</inherits-from>
+        <object-name>PitchKnob</object-name>
+        <object-name>RollKnob</object-name>
+    </effect>
+</PropertyList>
+

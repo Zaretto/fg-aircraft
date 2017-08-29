@@ -10,7 +10,7 @@
 var ht_xcf = 1024;
 var ht_ycf = -1024;
 var ht_xco = 0;
-var ht_yco = -30;
+var ht_yco = 0;
 var ht_debug = 0;
 
 #angular definitions
@@ -25,35 +25,64 @@ var ht_debug = 0;
 #pixels per deg = 21.458507963
 
 # paste into nasal console for debugging
-#aircraft.UpperHUD.canvas._node.setValues({
+#aircraft.MainHUD.canvas._node.setValues({
 #                           "name": "F-15 HUD",
 #                           "size": [1024,1024], 
 #                           "view": [276,106],                       
 #                           "mipmapping": 0     
 #  });
-#aircraft.UpperHUD.svg.setTranslation (-21.0, 37.0);
-#aircraft.LowerHUD.svg.setTranslation (-21.0, -106);
+#aircraft.MainHUD.svg.setTranslation (0, 20.0);
+#aircraft.MainHUD.svg.set("clip", "rect(2,256,276,0)");
+#aircraft.MainHUD.svg.setTranslation (-21.0, 37.0);
+#aircraft.MainHUD.svg.set("clip", "rect(1,256,276,0)");
+#aircraft.MainHUD.svg.set("clip", "rect(10,256,276,0)");
+#aircraft.MainHUD.svg.set("clip-frame", canvas.Element.PARENT);
 
-var pitch_offset = 12;
-var pitch_factor = 19.8;
-var pitch_factor_2 = pitch_factor * 180.0 / 3.14159;
+var pitch_factor=11.18;
+
 var alt_range_factor = (9317-191) / 100000; # alt tape size and max value.
 var ias_range_factor = (694-191) / 1100;
 
+#Pinto: if you know starting x (left/right) and z (up/down), then i just do
+#
+#var changeViewX = -1 * (startViewX-getprop(viewX))*getprop(ghosting_x);
+#var changeViewY = (startViewY-getprop(viewY))*getprop(ghosting_y);
+#
+#where ghosting_x and ghosting_y are parallax adjusting. about 7000
+# trial and error can quickly give you the right values. Then I move the canvas elements by however much changeViewX and changeViewY are.
+# calc of pitch_offset (compensates for AC3D model translated and rotated when loaded. Also semi compensates for HUD being at an angle.)
+#        var Hz_b =    0.80643; # HUD position inside ac model after it is loaded translated and rotated.
+#        var Hz_t =    0.96749;
+#        var Vz   =    getprop("sim/current-view/y-offset-m"); # view Z position (0.94 meter per default)
+#
+#        var bore_over_bottom = Vz - Hz_b;
+#        var Hz_height        = Hz_t-Hz_b;
+#        var hozizon_line_offset_from_middle_in_svg = 0.137; #fraction up from middle
+#        var frac_up_the_hud = bore_over_bottom / Hz_height - hozizon_line_offset_from_middle_in_svg;
+#       var texels_up_into_hud = frac_up_the_hud * me.sy;#sy default is 260
+#       var texels_over_middle = texels_up_into_hud - me.sy/2;
+#
+#
+#        pitch_offset = -texels_over_middle;
+
+#var changeViewX = -1 * (startViewX-getprop(viewX))*getprop(ghosting_x);
+#var changeViewY = (startViewY-getprop(viewY))*getprop(ghosting_y);
+
 var F15HUD = {
-	new : func (svgname, canvas_item,tran_x,tran_y){
+	new : func (svgname){
 		var obj = {parents : [F15HUD] };
 
         obj.canvas= canvas.new({
                 "name": "F-15 HUD",
                     "size": [1024,1024], 
-                    "view": [276,256],
-                    "mipmapping": 1     
+                    "view": [256,296],
+                    "mipmapping": 0,
                     });                          
-                          
-        obj.canvas.addPlacement({"node": canvas_item});
+        obj.view = [0, 1.4000051983, -5];                          
+        obj.canvas.addPlacement({"node": "HUDImage1"});
+        obj.canvas.addPlacement({"node": "HUDImage2"});
         obj.canvas.setColorBackground(0.36, 1, 0.3, 0.00);
-
+        obj.FocusAtInfinity = false;
 # Create a group for the parsed elements
         obj.svg = obj.canvas.createGroup();
  
@@ -61,15 +90,20 @@ var F15HUD = {
         print("HUD Parse SVG ",canvas.parsesvg(obj.svg, svgname));
 
         obj.canvas._node.setValues({
-                "name": "F-15 HUD",
-                    "size": [1024,1024], 
-                    "view": [276,106],                       
-                    "mipmapping": 0     
+                                    "name": "F-15 HUD",
+                                    "size": [1024,1024], 
+                                    "view": [256,296],                       
+                                    "mipmapping": 0     
                     });
-
-        obj.svg.setTranslation (tran_x,tran_y);
+        obj.baseTranslation = [30,30];
+        obj.svg.setTranslation (obj.baseTranslation[0], obj.baseTranslation[1]);
+        obj.svg.set("clip", "rect(11,256,296,0)");
+        obj.svg.set("clip-frame", canvas.Element.PARENT);
+        obj.svg.setScale(0.8,1.18);
 
         obj.ladder = obj.get_element("ladder");
+        obj.ladder.setScale(1,0.558);
+
         obj.VV = obj.get_element("VelocityVector");
         obj.heading_tape = obj.get_element("heading-scale");
         obj.roll_pointer = obj.get_element("roll-pointer");
@@ -206,14 +240,37 @@ var F15HUD = {
 
 
         var  roll_rad = -hdp.roll*3.14159/180.0;
-  
-#pitch ladder
-        me.ladder.setTranslation (0.0, hdp.pitch * pitch_factor+pitch_offset);                                           
-        me.ladder.setCenter (118,830 - hdp.pitch * pitch_factor-pitch_offset);
-        me.ladder.setRotation (roll_rad);
+        if (getprop("fdm/jsbsim/systems/electrics/ac-left-main-bus") <= 0 or getprop("sim/model/f15/controls/HUD/brightness") <= 0) {
+            me.svg.setVisible(0);
+            return;
+        } else {
+            me.svg.setVisible(1);
+        }
+        if(me.FocusAtInfinity)
+          {
+              # parallax correction
+              var current_x = getprop("/sim/current-view/x-offset-m");
+              var current_y = getprop("/sim/current-view/y-offset-m");
+              #        var current_z = getprop("/sim/current-view/z-offset-m");
+        
+              var dx = me.view[0] - current_x;
+              var dy = me.view[1] - current_y;
+              
+              me.svg.setTranslation(me.baseTranslation[0]-dx*1024, me.baseTranslation[1]+dy*1024);
+          }
+        var ptx = 0;
+        var pty = 392+hdp.pitch * pitch_factor;
+
+        me.ladder.setRotation(roll_rad);
+        me.ladder.setTranslation(ptx,pty);
+
+        if (hdp.pitch>0)
+          me.ladder.setCenter (110,900-hdp.pitch*(1815/90));
+        else
+          me.ladder.setCenter (110,900+hdp.pitch*-(1772/90));
   
 # velocity vector
-        me.VV.setTranslation (hdp.VV_x, hdp.VV_y+pitch_offset);
+        me.VV.setTranslation (hdp.VV_x, hdp.VV_y);
 
 #Altitude
         me.alt_range.setTranslation(0, hdp.measured_altitude * alt_range_factor);
@@ -377,11 +434,11 @@ var HUD_DataProvider  = {
         me.IAS = getprop("velocities/airspeed-kt");
         me.Nz = getprop("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
         me.WOW = getprop ("gear/gear[1]/wow") or getprop ("gear/gear[2]/wow");
-        me.alpha = getprop("orientation/alpha-indicated-deg");
-        me.beta = getprop("orientation/side-slip-deg");
+        me.alpha = getprop("orientation/alpha-indicated-deg") or 0;
+        me.beta = getprop("orientation/side-slip-deg") or 0;
         me.altitude_ft =  getprop ("position/altitude-ft");
-        me.heading =  getprop("orientation/heading-deg");
-        me.mach = getprop ("velocities/mach");
+        me.heading =  getprop("orientation/heading-deg") or 0;
+        me.mach = getprop ("instrumentation/airspeed-indicator/indicated-mach") or 0;
         me.measured_altitude = getprop("instrumentation/altimeter/indicated-altitude-ft");
         me.pitch =  getprop ("orientation/pitch-deg");
         me.roll =  getprop ("orientation/roll-deg");
@@ -434,16 +491,15 @@ var HUD_DataProvider  = {
 var hud_data_provider = HUD_DataProvider.new();
 #
 # The F-15C HUD is provided by 2 combiners.
-# We model this accurately by having two instances of the HUD
-# 2015-01-27: Note that the geometry isn't right and the projection needs to be adjusted (somehow) as the
-# image elements in the 3d model are correctly angled and this results in trapezoidal distortion
+# We model this accurately in the geometry by having the two glass panes 
+# which are texture mapped onto a single canvas texture.two instances of the HUD
+# 2016-01-06: The HUD appears slightly trapezoidal (better than previous version
+#             however still could be improved possibly with a transformation matrix.
 
-var UpperHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1", -7,0);
-var LowerHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage2", -7, -106);
+var MainHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1");
 
 var updateHUD = func ()
 {  
     hud_data_provider.update();
-    UpperHUD.update(hud_data_provider);
-    LowerHUD.update(hud_data_provider);
+    MainHUD.update(hud_data_provider);
 }

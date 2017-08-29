@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Logitech G940 Throttle</name>
+  <axis> <!-- Throttle R-->
+    <desc type="string">Throttle</desc>
+    <binding>
+            <command>property-scale</command>
+            <property>/controls/engines/engine[1]/throttle</property>
+            <offset type="double">-1.0</offset>
+            <factor type="double">-0.5</factor>
+    </binding>
+  </axis>
+    <axis n="1">
+        <desc type="string">Throttle</desc>
+        <binding>
+            <command>property-scale</command>
+            <property>/controls/engines/engine[0]/throttle</property>
+            <offset type="double">-1.0</offset>
+            <factor type="double">-0.5</factor>
+        </binding>
+    </axis>
+    <axis n="6">
+        <desc type="string">SideMiniJoy</desc>
+        <low>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">
+                    <![CDATA[ 
+              controls.stepSpoilers(-1);
+]]>
+                </script>
+                <module type="string">__js0</module>
+            </binding>
+        </low>
+        <high>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">
+                    <![CDATA[ 
+              controls.stepSpoilers(1);
+]]>
+                </script>
+                <module type="string">__js0</module>
+            </binding>
+        </high>
+    </axis>
+    <!--0 T1
+    1 T2
+    2 T3 
+    3 T4
+    4 P1 
+    5 P2
+    6 P3
+    7 P4
+    8 P5
+    9  P6
+    10 P7
+    11 P8-->
+    <button n="1">
+        <desc type="string">WeaponCycle</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command type="string">property-adjust</command>
+            <property type="string">sim/model/f15/controls/armament/weapon-selector</property>
+            <step type="string">1</step>
+            <min type="string">0</min>
+            <max type="string">3</max>
+            <repeat type="string">false</repeat>
+            <wrap type="string">true</wrap>
+            <offset type="double">1</offset>
+        </binding>
+    </button>
+    <button n="8">
+        <desc type="string">Flaps Down</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command type="string">nasal</command>
+            <script type="string">controls.flapsDown(1);</script>
+        </binding>
+        <mod-up>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">controls.flapsDown(0);</script>
+            </binding>
+        </mod-up>
+    </button>
+    <button n="4">
+        <desc type="string">Flaps Up</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command type="string">nasal</command>
+            <script type="string">controls.flapsDown(-1);</script>
+        </binding>
+        <mod-up>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">controls.flapsDown(0);</script>
+            </binding>
+        </mod-up>
+    </button>
+    <button n="9">
+        <desc type="string">Gear Down</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command type="string">nasal</command>
+            <script type="string">controls.gearDown(1);</script>
+        </binding>
+        <mod-up>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">controls.gearDown(0);</script>
+            </binding>
+        </mod-up>
+    </button>
+    <button n="5">
+        <desc type="string">Gear Up</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command type="string">nasal</command>
+            <script type="string">controls.gearDown(-1);</script>
+        </binding>
+        <mod-up>
+            <binding>
+                <command type="string">nasal</command>
+                <script type="string">controls.gearDown(0);</script>
+            </binding>
+        </mod-up>
+    </button>
+    <button n="7">
+        <desc type="string">Parking Brake</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command>property-toggle</command>
+            <property>/controls/gear/brake-parking</property>
+        </binding>
+    </button>
+
+</PropertyList>

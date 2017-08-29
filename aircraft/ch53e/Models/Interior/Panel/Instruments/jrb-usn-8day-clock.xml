@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<PropertyList>
+
+<path>jrb-usn-8day-clock.ac</path>
+
+<animation>
+   <type>noshadow</type>
+</animation>
+
+<animation>
+   <type>alpha-test</type>
+   <alpha-factor>0.05</alpha-factor>
+</animation>
+
+<animation>
+   <type>range</type>
+   <min-m>0</min-m>
+   <max-m>5</max-m>
+</animation>
+
+<!--animation>
+   <type>range</type>
+   <object-name>lowres</object-name>
+   <min-m>0</min-m>
+   <max-m>25</max-m>
+</animation-->
+
+<animation>
+   <type>material</type>
+   <property-base>controls/lighting/instruments/emission</property-base>
+   <emission>
+      <red-prop>red</red-prop>
+      <green-prop>green</green-prop>
+      <blue-prop>blue</blue-prop>
+   </emission>
+</animation>
+
+<animation>
+  <type>material</type>
+  <object-name>DayHand</object-name>
+  <object-name>SecondHand</object-name>
+  <object-name>MinuteHand</object-name>
+  <object-name>HourHand</object-name>
+  <emission>
+  <red>   0.6 </red>
+  <green> 0.3 </green>
+  <blue>  0.3 </blue>
+  <factor-prop>systems/electrical/outputs/instrument-lights</factor-prop>
+  </emission> 
+</animation>
+
+<animation>
+   <type>material</type>
+   <object-name>ClockBevel</object-name>
+   <property-base>controls/lighting/panel/emission</property-base>
+   <emission>
+      <red-prop>red</red-prop>
+      <green-prop>green</green-prop>
+      <blue-prop>blue</blue-prop>
+   </emission>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>DayHand</object-name>
+	<property>sim/time/elapsed-sec</property>
+	<factor>0.00001157</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>SecondHand</object-name>
+	<property>sim/time/utc/day-seconds</property>
+	<factor>6</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>MinuteHand</object-name>
+	<property>sim/time/utc/day-seconds</property>
+	<factor>0.1</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>HourHand</object-name>
+	<property>sim/time/utc/day-seconds</property>
+	<factor>0.008333</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>DayHand</object-name>
+	<property>instrumentation/clock/offset-sec</property>
+	<factor>0.00001157</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>SecondHand</object-name>
+	<property>instrumentation/clock/offset-sec</property>
+	<factor>6</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>MinuteHand</object-name>
+	<property>instrumentation/clock/offset-sec</property>
+	<factor>0.1</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<animation>
+	<type>rotate</type>
+	<object-name>HourHand</object-name>
+	<property>instrumentation/clock/offset-sec</property>
+	<factor>0.008333</factor>
+	<axis>
+		<x>-1</x>
+	</axis>
+</animation>
+
+<!--panel>
+   <path>Aircraft/ch53e/Models/Interior/Panel/Instruments/jrb-usn-8day-clock-hotspots.xml</path>
+   <bottom-right>
+      <x-m>0.009</x-m>
+      <y-m>0.041</y-m>
+      <z-m>-0.041</z-m>
+   </bottom-right>
+   <bottom-left>
+      <x-m>0.009</x-m>
+      <y-m>-0.041</y-m>
+      <z-m>-0.041</z-m>
+   </bottom-left>
+   <top-left>
+      <x-m>0.009</x-m>
+      <y-m>-0.041</y-m>
+      <z-m>0.041</z-m>
+   </top-left>
+</panel-->
+
+</PropertyList>

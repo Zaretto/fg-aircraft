@@ -12,12 +12,36 @@
     </gear>
     <fdm>
         <jsbsim>
+            <fcs>
+                <aileron-control  type="double">0</aileron-control>
+                <elevator-control type="double">0</elevator-control>
+                <left-aileron-normalization  type="double">0</left-aileron-normalization>
+            </fcs>
+            <gear>
+                <emergency-handle type="double">0</emergency-handle>
+                <emerg-pos type="double">0</emerg-pos>
+                <emerg-pos-dmd type="double">0</emerg-pos-dmd>
+                <unit n="1">
+                    <locked type="bool">false</locked>
+                </unit>
+                <unit n="2">
+                    <locked type="bool">false</locked>
+                </unit>
+            </gear>
+
             <metrics>
                 <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
-            <gear>
-                <emergency-handle type="double">0</emergency-handle>
-            </gear>
+
+            <propulsion>
+                <engine n="0">
+                    <augmentation-alight type="bool">false</augmentation-alight>
+                </engine>
+                <engine n="1">
+                    <augmentation-alight type="bool">false</augmentation-alight>
+                </engine>
+
+            </propulsion>
             <systems>
                 <hydraulics>
                     <combined-system-psi type="int">2200</combined-system-psi>
@@ -32,7 +56,6 @@
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
                 </catapult>
-
             </systems>
         </jsbsim>
     </fdm>
@@ -41,6 +64,9 @@
         <description>F-15</description>
         <author>Richard Harrison, Enrique Laso, xii</author>
         <status>production</status>
+        <config>
+            <hud-filter type="int">1</hud-filter>
+        </config>
 
         <tags>
             <tag>fighter</tag>
@@ -780,7 +806,7 @@
                         <clsn-light type="bool">false</clsn-light>
                         <!--Constant Angle Collision Steering enabled -->
                     </rio-nav-display>
-                    <uhf n="[0]">
+                    <uhf n="0">
                         <frequencies>
                             <selected-mhz type="int">225000</selected-mhz>
                         </frequencies>
@@ -957,39 +983,43 @@
 
         <multiplay>
             <generic>
-                <float type="double" n="0">0</float> <!-- free     -->
-                <float type="double" n="1">0</float> <!-- free     -->
-                <float type="double" n="2">0</float> <!-- free     -->
-                <float type="double" n="3">0</float> <!-- wing torn, 1 = left, 2 = right, 3 = both(!)-->
-                <float type="double" n="4">0</float> <!-- left elevator  -->
-                <float type="double" n="5">0</float> <!-- right elevator -->
-                <float type="double" n="6">0</float> <!-- refuel probe/door -->
-                <float type="double" n="8" alias="/engines/engine[0]/augmentation-burner" />
-                <float type="double" n="9" alias="/engines/engine[1]/augmentation-burner" />
-                <float type="double" n="10" alias="/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" />
-                <float type="double" n="11" alias="/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" />
-                <float type="double" n="12" alias="/surface-positions/l-ramp1-position-deg" />
-                <float type="double" n="13" alias="/surface-positions/r-ramp1-position-deg" />
-                <float type="double" n="14" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1" />
-                <float type="double" n="15" alias="/fdm/jsbsim/systems/electrics/ac-left-main-bus" />
-                <float type="double" n="16" alias="/engines/engine[0]/afterburner"/>
-                <float type="double" n="17" alias="/engines/engine[1]/afterburner"/>
+                <float n="4">0</float> <!-- left elevator  -->
+                <float n="5">0</float> <!-- right elevator -->
+                <float n="6">0</float> <!-- refuel probe/door -->
+                <float n="8" alias="/engines/engine[0]/augmentation-burner" />
+                <float n="9" alias="/engines/engine[1]/augmentation-burner" />
+                <float n="10" alias="/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" />
+                <float n="11" alias="/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" />
+                <float n="12" alias="/surface-positions/l-ramp1-position-deg" />
+                <float n="13" alias="/surface-positions/r-ramp1-position-deg" />
+                <float n="14" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1" />
+                <float n="15" alias="/fdm/jsbsim/systems/electrics/ac-left-main-bus" />
+                <float n="16" alias="/engines/engine[0]/afterburner"/>
+                <float n="17" alias="/engines/engine[1]/afterburner"/>
 
-                <int type="int" n="0">0</int> <!-- fuel dump      -->
-                <int type="int" n="1">0</int> <!-- formation slimmers -->
-                <int type="int" n="2">0</int> <!-- radar-standby -->
-                <int type="int" n="3">0</int> <!-- collision lights -->
-                <int type="int" n="4">0</int> <!-- position lights -->
-                <int type="int" n="5">0</int> <!-- tail flood  -->
-                <int type="int" n="6">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
-                <int type="int" n="7">0</int> <!-- weapons load -->
+                <int n="0">0</int> <!-- fuel dump      -->
+                <int n="1">0</int> <!-- formation slimmers -->
+                <int n="3">0</int> <!-- collision lights -->
+                <int n="4">0</int> <!-- position lights -->
+                <int n="5">0</int> <!-- tail flood  -->
+                <int n="6">0</int> <!-- taxi/ldg light (bit0 is taxi, bit 1 is landing) -->
+                <int n="7">0</int> <!-- weapons load -->
+                <int n="8" alias="/consumables/fuel/total-fuel-lbs"/>
+                <int n="9" alias="/engines/engine[0]/egt-degC" />
+                <int n="10" alias="/engines/engine[0]/fuel-flow_pph" />
+                <int n="11" alias="/engines/engine[1]/egt-degC" />
+                <int n="12" alias="/engines/engine[1]/fuel-flow_pph" />
+                <int n="13" alias="/instrumentation/airspeed-indicator/indicated-speed-kt" />
+                <int n="14" alias="/instrumentation/radar/radar2-range" />
+                <int n="15" alias="/sim/model/f15/instrumentation/fuel-gauges/total" />
+                <int n="16" alias="/velocities/mach" />
+                <int n="17">0</int> <!-- Radar Status -->
+                <int n="18">0</int> <!-- Total Weight (lbs) -->
                 <string n="0" type="string"></string>
-                <!-- mp-network -->
-                <string n="1" type="string">xxx</string>
-                <string n="2" type="string" alias="/sim/model/f15/variant"/>
                 <string n="13" type="string"></string>
                 <string n="15" type="string"></string>
-                <!-- instruments -->
+                <!-- Emesary multiplayer bridge -->
+                <!--<string n="19" type="string"></string> -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
             <!--<default-model>Aircraft/F-15/Models/f15c.ac</default-model>-->
@@ -1126,9 +1156,10 @@
             <internal archive="y">true</internal>
             <config>
                 <x-offset-m archive="y">0.0</x-offset-m>
-                <y-offset-m archive="y">1.457499884</y-offset-m>
+                <!--<y-offset-m archive="y">1.4874214034</y-offset-m>-->
+                <y-offset-m archive="y">1.4000519827</y-offset-m>
                 <z-offset-m archive="y">-5</z-offset-m>
-                <pitch-offset-deg>-15.3</pitch-offset-deg>
+                <pitch-offset-deg>-8</pitch-offset-deg>
                 <default-field-of-view-deg>85</default-field-of-view-deg>
                 <limits>
                     <enabled type="bool">true</enabled>
@@ -1205,6 +1236,39 @@
                 </limits>
             </config>
         </view>-->
+        <view n="109">
+            <name>Wingman View</name>
+            <type>lookat</type>
+            <internal archive="y">true</internal>
+            <config>
+                <from-model type="bool">false</from-model>
+                <from-model-idx type="int">0</from-model-idx>
+                <eye-lat-deg-path>/position/latitude-deg</eye-lat-deg-path>
+                <eye-lon-deg-path>/position/longitude-deg</eye-lon-deg-path>
+                <eye-alt-ft-path>/position/altitude-ft</eye-alt-ft-path>
+                <eye-heading-deg-path>/orientation/heading-deg</eye-heading-deg-path>
+                <eye-pitch-deg-path>/orientation/pitch-deg</eye-pitch-deg-path>
+                <eye-roll-deg-path>/orientation/roll-deg</eye-roll-deg-path>
+                <at-model type="bool">true</at-model>
+                <at-model-idx type="int">0</at-model-idx>
+                <at-model-roll-damping type="double">2.0</at-model-roll-damping>
+                <at-model-pitch-damping type="double">2.0</at-model-pitch-damping>
+                <at-model-heading-damping type="double">2.0</at-model-heading-damping>
+                <target-x-offset-m type="double">0</target-x-offset-m>
+                <target-y-offset-m type="double">0</target-y-offset-m>
+                <target-z-offset-m type="double">0</target-z-offset-m>
+                <default-field-of-view-deg type="double">55.0</default-field-of-view-deg>
+                <pitch-offset-deg type="double">0</pitch-offset-deg>
+                <heading-offset-deg type="double">0</heading-offset-deg>
+                <roll-offset-deg type="double">0</roll-offset-deg>
+                <x-offset-m type="double">15</x-offset-m>
+                <!-- left(+)/right(-) -->
+                <y-offset-m type="double">0</y-offset-m>
+                <!-- up(+)/down(-) -->
+                <z-offset-m type="double">-13</z-offset-m>
+                <!-- fore(+)/aft(-) -->
+            </config>
+        </view>
 
         <instrumentation>
             <path>Aircraft/F-15/Systems/instrumentation.xml</path>
@@ -1626,14 +1690,17 @@
             <tank n="5">
                 <name>External Wing L</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="6">
                 <name>External Wing R</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="7">
                 <name>Centre External</name>
                 <kill-when-empty type="bool">false</kill-when-empty>
+                <selected type="bool">false</selected >
             </tank>
             <tank n="8">
                 <name>L feed line</name>
@@ -1649,6 +1716,9 @@
     </consumables>
 
     <controls>
+        <seat>
+            <pilot-helmet-volume-attenuation type="int">0</pilot-helmet-volume-attenuation>
+        </seat>
         <armament>
             <trigger type="bool">false</trigger>
             <cycle-mode type="bool">false</cycle-mode>
@@ -2146,6 +2216,9 @@
             <file>Aircraft/F-15/Nasal/rcs.nas</file>
         </rcs>
         <aircraft>
+            <file>Nasal/canvas/MFD_Generic.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/F-15/Nasal/liveries.nas</file>
             <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
             <file>Aircraft/F-15/Nasal/flaps_computer.nas</file>

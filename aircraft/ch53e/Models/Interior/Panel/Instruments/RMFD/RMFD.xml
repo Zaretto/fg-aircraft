@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+	<path>RMFD.ac</path>
+	
+	<animation>
+        <type>material</type>
+        <object-name>LCD</object-name>
+        <object-name>Face</object-name>
+        <object-name>Pitch</object-name>
+        <object-name>AI</object-name>
+        <object-name>AOA</object-name>
+        <object-name>Ring</object-name>
+        <object-name>Compass</object-name>
+        <object-name>ASI.001</object-name>
+        <object-name>ASI.002</object-name>
+        <object-name>ASI.003</object-name>
+        <object-name>ALT.001</object-name>
+        <object-name>ALT.002</object-name>
+        <object-name>ALT.003</object-name>
+        <object-name>ALT.004</object-name>
+        <object-name>ALT.005</object-name>
+        <object-name>HI.001</object-name>
+        <object-name>HI.002</object-name>
+        <object-name>HI.003</object-name>
+        <emission>
+		<red>1</red>
+		<green>1</green>
+		<blue>1</blue>
+        </emission>
+    </animation>
+    
+<!-- Angle of Attack -->
+    
+    <animation>
+        <type>translate</type>
+        <object-name>AOA</object-name>
+        <property>orientation/alpha-deg</property>
+        <factor>0.0011</factor>
+        <axis>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>1.0</z>
+        </axis>
+        <center>
+            <x-m> 0.0000</x-m>
+            <y-m> 0.0594</y-m>
+            <z-m>-0.0033</z-m>
+        </center>
+    </animation>
+    
+<!-- Magnetic Compass -->
+    
+    <animation>
+		<type>textranslate</type>
+		<object-name>Compass</object-name>
+		<property>instrumentation/magnetic-compass/indicated-heading-deg</property>
+		<factor>0.0033</factor>
+		<step>1</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+	</animation>
+	
+<!-- Attitude Indicator -->
+    
+    <animation>
+		<type>rotate</type>
+		<object-name>Face</object-name>
+		<property>orientation/roll-deg</property>
+		<factor>-1</factor>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+	
+	<animation>
+		<type>translate</type>
+		<object-name>Pitch</object-name>
+		<property>orientation/pitch-deg</property>
+		<factor>-0.00035</factor>
+		<min-m>-0.01575</min-m>
+		<max-m>0.01575</max-m>
+		<axis>
+			<x>0.0</x>
+			<y>0.0</y>
+			<z>1.0</z>
+		</axis>
+	</animation>
+	
+	<animation>
+		<type>rotate</type>
+		<object-name>Ring</object-name>
+		<property>orientation/roll-deg</property>
+		<factor>-1</factor>
+        <center>
+            <x-m>0</x-m>
+            <y-m>0</y-m>
+            <z-m>0</z-m>
+        </center>
+		<axis>
+			<x>-1</x>
+			<y>0</y>
+			<z>0</z>
+		</axis>
+	</animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>AI</object-name>
+        <property>orientation/pitch-deg</property>
+        <factor>0.00167</factor>
+        <step>1</step>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+    </animation>  
+	
+<!-- Air Speed Indicator -->
+	
+	<animation>
+        <type>textranslate</type>
+        <object-name>ASI.003</object-name>
+        <property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <factor>0.001</factor>
+        <step>100</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>ASI.003</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+				<value>100</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>ASI.002</object-name>
+        <property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>ASI.002</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+				<value>10</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>ASI.001</object-name>
+        <property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+<!-- Altimeter -->
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>ALT.003</object-name>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.001</factor>
+        <step>100</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>ALT.003</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+				<value>100</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>ALT.004</object-name>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.0001</factor>
+        <step>1000</step>
+        <scroll>20</scroll>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>ALT.004</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+				<value>1000</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>ALT.005</object-name>
+        <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.00001</factor>
+        <step>10000</step>
+        <scroll>20</scroll>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>ALT.005</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+				<value>10000</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+	
+	<animation>
+		<type>select</type>
+		<object-name>ALT.002</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+				<value>10</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+    
+<!-- Heading Indicator -->
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>HI.003</object-name>
+        <property>/instrumentation/heading-indicator/indicated-heading-deg</property>
+        <factor>0.001</factor>
+        <step>100</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>HI.003</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/heading-indicator/indicated-heading-deg</property>
+				<value>100</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>HI.002</object-name>
+        <property>/instrumentation/heading-indicator/indicated-heading-deg</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+    <animation>
+		<type>select</type>
+		<object-name>HI.002</object-name>
+		<condition>
+			<greater-than-equals>
+				<property>/instrumentation/heading-indicator/indicated-heading-deg</property>
+				<value>10</value>
+			</greater-than-equals>
+		</condition>
+	</animation>
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>HI.001</object-name>
+        <property>/instrumentation/heading-indicator/indicated-heading-deg</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    
+</PropertyList>

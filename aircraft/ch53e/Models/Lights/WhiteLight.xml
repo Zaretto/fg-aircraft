@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+  <model>
+    <name>WhiteLightFlare</name>
+    <path>Aircraft/ch53e/Models/Lights/Flares/WhiteLight-flare.xml</path>
+  </model>
+
+  <model>
+    <name>WhiteLightRemb</name>
+    <path>Aircraft/ch53e/Models/Lights/Rembrandt/WhiteLight-remb.xml</path>
+  </model>
+  
+  <animation>
+    <type>select</type>
+    <object-name>WhiteLightFlare</object-name>
+    <object-name>WhiteLightRemb</object-name>
+    <condition>
+      <and>
+        <property>lightpack/white-light-intensity</property>
+        <not><property>sim/crashed</property></not>
+      </and>
+    </condition>
+  </animation>
+
+</PropertyList>

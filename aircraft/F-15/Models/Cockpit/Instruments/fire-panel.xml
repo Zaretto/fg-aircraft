@@ -12,13 +12,13 @@
         <object-name>l-burn-thru-lamp</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
                 <greater-than>
-                    <property>/fdm/jsbsim/propulsion/engine[0]/burn-thru</property>
+                    <property>fdm/jsbsim/propulsion/engine[0]/burn-thru</property>
                     <value>0</value>
                 </greater-than>
             </or>
@@ -29,12 +29,12 @@
         <object-name>r-burn-thru-lamp</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
-                <property>/fdm/jsbsim/propulsion/engine[1]/burn-thru</property>
+                <property>fdm/jsbsim/propulsion/engine[1]/burn-thru</property>
             </or>
         </condition>
     </animation>
@@ -43,7 +43,7 @@
         <object-name>amad-fire-button-lamp</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <property>sim/model/f15/lights/master-test-lights</property>
@@ -54,7 +54,7 @@
         <object-name>fire-button-left-on</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -67,7 +67,7 @@
         <object-name>fire-button-right-on</object-name>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <or>
@@ -81,7 +81,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -89,13 +89,13 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
             <red>  1.000</red>
             <green>0.576</green>
             <blue> 0.161</blue>
-            <red-prop>controls/lighting/panel-red</red-prop>
-            <green-prop>controls/lighting/panel-green</green-prop>
-            <blue-prop>controls/lighting/panel-blue</blue-prop>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
         </emission>
     </animation>
     <effect>

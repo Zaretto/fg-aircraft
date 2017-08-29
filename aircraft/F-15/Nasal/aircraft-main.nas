@@ -252,14 +252,14 @@ var n2_r = getprop("engines/engine[1]/n2");
     if(getprop("sim/current-view/internal"))
         setprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume",
                 0.2
-                + getprop("canopy/position-norm")-getprop("fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation"));
+                + getprop("canopy/position-norm")-getprop("/controls/seat/pilot-helmet-volume-attenuation"));
     else
         setprop("fdm/jsbsim/systems/sound/cockpit-adjusted-external-volume",1);
 
 
     setprop_inrange("fdm/jsbsim/systems/sound/cockpit-effects-volume", 
              0.3
-             - getprop("fdm/jsbsim/systems/ecs/pilot-helmet-volume-attenuation"),0,1);
+             - getprop("/controls/seat/pilot-helmet-volume-attenuation"),0,1);
 
 #
 # cold end of the engines
@@ -385,7 +385,7 @@ var rate4modules = func {
     else
         r4_count = (int)(frame_rate * 0.26667);
 
-    aircraft.updateVSD();
+    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Update4",4));
     aircraft.updateTEWS();
     aircraft.updateMPCD();
     aircraft.electricsFrame();
@@ -396,7 +396,7 @@ updateVolume();
 
 #
 # ensure that we're not ground refuelling in air...
-if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 0))
+if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1))
 {
 setprop("fdm/jsbsim/propulsion/refuel",0);
 setprop("fdm/jsbsim/propulsion/ground-refuel",0);

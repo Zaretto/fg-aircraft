@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+  <model>
+    <name>LandingLightFlash</name>
+    <path>Aircraft/ch53e/Models/Lights/Flares/LandingLight-flash.xml</path>
+  </model>
+
+  <model>
+    <name>LandingLightRemb</name>
+    <path>Aircraft/ch53e/Models/Lights/Rembrandt/LandingLight-remb.xml</path>
+  </model>
+  
+  ><model>
+    <name>LandingLightCone</name>
+    <path>Aircraft/ch53e/Models/Lights/LightCone/LandingLight-cone.xml</path>
+  </model> <!-- uncomment for fake non-rembrandt cones -->
+
+  <animation>
+    <type>select</type>
+    <object-name>LandingLightFlash</object-name>
+    <object-name>LandingLightRemb</object-name>
+    <object-name>LandingLightCone</object-name> <!-- uncomment for fake non-rembrandt cones -->
+    <condition>
+      <and>
+        <property>lightpack/landing-lights-intensity</property>
+        <not><property>sim/crashed</property></not>
+      </and>
+    </condition>
+  </animation>
+
+</PropertyList>

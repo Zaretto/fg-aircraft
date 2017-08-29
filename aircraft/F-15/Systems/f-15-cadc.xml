@@ -21,6 +21,7 @@
 
     <property value="0">systems/afcs/heading-hold-active</property>
     <property value="0">systems/afcs/SAS-roll-demand</property>
+    <property value="0">gear/gear-asym</property>
 
     <property value="0">fcs/yaw-damper-enable</property>
     <property value="0">fcs/pitch-damper-enable</property>
@@ -164,7 +165,7 @@
         </fcs_function>
     </channel>
 
-    <channel name="Auxiliary">
+    <channel name="Auxiliary" execrate="4">
         <pure_gain name="Pilot G">
             <input>accelerations/n-pilot-z-norm</input>
             <gain>-1</gain>
@@ -183,15 +184,19 @@
         <fcs_function name="aero/alpha-indicated-deg">
             <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
             <function>
-                <product>
-                    <sum>
-                        <property> aero/alpha-deg </property>
-                        <value> -0.797 </value>
-                    </sum>
-                    <value>1.231223836</value>
-                </product>
+                <ifthen><eq><property>position/aircraft-on-ground</property><value>1</value></eq>
+                    <value>0</value>
+                    <product>
+                        <sum>
+                            <property> aero/alpha-deg </property>
+                            <value> -0.797 </value>
+                        </sum>
+                        <value>1.231223836</value>
+                    </product>
+                </ifthen>
             </function>
         </fcs_function>
+        
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach</description>
@@ -427,7 +432,7 @@
 
   
 
-    <channel name="SoundFX">
+    <channel name="SoundFX" execrate="4">
         <fcs_function name="fcs/flap-windfx-volume">
             <function>
                 <product>
@@ -702,11 +707,11 @@
 
     <!-- gear related operations -->
 
-    <channel name="gear">
+    <channel name="gear" execrate="4">
         <!-- timer for the gear extension time to fire the warning-->
         <switch name="systems/cadc/gear-transit-timer-delta">
             <default value="0"/>
-            <test value="simulation/dt" logic="AND">
+            <test value="simulation/channel-dt" logic="AND">
                 gear/unit[1]/locked eq 0
             </test>
         </switch>
@@ -788,10 +793,9 @@
                 velocities/vc-kts lt 200
             </test>
         </switch>
-
-
     </channel>
-    <channel name="OWS">
+
+    <channel name="OWS" execrate="4">
         <switch name="systems/cadc/ows-config">
             <description>Overload Warning System Config</description>
             <default value="0"/> <!-- Config A-->

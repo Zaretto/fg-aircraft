@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">SL-6640-SBK BLACK WIDOW Flightstick</name>
+  <axis>
+    <desc type="string">Aileron</desc>
+      <dead-band type="double">0.003</dead-band>
+      <binding>
+          <command>property-scale</command>
+          <property>/controls/flight/aileron</property>
+          <factor type="double">1.0</factor>
+          <offset type="double">0</offset>
+          <power type="int">2</power>
+      </binding>
+  </axis>
+    <axis n="1">
+        <desc>Elevator</desc>
+        <dead-band type="double">0.003</dead-band>
+        <binding>
+            <command>property-scale</command>
+            <property>/controls/flight/elevator</property>
+            <factor type="double">-1.0</factor>
+            <offset type="double">0</offset>
+            <power type="int">2</power>
+        </binding>
+    </axis>
+    <axis n="2">
+    <desc type="string">Throttle</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.throttleAxis();</script>
+    </binding>
+  </axis>
+  <axis n="3">
+    <desc type="string">Rudder</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/rudder</property>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="4">
+    <desc type="string">View Direction</desc>
+    <number>
+      <windows type="string">6</windows>
+      <mac type="string">6</mac>
+      <unix type="string">6</unix>
+    </number>
+    <low>
+      <repeatable type="bool">true</repeatable>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">
+					
+					view.panViewDir(1);
+					
+				</script>
+        <module type="string">__js0</module>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="bool">true</repeatable>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">
+					
+					view.panViewDir(-1);
+					
+				</script>
+        <module type="string">__js0</module>
+      </binding>
+    </high>
+  </axis>
+  <axis n="5">
+    <desc type="string">View Elevation</desc>
+    <number>
+      <windows type="string">7</windows>
+      <mac type="string">7</mac>
+      <unix type="string">7</unix>
+    </number>
+    <low>
+      <repeatable type="bool">true</repeatable>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">
+					
+					view.panViewPitch(-1);
+					
+				</script>
+        <module type="string">__js0</module>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="bool">true</repeatable>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">
+					
+					view.panViewPitch(1);
+					
+				</script>
+        <module type="string">__js0</module>
+      </binding>
+    </high>
+  </axis>
+  <button>
+    <desc type="string">Trigger</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.trigger(1);</script>
+      <module type="string">__js0</module>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.trigger(0);</script>
+        <module type="string">__js0</module>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="1">
+    <desc type="string">Custom</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+                
+                 
+                    if (getprop("sim/model/f15/controls/fuel/refuel-probe-switch"))
+                    {
+                        var v = getprop("/sim/current-view/heading-offset-deg");
+                        if (v != 140)
+                            setprop("/sim/current-view/heading-offset-deg",140);
+                        else
+                            setprop("/sim/current-view/heading-offset-deg",0);
+                    }
+                    else
+                    {
+                        var v = getprop("sim/model/f15/controls/armament/weapon-selector");
+                        v = v + 1;
+                        if (v &gt; 3) v = 0;
+                            setprop("sim/model/f15/controls/armament/weapon-selector",v);
+                    }
+
+            </script>
+      <module type="string">__js0</module>
+    </binding>
+  </button>
+  <button n="2">
+    <desc type="string">Elevator Trim Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="3">
+    <desc type="string">Elevator Trim Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="4">
+    <desc type="string">Brakes</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.applyBrakes(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.applyBrakes(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="5">
+    <desc type="string">Custom</desc>
+    <repeatable type="bool">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+                 
+                    if (getprop("/controls/flight/flaps-direction") == nil)
+                        setprop("/controls/flight/flaps-direction",1);
+
+                    controls.flapsDown(getprop("/controls/flight/flaps-direction"));
+                    var flapsprop = getprop("/controls/flight/flaps");
+                    if ( flapsprop == 1 ) {
+                    gui.popupTip("Flaps fullly extended");
+                    } elsif ( flapsprop == 0 ) {
+                    gui.popupTip("Flaps retracted");
+                    } else {
+                    gui.popupTip(sprintf("Flaps at %i %%", 100 * flapsprop));
+                    }
+                if (getprop("/controls/flight/flaps") == 1)
+setprop("/controls/flight/flaps-direction",-1);
+                if (getprop("/controls/flight/flaps") == 0)
+setprop("/controls/flight/flaps-direction",1);
+
+            </script>
+      <module type="string">__js0</module>
+    </binding>
+  </button>
+  <button n="6">
+    <desc type="string">Custom</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">
+                
+                 
+                    var wowprop = getprop("/gear/gear[0]/wow");
+                    var gearprop = getprop("/controls/gear/gear-down");
+
+                    if (wowprop)
+                    {
+                        if (getprop("/fdm/jsbsim/fcs/steer-maneuver"))
+                        {
+                            gui.popupTip("Maneuver NWS disabled");
+                            setprop("/fdm/jsbsim/fcs/steer-maneuver",0)
+                        }
+                        else
+                        {
+                            gui.popupTip("Maneuver NWS enabled");
+                            setprop("/fdm/jsbsim/fcs/steer-maneuver",1)
+                        }
+                    }
+                    else
+                    {
+                        if (gearprop)
+                        {
+                            controls.gearDown(-1);
+                            gui.popupTip("Gear retracted");
+                        }
+                        else
+                        {
+                            controls.gearDown(1);
+                            gui.popupTip("Gear extended");
+                        }
+                    }
+                    
+            </script>
+      <module type="string">__js0</module>
+    </binding>
+  </button>
+  <button n="7">
+    <desc type="string">Custom</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">property-toggle</command>
+      <property type="string">/controls/gear/brake-parking</property>
+    </binding>
+  </button>
+</PropertyList>

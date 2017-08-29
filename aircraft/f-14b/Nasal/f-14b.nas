@@ -400,6 +400,9 @@ var updateFCS = func {
     f14.engineControls();
 	f14.timedMotions ();
     f14.electricsFrame();
+#
+# slower rate
+    f14.update_weapons_over_mp();
 	f14.registerFCS (); # loop, once per frame.
 }
 

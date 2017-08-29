@@ -34,12 +34,15 @@ var fixAirframe = func {
 	FailureAileron = 0.0;
 	setprop ("sim/model/f15/wings/left-wing-torn", LeftWingTorn);
 	setprop ("sim/model/f15/wings/right-wing-torn", RightWingTorn);
+	setprop ("fdm/jsbsim/gear/damage-reset", 1);
 	repairMe();
+	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 1); }, 1.3);
 }
 
 var computeWingBend = func {
-	var av_currentG = getprop ("sim/model/f15/instrumentation/g-meter/g-max-mooving-average") - 1.0;   # adjust to loading
-    if (av_currentG == nil) return;
+	var _av_currentG = getprop ("sim/model/f15/instrumentation/g-meter/g-max-mooving-average");
+    if (_av_currentG == nil) return;
+	var av_currentG = _av_currentG - 1.0;   # adjust to loading
 	#effects of normal acceleration
 
 	if (currentG >= MaxGreached) MaxGreached = av_currentG;
