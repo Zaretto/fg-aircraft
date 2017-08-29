@@ -64,29 +64,29 @@ var APC_on = func {
     {
 		APCengaged.setBoolValue(1);
 		disengaged_light.setBoolValue(0);
-		setprop ("autopilot/locks/aoa", "APC");
-		setprop ("autopilot/locks/speed", "APC");
+		setprop("autopilot/locks/aoa", "APC");
+		setprop("autopilot/locks/speed", "APC");
 
-    		setprop ("fdm/jsbsim/systems/apc/active",1);
-    		setprop ("fdm/jsbsim/systems/apc/target-vc-kts",getprop("fdm/jsbsim/velocities/vc-kts"));
-    		setprop ("fdm/jsbsim/systems/apc/divergence-pid/initial-integrator-value",getprop("fdm/jsbsim/fcs/throttle-cmd-norm[1]") /  getprop("fdm/jsbsim/systems/apc/throttle-gain"));
+    		setprop("fdm/jsbsim/systems/apc/active",1);
+    		setprop("fdm/jsbsim/systems/apc/target-vc-kts",getprop("fdm/jsbsim/velocities/vc-kts"));
+    		setprop("fdm/jsbsim/systems/apc/divergence-pid/initial-integrator-value",getprop("fdm/jsbsim/fcs/throttle-cmd-norm[1]") /  getprop("fdm/jsbsim/systems/apc/throttle-gain"));
 
         setprop("sim/model/f15/controls/switch-throttle-mode", 1);
 
-#print ("APC on", getprop ("fdm/jsbsim/systems/apc/target-vc-kts"));
+#print ("APC on", getprop("fdm/jsbsim/systems/apc/target-vc-kts"));
 	}
 }
 
 var APC_off = func {
-	setprop ("autopilot/internal/target-speed", 0.0);
+	setprop("autopilot/internal/target-speed", 0.0);
 	APCengaged.setBoolValue(0);
 	disengaged_light.setBoolValue(1);
 	settimer(func { disengaged_light.setBoolValue(0); }, 10);
-	setprop ("autopilot/locks/aoa", "");
-	setprop ("autopilot/locks/speed", "");
+	setprop("autopilot/locks/aoa", "");
+	setprop("autopilot/locks/speed", "");
 
-        setprop ("fdm/jsbsim/systems/apc/active",0);
-        setprop ("fdm/jsbsim/systems/apc/target-vc-kts",0);
+        setprop("fdm/jsbsim/systems/apc/active",0);
+        setprop("fdm/jsbsim/systems/apc/target-vc-kts",0);
 
 #print ("APC off");
 }

@@ -25,7 +25,6 @@
     <property value="0">systems/ecs/bleed-air-source</property>
 
     <property value="0">systems/ecs/canopy-position-dmd</property>
-    <property value="0">systems/ecs/pilot-helmet-volume-attenuation</property>
     <property value="0">systems/ecs/liquid-oxygen-activated</property>
     <!-- oxygen qty; 0 off, 1 normal, 2 emerg-->
     <property value="0">systems/ecs/oxygen-qty-test</property>
@@ -44,7 +43,7 @@
     <property>systems/ecs/windscreen-heater-power-watts</property>
 
 
-    <channel name="Oxygen">
+    <channel name="Oxygen" execrate="4">
 
     <switch name="systems/ecs/oxygen-converter-qty-dmd">
       <default value="1000"/>
@@ -137,7 +136,7 @@
     </channel>
 
 
-    <channel name="Pressurisation">
+    <channel name="Pressurisation"  execrate="4">
 
       <switch name="systems/ecs/pressurisation-active">
       <default value="0.0"/>
@@ -237,7 +236,8 @@
       <output>systems/ecs/cabin-altitude-ft</output>
     </actuator>
   </channel>
-  <channel name="Temperature">
+    
+  <channel name="Temperature" execrate="4">
     
 <!-- simple model of windshield heating.-->
 
@@ -295,7 +295,7 @@
                   <property>systems/ecs/windscreen-heater-power-lv-watts</property>
                   <product>
                       <property>systems/ecs/windscreen-heater-watts-second</property>
-                      <property>simulation/dt</property>
+                      <property>simulation/channel-dt</property>
                   </product>
               </sum>
           </ifthen>
@@ -352,7 +352,7 @@
               <sum>
                   <property>systems/ecs/windscreen-lv-temperature</property>
                   <product>
-                      <property>simulation/dt</property>
+                      <property>simulation/channel-dt</property>
                       <difference>
                           <product>
                               <value>0.0017</value>

@@ -29,7 +29,7 @@ var computeNWS = func {
     setprop("sim/model/f15/instrumentation/gears/nose-wheel-steering-warnlight", NWS_light);
 }
 
-
+setlistener("/gear/serviceable", func(v) { setprop("/fdm/jsbsim/gear/serviceable",v.getValue());});
 # GearDown Control
 # ----------------
 # Hijacked Gear handling so we have a Weight on Wheel security to prevent

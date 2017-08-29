@@ -400,6 +400,9 @@ var updateFCS = func {
     f14.engineControls();
 	f14.timedMotions ();
     f14.electricsFrame();
+#
+# slower rate
+    f14.update_weapons_over_mp();
 	f14.registerFCS (); # loop, once per frame.
 }
 
@@ -536,3 +539,11 @@ var rate2modules = func {
 # launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
 settimer (rate4modules, 1); 
 settimer (rate2modules, 1);
+
+
+var resetView = func () {
+  setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
+  setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
+  setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
+  setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
+}

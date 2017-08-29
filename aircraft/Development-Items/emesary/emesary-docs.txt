@@ -1,0 +1,350 @@
+I've been recently looking at how to improve the way that the F-14 is built and integrating the enhancements that Fabien has made to the missile and radar.
+
+The trouble is that the current implementation is all very interdependent and would massively benefit from being decoupled. This is ideally suited to my standard solution to this sort of problem "Emesary":https://emesary.codeplex.com/documentation
+
+Emesary is a simple and efficient class based interobject communcation system to allow decoupled disparate parts of a system to function together without knowing about each. It allows decoupling and removal of dependencies by using notifications to cause actions or to query values.
+
+h2. Brief introduction to Emesary
+
+Emesary is all about decoupling and removing dependecies, and improving the structure of code. Using Emesary you can more easily define the ***what*** rather than the ***how***. By using what is essential an event driven system it is easy to add or remove modules, and also for extra modules to be inserted that the rest of the aircraft knows nothing about (e.g. FGCamera or the Walker).
+
+Once I've figured it out there will be a multiplayer bridge for Emesary; this will allow selected messages to be routed to participating aircraft over the multiplayer protocol (MP). The important thing here is that the Bridge will decide which messages are routed, it will enable bi-directional communications between aircraft.
+
+Emesary is contained within emesary.nas which needs to be in $FGDATA/Nasal
+
+h3. Core concepts
+
+Emesary has Transmitters, Recipients and Notifications.
+
+Transmitters send out Notifications to all of the Recipients that they have registered. A recipient needs to only implement the Receive method and register itself with the transmitter to receive messages. 
+
+By convention all recipients must return Transmitter.ReceiptStatus_NotProcessed when they do not process a message. 
+
+h2. Transmitter
+
+A transmitter, usually emesary.GlobalTransmitter sends notifications. Each Transmitter must have an Ident.
+
+h2. Recipient
+
+A recipient uses emesary.Recipient as a base class and must provide a Receive method
+
+h2. Notification
+
+A notification must have at least Type and a Value. 
+
+The Type is used to identify the message type and to allow recipients to decide if they can process the notification.
+
+The Value is the most important part of the Notification. There can be other properties in the Notification, but the Value is the one that is the most important and as it is common it is the Value that can be made visible in a debug recipient.
+
+h2. Emesary in NASAL
+
+NASAL doesn't have the rigid structure that you'd find in other object oriented languages, so no interfaces etc. This actually makes the implementation smaller but the core concepts remain the same.
+
+h3. Creating a Transmitter
+
+You can have as many transmitters as you like; however it is usually sufficient to have a single transmitter for all of the Nasal Modules.
+
+For simplicity Emesary instantiates a Transmitter called GlobalTransmitter and referenced via emesary.GlobalTransmitter. The GlobalTransmitter should be used to most implementations, except where there are specialised requirements.
+
+To create a Transmitter you simply do 
+
+<pre>
+    var MyTransmitter =  Transmitter.new("MyTransmitter");
+</pre>
+
+h3. Connecting to a Transmitter
+
+There are two ways to connect to a Transmitter; if you have a Nasal class you can implement a Receive method and register with a Transmitter, or you can add a class to your Nasal module that will receive notifications and act upon them.
+
+h4. Connecting to a class
+
+In both of these examples the Recipient is registered with GlobalTransmitter at the time of creation. This is usually what you would want to do, however you don't need to register during the new method and you can also choose to instantiate your own Transmitter and register with that. Although generally it is better to use the GlobalTransmitter and only create a Transmitter for a good reason.
+
+If you don't already have a base class then create your new class like this
+<pre>
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Receive = func(notification)
+        {
+            if (notification.Type == "SomeNotificationType")
+            {
+                me.count = me.count + 1;
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        emesary.GlobalTransmitter.Register(new_class);
+        # the rest
+    },
+</pre>
+
+If you already have a base class then use the Recipient construct method to subclass and implement the Receive method.
+
+<pre>
+    new: func(_ident)
+    {
+        var obj = {parents : [SomeClass] };
+
+        emesary.Recipient.construct(_ident, obj);
+        obj.Receive = func(notification)
+        {
+            if (notification.Type == "SomeNotificationType")
+            {
+                # Do some work
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        emesary.GlobalTransmitter.Register(obj);
+</pre>
+
+h4. Adding a recipient to a module
+
+If you've got a module (filename.nas) that just has methods and data then 
+
+<pre>
+var MyRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.count = 0;
+        new_class.Receive = func(notification)
+        {
+            if (notification.Type == "SomeNotificationType")
+            {
+                # Do some work
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+</pre>
+
+h2. ReceiptStatus
+
+The ReceiptStatus return value from the Receive method is an important part of the way that Emesary works.
+
+The rules are
+
+# When a notification is not processed by your Receive method you must return **emesary.Transmitter.ReceiptStatus_NotProcessed**
+# When a notification is processed succesfully you should return either **emesary.Transmitter.ReceiptStatus_OK** or **emesary.Transmitter.ReceiptStatus_Fail**
+# When you have definitively processed a notification you can return **emesary.Transmitter.ReceiptStatus_Finished**. A definitive process return will result in no more Recipients being notified. 
+# When you have definitively processed a notification as not possible you can return **emesary.Transmitter.ReceiptStatus_Abort**. A definitive process return will result in no more Recipients being notified. 
+
+A definitive process return will result in no more Recipients being notified. An example of this is when the notification is a request to show the user a message. The message only needs to be shown once so returning **emesary.Transmitter.ReceiptStatus_Finished** tells Emesary to notify no more recipients. 
+
+An example of **emesary.Transmitter.ReceiptStatus_Abort** would be a request that cannot be fulfilled, for example raising the landing gear whilst on the ground. If you ensure that the first Recipient added to the Transmitter returns Abort when on the ground then it will avoid the need to check this condition in any other Recipients.
+
+h2. Send a notification
+
+To send a Notification simply construct a new Notification (or modify the parameters of an already constructed notification to avoid GC) and call **GlobalTransmitter.NotifyAll(notification)**
+
+This could look like this
+
+<pre>
+    emesary.GlobalTransmitter.NotifyAll(LandingGearSwitchNotification.new(1));
+</pre>
+
+You can inspect the value of the 
+
+h2. NotifyAll return value
+
+Notify all will return a **ReceiptStatus** that indicates the overall completion status. This is based on the return value from all recipients. 
+
+# If all Recipients do not process the message the status will be **emesary.Transmitter.ReceiptStatus_NotProcessed**
+# If all Recipients return OK the status will be **emesary.Transmitter.ReceiptStatus_OK**
+# If at least one Recipient returns Fail the status will be **emesary.Transmitter.ReceiptStatus_Fail**
+
+The idea behind the return value of NotifyAll is to allow the sender to take an appropriate action; so if the message wasn't processed at all then maybe show a message, equally if the return value was fail then a differnt message could be shown or maybe a direct action taken.
+
+h3. Example of handling not processed return
+
+<pre>
+    var landing_gear_pos = switch.getValue();
+    var lg_switch = LandingGearSwitchNotification.new(landing_gear_pos);
+    if (emesary.GlobalTransmitter.NotifyAll(lg_switch) == emesary.Transmitter.ReceiptStatus_NotProcessed)
+    {
+        # Not processed so do it ourselves
+        setprop("/controls/gear/gear-down", lg_switch.Value);
+    }
+</pre>
+
+h3. Example of handling fail return
+
+<pre>
+    var landing_gear_pos = switch.getValue();
+    var lg_switch = LandingGearSwitchNotification.new(landing_gear_pos);
+    if (Transmitter.IsFail(emesary.GlobalTransmitter.NotifyAll(lg_switch)))
+    {
+        displayMessage("Landing gear cannot be moved");
+    }
+</pre>
+
+h2. Difference between Emesary and Listeners
+
+Listeners can be used to achieve the same effect as using Emesary, except using Emesary gives you more control over how the message is handled and is less resource intensive. So if you have a multiple listeners on a property it may be necessary to have similar logic on each element.
+
+The other benefit is decoupling. You can have a standard module that performs certain processing when it receives a notification, but often the property that fires this differs between aircraft models. So in this case you can set a listener that will send a notification via the GlobalTransmitter and the standard module will perform the actions without having to know the property that initiates the action.
+
+h2. Using Notifications to return information
+
+It is possible and often very useful to add extra elements into a Notification that can be filled in by the Recipient. An example of this could be getting the current list of available radar returns for TCAS.
+
+<pre>
+    var RadarReturn =
+    {
+        new: func(_callsign, _coord, _hasradar)
+        {
+            var new_class = { parents: [RadarReturn]};
+            new_class.Callsign = _callsign;
+            new_class.Position = _coord;
+            new_class.HasRadar = _hasradar;
+            return new_class;
+        },
+    };
+
+    var RadarReturnsNotification =
+    {
+        new: func(_value)
+        {
+            var new_class = emesary.Notification.new("RadarReturnNotification", _value);
+            new_class.Returns = [];
+            return new_class;
+        },
+        AddReturn: func(radar_return)
+        {
+            append(me.Returns, radar_return);
+        },
+    };
+</pre>
+
+and in the Radar processing code
+
+<pre>
+        new_class.Receive = func(notification)
+        {
+            if (notification.Type == "RadarReturnsNotification")
+            {
+            	foreach( rr; returns_list )
+                {
+                    notification.AddReturn(rr);
+                    # or possibly notification.AddReturn(RadarReturn.new(rr.get_callsign(), rr.get_position(), rr.get_has_radar());
+                }
+                # Do some work
+                return emesary.Transmitter.ReceiptStatus_Finished;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+</pre>
+
+h2. Emesary as a scheduler
+
+Usually you will have at least one timer inside the Nasal for any given aircraft to perform frequent processing. Sometimes more than one timer is necessary for different rates, and sometimes this will introduce extra dependencies.
+
+Using Emesary you can set a timer that will send out a Notification that will allow all of the registered recipients to perform their required processing. You can obviously send out a less frequent message (for example in only 1 frame out of 4, or every second) for less important processing. The important thing here is that the sending of the notification and therefore the update frequency is only in one place.
+
+So the updateFCS method that usually calls lots of dependent modules can be replaced by the following code. 
+
+<pre>
+    var FrameNotification = 
+    {
+        new: func(_rate)
+        {
+            var new_class = emesary.Notification.new("FrameNotification", _rate);
+            new_class.Rate = _rate;
+            new_class.FrameRate = 60;
+            new_class.FrameCount = 0;
+            new_class.ElapsedSeconds = 0;
+            return new_class;
+        },
+    };
+    
+    var frameNotification = FrameNotification.new(1);
+    
+    var rtExec_loop = func
+    {
+        var frame_rate = getprop("/sim/frame-rate");
+        var elapsed_seconds = getprop("/sim/time/elapsed-sec");
+    
+    #
+    # you can put commonly accessed properties inside the message to improve performance.
+        frameNotification.FrameRate = frame_rate;
+        frameNotification.ElapsedSeconds = elapsed_seconds;
+        frameNotification.CurrentIAS = getprop("velocities/airspeed-kt");
+        frameNotification.CurrentMach = getprop("velocities/mach");
+        frameNotification.CurrentAlt = getprop("position/altitude-ft");
+        frameNotification.wow = getprop("gear/gear[1]/wow") or getprop("gear/gear[2]/wow");
+        frameNotification.Alpha = getprop("orientation/alpha-indicated-deg");
+        frameNotification.Throttle = getprop("controls/engines/engine/throttle");
+        frameNotification.e_trim = getprop("controls/flight/elevator-trim");
+        frameNotification.deltaT = getprop ("sim/time/delta-sec");
+        frameNotification.current_aileron = getprop("surface-positions/left-aileron-pos-norm");
+        frameNotification.currentG = getprop ("accelerations/pilot-gdamped");
+    
+    
+        if (frameNotification.FrameCount >= 4)
+        {
+            frameNotification.FrameCount = 0;
+        }
+        emesary.GlobalTransmitter.NotifyAll(frameNotification);
+    
+        frameNotification.FrameCount = frameNotification.FrameCount + 1;
+    
+        settimer(rtExec_loop, 0);
+    }
+    settimer(rtExec_loop, 1);
+
+</pre>
+
+Then inside each module have a recipient that will receive the appropriate notification and perform the required processing.
+
+For example inside our engines.nas we could do this
+
+<pre>
+    var enginesRecipient = emesary.Recipient.new("Engines");
+    enginesRecipient.Receive = func(notification)
+    {
+        if (notification.Type == "FrameNotification" and notification.FrameCount == 2)
+        {
+            #print("recv: ",notification.Type, " ", notification.ElapsedSeconds);
+            if (APCengaged.getBoolValue())
+            {
+    		    if ( wow or !getprop("engines/engine[0]/running") or !getprop("engines/engine[1]/running"))
+    	            APC_off();
+    	    }
+            return emesary.Transmitter.ReceiptStatus_OK;
+        }
+        return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
+    }
+    emesary.GlobalTransmitter.Register(enginesRecipient);
+</pre>
+
+h2. Troubleshooting
+
+The most common errors are;
+
+# Ensure that you have registered your recipient with emesary.GlobalTransmitter
+# Check that the notification type is correctly spelt
+# Not returning the appropriate receipt status.
+# Not sending the right message
+
+h3. Debugging
+
+Debugging is easy; just add a recipient that will print out the contents of the message.
+
+<pre>
+    var debugRecipient = emesary.Recipient.new("Debug");
+    debugRecipient.Receive = func(notification)
+    {
+        if (notification.Type != "FrameNotification")
+        {
+            print("recv: ",notification.Type, " ", notification.Value);
+        }
+        return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
+    }
+    emesary.GlobalTransmitter.Register(debugRecipient);
+</pre>

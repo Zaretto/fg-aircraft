@@ -284,7 +284,7 @@ setlistener("sim/model/f15/controls/fuel/refuel-probe-switch", func {
             r_probe.open();
             if (wow)
             {
-                setprop("fdm/jsbsim/propulsion/refuel",0);
+                setprop("fdm/jsbsim/propulsion/refuel",1);
                 setprop("fdm/jsbsim/propulsion/ground-refuel",1);
             }
         }
@@ -335,7 +335,10 @@ var internal_restore_fuel = func() {
 	var i = 0;
 	foreach (var t; Tank.list) {
 #    print(" -- ",t.name," = ",t.level_lbs.getValue());
+        if (i < size(level_list))
 		t.set_level(level_list[i]);
+	    else
+		    print("ERROR: Fuel restore level not saved -- ",t.name," = ",t.level_lbs.getValue());
 		i += 1;
 	}
 }

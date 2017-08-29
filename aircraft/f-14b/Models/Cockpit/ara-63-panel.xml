@@ -39,33 +39,32 @@
 
 
     <animation>
-        <type>rotate</type>
+        <type>knob</type>
         <object-name>channel-switch</object-name>
         <property>sim/model/f-14b/controls/electrics/ara-63-channel</property>
-        <interpolation>
-            <entry>
-                <ind>0</ind>
-                <dep>50</dep>
-            </entry>
-            <entry>
-                <ind>1</ind>
-                <dep>0</dep>
-            </entry>
-            <entry>
-                <ind>2</ind>
-                <dep>-50</dep>
-            </entry>
-        </interpolation>
+        <factor>-18</factor>
+        <offset-deg>18</offset-deg>
         <center>
-            <x-m>-0.0229</x-m>
-            <y-m>-0.0170</y-m>
-            <z-m> 0.0106</z-m>
+            <x-m>-0.0218</x-m>
+            <y-m>-0.0215</y-m>
+            <z-m> 0.0078</z-m>
         </center>
         <axis>
             <x>0</x>
             <y>0</y>
             <z>1</z>
         </axis>
+        <!-- ARA-63 Doesn't seem to have a channel 2, starts at 1 and goes to 3, so we will model it from 2 and effectively 2 is treated as 1-->
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/electrics/ara-63-channel</property>
+                <factor>1</factor>
+                <min>2</min>
+                <max>20</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
     </animation>
 
 	<!-- lighting -->

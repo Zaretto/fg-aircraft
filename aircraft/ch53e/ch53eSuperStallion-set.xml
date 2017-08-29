@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+************************************************************************
+* CH-53E : Model defintion. 
+* Pierre Duval, Josh Babcock.
+************************************************************************
+-->
+
+<PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
+    <sim include="Nasal/views.xml">
+
+        <description>Sikorsky CH-53E Super Stallion (Yasim)</description>
+        <author>Pierre Duval, Josh Babcok, StuartC</author>
+        <status>1.5</status>
+        <license>GPL v2</license>
+
+        <tags>
+            <tag>helicopter</tag>
+            <tag>2-engine</tag>
+        </tags>
+        
+        <rating>
+            <FDM type="int">4</FDM>
+            <systems type="int">2</systems>
+            <cockpit type="int">5</cockpit>
+            <model type="int">5</model>
+        </rating>
+
+        <flight-model>yasim</flight-model>
+        <aero>ch53e</aero>
+        <fuel-fraction>0.8</fuel-fraction>
+
+        <flight-recorder include="Systems/flight-recorder.xml"/>
+
+        <startup>
+            <splash-texture>Aircraft/ch53e/ch53e-splash.jpg</splash-texture>
+        </startup>
+
+        <sound>
+            <path>Aircraft/ch53e/Sounds/ch53e-sound.xml</path>
+        </sound>
+
+
+        <model>
+
+            <path archive="y">Aircraft/ch53e/Models/ch53e.xml</path>
+            <livery>
+                <file type="string">default</file>
+            </livery>
+            <map>
+                <default_exit>
+                    <x-offset-m type ="float">-4.5</x-offset-m>
+                    <y-offset-m type ="float">2</y-offset-m>
+                    <head-offset-deg type="double">90.0</head-offset-deg>
+                </default_exit>
+            </map>
+            <ch53e>
+				<particles>
+					<enabled type="bool">true</enabled>
+				</particles>
+			
+                <debug-model type='int'>0</debug-model>
+                <state type="int">0</state>
+                <engine type="float">0.0</engine>
+                <rotor-step-deg type="float">-1.0</rotor-step-deg>
+                <use-old-style-shadow type='bool'>true</use-old-style-shadow>
+                <materials>
+                    <gearHandleGlow>
+                        <emission>
+                            <red type='double'>0</red>
+                            <green type='double'>0</green>
+                            <blue type='double'>0</blue>
+                        </emission>
+                        <ambient>
+                            <red type='double'>0.8</red>
+                            <green type='double'>0.8</green>
+                            <blue type='double'>0.8</blue>
+                        </ambient>
+                    </gearHandleGlow>
+                    <dome-light-color>
+                        <nvg>
+                            <red type='double'>0.5</red>
+                            <green type='double'>0.15</green>
+                            <blue type='double'>0.15</blue>
+                        </nvg>
+                        <unaided>
+                            <red type='double'>1.0</red>
+                            <green type='double'>0.3</green>
+                            <blue type='double'>0.3</blue>
+                        </unaided>
+                    </dome-light-color>
+                    <panel-light-color>
+                        <nvg>
+                            <red type='double'>0.5</red>
+                            <green type='double'>0.15</green>
+                            <blue type='double'>0.15</blue>
+                        </nvg>
+                        <unaided>
+                            <red type='double'>1.0</red>
+                            <green type='double'>0.3</green>
+                            <blue type='double'>0.3</blue>
+                        </unaided>
+                    </panel-light-color>
+                    <instrument-light-color>
+                        <nvg>
+                            <red type='double'>0.2</red>
+                            <green type='double'>0.7</green>
+                            <blue type='double'>0.0</blue>
+                        </nvg>
+                        <unaided>
+                            <red type='double'>1.0</red>
+                            <green type='double'>0.1</green>
+                            <blue type='double'>0.3</blue>
+                        </unaided>
+                    </instrument-light-color>
+                    <flight-instrument-light-color>
+                        <nvg>
+                            <red type='double'>0.2</red>
+                            <green type='double'>0.7</green>
+                            <blue type='double'>0.0</blue>
+                        </nvg>
+                        <unaided>
+                            <red type='double'>1.0</red>
+                            <green type='double'>0.1</green>
+                            <blue type='double'>0.3</blue>
+                        </unaided>
+                    </flight-instrument-light-color>
+                </materials>
+                <control-pos>
+                    <LandingGearEmergExt-pos-norm type='double'>0</LandingGearEmergExt-pos-norm>
+                    <LandingGearEmergExt-rot-norm type='double'>0</LandingGearEmergExt-rot-norm>
+                    <TacanMajFreqSel-rot-deg type='double'>0</TacanMajFreqSel-rot-deg>
+                </control-pos>
+                <control-input>
+                    <emergency-gear-release type='int'>0</emergency-gear-release>
+                    <stick-pos-test type='int'>0</stick-pos-test>
+                    <stick-pos-bright-norm type='double' userarchive='y'/>
+                    <caution-bright-norm type='double' userarchive='y'/>
+                    <probe-extend type='int' userarchive='y'>0</probe-extend>
+                    <fuel-button n="0" type="bool">false</fuel-button>
+                    <fuel-button n="1" type="bool">false</fuel-button>
+                    <fuel-button n="2" type="bool">false</fuel-button>
+                    <fuel-button n="3" type="bool">false</fuel-button>
+                    <refuel-pwr type="bool">false</refuel-pwr>
+                    <refuel-probe type="bool">false</refuel-probe>
+                    <refuel-purge type="bool">false</refuel-purge>
+                    <eaps>
+                        <cutoff-speed-kts type='int'>40</cutoff-speed-kts>
+                        <sensitivity-kts type='int'>3</sensitivity-kts>
+                        <eaps n='0'>
+                            <command-open type='bool'/>
+                            <mode type='int' userarchive='y'/>
+                            <pos-norm type='double'/>
+                        </eaps>
+                        <eaps n='1'>
+                            <command-open type='bool'/>
+                            <mode type='int' userarchive='y'/>
+                            <pos-norm type='double'/>
+                        </eaps>
+                        <eaps n='2'>
+                            <command-open type='bool'/>
+                            <mode type='int' userarchive='y'/>
+                            <pos-norm type='double'/>
+                        </eaps>
+                    </eaps>
+                    <ramp>
+                        <knob-pos type='int'>0</knob-pos>
+                    </ramp>
+                </control-input>
+				
+				
+				
+            </ch53e>
+            <jrb-usn>
+                <gyro-needle-source n='0'>adf</gyro-needle-source>
+                <gyro-needle-source n='1'>tacan</gyro-needle-source>
+                <radar-altitude-decision-height type='int' userarchive='y'/>
+                <id-249-course-deg type="double" userarchive='y'>0</id-249-course-deg>
+            </jrb-usn>
+        </model>
+
+		 <mp-systems>
+	<radar-enabled type="bool">true</radar-enabled>
+	<ecm-rwr-enabled type="bool">true</ecm-rwr-enabled>
+	<combat-enabled type="bool">true</combat-enabled>
+</mp-systems>
+
+       <multiplay n="0">
+            <chat_display>1</chat_display>
+            <generic>
+				 <!-- Nav lights on -->
+        <!-- Nav lights on -->
+      <int n="0" alias="/controls/switches/nav-lights-switch" />
+      <!-- Beacon on -->
+      <int n="1" alias="/controls/switches/beacon-switch" />
+      <!-- Landing lights on -->
+      <int n="2" alias="/controls/switches/landing-lights-switch" />
+	    <!-- Taxi light on -->
+      <int n="3" alias="/controls/switches/strobe-switch" />
+      <!-- Crashed -->
+      <int n="7" alias="/sim/crashed" />
+				
+	   <float n="5" alias="/instrumentation/doors/passenger/position-norm"/>
+	   <float n="6" alias="/instrumentation/doors/crew/position-norm"/>
+	   <float n="7" alias="/instrumentation/doors/ramp/position-norm"/>
+		<float n="8" alias="/instrumentation/doors/wings/position-norm"/>		
+            </generic>
+        </multiplay>
+
+        <weight n="0">
+            <name>Pilot</name>
+            <weight-lb>180</weight-lb>
+            <max-lb>300</max-lb>
+        </weight>
+
+        <weight n="1">
+            <name>Co-Pilot</name>
+            <weight-lb>180</weight-lb>
+            <max-lb>300</max-lb>
+        </weight>
+
+        <weight n="2">
+            <name>AirCrewMan1</name>
+            <weight-lb>180</weight-lb>
+            <max-lb>300</max-lb>
+        </weight>
+
+        <weight n="3">
+            <name>AirCrewMan2</name>
+            <weight-lb>180</weight-lb>
+            <max-lb>300</max-lb>
+        </weight>
+
+        <weight n="4">
+            <name>Utility Hoist</name>
+            <weight-lb>0</weight-lb>
+            <max-lb>600</max-lb>
+        </weight>
+
+        <weight n="5">
+            <name>Internal</name>
+            <weight-lb>0</weight-lb>
+            <max-lb>30000</max-lb>
+        </weight>
+        
+        <weight n="6">
+            <name>Fore Hook</name>
+            <weight-lb>0</weight-lb>
+            <max-lb>21600</max-lb>
+        </weight>
+
+        <weight n="7">
+            <name>Center Hook</name>
+            <weight-lb>0</weight-lb>
+            <max-lb>32000</max-lb>
+        </weight>
+
+        <weight n="8">
+            <name>Aft Hook</name>
+            <weight-lb>0</weight-lb>
+            <max-lb>21600</max-lb>
+        </weight>
+
+        <help>
+            <title>Sikorsky CH-53E - background and help</title>
+            <line></line>
+            <key>
+                <name>CTRL-d</name>
+                <desc>Crew door and left Window</desc>
+            </key>
+            <key>
+                <name>SHIFT-D</name>
+                <desc>Cargo Ramp</desc>
+            </key>
+            <key>
+                <name>n</name>
+                <desc>Apply rotor brake</desc>
+            </key>
+            <key>
+                <name>f</name>
+                <desc>Rotor blades and tailboom folding</desc>
+            </key>
+            <text>
+                Rotor Folding.
+                The rotor folding is quite simple and works best when the rotors are nearly at the correct position. There are no interlocks so it is possible to fold whilst rotating.
+                To align correctly use the rotor brake (press and hold N to increase braking). The 7th main rotor blade is marked with "V" letter which should be pointing out to the tailboom.
+            </text>
+        </help>
+
+        <menubar include="Dialogs/ch53e-menu.xml"/>
+
+    </sim>
+	
+	<environment>
+    <turbulence>
+      <use-cloud-turbulence>true</use-cloud-turbulence>
+    </turbulence>
+  </environment>
+
+    <controls>
+        <engines>
+            <engine n="0">
+                <magnetos>0</magnetos>
+            </engine>
+        </engines>
+        <gear>
+            <brake-parking>1</brake-parking>
+        </gear>
+        <rotor>
+            <reltarget>1</reltarget>
+            <maxreltorque>1</maxreltorque>
+        </rotor>
+        <lighting>
+            <a-lm-low>0.6</a-lm-low>
+            <a-lm-high>1.0</a-lm-high>
+            <panel-eff-norm>1</panel-eff-norm>
+            <nvg-mode type='bool'>false</nvg-mode>
+            <hover-light type='int'>1</hover-light>
+
+        </lighting>
+
+
+    </controls>
+
+    <instrumentation>
+	
+	 <rwr>
+      <display-lighting-intens type="double">0.4</display-lighting-intens>
+      <symbology-lighting-intens type="double">1</symbology-lighting-intens>
+    </rwr>
+        <enav>
+            <selected type="int">3</selected>
+        </enav>
+		  <radar>
+      <range type="int" archive="y">40</range>
+      <range-factor type="double" archive="n">0.001888</range-factor>
+      <minimized type="bool" archive="y">false</minimized>
+      <selected type="int">3</selected>
+      <!-- inicio en pruebas -->
+      <enabled type="bool">true</enabled>
+      <az-field type="double">140</az-field>
+      <range type="double">150</range>
+      <range-selected type="double">40</range-selected>
+      <radar2-range type="double">150</radar2-range>
+      <display-rdr type="bool">true</display-rdr>
+      <radar-standby type="int">0</radar-standby>
+      <mode>
+        <rws type="bool">true</rws>
+        <tws-auto type="bool">false</tws-auto>
+      </mode>
+    </radar> 
+	
+        <gsdi>
+            <serviceable type="bool">true</serviceable>
+            <enabled type="bool">true</enabled>
+        </gsdi>
+    </instrumentation>
+    <systems>
+        <!--electrical>
+		<path>Aircraft/ch53e/ch53e-electrical.xml</path>
+	</electrical-->
+        <hydraulic>
+            <system n='0'>
+                <stage n='0'>
+                    <psi type='double'>0</psi>
+                </stage>
+                <stage n='1'>
+                    <psi type='double'>0</psi>
+                </stage>
+            </system>
+            <system n='1'>
+                <stage n='0'>
+                    <psi type='double'>0</psi>
+                </stage>
+            </system>
+        </hydraulic>
+	
+		
+		<refuel>
+  <type>probe</type>
+  <serviceable type="bool">true</serviceable>
+ </refuel>
+
+		
+		
+    </systems>
+
+    <consumables>
+        <hydraulic>
+            <tank n="0">
+                <volume-gal_us type="double">5</volume-gal_us>
+                <capacity-gal_us type="double">5</capacity-gal_us>
+            </tank>
+            <tank n="1">
+                <volume-gal_us type="double">5</volume-gal_us>
+                <capacity-gal_us type="double">5</capacity-gal_us>
+            </tank>
+            <tank n="2">
+                <volume-gal_us type="double">5</volume-gal_us>
+                <capacity-gal_us type="double">5</capacity-gal_us>
+            </tank>
+            <tank n="3">
+                <volume-gal_us type="double">5</volume-gal_us>
+                <capacity-gal_us type="double">5</capacity-gal_us>
+            </tank>
+        </hydraulic>
+    </consumables>
+
+    <engines>
+        <engine n='0'>
+            <gear-oil-temp-degf type='double'>70</gear-oil-temp-degf>
+            <egt-degf type='double'>70</egt-degf>
+        </engine>
+        <engine n='1'>
+            <gear-oil-temp-degf type='double'>70</gear-oil-temp-degf>
+            <egt-degf type='double'>70</egt-degf>
+        </engine>
+        <engine n='2'>
+            <gear-oil-temp-degf type='double'>70</gear-oil-temp-degf>
+            <egt-degf type='double'>70</egt-degf>
+        </engine>
+    </engines>
+    <surface-positions>
+        <wing-fold-pos-norm alias="/instrumentation/doors/wings/position-norm" />
+    </surface-positions>
+
+    <input>
+        <keyboard include="Nasal/ch53e-keyboard.xml"/>
+    </input>
+
+    <rotors>
+        <main>
+            <rpm type="double">0</rpm>
+            <cone-deg type="double">0</cone-deg>
+            <cone1-deg type="double">0</cone1-deg>
+            <cone2-deg type="double">0</cone2-deg>
+            <cone3-deg type="double">0</cone3-deg>
+            <cone4-deg type="double">0</cone4-deg>
+        </main>
+    </rotors>
+
+    <nasal>
+        <ch53e>
+            <file>Aircraft/ch53e/Nasal/doors.nas</file>
+            <file>Aircraft/ch53e/Nasal/ch53e.nas</file>
+            <file>Aircraft/ch53e/Nasal/liveries.nas</file>
+           
+            <file>Aircraft/ch53e/Nasal/jrb-usn.nas</file>
+            <file>Aircraft/ch53e/Nasal/interior-lights.nas</file>
+            <file>Aircraft/ch53e/Nasal/ch53e-caution.nas</file>
+            <file>Aircraft/ch53e/Nasal/EngSim.nas</file>
+        </ch53e>
+		
+			
+		<lights>
+      <file>Aircraft/ch53e/Nasal/Lights.nas</file>
+    </lights>
+		
+		<aar> 
+            <file>Aircraft/Generic/aar.nas</file>
+        </aar>	
+		
+		<dual_control_tools>
+   <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
+  </dual_control_tools>
+  <aircraft_dual_control>
+   <file>Aircraft/ch53e/Nasal/ch53-dual-control.nas</file>
+  </aircraft_dual_control>
+  <dual_control>
+   <file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
+  </dual_control>
+		
+    </nasal>
+
+
+</PropertyList>
+

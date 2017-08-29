@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<PropertyList>
+
+<name>Altimeter Hotspots</name>
+<background>Aircraft/ch53e/Models/Interior/Panel/Instruments/transparent.png</background>
+<w>1024</w>
+<h>1024</h>
+<y-offset>0</y-offset>
+
+<instruments>
+	<instrument>
+		<name/>
+		<x>512</x>
+		<y>512</y>
+		<w>1024</w>
+		<h>1024</h>
+		<w-base>1024</w-base>
+		<h-base>1024</h-base>
+		<actions>
+			<action>
+				<name>decInHg</name>
+				<button>0</button>
+				<x>-450</x>
+				<y>-455</y>
+				<w>65</w>
+				<h>130</h>
+				<binding>
+					<command>property-adjust</command>
+					<property>instrumentation/altimeter/setting-inhg</property>
+					<step>-0.01</step>
+					<min>27.0</min>
+					<max>33.0</max>
+					<wrap>false</wrap>
+				</binding>
+			</action>
+			<action>
+				<name>incInHg</name>
+				<button>0</button>
+				<x>-385</x>
+				<y>-455</y>
+				<w>65</w>
+				<h>130</h>
+				<binding>
+					<command>property-adjust</command>
+					<property>instrumentation/altimeter/setting-inhg</property>
+					<step>0.01</step>
+					<min>27.0</min>
+					<max>33.0</max>
+					<wrap>false</wrap>
+				</binding>
+			</action>
+		</actions>
+	</instrument>
+</instruments>
+
+</PropertyList>

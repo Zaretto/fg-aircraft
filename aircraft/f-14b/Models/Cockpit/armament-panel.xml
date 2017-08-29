@@ -74,6 +74,127 @@
 		</action>
 	</animation>
 
+    <animation>
+        <type>knob</type>
+		<object-name>sta-3-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
+        <factor>-30</factor>
+        <center>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0474</y-m>
+            <z-m>-0.0262</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-toggle</command>
+        		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+		<object-name>sta-4-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+        <factor>-30</factor>
+        <center>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0485</y-m>
+            <z-m>-0.0650</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-toggle</command>
+        		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+		<object-name>sta-5-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+        <factor>-30</factor>
+        <center>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0186</y-m>
+            <z-m>-0.0650</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-toggle</command>
+        		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+		<object-name>sta-6-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+        <factor>-30</factor>
+        <center>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0186</y-m>
+            <z-m>-0.0262</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-toggle</command>
+        		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+		<object-name>msl-option-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/msl-option-sw</property>
+        <offset-deg>30</offset-deg>
+        <factor>-30</factor>
+        <center>
+            <x-m>-0.0018</x-m>
+            <y-m>-0.0054</y-m>
+            <z-m>-0.1013</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+        		<property>sim/model/f-14b/controls/armament/msl-option-sw</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
 	<animation>
 		<type>rotate</type>
 		<object-name>sta-8-sw</object-name>
@@ -211,13 +332,4 @@
 			<blue>0.10</blue>
 		</emission>
 	</animation>
-
-
-
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>7</max-m>
-	</animation>
-
 </PropertyList>

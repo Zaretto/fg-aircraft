@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+	<PropertyList>
+
+	<path>pilot.ac</path>
+
+	<animation>
+		<type>select</type>
+		<object-name>body</object-name>
+		<object-name>head</object-name>
+		<condition>
+			<not>
+				<equals>
+					<property>sim/current-view/name</property>
+					<value>Cockpit View</value>
+				</equals>
+			</not>
+		</condition>
+	</animation>
+
+	
+<!-- head movement -->
+
+ <animation>
+    <type>rotate</type>
+   <object-name>head</object-name>
+    <property>controls/flight/elevator</property>
+    <factor> -15 </factor> 
+    <center>
+      <x-m> 0.24 </x-m>
+      <y-m> 0.000 </y-m>
+      <z-m> 0.37 </z-m>
+    </center>
+    <axis>
+      <x> 0.000 </x>
+      <y> 1.000 </y>
+      <z> 0.000 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>head</object-name>
+    <property>controls/flight/rudder</property>
+    <factor>-25</factor>
+    <center>
+      <x-m> 0.24 </x-m>
+      <y-m> 0.000 </y-m>
+      <z-m> 0.37 </z-m>
+    </center>
+    <axis>
+      <x> 0.000 </x>
+      <y> 0.000 </y>
+      <z> 1.000 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>head</object-name>
+    <property>controls/flight/aileron</property>
+    <factor> -10.0</factor>
+    <center>
+      <x-m> 0.24 </x-m>
+      <y-m> 0.000 </y-m>
+      <z-m> 0.37 </z-m>
+    </center>
+    <axis>
+      <x> 1.000 </x>
+      <y> 0.000 </y>
+      <z> 0.000 </z>
+    </axis>
+  </animation> 	
+	
+
+</PropertyList>

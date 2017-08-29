@@ -504,10 +504,528 @@
         </action>
     </animation>
 
+    <!-- Radar Panel-->
+    <animation>
+        <type>knob</type>
+        <object-name>radar-power-knob</object-name>
+        <property>sim/multiplay/generic/int[17]</property>
+        <!--Radar Status	
+                000	high	0
+                001	on	1
+                010	standby	2
+                011	off	3
+        -->
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-90</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>-60</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>3</ind>
+                <dep>30</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.4842</x-m>
+            <y-m>-0.5109</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
 
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/multiplay/generic/int[17]</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    
+    <animation>
+        <type>knob</type>
+        <object-name>radar-el-scan-knob</object-name>
+        <property>instrumentation/radar/el-scan</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.4859</x-m>
+            <y-m>-0.4529</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/el-scan</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>4</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>radar-gmtr-knob</object-name>
+        <property>instrumentation/radar/gmtr</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.4391</x-m>
+            <y-m>-0.4534</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/gmtr</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>radar-spl-mode-knob</object-name>
+        <property>instrumentation/radar/spl-mode</property>
+        <factor>-30</factor>
+        <offset-deg>60</offset-deg>
+        <center>
+            <x-m>-5.367</x-m>
+            <y-m>-0.4547</y-m>
+            <z-m> 0.6677</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/spl-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>7</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    
+    <animation>
+        <type>knob</type>
+        <object-name>radar-mode-knob</object-name>
+        <property>instrumentation/radar/mode</property>
+        <factor>-30</factor>
+        <offset-deg>70</offset-deg>
+        <center>
+            <x-m>-5.3644</x-m>
+            <y-m>-0.5113</y-m>
+            <z-m> 0.6674</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>7</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>radar-framestore-knob</object-name>
+        <property>instrumentation/radar/framestore</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <center>
+            <x-m>-5.4366</x-m>
+            <y-m>-0.5113</y-m>
+            <z-m> 0.6674</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>1</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/radar/framestore</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>3</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <!--IFF PANEL-->
+
+    <animation>
+        <type>knob</type>
+        <object-name>iff-m3a-switch</object-name>
+        <property>instrumentation/transponder/inputs/knob-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>4</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>5</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2677</x-m>
+            <y-m>-0.4571</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/knob-mode</property>
+                <factor>5</factor>
+                <min>0</min>
+                <max>5</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>iff-mc-switch</object-name>
+        <property>instrumentation/transponder/inputs/mc-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>4</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>5</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2677</x-m>
+            <y-m>-0.4571</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/mc-mode</property>
+                <factor>5</factor>
+                <min>0</min>
+                <max>5</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>iff-m2-switch</object-name>
+        <property>instrumentation/transponder/inputs/m2-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>4</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>5</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2677</x-m>
+            <y-m>-0.474</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/m2-mode</property>
+                <factor>5</factor>
+                <min>0</min>
+                <max>5</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>iff-m1-switch</object-name>
+        <property>instrumentation/transponder/inputs/m1-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>4</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>5</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2651</x-m>
+            <y-m>-0.4931</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/m1-mode</property>
+                <factor>5</factor>
+                <min>0</min>
+                <max>5</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>iff-master-switch</object-name>
+        <property>instrumentation/transponder/inputs/master-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2972</x-m>
+            <y-m>-0.446</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/master-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>iff-mode4-1-switch</object-name>
+        <property>instrumentation/transponder/inputs/mode4-1-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2979</x-m>
+            <y-m>-0.5232</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/mode4-1-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>iff-mode4-2-switch</object-name>
+        <property>instrumentation/transponder/inputs/mode4-2-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2976</x-m>
+            <y-m>-0.4989</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/mode4-2-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>iff-out-switch</object-name>
+        <property>instrumentation/transponder/inputs/out-mode</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>20</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>2</ind>
+                <dep>-20</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.2919</x-m>
+            <y-m>-0.4749</y-m>
+            <z-m> 0.6594</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/transponder/inputs/out-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
 
     <!-- EXT LT Panel-->
-
     <animation>
         <type>knob</type>
         <object-name>formation-light-brightness-knob</object-name>
@@ -759,7 +1277,7 @@
     <animation>
         <type>knob</type>
         <object-name>radio2-int-knob</object-name>
-        <property>controls/lighting/radio2-brightness</property>
+        <property>/controls/lighting/radio2-brightness</property>
         <factor>-300</factor>
         <center>
             <x-m>-5.298</x-m>
@@ -775,7 +1293,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/radio2-brightness</property>
+                <property>/controls/lighting/radio2-brightness</property>
                 <factor>0.1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -796,7 +1314,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -839,12 +1357,6 @@
                 <wrap>false</wrap>
             </binding>
         </action>
-        <release>
-            <binding>
-                <command>nasal</command>
-                <script>aircraft.arm_selector();    aircraft.demand_weapons_refresh();</script>
-            </binding>
-        </release>
     </animation>
 
     <animation>
@@ -942,7 +1454,7 @@
     <animation>
         <type>knob</type>
         <object-name>misc-roll-ratio-switch</object-name>
-        <property>/fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+        <property>fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
         <factor>60</factor>
         <offset-deg>-30</offset-deg>
         <center>
@@ -959,7 +1471,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>/fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+                <property>fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -1653,14 +2165,15 @@
                 <script>
                     if(getprop("sim/model/f15/controls/engs/l-eng-master-guard"))
                     {
-                    if (!getprop("engines/engine[0]/running") and  getprop("controls/engines/engine[0]/cutoff"))
+                    if ( (!getprop("engines/engine[0]/running") or getprop("engines/engine[0]/running")=="false") and  getprop("controls/engines/engine[0]/cutoff"))
                     {
                     setprop("controls/engines/engine[0]/starter",1);
-                    print("Set crank L");
                     settimer(func { setprop("controls/engines/engine[0]/cutoff",0) }, 0.2);
-
                     }
-                    else setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    else
+                    {
+                    setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+                    }
                     }
                 </script>
             </binding>
@@ -1728,12 +2241,10 @@
                 <script>
                     if(getprop("sim/model/f15/controls/engs/r-eng-master-guard"))
                     {
-                    if (!getprop("engines/engine[1]/running") and  getprop("controls/engines/engine[1]/cutoff"))
+                    if ( (!getprop("engines/engine[1]/running") or getprop("engines/engine[1]/running")=="false") and  getprop("controls/engines/engine[1]/cutoff"))
                     {
                     setprop("controls/engines/engine[1]/starter",1);
-                    print("Set crank 1");
                     settimer(func { setprop("controls/engines/engine[1]/cutoff",0) }, 0.2);
-
                     }
                     else setprop("controls/engines/engine[1]/cutoff",1-getprop("controls/engines/engine[1]/cutoff"));
                     }
@@ -1820,7 +2331,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-console-right-knob</object-name>
-        <property>controls/lighting/r-console</property>
+        <property>/controls/lighting/r-console</property>
         <factor>-30</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -1837,7 +2348,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/r-console</property>
+                <property>/controls/lighting/r-console</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>10</max>
@@ -1849,7 +2360,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-console-left-knob</object-name>
-        <property>controls/lighting/l-console</property>
+        <property>/controls/lighting/l-console</property>
         <factor>-30</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -1866,7 +2377,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/l-console</property>
+                <property>/controls/lighting/l-console</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>10</max>
@@ -1877,7 +2388,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-aux-inst-knob</object-name>
-        <property>controls/lighting/aux-inst</property>
+        <property>/controls/lighting/aux-inst</property>
         <factor>-30</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -1894,7 +2405,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/aux-inst</property>
+                <property>/controls/lighting/aux-inst</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>10</max>
@@ -1906,7 +2417,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-eng-inst-knob</object-name>
-        <property>controls/lighting/eng-inst</property>
+        <property>/controls/lighting/eng-inst</property>
         <factor>-30</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -1923,7 +2434,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/eng-inst</property>
+                <property>/controls/lighting/eng-inst</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>10</max>
@@ -1936,7 +2447,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-flt-inst-knob</object-name>
-        <property>controls/lighting/flt-inst</property>
+        <property>/controls/lighting/flt-inst</property>
         <factor>-30</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -1953,7 +2464,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/flt-inst</property>
+                <property>/controls/lighting/flt-inst</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>10</max>
@@ -1966,7 +2477,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-storm-flood-knob</object-name>
-        <property>controls/lighting/panel-norm</property>
+        <property>/controls/lighting/panel-norm</property>
         <factor>-300</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -1983,7 +2494,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/panel-norm</property>
+                <property>/controls/lighting/panel-norm</property>
                 <factor>0.1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -2000,7 +2511,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-warn-caution-knob</object-name>
-        <property>controls/lighting/warn-caution</property>
+        <property>/controls/lighting/warn-caution</property>
         <factor>-30</factor>
         <offset-deg>153</offset-deg>
         <center>
@@ -2017,7 +2528,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/warn-caution</property>
+                <property>/controls/lighting/warn-caution</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>10</max>
@@ -2055,7 +2566,7 @@
     <animation>
         <type>knob</type>
         <object-name>lighting-stby-inst-switch</object-name>
-        <property>controls/lighting/stby-inst</property>
+        <property>/controls/lighting/stby-inst</property>
         <factor>-50</factor>
         <offset-deg>20</offset-deg>
         <center>
@@ -2071,7 +2582,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/lighting/stby-inst</property>
+                <property>/controls/lighting/stby-inst</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -2113,7 +2624,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -2121,13 +2632,13 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
             <red>  1.000</red>
             <green>0.576</green>
             <blue> 0.161</blue>
-            <red-prop>controls/lighting/panel-red</red-prop>
-            <green-prop>controls/lighting/panel-green</green-prop>
-            <blue-prop>controls/lighting/panel-blue</blue-prop>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
         </emission>
     </animation>
  
@@ -2136,7 +2647,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -2144,13 +2655,13 @@
             </not>
         </condition>
         <emission>
-            <factor-prop>controls/lighting/panel-norm</factor-prop>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
             <red>  1.000</red>
             <green>0.576</green>
             <blue> 0.161</blue>
-            <red-prop>controls/lighting/panel-red</red-prop>
-            <green-prop>controls/lighting/panel-green</green-prop>
-            <blue-prop>controls/lighting/panel-blue</blue-prop>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
         </emission>
     </animation>
 
@@ -2244,7 +2755,7 @@
                 <property>sim/model/f15/lights/jfs-ready</property>
             </or>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
         </condition>

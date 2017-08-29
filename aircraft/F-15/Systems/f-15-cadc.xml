@@ -21,11 +21,11 @@
 
     <property value="0">systems/afcs/heading-hold-active</property>
     <property value="0">systems/afcs/SAS-roll-demand</property>
+    <property value="0">gear/gear-asym</property>
 
     <property value="0">fcs/yaw-damper-enable</property>
     <property value="0">fcs/pitch-damper-enable</property>
     <property value="0">fcs/roll-sas-enable</property>
-    <property value="0">fcs/external-tanks-fitted</property>
     <property value="0">fcs/aim-fitted</property>
     <property value="0">fcs/steer-maneuver</property>
     <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
@@ -45,6 +45,25 @@
             <input> -metrics/aero-rp-x-in</input>
             <output>inertia/cg-x-offset-chord-in</output>
         </summer>
+       <!-- figure out the factor for the fuel tank aero -->
+       <fcs_function name="metrics/stores-tank-factor">
+           <function>
+               <sum>
+                   <ifthen><ge><property>inertia/pointmass-weight-lbs[1]</property><value>1</value></ge>
+                       <value>0.3</value>
+                       <value>0</value>
+                   </ifthen>
+                   <ifthen><ge><property>inertia/pointmass-weight-lbs[5]</property><value>1</value></ge>
+                       <value>0.4</value>
+                       <value>0</value>
+                   </ifthen>
+                   <ifthen><ge><property>inertia/pointmass-weight-lbs[9]</property><value>1</value></ge>
+                       <value>0.3</value>
+                       <value>0</value>
+                   </ifthen>
+               </sum>
+            </function>
+        </fcs_function>
 
         <pure_gain name="cg-x-chord-percent">
             <description>Percent offset of the CoP from the CG</description>
@@ -146,7 +165,7 @@
         </fcs_function>
     </channel>
 
-    <channel name="Auxiliary">
+    <channel name="Auxiliary" execrate="4">
         <pure_gain name="Pilot G">
             <input>accelerations/n-pilot-z-norm</input>
             <gain>-1</gain>
@@ -165,15 +184,19 @@
         <fcs_function name="aero/alpha-indicated-deg">
             <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 alphaNOSEPROBE + .797deg</description>
             <function>
-                <product>
-                    <sum>
-                        <property> aero/alpha-deg </property>
-                        <value> -0.797 </value>
-                    </sum>
-                    <value>1.231223836</value>
-                </product>
+                <ifthen><eq><property>position/aircraft-on-ground</property><value>1</value></eq>
+                    <value>0</value>
+                    <product>
+                        <sum>
+                            <property> aero/alpha-deg </property>
+                            <value> -0.797 </value>
+                        </sum>
+                        <value>1.231223836</value>
+                    </product>
+                </ifthen>
             </function>
         </fcs_function>
+        
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach</description>
@@ -409,7 +432,7 @@
 
   
 
-    <channel name="SoundFX">
+    <channel name="SoundFX" execrate="4">
         <fcs_function name="fcs/flap-windfx-volume">
             <function>
                 <product>
@@ -684,17 +707,12 @@
 
     <!-- gear related operations -->
 
-    <channel name="gear">
+    <channel name="gear" execrate="4">
         <!-- timer for the gear extension time to fire the warning-->
         <switch name="systems/cadc/gear-transit-timer-delta">
             <default value="0"/>
-            <test value="simulation/dt" logic="AND">
-                /gear/gear[0]/position-norm gt 0
-                /gear/gear[0]/position-norm lt 1
-                /gear/gear[1]/position-norm gt 0
-                /gear/gear[1]/position-norm lt 1
-                /gear/gear[2]/position-norm gt 0
-                /gear/gear[2]/position-norm lt 1
+            <test value="simulation/channel-dt" logic="AND">
+                gear/unit[1]/locked eq 0
             </test>
         </switch>
 
@@ -702,20 +720,25 @@
             <input>systems/cadc/gear-transit-timer</input>
             <output>systems/cadc/gear-transit-timer-ltv</output>
         </summer>
-        <summer name="systems/cadc/gear-transit-timer">
+        <summer name="systems/cadc/gear-transit-timer-nv">
             <input>systems/cadc/gear-transit-timer-ltv</input>
             <input>systems/cadc/gear-transit-timer-delta</input>
-            <output>systems/cadc/gear-transit-timer</output>
         </summer>
+        <switch name="systems/cadc/gear-transit-timer">
+            <default value="systems/cadc/gear-transit-timer-nv"/>
+            <test value="0">
+                gear/unit[1]/locked ne 0
+            </test>
+        </switch>
 
         <!-- warning silence -->
         <switch name="systems/cadc/gear-warn-silence-cmd">
             <default value="0"/>
             <test value="systems/cadc/gear-warn-silence-dmd">
-                gear/gear-dmd-norm ne gear/gear-pos-norm
+                gear/unit[1]/locked eq 0
             </test>
             <test value="systems/cadc/gear-warn-silence-cmd">
-                gear/gear-dmd-norm eq gear/gear-pos-norm
+                gear/unit[1]/locked ne 0
             </test>
         </switch>
 
@@ -725,7 +748,7 @@
                 systems/cadc/gear-warn-silence-dmd ne systems/cadc/gear-warn-silence-cmd
             </test>
             <test value="0">
-                gear/gear-dmd-norm ne gear/gear-pos-norm
+                gear/unit[1]/locked ne 0
             </test>
         </switch>
 
@@ -733,18 +756,23 @@
         <switch name="systems/cadc/gear-warning">
             <description>Landing gear warning light</description>
             <default value="0"/>
-            <test value="1" logic="AND">
+            <test value="2" logic="AND">
+                gear/unit[0]/locked eq 0
+                gear/unit[1]/locked eq 0
+                gear/unit[2]/locked eq 0
+            </test>
+<!--
                 /gear/gear[0]/position-norm gt 0
                 /gear/gear[0]/position-norm lt 1
                 /gear/gear[1]/position-norm gt 0
                 /gear/gear[1]/position-norm lt 1
                 /gear/gear[2]/position-norm gt 0
                 /gear/gear[2]/position-norm lt 1
-            </test>
+-->
             <test value="1" logic="AND">
                 position/h-sl-ft le 10000
                 velocities/v-down-fps gt 4.1666666666666666666666666666667 <!-- 250 FPM -->
-                gear/gear-cmd-norm lt 1
+                gear/unit[1]/locked gt -1
                 velocities/vc-kts lt 200
             </test>
         </switch>
@@ -755,19 +783,19 @@
                 systems/cadc/gear-warn-silence eq 0
                 systems/cadc/gear-warning ne 0
                 systems/cadc/gear-transit-timer  gt 10
+                gear/unit[1]/locked ne -1
             </test>
             <test value="1" logic="AND">
                 systems/cadc/gear-warn-silence eq 0
                 position/h-sl-ft le 10000
                 velocities/v-down-fps gt 4.1666666666666666666666666666667 <!-- 250 FPM -->
-                gear/gear-dmd-norm eq 0
+                gear/unit[1]/locked ne -1
                 velocities/vc-kts lt 200
             </test>
         </switch>
-
-
     </channel>
-    <channel name="OWS">
+
+    <channel name="OWS" execrate="4">
         <switch name="systems/cadc/ows-config">
             <description>Overload Warning System Config</description>
             <default value="0"/> <!-- Config A-->

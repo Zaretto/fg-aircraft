@@ -2,220 +2,15 @@
 # ---------------------------
 # MPCD has many pages; the classes here support multiple pages, menu
 # operation and the update loop.
+# 2016-05-17: Refactor to use Nasal/canvas/MFD_Generic.nas 
 # ---------------------------
 # Richard Harrison: 2015-01-23 : rjh@zaretto.com
 # ---------------------------
 
-setprop ("/sim/startup/terminal-ansi-colors",0);
+#for debug: setprop ("/sim/startup/terminal-ansi-colors",0);
 
-var MPCDcanvas= canvas.new({
-                           "name": "F-15 MPCD",
-                           "size": [1024,1024], 
-                           "view": [740,680],                       
-                           "mipmapping": 1     
-                          });                          
-                          
-MPCDcanvas.addPlacement({"node": "MPCDImage"});
-MPCDcanvas.setColorBackground(0.003921,0.1764,0, 0);
-
-# Create a group for the parsed elements
-var MPCDsvg = MPCDcanvas.createGroup();
- 
-# Parse an SVG file and add the parsed elements to the given group
-print("MPCD : Load SVG ",canvas.parsesvg(MPCDsvg, "Nasal/MPCD/MPCD_0_0.svg"));
-#MPCDsvg.setTranslation (-20.0, 37.0);
-MPCDsvg.setTranslation (270.0, 197.0);
-#print("MPCD INIT");
-
-#
-# Menu Id's
-# 0           5            
-# 1           6            
-# 2           7            
-# 3           8            
-# 4           9            
-#
-# Top: 10 11 12 13 14 
-# Bot: 15 16 17 18 19
-var MPCD_MenuItem = {
-    new : func (menu_id, title, page)
-    {
-		var obj = {parents : [MPCD_MenuItem] };
-        obj.page = page;
-        obj.menu_id = menu_id;
-        obj.title = title;
-#        printf("New MenuItem %s,%s,%s",menu_id, title, page);
-        return obj;
-    },
-};
-
-#
-#
-# New MPCD Page 0 needs page id, svg and layer id
-var MPCD_Page = {
-	new : func (title, layer_id, device)
-    {
-		var obj = {parents : [MPCD_Page] };
-        obj.title = title;
-        obj.device = device;
-        obj.layer_id = layer_id;
-        obj.menus = [];
-#        print("Load page ",title);
-        obj.svg = MPCDsvg.getElementById(layer_id);
-        if(obj.svg == nil)
-            printf("Error loading %s: svg layer %s ",title, layer_id);
-
-        return obj;
-    },
-    setVisible : func(vis)
-    {
-        if(me.svg != nil)
-            me.svg.setVisible(vis);
-#        print("Set visible ",me.layer_id);
-
-        if (vis)
-        {
-            foreach(mi ;  me.menus)
-            {
-#                printf("load menu %s %\n",mi.title, mi);
-            }
-        }
-    },
-    notifyButton : func(button_id) 
-    {        foreach(var mi; me.menus)
-             {
-                 if (mi.menu_id == button_id)
-                 {
-#                     printf("Page: found button %s, selecting page\n",mi.title);
-                     me.device.selectPage(mi.page);
-                     break;
-                 }
-             }
-    },
-    addMenuItem : func(menu_id, title, page)
+var MPCD_Station =
 {
-        var nm = MPCD_MenuItem.new(menu_id, title, page);
-#        printf("New menu %s %s on page ", menu_id, title, page.layer_id);
-        append(me.menus, nm);
-#        printf("Page %s: add menu %s [%s]",me.layer_id, menu_id, title);
-#            foreach(mi ; me.menus)
-#            {
-#                printf("--menu %s",mi.title);
-#            }
-        return nm;
-    },
-    update : func
-    {
-    },
-#
-# called when the page comes onto display
-display : func
-{
-},
-
-};
-
-var MPCD_Device =
-{
-    new : func(svg)
-    {
-		var obj = {parents : [MPCD_Device] };
-        obj.svg = svg;
-        obj.current_page = nil;
-        obj.pages = [];
-        obj.buttons = setsize([], 20);
-        # 4 sets of 5 buttons. this is hardcoded but then so is the device...
-        for(var idx = 0; idx < 20; idx += 1)
-        {
-            var label_name = sprintf("MI_%d",idx);
-            var msvg = obj.svg.getElementById(label_name);
-            if (msvg == nil)
-                printf("Failed to load  %s",label_name);
-            else
-            {
-                obj.buttons[idx] = msvg;
-                obj.buttons[idx].setText(sprintf("M",idx));
-            }
-        }
-#        for(var idx = 0; idx < size(obj.buttons); idx += 1)
-#        {
-#            printf("Button %d %s",idx,obj.buttons[idx]);
-#        }
-        return obj;
-    },
-    notifyButton : func(button_id)
-    {
-        #
-        #
-# by convention the buttons we have are 0 based; however externally 0 is used
-# to indicate no button pushed.
-        if (button_id > 0)
-        {
-            button_id = button_id - 1;
-            if (me.current_page != nil)
-            {
-#                printf("Button routing to %s",me.current_page.title);
-                me.current_page.notifyButton(button_id);
-            }
-        }
-    },
-    addPage : func(title, layer_id)
-    {
-        var np = MPCD_Page.new(title, layer_id, me);
-        append(me.pages, np);
-        np.setVisible(0);
-        return np;
-    },
-    update : func
-    {
-        if (me.current_page != nil)
-            me.current_page.update();
-    },
-    selectPage : func(p)
-    {
-        if (me.current_page != nil)
-            me.current_page.setVisible(0);
-        if (me.buttons != nil)
-        {
-            foreach(var mb ; me.buttons)
-                if (mb != nil)
-                    mb.setVisible(0);
-
-            foreach(var mi ; p.menus)
-            {
-#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
-                if (me.buttons[mi.menu_id] != nil)
-                {
-                    me.buttons[mi.menu_id].setText(mi.title);
-                    me.buttons[mi.menu_id].setVisible(1);
-                }
-                else
-                    printf("No corresponding item '%s'",mi.menu_id);
-            }
-        }
-        p.setVisible(1);
-        me.current_page = p;
-    },
-    updateMenus : func{
-            foreach(var mi ; me.current_page.menus)
-            {
-#                printf("selectPage: load menu %d %s",mi.menu_id, mi.title);
-                if (me.buttons[mi.menu_id] != nil)
-                {
-                    me.buttons[mi.menu_id].setText(mi.title);
-                    me.buttons[mi.menu_id].setVisible(1);
-                }
-                else
-                    printf("No corresponding item '%s'",mi.menu_id);
-            }
-    },
-};
-
-#
-#
-#
-
-var MPCD_Station = {
 	new : func (svg, ident)
     {
 		var obj = {parents : [MPCD_Station] };
@@ -251,6 +46,7 @@ var MPCD_Station = {
         obj.update();
         return obj;
     },
+
     update: func
     {
         var weapon_mode = getprop("sim/model/f15/controls/armament/weapon-selector");
@@ -259,7 +55,6 @@ var MPCD_Station = {
         var mode = "STBY";
         var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
         var master_arm=getprop("sim/model/f15/controls/armament/master-arm-switch");
-#        print("Station ",me.ident," update ",sel_node,getprop(sel_node));
 
         if (na != nil and na != "none")
         {
@@ -297,7 +92,6 @@ var MPCD_Station = {
                 else mode = "MRM";
             }
             me.status.setText(mode);
-#            print("NA ",me.ident," ",na);
             me.label.setText(na);
 
             me.selected1.setVisible(sel);
@@ -322,29 +116,263 @@ var MPCD_Station = {
     },
 };
 
-var MPCD =  MPCD_Device.new(MPCDsvg);
+var MPCD_Device =
+{
+#
+# create new MFD device. This is the main interface (from our code) to the MFD device
+# Each MFD device will contain the underlying PFD device object, the SVG, and the canvas
+# Parameters
+# - designation - Flightdeck Legend for this
+# - model_element - name of the 3d model element that is to be used for drawing
+# - model_index - index of the device
+    new : func(designation, model_element, model_index=0)
+    {
+        var obj = {parents : [MPCD_Device] };
+        obj.designation = designation;
+        obj.model_element = model_element;
+        var dev_canvas= canvas.new({
+                "name": designation,
+                           "size": [1024,1024], 
+                           "view": [740,680],                       
+                    "mipmapping": 1     
+                    });                          
 
-setlistener("sim/model/f15/controls/MPCD/button-pressed", func(v)
+        dev_canvas.addPlacement({"node": model_element});
+        dev_canvas.setColorBackground(0.003921,0.1764,0, 0);
+# Create a group for the parsed elements
+        obj.PFDsvg = dev_canvas.createGroup();
+        var pres = canvas.parsesvg(obj.PFDsvg, "Nasal/MPCD/MPCD_0_0.svg");
+# Parse an SVG file and add the parsed elements to the given group
+        printf("MPCD : %s Load SVG %s",designation,pres);
+        obj.PFDsvg.setTranslation (270.0, 197.0);
+#
+# create the object that will control all of this
+        obj.num_menu_buttons = 20;
+        obj.PFD = PFD_Device.new(obj.PFDsvg, obj.num_menu_buttons, "MI_", dev_canvas);
+        obj.PFD._canvas = dev_canvas;
+        obj.PFD.designation = designation;
+        obj.mfd_device_status = 1;
+        obj.model_index = model_index; # numeric index (1 to 9, left to right) used to connect the buttons in the cockpit to the display
+
+        obj.addPages();
+        return obj;
+    },
+
+    addPages : func
+    {
+        me.p1_1 = me.PFD.addPage("Aircraft Menu", "p1_1");
+
+        me.p1_1.update = func
+        {
+            var sec = getprop("instrumentation/clock/indicated-sec");
+            me.page1_1.time.setText(getprop("sim/time/gmt-string")~"Z");
+            var cdt = getprop("sim/time/gmt");
+
+            if (cdt != nil)
+                me.page1_1.date.setText(substr(cdt,5,2)~"/"~substr(cdt,8,2)~"/"~substr(cdt,2,2)~"Z");
+        };
+
+        me.p1_1 = me.PFD.addPage("Aircraft Menu", "p1_1");
+        me.p1_2 = me.PFD.addPage("Top Level PACS Menu", "p1_2");
+        me.p1_3 = me.PFD.addPage("PACS Menu", "p1_3");
+        me.p1_3.S0 = MPCD_Station.new(me.PFDsvg, 0);
+        #1 droptank
+        me.p1_3.S2 = MPCD_Station.new(me.PFDsvg, 2);
+        me.p1_3.S3 = MPCD_Station.new(me.PFDsvg, 3);
+        me.p1_3.S4 = MPCD_Station.new(me.PFDsvg, 4);
+        #5 droptank
+        me.p1_3.S6 = MPCD_Station.new(me.PFDsvg, 6);
+        me.p1_3.S7 = MPCD_Station.new(me.PFDsvg, 7);
+        me.p1_3.S8 = MPCD_Station.new(me.PFDsvg, 8);
+        #9 droptank
+        me.p1_3.S10 = MPCD_Station.new(me.PFDsvg, 10);
+
+        me.pjitds_1 =  PFD_NavDisplay.new(me.PFD,"Situation", "mpcd-sit", "pjitds_1", "jtids_main");
+        # use the radar range as the ND range.
+
+        me.p_spin_recovery = me.PFD.addPage("Spin recovery", "p_spin_recovery");
+        me.p_spin_recovery.cur_page = nil;
+
+        me.p1_1.date = me.PFDsvg.getElementById("p1_1_date");
+        me.p1_1.time = me.PFDsvg.getElementById("p1_1_time");
+
+        me.p_spin_recovery.p_spin_cas = me.PFDsvg.getElementById("p_spin_cas");
+        me.p_spin_recovery.p_spin_alt = me.PFDsvg.getElementById("p_spin_alt");
+        me.p_spin_recovery.p_spin_alpha = me.PFDsvg.getElementById("p_spin_alpha");
+        me.p_spin_recovery.p_spin_stick_left  = me.PFDsvg.getElementById("p_spin_stick_left");
+        me.p_spin_recovery.p_spin_stick_right  = me.PFDsvg.getElementById("p_spin_stick_right");
+        me.p_spin_recovery.update = func
+        {
+            me.p_spin_alpha.setText(sprintf("%d", getprop ("orientation/alpha-indicated-deg")));
+            me.p_spin_alt.setText(sprintf("%5d", getprop ("instrumentation/altimeter/indicated-altitude-ft")));
+            me.p_spin_cas.setText(sprintf("%3d", getprop ("instrumentation/airspeed-indicator/indicated-speed-kt")));
+
+            if (math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368 
+                or math.abs(getprop("fdm/jsbsim/velocities/p-rad_sec")) > 0.022)
             {
-                if (v != nil)
-                {
-                    if (v.getValue())
-                        mpcd_button_pushed = v.getValue();
-                    else
+                me.p_spin_stick_left.setVisible(1);
+                me.p_spin_stick_right.setVisible(0);
+            }
+            else
+            {
+                me.p_spin_stick_left.setVisible(0);
+                me.p_spin_stick_right.setVisible(1);
+            }
+        };
+
+        #
+        # Page 1 is the time display
+        me.p1_1.update = func
+        {
+            var sec = getprop("instrumentation/clock/indicated-sec");
+            me.time.setText(getprop("sim/time/gmt-string")~"Z");
+            var cdt = getprop("sim/time/gmt");
+
+            if (cdt != nil)
+                me.date.setText(substr(cdt,5,2)~"/"~substr(cdt,8,2)~"/"~substr(cdt,2,2)~"Z");
+        };
+
+        #
+        # armament page gun rounds is implemented a little differently as the menu item (1) changes to show
+        # the contents of the magazine.
+        me.p1_3.gun_rounds = me.p1_3.addMenuItem(1, sprintf("HIGH\n%dM",getprop("sim/model/f15/systems/gun/rounds")), me.p1_3);
+
+        setlistener("sim/model/f15/systems/gun/rounds", func(v)
                     {
-#                        printf("Button %d",mpcd_button_pushed);
-                        MPCD.notifyButton(mpcd_button_pushed);
-                        mpcd_button_pushed = 0;
+                        if (v != nil) {
+                            me.p1_3.gun_rounds.title = sprintf("HIGH\n%dM",v.getValue());
+                            me.PFD.updateMenus();
+                        }
                     }
+            );
+        me.PFD.selectPage(me.p1_1);
+        me.mpcd_button_pushed = 0;
+        # Connect the buttons - using the provided model index to get the right ones from the model binding
+        setlistener("sim/model/f15/controls/MPCD/button-pressed", func(v)
+                    {
+                        if (v != nil) {
+                            if (v.getValue())
+                                me.mpcd_button_pushed = v.getValue();
+                            else {
+                                printf("%s: Button %d",me.designation, me.mpcd_button_pushed);
+                                me.PFD.notifyButton(me.mpcd_button_pushed);
+                                me.mpcd_button_pushed = 0;
+                            }
+                        }
+                    }
+            );
+
+        # Set listener on the PFD mode button; this could be an on off switch or by convention
+        # it will also act as brightness; so 0 is off and anything greater is brightness.
+        # ranges are not pre-defined; it is probably sensible to use 0..10 as an brightness rather
+        # than 0..1 as a floating value; but that's just my view.
+        setlistener("sim/model/f15/controls/PFD/mode"~me.model_index, func(v)
+                    {
+                        if (v != nil) {
+                            me.mfd_device_status = v.getValue();
+                            print("MFD Mode ",me.designation," ",me.mfd_device_status);
+                            if (!me.mfd_device_status)
+                                me.PFDsvg.setVisible(0);
+                            else
+                                me.PFDsvg.setVisible(1);
+                        }
+                    }
+            );
+
+        me.mpcd_button_pushed = 0;
+        me.setupMenus();
+        me.PFD.selectPage(me.p1_1);
+    },
+
+    # Add the menus to each page. 
+    setupMenus : func
+    {
+#
+# Menu Id's
+# 0           5            
+# 1           6            
+# 2           7            
+# 3           8            
+# 4           9            
+#
+# Top: 10 11 12 13 14 
+# Bot: 15 16 17 18 19
+        me.mpcd_spin_reset_time = 0;
+
+        me.p1_1.addMenuItem(0, "ARMT", me.p1_2);
+        me.p1_1.addMenuItem(1, "BIT", me.p1_2);
+        me.p1_1.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_1.addMenuItem(3, "WPN", me.p1_2);
+        me.p1_1.addMenuItem(4, "DTM", me.p1_2);
+
+        me.p1_2.addMenuItem(1, "A/A", me.p1_3);
+        me.p1_2.addMenuItem(2, "A/G", me.p1_3);
+        me.p1_2.addMenuItem(3, "CBT JETT", me.p1_3);
+        me.p1_2.addMenuItem(4, "WPN LOAD", me.p1_3);
+        me.p1_2.addMenuItem(9, "M", me.p1_1);
+
+        me.p1_3.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_3.addMenuItem(3, "A/G", me.p1_3);
+        me.p1_3.addMenuItem(4, "2/2", me.p1_3);
+        me.p1_3.addMenuItem(8, "TM\nPWR", me.p1_3);
+        me.p1_3.addMenuItem(9, "M", me.p1_1);
+        me.p1_3.addMenuItem(10, "PYLON", me.p1_3);
+        me.p1_3.addMenuItem(12, "FUEL", me.p1_3);
+        me.p1_3.addMenuItem(14, "PYLON", me.p1_3);
+        me.p1_3.addMenuItem(15, "MODE S", me.p1_3);
+
+        me.pjitds_1.addMenuItem(9, "M", me.p1_1);
+    },
+
+    update : func
+    {
+    # see if spin recovery page needs to be displayed.
+    # it is displayed automatically and will remain for 5 seconds.
+    # this page provides (sort of) guidance on how to recover from a spin
+    # which is identified by the yar rate.
+        if (!wow and math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
+        {
+            if (me.PFD.current_page != me.p_spin_recovery)
+            {
+                me.p_spin_recovery.cur_page = me.PFD.current_page;
+                me.PFD.selectPage(me.p_spin_recovery);
+            }
+            me.mpcd_spin_reset_time = getprop("instrumentation/clock/indicated-sec") + 5;
+        } 
+        else
+        {
+            if (me.mpcd_spin_reset_time > 0 and getprop("instrumentation/clock/indicated-sec") > me.mpcd_spin_reset_time)
+            {
+                me.mpcd_spin_reset_time = 0;
+                if (me.p_spin_recovery.cur_page != nil)
+                {
+                    me.PFD.selectPage(me.p_spin_recovery.cur_page);
+                    me.p_spin_recovery.cur_page = nil;
                 }
-            });
-var mpcd_mode = 1;
+            }
+        }
+
+        if (me.mfd_device_status)
+            me.PFD.update();
+    },
+};
+
+#
+# Create the MPCD device 
+var MPCD =  MPCD_Device.new("F15-MPCD", "MPCDImage",0);
+
+var updateMPCD = func ()
+{  
+    MPCD.update();
+}
+
+#
+# Mode switch is day/night/off. we just do on/off
 setlistener("sim/model/f15/controls/MPCD/mode", func(v)
             {
                 if (v != nil)
                 {
-                    var mpcd_mode = v.getValue();
-#                    print("MPCD Mode ",mpcd_mode);
+                    MPCD.mpcd_mode = v.getValue();
 #    if (!mpcd_mode)
 #        MPCDcanvas.setVisible(0);
 #    else
@@ -352,130 +380,12 @@ setlistener("sim/model/f15/controls/MPCD/mode", func(v)
                 }
             });
 
-var p1_1 = MPCD.addPage("Aircraft Menu", "p1_1");
-var p1_2 = MPCD.addPage("Top Level PACS Menu", "p1_2");
-var p1_3 = MPCD.addPage("PACS Menu", "p1_3");
-p1_3.S0 = MPCD_Station.new(MPCDsvg, 0);
-#1 droptank
-p1_3.S2 = MPCD_Station.new(MPCDsvg, 2);
-p1_3.S3 = MPCD_Station.new(MPCDsvg, 3);
-p1_3.S4 = MPCD_Station.new(MPCDsvg, 4);
-#5 droptank
-p1_3.S6 = MPCD_Station.new(MPCDsvg, 6);
-p1_3.S7 = MPCD_Station.new(MPCDsvg, 7);
-p1_3.S8 = MPCD_Station.new(MPCDsvg, 8);
-#9 droptank
-p1_3.S10 = MPCD_Station.new(MPCDsvg, 10);
-
-var pjitds_1 = MPCD.addPage("JITDS Decentered", "pjitds_1");
-var p_spin_recovery = MPCD.addPage("Spin recovery", "p_spin_recovery");
-p_spin_recovery.cur_page = nil;
-
-p1_1.addMenuItem(0, "ARMT", p1_2);
-p1_1.addMenuItem(1, "BIT", p1_2);
-p1_1.addMenuItem(2, "SIT", pjitds_1);
-p1_1.addMenuItem(3, "WPN", p1_2);
-p1_1.addMenuItem(4, "DTM", p1_2);
-
-p1_1.date = MPCDsvg.getElementById("p1_1_date");
-p1_1.time = MPCDsvg.getElementById("p1_1_time");
-
-p_spin_recovery.p_spin_cas = MPCDsvg.getElementById("p_spin_cas");
-p_spin_recovery.p_spin_alt = MPCDsvg.getElementById("p_spin_alt");
-p_spin_recovery.p_spin_alpha = MPCDsvg.getElementById("p_spin_alpha");
-p_spin_recovery.p_spin_stick_left  = MPCDsvg.getElementById("p_spin_stick_left");
-p_spin_recovery.p_spin_stick_right  = MPCDsvg.getElementById("p_spin_stick_right");
-p_spin_recovery.update = func
-{
-    p_spin_recovery.p_spin_alpha.setText(sprintf("%d", getprop ("orientation/alpha-indicated-deg")));
-    p_spin_recovery.p_spin_alt.setText(sprintf("%5d", getprop ("instrumentation/altimeter/indicated-altitude-ft")));
-    p_spin_recovery.p_spin_cas.setText(sprintf("%3d", getprop ("instrumentation/airspeed-indicator/indicated-speed-kt")));
-
-    if (math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368 or math.abs(getprop("fdm/jsbsim/velocities/p-rad_sec")) > 0.022)
-    {
-        p_spin_recovery.p_spin_stick_left.setVisible(1);
-        p_spin_recovery.p_spin_stick_right.setVisible(0);
-    }
-    else
-    {
-        p_spin_recovery.p_spin_stick_left.setVisible(0);
-        p_spin_recovery.p_spin_stick_right.setVisible(1);
-    }
-
-};
-
-p1_1.update = func
-{
-    var sec = getprop("instrumentation/clock/indicated-sec");
-    p1_1.time.setText(getprop("sim/time/gmt-string")~"Z");
-    var cdt = getprop("sim/time/gmt");
-
-    if (cdt != nil)
-        p1_1.date.setText(substr(cdt,5,2)~"/"~substr(cdt,8,2)~"/"~substr(cdt,2,2)~"Z");
-};
-
-p1_2.addMenuItem(1, "A/A", p1_3);
-p1_2.addMenuItem(2, "A/G", p1_3);
-p1_2.addMenuItem(3, "CBT JETT", p1_3);
-p1_2.addMenuItem(4, "WPN LOAD", p1_3);
-p1_2.addMenuItem(9, "M", p1_1);
-
-p1_3.gun_rounds = p1_3.addMenuItem(1, sprintf("HIGH\n%dM",getprop("sim/model/f15/systems/gun/rounds")), p1_3);
-setlistener("sim/model/f15/systems/gun/rounds", func(v) {
-                if (v != nil)
-                {
-                    p1_3.gun_rounds.title = sprintf("HIGH\n%dM",v.getValue());
-                    MPCD.updateMenus();
-                }
-            });
-p1_3.addMenuItem(2, "NML", p1_3);
-p1_3.addMenuItem(3, "A/G", p1_3);
-p1_3.addMenuItem(4, "2/2", p1_3);
-p1_3.addMenuItem(8, "TM\nPWR", p1_3);
-p1_3.addMenuItem(9, "M", p1_1);
-
-p1_3.addMenuItem(10, "PYLON", p1_3);
-p1_3.addMenuItem(12, "FUEL", p1_3);
-p1_3.addMenuItem(14, "PYLON", p1_3);
-p1_3.addMenuItem(15, "MODE S", p1_3);
-p1_3.addMenuItem(18, "SIT", p1_3);
-
-pjitds_1.addMenuItem(9, "M", p1_1);
-MPCD.selectPage(p1_1);
-var mpcd_button_pushed = 0;
 
 #
-# Time after which the Spin page will be hidden
-var mpcd_spin_reset_time = 0;
-
-var updateMPCD = func ()
-{  
-    # see if spin recovery page needs to be displayed.
-    # it is displayed automatically and will remain for 5 seconds.
-    # this page provides (sort of) guidance on how to recover from a spin
-    # which is identified by the yar rate.
-    if (!wow and math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
-    {
-        if (MPCD.current_page != p_spin_recovery)
-        {
-            p_spin_recovery.cur_page = MPCD.current_page;
-            MPCD.selectPage(p_spin_recovery);
-        }
-        mpcd_spin_reset_time = getprop("instrumentation/clock/indicated-sec") + 5;
-    }
-    else
-    {
-        if (mpcd_spin_reset_time > 0 and getprop("instrumentation/clock/indicated-sec") > mpcd_spin_reset_time)
-        {
-            mpcd_spin_reset_time = 0;
-            if (p_spin_recovery.cur_page != nil)
+# Connect the radar range to the nav display range. 
+setprop("instrumentation/mpcd-sit/inputs/range-nm", getprop("instrumentation/radar/radar2-range"));
+setlistener("instrumentation/radar/radar2-range", 
+            func(v)
             {
-                MPCD.selectPage(p_spin_recovery.cur_page);
-                p_spin_recovery.cur_page = nil;
-            }
-        }
-    }
-
-    if(mpcd_mode)
-        MPCD.update();
-}
+                setprop("instrumentation/mpcd-sit/inputs/range-nm", v.getValue());
+            });
