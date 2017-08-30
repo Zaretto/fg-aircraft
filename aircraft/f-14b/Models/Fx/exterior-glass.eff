@@ -7,13 +7,14 @@
     <inherits-from>Effects/model-combined-transparent</inherits-from>
 
     <parameters>
-        <reflect-map-enabled type="int"><use>/sim/model/f-14b/reflect-map-enabled</use></reflect-map-enabled>
-        <reflection-correction type="float"><use>/sim/model/f-14b/reflection-correction</use></reflection-correction>
-        <reflection-dynamic type="int"><use>/sim/model/f-14b/reflection-dynamic</use></reflection-dynamic>
-        <reflection-enabled type="int"><use>/sim/model/f-14b/reflection-enabled</use></reflection-enabled>
-        <reflection-fresnel type="float"><use>/sim/model/f-14b/reflection-fresnel</use></reflection-fresnel>
-        <reflection-noise type="float"><use>/sim/model/f-14b/reflection-noise</use></reflection-noise>
-        <reflection-rainbow type="float"><use>/sim/model/f-14b/reflection-rainbow</use></reflection-rainbow>
+        <reflection-enabled type="int">1</reflection-enabled>
+        <reflection-correction type="float">0.5</reflection-correction>
+        <reflect-map-enabled type="int">1</reflect-map-enabled>
+        <reflection-fresnel type="float">0.6</reflection-fresnel>
+        <reflection-rainbow type="float">0.5</reflection-rainbow>
+        <reflection-noise type="float">0.0</reflection-noise>
+        <reflection-dynamic type="int">1</reflection-dynamic>
+
         <texture n= "5" >
             <type>cubemap</type>
             <images>
@@ -38,12 +39,3 @@
     </parameters>
 
 </PropertyList>
-<!--
-setprop("/sim/model/f-14b/reflect-map-enabled",0);
-setprop("/sim/model/f-14b/reflection-correction",0.5);
-setprop("/sim/model/f-14b/reflection-dynamic",1);
-setprop("/sim/model/f-14b/reflection-enabled",1);
-setprop("/sim/model/f-14b/reflection-fresnel",0.0);
-setprop("/sim/model/f-14b/reflection-noise",0.1);
-setprop("/sim/model/f-14b/reflection-rainbow",0.3);
--->
