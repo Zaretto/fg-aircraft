@@ -90,7 +90,7 @@ var EmesaryRecipient =
                     {
                         if(notification.SecondaryKind >=80 and notification.SecondaryKind <= 95)
                         {
-                            var missile = aircraft.AIM9.new(0, "AIM-120");
+                            var missile = armament.AIM.new(0, "AIM-120");
                             missile.Tgt = awg_9.Target.new(props.globals.getNode("/"));
                             var tnode = props.globals.getNode("/");
                             missile.latN   = tnode.getNode("position/latitude-deg", 1);
