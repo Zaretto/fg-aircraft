@@ -177,7 +177,6 @@ var armament_update = func {
 			SWCoolOn.setBoolValue(1);
 			SWCoolOff.setBoolValue(0);
 		}
-		update_sw_ready();
 	} else {
 		SWCoolOn.setBoolValue(0);
 		SWCoolOff.setBoolValue(1);
@@ -185,6 +184,7 @@ var armament_update = func {
 		#set_status_current_aim9(-1);
 	}
 	SwCount.setValue(aim9_count);
+	update_sw_ready();
 }
 
 var update_gun_ready = func() {
@@ -249,7 +249,7 @@ var update_sw_ready = func() {
 		if (sw_count > 0 and size(aim9_seq) >= sw_count) {
 			pylon = aim9_seq[sw_count - 1];
 		}
-		if (Current_aim9 != nil and pylon != nil and Current_aim9.type != pylon.get_type()) {
+		if (Current_aim9 != nil and (pylon == nil or (pylon != nil and Current_aim9.type != pylon.get_type()))) {
 			Current_aim9.status = -1;
 			Current_aim9.del();
 			Current_aim9 = nil;
