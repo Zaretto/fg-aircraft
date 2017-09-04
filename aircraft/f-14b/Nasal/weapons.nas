@@ -281,11 +281,12 @@ var release_aim9 = func() {
 			} else {
 				setprop("/sim/messages/atc", phrase);
 			}
+			Current_aim9.release();
+			Current_aim9 = nil;
 			# Set the pylon empty:
 			var current_pylon = pop(aim9_seq);
 			current_pylon.set_type("-");
 			armament_update();
-			Current_aim9.release();
 		}
 	}
 }
