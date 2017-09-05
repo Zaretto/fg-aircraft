@@ -1,0 +1,308 @@
+            <key n="1">
+                <name>CTRL-a</name>
+                <desc>Toggle autopilot altitude mode.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14_afcs.afcs_altitude_engage_toggle();</script>
+                </binding>
+            </key>
+
+<!--
+            <key n="4">
+                <name>CTRL-d</name>
+                <desc>DLC toggle</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggleDLC();</script>
+                </binding>
+            </key>
+-->
+
+            <key n="8">
+                <name>CTRL-h</name>
+                <desc>Toggle autopilot heading mode.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14_afcs.afcs_heading_switch(0);</script>
+                </binding>
+            </key>
+
+            <key n="14">
+                <name>Ctrl-n</name>
+                <desc>Toggle Radar PULSE SRCH / TWS AUTO Modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.wcs_mode_toggle()</script>
+                </binding>
+            </key>
+
+            <key n="15">
+                <name>Ctrl-o</name>
+                <desc>toggle oversweep</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggleOversweep();</script>
+                </binding>
+            </key>
+
+		   <key n="19">
+                <name>CTRL-S</name>
+                <desc>toggle APC</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggleAPC();</script>
+                </binding>
+            </key>
+
+            <key n="20">
+                <name>Ctrl-t</name>
+                <desc>Toggle autopilot attitude mode</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14_afcs.afcs_engage_toggle()</script>
+                </binding>
+            </key>
+
+            <key n="22">
+                <name>Ctrl-v</name>
+                <desc>Select pilot's view (view 0) or toggle between pilot's and RIO's view</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggle_cockpit_views();</script>
+                </binding>
+            </key>
+
+            <key n="23">
+                <name>Ctrl-w</name>
+                <desc>Cycle through MasterArm modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.master_arm_cycle();</script>
+                </binding>
+            </key>
+
+            <key n="25">
+                <name>Ctrl-y</name>
+                <desc>Toggle ground spoilers armed</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.toggleGroundSpoilers();</script>
+                </binding>
+            </key>
+
+            <key n="42">
+                <name>*</name>
+                <desc>Nose wheel steering or Autopilot selected mode</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (! f14.wow) {
+                        f14_afcs.afcs_engage_selected_mode()
+                        }
+                    </script>
+                </binding>
+            </key>
+
+            <key n="60">
+                <name>&lt;</name>
+                <desc>Decrease Sweep</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.move_wing_sweep(-1)</script>
+                </binding>
+            </key>
+            <key n="61">
+                <name>=</name>
+                <desc>Wing Sweep Automatic</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.set_sweep(0)</script>
+                </binding>
+            </key>
+            <key n="62">
+                <name>&gt;</name>
+                <desc>Increase Sweep</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.move_wing_sweep(1)</script>
+                </binding>
+            </key>
+
+<!--
+            <key n="68">
+                <name>D</name>
+                <desc>DLC decrease</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>/controls/flight/DLC</property>
+                    <step>-0.1</step>
+                    <min>0</min>
+                </binding>
+            </key>
+-->
+
+            <key n="69">
+                <name>E</name>
+                <desc>Decrease Radar Range</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.range_control(-1);</script>
+                </binding>
+            </key>
+
+            <key n="70">
+                <name>F</name>
+                <desc>Raise flaps</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>controls.flapsDown(-1);</script>
+                </binding>
+            </key>
+
+            <key n="82">
+                <name>R</name>
+                <desc>Increase Radar Range</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.range_control(1);</script>
+                </binding>
+            </key>
+
+            <key n="99">
+                <name>c</name>
+                <desc>Open canopy and access ladder</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.canopyswitch(2);</script>
+                </binding>
+            </key>
+
+<!--
+            <key n="100">
+                <name>d</name>
+                <desc>DLC increase</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/flight/DLC</property>
+                    <step>0.1</step>
+                    <max>1.0</max>
+                </binding>
+            </key>
+-->
+
+            <key n="101">
+                <name>e</name>
+                <desc>Trigger M61A1 Vulcan or AIM-9s</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>controls/armament/trigger</property>
+                    <value>true</value>
+                </binding>
+                <mod-up>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>controls/armament/trigger</property>
+                        <value>false</value>
+                    </binding>
+                </mod-up>
+            </key>
+
+            <key n="102">
+                <name>f</name>
+                <desc>Lower flaps</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>controls.flapsDown(1);</script>
+                </binding>
+            </key>
+
+            <key n="104">
+                <name>h</name>
+                <desc>HSD cycle modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14_instruments.select_key_ecm_nav();</script>
+                </binding>
+            </key>
+
+            <key n="111">
+                <name>o</name>
+                <desc>Toggle arrester hook</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+                </binding>
+            </key>
+            <key n="113">
+                <name>q</name>
+                <desc>Toggle radar standby mode</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.toggle_radar_standby();</script>
+                </binding>
+            </key>
+
+            <key n="117">
+                <name>u</name>
+                <desc>Cycle through the 3 refuelling probe switch positions</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.refuel_probe_switch_cycle();</script>
+                </binding>
+            </key>
+
+            <key n="109">
+                <name>m</name>
+                <desc>Cycle Stick Weapon Mode Selector</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>sim/model/f-14b/controls/armament/stick-selector</property>
+                    <step>1</step>
+                    <min>0</min>
+                    <max>4</max>
+                    <repeat>false</repeat>
+                    <wrap>true</wrap>
+                </binding>
+            <key n="121">
+                <name>y</name>
+                <desc>Next target select</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <key n="89">
+                <name>Y</name>
+                <desc>Previous target select</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>-1</value>
+                </binding>
+            </key>
+
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.arm_selector();</script>
+                </binding>
+            </key>
+
+            <key n="362">
+                <name>Home</name>
+                <desc>Increase elevator trim</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.trimUp();</script>
+                </binding>
+            </key>
+
+            <key n="363">
+                <name>End</name>
+                <desc>Decrease elevator trim</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14.trimDown();</script>
+                </binding>
+            </key>
