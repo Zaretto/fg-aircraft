@@ -77,8 +77,8 @@
    <animation>
         <type>knob</type>
 		<object-name>sta-3-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0474</y-m>
@@ -92,15 +92,18 @@
 
         <action>
             <binding>
-                f14.station_selector(3, 0);
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(3, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
 		<object-name>sta-4-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0485</y-m>
@@ -114,15 +117,18 @@
 
         <action>
             <binding>
-                f14.station_selector(4, 0);
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(4, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
 		<object-name>sta-5-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0186</y-m>
@@ -136,15 +142,18 @@
 
         <action>
             <binding>
-                f14.station_selector(5, 0);
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(5, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
 		<object-name>sta-6-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[6]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0186</y-m>
@@ -158,7 +167,10 @@
 
         <action>
             <binding>
-                f14.station_selector(6, 0);
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(6, -1000);
+                </script>
             </binding>
         </action>
     </animation>

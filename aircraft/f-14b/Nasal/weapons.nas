@@ -419,6 +419,10 @@ var station_selector = func(n, v) {
 		# Only up/neutral allowed.
 		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
 		var state = getprop(selector);
+		if (state == -1000){
+			# toggle value between 0 and -1
+			state = -(-state - 1);
+		}
 		if (state != -1) {
 			state = -1;
 		} else {
