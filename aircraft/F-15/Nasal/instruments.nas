@@ -822,7 +822,6 @@ setlistener("sim/signals/fdm-initialized", init);
 
 
 setlistener("sim/position-finalized", func (is_done) {
-    print("position-finalized ",is_done.getValue());
     if (is_done.getValue())
     {
     common_init();

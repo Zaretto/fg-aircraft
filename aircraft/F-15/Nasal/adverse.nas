@@ -36,7 +36,7 @@ var fixAirframe = func {
 	setprop ("sim/model/f15/wings/right-wing-torn", RightWingTorn);
 	setprop ("fdm/jsbsim/gear/damage-reset", 1);
 	repairMe();
-	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 1); }, 1.3);
+	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
 }
 
 var computeWingBend = func {
