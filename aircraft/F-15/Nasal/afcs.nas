@@ -48,9 +48,9 @@ var ap_hdglock_winglevel = 0;
 var ap_hdglock_truehdg   = 0; 
 
 # SAS
-var SASpitch_on = props.globals.getNode("fdm/jsbsim/fcs/pitch-damper-enable");
-var SASroll_on  = props.globals.getNode("fdm/jsbsim/fcs/roll-damper-enable");
-var SASyaw_on   = props.globals.getNode("fdm/jsbsim/fcs/yaw-damper-enable");
+var SASpitch_on = props.globals.getNode("sim/model/f15/controls/CAS/pitch-damper-enable");
+var SASroll_on  = props.globals.getNode("sim/model/f15/controls/CAS/roll-damper-enable");
+var SASyaw_on   = props.globals.getNode("sim/model/f15/controls/CAS/yaw-damper-enable");
 
 
 # Switches Commands

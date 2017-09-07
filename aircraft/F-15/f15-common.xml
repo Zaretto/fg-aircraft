@@ -16,6 +16,9 @@
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
+                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable"/>
+                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable"/>
+                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable"/>
             </fcs>
             <gear>
                 <emergency-handle type="double">0</emergency-handle>
@@ -533,15 +536,20 @@
             <hide-pilot type="bool">false</hide-pilot >
             <hide-backseater type="bool">false</hide-backseater>
             <hide-pilots-auto type="bool">true</hide-pilots-auto>
-		<map>
-			<default_exit>
-				<x-offset-m type ="float">-5</x-offset-m>
-				<y-offset-m type ="float">-3.55</y-offset-m>
-			</default_exit>
-		</map>
+            <map>
+                <default_exit>
+                    <x-offset-m type ="float">-5</x-offset-m>
+                    <y-offset-m type ="float">-3.55</y-offset-m>
+                </default_exit>
+            </map>
             <f15>
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
+                    <CAS>
+                        <pitch-damper-enable type="int"/>
+                        <roll-damper-enable type="int"/>
+                        <yaw-damper-enable type="int"/>
+                    </CAS>
                     <AFCS>
                         <engage type="bool">false</engage>
                         <vec-acl type="int">0</vec-acl>
@@ -1031,11 +1039,18 @@
                 <znear type="double">0.20</znear>
             </camera-group>
             <redout>
+                <enabled type="bool" userarchive="n" archive="n">true</enabled>
                 <parameters>
-                    <blackout-complete-g>11</blackout-complete-g>
-                    <blackout-onset-g>8.5</blackout-onset-g>
-                    <redout-onset-g type="double">-3.5</redout-onset-g>
-                    <redout-complete-g type="double">-4.5</redout-complete-g>
+                    <blackout-onset-g type="double">5</blackout-onset-g>
+                    <blackout-complete-g type="double">8</blackout-complete-g>
+                    <onset-blackout-sec type="double">300</onset-blackout-sec>
+                    <fast-blackout-sec type="double">30</fast-blackout-sec>
+                    <redout-onset-g type="double">-1.5</redout-onset-g>
+                    <redout-complete-g type="double">-4</redout-complete-g>
+                    <onset-redout-sec type="double">45</onset-redout-sec>
+                    <fast-redout-sec type="double">3.5</fast-redout-sec>
+                    <recover-fast-sec type="double">7</recover-fast-sec>
+                    <recover-slow-sec type="double">15</recover-slow-sec>
                 </parameters>
             </redout>
         </rendering>
