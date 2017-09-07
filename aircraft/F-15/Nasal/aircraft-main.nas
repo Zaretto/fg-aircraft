@@ -552,9 +552,9 @@ var quickstart = func() {
     setprop("engines/engine[1]/out-of-fuel",0);
     setprop("engines/engine[1]/run",1);
     setprop("engines/engine[1]/run",1);
-    setprop("fdm/jsbsim/fcs/pitch-damper-enable",1);
-    setprop("fdm/jsbsim/fcs/roll-damper-enable",1);
-    setprop("fdm/jsbsim/fcs/yaw-damper-enable",1);
+    setprop("sim/model/f15/controls/CAS/pitch-damper-enable",1);
+    setprop("sim/model/f15/controls/CAS/roll-damper-enable",1);
+    setprop("sim/model/f15/controls/CAS/yaw-damper-enable",1);
 
 setprop("engines/engine[1]/cutoff",0);
 setprop("engines/engine[0]/cutoff",0);
@@ -596,9 +596,9 @@ var cold_and_dark = func()
     setprop("controls/lighting/stby-inst", 0);
     setprop("controls/lighting/warn-caution", 0);
 
-    setprop("fdm/jsbsim/fcs/pitch-damper-enable",0);
-    setprop("fdm/jsbsim/fcs/roll-damper-enable",0);
-    setprop("fdm/jsbsim/fcs/yaw-damper-enable",0);
+    setprop("sim/model/f15/controls/CAS/pitch-damper-enable",0);
+    setprop("sim/model/f15/controls/CAS/roll-damper-enable",0);
+    setprop("sim/model/f15/controls/CAS/yaw-damper-enable",0);
 
     setprop("sim/model/f15/controls/HUD/brightness",0);
     setprop("sim/model/f15/controls/HUD/on-off",false);
