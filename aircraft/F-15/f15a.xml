@@ -583,6 +583,21 @@
     </propulsion>
 
     <external_reactions>
+        <!-- wake turbulence from other AI plane -->
+        <force name="ai-wake" frame="BODY">
+            <location unit="M">
+                <!-- Center of the main wing leading edge -->
+                <x> -0.33864</x>
+                <y> 0.0 </y>
+                <z> 0.63046 </z>
+            </location>
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </force>
+        <moment name="ai-wake" frame="BODY"/>
         <force name="catapult" frame="BODY">
             <location unit="IN">
                 <x>667</x>
