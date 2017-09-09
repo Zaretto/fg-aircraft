@@ -3306,6 +3306,21 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </aerodynamics>
 
     <external_reactions>
+        <force name="ai-wake" frame="BODY">
+            <location unit="M">
+                <!-- Center of the main wing leading edge -->
+                <x> 7.1</x>
+                <y> 0.0 </y>
+                <z> 0.523 </z>
+            </location>
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </force>
+        <moment name="ai-wake" frame="BODY"/>
+        
         <force name="catapult" frame="BODY">
             <location unit="IN">
                 <x> 667 </x>
