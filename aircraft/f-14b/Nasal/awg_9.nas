@@ -76,6 +76,16 @@ var u_radar_standby   = 0;
 var u_ecm_type_num    = 0;
 var FD_TAN3DEG = 0.052407779283; # tan(3)
 
+var versionString = getprop("sim/version/flightgear");
+var version = split(".", versionString);
+var major = num(version[0]);
+var minor = num(version[1]);
+var pica  = num(version[2]);
+var pickingMethod = 0;
+if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2) or major > 2017) {
+    pickingMethod = 1;
+}
+
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
     if(our_ac_name == "f-14a") our_ac_name = "f-14b"; # RJH: We are an F14a - but internally we are an F14-B for compatibility with existing model so need to change the aircraft name here otherwise radar won't work
@@ -142,7 +152,7 @@ var az_scan = func() {
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
+			if (c.getNode("valid") == nil or !c.getNode("valid").getValue() or isNotBehindTerrain(c) == 0) {
 				continue;
 			}
 			var HaveRadarNode = c.getNode("radar");
@@ -200,6 +210,9 @@ var az_scan = func() {
 
 			if ((type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") and HaveRadarNode != nil) {
 				var u = Target.new(c);
+				if (rcs.inRadarRange(u, 89, 3.2) == 0) {#F14 AWG-9 = 89NM for 3.2 rcs
+	                continue;
+	            }
 				u_ecm_signal      = 0;
 				u_ecm_signal_norm = 0;
 				u_radar_standby   = 0;
@@ -299,7 +312,7 @@ var az_scan = func() {
 
 }
 
-setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~""~"7");
+#setprop("sim/mul"~"tiplay/gen"~"eric/strin"~"g[14]", "o"~""~"7");
 var hud_nearest_tgt = func() {
 	# Computes nearest_u position in the HUD
 	if ( nearest_u != nil ) {
@@ -509,7 +522,121 @@ wcs_mode_update = func() {
     setprop("sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", wcs_current_mode);
 }
 
+#
+# The following 1 methods is from Mirage 2000-5 (modified by Pinto)
+#
+var isNotBehindTerrain = func(node) {
+    var SelectCoord = geo.Coord.new();
+    var x = nil;
+    var y = nil;
+    var z = nil;
+    call(func {
+        x = node.getNode("position/global-x").getValue();
+        y = node.getNode("position/global-y").getValue();
+        z = node.getNode("position/global-z").getValue(); },
+        nil, var err = []);
+    if(x == nil or y == nil or z == nil) {
+        return 1;
+    }
+    var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
 
+    if (pickingMethod == 1) {
+      var myPos = geo.aircraft_position();
+
+      var xyz = {"x":myPos.x(),                  "y":myPos.y(),                 "z":myPos.z()};
+      var dir = {"x":SelectCoord.x()-myPos.x(),  "y":SelectCoord.y()-myPos.y(), "z":SelectCoord.z()-myPos.z()};
+
+      # Check for terrain between own aircraft and other:
+      v = get_cart_ground_intersection(xyz, dir);
+      if (v == nil) {
+        return 1;
+        #printf("No terrain, planes has clear view of each other");
+      } else {
+       var terrain = geo.Coord.new();
+       terrain.set_latlon(v.lat, v.lon, v.elevation);
+       var maxDist = myPos.direct_distance_to(SelectCoord);
+       var terrainDist = myPos.direct_distance_to(terrain);
+       if (terrainDist < maxDist) {
+         #print("terrain found between the planes");
+         return 0;
+       } else {
+          return 1;
+          #print("The planes has clear view of each other");
+       }
+      }
+    } else {
+	    var isVisible = 0;
+	    var MyCoord = geo.aircraft_position();
+	    
+	    # Because there is no terrain on earth that can be between these 2
+	    if(MyCoord.alt() < 8900 and SelectCoord.alt() < 8900)
+	    {
+	        # Temporary variable
+	        # A (our plane) coord in meters
+	        var a = MyCoord.x();
+	        var b = MyCoord.y();
+	        var c = MyCoord.z();
+	        # B (target) coord in meters
+	        var d = SelectCoord.x();
+	        var e = SelectCoord.y();
+	        var f = SelectCoord.z();
+	        var difa = d - a;
+	        var difb = e - b;
+	        var difc = f - c;
+	    
+	    #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
+	    #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
+	    
+	        # direct Distance in meters
+	        var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
+	        #print("myDistance: " ~ myDistance);
+	        var Aprime = geo.Coord.new();
+	        
+	        # Here is to limit FPS drop on very long distance
+	        var L = 500;
+	        if(myDistance > 50000)
+	        {
+	            L = myDistance / 15;
+	        }
+	        var maxLoops = int(myDistance / L);
+	        
+	        isVisible = 1;
+	        # This loop will make travel a point between us and the target and check if there is terrain
+	        for(var i = 1 ; i <= maxLoops ; i += 1)
+	        {
+	          #calculate intermediate step
+	          #basically dividing the line into maxLoops number of steps, and checking at each step
+	          #to ascii-art explain it:
+	          #  |us|----------|step 1|-----------|step 2|--------|step 3|----------|them|
+	          #there will be as many steps as there is i
+	          #every step will be equidistant
+	          
+	          #also, if i == 0 then the first step will be our plane
+	          
+	          var x = ((difa/(maxLoops+1))*i)+a;
+	          var y = ((difb/(maxLoops+1))*i)+b;
+	          var z = ((difc/(maxLoops+1))*i)+c;
+	          #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
+	          Aprime.set_xyz(x,y,z);
+	          var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
+	          if(AprimeTerrainAlt == nil)
+	          {
+	            AprimeTerrainAlt = 0;
+	          }
+	          
+	          if(AprimeTerrainAlt > Aprime.alt())
+	          {
+	            return 0;
+	          }
+	        }
+	    }
+	    else
+	    {
+	        isVisible = 1;
+	    }
+	    return isVisible;
+	}
+}
 
 var TRUE = 1;
 var FALSE = 0;
@@ -530,6 +657,31 @@ var Target = {
 		obj.name            = c.getNode("name");
         obj.sign            = c.getNode("sign",1);
         obj.Model = c.getNode("model-short");
+
+		var model_short = c.getNode("sim/model/path");
+        if(model_short != nil)
+        {
+            var model_short_val = model_short.getValue();
+            if (model_short_val != nil and model_short_val != "")
+            {
+	            var u = split("/", model_short_val); # give array
+	            var s = size(u); # how many elements in array
+	            var o = u[s-1];	 # the last element
+	            var m = size(o); # how long is this string in the last element
+	            var e = m - 4;   # - 4 chars .xml
+	            obj.ModelType = substr(o, 0, e); # the string without .xml
+			}
+			else
+			{
+	            obj.ModelType = "";
+	        }
+    	}
+		else
+		{
+           	obj.ModelType = "";
+        }
+
+
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
@@ -591,10 +743,24 @@ var Target = {
 		obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
 		
 		obj.pitch          = c.getNode("orientation/pitch-deg");
-        obj.lat            = c.getNode("position/latitude-deg");
-        obj.lon            = c.getNode("position/longitude-deg");
-		obj.coord          = geo.Coord.new();
-		obj.coord.set_latlon(obj.lat.getValue(), obj.lon.getValue(), obj.Alt.getValue() * FT2M);
+		obj.roll           = c.getNode("orientation/roll-deg");
+        obj.coord          = geo.Coord.new();
+        if (c.getNode("position/latitude-deg") != nil and c.getNode("position/longitude-deg") != nil) {
+            obj.lat = c.getNode("position/latitude-deg");
+            obj.lon = c.getNode("position/longitude-deg");
+            obj.coord.set_latlon(obj.lat.getValue(), obj.lon.getValue(), obj.Alt.getValue() * FT2M);
+        } else {
+            obj.lat = nil;
+            if (c.getNode("position/global-x") != nil)
+            {
+                obj.x = me.propNode.getNode("position/global-x");
+                obj.y = me.propNode.getNode("position/global-y");
+                obj.z = me.propNode.getNode("position/global-z");
+                obj.coord.set_xyz(obj.x.getValue(), obj.y.getValue(), obj.z.getValue() * FT2M);
+            } else {
+                obj.x = nil;
+            }
+        }
 
 		obj.TimeLast.setValue(ElapsedSec.getValue());
 		obj.RangeLast.setValue(obj.Range.getValue());
@@ -636,7 +802,22 @@ var Target = {
 		return me.deviation;
 	},
 	get_range : func {
-		return me.Range.getValue();
+		#
+        # range on carriers (and possibly other items) is always 0 so recalc.
+        if (me.Range == nil or me.Range.getValue() == 0)
+        {
+            var tgt_pos = me.get_Coord();
+#                print("Recalc range - ",tgt_pos.distance_to(geo.aircraft_position()));
+            if (tgt_pos != nil) {
+                return tgt_pos.distance_to(geo.aircraft_position()) * M2NM; # distance in NM
+            }
+            if (me.Range != nil)
+                return me.Range.getValue();
+        }
+        if (me.Range == nil)
+            return 0;
+        else
+            return me.Range.getValue();
 	},
 	get_horizon : func(own_alt) {
 		var tgt_alt = me.get_altitude();
@@ -711,10 +892,12 @@ var Target = {
 		me.RangeLast.setValue(rng);
 		return(cr);
 	},
-	getFlareNode: func () {
-		# for now, no flare implementation in the F14, until the F14 can fire flares of its own.
-		return nil; 
-	},
+	getFlareNode: func {
+        return me.propNode.getNode("rotors/main/blade[3]/flap-deg");
+    },
+    getChaffNode: func () {
+      return me.propNode.getNode("rotors/main/blade[3]/position-deg");
+    },
 	get_type: func () {
 		# for now, just interpret all as air targets
 		var AIR = 0;
@@ -773,9 +956,21 @@ var Target = {
         return "UFO";
     },
     get_Coord: func(){
-        me.coord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
-        var TgTCoord  = geo.Coord.new(me.coord);
-        return TgTCoord;
+        if (me.lat != nil) {
+            me.coord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
+        } else {
+            if (me.x != nil)
+            {
+                var x = me.x.getValue();
+                var y = me.y.getValue();
+                var z = me.z.getValue();
+
+                me.coord.set_xyz(x, y, z);
+            } else {
+                return nil;#hopefully wont happen
+            }
+        }
+        return geo.Coord.new(me.coord);#best to pass a copy
     },
     get_Longitude: func(){
         var n = me.lon.getValue();
@@ -789,6 +984,10 @@ var Target = {
         var n = me.pitch.getValue();
         return n;
     },
+    get_Roll: func(){
+        var n = me.roll.getValue();
+        return n;
+    },
     isPainted: func() {
     	# Tells if this is the target that are being tracked, only used in semi-radar guided missiles.
     	return TRUE;
@@ -797,6 +996,9 @@ var Target = {
         # return true airspeed
         var n = me.speed.getValue();
         return n;
+    },
+    get_model: func {
+        return me.ModelType;
     },
 	list : [],
 };

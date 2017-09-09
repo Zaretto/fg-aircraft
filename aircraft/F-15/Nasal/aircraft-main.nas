@@ -552,9 +552,9 @@ var quickstart = func() {
     setprop("engines/engine[1]/out-of-fuel",0);
     setprop("engines/engine[1]/run",1);
     setprop("engines/engine[1]/run",1);
-    setprop("fdm/jsbsim/fcs/pitch-damper-enable",1);
-    setprop("fdm/jsbsim/fcs/roll-damper-enable",1);
-    setprop("fdm/jsbsim/fcs/yaw-damper-enable",1);
+    setprop("sim/model/f15/controls/CAS/pitch-damper-enable",1);
+    setprop("sim/model/f15/controls/CAS/roll-damper-enable",1);
+    setprop("sim/model/f15/controls/CAS/yaw-damper-enable",1);
 
 setprop("engines/engine[1]/cutoff",0);
 setprop("engines/engine[0]/cutoff",0);
@@ -596,9 +596,9 @@ var cold_and_dark = func()
     setprop("controls/lighting/stby-inst", 0);
     setprop("controls/lighting/warn-caution", 0);
 
-    setprop("fdm/jsbsim/fcs/pitch-damper-enable",0);
-    setprop("fdm/jsbsim/fcs/roll-damper-enable",0);
-    setprop("fdm/jsbsim/fcs/yaw-damper-enable",0);
+    setprop("sim/model/f15/controls/CAS/pitch-damper-enable",0);
+    setprop("sim/model/f15/controls/CAS/roll-damper-enable",0);
+    setprop("sim/model/f15/controls/CAS/yaw-damper-enable",0);
 
     setprop("sim/model/f15/controls/HUD/brightness",0);
     setprop("sim/model/f15/controls/HUD/on-off",false);
@@ -680,3 +680,11 @@ var resetView = func () {
   setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
   setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
 }
+
+dynamic_view.register(func {
+              me.default_plane(); 
+   });
+
+var prop = "/instrumentation/radar";
+var actuator_radar = compat_failure_modes.set_unserviceable(prop);
+FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);

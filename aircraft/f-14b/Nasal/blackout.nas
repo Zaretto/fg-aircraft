@@ -169,7 +169,7 @@ var blackout_init = func {
 	fdm = getprop("/sim/flight-model");
 
 	if (getprop("sim/rendering/redout/internal/log/g-force") == nil) {
-	blackout_loop();
+		blackout_loop();
 	} else {
 		redout_loop();
 	}

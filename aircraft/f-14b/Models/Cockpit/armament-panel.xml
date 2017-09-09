@@ -10,11 +10,11 @@
 		<condition>
 			<or>
 				<equals>
-					<property>/sim/current-view/name</property>
+					<property>sim/current-view/name</property>
 					<value>RIO View</value>
 				</equals>
 				<equals>
-					<property>/sim/current-view/name</property>
+					<property>sim/current-view/name</property>
 					<value>Back-seat View</value>
 				</equals>
 			</or>
@@ -49,15 +49,10 @@
 			<button>0</button>
 			<repeatable>false</repeatable>
 			<interval-sec>0.05</interval-sec>
-            <binding>
-                <command>property-toggle</command>
-                <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
-            </binding>
-
-            <binding>
+			<binding>
 				<command>nasal</command>
 				<script>
-					f14.notify_value(f14.station_selector_0, -1);
+					f14.station_selector(0, -1);
 				</script>
 			</binding>
 		</action>
@@ -73,124 +68,141 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.notify_value(f14.station_selector_0, 1);
+					f14.station_selector(0, 1);
 				</script>
 			</binding>
 		</action>
 	</animation>
 
-    <animation>
-		<type>rotate</type>
+   <animation>
+        <type>knob</type>
 		<object-name>sta-3-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
-		<factor>-35</factor>
+        <factor>30</factor>
         <center>
-			<x-m>0.00105</x-m>
-			<y-m>0.00862</y-m>
-			<z-m>-0.03725</z-m>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0474</y-m>
+            <z-m>-0.0262</z-m>
         </center>
-		<axis><y>-1</y></axis>
-	</animation>
-	<animation>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>hotspot-sta-3</object-name>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
         <action>
-			<button>0</button>
-			<repeatable>false</repeatable>
-			<interval-sec>0.05</interval-sec>
             <binding>
-				<command>nasal</command>
-				<script>
-					f14.notify_value(f14.station_selector_3, 0);
-				</script>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(3, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
-		<type>rotate</type>
+        <type>knob</type>
 		<object-name>sta-4-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
-		<factor>-35</factor>
+        <factor>30</factor>
         <center>
-			<x-m>0.00176</x-m>
-			<y-m>0.00906</y-m>
-			<z-m>-0.07668</z-m>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0485</y-m>
+            <z-m>-0.0650</z-m>
         </center>
-		<axis><y>-1</y></axis>
-	</animation>
-	<animation>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>hotspot-sta-4</object-name>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
         <action>
-			<button>0</button>
-			<repeatable>false</repeatable>
-			<interval-sec>0.05</interval-sec>
             <binding>
-				<command>nasal</command>
-				<script>
-					f14.notify_value(f14.station_selector_4, 0);
-				</script>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(4, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
-		<type>rotate</type>
+        <type>knob</type>
 		<object-name>sta-5-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
-		<factor>-35</factor>
+        <factor>30</factor>
         <center>
-			<x-m>0.00489</x-m>
-			<y-m>0.03834</y-m>
-			<z-m>-0.07693</z-m>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0186</y-m>
+            <z-m>-0.0650</z-m>
         </center>
-		<axis><y>-1</y></axis>
-	</animation>
-	<animation>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>hotspot-sta-5</object-name>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
         <action>
-			<button>0</button>
-			<repeatable>false</repeatable>
-			<interval-sec>0.05</interval-sec>
             <binding>
-				<command>nasal</command>
-				<script>
-					f14.notify_value(f14.station_selector_5, 0);
-				</script>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(5, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
-		<type>rotate</type>
+        <type>knob</type>
 		<object-name>sta-6-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[6]</property>
-		<factor>-35</factor>
+        <factor>30</factor>
         <center>
-			<x-m>0.00176</x-m>
-			<y-m>0.03895</y-m>
-			<z-m>-0.03785</z-m>
+            <x-m>-0.0037</x-m>
+            <y-m>-0.0186</y-m>
+            <z-m>-0.0262</z-m>
         </center>
-		<axis><y>-1</y></axis>
-    </animation>
-    <animation>
-		<type>pick</type>
-		<visible>true</visible>
-		<object-name>hotspot-sta-6</object-name>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
         <action>
-			<button>0</button>
-			<repeatable>false</repeatable>
-			<interval-sec>0.05</interval-sec>
             <binding>
-				<command>nasal</command>
-				<script>
-					f14.notify_value(f14.station_selector_6, 0);
-				</script>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(6, -1000);
+                </script>
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>knob</type>
+		<object-name>msl-option-sw</object-name>
+		<property>sim/model/f-14b/controls/armament/msl-option-sw</property>
+        <offset-deg>30</offset-deg>
+        <factor>-30</factor>
+        <center>
+            <x-m>-0.0018</x-m>
+            <y-m>-0.0054</y-m>
+            <z-m>-0.1013</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+        		<property>sim/model/f-14b/controls/armament/msl-option-sw</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
 
 	<animation>
 		<type>rotate</type>
@@ -215,7 +227,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.notify_value(f14.station_selector_7, -1);
+					f14.station_selector(7, -1);
 				</script>
 			</binding>
 		</action>
@@ -231,7 +243,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.notify_value(f14.station_selector_7, 1);
+					f14.station_selector(7, 1);
 				</script>
 			</binding>
 		</action>
@@ -244,7 +256,7 @@
     <type>material</type>
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
         <value>0</value>
       </greater-than>
       <not>
@@ -296,7 +308,7 @@
 		<type>material</type>
         <condition>
             <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
@@ -315,7 +327,7 @@
 		<type>material</type>
         <condition>
             <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>

@@ -68,7 +68,7 @@ var warhead_lbs = {
     "R-27T1":               85.98,
     "FAB-500":             564.00,
     "Exocet":              364.00,
-  };
+};
 
 var fireMsgs = {
   
@@ -103,6 +103,7 @@ var incoming_listener = func {
     var last_vector = split(":", last);
     var author = last_vector[0];
     var callsign = getprop("sim/multiplay/callsign");
+    callsign = size(callsign) < 8 ? callsign : left(callsign,7);
     if (size(last_vector) > 1 and author != callsign) {
       # not myself
       #print("not me");
@@ -221,6 +222,11 @@ var incoming_listener = func {
           } 
         } elsif (cannon_types[last_vector[1]] != nil) {
           if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
+            if (size(last_vector) < 4) {
+              # msg is either missing number of hits, or has no trailing dots from spam filter.
+              print('"'~last~'"   is not a legal hit message, tell the shooter to upgrade his OPRF plane :)');
+              return;
+            }
             var last3 = split(" ", last_vector[3]);
             if(size(last3) > 2 and size(last3[2]) > 2 and last3[2] == "hits" ) {
               var probability = cannon_types[last_vector[1]];
@@ -234,14 +240,14 @@ var incoming_listener = func {
 
                 printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
                 nearby_explosion();
-            }
+              }
             } else {
               var probability = cannon_types[last_vector[1]];
               #print("probability: " ~ probability);
-
+              
               var failed = fail_systems(probability * 3);# Old messages is assumed to be 3 hits
               printf("Took %.1f%% x 3 damage from cannon! %s systems was hit.", probability*100, failed);
-            nearby_explosion();
+              nearby_explosion();
           }
         }
       }
@@ -623,6 +629,7 @@ var re_init = func {
   foreach(var failure_mode_id; mode_list) {
     FailureMgr.set_failure_level(failure_mode_id, 0);
   }
+  setprop("ai/submodels/submodel[4]/count", 100);
+  setprop("ai/submodels/submodel[5]/count", 100);
 }
 
-setlistener("/sim/signals/reinit", re_init, 0, 0);

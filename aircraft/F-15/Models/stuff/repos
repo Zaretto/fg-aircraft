@@ -1,0 +1,103 @@
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+np.apply_course_distance(10,5000);
+geo.aircraft_position().set_xyz(np.x(),np.y(),np.z());
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",1200);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading+getprop("/orientation/local-mag-dev"));
+fgcommand("reposition")
+
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+np.apply_course_distance(10,2000);
+geo.aircraft_position().set_xyz(np.x(),np.y(),np.z());
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",500);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/pitch-deg",7);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading+getprop("/orientation/local-mag-dev"));
+fgcommand("reposition")
+
+
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+var magvar=getprop("/orientation/local-mag-dev");
+np.apply_course_distance(-magvar,1000);
+
+geo.aircraft_position().set_xyz(np.x(),np.y(),np.z());
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",240);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/pitch-deg",7);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading+magvar);
+fgcommand("reposition")
+
+
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+
+var magvar=getprop("/orientation/local-mag-dev");
+np.apply_course_distance(7-magvar,1000);
+
+geo.aircraft_position().set_xyz(np.x(),np.y(),np.z());
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",240);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/pitch-deg",6);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+fgcommand("reposition")
+
+
+##
+#                    var x = c.getNode("position/global-x").getValue() + 136.8405162137933;
+#                    var y = c.getNode("position/global-y").getValue() + 68.03873590473086;
+#                    var z = c.getNode("position/global-z").getValue() + 206.9255831753835;
+
+
+
+		
+
+var x = f14.carrier_ara_63_position.x() + 88.7713542;
+var y = f14.carrier_ara_63_position.y()  + 18.74631309;
+var z = f14.carrier_ara_63_position.z() + 115.6574875;
+var np = geo.Coord.new().set_xyz(x,y,z);
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+var magvar=getprop("/orientation/local-mag-dev");
+np.apply_course_distance(357.5-magvar,1000);
+
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",740);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/pitch-deg",2);
+#setprop("sim/presets/heading-deg",178-magvar);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+fgcommand("reposition")
+
+
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+var magvar=getprop("/orientation/local-mag-dev");
+np.apply_course_distance(f14.carrier_ara_63_heading,-1700);
+
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",300);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/pitch-deg",7);
+#setprop("sim/presets/heading-deg",178-magvar);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+fgcommand("reposition")
+
+var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+var magvar=getprop("/orientation/local-mag-dev");
+np.apply_course_distance(f14.carrier_ara_63_heading,-1700);
+
+setprop("sim/presets/latitude-deg",np.lat());
+setprop("sim/presets/longitude-deg",np.lon());
+setprop("sim/presets/altitude-ft",350);
+setprop("sim/presets/airspeed-kt",140);
+setprop("sim/presets/pitch-deg",7);
+#setprop("sim/presets/heading-deg",178-magvar);
+setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+fgcommand("reposition")

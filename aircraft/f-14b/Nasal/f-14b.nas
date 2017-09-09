@@ -612,3 +612,7 @@ model_setprop = func(v){
 #setprop(v, getprop("/"~v));
 #print(" >> ", getprop(v));
 }
+
+dynamic_view.register(func {
+              me.default_plane(); 
+   });

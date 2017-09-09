@@ -68,6 +68,14 @@
             date="08 September 2010"
             URL="http://www.f-15e.info/joomla/technology/fuel-system/95-fuel-dumping-system"
         />
+        <reference
+                refID="NASA TM-104278"
+                author="Compiled by Sheryll Goecke Powers"
+                title="An Electronic workshop on the Performance Seeking Control and Propulsion Controlled Aircraft Results of the F-15 Highly Integrated Digital Electronic Control Flight Research Program. Proceedings of the Electronic workshop"
+                date="1995"
+                URL="https://ntrs.nasa.gov/search.jsp?R=19950026588"
+        />
+
     </fileheader>
     <metrics>
         <wingarea unit="FT2">608</wingarea>
@@ -241,6 +249,49 @@
             <brake_group>RIGHT</brake_group>
             <retractable>1</retractable>
         </contact>
+
+        <!--These three contact points that are used to substitute for damaged gear. The z-position will be adjusted lower when the gear is damaged, and the damaged gear will be move upwards. This is really to make it
+            look about right and also to help with the dynamics --> 
+        <contact type="STRUCTURE" name="NOSE_LG_DOORS">
+            <location unit="IN">
+                <x>197</x>
+                <y>0</y>
+                <z>-30.6496063</z>
+            </location>
+                       <static_friction>1.2</static_friction>
+            <dynamic_friction>1.212</dynamic_friction>
+            <rolling_friction>1.413</rolling_friction>
+            <spring_coeff unit="LBS/FT">25200</spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC">5600</damping_coeff>
+
+        </contact>
+        <contact type="STRUCTURE" name="LEFT_MLG_DOORS">
+            <location unit="IN">
+                <x>451</x>
+                <y>-98</y>
+                <z>-30</z>
+            </location>
+                       <static_friction>1.2</static_friction>
+            <dynamic_friction>1.212</dynamic_friction>
+            <rolling_friction>1.413</rolling_friction>
+            <spring_coeff unit="LBS/FT">25200</spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC">5600</damping_coeff>
+
+        </contact>
+        <contact type="STRUCTURE" name="RIGHT_MLG_DOORS">
+            <location unit="IN">
+                <x>451</x>
+                <y>98</y>
+                <z>-30</z>
+            </location>
+           <static_friction>1.2</static_friction>
+            <dynamic_friction>1.212</dynamic_friction>
+            <rolling_friction>1.413</rolling_friction>
+            <spring_coeff unit="LBS/FT">25200</spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC">5600</damping_coeff>
+
+        </contact>
+        
         <contact type="STRUCTURE" name="LEFT_WING_TIP">
             <location unit="IN">
                 <x>472</x>
@@ -532,6 +583,21 @@
     </propulsion>
 
     <external_reactions>
+        <!-- wake turbulence from other AI plane -->
+        <force name="ai-wake" frame="BODY">
+            <location unit="M">
+                <!-- Center of the main wing leading edge -->
+                <x> 9.40857</x>
+                <y> 0.0 </y>
+                <z> 0.63046 </z>
+            </location>
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </force>
+        <moment name="ai-wake" frame="BODY"/>
         <force name="catapult" frame="BODY">
             <location unit="IN">
                 <x>667</x>
@@ -1071,6 +1137,36 @@
                 </table>
             </product>
         </function>
+
+        <function name="aero/coefficients/DCdGE">
+            <description>Delta drag due ground effect, NASA-TM-104278, p228</description>
+            <product>
+                <table>
+                    <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                    <independentVar lookup="column">velocities/w-aero-fps</independentVar>
+                    <tableData>
+                                 0.7         6.5
+                         0  	0.014888	0.040409
+                         1  	0.012193	0.033129
+                         3  	0.010844	0.029238
+                         4  	0.009267	0.021686
+                         6  	0.007690	0.015870
+                         8  	0.006561	0.011991
+                         9  	0.005545	0.009817
+                        11  	0.004191	0.007486
+                        13  	0.003286	0.006122
+                        16  	0.002598	0.004051
+                        18  	0.002024	0.002685
+                        22  	0.001558	0.001590
+                        25  	0.001093	0.000981
+                        27  	0.000744	0.000744
+                        29  	0.000000	0.000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
+
         <function name="aero/coefficients/CFZB">
             <description>BASIC LIFT</description>
             <product>
@@ -1257,6 +1353,33 @@
                 </table>
             </product>
         </function>
+        <function name="aero/coefficients/DClGE">
+            <description>Delta Cl due ground effect, NASA-TM-104278, p228</description>
+            <product>
+                <table>
+                    <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                    <independentVar lookup="column">velocities/w-aero-fps</independentVar>
+                    <tableData>
+                                        0.7         6.5
+                             0  	0.1039090	0.0734851
+                             3  	0.0844895	0.0604182
+                             5  	0.0669446	0.0510854
+                             7  	0.0542444	0.0426352
+                            10  	0.0419074	0.0343156
+                            13  	0.0310507	0.0258929
+                            16  	0.0209326	0.0175744
+                            20  	0.0119226	0.0113901
+                            23  	0.0081328	0.0079730
+                            26  	0.0054696	0.0055229
+                            29  	0.0035576	0.0035576
+                            31  	0.0027785	0.0028405
+                            33  	0.0012513	0.0012513
+                            34  	0.0001122	0.0002520
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
         <function name="aero/coefficients/CMDFM">
             <description>CM increment due to flap mean position</description>
             <product>
@@ -1535,6 +1658,58 @@
                 </table>
             </product>
         </function>
+
+        <function name="aero/coefficients/DCMGE">
+            <description>Delta pitch moment due ground effect, NASA-TM-104278, p228</description>
+            <product>
+                <table>
+                    <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                    <independentVar lookup="column">velocities/w-aero-fps</independentVar>
+                    <independentVar lookup="table">fcs/flap-pos-deg</independentVar>
+                    <tableData breakPoint="0">
+                                   0.7         6.5
+                         0.0	-0.014767	-0.007937
+                         0.1	-0.014690	-0.007912
+                         0.4	-0.014111	-0.007729
+                         1.6	-0.012123	-0.007099
+                         3.7	-0.009725	-0.006025
+                         6.4	-0.007056	-0.004666
+                         8.4	-0.005538	-0.003887
+                        10.1	-0.004577	-0.003312
+                        11.3	-0.004206	-0.003037
+                        13.7	-0.003450	-0.002503
+                        14.7	-0.003087	-0.002366
+                        16.1	-0.002625	-0.002184
+                        19.0	-0.001958	-0.001755
+                        23.2	-0.001214	-0.000968
+                        26.9	-0.000605	-0.000741
+                        28.6	-0.000350	-0.000355
+                        36.6	-0.000127	-0.000125
+                    </tableData>
+                    <tableData breakPoint="35">
+                                   0.7         6.5
+                         0.0	-0.054720	-0.054720
+                         0.1	-0.035523	-0.035523
+                         0.4	-0.031475	-0.031475
+                         1.6	-0.026647	-0.026647
+                         3.7	-0.020908	-0.020908
+                         6.4	-0.013864	-0.013864
+                         8.4	-0.011128	-0.011128
+                        10.1	-0.008522	-0.008522
+                        11.3	-0.006567	-0.006567
+                        13.7	-0.004485	-0.004485
+                        14.7	-0.003182	-0.003182
+                        16.1	-0.002403	-0.002403
+                        19.0	-0.001760	-0.001760
+                        23.2	-0.001121	-0.001121
+                        26.9	-0.000741	-0.000741
+                        28.6	-0.000224	-0.000224
+                        36.6	-0.000120	-0.000120
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
         <function name="aero/coefficients/CLMach">
             <description>Roll Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
             <product>
@@ -4475,6 +4650,7 @@
                 <property>aero/coefficients/ClDFM</property>
                 <property>aero/coefficients/ClUC</property>
                 <property>aero/coefficients/DClRamp</property>
+                <property>aero/coefficients/DClGE</property>
             </sum>
         </function>
         <axis name="LIFT">
@@ -4495,6 +4671,7 @@
                 <property>aero/coefficients/CdDBRK</property>
                 <property>aero/coefficients/CdDFM</property>
                 <property>aero/coefficients/DCdRamp</property>
+                <property>aero/coefficients/DCdGE</property>
             </sum>
         </function>
         <axis name="DRAG">
@@ -4561,6 +4738,7 @@
                 <property>aero/coefficients/CMDFM</property>
                 <property>aero/coefficients/DCMRamp</property>
                 <property>aero/coefficients/CMMTNK</property>
+                <property>aero/coefficients/DCMGE</property>
             </sum>
         </function>
         <axis name="PITCH">
@@ -4599,9 +4777,9 @@
         </axis>
     </aerodynamics>
     <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
-        --><!--<simulation> ON </simulation>--><!--
+        <simulation> ON </simulation>
         <atmosphere> ON </atmosphere>
-        --><!--<massprops> ON </massprops>
+        <massprops> ON </massprops>
         <aerosurfaces> ON </aerosurfaces>
         <rates> ON </rates>
         <velocities> ON </velocities>
@@ -4610,7 +4788,27 @@
         <coefficients> ON </coefficients>
         <ground_reactions> ON </ground_reactions>
         <fcs> ON </fcs>
-        <propulsion> ON </propulsion>--><!--
+        <propulsion> ON </propulsion>
         <property>systems/ecs/windscreen-temperature-k</property>
     </output>-->
+    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+        <property>position/aircraft-on-ground</property>
+        <property>velocities/h-dot-fps</property>
+        <property>velocities/u-aero-fps</property>
+        <property>velocities/v-aero-fps</property>
+        <property>velocities/w-aero-fps</property>
+        
+        <property>gear/unit[0]/compression-ft</property>
+        <property>gear/unit[1]/compression-ft</property>
+        <property>gear/unit[2]/compression-ft</property>
+        
+        <property>gear/unit[0]/damaged</property>
+        <property>gear/unit[0]/WOW</property>
+
+        <property>gear/unit[1]/damaged</property>
+        <property>gear/unit[1]/WOW</property>
+
+        <property>gear/unit[2]/damaged</property>
+        <property>gear/unit[2]/WOW</property>
+</output>-->
 </fdm_config>
