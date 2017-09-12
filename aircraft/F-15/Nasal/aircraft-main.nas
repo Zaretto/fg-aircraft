@@ -411,11 +411,11 @@ var rate2modules = func {
     if (r2_count > 0)
         return;
 
-    var frame_rate = getprop("/sim/frame-rate");
-    if (frame_rate <= 15 or frame_rate > 100)
+#    var frame_rate = getprop("/sim/frame-rate");
+#    if (frame_rate <= 15 or frame_rate > 100)
         r2_count = 2;
-    else
-        r2_count = (int)(frame_rate * 0.1333);
+#    else
+#        r2_count = (int)(frame_rate * 0.1333);
 
     aircraft.updateHUD();
 #	settimer (rate2modules, 0.1);
