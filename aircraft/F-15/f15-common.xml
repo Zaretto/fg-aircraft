@@ -561,6 +561,7 @@
                         <altitude-enable type="bool">0</altitude-enable>
                         <dead-zone-pitch type="double">0.05</dead-zone-pitch>
                         <dead-zone-roll type="double">0.01</dead-zone-roll>
+                        <cas-takeoff-trim type="bool">false</cas-takeoff-trim>
                     </AFCS>
                     <armament>
                         <acm-jettison-lever type="bool">0</acm-jettison-lever>
@@ -1811,7 +1812,7 @@
                 <desc>Toggle autopilot altitude mode.</desc>
                 <binding>
                     <command>property-toggle</command>
-                    <property>sim/model/f15/controls/afcs/alt-hold</property>
+                    <property>sim/model/f15/controls/AFCS/alt-hold</property>
                 </binding>
             </key>
 
@@ -1847,7 +1848,7 @@
                 <desc>Toggle autopilot attitude mode</desc>
                 <binding>
                     <command>property-toggle</command>
-                    <property>sim/model/f15/controls/afcs/att-hold</property>
+                    <property>sim/model/f15/controls/AFCS/att-hold</property>
                 </binding>
             </key>
 

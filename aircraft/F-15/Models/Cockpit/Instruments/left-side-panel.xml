@@ -1700,7 +1700,7 @@
     <animation>
         <type>knob</type>
         <object-name>cas-alt-hold-switch</object-name>
-        <property>sim/model/f15/controls/afcs/alt-hold</property>
+        <property>sim/model/f15/controls/AFCS/alt-hold</property>
         <factor>-60</factor>
         <offset-deg>30</offset-deg>
         <center>
@@ -1717,7 +1717,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>sim/model/f15/controls/afcs/alt-hold</property>
+                <property>sim/model/f15/controls/AFCS/alt-hold</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -1729,7 +1729,7 @@
     <animation>
         <type>knob</type>
         <object-name>cas-att-hold-switch</object-name>
-        <property>sim/model/f15/controls/afcs/att-hold</property>
+        <property>sim/model/f15/controls/AFCS/att-hold</property>
         <factor>-60</factor>
         <offset-deg>30</offset-deg>
         <center>
@@ -1746,7 +1746,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>sim/model/f15/controls/afcs/att-hold</property>
+                <property>sim/model/f15/controls/AFCS/att-hold</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -1763,15 +1763,52 @@
             <button>0</button>
             <repeatable>false</repeatable>
             <binding>
-                <command>property-toggle</command>
-                <property>sim/model/f15/controls/afcs/cas-takeoff-trim</property>
+                <condition>
+                    <property>fdm/jsbsim/gear/wow</property>
+                </condition>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+                <value>1</value>
             </binding>
+        <mod-up>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+                <value>0</value>
+            </binding>
+        </mod-up>
         </action>
     </animation>
     <animation>
         <type>translate</type>
         <object-name>cas-takeoff-trim-switch</object-name>
-        <property>sim/model/f15/controls/afcs/cas-takeoff-trim</property>
+        <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.003</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6251</x-m>
+            <y-m> 0.3209</y-m>
+            <z-m> 0.6550</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>0</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <!--<animation>
+        <type>knob</type>
+        <object-name>cas-takeoff-trim-switch</object-name>
+        <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -1792,7 +1829,28 @@
             <y>0</y>
             <z>1</z>
         </axis>
-    </animation>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>-->
 
     <!-- fuel  panel -->
     <animation>
@@ -2766,6 +2824,48 @@
 
         <emission>
             <factor>1</factor>
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>cas-takeoff-trim-lamp-on</object-name>
+        <type>material</type>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+            </or>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <emission>
+            <factor>1</factor>
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>cas-takeoff-trim-lamp-on</object-name>
+        <type>material</type>
+        <condition>
+            <not>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/controls/AFCS/cas-takeoff-trim</property>
+            </or>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            </not>
+        </condition>
+        <emission>
+            <factor>0</factor>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>

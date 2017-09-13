@@ -493,6 +493,10 @@ print("F-15 two seat variant (B,D,E)");
 
 setlistener("/sim/signals/fdm-initialized", startProcess);
 
+setlistener("sim/model/f15/controls/AFCS/cas-takeoff-trim", func(v) {
+print("Takeoff trim");
+setprop("controls/flight/elevator-trim", -0.43);
+});
 #----------------------------------------------------------------------------
 # View change: Ctrl-V switchback to view #0 but switch to Rio view when already
 # in view #0.

@@ -355,7 +355,7 @@ var runEMMISC = func {
         }
     }
 
-	if (getprop("sim/model/f15/controls/afcs/autopilot-disengage"))
+	if (getprop("sim/model/f15/controls/AFCS/autopilot-disengage"))
     {
         if (!getprop("sim/model/f15/lights/ca-auto-plt"))
         {
@@ -548,7 +548,7 @@ var master_caution_pressed = func {
     masterCaution_light.setBoolValue(0);
     masterCaution_light_set.setBoolValue(0);
 
-    setprop("sim/model/f15/controls/afcs/autopilot-disengage",0);
+    setprop("sim/model/f15/controls/AFCS/autopilot-disengage",0);
 }
 
 var electricsFrame = func {
