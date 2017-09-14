@@ -688,30 +688,6 @@ emerg operation.
                 gear/unit[2]/WOW ne 0
             </test>
         </switch>
-        <switch name="/gear/gear[0]/position-norm">
-            <default value="gear/gear-pos-norm"/>
-            <test value="0.5">
-                gear/unit[0]/damaged eq 1
-                gear/unit[0]/pos-norm ge 0.6
-            </test>
-            <output>/gear/gear[0]/position-norm</output>
-        </switch>
-        <switch name="/gear/gear[1]/position-norm">
-            <default value="gear/gear-pos-norm"/>
-            <test value="0.6">
-                gear/unit[1]/damaged eq 1
-                gear/unit[1]/pos-norm ge 0.6
-            </test>
-            <output>/gear/gear[1]/position-norm</output>
-        </switch>
-        <switch name="/gear/gear[2]/position-norm">
-            <default value="gear/gear-pos-norm"/>
-            <test value="0.6">
-                gear/unit[2]/damaged eq 1
-                gear/unit[2]/pos-norm ge 0.6
-            </test>
-            <output>/gear/gear[2]/position-norm</output>
-        </switch>
         <switch name="Gear Unit 0 Z">
             <default value="-77.6496063"/>
             <test value="-20">
@@ -767,10 +743,10 @@ emerg operation.
             <default value="1"/>
             <test value="1">
                 <!-- always force gear down when on ground - to prevent inadvertant retraction -->
-                position/aircraft-on-ground ne 0
+              position/aircraft-on-ground ne 0
             </test>
             <test value="gear/emerg-pos">
-                gear/emergency-handle ne 0
+              gear/emergency-handle ne 0
             </test>
             <test value="gear/gear-pos-norm">
                 gear/serviceable ne 1
