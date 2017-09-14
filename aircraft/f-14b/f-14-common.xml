@@ -2,6 +2,7 @@
 
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <sim>
+        <minimum-fg-version>2016.1</minimum-fg-version>
         <description>Grumman F-14A</description>
         <author>Richard Harrison, Enrique Laso, Alexis Bory, Nikolai V. Chr.</author>
         <status>production</status>
@@ -383,6 +384,10 @@
                 <desc>Reset view</desc>
             </key>
             <key>
+                <name>Ctrl-q</name>
+                <desc>Release chaff/flare</desc>
+            </key>
+            <key>
                 <name>S</name>
                 <desc>Toggle smoke</desc>
             </key>
@@ -542,11 +547,8 @@
                         <station-selector n="6" type="int">0</station-selector>
                         <station-selector n="7" type="int">0</station-selector>
                         <stick-selector type="int">0</stick-selector>
-                        <!-- 0 PH ACT, 1 NRM, 2 SP PD -->
-                        <msl-option-sw type="int">1</msl-option-sw>
                         <!-- 0=OFF, 1=GUN, 2=SW, 3=SP-PH -->
                         <system-on-off type="bool">false</system-on-off>
-                        <weapons-updated type="int">0</weapons-updated>
                         <tanks-ground-sound type="bool">0</tanks-ground-sound>
                     </armament>
                     <electrics>
@@ -628,7 +630,7 @@
                     </VDI>
                 </controls>
                 <fx>
-                    <smoke type="int">0</smoke>
+                    <smoke type="double">0</smoke>
                     <burner type="int">0</burner>
                     <heat-blur-on type="bool">false</heat-blur-on>
                 </fx>
@@ -792,139 +794,9 @@
                     <armament>
                         <aim9>
                             <count type="int">0</count>
-                            <guidance type="string">heat</guidance>
                             <nearest-target type="int">-1</nearest-target>
-                            <sound-on-off type="bool">false</sound-on-off>
-                            <sound-volume type="double">0.12</sound-volume>
-                            <target-range-nm type="double">0</target-range-nm>
-                            <!-- AIM-9L specs -->
-                            <max-detection-rng-nm type="int">10</max-detection-rng-nm>
-                            <!--FIXME: up to 10-16 MN with best conditions-->
-                            <fov-deg type="int">27</fov-deg>
-                            <!-- seeker optical FOV -->
-                            <detection-fov-deg type="int">60</detection-fov-deg>
-                            <!-- Search pattern diameter (rosette scan) -->
-                            <track-max-deg type="int">134</track-max-deg>
-                            <!-- Seeker max total angular rotation -->
-                            <max-g type="int">32</max-g>
-                            <!-- In turn -->
-                            <thrust-lbs-stage-1 type="double">3821.75</thrust-lbs-stage-1><!-- guess -->
-                            <thrust-lbs-stage-2 type="double">0.0</thrust-lbs-stage-2>    <!-- authentic -->
-                            <stage-1-duration-sec type="double">4.0</stage-1-duration-sec><!-- guess -->
-                            <stage-2-duration-sec type="double">1.0</stage-2-duration-sec><!-- Aim-9L -->
-                            <self-destruct-time-sec type="double">43</self-destruct-time-sec><!-- guess -->
-                            <!-- Mk.36 Mod.7,8 -->
-                            <weight-launch-lbs>191</weight-launch-lbs>
-                            <weight-warhead-lbs>20.8</weight-warhead-lbs>
-                            <drag-coeff type="double">0.5</drag-coeff>
-                            <!-- guess -->
-                            <drag-area type="double">0.143</drag-area>
-                            <!-- sq ft -->
-                            <seeker-angular-speed-dps>30</seeker-angular-speed-dps><!-- deg/sec guess-->
-                            <loft-altitude>0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
-                            <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
-                            <arming-time-sec type="double">1.4</arming-time-sec>
-                            <rail type="bool">true</rail>
-                            <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
-                            <rail-point-forward type="bool">true</rail-point-forward>
+                            <sound-volume type="double">0</sound-volume>
                         </aim9>
-                        <aim54>
-                            <!--Based on values from Fabien's loading_missiles:
-                            AIM 120 max range 1884 km for actual version. ->100 nm.. at mach 5 it's about 108 sec. I put a life of 1120, and thurst duration to 3/4 the travel time.-->
-                            <count type="int">0</count>
-                            <cruisealt type="int">100000</cruisealt>
-                            <nearest-target type="int">-1</nearest-target>
-                            <sound-on-off type="bool">false</sound-on-off>
-                            <sound-volume type="double">0.12</sound-volume>
-                            <target-range-nm type="double">0</target-range-nm>
-                            <max-detection-rng-nm type="int">100</max-detection-rng-nm>
-                            <fov-deg type="int">25</fov-deg>
-                            <detection-fov-deg type="int">180</detection-fov-deg>
-                            <track-max-deg type="int">110</track-max-deg>
-                            <max-g type="int">30</max-g>
-                            <max-speed type="int">30</max-speed>
-                            <thrust-lbs type="double">2722</thrust-lbs>
-                            <thrust-duration-sec type="int">81</thrust-duration-sec>
-                            <weight-launch-lbs>905</weight-launch-lbs>
-                            <weight-warhead-lbs>135</weight-warhead-lbs>
-                            <drag-coeff type="double">0.272</drag-coeff>
-                            <drag-area type="double">0.234</drag-area>
-                        </aim54>
-                        <aim120>
-                            <!--Based on values from Fabien's loading_missiles:
-                            AIM 120 max range 72 km for actual version. ->39 nm.. at mach 4 it's about 53 sec. I put a life of 115, and thurst duration oo 3/4 the travel time.-->
-                            <count type="int">0</count>
-                            <nearest-target type="int">-1</nearest-target>
-                            <sound-on-off type="bool">false</sound-on-off>
-                            <sound-volume type="double">0.12</sound-volume>
-                            <target-range-nm type="double">0</target-range-nm>
-                            <max-detection-rng-nm type="int">38.8</max-detection-rng-nm>
-                            <fov-deg type="int">25</fov-deg>
-                            <detection-fov-deg type="int">180</detection-fov-deg>
-                            <track-max-deg type="int">110</track-max-deg>
-                            <max-g type="int">15</max-g>
-                            <thrust-lbs type="double">701</thrust-lbs>
-                            <thrust-duration-sec type="int">39</thrust-duration-sec>
-                            <weight-launch-lbs>291</weight-launch-lbs>
-                            <weight-warhead-lbs>44</weight-warhead-lbs>
-                            <drag-coeff type="double">0.088</drag-coeff>
-                            <drag-area type="double">0.075</drag-area>
-                        </aim120>
-                        <aim7>
-                            <!-- AIM-7 F/M http://www.hill.af.mil/library/factsheets/factsheet.asp?id=5787
-                                 http://warfare.be/db/lang/rus/catid/348/linkid/2517/
-                                 Power Plant Hercules MK-58 solid-propellant rocket motor
-                                    Thrust Classified
-                                    Speed Classified
-                                    Range approximately 30 nm
-                                    Length 12 feet (3.64 meters)
-                                    Diameter 8 inches (0.20 meters)
-                                    Wingspan 3 feet, 4 inches (1 meter)
-                                    Warhead Annular blast fragmentation warhead
-                                    88 lbs high explosive for AIM-9H
-                                    Launch Weight Approximately 500 pounds (225 kilograms)
-                                    Guidance System Raytheon semiactive on either continuous wave or pulsed Doppler radar energy
-                                    Date Deployed 1976
-                                    Aircraft Platforms Navy: F-14 and F/A-18;
-                                    Air Force: F-4, F-15, and F-16;
-                                    Marine Corps: F-4 and F/A-18
-
-                                    Unit Cost Approximately $125,000
-                                    Inventory Classified
-
-                                    Data for AIM-7A/C/E/F/M/P and RIM-7M/P:
-
-                                    AAM-N-2 (AIM-7A) AIM-7C AIM-7E AIM-7F AIM-7M/P RIM-7M/P
-                                    Length 3.74 m (147.3 in) 3.66 m (144 in)
-                                    Wingspan 0.94 m (37 in) 1.02 m (40 in)
-                                    Finspan 0.88 m (34.8 in) 0.81 m (32 in) 0.62 m (24.3 in)
-                                    Diameter 0.203 m (8 in)
-                                    Weight 143 kg (315 lb) 172 kg (380 lb) 197 kg (435 lb) 231 kg (510 lb)
-                                    Speed Mach 2.5 Mach 4
-                                    Range 10 km (5.4 nm) 11 km (6 nm) 30 km (16 nm) 70 km (38 nm) 26 km (14 nm)
-                                    Propulsion Aerojet 1.8KS7800 solid rocket Rocketdyne MK 38/MK 52
-                                    solid rocket Hercules MK 58 dual-thrust solid rocket
-                                    Warhead 20 kg (45 lb) 30 kg (65 lb) MK 38 continuous rod 39 kg (86 lb) MK 71
-                                    continuous rod 40 kg (88 lb) WDU-27/B
-                                    blast-fragmentation
-                                 -->
-                            <count type="int">0</count>
-                            <nearest-target type="int">-1</nearest-target>
-                            <sound-on-off type="bool">false</sound-on-off>
-                            <sound-volume type="double">0.12</sound-volume>
-                            <target-range-nm type="double">0</target-range-nm>
-                            <max-detection-rng-nm type="int">31</max-detection-rng-nm>
-                            <fov-deg type="int">25</fov-deg>
-                            <detection-fov-deg type="int">140</detection-fov-deg>
-                            <track-max-deg type="int">110</track-max-deg>
-                            <max-g type="int">13</max-g>
-                            <thrust-lbs type="double">745</thrust-lbs> <!-- classified so this is a wild guess; some of that extra weight must be spare fuel.... -->
-                            <thrust-duration-sec type="int">55</thrust-duration-sec>
-                            <weight-launch-lbs>510</weight-launch-lbs>
-                            <weight-warhead-lbs>88</weight-warhead-lbs>
-                            <drag-coeff type="double">0.088</drag-coeff>
-                            <drag-area type="double">0.075</drag-area>
-                        </aim7>
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
                         <mp-messaging type="bool">false</mp-messaging>
@@ -1072,7 +944,8 @@
             <generic>
                 <float n="0">0</float>
                 <!-- wing-sweep     -->
-                <!-- <float n="1">0</float> free     -->
+                <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
+                <!--smoke-->
                 <float n="2">0</float>
                 <!-- aux flaps      -->
                 <float n="3">0</float>
@@ -1111,12 +984,15 @@
                 <int n="8" type="int">0</int>
                 <!--afterburner right-->
                 <int n="9" type="int">0</int>
-                <!--smoke-->
-                <int n="10" alias="/sim/model/f-14b/fx/smoke"/>
+                <!--free-->
+                <!--<int n="10" alias="/sim/model/f-14b/fx/smoke"/>-->
                 <!-- external weapons layout and pylons details -->
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
-                <string n="1" type="string">xxx</string> <!-- instruments -->
+                <string n="1" type="string">xxx</string>
+                <string n="13" type="string"></string>
+                <string n="15" type="string"></string>
+                <!-- instruments -->
                 <!-- <string n="2" type="string">50</string>      free -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
@@ -1368,226 +1244,6 @@
         </weight>
 
     </sim>
-    <payload>
-        <weight n="0">
-            <name>Left Wing 1A</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[0]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-        </weight>
-
-        <weight n="1">
-            <name>Left Wing 1B</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-54</name>
-                <lbs>1000</lbs>
-            </opt>
-        </weight>
-
-        <weight n="2">
-            <name>Left External Tank 2</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[2]"/>
-            <tank>8</tank>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>Droptank</name>
-                <lbs>271.0</lbs>
-                <gals>600</gals>
-            </opt>
-        </weight>
-
-
-        <weight n="3">
-            <name>Centre Left 3</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[3]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-54</name>
-                <lbs>1000</lbs>
-            </opt>
-            <opt>
-                <name>AIM-120</name>
-                <lbs>335</lbs>
-            </opt>
-        </weight>
-
-        <weight n="4">
-            <name>Centre Right Front 4</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[4]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-54</name>
-                <lbs>1000</lbs>
-            </opt>
-            <opt>
-                <name>AIM-120</name>
-                <lbs>335</lbs>
-            </opt>
-        </weight>
-
-        <weight n="5">
-            <name>Centre Back 5</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[5]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-54</name>
-                <lbs>1000</lbs>
-            </opt>
-            <opt>
-                <name>AIM-120</name>
-                <lbs>335</lbs>
-            </opt>
-        </weight>
-
-
-        <weight n="6">
-            <name>Centre Back 6</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[6]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-54</name>
-                <lbs>1000</lbs>
-            </opt>
-            <opt>
-                <name>AIM-120</name>
-                <lbs>335</lbs>
-            </opt>
-        </weight>
-
-        <weight n="7">
-            <name>Right External Tank 7</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[7]"/>
-            <tank>9</tank>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>Droptank</name>
-                <lbs>271.0</lbs>
-                <gals>600</gals>
-            </opt>
-        </weight>
-
-        <weight n="8">
-            <name>Right 8A</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[8]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-54</name>
-                <lbs>1000</lbs>
-            </opt>
-            <opt>
-                <name>AIM-120</name>
-                <lbs>335</lbs>
-            </opt>
-        </weight>
-
-        <weight n="9">
-            <name>Right 8B</name>
-            <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[9]"/>
-            <selected>none</selected>
-            <opt>
-                <name>none</name>
-                <lbs>0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-9</name>
-                <lbs>190.0</lbs>
-            </opt>
-            <opt>
-                <name>AIM-7</name>
-                <lbs>500.0</lbs>
-            </opt>
-        </weight>
-    </payload>
-
     <environment>
         <aircraft-effects>
             <overlay-alpha type="float">0.45</overlay-alpha>
@@ -1721,74 +1377,75 @@
         
         <armament>
             <trigger type="bool">false</trigger>
+            <!-- the station offsets is used by the fox2.nas to fire the missiles from their correct positions, some of them needs to be updated -->
             <station n="1">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>-3.6717</y-m>
-                    <z-m>-1.0600</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">-3.6717</y-m>
+                    <z-m type="double">-1.0600</z-m>
                 </offsets>
             </station>
             <station n="2">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>-3.2800</y-m>
-                    <z-m>-1.5700</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">-3.2800</y-m>
+                    <z-m type="double">-1.5700</z-m>
                 </offsets>
             </station>
             <station n="3">
                 <offsets>
-                    <x-m>0</x-m>
-                    <y-m>0</y-m>
-                    <z-m>0</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="4">
                 <offsets>
-                    <x-m>0</x-m>
-                    <y-m>0</y-m>
-                    <z-m>0</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="5">
                 <offsets>
-                    <x-m>0</x-m>
-                    <y-m>0</y-m>
-                    <z-m>0</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="6">
                 <offsets>
-                    <x-m>0</x-m>
-                    <y-m>0</y-m>
-                    <z-m>0</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="7">
                 <offsets>
-                    <x-m>0</x-m>
-                    <y-m>0</y-m>
-                    <z-m>0</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="8">
                 <offsets>
-                    <x-m>0</x-m>
-                    <y-m>0</y-m>
-                    <z-m>0</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="9">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>3.2800</y-m>
-                    <z-m>-1.5700</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">3.2800</y-m>
+                    <z-m type="double">-1.5700</z-m>
                 </offsets>
             </station>
             <station n="10">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>3.6717</y-m>
-                    <z-m>-1.0600</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">3.6717</y-m>
+                    <z-m type="double">-1.0600</z-m>
                 </offsets>
             </station>
         </armament>
@@ -1879,6 +1536,16 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14.toggleOversweep();</script>
+                </binding>
+            </key>
+
+            <key n="17">
+                <name>ctrl-q</name>
+                <desc>Trigger flare/chaff release</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>/ai/submodels/submodel[4]/flare-release-cmd</property>
+                    <value type="bool">true</value>
                 </binding>
             </key>
 
@@ -2164,6 +1831,22 @@
                 </binding>
             </key>
 
+            <key n="83">
+                <name>S</name>
+                <desc>smoke</desc>
+                <!--<binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
+                </binding>-->
+                <binding>
+                    <command>property-cycle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
+                    <value type="double">0.0</value>
+                    <value type="double">1.0</value>
+                    <wrap>true</wrap>
+                </binding>
+            </key>
+
             <key n="117">
                 <name>u</name>
                 <desc>Cycle through the 3 refuelling probe switch positions</desc>
@@ -2230,7 +1913,7 @@
               </binding>
              </key>
 
-             <!--<key n="97"> already overwritten
+             <key n="97">
               <name>a</name>
               <desc>Increase speed-up</desc>
                 <binding>
@@ -2241,7 +1924,7 @@
                <command>nasal</command>
                <script>armament.ct("a")</script>
               </binding>
-             </key>-->
+             </key>
 
              <key n="65">
               <name>A</name>
@@ -2285,75 +1968,137 @@
     <payload>                        
         <armament>
             <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <modelsUseCase type="bool">true</modelsUseCase>
+            <modelsUpperCase type="bool">true</modelsUpperCase>
+            <pylon-offset type="int">1</pylon-offset>
+            <pylon-stations>controls/armament</pylon-stations>
+            <station-name type="string">station</station-name>
+            <hit-interpolation type="bool">true</hit-interpolation>
+            <MP-lat type="string">rotors/main/blade[0]/flap-deg</MP-lat>
+            <MP-lon type="string">rotors/main/blade[1]/flap-deg</MP-lon>
+            <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
             <aim-9>             <!-- aim-9L sidewinder -->
-                <sound-on-off type="bool">false</sound-on-off>
-                <sound-volume type="double">0.0</sound-volume>
-                <vol-search type="double">0.150</vol-search>
-                <vol-track type="double">0.35</vol-track>
-                <vol-track-weak type="double">0.20</vol-track-weak>
-                <guidance type="string">heat</guidance>                       <!-- heat, radar or semi-radar -->
+                <vol-search type="double">0.075</vol-search>
+                <vol-track type="double">0.25</vol-track>
+                <vol-track-weak type="double">0.175</vol-track-weak>
+                <guidance type="string">heat</guidance>                       <!-- heat/radar/semi-radar/laser/gps/vision/unguided -->
                 <all-aspect type="bool">true</all-aspect>                     <!-- all or rear-only -->
                 <max-fire-range-nm type="double">9.7</max-fire-range-nm> <!-- source -->
-                <FCS-field-deg type="int">27</FCS-field-deg>                              <!-- source -->
-                <seeker-field-deg type="int">134</seeker-field-deg>                 <!-- source -->
+                <FCS-field-deg type="int">55</FCS-field-deg>                              <!-- source -->
+                <seeker-field-deg type="int">82</seeker-field-deg>                 <!-- source: 40 deg gyro + 1 deg searcher-beam-width -->
                 <max-g type="int">32</max-g>                                  <!-- source -->
                 <thrust-lbf-stage-1 type="double">2660</thrust-lbf-stage-1><!-- authentic -->
                 <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>    <!-- authentic -->
                 <stage-1-duration-sec type="double">5.23</stage-1-duration-sec><!-- authentic -->
                 <stage-2-duration-sec type="double">0.0</stage-2-duration-sec><!-- authentic -->
-                <weight-launch-lbs type="double">188</weight-launch-lbs>      <!-- authentic -->
+                <weight-launch-lbs type="double">186.2</weight-launch-lbs>      <!-- authentic -->
                 <weight-warhead-lbs type="double">20.8</weight-warhead-lbs>   <!-- authentic -->
-                <drag-coeff type="double">0.5</drag-coeff>                   <!-- guesstimate -->
-                <drag-area type="double">0.143</drag-area>                    <!-- sq ft -->
+                <weight-fuel-lbm type="double">60.4</weight-fuel-lbm>           <!-- guess -->
+                <drag-coeff type="double">0.55</drag-coeff>                   <!-- guesstimate -->
+                <cross-section-sqft type="double">0.143</cross-section-sqft>                    <!-- sq ft -->
                 <searcher-beam-width type="double">2.0</searcher-beam-width>  <!-- guess -->
                 <arming-time-sec type="double">1.4</arming-time-sec>          <!-- guess -->
                 <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach><!-- guess -->
-                <self-destruct-time-sec type="double">50</self-destruct-time-sec>         <!-- guess -->
+                <self-destruct-time-sec type="double">43</self-destruct-time-sec>         <!-- guess -->
                 <seeker-angular-speed-dps type="double">30</seeker-angular-speed-dps><!-- deg/sec guess-->
-                <loft-altitude>0</loft-altitude>
+                <lock-on-sun-deg type="double">5</lock-on-sun-deg> <!-- source -->
+                <loft-altitude type="int">0</loft-altitude>
+                <terrain-follow type="bool">false</terrain-follow>
                 <min-fire-range-nm type="double">0.2</min-fire-range-nm>
                 <rail type="bool">true</rail>
                 <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
                 <rail-point-forward type="bool">true</rail-point-forward>
-                <class type="string">A/A</class>
-                <fire-msg>Fox 2</fire-msg>
+                <max-report-distance type="double">65</max-report-distance>
+                <navigation type="string">APN</navigation>
+                <class type="string">A</class>
+                <fire-msg type="string">FOX2</fire-msg>
             </aim-9>
-            <aim-54><!-- aim-54 Phoenix - pretty much just a copy of Mirage's need tuning badly -->
-                <sound-on-off type="bool">false</sound-on-off>
-                <sound-volume type="double">0.0</sound-volume>
-                <vol-search type="double">0.0</vol-search>
-                <vol-track type="double">0.35</vol-track>
-                <vol-track-weak type="double">0.20</vol-track-weak>
-                <guidance type="string">radar</guidance>                       <!-- heat, radar or semi-radar -->
+            <aim-7>          <!-- aim-7f Sparrow -->
+                <vol-search type="double">0.00</vol-search>
+                <vol-track type="double">0.20</vol-track>
+                <vol-track-weak type="double">0.10</vol-track-weak>
+                <guidance type="string">semi-radar</guidance>           <!-- heat, radar or semi-radar -->
                 <all-aspect type="bool">true</all-aspect>                     <!-- all or rear-only -->
-                <max-fire-range-nm type="double">100</max-fire-range-nm> <!-- source -->
+                <max-fire-range-nm type="double">22</max-fire-range-nm><!-- authentic 21.5 for 2m2 RCS -->
                 <FCS-field-deg type="int">25</FCS-field-deg>                              
                 <seeker-field-deg type="int">110</seeker-field-deg>                 
-                <max-g type="int">30</max-g>
-                <thrust-lbf-stage-1 type="double">41611</thrust-lbf-stage-1>
-                <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>    
-                <stage-1-duration-sec type="double">81</stage-1-duration-sec>
-                <stage-2-duration-sec type="double">0.0</stage-2-duration-sec>
-                <weight-launch-lbs type="double">905</weight-launch-lbs>      
-                <weight-warhead-lbs type="double">135</weight-warhead-lbs>   
-                <drag-coeff type="double">0.5</drag-coeff>                   <!-- guesstimate -->
-                <drag-area type="double">0.234</drag-area>                    <!-- sq ft -->
-                <arming-time-sec type="double">2</arming-time-sec>          
-                <min-speed-for-guiding-mach type="double">0.95</min-speed-for-guiding-mach>
-                <self-destruct-time-sec type="double">160</self-destruct-time-sec>         
-                <loft-altitude>100000</loft-altitude>
+                <max-g type="int">20</max-g>                                      <!-- guess -->
+                <thrust-lbf-stage-1 type="double">5750</thrust-lbf-stage-1><!-- authentic -->
+                <thrust-lbf-stage-2 type="double">1018</thrust-lbf-stage-2><!-- authentic -->
+                <stage-1-duration-sec type="double">4.5</stage-1-duration-sec> <!-- authentic -->
+                <stage-2-duration-sec type="double">11</stage-2-duration-sec>  <!-- authentic -->
+                <weight-launch-lbs type="double">510</weight-launch-lbs>      
+                <weight-warhead-lbs type="double">88</weight-warhead-lbs>
+                <weight-fuel-lbm type="double">135</weight-fuel-lbm>
+                <drag-coeff type="double">0.25</drag-coeff>
+                <cross-section-sqft type="double">0.3382</cross-section-sqft><!-- sq ft (0.3281 ft radius) authentic -->
+                <arming-time-sec type="double">2.5</arming-time-sec>                       <!-- guess -->
+                <min-speed-for-guiding-mach type="double">0.7</min-speed-for-guiding-mach> <!-- guess -->
+                <self-destruct-time-sec type="double">75</self-destruct-time-sec>         <!-- guess -->
+                <loft-altitude>30000</loft-altitude><!-- in stage 1 it want to climb to this altitude -->
+                <min-fire-range-nm type="double">0.16</min-fire-range-nm>
+                <max-report-distance type="double">65</max-report-distance>
+                <navigation type="string">APN</navigation>
+                <rail type="bool">false</rail>
+                <class type="string">A</class>
+                <fire-msg>FOX1</fire-msg>
+            </aim-7>
+            <aim-54><!-- aim-54c Phoenix -->
+                <vol-search type="double">0.0</vol-search>
+                <vol-track type="double">0.20</vol-track>
+                <vol-track-weak type="double">0.10</vol-track-weak>
+                <guidance source="authentic" type="string">radar</guidance>
+                <all-aspect source="authentic" type="bool">true</all-aspect>
+                <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm> 
+                <FCS-field-deg type="int">25</FCS-field-deg>                              
+                <seeker-field-deg type="int">155</seeker-field-deg>                 
+                <max-g type="int">17</max-g><!-- AIM-54A could do 17G -->
+                <thrust-lbf-stage-1 source="authentic" type="double">4000</thrust-lbf-stage-1>
+                <thrust-lbf-stage-2 source="authentic" type="double">0.0</thrust-lbf-stage-2>    
+                <stage-1-duration-sec source="authentic" type="double">30</stage-1-duration-sec>
+                <stage-2-duration-sec source="authentic" type="double">0.0</stage-2-duration-sec>
+                <weight-launch-lbs source="authentic" type="double">1020</weight-launch-lbs>      
+                <weight-warhead-lbs source="source" type="double">135</weight-warhead-lbs>
+                <weight-fuel-lbm source="authentic" type="double">364</weight-fuel-lbm>
+                <drag-coeff type="double">0.18</drag-coeff>
+                <cross-section-sqft source="authentic" type="double">1.227</cross-section-sqft>
+                <arming-time-sec type="double">3</arming-time-sec>          
+                <min-speed-for-guiding-mach type="double">0.80</min-speed-for-guiding-mach>
+                <self-destruct-time-sec type="double">180</self-destruct-time-sec>         
+                <loft-altitude source="authentic" type="int">100000</loft-altitude>
                 <min-fire-range-nm type="double">0.4</min-fire-range-nm>
                 <rail type="bool">false</rail>
-                <class type="string">A/A</class>
-                <fire-msg>Fox 3</fire-msg>
+                <max-report-distance type="double">100</max-report-distance>
+                <navigation type="string">PN</navigation>
+                <class type="string">A</class>
+                <fire-msg>FOX3</fire-msg>
             </aim-54>
         </armament>
     </payload>
 
+    <rotors>
+        <main>
+            <!-- used for missile over MP -->
+            <blade n="0">
+                <flap-deg type="double">0</flap-deg>
+            </blade>
+            <blade n="1">
+                <flap-deg type="double">0</flap-deg>
+            </blade>
+            <blade n="2">
+                <flap-deg type="double">0</flap-deg>
+            </blade>
+            <blade n="3">
+                <flap-deg type="double">0</flap-deg><!-- used for releasing flares -->
+                <position-deg type="double">0</position-deg><!-- used for releasing chaff -->
+            </blade>
+        </main>
+    </rotors>
+
     <nasal>
-        <aar>
+      <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
         <limits>
@@ -2362,6 +2107,12 @@
         <radardist>
             <file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
         </radardist>
+        <vector>
+            <file>Aircraft/f-14b/Nasal/vector.nas</file>
+        </vector>
+        <rcs>
+            <file>Aircraft/f-14b/Nasal/rcs.nas</file>
+        </rcs>
         <awg_9>
             <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
         </awg_9>
@@ -2400,8 +2151,6 @@
             <file>Aircraft/f-14b/Nasal/fuel-system.nas</file>
             <file>Aircraft/f-14b/Nasal/weapons.nas</file>
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
-            <!--<file>Aircraft/f-14b/Nasal/bombable_integration.nas</file>-->
-            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
             <file>Aircraft/f-14b/Nasal/crash-and-stress.nas</file>
         </f14>
         <f14_hud>
