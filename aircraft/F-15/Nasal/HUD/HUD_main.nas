@@ -150,8 +150,6 @@ var F15HUD = {
         obj.mach=0;
         obj.rng=0;
         obj.eta_s=0;
-        obj.navRangeETA = "";
-        obj.navRangeDisplay = "";
 #
 #
 # Load the target symbosl.
