@@ -273,6 +273,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <max_steer unit="DEG"> 89 </max_steer>
             <brake_group> NOSE </brake_group>
             <retractable>1</retractable>
+            <base-compression-norm>
+              <property>gear/kneel-compression-norm</property>
+            </base-compression-norm>
         </contact>
         <!-- 1 -->
         <contact type="BOGEY" name="LEFT_MLG">
@@ -3306,6 +3309,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </aerodynamics>
 
     <external_reactions>
+        <!-- wake turbulence from other AI plane -->
         <force name="ai-wake" frame="BODY">
             <location unit="M">
                 <!-- Center of the main wing leading edge -->
