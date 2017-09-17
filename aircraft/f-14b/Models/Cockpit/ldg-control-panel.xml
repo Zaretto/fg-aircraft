@@ -70,8 +70,51 @@
 			<z>0</z>
 		</axis>
 	</animation>
+  <animation>
+    <type>knob</type>
+    <object-name>down-lock-oride-lever</object-name>
+    <property>sim/model/f-14b/controls/gear/down-lock-override</property>
+    <offset-deg>-10</offset-deg>
+    <factor>-30</factor>
+    <axis>
+      <object-name>down-lock-oride-lever-axis</object-name>
+    </axis>
 
-	<animation>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>sim/model/f-14b/controls/gear/down-lock-override</property>
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
+        <wrap>false</wrap>
+      </binding>
+    </action>
+  </animation>
+  
+  <animation>
+    <type>knob</type>
+    <object-name>nose-strut-switch</object-name>
+    <property>sim/model/f-14b/controls/gear/nose-strut</property>
+    <offset-deg>-10</offset-deg>
+    <factor>30</factor>
+    <axis>
+      <object-name>nose-strut-switch-axis</object-name>
+    </axis>
+
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>sim/model/f-14b/controls/gear/nose-strut</property>
+        <factor>1</factor>
+        <min>-1</min>
+        <max>1</max>
+        <wrap>false</wrap>
+      </binding>
+    </action>
+  </animation>
+
+  <animation>
 		<type>select</type>
 		<object-name>lamp-on</object-name>
 		<condition>

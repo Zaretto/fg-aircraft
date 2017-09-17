@@ -1,6 +1,8 @@
 # Nose Wheel Steering
 # -------------------
 
+var noseStrutControl = props.globals.getNode("sim/model/f-14b/controls/gear/nose-strut");
+var noseWOW = props.globals.getNode("/gear/gear[0]/wow");
 var NWScutoffSpeed = 80.0; #knots
 	var NWS_light = 0;
 
@@ -8,6 +10,11 @@ var computeNWS = func {
   	if ( getprop("sim/replay/time") > 0 ) { 
        return;
    }
+    #
+    # This is a spring loaded switch - so it seems sensible that it should reset once the weight has come off.
+    if (!noseWOW.getValue() and noseStrutControl.getValue())
+        noseStrutControl.setIntValue(0);
+
     if (usingJSBSim)
     {
         NWS_light = getprop("fdm/jsbsim/systems/NWS/engaged");
@@ -60,7 +67,6 @@ controls.gearDown = func(v) {
       setprop("/controls/gear/gear-down", 1);
     }
 } 
-
 
 # Landing gear handle animation 
 # -----------------------------

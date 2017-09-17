@@ -214,8 +214,12 @@
                     <property type="string">engines/engine[0]/stalled</property>
                 </signal>
                 <signal>
-                    <type>float</type>
-                    <property type="string">engines/engine[1]/stalled</property>
+                  <type>float</type>
+                  <property type="string">engines/engine[1]/stalled</property>
+                </signal>
+                <signal>
+                  <type>float</type>
+                  <property type="string">fdm/jsbsim/fcs/gear-kneel-dmd</property>
                 </signal>
             </config>
         </flight-recorder>
@@ -564,6 +568,7 @@
                     </fuel>
                     <gear>
                         <ld-gear-handle-anim type="double">0</ld-gear-handle-anim>
+                        <nose-strut alias="/fdm/jsbsim/fcs/gear-kneel-dmd"/>
                     </gear>
                     <hud>
                         <intens type="double">1</intens>

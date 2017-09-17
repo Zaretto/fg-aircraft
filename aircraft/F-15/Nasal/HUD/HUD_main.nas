@@ -139,7 +139,17 @@ var F15HUD = {
         obj.radarActiveTargetClosure.setValue(0);
         obj.navRangeDisplay.setValue("");
         obj.navRangeETA.setValue("");
+
         obj.symbol_reject = 0;
+        obj.heading_deg=0;
+        obj.roll_deg=0;
+        obj.roll_rad=0;
+        obj.pitch_deg=0;
+        obj.VV_x=0;
+        obj.VV_y=0;
+        obj.mach=0;
+        obj.rng=0;
+        obj.eta_s=0;
 #
 #
 # Load the target symbosl.
