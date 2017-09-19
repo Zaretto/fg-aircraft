@@ -544,9 +544,11 @@ return obj;
 # 2016-01-06: The HUD appears slightly trapezoidal (better than previous version
 #             however still could be improved possibly with a transformation matrix.
 
-var MainHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1");
+var MainHUD = nil;
 
 var updateHUD = func ()
 {  
+    if (MainHUD == nil)
+      MainHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1");
     MainHUD.update();
 }

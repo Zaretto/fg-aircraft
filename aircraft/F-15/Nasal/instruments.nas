@@ -816,6 +816,9 @@ var init = func {
         settimer(main_loop, 0.5);
         main_loop_launched = 1;
     }
+    var prop = "/instrumentation/radar";
+    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
