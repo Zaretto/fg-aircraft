@@ -18,14 +18,18 @@ var test = func (echoHeading, echoPitch, echoRoll, bearing, frontRCS) {
 var rcs_database = {
     "default":                  200,    #default value if target's model isn't listed
     "f-14b":                    12,     #guess
+    "F-14D":                    12,     #guess
+    "f-14b-bs":                 0.001,   # low so it dont show up on radar
     "F-15C":                    10,     #low end of sources
     "F-15D":                    11,     #low end of sources
+    "f15-bs":                   0.001,   # low so it dont show up on radar
     "JA37-Viggen":              3,      #guess
     "AJ37-Viggen":              3,      #guess
     "AJS37-Viggen":             3,      #guess
     "JA37Di-Viggen":            3,      #guess
     "m2000-5":                  1,
     "m2000-5B":                 1,
+    "m2000-5B-backseat":        0.001,
     "707":                      100,    #guess
     "707-TT":                   100,    #guess
     "EC-137D":                  110,    #guess
@@ -91,6 +95,7 @@ var targetRCSSignal = func(targetCoord, targetModel, targetHeading, targetPitch,
     if ( contains(rcs_database,targetModel) ) {
         target_front_rcs = rcs_database[targetModel];
     } else {
+        return 1;
         target_front_rcs = rcs_database["default"];
     }
     var target_rcs = getRCS(targetCoord, targetHeading, targetPitch, targetRoll, myCoord, target_front_rcs);
