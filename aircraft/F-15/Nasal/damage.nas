@@ -281,7 +281,7 @@ var fail_systems = func (probability) {
 
 var doSAMLight = func () {
   setprop("sim/model/f15/instrumentation/warnings/ac-sam", 1);
-  settimer(func {stopSAM();},3);
+  settimer(func {stopSAM();},15);
 }
 
 var stopSAM = func () {
