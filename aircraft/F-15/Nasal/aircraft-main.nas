@@ -689,6 +689,3 @@ dynamic_view.register(func {
               me.default_plane(); 
    });
 
-var prop = "/instrumentation/radar";
-var actuator_radar = compat_failure_modes.set_unserviceable(prop);
-FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);

@@ -154,6 +154,28 @@ var MPCD_Device =
         obj.mfd_device_status = 1;
         obj.model_index = model_index; # numeric index (1 to 9, left to right) used to connect the buttons in the cockpit to the display
 
+#
+# Mode switch is day/night/off. we just do on/off
+        setlistener("sim/model/f15/controls/MPCD/mode", 
+                    func(v)
+                    {
+                        if (v != nil)
+                          {
+                              MPCD.mpcd_mode = v.getValue();
+                              #    if (!mpcd_mode)
+                              #        MPCDcanvas.setVisible(0);
+                              #    else
+                              #        MPCDcanvas.setVisible(1);
+                          }
+                    });
+
+        setlistener("instrumentation/radar/radar2-range", 
+                    func(v)
+                    {
+                        setprop("instrumentation/mpcd-sit/inputs/range-nm", v.getValue());
+                    });
+
+
         obj.addPages();
         return obj;
     },
@@ -359,33 +381,16 @@ var MPCD_Device =
 
 #
 # Create the MPCD device 
-var MPCD =  MPCD_Device.new("F15-MPCD", "MPCDImage",0);
+var MPCD =  nil;
 
 var updateMPCD = func ()
 {  
+    if (MPCD == nil)
+      MPCD = MPCD_Device.new("F15-MPCD", "MPCDImage",0);
     MPCD.update();
 }
-
-#
-# Mode switch is day/night/off. we just do on/off
-setlistener("sim/model/f15/controls/MPCD/mode", func(v)
-            {
-                if (v != nil)
-                {
-                    MPCD.mpcd_mode = v.getValue();
-#    if (!mpcd_mode)
-#        MPCDcanvas.setVisible(0);
-#    else
-#        MPCDcanvas.setVisible(1);
-                }
-            });
 
 
 #
 # Connect the radar range to the nav display range. 
 setprop("instrumentation/mpcd-sit/inputs/range-nm", getprop("instrumentation/radar/radar2-range"));
-setlistener("instrumentation/radar/radar2-range", 
-            func(v)
-            {
-                setprop("instrumentation/mpcd-sit/inputs/range-nm", v.getValue());
-            });
