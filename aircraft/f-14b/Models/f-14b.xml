@@ -3752,6 +3752,36 @@
 			<z>0.0</z>
 		</axis>
 	</animation>
+  <animation>
+    <type>select</type>
+    <object-name>shoot-lights</object-name>
+    <condition>
+      <or>
+        <property>sim/model/f-14b/lights/master-test-lights</property>
+        <property>sim/model/f-14b/systems/armament/launch-light</property>
+      </or>
+      <greater-than>
+        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <value>0</value>
+      </greater-than>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>lock-lights</object-name>
+    <condition>
+      <or>
+        <property>sim/model/f-14b/lights/master-test-lights</property>
+        <property>sim/model/f-14b/systems/armament/lock-light</property>
+      </or>
+      <greater-than>
+        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <value>0</value>
+      </greater-than>
+    </condition>
+  </animation>
+  
 
 
 </PropertyList>
