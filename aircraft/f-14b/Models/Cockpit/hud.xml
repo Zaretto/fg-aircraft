@@ -134,7 +134,7 @@
     <type>select</type>
     <object-name>lock-circle-1</object-name>
     <condition>
-      <property>sim/model/f-14b/systems/armament/lock-light</property>
+      <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-display</property>
       <not>
         <property>instrumentation/radar/radar-standby</property>
       </not>
@@ -384,13 +384,13 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>sw-seeker</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-angle</property>
+		<property>payload/armament/hud/reticle-total-angle</property>
 		<axis><x>-1</x></axis>
 	</animation>
 	<animation>
 		<type>translate</type>
 		<object-name>sw-seeker</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-deviation</property>
+		<property>payload/armament/hud/reticle-total-deviation</property>
 		<factor>1</factor>
 		<axis>
 			<z>1</z>
@@ -399,7 +399,7 @@
 	<animation><!-- post-rotate in inverse direction to keep the symbol vertical -->
 		<type>rotate</type>
 		<object-name>sw-seeker</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-angle</property>
+		<property>payload/armament/hud/reticle-total-angle</property>
 		<axis><x>1</x></axis>
 	</animation>
 
