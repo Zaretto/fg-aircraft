@@ -769,7 +769,7 @@ var Target = {
 
 		obj.deviation = nil;
 
-		obj.unique = rand();
+		obj.unique = c.getPath()~c.getName()~c.getIndex();#better unique identifier than rand().
 		obj.propNode = c;
 
 		return obj;
