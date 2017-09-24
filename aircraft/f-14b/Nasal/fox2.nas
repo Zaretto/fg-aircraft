@@ -116,7 +116,8 @@ var REAL_TIME = 1;
 var TRUE = 1;
 var FALSE = 0;
 
-var use_fg_default_hud = FALSE;
+# enables the AIM-9 aiming reticle (F-14) - doesn't require the radar to be in TWS
+var use_fg_default_hud = props.globals.getNode("payload/armament/use-fg-default-hud",1).getValue();
 
 var MISSILE_STANDBY = -1;
 var MISSILE_SEARCH = 0;
