@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- F-15 Viggen Autopilot -->
+<!-- F-15 Autopilot -->
 <!-- Retuned and Overhauled -->
 <!-- (c) 2017 Joshua Davidson (it0uchpods) -->
 
@@ -85,6 +85,24 @@
  <!-- Lateral Modes                                                   -->
  <!-- =============================================================== -->
 
+	<filter>
+		<name>IT-CONTROLLER: HDG KP (P Gain)</name>
+		<type>gain</type>
+		<gain>1</gain>
+		<input>
+			<expression>
+				<table>
+					<property>/velocities/mach</property>
+					<entry><ind>0.2</ind><dep>-1.8</dep></entry>
+					<entry><ind>1.0</ind><dep>-3.7</dep></entry>
+					<entry><ind>1.5</ind><dep>-3.9</dep></entry>
+					<entry><ind>2.1</ind><dep>-4.1</dep></entry>
+				</table>
+			</expression>
+		</input>
+		<output>/autopilot/internal/kp-hdg</output>
+	</filter>
+
 	<pi-simple-controller>
 		<name>HEADING MAGNETIC</name>
 		<debug>false</debug>
@@ -106,7 +124,9 @@
 			<property>/autopilot/internal/target-roll-deg</property>
 		</output>
 		<config>
-			<Kp>-4.0</Kp>
+			<Kp>
+				<property>/autopilot/internal/kp-hdg</property>
+			</Kp>
 			<Ki>-0.000001</Ki>
 			<min>-45</min>
 			<max>45</max>
@@ -134,7 +154,9 @@
 			<property>/autopilot/internal/target-roll-deg</property>
 		</output>
 		<config>
-			<Kp>-4.0</Kp>
+			<Kp>
+				<property>/autopilot/internal/kp-hdg</property>
+			</Kp>
 			<Ki>-0.000001</Ki>
 			<min>-45</min>
 			<max>45</max>
@@ -230,8 +252,8 @@
 		<output>
 			<property>/autopilot/internal/roll-rate-cmd</property>
 		</output>   	
-		<min>-1</min>
-		<max>1</max>
+		<min>-0.4</min>
+		<max>0.4</max>
 	</filter>
 	
 	<filter>
@@ -260,8 +282,8 @@
 				<table>
 					<property>/velocities/mach</property>
 					<entry><ind>0.2</ind><dep>0.07</dep></entry>
-					<entry><ind>1.0</ind><dep>0.06</dep></entry>
-					<entry><ind>1.5</ind><dep>0.04</dep></entry>
+					<entry><ind>1.0</ind><dep>0.04</dep></entry>
+					<entry><ind>1.5</ind><dep>0.02</dep></entry>
 					<entry><ind>2.1</ind><dep>0.01</dep></entry>
 				</table>
 			</expression>
@@ -426,8 +448,8 @@
 			<expression>
 				<table>
 					<property>/velocities/mach</property>
-					<entry><ind>0.2</ind><dep>0.011</dep></entry>
-					<entry><ind>1.4</ind><dep>0.007</dep></entry>
+					<entry><ind>0.2</ind><dep>0.014</dep></entry>
+					<entry><ind>1.4</ind><dep>0.006</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -569,7 +591,7 @@
 			</expression>
 		</input>
 		<output>/autopilot/settings/target-pitch-deg</output>
-		<min>-45</min>
+		<min>-30</min>
 		<max>45</max>
 	</filter>
 	
@@ -600,7 +622,7 @@
 		</enable>
 		<input>/orientation/pitch-deg</input>
 		<output>/autopilot/internal/target-pitch-deg</output>
-		<min>-45</min>
+		<min>-30</min>
 		<max>45</max>
 	</filter>
 	
@@ -654,8 +676,8 @@
 		<output>
 			<property>/autopilot/internal/pitch-rate-cmd</property>
 		</output>   	
-		<min>-1</min>
-		<max>1</max>
+		<min>-0.8</min>
+		<max>0.8</max>
 	</filter>
 	
 	<filter>
