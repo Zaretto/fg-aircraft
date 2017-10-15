@@ -31,97 +31,99 @@
 	<hrule/>
 	<nasal>
 		<open>
-	  ## manage one AP property group with checkbox and radio buttons
-	  #
-	  Group = {
-		  new : func(name, options) {
-			  var m = { parents: [Group] };
-			  m.name = name;
-			  m.enabled = 0;
-			  m.mode = options[0];
-			  m.options = [];
+            ## manage one AP property group with checkbox and radio buttons
+            #
+            Group = {
+            new : func(name, options) {
+            var m = { parents: [Group] };
+            m.name = name;
+            m.enabled = 0;
+            m.mode = options[0];
+            m.options = [];
 
-			  var locks = props.globals.getNode("/autopilot/locks", 1);
-			  if (locks.getNode(name) == nil or locks.getNode(name, 1).getValue() == nil) {
-				  locks.getNode(name, 1).setValue("");
-			  }
-			  m.lock = locks.getNode(name);
-			  m.active = dlg.getNode(name ~ "-active", 1);
+            var locks = props.globals.getNode("/autopilot/locks", 1);
+            if (locks.getNode(name) == nil or locks.getNode(name, 1).getValue() == nil) {
+            locks.getNode(name, 1).setValue("");
+            }
+            m.lock = locks.getNode(name);
+            m.active = dlg.getNode(name ~ "-active", 1);
 
-			  foreach (var o; options) {
-				  var node = dlg.getNode(o);
-				  if (node == nil) {
-					  node = dlg.getNode(o, 1);
-					  node.setBoolValue(0);
-				  }
-				  append(m.options, node);
-				  if (m.lock.getValue() == o) {
-					  m.mode = o;
-				  }
-			  }
-			  m.listener = setlistener(m.lock, func(n) { m.update(n.getValue()) }, 1);
-			  return m;
-		  },
-		  del : func {
-			  removelistener(me.listener);
-		  },
+            foreach (var o; options) {
+            var node = dlg.getNode(o);
+            if (node == nil) {
+            node = dlg.getNode(o, 1);
+            node.setBoolValue(0);
+            }
+            append(m.options, node);
+            if (m.lock.getValue() == o) {
+            m.mode = o;
+            }
+            }
+            m.listener = setlistener(m.lock, func(n) { m.update(n.getValue()) }, 1);
+            return m;
+            },
+            del : func {
+            removelistener(me.listener);
+            },
 
-		  ## handle checkbox
-		  #
-		  enable : func {
-			  me.enabled = me.active.getBoolValue();
-			  me.lock.setValue(me.enabled ? me.mode : "");
-		  },
+            ## handle checkbox
+            #
+            enable : func {
+            me.enabled = me.active.getBoolValue();
+            me.lock.setValue(me.enabled ? me.mode : "");
+            },
 
-		  ## handle radiobuttons
-		  #
-		  set : func(mode) {
-			  me.mode = mode;
-			  foreach (var o; me.options) {
-				  o.setBoolValue(o.getName() == mode);
-			  }
-			  if (me.enabled) {
-				  me.lock.setValue(mode);
-			  }
-		  },
+            ## handle radiobuttons
+            #
+            set : func(mode) {
+            me.mode = mode;
+            foreach (var o; me.options) {
+            o.setBoolValue(o.getName() == mode);
+            }
+            if (me.enabled) {
+            me.lock.setValue(mode);
+            }
+            },
 
-		  ## update checkboxes/radiobuttons state from the AP (listener callback)
-		  #
-		  update : func(mode) {
-			  me.enabled = (mode != "");
-			  me.active.setBoolValue(me.enabled);
-			  if (mode == "") {
-				  mode = me.mode;
-			  }
-			  foreach (var o; me.options) {
-				  o.setBoolValue(o.getName() == mode);
-			  }
-		  },
-	  };
+            ## update checkboxes/radiobuttons state from the AP (listener callback)
+            #
+            update : func(mode) {
+            me.enabled = (mode != "");
+            me.active.setBoolValue(me.enabled);
+            if (mode == "") {
+            mode = me.mode;
+            }
+            foreach (var o; me.options) {
+            o.setBoolValue(o.getName() == mode);
+            }
+            },
+            };
 
 
-	  ## create and initialize input field properties if necessary
-	  #
-	  var apset = props.globals.getNode("/autopilot/settings", 1);
-	  foreach (var p; ["heading-bug-deg", "true-heading-deg", "vertical-speed-fpm",
-					   "target-pitch-deg", "target-aoa-deg", "target-altitude-ft",
-					   "target-agl-ft", "target-speed-kt"]) {
+            ## create and initialize input field properties if necessary
+            #
+            var apset = props.globals.getNode("/autopilot/settings", 1);
+            foreach (var p; ["heading-bug-deg", "true-heading-deg", "vertical-speed-fpm",
+            "target-pitch-deg", "target-aoa-deg", "target-altitude-ft",
+            "target-agl-ft", "target-speed-kt"]) {
 
-		  if ((var n = apset.getNode(p)) == nil or n.getType() == "NONE") {
-			  apset.getNode(p, 1).setDoubleValue(0);
-		  }
-	  }
+            if ((var n = apset.getNode(p)) == nil or n.getType() == "NONE") {
+            apset.getNode(p, 1).setDoubleValue(0);
+            }
+            }
 
-	  var dlg = props.globals.getNode("/sim/gui/dialogs/autopilot", 1);
+            var dlg = props.globals.getNode("/sim/gui/dialogs/autopilot", 1);
 
-	  # - first entry ("heading" etc.) is the target property in /autopilot/locks/ *and*
-	  #   the checkbox state property name (with "-active" appended);
-	  # - second entry is a list of available options for the /autopilot/locks/* property
-	  #   and used as radio button state property; the first list entry is used as default
-	  #
-	  var hdg = Group.new("heading",  ["dg-heading-hold", "wing-leveler", "true-heading-hold"]);
-	  var alt = Group.new("altitude", ["altitude-hold", "vertical-speed-hold", "pitch-hold"]);
-	</open>
+            # - first entry ("heading" etc.) is the target property in /autopilot/locks/ *and*
+            #   the checkbox state property name (with "-active" appended);
+            # - second entry is a list of available options for the /autopilot/locks/* property
+            #   and used as radio button state property; the first list entry is used as default
+            #
+            var hdg = Group.new("heading",  ["dg-heading-hold", "wing-leveler", "true-heading-hold"]);
+            var alt = Group.new("altitude", ["altitude-hold", "vertical-speed-hold", "pitch-hold"]);
+            var vel = Group.new("speed",    ["speed-with-throttle"]);
+
+        </open>
 	<close>
 	  hdg.del();
 	  alt.del();
@@ -344,5 +346,31 @@
 			</group>
 		</group>
 	</group>
+
+    <hrule/>
+    <group>
+        <layout>hbox</layout>
+        <checkbox>
+            <label>Autothrottle</label>
+            <halign>fill</halign>
+            <property>/sim/gui/dialogs/autopilot/speed-active</property>
+            <live>true</live>
+            <binding>
+                <command>dialog-apply</command>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>vel.enable()</script>
+            </binding>
+        </checkbox>
+   
+        <input>
+            <property>/autopilot/settings/target-speed-kt</property>
+            <live>true</live>
+            <binding>
+                <command>dialog-apply</command>
+            </binding>
+        </input>
+    </group>
 
 </PropertyList>

@@ -453,7 +453,6 @@ var updateFCS = func {
     currentG = getprop ("accelerations/pilot-gdamped");
 
 	#update functions
-    aircraft.computeAPC();
 	aircraft.computeEngines ();
 	aircraft.computeAdverse ();
 rate2modules();
