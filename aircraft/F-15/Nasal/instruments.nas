@@ -734,56 +734,53 @@ var common_carrier_init = func {
     }
 
 }
-var common_init = func {
+var common_init = func
+{
+    print("Setting replay medium res to 50hz");
+    setprop("sim/hud/visibility[0]",0);
+    setprop("sim/hud/visibility[1]",0);
+    aoa_max.setDoubleValue(0);
 
-        print("Setting replay medium res to 50hz");
-setprop("sim/hud/visibility[0]",0);
-setprop("sim/hud/visibility[1]",0);
-aoa_max.setDoubleValue(0);
+    setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
+    setprop("controls/flight/SAS-roll",0);
+    setprop("sim/model/f15/controls/AFCS/engage",0);
+    setprop("autopilot/locks/altitude","");
+    setprop("autopilot/locks/heading","");
+    setprop("autopilot/locks/speed","");
 
-        setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
-        setprop("controls/flight/SAS-roll",0);
-        setprop("sim/model/f15/controls/AFCS/altitude",0);
-        setprop("sim/model/f15/controls/AFCS/heading-gt",0);
-        setprop("sim/model/f15/controls/AFCS/engage",0);
-        if (getprop("sim/model/f15/controls/windshield-heat") != nil)
-            setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
+    if (getprop("sim/model/f15/controls/windshield-heat") != nil)
+      setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
 
-#
-# this is just to ensure that we start with pressure in the util hyds
-        setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",-500);
-        settimer(func {
-                     setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); 
-                        }, 4);
-        if (getprop("fdm/jsbsim/position/h-agl-ft") != nil)
-        {
-            if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) 
-            {
-                print("Starting with gear down as below 500 ft");
-                setprop("controls/gear/gear-down", 1);
-                setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
-                setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+    #
+    # this is just to ensure that we start with pressure in the util hyds
+    setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",-500);
+    settimer(func {
+        setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); 
+    }, 4);
+    if (getprop("fdm/jsbsim/position/h-agl-ft") != nil) {
+        if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) {
+            print("Starting with gear down as below 500 ft");
+            setprop("controls/gear/gear-down", 1);
+            setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
+            setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
+            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
 
-                if (getprop("fdm/jsbsim/position/h-agl-ft") < 50) 
-                {
-                    setprop("controls/gear/brake-parking",1);
-                    print("--> Set parking brake as below 50 ft");
-                }
+            if (getprop("fdm/jsbsim/position/h-agl-ft") < 50) {
+                setprop("controls/gear/brake-parking",1);
+                print("--> Set parking brake as below 50 ft");
             }
-            else 
-            {
-                print("Starting with gear up as above 500 ft");
-                setprop("controls/gear/gear-down", 0);
-                setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
-                setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
-                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("controls/gear/brake-parking",0);
-            }
+        } else {
+            print("Starting with gear up as above 500 ft");
+            setprop("controls/gear/gear-down", 0);
+            setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
+            setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
+            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+            setprop("controls/gear/brake-parking",0);
         }
-        common_carrier_init();
+    }
+    common_carrier_init();
 }
 
 # Init ####################

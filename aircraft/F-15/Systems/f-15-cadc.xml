@@ -37,6 +37,7 @@
     <property>fcs/hook-engage</property>
     <property>fcs/flap-cmd-sum</property>
     <property>fcs/roll-trim-sas-cmd-norm</property>
+	<property>systems/afcs/elevator-cmd-delta</property>
 
     <channel name="extra-aero">
         <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
@@ -451,109 +452,6 @@
             </function>
             <output>fcs/gear-windfx-volume</output>
         </fcs_function>
-    </channel>
-
-  
-    <channel name="AFCS">
-        <!-- ensure within operating envelope -->
-
-        <switch name="systems/afcs/altitude-hold-trigger">
-            <default value="0.0"/>
-            <test value="1.0">
-                <and>
-                    propulsion/engine[0]/set-running == 0
-                    propulsion/engine[1]/set-running == 0
-                    systems/afcs/altitude-hold-active ne 0
-                </and>
-            </test>
-        </switch>
-
-        <summer name="systems/afcs/altitude-hold-divergence">
-            <input> systems/afcs/target-altitude-ft </input>
-            <input> -position/h-sl-ft </input>
-        </summer>
-
-
-        <switch name="systems/afcs/altitude-hold-alt-diff-delta">
-            <default value="0.0"/>
-
-            <test value="0">
-                systems/afcs/altitude-hold-divergence lt 20
-                systems/afcs/altitude-hold-divergence gt -20
-            </test>
-
-            <test value="-systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence gt 10
-                systems/afcs/altitude-hold-divergence lt systems/afcs/altitude-hold-alt-diff-feet
-            </test>
-
-            <test value="systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence lt -10
-                systems/afcs/altitude-hold-divergence gt systems/afcs/altitude-hold-alt-diff-feet
-            </test>
-
-            <test value="-systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence lt -4
-                systems/afcs/altitude-hold-alt-diff-feet ge -2000
-            </test>
-
-            <test value="systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence gt 4
-                systems/afcs/altitude-hold-alt-diff-feet le 2000
-            </test>
-
-
-        </switch>
-
-        <summer name="systems/afcs/altitude-hold-alt-diff-feet1">
-            <input>systems/afcs/altitude-hold-alt-diff-feet</input>
-            <input>systems/afcs/altitude-hold-alt-diff-delta</input>
-            <output>systems/afcs/altitude-hold-alt-diff-feet</output>
-        </summer>
-
-        <pure_gain name="systems/afcs/altitude-hold-vsi-dmd-fps">
-            <input> systems/afcs/altitude-hold-alt-diff-feet </input>
-            <gain>0.0166666666666667</gain>
-            <!-- from fpm to fps -->
-        </pure_gain>
-
-        <summer name="systems/afcs/altitude-hold-vsi">
-            <input> systems/afcs/altitude-hold-vsi-dmd-fps </input>
-            <input> -velocities/h-dot-fps  </input>
-        </summer>
-
-        <switch name="systems/afcs/altitude-hold-dmd-vsi">
-            <default value="0.0"/>
-            <test value="systems/afcs/altitude-hold-vsi">
-                systems/afcs/altitude-hold-active == 1
-            </test>
-        </switch>
-
-        <pid name="systems/afcs/altitude-hold-divergence-pid">
-            <input>systems/afcs/altitude-hold-dmd-vsi</input>
-            <kp> systems/afcs/altitude-hold-pid-kp </kp>
-            <ki> systems/afcs/altitude-hold-pid-ki </ki>
-            <kd> systems/afcs/altitude-hold-pid-kd </kd>
-            <trigger> systems/afcs/altitude-hold-trigger </trigger>
-        </pid>
-
-        <!--
-        <pure_gain name="systems/afcs/altitude-hold-divergence-pid-contents">
-            <input> systems/afcs/altitude-hold-divergence-pid </input>
-            <gain> 1.0 </gain>
-            <output>systems/afcs/altitude-hold-divergence-pid-contents</output>
-        </pure_gain>
--->
-        <pure_gain name="systems/afcs/elevator-cmd-out">
-            <input> systems/afcs/altitude-hold-divergence-pid </input>
-            <gain> -systems/afcs/altitude-hold-elevator-gain </gain>
-            <clipto>
-                <min> -0.6</min>
-                <max> 0.6</max>
-            </clipto>
-            <output>systems/afcs/elevator-cmd-delta</output>
-        </pure_gain>
-
     </channel>
 
     <channel name="Inlet Control">

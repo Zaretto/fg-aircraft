@@ -451,28 +451,8 @@ var updateFCS = func {
     aileron_generic.setDoubleValue(-current_aileron);
 
     currentG = getprop ("accelerations/pilot-gdamped");
-    # use interpolate to make it take 1.2seconds to affect the demand
-
-    var dmd_afcs_roll = getprop("controls/flight/SAS-roll");
-    var roll_mode = getprop("autopilot/locks/heading");
-
-    if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
-        setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
-    else
-    {
-        var roll = getprop("orientation/roll-deg");
-        if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
-        else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
-
-#print("AFCS ",roll," DMD ",dmd_afcs_roll, " SAS=", getprop("controls/flight/SAS-roll"), " cur=",getprop("fdm/jsbsim/fcs/roll-trim-cmd-norm"));
-        if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
-        if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
-
-        interpolate("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",dmd_afcs_roll,0.1);
-    }
 
 	#update functions
-    aircraft.computeAPC();
 	aircraft.computeEngines ();
 	aircraft.computeAdverse ();
 rate2modules();
@@ -484,9 +464,10 @@ rate4modules();
 var startProcess = func {
 	settimer (updateFCS, 1.0);
 	position_flash_init();
-#slat_output.setDoubleValue(0);
-
+	#slat_output.setDoubleValue(0);
+	var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/F-15/Systems/autopilot-dlg.xml");
 }
+
 var two_seater = getprop("fdm/jsbsim/metrics/two-place-canopy");
 if (two_seater)
 print("F-15 two seat variant (B,D,E)");

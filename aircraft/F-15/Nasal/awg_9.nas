@@ -37,7 +37,7 @@ var OurIAS            = props.globals.getNode("fdm/jsbsim/velocities/vtrue-kts",
 var EcmOn             = props.globals.getNode("instrumentation/ecm/on-off", 1);
 var WcsMode           = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode",1);
 var SWTgtRange        = props.globals.getNode("sim/model/"~this_model~"/systems/armament/aim9/target-range-nm",1);
-var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable");
+var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
 var SelectTargetCommand =props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 
 SelectTargetCommand.setIntValue(0);

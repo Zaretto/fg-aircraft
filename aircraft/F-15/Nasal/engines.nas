@@ -14,6 +14,8 @@ var egt1_c = props.globals.getNode("engines/engine[0]/egt-degC", 1);
 var egt2_c = props.globals.getNode("engines/engine[1]/egt-degC", 1);
 var egt1 = props.globals.getNode("fdm/jsbsim/propulsion/engine[0]/EGT-R", 1);
 var egt2 = props.globals.getNode("fdm/jsbsim/propulsion/engine[1]/EGT-R", 1);
+var throttle_0 = props.globals.getNode("controls/engines/engine[0]/throttle");
+var throttle_1 = props.globals.getNode("controls/engines/engine[1]/throttle");
 
 
 #props.globals.getNode("sim/model/f15/fx/test1",1);
@@ -63,6 +65,20 @@ var GearPos   = props.globals.getNode("gear/gear[0]/position-norm", 1);
 NozzleSpeed = 1.0;
 var current_flame_number = 0;
 
+#
+# Autothrottle 
+var autoThrottle = props.globals.getNode("autopilot/locks/speed", 1);
+
+var toggleAutoThrottle = func {
+	if (autoThrottle.getValue() == "speed-with-throttle")
+		autoThrottle.setValue("");
+	else 
+	{
+		autoThrottle.setValue("speed-with-throttle");
+		setprop("/autopilot/settings/target-speed-kt", getprop("/instrumentation/airspeed-indicator/indicated-mach"));
+	}
+}
+#####################
 var computeEngines = func {
 
 #
@@ -142,6 +158,19 @@ var computeEngines = func {
         setprop("surface-positions/l-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
         setprop("surface-positions/r-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
     }
+	#
+	#
+	# Auto retract speedbrake when power advanced to mil or greate.
+	if (throttle_0.getValue() >= 0.95 or throttle_1.getValue() >= 0.95)
+    {
+        if (getprop("controls/flight/speedbrake", 0))
+        {
+            print("Retract speedbrake when throttles advanced to MIL");
+            setprop("controls/flight/speedbrake", 0);
+        }
+    }
+    
+#
 }
 
 # JFS Startup / running noises
