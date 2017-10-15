@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+        Description: F14 landing gear
+        Notes: Provides the kneel and extend function by adjusting the
+               gear z position and having a matching adjusted compression so 
+               that the model draws the landing gear correctly.
+        Author: Richard Harrison (rjh@zaretto.com)
+    -->
+
+<system name="Landing Gear">
+    <property value="-94.01">gear/unit[0]/z-position-base</property>
+
+    <channel name="Nose strut length">
+        <kinematic name="Nose strut kneeling">
+            <input>fcs/gear-kneel-dmd</input>
+            <traverse>
+                <setting>
+                    <position>-1.167</position>
+                    <time>5</time>
+                </setting>
+                <setting>
+                    <position>0</position>
+                    <time>5</time>
+                </setting>
+                <setting>
+                    <position>1.167</position>
+                    <time>5</time>
+                </setting>
+            </traverse>
+            <output>gear/unit[0]/base-compression-ft</output>
+        </kinematic>
+        <aerosurface_scale name="Adjusted strut compression feet">
+            <input>fcs/gear-kneel-cmd</input>
+            <range>
+                <min> -0.8</min>
+                <max> 1.167 </max>
+            </range>
+            <output>fcs/gear-kneel-dmd</output>
+        </aerosurface_scale>
+
+        <fcs_function>
+            <description>Adjusted gear compression</description>
+            <function>
+                <sum>
+                    <p>gear/unit[0]/compression-ft</p>
+                    <p>gear/unit[0]/base-compression-ft</p>
+                </sum>
+            </function>
+            <output>gear/unit[0]/compression-adjusted-ft</output>
+        </fcs_function>
+
+        <fcs_function>
+            <description>Adjusted gear position</description>
+            <function>
+                <sum>
+                    <p>gear/unit[0]/z-position-base</p>
+                    <product>
+                        <p>gear/unit[0]/base-compression-ft</p>
+                        <v>12</v>
+                    </product>
+                </sum>
+            </function>
+            <output>gear/unit[0]/z-position</output>
+        </fcs_function>
+    </channel>
+
+</system>
