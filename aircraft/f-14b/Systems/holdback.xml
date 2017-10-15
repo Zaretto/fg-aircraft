@@ -7,24 +7,6 @@
 
   <!--- provides the nose strut kneeling either 14 inches down (kneel) or up (extd) -->
   <channel name="Holdback_Launchbar">
-    <kinematic name="Nose strut kneeling">
-      <input>fcs/gear-kneel-dmd</input>
-      <traverse>
-        <setting>
-          <position>-1.167</position>
-          <time>2</time>
-        </setting>
-        <setting>
-          <position>0</position>
-          <time>5</time>
-        </setting>
-        <setting>
-          <position>1.167</position>
-          <time>5</time>
-        </setting>
-      </traverse>
-      <output>gear/unit[0]/base-compression-ft</output>
-    </kinematic>
 
     <summer name="systems/holdback/total_thrust">
             <input>propulsion/engine/thrust-lbs</input>
