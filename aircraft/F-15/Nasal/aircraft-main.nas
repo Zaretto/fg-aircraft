@@ -465,9 +465,10 @@ rate4modules();
 var startProcess = func {
 	settimer (updateFCS, 1.0);
 	position_flash_init();
-#slat_output.setDoubleValue(0);
-
+	#slat_output.setDoubleValue(0);
+	var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/F-15/Systems/autopilot-dlg.xml");
 }
+
 var two_seater = getprop("fdm/jsbsim/metrics/two-place-canopy");
 if (two_seater)
 print("F-15 two seat variant (B,D,E)");
