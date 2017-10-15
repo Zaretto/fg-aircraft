@@ -363,7 +363,16 @@
                 <script>vel.enable()</script>
             </binding>
         </checkbox>
-   
+        <checkbox>
+            <label>Thrust Augmentation</label>
+            <halign>fill</halign>
+            <property>/autopilot/locks/autothrottle-permit-augmentation</property>
+            <live>true</live>
+            <binding>
+                <command>dialog-apply</command>
+            </binding>
+        </checkbox>
+
         <input>
             <property>/autopilot/settings/target-speed-kt</property>
             <live>true</live>
