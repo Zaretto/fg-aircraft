@@ -257,7 +257,7 @@ obj.dlzY = 70;
                             props.UpdateManager.FromPropertyHashList(["orientation/alpha-indicated-deg", 
                                                                       "controls/gear/brake-parking", 
                                                                       "instrumentation/airspeed-indicator/indicated-mach",
-                                                                      "controls/gear/gear-down"], 0.1, func(val)
+                                                                      "controls/gear/gear-down"], 0.01, func(val)
                                                                      {
                                                                          obj.alpha = val.property["orientation/alpha-indicated-deg"].getValue() or 0;
                                                                          obj.mach = val.property["instrumentation/airspeed-indicator/indicated-mach"].getValue() or 0;
