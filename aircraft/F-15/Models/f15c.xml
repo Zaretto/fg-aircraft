@@ -260,11 +260,73 @@ var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
         <object-name>WingTipPosL-Light</object-name>
         <object-name>WingTipPosR-Housing</object-name>
         <object-name>WingTipPosR-Light</object-name>
+        <object-name>CFT-right</object-name>
+        <object-name>CFT-left</object-name>
+        <object-name>CFT-left-pylons</object-name>
+        <object-name>CFT-right-pylons</object-name>
         <property-base>sim/model/livery</property-base>
         <texture-prop>texture</texture-prop>
         <texture>livery.AF80-0007.png</texture>
     </animation>
 
+    <animation>
+        <type>translate</type>
+        <object-name>aim-7-r3</object-name>
+        <object-name>aim-7-r4</object-name>
+        <object-name>aim120-r3</object-name>
+        <object-name>aim120-r4</object-name>
+        <factor>0.36</factor>
+        <property>fdm/jsbsim/propulsion/cft</property>
+        <axis>
+            <x>0</x>
+            <y>0.93</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>translate</type>
+
+        <object-name>aim120-l3</object-name>
+        <object-name>aim120-l4</object-name>
+        <object-name>aim-7-l3</object-name>
+        <object-name>aim-7-l4</object-name>
+        <factor>0.36</factor>
+        <property>fdm/jsbsim/propulsion/cft</property>
+        <axis>
+            <x>0</x>
+            <y>-0.93</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <!-- adjust missile positions tanks to take account of conformal tanks (FAST PACK) hardpoints -->
+    <!--<animation>
+        <type>rotate</type>
+        <object-name>aim-7-r3</object-name>
+        <object-name>aim-7-r4</object-name>
+        <object-name>aim120-r3</object-name>
+        <object-name>aim120-r4</object-name>
+        <object-name>aim120-l3</object-name>
+        <object-name>aim120-l4</object-name>
+        <object-name>aim-7-l3</object-name>
+        <object-name>aim-7-l4</object-name>
+        <factor>45</factor>
+        <property>fdm/jsbsim/propulsion/cft</property>
+        <axis>
+            <object>pylon-axis-r</object>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>aim120-l3</object-name>
+        <object-name>aim120-l4</object-name>
+        <object-name>aim-7-l3</object-name>
+        <object-name>aim-7-l4</object-name>
+        <factor>45</factor>
+        <property>fdm/jsbsim/propulsion/cft</property>
+        <axis>
+            <object>pylon-axis-l</object>
+        </axis>
+    </animation>-->
 
     <!-- Fuel Slipway -->
     <animation>
@@ -2031,6 +2093,36 @@ var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
         <path>ground-fuelling-bowser94-f600.xml</path>
         <name>GroundRefuellingBowser</name>
     </model>
+
+    <animation>
+        <type>select</type>
+        <object-name>CFT-right</object-name>
+        <object-name>CFT-left</object-name>
+        <condition>
+            <not-equals>
+                <property>fdm/jsbsim/propulsion/cft</property>
+                <value>0</value>
+            </not-equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>CFT-left-pylons</object-name>
+        <object-name>CFT-right-pylons</object-name>
+        <condition>
+            <not-equals>
+                <property>fdm/jsbsim/propulsion/cft</property>
+                <value>0</value>
+            </not-equals>
+            <or>
+                <property>payload/weight[3]/weight-lb</property>
+                <property>payload/weight[4]/weight-lb</property>
+                <property>payload/weight[6]/weight-lb</property>
+                <property>payload/weight[7]/weight-lb</property>
+            </or>
+        </condition>
+    </animation>
+
     <animation>
         <type>select</type>
         <object-name>aircraft-ladder</object-name>

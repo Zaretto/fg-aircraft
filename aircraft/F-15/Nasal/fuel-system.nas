@@ -12,11 +12,6 @@ var fuel_system_initialized = 0; # Used to avoid spawning a bunch of new tanks e
 var PPG = nil;
 var LBS_HOUR2GALS_SEC    = nil;
 var LBS_HOUR2GALS_PERIOD = nil;
-var max_flow18000        = nil;
-var max_flow36000        = nil;
-var max_flow45000        = nil;
-var max_flow85000        = nil;
-var max_refuel_flow      = nil;
 
 var TankRightSide = 1;
 var TankLeftSide = 0;
@@ -39,6 +34,8 @@ var WingExternal_R         = nil;
 var Centre_External      = nil;
 var Left_Proportioner  = nil;
 var Right_Proportioner = nil;
+var Conformal_L = nil;
+var Conformal_R = nil;
 
 var neg_g = nil;
 
@@ -134,12 +131,14 @@ var build_new_tanks = func {
 	WingExternal_L   = Tank.newExternal("External Wing L", 5, 1, TankLeftSide);
 	WingExternal_R   = Tank.newExternal("External Wing R", 6, 1, TankRightSide);
 	Centre_External  = Tank.newExternal("Centre External", 7, 1, TankBothSide); 
+    Conformal_L  = Tank.newExternal("Conformal Left", 8, 1, TankLeftSide); 
+	Conformal_R  = Tank.newExternal("Conformal Right", 9, 1, TankRightSide); 
 }
 
 var build_new_proportioners = func {
 	#proportioners ("name", number, initial connection status, operational status)
-	Left_Proportioner	= Prop.new("L feed line", 8, 1, 1); # 10 lbs
-	Right_Proportioner	= Prop.new("R feed line", 9, 1, 1); # 10 lbs
+	Left_Proportioner	= Prop.new("L feed line", 10, 1, 1); # 10 lbs
+	Right_Proportioner	= Prop.new("R feed line", 11, 1, 1); # 10 lbs
 }
 
 
@@ -154,10 +153,6 @@ var fuel_update = func {
 	if ( getprop("/sim/freeze/fuel") or getprop("/sim/replay/time") > 0 ) { return }
 
 	LBS_HOUR2GALS_PERIOD = LBS_HOUR2GALS_SEC * fuel_dt;
-	max_flow85000 = 85000 * LBS_HOUR2GALS_PERIOD; 
-	max_flow45000 = 45000 * LBS_HOUR2GALS_PERIOD;
-	max_flow36000 = 36000 * LBS_HOUR2GALS_PERIOD;
-	max_flow18000 = 18000 * LBS_HOUR2GALS_PERIOD; 
 	refuel_rate_gpm = 450; # max rate in gallons per minute at 50 psi pressure
 }
 
@@ -226,8 +221,8 @@ var calc_levels = func() {
     else if (sel_display == 6)
     {
 #CONF TANK The fuel remaining in the respective conformal tank is displayed.
-        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display",0); 
-        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",0); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/left-display",Conformal_L.get_level_lbs()); 
+        setprop("sim/model/f15/instrumentation/fuel-gauges/right-display",Conformal_R.get_level_lbs()); 
         setprop("sim/model/f15/instrumentation/fuel-gauges/total-display",getprop("consumables/fuel/total-fuel-lbs"));
     }
     else
@@ -241,6 +236,29 @@ var calc_levels = func() {
 
 # Controls
 # --------
+configure_cft = func() {
+    print("CFT changed");
+    if (Conformal_R == nil or Conformal_L == nil)
+      return;
+    if (getprop("fdm/jsbsim/propulsion/cft")){
+        Conformal_R.set_capacity(728);
+        Conformal_L.set_capacity(728);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",1000);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",1000);
+    } else {
+        Conformal_R.set_level(0);
+        Conformal_L.set_level(0);
+        Conformal_R.set_capacity(0);
+        Conformal_L.set_capacity(0);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",0);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",0);
+    }
+}
+
+setlistener("fdm/jsbsim/propulsion/cft", func()
+{
+configure_cft();
+});
 
 setlistener("sim/model/f15/controls/fuel/dump-switch", func(v) {
     if (v != nil)
@@ -418,6 +436,9 @@ Tank = {
 
 	get_capacity : func {
 		return me.capacity.getValue(); 
+	},
+	set_capacity : func(v) {
+		return me.capacity.setValue(v); 
 	},
 	get_capacity_lbs : func {
 		return me.capacity.getValue() * me.ppg.getValue(); 

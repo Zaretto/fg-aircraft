@@ -198,6 +198,26 @@
             </location>
             <weight unit="LBS">0</weight>
         </pointmass>
+        <pointmass name="CFT11">
+            <location unit="M" name="CFT left">
+                <location unit="IN">
+                    <x>420</x>
+                    <y>-33</y>
+                    <z>0</z>
+                </location>
+            </location>
+            <weight unit="LBS">0</weight>
+        </pointmass>
+        <pointmass name="CFT12">
+            <location unit="M" name="CFT right">
+                <location unit="IN">
+                    <x>420</x>
+                    <y>33</y>
+                    <z>0</z>
+                </location>
+            </location>
+            <weight unit="LBS">0</weight>
+        </pointmass>
     </mass_balance>
 
     <!--  Tire on concrete 1.00, ref: http://ffden-2.phys.uaf.edu/211_fall2002.web.dir/ben_townsend/staticandkineticfriction.htm
@@ -417,6 +437,7 @@
             <feed>1</feed>
             <feed>2</feed>
             <feed>4</feed>
+            <feed>10</feed>
             <feed>6</feed>
             <feed>7</feed>
             <feed>9</feed>
@@ -446,6 +467,7 @@
             </orient>
             <feed>0</feed>
             <feed>2</feed>
+            <feed>11</feed>
             <feed>3</feed>
             <feed>5</feed>
             <feed>7</feed>
@@ -463,7 +485,8 @@
                 </orient>
             </thruster>
         </engine>
-        <tank type="FUEL">
+        <!-- numerically lower priority are used first.-->
+        <tank type="FUEL" name="0 Left Engine Feed">
             <!--0: Left Engine Feed-->
             <location unit="IN">
                 <x>453.87</x>
@@ -472,9 +495,9 @@
             </location>
             <capacity unit="LBS">1200</capacity>
             <contents unit="LBS">1200</contents>
-            <priority>10</priority>
+            <priority>12</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="1 Right Engine Feed">
             <!--1: Right Engine Feed-->
             <location unit="IN">
                 <x>396.79</x>
@@ -483,9 +506,9 @@
             </location>
             <capacity unit="LBS">1500</capacity>
             <contents unit="LBS">1500</contents>
-            <priority>9</priority>
+            <priority>11</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="2 Tank 1">
             <!--2: Tank 1-->
             <location unit="IN">
                 <x>307.42</x>
@@ -495,9 +518,9 @@
             <capacity unit="LBS">3300</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">3300</contents>
-            <priority>8</priority>
+            <priority>10</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="3 Left Wing Tank">
             <!--3: Left Wing Tank-->
             <location unit="IN">
                 <x>457.02</x>
@@ -509,7 +532,7 @@
             <contents unit="LBS">2750</contents>
             <priority>7</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="4 Right Wing Tank">
             <!--4: Right Wing Tank-->
             <location unit="IN">
                 <x>457.02</x>
@@ -519,9 +542,9 @@
             <capacity unit="LBS">2750</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">2750</contents>
-            <priority>6</priority>
+            <priority>7</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="5 Left External Wing Tank">
             <!--5: Left External Wing Tank-->
             <location unit="IN">
                 <x>420</x>
@@ -531,9 +554,9 @@
             <capacity unit="LBS">3950</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">3950</contents>
-            <priority>5</priority>
+            <priority>4</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="6 Right External Wing Tank">
             <!--6: Right External Wing Tank-->
             <location unit="IN">
                 <x>420</x>
@@ -545,7 +568,7 @@
             <contents unit="LBS">3950</contents>
             <priority>4</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="7 External Tank">
             <!--7: External Tank-->
             <location unit="IN">
                 <x>386</x>
@@ -557,8 +580,33 @@
             <contents unit="LBS">3950</contents>
             <priority>3</priority>
         </tank>
-        <tank type="FUEL">
-            <!--8: Left Feed line-->
+        <tank type="FUEL" name="8 left conformal Tank">
+            <!--8: left conformal Tank-->
+            <location unit="IN">
+                <x>420</x>
+                <y>-33</y>
+                <z>0</z>
+            </location>
+            <capacity unit="LBS">4720</capacity>
+            <standpipe unit="LBS">100</standpipe>
+            <contents unit="LBS">4720</contents>
+            <priority>6</priority>
+        </tank>
+        <tank type="FUEL" name="9 Right conformal Tank">
+            <!--9: Right conformal Tank-->
+            <location unit="IN">
+                <x>420</x>
+                <y>33</y>
+                <z>0</z>
+            </location>
+            <capacity unit="LBS">4720</capacity>
+            <standpipe unit="LBS">100</standpipe>
+            <contents unit="LBS">4720</contents>
+            <priority>6</priority>
+        </tank>
+
+        <tank type="FUEL" name="10 Left Feed line">
+            <!--10: Left Feed line-->
             <location unit="IN">
                 <x>489</x>
                 <y>-38</y>
@@ -566,10 +614,10 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>2</priority>
+            <priority>1</priority>
         </tank>
-        <tank type="FUEL">
-            <!--9: Right Feed line-->
+        <tank type="FUEL" name="11 Right Feed line">
+            <!--11: Right Feed line-->
             <location unit="IN">
                 <x>489</x>
                 <y>38</y>
@@ -579,6 +627,7 @@
             <contents unit="LBS">10</contents>
             <priority>1</priority>
         </tank>
+       
         <dump-rate unit="LBS/MIN">910</dump-rate>
     </propulsion>
 
@@ -597,7 +646,14 @@
                 <z>   0.0 </z>
             </direction>
         </force>
-        <moment name="ai-wake" frame="BODY"/>
+        <moment name="ai-wake" frame="BODY">
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </moment>
+       
         <force name="catapult" frame="BODY">
             <location unit="IN">
                 <x>667</x>
@@ -681,6 +737,284 @@
     <system file="hook"/>
     <system file="flight-controls"/>
     <aerodynamics>
+
+        <function name="aero/coefficients/CFXAIML">
+            <description>DRAG INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00071389	 0.00041917	 0.00036861	 0.00027389	 0.00029806	 0.00029833	 0.00029306
+                        -5	 0.00033389	 0.00028778	 0.00028694	 0.00028083	 0.00027833	 0.00030694	 0.00031750
+                        0	 0.00027111	 0.00029250	 0.00029278	 0.00029306	 0.00029278	 0.00029194	 0.00026833
+                        5	 0.00026528	 0.00026694	 0.00027972	 0.00025972	 0.00028972	 0.00028944	 0.00028417
+                        10	 0.00029167	 0.00029083	 0.00029750	 0.00031528	 0.00029778	 0.00029778	 0.00029000
+                        15	 0.00031611	 0.00030278	 0.00030250	 0.00029722	 0.00030000	 0.00029694	 0.00028722
+                        20	 0.00031083	 0.00032111	 0.00031444	 0.00033083	 0.00030222	 0.00029083	 0.00027750
+                        25	 0.00031722	 0.00030194	 0.00033111	 0.00034972	 0.00033417	 0.00032306	 0.00026222
+                        30	 0.00031889	 0.00030639	 0.00031000	 0.00034583	 0.00029833	 0.00030306	 0.00029167
+                        40	 0.00029083	 0.00028500	 0.00028250	 0.00038639	 0.00027417	 0.00026750	 0.00025861
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFXAIMR">
+            <description>DRAG INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00071722	 0.00042444	 0.00037306	 0.00027389	 0.00029361	 0.00029306	 0.00029000
+                        -5	 0.00031750	 0.00030694	 0.00027833	 0.00028083	 0.00028694	 0.00028778	 0.00033389
+                        0	 0.00026833	 0.00029194	 0.00029278	 0.00029306	 0.00029278	 0.00029250	 0.00027111
+                        5	 0.00028417	 0.00028944	 0.00028972	 0.00025972	 0.00027972	 0.00026694	 0.00026556
+                        10	 0.00029028	 0.00029778	 0.00029778	 0.00031528	 0.00029750	 0.00029083	 0.00029139
+                        15	 0.00028722	 0.00029694	 0.00030000	 0.00029722	 0.00030250	 0.00030278	 0.00031611
+                        20	 0.00027750	 0.00029083	 0.00030250	 0.00033083	 0.00031444	 0.00032111	 0.00031083
+                        25	 0.00026222	 0.00032306	 0.00033417	 0.00034972	 0.00033111	 0.00030194	 0.00031694
+                        30	 0.00029194	 0.00030333	 0.00029833	 0.00034583	 0.00031000	 0.00030611	 0.00031889
+                        40	 0.00025861	 0.00026750	 0.00027417	 0.00038639	 0.00028250	 0.00028500	 0.00029083
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFYAIML">
+            <description>SIDE FORCE INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00143972	 0.00065556	 0.00032139	 0.00000000	 0.00000000	 0.00000000	 0.00000028
+                        -5	 0.00020361	 0.00000000	 0.00000000	 0.00000000	 0.00004056	 0.00000000	 0.00000000
+                        0	 0.00000000	 0.00000722	 0.00000250	 0.00000000	 0.00000083	 0.00000444	 0.00006694
+                        5	 0.00000000	 0.00000500	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00006944	 0.00000000	 0.00000000	 0.00000472	 0.00000000	 0.00001417
+                        15	 0.00002778	 0.00005028	 0.00000861	 0.00004667	 0.00003667	 0.00001417	 0.00003306
+                        20	 0.00009556	 0.00000000	 0.00003694	 0.00000528	 0.00003750	 0.00003500	 0.00002278
+                        25	 0.00012639	 0.00000000	 0.00001778	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        30	 0.00009222	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFYAIMR">
+            <description>SIDE FORCE INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00143778	 0.00065694	 0.00031889	 0.00000500	 0.00000000	 0.00000056	 0.00000000
+                        -5	 0.00014500	 0.00005222	 0.00000000	 0.00000000	 0.00001167	 0.00001667	 0.00000000
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000083	 0.00000000	 0.00000000	 0.00009944
+                        5	 0.00003194	 0.00001833	 0.00001167	 0.00000667	 0.00003778	 0.00000000	 0.00011111
+                        10	 0.00000000	 0.00001417	 0.00000000	 0.00001278	 0.00000944	 0.00000000	 0.00004444
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002472	 0.00000000
+                        25	 0.00005472	 0.00014500	 0.00008556	 0.00004083	 0.00000000	 0.00024639	 0.00000000
+                        30	 0.00026972	 0.00014361	 0.00007972	 0.00006250	 0.00005000	 0.00012472	 0.00000000
+                        40	 0.00018833	 0.00006806	 0.00004472	 0.00006250	 0.00003944	 0.00003556	 0.00003000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFZAIML">
+            <description>LIFT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00091417	 0.00105806	 0.00071278	 0.00105972	 0.00000139	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00006417	 0.00009111	 0.00031889	 0.00020611	 0.00000000	 0.00000000
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000139	 0.00000278	 0.00000000
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00003167	 0.00004694	 0.00056000	 0.00000000	 0.00000000	 0.00000000
+                        15	 0.00000417	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        20	 0.00000000	 0.00000000	 0.00003167	 0.00009056	 0.00000000	 0.00000000	 0.00000000
+                        25	 0.00000000	 0.00000611	 0.00006556	 0.00014083	 0.00025750	 0.00016750	 0.00000000
+                        30	 0.00000000	 0.00000000	 0.00000000	 0.00005833	 0.00000000	 0.00007472	 0.00008500
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00001472	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFZAIMR">
+            <description>LIFT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00086528	 0.00101500	 0.00068750	 0.00105944	 0.00002611	 0.00001694	 0.00001472
+                        -5	 0.00000000	 0.00000000	 0.00020611	 0.00031889	 0.00009083	 0.00006417	 0.00000000
+                        0	 0.00000000	 0.00000278	 0.00000139	 0.00000000	 0.00000000	 0.00000028	 0.00000000
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00000000	 0.00000000	 0.00056000	 0.00004667	 0.00003167	 0.00000000
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000389
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00009139	 0.00003194	 0.00000000	 0.00000000
+                        25	 0.00000000	 0.00016806	 0.00025778	 0.00014111	 0.00006583	 0.00000639	 0.00000000
+                        30	 0.00008500	 0.00007500	 0.00000000	 0.00005833	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00001472	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMLAIML">
+            <description>ROLLING MOMENT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00001306
+                        0	 0.00001583	 0.00000028	 0.00000083	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        5	 0.00002167	 0.00002500	 0.00000528	 0.00000806	 0.00001611	 0.00002667	 0.00006250
+                        10	 0.00000000	 0.00000167	 0.00000333	 0.00001722	 0.00003278	 0.00005056	 0.00008056
+                        15	 0.00000000	 0.00000472	 0.00001111	 0.00002972	 0.00004389	 0.00005528	 0.00006472
+                        20	 0.00000000	 0.00001222	 0.00000444	 0.00001083	 0.00003639	 0.00005028	 0.00004917
+                        25	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002500
+                        30	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMLAIMR">
+            <description>ROLLING MOMENT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00000000	 0.00001417	 0.00002972	 0.00002389	 0.00002917	 0.00003167	 0.00003639
+                        -5	 0.00000000	 0.00000361	 0.00000750	 0.00000778	 0.00000944	 0.00001000	 0.00002250
+                        0	 0.00000389	 0.00000111	 0.00000083	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000139
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002139
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000667
+                        25	 0.00000000	 0.00004222	 0.00005028	 0.00002778	 0.00002056	 0.00003528	 0.00002194
+                        30	 0.00004278	 0.00003917	 0.00003472	 0.00003611	 0.00003694	 0.00005139	 0.00004750
+                        40	 0.00005556	 0.00006056	 0.00006389	 0.00006778	 0.00006944	 0.00007528	 0.00008194
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMMAIML">
+            <description>PITCHING MOMENT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00072722	 0.00025028	 0.00058528	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00014000	 0.00000000
+                        0	 0.00002444	 0.00000000	 0.00000000	 0.00000722	 0.00001333	 0.00002222	 0.00005722
+                        5	 0.00017778	 0.00025333	 0.00022333	 0.00052500	 0.00015611	 0.00016028	 0.00017194
+                        10	 0.00018806	 0.00016750	 0.00016306	 0.00013250	 0.00021694	 0.00025250	 0.00029167
+                        15	 0.00018583	 0.00016972	 0.00018417	 0.00026222	 0.00025333	 0.00030278	 0.00035639
+                        20	 0.00025500	 0.00020417	 0.00021694	 0.00018917	 0.00029667	 0.00035333	 0.00042417
+                        25	 0.00027750	 0.00032639	 0.00035667	 0.00021389	 0.00037389	 0.00036333	 0.00046250
+                        30	 0.00034472	 0.00038806	 0.00043194	 0.00026861	 0.00046722	 0.00045528	 0.00044278
+                        40	 0.00048778	 0.00054278	 0.00056806	 0.00027694	 0.00058472	 0.00058083	 0.00056833
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMMAIMR">
+            <description>PITCHING MOMENT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00080917	 0.00032083	 0.00063250	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00014028	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        0	 0.00005750	 0.00002250	 0.00001361	 0.00000722	 0.00000000	 0.00000000	 0.00002389
+                        5	 0.00017250	 0.00016056	 0.00015611	 0.00052500	 0.00022306	 0.00025278	 0.00017750
+                        10	 0.00029222	 0.00025306	 0.00021750	 0.00013278	 0.00016306	 0.00016750	 0.00018778
+                        15	 0.00035667	 0.00030333	 0.00025333	 0.00026250	 0.00018444	 0.00017000	 0.00018556
+                        20	 0.00042472	 0.00035361	 0.00029722	 0.00018917	 0.00021722	 0.00020472	 0.00025500
+                        25	 0.00046333	 0.00036389	 0.00037472	 0.00021417	 0.00035667	 0.00032667	 0.00027806
+                        30	 0.00044389	 0.00045611	 0.00046750	 0.00026917	 0.00043222	 0.00038806	 0.00034472
+                        40	 0.00056917	 0.00058139	 0.00058556	 0.00027750	 0.00056833	 0.00054306	 0.00048806
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMNAIML">
+            <description>YAWING MOMENT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00077972	 0.00034667	 0.00012111	 0.00000000	 0.00000000	 0.00000833	 0.00006528
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00003583	 0.00002194	 0.00001278
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000056	 0.00002972	 0.00005917	 0.00016444
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00002139	 0.00005472	 0.00008306	 0.00014611
+                        10	 0.00000000	 0.00000000	 0.00001472	 0.00004306	 0.00006944	 0.00009889	 0.00016306
+                        15	 0.00000000	 0.00002167	 0.00004250	 0.00006500	 0.00009500	 0.00011694	 0.00017333
+                        20	 0.00001361	 0.00006333	 0.00006083	 0.00008778	 0.00011472	 0.00013917	 0.00018361
+                        25	 0.00003500	 0.00006889	 0.00007583	 0.00009194	 0.00010194	 0.00011139	 0.00018000
+                        30	 0.00005556	 0.00006833	 0.00008917	 0.00010361	 0.00011778	 0.00012361	 0.00013056
+                        40	 0.00003389	 0.00008167	 0.00010083	 0.00011972	 0.00014167	 0.00015417	 0.00017222
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMNAIMR">
+            <description>YAWING MOMENT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00085889	 0.00042944	 0.00020028	 0.00003861	 0.00006167	 0.00009111	 0.00014444
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00002111	 0.00005778	 0.00008556	 0.00001667
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002750	 0.00005694	 0.00017444
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002528	 0.00009000	 0.00015167
+                        10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002167	 0.00007972
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00001222
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        25	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        30	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        
         <function name="aero/coefficients/CFXTNK">
             <description>DRAG INCREMENT DUE TO TANK CFXTNK(ALPHA,BETA)</description>
             <product>
@@ -697,16 +1031,16 @@
                         -5	 0.00646000	 0.00677000	 0.00012000	 0.00634000	 0.00658000	 0.00634000	 0.00012000	 0.00677000	 0.00646000
                         0	 0.00622000	 0.00633000	 0.00634000	 0.00632000	 0.00632000	 0.00632000	 0.00634000	 0.00633000	 0.00622000
                         5	 0.00616000	 0.00633000	 0.00640000	 0.00645000	 0.00835000	 0.00645000	 0.00640000	 0.00633000	 0.00616000
-                        10	 0.00629000	 0.00646000	 0.00653000	 0.00677000	-0.00285000	 0.00677000	 0.00653000	 0.00646000	 0.00629000
-                        15	 0.00656000	 0.00660000	 0.00454000	 0.00854000	 0.00456000	 0.00854000	 0.00454000	 0.00660000	 0.00656000
+                        10	 0.00629000	 0.00646000	 0.00653000	 0.00677000	 0.01085000	 0.00677000	 0.00653000	 0.00646000	 0.00629000
+                        15	 0.00656000	 0.00660000	 0.00454000	 0.00854000	 0.01156000	 0.00854000	 0.00454000	 0.00660000	 0.00656000
                         20	 0.00647000	 0.00683000	 0.00653000	 0.00297000	 0.01244000	 0.00297000	 0.00653000	 0.00683000	 0.00647000
-                        23	 0.00657000	 0.00156000	 0.00908000	 0.00722000	-0.02660000	 0.00722000	 0.00908000	 0.00156000	 0.00657000
+                        23	 0.00657000	 0.00156000	 0.00908000	 0.00722000	 0.01660000	 0.00722000	 0.00908000	 0.00156000	 0.00657000
                         25	 0.00751000	 0.01074000	 0.01536000	 0.00885000	 0.01720000	 0.00885000	 0.01536000	 0.01074000	 0.00751000
-                        26	 0.00782000	 0.01228000	-0.06345000	 0.00698000	 0.05528000	 0.00698000	-0.06345000	 0.01228000	 0.00782000
-                        30	 0.00754000	 0.00872000	 0.01665000	-0.15374000	 0.01622000	-0.15374000	 0.01665000	 0.00872000	 0.00754000
-                        35	 0.01165000	 0.01919000	 0.00884000	 0.20168000	 0.02231000	 0.20168000	 0.00884000	 0.01919000	 0.01165000
-                        40	-0.00503000	 0.02090000	 0.02583000	 0.01221000	-0.00046000	 0.01221000	 0.02583000	 0.02090000	-0.00503000
-                        50	 0.02766000	 0.02222000	-0.23644000	-0.01802000	 0.03414000	-0.01802000	-0.23644000	 0.02222000	 0.02766000
+                        26	 0.00782000	 0.01228000	 0.01635000	 0.00698000	 0.05528000	 0.00698000	 0.01565000	 0.01228000	 0.00782000
+                        30	 0.00754000	 0.00872000	 0.01665000	 0.01537000	 0.01622000	 0.05153000	 0.01665000	 0.00872000	 0.00754000
+                        35	 0.01165000	 0.01919000	 0.00884000	 0.02168000	 0.02231000	 0.20168000	 0.00884000	 0.01919000	 0.01165000
+                        40	 0.01503000	 0.02090000	 0.02583000	 0.01221000	 0.03406000	 0.01221000	 0.02583000	 0.02090000	 0.01503000
+                        50	 0.02766000	 0.02222000	 0.02644000	 0.02182000	 0.03414000	 0.02180000	 0.02364000	 0.02222000	 0.02766000
                         60	 0.01803000	 0.00781000	 0.02740000	 0.02934000	 0.00938000	 0.02934000	 0.02740000	 0.00781000	 0.01803000
                     </tableData>
                 </table>
@@ -1132,6 +1466,36 @@
                         7.5		 0.00670196
                         13.75		 0.01263050
                         20		 0.01632770
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
+        <function name="aero/coefficients/DCdCFT">
+            <description>Cd increment due to conformal tanks</description>
+            <product>
+                <property>propulsion/cft</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <tableData>
+                         -30	0.0044058
+                         -20	0.0033306
+                         -15	0.0024402
+                         -10	0.0028182
+                          -5	0.0026628
+                           0	0.0026544
+                           5	0.002709
+                          10	0.0028434
+                          15	0.0035868
+                          20	0.003826074
+                          23	0.0030324
+                          25	0.003717
+                          26	0.0029316
+                          30	0.0064554
+                          35	0.0091056
+                          40	0.0105882
+                          50	0.0133644
+                          60	0.01467228
                     </tableData>
                 </table>
             </product>
@@ -4646,6 +5010,8 @@
             <sum>
                 <property>aero/coefficients/CFZB</property>
                 <property>aero/coefficients/CFZTNK</property>
+                <property>aero/coefficients/CFZAIML</property>
+                <property>aero/coefficients/CFZAIMR</property>
                 <property>aero/coefficients/ClDFM</property>
                 <property>aero/coefficients/ClUC</property>
                 <property>aero/coefficients/DClRamp</property>
@@ -4666,11 +5032,14 @@
             <sum>
                 <property>aero/coefficients/CFXB</property>
                 <property>aero/coefficients/CFXTNK</property>
+                <property>aero/coefficients/CFXAIML</property>
+                <property>aero/coefficients/CFXAIMR</property>
                 <property>aero/coefficients/CdUC</property>
                 <property>aero/coefficients/CdDBRK</property>
                 <property>aero/coefficients/CdDFM</property>
                 <property>aero/coefficients/DCdRamp</property>
                 <property>aero/coefficients/DCdGE</property>
+                <property>aero/coefficients/DCdCFT</property>
             </sum>
         </function>
         <axis name="DRAG">
@@ -4693,6 +5062,8 @@
                 <property>aero/coefficients/CYDTD</property>
                 <property>aero/coefficients/CYRB</property>
                 <property>aero/coefficients/CFYTNK</property>
+                <property>aero/coefficients/CFYAIML</property>
+                <property>aero/coefficients/CFYAIMR</property>
             </sum>
         </function>
         <axis name="SIDE">
@@ -4715,6 +5086,8 @@
                 <property>aero/coefficients/CMLDTD</property>
                 <property>aero/coefficients/CMLDCLB</property>
                 <property>aero/coefficients/CMLTNK</property>
+                <property>aero/coefficients/CMLAIML</property>
+                <property>aero/coefficients/CMLAIMR</property>
             </sum>
         </function>
         <axis name="ROLL">
@@ -4738,6 +5111,8 @@
                 <property>aero/coefficients/DCMRamp</property>
                 <property>aero/coefficients/CMMTNK</property>
                 <property>aero/coefficients/DCMGE</property>
+                <property>aero/coefficients/CMMAIML</property>
+                <property>aero/coefficients/CMMAIMR</property>
             </sum>
         </function>
         <axis name="PITCH">
@@ -4761,6 +5136,8 @@
                 <property>aero/coefficients/CMNDAD</property>
                 <property>aero/coefficients/CMNRB</property>
                 <property>aero/coefficients/CMNTNK</property>
+                <property>aero/coefficients/CMNAIML</property>
+                <property>aero/coefficients/CMNAIMR</property>
             </sum>
         </function>
         <axis name="YAW">
