@@ -43,7 +43,7 @@
                 <engine n="1">
                     <augmentation-alight type="bool">false</augmentation-alight>
                 </engine>
-
+                <cft type="float">0</cft>
             </propulsion>
             <systems>
                 <hydraulics>
@@ -548,6 +548,7 @@
                 </default_exit>
             </map>
             <f15>
+                <cft alias="/fdm/jsbsim/propulsion/cft"/>
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
@@ -1022,6 +1023,7 @@
 
                 <int n="0">0</int> <!-- fuel dump      -->
                 <int n="1">0</int> <!-- formation slimmers -->
+                <int n="2">0</int> <!-- radar standby -->
                 <int n="3">0</int> <!-- collision lights -->
                 <int n="4">0</int> <!-- position lights -->
                 <int n="5">0</int> <!-- tail flood  -->
@@ -1036,7 +1038,6 @@
                 <int n="14" alias="/instrumentation/radar/radar2-range" />
                 <int n="15" alias="/sim/model/f15/instrumentation/fuel-gauges/total" />
                 <int n="16" alias="/velocities/mach" />
-                <int n="17">0</int> <!-- Radar Status -->
                 <int n="18">0</int> <!-- Total Weight (lbs) -->
                 <string n="0" type="string"></string>
                 <string n="13" type="string"></string>
@@ -2177,6 +2178,7 @@
             <symbols-enabled type="bool">true</symbols-enabled>
             <debug-mode type="bool">true</debug-mode>
             <serviceable type="bool">true</serviceable>
+            <radar-mode type="int">1</radar-mode>
         </radar>
         <ecm>
             <enabled type="bool">true</enabled>

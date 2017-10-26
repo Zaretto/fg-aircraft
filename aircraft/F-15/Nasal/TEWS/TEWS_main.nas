@@ -133,7 +133,7 @@ return;
     foreach( u; awg_9.tgts_list ) 
     {
         var callsign = "XX";
-        if (u.get_range() < radar_range)
+        if (u.get_range() < radar_range and u.get_RWR_visible())
         {
             if (u.Callsign != nil)
                 callsign = u.Callsign.getValue();

@@ -14,6 +14,19 @@ var deltaT = 1.0;
 
 var currentG = 1.0;
 
+#
+# 2017.3 or earlier FG compatibility fixes
+# Remove after 2017.4
+string.truncateAt = func(src, match){
+    var pos = find(match,src);
+    if (pos>=0)
+      return substr(src,0,pos);
+    return src;
+}
+#
+#
+
+
 #----------------------------------------------------------------------------
 # Nozzle opening
 #----------------------------------------------------------------------------
@@ -40,6 +53,8 @@ var Throttle = 0;
 var e_trim = 0;
 var rudder_trim = 0;
 var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1);
+var radarStandbyNode = props.globals.getNode("instrumentation/radar/radar-standby",1);
+var radarMPnode = props.globals.getNode("instrumentation/radar/radar-mode",1);
 
 
 # Utilities #########
@@ -390,8 +405,9 @@ var rate4modules = func {
     aircraft.updateMPCD();
     aircraft.electricsFrame();
 	aircraft.computeNWS ();
-aircraft.update_weapons_over_mp();
-updateVolume();
+    aircraft.update_weapons_over_mp();
+    updateVolume();
+    radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
 #	settimer (rate4modules, 0.20);
 
 #
