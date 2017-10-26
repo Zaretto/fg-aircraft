@@ -40,6 +40,8 @@ var SWTgtRange        = props.globals.getNode("sim/model/"~this_model~"/systems/
 var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
 var SelectTargetCommand =props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 
+var myRadarStrength_rcs = 3.2;
+
 SelectTargetCommand.setIntValue(0);
 
 # variables for the partioned scanning.
@@ -56,6 +58,7 @@ SelectTargetCommand.setIntValue(0);
 
 var scan_tgt_idx = 0;
 var scan_hidden_by_rcs = 0;
+var scan_hidden_by_radar_mode = 0;
 var scan_hidden_by_terrain = 0;
 var scan_visible_count = 0;
 
@@ -179,12 +182,60 @@ var rdr_loop = func() {
         armament.contact = nil;
 	}
 }
+#
+# this is RWR for TEWS display for the F-15. For a less advanced EW system
+# this method would probably just look at their radar.
+var compute_rwr = func(radar_mode, u, u_rng){
+    #
+    # Decide if this mp item is a valid return (and within range).
+    # - our radar switched on
+    # - their radar switched on
+    # - their transponder switched on 
+    var their_radar_standby = u.get_rdr_standby();
+    var their_transponder_id = u.get_transponder();
+    var emitting = 0;
+#    var em_by = "";
+    # TEWS will see transpoders that are turned on; according to some
+    # using the inverse square law and an estimated power of 200 watts
+    # and an assumed high gain antenna the estimate is that the maximum
+    # distance the transponder/IFF would be distinct enough is 61.18357nm
+    if (their_transponder_id != nil and their_transponder_id > 0 and u_rng < 61.18357) {
+        emitting = 1;
+#em_by = em_by ~ "xpdr ";
+    }
+    # modes below 2 are on / emerg so they will show up on rwr
+    if (radar_mode < 2 and !u.get_behind_terrain()) {
+        # in this sense it is actually us that is illuminating them, but for TEWS this is fine.
+        var horizon = u.get_horizon( our_alt );
+        var u_az_field = az_fld/2.0;
+#print ("u_rng=",u_rng," horizon=",horizon);
+         if (  u_rng < horizon ) {
+            var our_deviation_deg = deviation_normdeg(u.get_heading(), u.get_bearing());
+#print("     our_deviation_deg=",our_deviation_deg);
+            
+            if ( our_deviation_deg < 0 ) { our_deviation_deg *= -1 }
+            if ( our_deviation_deg < u_az_field) {
+#                em_by = em_by ~ "my_rdr ";
+                emitting = 1; 
+            }
+        }
+    }
+    if (their_radar_standby != nil and their_radar_standby == 0){
+      emitting = 1;
+#em_by = em_by ~ "their_rdr ";
+  }
+
+#    print("TEWS: ",u.Callsign.getValue()," range ",u_rng, " by ", em_by, " our_mode=",radar_mode, " their_mode=",their_radar_standby, " their_transponder_id=",their_transponder_id, " emitting = ",emitting, " vis=",u.get_visible());
+
+    u.set_RWR_visible(emitting and u.get_visible());
+}
 
 var az_scan = func() {
 
 	# Antena az scan. Angular speed is constant but angle covered varies (120 or 60 deg ATM).
 	var fld_frac = az_fld / 120;                    # the screen (and the max scan angle) covers 120 deg, but we may use less (az_fld).
 	var fswp_spd = swp_spd / fld_frac;              # So the duration (fswp_spd) of a complete scan will depend on the fraction we use.
+    var rwr_done = 0;
 	swp_fac = math.sin(cnt * fswp_spd) * fld_frac;  # Build a sinusoude, each step based on a counter incremented by the main UPDATE_PERIOD
 	SwpFac.setValue(swp_fac);                       # Update this value on the property tree so we can use it for the sweep line animation.
 	swp_deg = az_fld / 2 * swp_fac;                 # Now get the actual deviation of the antenae in deg,
@@ -198,6 +249,13 @@ var az_scan = func() {
 	our_true_heading = OurHdg.getValue();
 	our_alt = OurAlt.getValue();
 
+    var radar_active = 1;
+    var radar_mode = getprop("instrumentation/radar/radar-mode");
+    if (radar_mode == nil)
+      radar_mode = 0;
+    if (radar_mode >= 3)
+      radar_active = 0;
+
 #
 #
 # The radar sweep is simulated such that when the scan limit is reached it is reversed
@@ -206,13 +264,14 @@ var az_scan = func() {
 # be ok; the values (distance etc) will be read from the target list so these will be accurate
 # which isn't quite how radar works but it will be good enough for us.
 
+    range_radar2 = RangeRadar2.getValue();
+    
     if (1==1 or swp_dir != swp_dir_last)
     {
 		# Antena scan direction change (at max: more or less every 2 seconds). Reads the whole MP_list.
 		# TODO: Visual glitch on the screen: the sweep line jumps when changing az scan field.
 
 		az_fld = AzField.getValue();
-		range_radar2 = RangeRadar2.getValue();
 		if ( range_radar2 == 0 ) { range_radar2 = 0.00000001 }
 
 		# Reset nearest_range score
@@ -298,6 +357,7 @@ var az_scan = func() {
 		var u_display = 0;
 		var u_fading = u.get_fading() - fading_speed;
         var u_rng = u.get_range();
+        ecm_on = EcmOn.getValue();
 
         if (scan_update_visibility) {
             # check for visible by radar taking into account RCS, based on APG-63 v1 = 80NM for 3.2 rcs (guesstimate)
@@ -305,24 +365,36 @@ var az_scan = func() {
             # - this test is more costly than the RCS check so perform that first.
             # for both of these tests the result is to set the target as not visible.
             # and simply continue with the rest of the loop.
-            if (rcs.inRadarRange(u, 80, 3.2) == 0) {
+            # we don't check our radar range here because the scan update visibility is
+            # called infrequently so the list must not take into account something that may
+           # change between invocations of the update.
+            u.set_behind_terrain(0);
+#var msg = "";
+#pickingMethod = 0;
+#var v1 = isNotBehindTerrain(u.propNode);
+#pickingMethod = 1;
+#var v2 = isNotBehindTerrain(u.propNode);
+            if (rcs.inRadarRange(u, 200, myRadarStrength_rcs) == 0) {
                 u.set_display(0);
                 u.set_visible(0);
                 scan_hidden_by_rcs += 1;
-                continue ;
-            }
-            if (isNotBehindTerrain(u) == 0) {
+#msg = "out of rcs range";
+            } else if (isNotBehindTerrain(u.propNode) == 0) {
+#msg = "behind terrain";
+                u.set_behind_terrain(1);
                 u.set_display(0);
                 u.set_visible(0);
                 scan_hidden_by_terrain += 1;
-                continue ;
+            } else {
+#msg = "visible";
+                scan_visible_count = scan_visible_count+1;
+                u.set_visible(1);
+                if (u_rng != nil and (u_rng > range_radar2))
+                  u.set_display(0);
+                else
+                  u.set_display(1);
             }
-            scan_visible_count = scan_visible_count+1;
-            u.set_visible(1);
-            if (u_rng != nil and (u_rng > range_radar2))
-                u.set_display(0);
-            else
-                u.set_display(1);
+#    print("UPDS: ",u.Callsign.getValue(),", ", msg);
         } else {
 
             # the list is sorted by distance we can bail out of this loop the first time
@@ -330,8 +402,13 @@ var az_scan = func() {
             # - obviously we cannot shortcut the entire list when updating visibility.
             if (u_rng != nil and (u_rng > range_radar2)) {
             
-                for (;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1)
-                  tgts_list[scan_tgt_idx].set_display(0);
+                for (;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1) {
+                    tgts_list[scan_tgt_idx].set_display(0);
+                    # still need to test for RWR warning indication even if outside of the radar range
+                    if ( !rwr_done and ecm_on and tgts_list[scan_tgt_idx].get_rdr_standby() == 0) {
+                        rwr_done = rwr_warning_indication(tgts_list[scan_tgt_idx]); 
+                    }
+                }
                 break;
             }
         }
@@ -339,21 +416,32 @@ var az_scan = func() {
         if (u_rng != nil and (u_rng < range_radar2  and u.not_acting == 0 )) {
             u.get_deviation(our_true_heading);
         
-            if ( u.deviation > l_az_fld  and  u.deviation < r_az_fld )
+            if (rcs.inRadarRange(u, range_radar2, myRadarStrength_rcs) == 0) {
+                u.set_display(0);
+                u.set_visible(0);
+            }
+            else{
+                u.set_visible(!u.get_behind_terrain());
+            }
+
+            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld )
               u.set_display(u.get_visible());
             else {
                 u.set_display(0);
-                continue ;
             }
         }
-        
-        ecm_on = EcmOn.getValue();
+
+        compute_rwr(radar_mode, u, u_rng);
         # Test if target has a radar. Compute if we are illuminated. This propery used by ECM
         # over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
-        if ( ecm_on and u.get_rdr_standby() == 0) {
-            rwr(u);             # TODO: override display when alert.
+        if ( !rwr_done and ecm_on and u.get_rdr_standby() == 0) {
+           rwr_done = rwr_warning_indication(u);             # TODO: override display when alert.
         }
 
+        #
+        # if not displayed then we can continue to the next in the list.
+        if (!u.get_display())
+          continue;
 
         if ( u_fading < 0 ) {
             u_fading = 0;
@@ -433,6 +521,7 @@ var az_scan = func() {
             scan_hidden_by_rcs = 0;
             scan_hidden_by_terrain = 0;
             scan_visible_count = 0;
+            scan_hidden_by_radar_mode = 0;
         }
 
         # Summarize ECM alerts.
@@ -589,25 +678,33 @@ var containsV = func (vector, content) {
 # The following 1 methods is from Mirage 2000-5 (modified by Pinto)
 #
 var isNotBehindTerrain = func(node) {
-    var SelectCoord = geo.Coord.new();
     var x = nil;
     var y = nil;
     var z = nil;
+if (node == nil)
+{
+print("isNotBehindTerrain, node is nil");
+return 3;
+}
+
     call(func {
         x = node.getNode("position/global-x").getValue();
         y = node.getNode("position/global-y").getValue();
         z = node.getNode("position/global-z").getValue(); },
         nil, var err = []);
     if(x == nil or y == nil or z == nil) {
-        return 1;
+        print("Failed to get position from node: ",node.string, " x=",x," y=",y," z=",z);
+        return 2;
     }
     var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
+    var MyCoord = geo.aircraft_position();
         
     # There is no terrain on earth that can be between these altitudes
     # so shortcut the whole thing and return now.
-    if(MyCoord.alt() < 8900 and SelectCoord.alt() < 8900)
+    if(MyCoord.alt() > 8900 and SelectCoord.alt() > 8900){
+#print("inbt: both above 8900");
         return 1;
-
+    }
     if (pickingMethod == 1) {
       var myPos = geo.aircraft_position();
 
@@ -618,23 +715,22 @@ var isNotBehindTerrain = func(node) {
       v = get_cart_ground_intersection(xyz, dir);
       if (v == nil) {
         return 1;
-        #printf("No terrain, planes has clear view of each other");
+#        printf(":: No terrain, planes has clear view of each other");
       } else {
        var terrain = geo.Coord.new();
        terrain.set_latlon(v.lat, v.lon, v.elevation);
        var maxDist = myPos.direct_distance_to(SelectCoord);
        var terrainDist = myPos.direct_distance_to(terrain);
        if (terrainDist < maxDist) {
-         #print("terrain found between the planes");
+#         print("::terrain found between the planes");
          return 0;
        } else {
+#          print("::the planes has clear view of each other");
           return 1;
-          #print("The planes has clear view of each other");
        }
       }
     } else {
         var isVisible = 0;
-        var MyCoord = geo.aircraft_position();
         
         # Temporary variable
         # A (our plane) coord in meters
@@ -651,12 +747,12 @@ var isNotBehindTerrain = func(node) {
         var difb = e - b;
         var difc = f - c;
         
-        #print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
-        #print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
+#        print("a,b,c | " ~ a ~ "," ~ b ~ "," ~ c);
+#        print("d,e,f | " ~ d ~ "," ~ e ~ "," ~ f);
         
         # direct Distance in meters
         var myDistance = math.sqrt( math.pow((d-a),2) + math.pow((e-b),2) + math.pow((f-c),2)); #calculating distance ourselves to avoid another call to geo.nas (read: speed, probably).
-        #print("myDistance: " ~ myDistance);
+#        print("myDistance: " ~ myDistance);
         var Aprime = geo.Coord.new();
             
         # Here is to limit FPS drop on very long distance
@@ -681,7 +777,7 @@ var isNotBehindTerrain = func(node) {
             var x = ((difa/(maxLoops+1))*i)+a;
             var y = ((difb/(maxLoops+1))*i)+b;
               var z = ((difc/(maxLoops+1))*i)+c;
-              #print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
+#              print("i:" ~ i ~ "|x,y,z | " ~ x ~ "," ~ y ~ "," ~ z);
               Aprime.set_xyz(x,y,z);
               var AprimeTerrainAlt = geo.elevation(Aprime.lat(), Aprime.lon());
             if (AprimeTerrainAlt == nil) {
@@ -770,24 +866,68 @@ var hud_nearest_tgt = func() {
 Diamond_Blinker = aircraft.light.new("sim/model/"~this_model~"/lighting/hud-diamond-switch", [0.1, 0.1]);
 setprop("sim/model/"~this_model~"/lighting/hud-diamond-switch/enabled", 1);
 
+#
+#
+# Map of known names to radardist names.
+# radardist should be updated.
+var ac_map = {"C-137R" : "707",
+              "C-137R-PAX" : "707",
+              "E-8R" : "707",
+              "EC-137R" : "707",
+              "KC-137R" : "707",
+              "KC-137R-RT" : "707",
+              "KC135" : "707",
+              "RC-137R" : "707",
+              "MiG-21MF-75" : "MiG-21",
+              "MiG-21bis" : "MiG-21",
+              "MiG-21bis-AI" : "MiG-21",
+              "MiG-21bis-Wingman" : "MiG-21",
+              "Blackbird-SR71A" : "SR71-Blackbird",
+              "Blackbird-SR71B" : "SR71-Blackbird",
+              "Tornado-GR4" : "Tornado",
+              "ac130" : "c310",
+              "c130" : "c310",
+              "c130k" : "c310",
+              "kc130" : "c310",
+              "F-15D" : "f15c",
+              "F-15C" : "f15c", 
+              "AJ37-Viggen" : "mirage2000",
+              "AJS37-Viggen" : "mirage2000",
+              "JA37Di-Viggen" : "mirage2000",
+              "Typhoon" : "mirage2000"
+             };
 
 # ECM: Radar Warning Receiver
-rwr = func(u) {
+# control the lights that indicate radar warning, the F-14 has two lights, the F-15 one light
+# other aircraft may or not have this function; or instead of lights maybe a warning tone.
+rwr_warning_indication = func(u) {
+#
+# get the aircraft type using radardist method that extracts from the model using
+# the path.
+# then remove the .xml and additionally support extra craft using the ac_map mapping defined above.
+# this will then give us the maximum range.
+# although we will use our own RCS method to 
 	var u_name = radardist.get_aircraft_name(u.string);
+    u_name = string.truncateAt(u_name, ".xml");
+    u_name = ac_map[u_name] or u_name;
 	var u_maxrange = radardist.my_maxrange(u_name); # in kilometer, 0 is unknown or no radar.
 	var horizon = u.get_horizon( our_alt );
 	var u_rng = u.get_range();
 	var u_carrier = u.check_carrier_type();
+    var u_az_field = (u.get_az_field()/2.0)*1.2;
 	if ( u_maxrange > 0  and u_rng < horizon ) {
-		# Test if we are in its radar field (hard coded 74°) or if we have a MPcarrier.
-		# Compute the signal strength.
+#print("RWR: ",u_name, " rng=",u_rng, "u_maxrange=",u_maxrange, " horizon=",horizon, " az=",u_az_field);
 		var our_deviation_deg = deviation_normdeg(u.get_heading(), u.get_reciprocal_bearing());
+
 		if ( our_deviation_deg < 0 ) { our_deviation_deg *= -1 }
-		if ( our_deviation_deg < 37 or u_carrier == 1 ) {
+#print("     our_deviation_deg=",our_deviation_deg, " u_carrier=",u_carrier);
+		if ( our_deviation_deg < u_az_field or u_carrier == 1 ) {
 			u_ecm_signal = (((-our_deviation_deg/20)+2.5)*(!u_carrier )) + (-u_rng/20) + 2.6 + (u_carrier*1.8);
 			u_ecm_type_num = radardist.get_ecm_type_num(u_name);
+#print("     u_ecm_signal=",u_ecm_signal," u_ecm_type_num=",u_ecm_type_num);
 		}
 	}
+#else print("RWR: out of range");
 	# Compute global threat situation for undiscriminant warning lights
 	# and discrete (normalized) definition of threat strength.
 	if ( u_ecm_signal > 1 and u_ecm_signal < 3 ) {
@@ -804,10 +944,13 @@ rwr = func(u) {
     u_ecm_signal = (-u_rng/20) + 2.6;
     u_ecm_type_num = radardist.get_ecm_type_num(u_name);
 	
+#print("     u_ecm_signal=",u_ecm_signal," u_ecm_type_num=",u_ecm_type_num);
+
     u.EcmSignal.setValue(u_ecm_signal);
 	u.EcmSignal.setValue(u_ecm_signal);
 	u.EcmSignalNorm.setIntValue(u_ecm_signal_norm);
 	u.EcmTypeNum.setIntValue(u_ecm_type_num);
+    return u_ecm_signal != 0;
 }
 
 
@@ -920,6 +1063,7 @@ wcs_mode_update = func() {
 var Target = {
 	new : func (c) {
 		var obj = { parents : [Target]};
+        obj.propNode = c;
 		obj.RdrProp = c.getNode("radar");
 		obj.Heading = c.getNode("orientation/true-heading-deg");
         obj.pitch   = c.getNode("orientation/pitch-deg");
@@ -930,7 +1074,7 @@ var Target = {
 		obj.Valid = c.getNode("valid");
 		obj.Callsign = c.getNode("callsign");
         obj.TAS = c.getNode("velocities/true-airspeed-kt");
-
+        obj.TransponderId = c.getNode("instrumentation/transponder/transmitted-id");
 
         if (obj.Callsign == nil or obj.Callsign.getValue() == "")
         {
@@ -968,7 +1112,6 @@ else
 		obj.index = c.getIndex();
 		obj.string = "ai/models/" ~ obj.type ~ "[" ~ obj.index ~ "]";
 		obj.shortstring = obj.type ~ "[" ~ obj.index ~ "]";
-        obj.propNode = c;
         obj.TgTCoord  = geo.Coord.new();
         if (c.getNode("position/latitude-deg") != nil and c.getNode("position/longitude-deg") != nil) {
             obj.lat = c.getNode("position/latitude-deg");
@@ -1050,6 +1193,8 @@ else
             obj.EcmTypeNum     = obj.TgtsFiles.getNode("ecm_type_num", 1);
             obj.Display        = obj.TgtsFiles.getNode("display", 1);
             obj.Visible        = obj.TgtsFiles.getNode("visible", 1);
+            obj.Behind_terrain = obj.TgtsFiles.getNode("behind-terrain", 1);
+            obj.RWRVisible     = obj.TgtsFiles.getNode("rwr-visible", 1);
             obj.Fading         = obj.TgtsFiles.getNode("ddd-echo-fading", 1);
             obj.DddDrawRangeNm = obj.TgtsFiles.getNode("ddd-draw-range-nm", 1);
             obj.TidDrawRangeNm = obj.TgtsFiles.getNode("tid-draw-range-nm", 1);
@@ -1071,6 +1216,11 @@ else
 
 		return obj;
 	},
+#
+# radar azimuth
+    get_az_field : func {
+        return 60.0;
+    },
 	get_heading : func {
 		var n = me.Heading.getValue();
         if (n != nil)
@@ -1151,10 +1301,16 @@ else
 		var s = 0;
 		if ( me.RadarStandby != nil ) {
 			s = me.RadarStandby.getValue();
-			if (s == nil) { s = 0 } elsif (s != 1) { s = 0 }
+        if (s == nil or s != 1) 
+            return 0;
 		}
 		return s;
 	},
+	get_transponder : func {
+        if (me.TransponderId != nil) 
+            return me.TransponderId.getValue();
+        return nil;
+		},
 	get_display : func() {
 		return me.Display.getValue();
 	},
@@ -1166,6 +1322,18 @@ else
 	},
 	set_visible : func(n) {
 		me.Visible.setBoolValue(n);
+	},
+	get_behind_terrain : func() {
+		return me.Behind_terrain.getValue();
+	},
+	set_behind_terrain : func(n) {
+		me.Behind_terrain.setBoolValue(n);
+	},
+	get_RWR_visible : func() {
+		return me.RWRVisible.getValue();
+	},
+	set_RWR_visible : func(n) {
+		me.RWRVisible.setBoolValue(n);
 	},
 	get_fading : func() {
 		var fading = me.Fading.getValue(); 
@@ -1326,3 +1494,4 @@ else
 
 # HUD field of view = 2 * math.atan2( 0.0764, 0.7186) * globals.R2D; # ~ 12.1375°
 # where 0.071 : virtual screen half width, 0.7186 : distance eye -> screen
+
