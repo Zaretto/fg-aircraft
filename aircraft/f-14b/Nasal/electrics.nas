@@ -470,7 +470,6 @@ setlistener("sim/current-view/internal", func {
         setprop("sim/rendering/als-secondary-lights/use-landing-light", getprop("controls/lighting/taxi-light") != 0);
     else
         setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
-    print("Switching to internal ",getprop("sim/current-view/internal")," ", getprop("sim/rendering/als-secondary-lights/use-landing-light"));
 }, 1, 0);
 
 setlistener("controls/lighting/taxi-light", func {

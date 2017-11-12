@@ -37,9 +37,6 @@ setlistener("sim/model/f15/controls/armament/weapon-selector", func(v)
     aircraft.demand_weapons_refresh();
 });
 
-var FALSE = 0;
-var TRUE  = 1;
-
 var getDLZ = func {
     if (ArmSwitch.getValue() and Current_missile != nil) {
         return Current_missile.getDLZ();
@@ -49,7 +46,7 @@ var getDLZ = func {
 # Init
 var weapons_init = func()
 {
-	print("Initializing f15 weapons system");
+	print("Initializing F-15 weapons system");
 	ArmSwitch.setValue(0);
 	system_stop();
 	SysRunning.setBoolValue(0);
@@ -102,18 +99,18 @@ var armament_update = func {
 	}
     if (WeaponSelector.getValue() == 1) {
         if (Current_srm != nil and Current_srm.status == 1) {
-            setprop("sim/model/f15/systems/armament/launch-light",true);
+            setprop("sim/model/f15/systems/armament/launch-light",1);
         } else {
-            setprop("sim/model/f15/systems/armament/launch-light",false);
+            setprop("sim/model/f15/systems/armament/launch-light",0);
         }
     } elsif (WeaponSelector.getValue() == 2) {
         if (Current_mrm != nil and Current_mrm.status == 1) {
-            setprop("sim/model/f15/systems/armament/launch-light",true);
+            setprop("sim/model/f15/systems/armament/launch-light",1);
         } else {
-            setprop("sim/model/f15/systems/armament/launch-light",false);
+            setprop("sim/model/f15/systems/armament/launch-light",0);
         }
     } else {
-        setprop("sim/model/f15/systems/armament/launch-light",false);
+        setprop("sim/model/f15/systems/armament/launch-light",0);
     }
 }
 
@@ -177,6 +174,7 @@ var get_sel_missile_count = func()
         }
         return 0;
 }
+
 var update_sw_ready = func()
 {
 	if (WeaponSelector.getValue() > 0 and ArmSwitch.getValue())
@@ -187,7 +185,7 @@ var update_sw_ready = func()
              or (WeaponSelector.getValue() == 2 and (Current_mrm == nil or Current_mrm.status == 2)  and sel_missile_count > 0 ))
         {
             print("Missile: sel_missile_count = ", sel_missile_count - 1);
-            foreach (var S; Station.list)
+            foreach (var S; Station.firing_order)
             {
                 printf("AIM %d: %s, %s",S.index, S.get_type(), S.get_selected());
 #                if (S.get_type() == "AIM-9" and S.get_selected())
@@ -249,7 +247,7 @@ print("Release ",current_pylon);
 			setprop(current_pylon,"none");
 print("currently ",getprop(current_pylon));
 			armament_update();
-setprop("sim/model/f15/systems/armament/launch-light",false);
+setprop("sim/model/f15/systems/armament/launch-light",0);
 			Current_missile.release();
             arm_selector();
 		}
@@ -286,7 +284,7 @@ var system_stop = func
     print("Weapons System stop");
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
-                setprop("sim/model/f15/systems/armament/launch-light",false);
+                setprop("sim/model/f15/systems/armament/launch-light",0);
 	foreach (var S; Station.list)
     {
 		S.set_display(0); # initialize bcode (showing weapons set over MP).
@@ -349,7 +347,7 @@ var arm_selector = func() {
 	update_gun_ready();
 	var weapon_s = WeaponSelector.getValue();
 #    print("arm stick selector ",weapon_s);
-    setprop("sim/model/f15/systems/armament/launch-light",false);
+    setprop("sim/model/f15/systems/armament/launch-light",0);
 	if ( weapon_s == 0 ) 
     {
 		SwSoundVol.setValue(0);
@@ -380,16 +378,16 @@ var arm_selector = func() {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);	
 	}
-    var sel=true; # only the next will be selected
-	foreach (var S; Station.list)
+    var sel=1; # only the next will be selected
+	foreach (var S; Station.firing_order)
     {
-        S.set_selected(false);
+        S.set_selected(0);
         if (weapon_s == 2)
         {
             if (S.bcode == 2 or S.bcode == 3)
             {
                 S.set_selected(sel);
-                sel=false;
+                sel=0;
             }
         }
         else if (weapon_s == 1)
@@ -397,7 +395,7 @@ var arm_selector = func() {
             if (S.bcode == 1)
             {
                 S.set_selected(sel);
-                sel=false;
+                sel=0;
             }
         }
 #        printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
@@ -512,38 +510,38 @@ var flareStart = -1;
 var flareLoop = func {
   # Flare release
   if (getprop("ai/submodels/submodel[5]/flare-release-snd") == nil) {
-    setprop("ai/submodels/submodel[5]/flare-release-snd", FALSE);
-    setprop("ai/submodels/submodel[5]/flare-release-out-snd", FALSE);
+    setprop("ai/submodels/submodel[5]/flare-release-snd", 0);
+    setprop("ai/submodels/submodel[5]/flare-release-out-snd", 0);
   }
   var flareOn = getprop("ai/submodels/submodel[5]/flare-release-cmd");
-  if (flareOn == TRUE and getprop("ai/submodels/submodel[5]/flare-release") == FALSE
-      and getprop("ai/submodels/submodel[5]/flare-release-out-snd") == FALSE
-      and getprop("ai/submodels/submodel[5]/flare-release-snd") == FALSE) {
+  if (flareOn == 1 and getprop("ai/submodels/submodel[5]/flare-release") == 0
+      and getprop("ai/submodels/submodel[5]/flare-release-out-snd") == 0
+      and getprop("ai/submodels/submodel[5]/flare-release-snd") == 0) {
     flareCount = getprop("ai/submodels/submodel[5]/count");
     flareStart = getprop("sim/time/elapsed-sec");
-    setprop("ai/submodels/submodel[5]/flare-release-cmd", FALSE);
+    setprop("ai/submodels/submodel[5]/flare-release-cmd", 0);
     if (flareCount > 0) {
       # release a flare
-      setprop("ai/submodels/submodel[5]/flare-release-snd", TRUE);
-      setprop("ai/submodels/submodel[5]/flare-release", TRUE);
+      setprop("ai/submodels/submodel[5]/flare-release-snd", 1);
+      setprop("ai/submodels/submodel[5]/flare-release", 1);
       setprop("rotors/main/blade[3]/flap-deg", flareStart);
       setprop("rotors/main/blade[3]/position-deg", flareStart);
     } else {
       # play the sound for out of flares
-      setprop("ai/submodels/submodel[5]/flare-release-out-snd", TRUE);
+      setprop("ai/submodels/submodel[5]/flare-release-out-snd", 1);
     }
   }
-  if (getprop("ai/submodels/submodel[5]/flare-release-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
-    setprop("ai/submodels/submodel[5]/flare-release-snd", FALSE);
+  if (getprop("ai/submodels/submodel[5]/flare-release-snd") == 1 and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
+    setprop("ai/submodels/submodel[5]/flare-release-snd", 0);
     setprop("rotors/main/blade[3]/flap-deg", 0);
     setprop("rotors/main/blade[3]/position-deg", 0);
   }
-  if (getprop("ai/submodels/submodel[5]/flare-release-out-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
-    setprop("ai/submodels/submodel[5]/flare-release-out-snd", FALSE);
+  if (getprop("ai/submodels/submodel[5]/flare-release-out-snd") == 1 and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
+    setprop("ai/submodels/submodel[5]/flare-release-out-snd", 0);
   }
   if (flareCount > getprop("ai/submodels/submodel[5]/count")) {
     # A flare was released in last loop, we stop releasing flares, so user have to press button again to release new.
-    setprop("ai/submodels/submodel[5]/flare-release", FALSE);
+    setprop("ai/submodels/submodel[5]/flare-release", 0);
     flareCount = -1;
   }
   settimer(flareLoop, 0.1);

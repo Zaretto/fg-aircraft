@@ -514,6 +514,8 @@ var quickstart = func() {
     setprop("sim/model/f-14b/controls/electrics/master-test-switch",0);
 	setprop("sim/model/f-14b/controls/electrics/r-gen-switch",1);
 
+#
+# Richard's quickstart method
     setprop("controls/engines/engine[0]/cutoff",0);
     setprop("controls/engines/engine[1]/cutoff",0);
     setprop("engines/engine[0]/out-of-fuel",0);
@@ -521,13 +523,13 @@ var quickstart = func() {
     setprop("engines/engine[1]/run",1);
     setprop("engines/engine[1]/run",1);
 
-setprop("/engines/engine[1]/cutoff",0);
-setprop("/engines/engine[0]/cutoff",0);
+    setprop("/engines/engine[1]/cutoff",0);
+    setprop("/engines/engine[0]/cutoff",0);
 
-setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
-setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
-setprop("/fdm/jsbsim/propulsion/set-running",1);
-setprop("/fdm/jsbsim/propulsion/set-running",0);
+    setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
+    setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
+    setprop("/fdm/jsbsim/propulsion/set-running",1);
+    setprop("/fdm/jsbsim/propulsion/set-running",0);
 
 }
 

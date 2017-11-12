@@ -2,6 +2,7 @@
 
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <sim>
+        <minimum-fg-version>2016.1</minimum-fg-version>
         <description>Grumman F-14A</description>
         <author>Richard Harrison, Enrique Laso, Alexis Bory, Nikolai V. Chr.</author>
         <status>production</status>
@@ -214,8 +215,16 @@
                     <property type="string">engines/engine[0]/stalled</property>
                 </signal>
                 <signal>
+                  <type>float</type>
+                  <property type="string">engines/engine[1]/stalled</property>
+                </signal>
+                <signal>
                     <type>float</type>
-                    <property type="string">engines/engine[1]/stalled</property>
+                    <property type="string">fdm/jsbsim/fcs/gear-kneel-cmd</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">gear/gear[0]/compression-adjusted-ft</property>
                 </signal>
             </config>
         </flight-recorder>
@@ -382,6 +391,10 @@
             <key>
                 <name>Q</name>
                 <desc>Reset view</desc>
+            </key>
+            <key>
+                <name>Ctrl-q</name>
+                <desc>Release chaff/flare</desc>
             </key>
             <key>
                 <name>S</name>
@@ -560,6 +573,7 @@
                     </fuel>
                     <gear>
                         <ld-gear-handle-anim type="double">0</ld-gear-handle-anim>
+                        <nose-strut alias="/fdm/jsbsim/fcs/gear-kneel-cmd"/>
                     </gear>
                     <hud>
                         <intens type="double">1</intens>
@@ -626,7 +640,7 @@
                     </VDI>
                 </controls>
                 <fx>
-                    <smoke type="int">0</smoke>
+                    <smoke type="double">0</smoke>
                     <burner type="int">0</burner>
                     <heat-blur-on type="bool">false</heat-blur-on>
                 </fx>
@@ -1320,72 +1334,72 @@
             <!-- the station offsets is used by the fox2.nas to fire the missiles from their correct positions, some of them needs to be updated -->
             <station n="1">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>-3.6717</y-m>
-                    <z-m>-1.0600</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">-3.6717</y-m>
+                    <z-m type="double">-1.0600</z-m>
                 </offsets>
             </station>
             <station n="2">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>-3.2800</y-m>
-                    <z-m>-1.5700</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">-3.2800</y-m>
+                    <z-m type="double">-1.5700</z-m>
                 </offsets>
             </station>
             <station n="3">
                 <offsets>
-                    <x-m>-2</x-m>
-                    <y-m>0</y-m>
-                    <z-m>-1.4333</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="4">
                 <offsets>
-                    <x-m>-2</x-m>
-                    <y-m>0</y-m>
-                    <z-m>-1.4333</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="5">
                 <offsets>
-                    <x-m>-2</x-m>
-                    <y-m>0</y-m>
-                    <z-m>-1.4333</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="6">
                 <offsets>
-                    <x-m>-2</x-m>
-                    <y-m>0</y-m>
-                    <z-m>-1.4333</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="7">
                 <offsets>
-                    <x-m>-2</x-m>
-                    <y-m>0</y-m>
-                    <z-m>-1.4333</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="8">
                 <offsets>
-                    <x-m>-2</x-m>
-                    <y-m>0</y-m>
-                    <z-m>-1.4333</z-m>
+                    <x-m type="double">-2</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-1.4333</z-m>
                 </offsets>
             </station>
             <station n="9">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>3.2800</y-m>
-                    <z-m>-1.5700</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">3.2800</y-m>
+                    <z-m type="double">-1.5700</z-m>
                 </offsets>
             </station>
             <station n="10">
                 <offsets>
-                    <x-m>0.4795</x-m>
-                    <y-m>3.6717</y-m>
-                    <z-m>-1.0600</z-m>
+                    <x-m type="double">0.4795</x-m>
+                    <y-m type="double">3.6717</y-m>
+                    <z-m type="double">-1.0600</z-m>
                 </offsets>
             </station>
         </armament>
@@ -1476,6 +1490,16 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14.toggleOversweep();</script>
+                </binding>
+            </key>
+
+            <key n="17">
+                <name>ctrl-q</name>
+                <desc>Trigger flare/chaff release</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>/ai/submodels/submodel[4]/flare-release-cmd</property>
+                    <value type="bool">true</value>
                 </binding>
             </key>
 
@@ -1761,6 +1785,22 @@
                 </binding>
             </key>
 
+            <key n="83">
+                <name>S</name>
+                <desc>smoke</desc>
+                <!--<binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
+                </binding>-->
+                <binding>
+                    <command>property-cycle</command>
+                    <property>sim/model/f-14b/fx/smoke</property>
+                    <value type="double">0.0</value>
+                    <value type="double">1.0</value>
+                    <wrap>true</wrap>
+                </binding>
+            </key>
+
             <key n="117">
                 <name>u</name>
                 <desc>Cycle through the 3 refuelling probe switch positions</desc>
@@ -1827,7 +1867,7 @@
               </binding>
              </key>
 
-             <!--<key n="97"> already overwritten
+             <key n="97">
               <name>a</name>
               <desc>Increase speed-up</desc>
                 <binding>
@@ -1838,7 +1878,7 @@
                <command>nasal</command>
                <script>armament.ct("a")</script>
               </binding>
-             </key>-->
+             </key>
 
              <key n="65">
               <name>A</name>
@@ -1881,36 +1921,42 @@
 
     <payload>                        
         <armament>
-            <models type="string">Aircraft/f-14b/Models/Stores/</models>
+          <use-fg-default-hud type="bool">true</use-fg-default-hud>
+          <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <modelsUseCase type="bool">true</modelsUseCase>
+            <modelsUpperCase type="bool">true</modelsUpperCase>
             <pylon-offset type="int">1</pylon-offset>
             <pylon-stations>controls/armament</pylon-stations>
+            <station-name type="string">station</station-name>
+            <hit-interpolation type="bool">true</hit-interpolation>
+            <MP-lat type="string">rotors/main/blade[0]/flap-deg</MP-lat>
+            <MP-lon type="string">rotors/main/blade[1]/flap-deg</MP-lon>
+            <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
             <aim-9>             <!-- aim-9L sidewinder -->
-                <sound-on-off type="bool">false</sound-on-off>
-                <sound-volume type="double">0.0</sound-volume>
                 <vol-search type="double">0.075</vol-search>
                 <vol-track type="double">0.25</vol-track>
                 <vol-track-weak type="double">0.175</vol-track-weak>
                 <guidance type="string">heat</guidance>                       <!-- heat/radar/semi-radar/laser/gps/vision/unguided -->
                 <all-aspect type="bool">true</all-aspect>                     <!-- all or rear-only -->
                 <max-fire-range-nm type="double">9.7</max-fire-range-nm> <!-- source -->
-                <FCS-field-deg type="int">27</FCS-field-deg>                              <!-- source -->
+                <FCS-field-deg type="int">55</FCS-field-deg>                              <!-- source -->
                 <seeker-field-deg type="int">82</seeker-field-deg>                 <!-- source: 40 deg gyro + 1 deg searcher-beam-width -->
                 <max-g type="int">32</max-g>                                  <!-- source -->
                 <thrust-lbf-stage-1 type="double">2660</thrust-lbf-stage-1><!-- authentic -->
                 <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>    <!-- authentic -->
                 <stage-1-duration-sec type="double">5.23</stage-1-duration-sec><!-- authentic -->
                 <stage-2-duration-sec type="double">0.0</stage-2-duration-sec><!-- authentic -->
-                <weight-launch-lbs type="double">188</weight-launch-lbs>      <!-- authentic -->
+                <weight-launch-lbs type="double">186.2</weight-launch-lbs>      <!-- authentic -->
                 <weight-warhead-lbs type="double">20.8</weight-warhead-lbs>   <!-- authentic -->
                 <weight-fuel-lbm type="double">60.4</weight-fuel-lbm>           <!-- guess -->
-                <drag-coeff type="double">0.5</drag-coeff>                   <!-- guesstimate -->
-                <drag-area type="double">0.143</drag-area>                    <!-- sq ft -->
+                <drag-coeff type="double">0.55</drag-coeff>                   <!-- guesstimate -->
+                <cross-section-sqft type="double">0.143</cross-section-sqft>                    <!-- sq ft -->
                 <searcher-beam-width type="double">2.0</searcher-beam-width>  <!-- guess -->
                 <arming-time-sec type="double">1.4</arming-time-sec>          <!-- guess -->
                 <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach><!-- guess -->
-                <self-destruct-time-sec type="double">50</self-destruct-time-sec>         <!-- guess -->
+                <self-destruct-time-sec type="double">43</self-destruct-time-sec>         <!-- guess -->
                 <seeker-angular-speed-dps type="double">30</seeker-angular-speed-dps><!-- deg/sec guess-->
                 <lock-on-sun-deg type="double">5</lock-on-sun-deg> <!-- source -->
                 <loft-altitude type="int">0</loft-altitude>
@@ -1923,10 +1969,11 @@
                 <navigation type="string">APN</navigation>
                 <class type="string">A</class>
                 <fire-msg type="string">FOX2</fire-msg>
+                <DLZ type="bool">true</DLZ>
+                <DLZ-optimal-alt-feet type="double">25000</DLZ-optimal-alt-feet>
+                <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
             </aim-9>
             <aim-7>          <!-- aim-7f Sparrow -->
-                <sound-on-off type="bool">false</sound-on-off>
-                <sound-volume type="double">0.0</sound-volume>
                 <vol-search type="double">0.00</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <vol-track-weak type="double">0.10</vol-track-weak>
@@ -1944,7 +1991,7 @@
                 <weight-warhead-lbs type="double">88</weight-warhead-lbs>
                 <weight-fuel-lbm type="double">135</weight-fuel-lbm>
                 <drag-coeff type="double">0.25</drag-coeff>
-                <drag-area type="double">0.3382</drag-area><!-- sq ft (0.3281 ft radius) authentic -->
+                <cross-section-sqft type="double">0.3382</cross-section-sqft><!-- sq ft (0.3281 ft radius) authentic -->
                 <arming-time-sec type="double">2.5</arming-time-sec>                       <!-- guess -->
                 <min-speed-for-guiding-mach type="double">0.7</min-speed-for-guiding-mach> <!-- guess -->
                 <self-destruct-time-sec type="double">75</self-destruct-time-sec>         <!-- guess -->
@@ -1955,10 +2002,11 @@
                 <rail type="bool">false</rail>
                 <class type="string">A</class>
                 <fire-msg>FOX1</fire-msg>
+                <DLZ type="bool">true</DLZ>
+                <DLZ-optimal-alt-feet type="double">30000</DLZ-optimal-alt-feet>
+                <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
             </aim-7>
             <aim-54><!-- aim-54c Phoenix -->
-                <sound-on-off type="bool">false</sound-on-off>
-                <sound-volume type="double">0.0</sound-volume>
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <vol-track-weak type="double">0.10</vol-track-weak>
@@ -1967,7 +2015,7 @@
                 <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm> 
                 <FCS-field-deg type="int">25</FCS-field-deg>                              
                 <seeker-field-deg type="int">155</seeker-field-deg>                 
-                <max-g type="int">25</max-g>
+                <max-g type="int">17</max-g><!-- AIM-54A could do 17G -->
                 <thrust-lbf-stage-1 source="authentic" type="double">4000</thrust-lbf-stage-1>
                 <thrust-lbf-stage-2 source="authentic" type="double">0.0</thrust-lbf-stage-2>    
                 <stage-1-duration-sec source="authentic" type="double">30</stage-1-duration-sec>
@@ -1976,7 +2024,7 @@
                 <weight-warhead-lbs source="source" type="double">135</weight-warhead-lbs>
                 <weight-fuel-lbm source="authentic" type="double">364</weight-fuel-lbm>
                 <drag-coeff type="double">0.18</drag-coeff>
-                <drag-area source="authentic" type="double">1.227</drag-area>
+                <cross-section-sqft source="authentic" type="double">1.227</cross-section-sqft>
                 <arming-time-sec type="double">3</arming-time-sec>          
                 <min-speed-for-guiding-mach type="double">0.80</min-speed-for-guiding-mach>
                 <self-destruct-time-sec type="double">180</self-destruct-time-sec>         
@@ -1987,6 +2035,9 @@
                 <navigation type="string">PN</navigation>
                 <class type="string">A</class>
                 <fire-msg>FOX3</fire-msg>
+                <DLZ type="bool">true</DLZ>
+                <DLZ-optimal-alt-feet type="double">35000</DLZ-optimal-alt-feet>
+                <DLZ-optimal-closing-mach type="double">2.5</DLZ-optimal-closing-mach>
             </aim-54>
         </armament>
     </payload>
@@ -2002,6 +2053,10 @@
             </blade>
             <blade n="2">
                 <flap-deg type="double">0</flap-deg>
+            </blade>
+            <blade n="3">
+                <flap-deg type="double">0</flap-deg><!-- used for releasing flares -->
+                <position-deg type="double">0</position-deg><!-- used for releasing chaff -->
             </blade>
         </main>
     </rotors>
@@ -2019,6 +2074,12 @@
         <radardist>
             <file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
         </radardist>
+        <vector>
+            <file>Aircraft/f-14b/Nasal/vector.nas</file>
+        </vector>
+        <rcs>
+            <file>Aircraft/f-14b/Nasal/rcs.nas</file>
+        </rcs>
         <awg_9>
             <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
         </awg_9>

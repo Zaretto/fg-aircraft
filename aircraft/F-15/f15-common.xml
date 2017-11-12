@@ -43,7 +43,7 @@
                 <engine n="1">
                     <augmentation-alight type="bool">false</augmentation-alight>
                 </engine>
-
+                <cft type="float">0</cft>
             </propulsion>
             <systems>
                 <hydraulics>
@@ -511,10 +511,14 @@
                     <type>float</type>
                     <property type="string">fdm/jsbsim/systems/electrics/ac-left-main-bus-powered</property>
                 </signal>
-                <signal>
-                    <type>float</type>
-                    <property type="string">fdm/jsbsim/systems/electrics/ac-essential-bus1-powered</property>
-                </signal>
+              <signal>
+                <type>float</type>
+                <property type="string">fdm/jsbsim/systems/electrics/ac-essential-bus1-powered</property>
+              </signal>
+              <signal>
+                <type>float</type>
+                <property type="string">fdm/jsbsim/gear/gear-pos-norm</property>
+              </signal>
             </config>
         </flight-recorder>
 
@@ -544,6 +548,7 @@
                 </default_exit>
             </map>
             <f15>
+                <cft alias="/fdm/jsbsim/propulsion/cft"/>
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
@@ -556,11 +561,11 @@
                         <vec-acl type="int">0</vec-acl>
                         <!-- 1=VEC/PCD, 0=OFF, -1=ACL -->
                         <altitude type="bool">false</altitude>
-                        <heading-gt type="int">0</heading-gt>
                         <!-- 1=HDG, 0=OFF, -1=GT -->
                         <altitude-enable type="bool">0</altitude-enable>
                         <dead-zone-pitch type="double">0.05</dead-zone-pitch>
                         <dead-zone-roll type="double">0.01</dead-zone-roll>
+                        <cas-takeoff-trim type="bool">false</cas-takeoff-trim>
                     </AFCS>
                     <armament>
                         <acm-jettison-lever type="bool">0</acm-jettison-lever>
@@ -779,6 +784,10 @@
                     <hud-mode-cruise type="bool">true</hud-mode-cruise>
                     <hud-mode-ldg type="bool">false</hud-mode-ldg>
                     <hud-mode-to type="bool">false</hud-mode-to>
+                    <hud>
+                        <nav-range-display type="string"/>
+                        <nav-range-eta type="string"/>
+                    </hud>
                     <radar-altimeter>
                         <limit-bug type="double">250</limit-bug>
                     </radar-altimeter>
@@ -793,6 +802,12 @@
                         <rd-rot-light type="bool">false</rd-rot-light>
                         <jat-light type="bool">false</jat-light>
                         <irot-light type="bool">false</irot-light>
+                        <active-target-available type="bool"/>
+                        <active-target-callsign type="string"/>
+                        <active-target-type type="string"/>
+                        <active-target-range type="double"/>
+                        <active-target-closure type="double"/>
+
                         <wcs-mode>
                             <pd-stt type="bool">false</pd-stt>
                             <pulse-stt type="bool">false</pulse-stt>
@@ -1008,6 +1023,7 @@
 
                 <int n="0">0</int> <!-- fuel dump      -->
                 <int n="1">0</int> <!-- formation slimmers -->
+                <int n="2">0</int> <!-- radar standby -->
                 <int n="3">0</int> <!-- collision lights -->
                 <int n="4">0</int> <!-- position lights -->
                 <int n="5">0</int> <!-- tail flood  -->
@@ -1022,7 +1038,6 @@
                 <int n="14" alias="/instrumentation/radar/radar2-range" />
                 <int n="15" alias="/sim/model/f15/instrumentation/fuel-gauges/total" />
                 <int n="16" alias="/velocities/mach" />
-                <int n="17">0</int> <!-- Radar Status -->
                 <int n="18">0</int> <!-- Total Weight (lbs) -->
                 <string n="0" type="string"></string>
                 <string n="13" type="string"></string>
@@ -1801,7 +1816,7 @@
                 <desc>Toggle autopilot altitude mode.</desc>
                 <binding>
                     <command>property-toggle</command>
-                    <property>sim/model/f15/controls/afcs/alt-hold</property>
+                    <property>sim/model/f15/controls/AFCS/alt-hold</property>
                 </binding>
             </key>
 
@@ -1828,7 +1843,7 @@
                 <desc>Toggle Auto Throttle hold</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>aircraft.toggleAPC();</script>
+                    <script>aircraft.toggleAutoThrottle();</script>
                 </binding>
             </key>
 
@@ -1837,7 +1852,7 @@
                 <desc>Toggle autopilot attitude mode</desc>
                 <binding>
                     <command>property-toggle</command>
-                    <property>sim/model/f15/controls/afcs/att-hold</property>
+                    <property>sim/model/f15/controls/AFCS/att-hold</property>
                 </binding>
             </key>
 
@@ -2162,6 +2177,8 @@
             <radar-standby type="bool">0</radar-standby>
             <symbols-enabled type="bool">true</symbols-enabled>
             <debug-mode type="bool">true</debug-mode>
+            <serviceable type="bool">true</serviceable>
+            <radar-mode type="int">1</radar-mode>
         </radar>
         <ecm>
             <enabled type="bool">true</enabled>
@@ -2194,6 +2211,9 @@
     </rotors>
 
     <nasal>
+        <props>
+            <file>Nasal/PropertyUpdateManager.nas</file>
+        </props>
         <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>

@@ -1858,10 +1858,11 @@
 		<type>translate</type>
 		<object-name>NsWheel</object-name>
 		<object-name>NsShock</object-name>
-		<property>gear/gear[0]/compression-norm</property>
+		<property>gear/gear[0]/compression-adjusted-ft</property>
 		<interpolation>
+			<entry><ind>-1</ind><dep>-0.555</dep></entry>
 			<entry><ind>0</ind><dep>-0.30</dep></entry>
-			<entry><ind>2</ind><dep>0.42</dep></entry>
+            <entry><ind>2</ind><dep>0.32</dep></entry>
 		</interpolation>
 		<axis>
 			<x>0</x>
@@ -1874,8 +1875,9 @@
 		<type>rotate</type>
 		<object-name>UpNsCompass</object-name>
 		<object-name>LoNsCompass</object-name>
-		<property>gear/gear[0]/compression-norm</property>
+		<property>gear/gear[0]/compression-adjusted-ft</property>
 		<interpolation>
+			<entry><ind>-0.73</ind><dep>30</dep></entry>
 			<entry><ind>0</ind><dep>15</dep></entry>
 			<entry><ind>2</ind><dep>-45</dep></entry>
 		</interpolation>
@@ -1894,10 +1896,11 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>LoNsCompass</object-name>
-		<property>gear/gear[0]/compression-norm</property>
+		<property>gear/gear[0]/compression-adjusted-ft</property>
 		<interpolation>
-			<entry><ind>0</ind><dep>-15</dep></entry>
-			<entry><ind>2</ind><dep>45</dep></entry>
+			<entry><ind>-0.73</ind><dep>-80</dep></entry>
+			<entry><ind>0</ind><dep>-50</dep></entry>
+			<entry><ind>2</ind><dep>80</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>-4.318</x-m>
@@ -3658,6 +3661,36 @@
 			<z>0.0</z>
 		</axis>
 	</animation>
+  <animation>
+    <type>select</type>
+    <object-name>shoot-lights</object-name>
+    <condition>
+      <or>
+        <property>sim/model/f-14b/lights/master-test-lights</property>
+        <property>sim/model/f-14b/systems/armament/launch-light</property>
+      </or>
+      <greater-than>
+        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <value>0</value>
+      </greater-than>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>lock-lights</object-name>
+    <condition>
+      <or>
+        <property>sim/model/f-14b/lights/master-test-lights</property>
+        <property>sim/model/f-14b/systems/armament/lock-light</property>
+      </or>
+      <greater-than>
+        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <value>0</value>
+      </greater-than>
+    </condition>
+  </animation>
+  
 
 
 </PropertyList>

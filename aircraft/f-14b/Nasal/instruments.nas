@@ -556,9 +556,14 @@ var main_loop = func {
 	if (f14.usingJSBSim)
     {
 	    if ( getprop("sim/replay/time") > 0 ) 
-            setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+          {
+              setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+          }
         else
-    		setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+          {
+              setprop ("/gear/gear[0]/compression-adjusted-ft", getprop("fdm/jsbsim/gear/unit[0]/compression-adjusted-ft"));
+              setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+          }
     }
 	else
 		setprop ("/orientation/alpha-indicated-deg", getprop("/orientation/alpha-deg"));
@@ -805,7 +810,7 @@ setlistener("sim/signals/fdm-initialized", init);
 
 
 setlistener("sim/position-finalized", func (is_done) {
-    print("position-finalized ",is_done.getValue());
+#    print("position-finalized ",is_done.getValue());
     if (is_done.getValue())
     {
     common_init();

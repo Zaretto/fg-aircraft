@@ -119,6 +119,9 @@ var incoming_listener = func {
           if (m2000 == TRUE or last_vector[2] == " "~callsign) {
             # its being fired at me
             #print("Incoming!");
+            if (last_vector[1] == " Bird away at") {
+              doSAMLight();
+            }
             var enemy = getCallsign(author);
             if (enemy != nil) {
               #print("enemy identified");
@@ -275,6 +278,15 @@ var fail_systems = func (probability) {
     }
     return failed;
 };
+
+var doSAMLight = func () {
+  setprop("sim/model/f15/instrumentation/warnings/ac-sam", 1);
+  settimer(func {stopSAM();},15);
+}
+
+var stopSAM = func () {
+  setprop("sim/model/f15/instrumentation/warnings/ac-sam", 0);
+}
 
 var playIncomingSound = func (clock) {
   setprop("sound/incoming"~clock, 1);

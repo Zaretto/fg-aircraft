@@ -116,7 +116,8 @@ var REAL_TIME = 1;
 var TRUE = 1;
 var FALSE = 0;
 
-var use_fg_default_hud = FALSE;
+# enables the AIM-9 aiming reticle (F-14) - doesn't require the radar to be in TWS
+var use_fg_default_hud = props.globals.getNode("payload/armament/use-fg-default-hud",1).getValue();
 
 var MISSILE_STANDBY = -1;
 var MISSILE_SEARCH = 0;
@@ -2244,7 +2245,7 @@ var AIM = {
 				me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
 				me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
 				# Check if in range and in the seeker FOV.
-				if (((me.guidance != "semi-radar" and me.guidance != "laser") or me.is_painted(me.tagt) == TRUE)
+				if ((me.class!="A" or contact.get_Speed()>15) and ((me.guidance != "semi-radar" and me.guidance != "laser") or me.is_painted(me.tagt) == TRUE)
 				    and me.rng < me.max_fire_range_nm and me.rng > me.min_fire_range_nm and me.FOV_check(me.total_horiz, me.total_elev, me.fcs_fov) ) {
 					#print("search4");
 					me.status = MISSILE_LOCK;

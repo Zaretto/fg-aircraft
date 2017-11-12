@@ -28,8 +28,31 @@
 			<property>sim/model/f-14b/systems/armament/launch-light</property>
 		</condition>
 	</animation>
+  
+  <animation>
+    <type>pick</type>
+    <visible>true</visible>
+    <object-name>launch-on</object-name>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <interval-sec>0.05</interval-sec>
+      <binding>
+        <command>property-assign</command>
+        <property>controls/armament/trigger</property>
+        <value>true</value>
+      </binding>
+      <mod-up>
+        <binding>
+          <command>property-assign</command>
+          <property>controls/armament/trigger</property>
+          <value>false</value>
+        </binding>
+      </mod-up>
+    </action>
+  </animation>
 
-	<animation>
+  <animation>
 		<type>rotate</type>
 		<object-name>sta-1-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[0]</property>

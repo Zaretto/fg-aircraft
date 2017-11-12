@@ -341,4 +341,16 @@
         </pure_gain>
 
     </channel>
+  <channel name="auxiliary">
+    <switch name="Aircraft on ground">
+      <description>Aircraft on ground</description>
+      <default value="0"/>
+      <test value="1" logic="OR">
+        gear/unit[0]/WOW ne 0
+        gear/unit[1]/WOW ne 0
+        gear/unit[2]/WOW ne 0
+      </test>
+      <output>position/aircraft-on-ground</output>
+    </switch>
+  </channel>
 </system>

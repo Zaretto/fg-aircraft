@@ -16,8 +16,9 @@
 		<object-name>g-label</object-name>
 		<object-name>sw-label</object-name>
 		<object-name>sp-label</object-name>
-		<object-name>lock-1</object-name>
-		<object-name>master-arm-locked</object-name>
+    <object-name>lock-1</object-name>
+    <object-name>lock-circle-1</object-name>
+    <object-name>master-arm-locked</object-name>
 		<object-name>sw-digit</object-name>
 		<object-name>gun-digit</object-name>
 		<object-name>sw-rng-5-scale</object-name>
@@ -91,38 +92,84 @@
 	</animation>
 
 	<!-- Diamond -->
-	<animation>
-		<type>select</type>
-		<object-name>lock-1</object-name>
-		<condition>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-display</property>
-			<not><property>instrumentation/radar/radar-standby</property></not>
-			<property>sim/model/f-14b/lighting/hud-diamond-switch/state</property>
-		</condition>
-	</animation>
-	<animation>
-		<type>rotate</type>
-		<object-name>lock-1</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle</property>
-		<axis><x>-1</x></axis>
-	</animation>
-	<animation>
-		<type>translate</type>
-		<object-name>lock-1</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-deviation</property>
-		<factor>1</factor>
-		<axis>
-			<z>1</z>
-		</axis>
-	</animation>
-	<animation><!-- post-rotate in inverse direction to keep the symbol vertical -->
-		<type>rotate</type>
-		<object-name>lock-1</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle</property>
-		<axis><x>1</x></axis>
-	</animation>
+  <animation>
+    <type>select</type>
+    <object-name>lock-1</object-name>
+    <condition>
+      <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-display</property>
+      <not>
+        <property>instrumentation/radar/radar-standby</property>
+      </not>
+      <property>sim/model/f-14b/lighting/hud-diamond-switch/state</property>
+    </condition>
+  </animation>
+  <animation>
+    <type>rotate</type>
+    <object-name>lock-1</object-name>
+    <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle</property>
+    <axis>
+      <x>-1</x>
+    </axis>
+  </animation>
+  <animation>
+    <type>translate</type>
+    <object-name>lock-1</object-name>
+    <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-deviation</property>
+    <factor>1</factor>
+    <axis>
+      <z>1</z>
+    </axis>
+  </animation>
+  <animation>
+    <!-- post-rotate in inverse direction to keep the symbol vertical -->
+    <type>rotate</type>
+    <object-name>lock-1</object-name>
+    <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle</property>
+    <axis>
+      <x>1</x>
+    </axis>
+  </animation>
+<!-- circle to indicate lock-->
+  <animation>
+    <type>select</type>
+    <object-name>lock-circle-1</object-name>
+    <condition>
+      <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-display</property>
+      <not>
+        <property>instrumentation/radar/radar-standby</property>
+      </not>
+      <property>sim/model/f-14b/lighting/hud-diamond-switch/state</property>
+    </condition>
+  </animation>
+  <animation>
+    <type>rotate</type>
+    <object-name>lock-circle-1</object-name>
+    <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle</property>
+    <axis>
+      <x>-1</x>
+    </axis>
+  </animation>
+  <animation>
+    <type>translate</type>
+    <object-name>lock-circle-1</object-name>
+    <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-deviation</property>
+    <factor>1</factor>
+    <axis>
+      <z>1</z>
+    </axis>
+  </animation>
+  <animation>
+    <!-- post-rotate in inverse direction to keep the symbol vertical -->
+    <type>rotate</type>
+    <object-name>lock-circle-1</object-name>
+    <property>sim/model/f-14b/instrumentation/radar-awg-9/hud/target-total-angle</property>
+    <axis>
+      <x>1</x>
+    </axis>
+  </animation>
 
-	<!-- Weapons labels -->
+
+  <!-- Weapons labels -->
 	<animation>
 		<type>select</type>
 		<object-name>master-arm-locked</object-name>
@@ -337,13 +384,13 @@
 	<animation>
 		<type>rotate</type>
 		<object-name>sw-seeker</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-angle</property>
+		<property>payload/armament/hud/reticle-total-angle</property>
 		<axis><x>-1</x></axis>
 	</animation>
 	<animation>
 		<type>translate</type>
 		<object-name>sw-seeker</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-deviation</property>
+		<property>payload/armament/hud/reticle-total-deviation</property>
 		<factor>1</factor>
 		<axis>
 			<z>1</z>
@@ -352,7 +399,7 @@
 	<animation><!-- post-rotate in inverse direction to keep the symbol vertical -->
 		<type>rotate</type>
 		<object-name>sw-seeker</object-name>
-		<property>sim/model/f-14b/instrumentation/radar-awg-9/hud/reticle-total-angle</property>
+		<property>payload/armament/hud/reticle-total-angle</property>
 		<axis><x>1</x></axis>
 	</animation>
 

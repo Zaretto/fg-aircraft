@@ -29,6 +29,10 @@ aircraft.data.add( StickSelector, ArmLever, ArmSwitch );
 var FALSE = 0;
 var TRUE  = 1;
 
+
+
+
+
 # Init
 var weapons_init = func() {
 	print("Initializing F-14B weapons system");
@@ -185,6 +189,31 @@ var armament_update = func {
 	}
 	SwCount.setValue(aim9_count);
 	update_sw_ready();
+	setCockpitLights();
+}
+
+var getDLZ = func {
+    if (ArmSwitch.getValue() > 1 and Current_aim9 != nil) {
+        return Current_aim9.getDLZ();
+    }
+}
+
+var setCockpitLights = func {
+	if (ArmSwitch.getValue() > 1 and Current_aim9 != nil and Current_aim9.status == 1) {
+		setprop("sim/model/f-14b/systems/armament/lock-light", 1);
+	} else {
+		setprop("sim/model/f-14b/systems/armament/lock-light", 0);
+	}
+	var dlzArray = getDLZ();
+	if (dlzArray == nil or size(dlzArray) == 0) {
+	    setprop("sim/model/f-14b/systems/armament/launch-light", 0);
+	} else {
+		if (dlzArray[4] < dlzArray[1]) {
+			setprop("sim/model/f-14b/systems/armament/launch-light", 1);
+		} else {
+			setprop("sim/model/f-14b/systems/armament/launch-light", 0);
+		}
+	}
 }
 
 var update_gun_ready = func() {
@@ -375,6 +404,7 @@ var master_arm_switch = func(a) {
 			system_stop();
 		}
 	}
+	setCockpitLights();
 }
 
 var master_arm_cycle = func() {
@@ -398,6 +428,7 @@ var master_arm_cycle = func() {
 		system_stop();
 		SysRunning.setBoolValue(0);
 	}
+	setCockpitLights();
 }
 
 var arm_selector = func() {
@@ -427,6 +458,7 @@ var arm_selector = func() {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);	
 	}
+	setCockpitLights();
 }
 
 var station_selector = func(n, v) {
