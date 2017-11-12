@@ -1,7 +1,7 @@
 #
 # F-15 AFCS (Auto Flight Control System)  interfaces
 # ---------------------------
-# Connects the autopilot (rewritten by it0uchp0ds (Joshua Davidson) to the autopilot system and the 
+# Connects the autopilot (rewritten by it0uchpods (Joshua Davidson) to the autopilot system and the 
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2017-10-15
 #
