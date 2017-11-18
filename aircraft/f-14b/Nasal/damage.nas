@@ -354,8 +354,13 @@ var DamageRecipient =
                       " RemoteCallsign=",notification.RemoteCallsign,
                       " Flags=",notification.Flags);
                 #
+                # todo:
+                #   detect launches if they are nearby
+                #   animate missiles
+                #
                 var callsign = getprop("sim/multiplay/callsign");
-                callsign = size(callsign) < 8 ? callsign : left(callsign,7);#use this later to check if the missiles radar is locked onto us or not
+                callsign = size(callsign) < 8 ? callsign : left(callsign,7);
+                if (notification.RemoteCallsign != callsign) return;
                 var radarOn = bits.test(notification.Flags, 1);
                 if (!radarOn) return;# this should be little more complex later
                 var ownPos = geo.aircraft_position();
@@ -408,6 +413,10 @@ var DamageRecipient =
                           " Bearing=",notification.Bearing,
                           " RemoteCallsign=",notification.RemoteCallsign);
 #                    debug.dump(notification);
+                    #
+                    # todo:
+                    #   lookup types (and hit counts for cannon)
+                    #
                     var callsign = getprop("sim/multiplay/callsign");
                     callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                     if (notification.RemoteCallsign == callsign and getprop("payload/armament/msg") == 1) {
