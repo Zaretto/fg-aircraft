@@ -88,7 +88,7 @@ var PropertySyncNotification =
         new_class.addNormProperty("SlatsPosNorm","surface-positions/slats-pos-norm", 1);
         new_class.addNormProperty("SpeedbrakePosNorm","surface-positions/speedbrake-pos-norm", 1);
         new_class.addNormProperty("WingPosNorm","surface-positions/wing-pos-norm", 1);
-
+        new_class.addStringProperty("Livery","sim/model/livery/file");
         return new_class;
     }
 };

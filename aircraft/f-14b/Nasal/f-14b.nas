@@ -335,12 +335,19 @@ var timedMotions = func {
 #
 #
 # Use Emesary (with bridge notifications) to communicate all of the shared properties over MP.
-
+#
+# - remember that the incoming bridges that are used here will apply to all models that 
+#   are loaded over MP; it is better to create the bridges here rather than in the model.xml
+#
+#   so for example a set of cooperating players who wish to engage in combat can simply
+#   use a set of models that have the incoming bridge active. Emesary then becomes a protocol
+#   within a protocol.
+#
 ##
 ## These are the notifications that will be bridged.
 #var routedNotifications = [notifications.PropertySyncNotification.new(nil), notifications.GeoEventNotification.new(nil)];
 var routedNotifications = [notifications.PropertySyncNotification.new(nil)];
-var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil)];
+var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil), notifications.ArmamentNotification.new(nil)];
 
 # To seperate out the incoming and outgoing we will have a dedicated transmitter for sending notifications over MP.
 # We could bridge GlobalTransmitter - however this way allows us to control what is sent.
@@ -351,12 +358,24 @@ var bridgedTransmitter = emesary.Transmitter.new("outgoingBridge");
 # MP; and these will be received by a similarly equipped craft. All received notifications are, by default, sent via the
 # global transmitter; and therefore there needs to be no differentiation (in our code) as to where the notification comes 
 # from.
+# The F-14 with transmit-only-generics is about 300 bytes; this gives us 900 bytes for emesary notifications that we will
+# allocate between the two bridges.
+# As of 14June2017 the properties take only 60 bytes; so we will allocate 100 bytes for that, and use the remaining 800 for
+# the geontification bridge which is used both for missile position updates and hit notifications.
 var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp",routedNotifications, 19, "", bridgedTransmitter);
-var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications, 19, emesary.GlobalTransmitter);
+outgoingBridge.MPStringMaxLen = 110;
+emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications, 19, emesary.GlobalTransmitter);
 
+# armament notification 24 bytes
+# geoEventNotification - 34 bytes + the length of the RemoteCallsign and Name fields.
+# propertySyncNotification 89 bytes.
+# measured maximum packet length 1150
 var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
 var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
-var geoincomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
+
+geooutgoingBridge.MPStringMaxLen = 730;
+emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
+
 #
 # This is the notification (derived from Nasal/PropertySyncNotificationBase) that will allow properties to be transmitted over MP
 var f14_aircraft_notification = notifications.PropertySyncNotification.new("F-14"~getprop("/sim/multiplay/callsign"));
@@ -369,6 +388,19 @@ debugRecipient.Receive = func(notification)
         print("recv: ",notification.NotificationType, " ", notification.Ident);
 		debug.dump(notification);
     }
+    if (notification.NotificationType == "ArmamentNotification") {
+        if (notification.FromIncomingBridge) {
+            print("recv: ",notification.NotificationType, " ", notification.Ident,
+                  " Kind=",notification.Kind,
+                  " SecondaryKind=",notification.SecondaryKind,
+                  " RelativeAltitude=",notification.RelativeAltitude,
+                  " Distance=",notification.Distance,
+                  " Bearing=",notification.Bearing,
+                  " RemoteCallsign=",notification.RemoteCallsign);
+            debug.dump(notification);
+        }
+    }
+
 #    if (notification.NotificationType == "PropertySyncNotification")
 #    {
 #        print("recv: ",notification.NotificationType, " ", notification.Ident);

@@ -300,33 +300,44 @@ var update_sw_ready = func() {
 			pylon = aim9_seq[sw_count - 1];
 		}
 		if (Current_aim9 != nil and pylon != nil and Current_aim9.type != pylon.get_type()) {
-		Current_aim9.status = -1;	
+            Current_aim9.status = -1;	
 			Current_aim9.del();
 			Current_aim9 = nil;
-	}
+        }
 		if ((Current_aim9 == nil or Current_aim9.status == 2)  and sw_count > 0 ) {
 			var pylon = aim9_seq[sw_count - 1];
 			var name = "Phoenix";
 			if (pylon.get_type() == "AIM-7") {
 				name = "Sparrow";
+            }
+        } elsif (Current_aim9 != nil) {
+            Current_aim9.status = -1;	
+            SwSoundVol.setValue(0);
+        }
+    }
 }
-	} elsif (Current_aim9 != nil) {
-		Current_aim9.status = -1;	
-		SwSoundVol.setValue(0);
-	}
-}
-
 var release_aim9 = func() {
 	#print("RELEASE AIM-9 status: ", Current_aim9.status);
 	if (Current_aim9 != nil) {
 		if ( Current_aim9.status == 1 ) {
+
 			var phrase = Current_aim9.brevity~" at: " ~ Current_aim9.Tgt.Callsign.getValue();
-			if (getprop("payload/armament/msg")) {
-				armament.defeatSpamFilter(phrase);
-			} else {
-				setprop("/sim/messages/atc", phrase);
-			}
+            
+            #			if (getprop("payload/armament/msg")) {
+            #				armament.defeatSpamFilter(phrase);
+            #			} else {
+            setprop("/sim/messages/atc", phrase);
+            #			}
 			Current_aim9.release();
+
+            var msg = notifications.GeoEventNotification.new("mis", Current_aim9.type, 1, 20+Current_aim9.ID);
+            msg.Position.set_latlon(Current_aim9.latN.getValue(), Current_aim9.lonN.getValue(), Current_aim9.altN.getValue());
+            msg.IsDistinct = 1;
+            msg.UniqueIndex = Current_aim9.unique_id;
+#print("release_aim9 ",msg.UniqueIndex);
+#debug.dump(msg);
+            geoBridgedTransmitter.NotifyAll(msg);
+            
 			Current_aim9 = nil;
 			# Set the pylon empty:
 			var current_pylon = pop(aim9_seq);
@@ -582,13 +593,29 @@ var impact_listener = func {
         var distance = impactPos.distance_to(selectionPos);
         if (distance < 125) {
           last_impact = getprop("sim/time/elapsed-sec");
-          var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.nearest_u.Callsign.getValue();
-          if (getprop("payload/armament/msg")) {
-            armament.defeatSpamFilter(phrase);
-                  #hit_count = hit_count + 1;
-          } else {
-            setprop("/sim/messages/atc", phrase);
-          }
+
+          # kind 4 = damaged
+          # 20+mid = secondary kind
+          var impact_name = ballistic.getNode("name").getValue();
+          impact_name = "something"; #RJHTODO: for test
+          if (impact_name != nil and impact_name != "") {
+              var msg = notifications.ArmamentNotification.new("shell", 4, 20);
+              msg.RelativeAltitude = impactPos.alt() - selectionPos.alt();
+              msg.Bearing = impactPos.course_to(selectionPos);
+              msg.Distance = distance;
+              msg.RemoteCallsign = awg_9.nearest_u.Callsign.getValue();
+#              debug.dump(msg);
+              geoBridgedTransmitter.NotifyAll(msg);
+          } else
+            print("Not notifying as didn't hit callsign");
+
+#          var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.nearest_u.Callsign.getValue();
+#          if (getprop("payload/armament/msg")) {
+#            armament.defeatSpamFilter(phrase);
+#                  #hit_count = hit_count + 1;
+#          } else {
+#            setprop("/sim/messages/atc", phrase);
+#          }
         }
       }
     }

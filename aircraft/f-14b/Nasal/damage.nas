@@ -320,31 +320,6 @@ var processCallsigns = func () {
 processCallsigns();
 
 
-#f14b
-var sendMis = func () {
-  var mkeys = keys(armament.AIM9.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = armament.AIM.active[m];
-    if (m.status == 2) {
-      #var lat = m.latN.getValue();
-      #var lon = m.lonN.getValue();
-      #var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      #str = str~mid~";"~lat~";"~lon~";"~alt~":";
-      var msg = notifications.GeoEventNotification.new("mis", mid, 2, 20+mid);
-      msg.Position.set_latlon(m.latN.getValue(), m.lonN.getValue(), m.altN.getValue());
-      geoBridgedTransmitter.GlobalTransmitter.NotifyAll(msg);
-    }
-  }
-#  setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.1);
-}
 
 #
 # Create emesary recipient for handling other craft's missile positioins.
@@ -356,20 +331,41 @@ var DamageRecipient =
 
         new_class.Receive = func(notification)
         {
-            if (!notification.FromIncomingBridge)
-                return emesary.Transmitter.ReceiptStatus_NotProcessed;
-
-            if (notification.NotificationType == "GeoEventNotification") {
 #
 #
 # This will be where movement and damage notifications are received. 
 # This can replace MP chat for damage notifications 
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
-                print("Event received from ",notification.Callsign, " pos (lat=",notification.Position.lat(), ", lon=",notification.Position.lon(),", ",notification.Position.alt()," ft. Name=",
-                      notification.Name," Kind=",notification.Kind, " SecKind=",notification.SecondaryKind);
-#                debug.dump(notification);
-                return emesary.Transmitter.ReceiptStatus_OK;
+            if (notification.NotificationType == "GeoEventNotification") {
+                print("recv: ",notification.NotificationType, " ", notification.Ident, 
+                      " Kind=",notification.Kind,
+                      " Name=",notification.Name,
+                      " SecondaryKind=",notification.SecondaryKind,
+                      " lat=",notification.Position.lat(),
+                      " lon=",notification.Position.lon(),
+                      " alt=",notification.Position.alt(),
+                      " Heading=",notification.Heading,
+                      " u_fps=",notification.u_fps,
+                      " v_fps=",notification.v_fps,
+                      " w_fps=",notification.w_fps,
+                      " IsDistinct=",notification.IsDistinct,
+                      " Callsign=",notification.Callsign,
+                      " RemoteCallsign=",notification.RemoteCallsign,
+                      " Flags=",notification.Flags);
+            }
+            if (notification.NotificationType == "ArmamentNotification") {
+                if (notification.FromIncomingBridge) {
+                    print("recv: ",notification.NotificationType, " ", notification.Ident,
+                          " Kind=",notification.Kind,
+                          " SecondaryKind=",notification.SecondaryKind,
+                          " RelativeAltitude=",notification.RelativeAltitude,
+                          " Distance=",notification.Distance,
+                          " Bearing=",notification.Bearing,
+                          " RemoteCallsign=",notification.RemoteCallsign);
+#                    debug.dump(notification);
+
+                }
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
         }
@@ -390,8 +386,6 @@ var logTime = func{
     setprop("logging/time-log", time);
   }
 }
-
-#sendMis(); use emmisary for this
 
 var ct = func (type) {
   if (type == "c-u") {

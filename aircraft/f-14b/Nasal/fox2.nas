@@ -110,6 +110,8 @@ var HudReticleDev  = props.globals.getNode("payload/armament/hud/reticle-total-d
 var HudReticleDeg  = props.globals.getNode("payload/armament/hud/reticle-total-angle", 1);
 var update_loop_time = 0.000;
 
+var fox2_unique_id = 0; # Unique index of missile in this model
+
 var SIM_TIME = 0;
 var REAL_TIME = 1;
 
@@ -208,6 +210,9 @@ var AIM = {
         }
         m.useHitInterpolation   = getprop("payload/armament/hit-interpolation");#false to use 5H1N0B1 trigonometry, true to use Leto interpolation.
 		m.PylonIndex        = m.prop.getNode("pylon-index", 1).setValue(p);
+# ident. This is also used for transmission over MP. 
+# 0 is reserved for shells.
+# 1..240 are available for other items that collide.
 		m.ID                = p;
 		m.stationName       = AcModel.getNode("armament/station-name").getValue();
 		m.pylon_prop        = props.globals.getNode(AcModel.getNode("armament/pylon-stations").getValue()).getChild(m.stationName, p+AcModel.getNode("armament/pylon-offset").getValue());
@@ -217,6 +222,8 @@ var AIM = {
 		m.direct_dist_m     = nil;
 		m.speed_m           = 0;
 
+        fox2_unique_id = fox2_unique_id + 1;
+        m.unique_id = fox2_unique_id;
 		m.nodeString = "payload/armament/"~m.type_lc~"/";
 
 		###############
@@ -1266,6 +1273,18 @@ var AIM = {
 			me.ai.getNode("hit").setIntValue(me.hit);
 		}
 
+        if (me.status == MISSILE_FLYING) {
+            # notify in flight using Emesary.
+            var msg = notifications.GeoEventNotification.new("mis", me.type, 2, 20+me.ID);
+            msg.Position.set_latlon(me.latN.getValue(), me.lonN.getValue(), me.altN.getValue());
+            if (me.guidance=="radar")
+              msg.Flags = 1;
+            else
+              msg.Flags = 0;
+            msg.IsDistinct = 1;
+            msg.UniqueIndex = me.unique_id;
+            f14.geoBridgedTransmitter.NotifyAll(msg);
+        }
 		me.last_dt = me.dt;
 		settimer(func me.flight(), update_loop_time, SIM_TIME);		
 	},
@@ -2092,13 +2111,13 @@ var AIM = {
 		} elsif (me.chaffLock == TRUE) {
 			reason = "Locked onto chaff.";
 		}
-		
+		var t_coord=nil;
 		var explosion_coord = me.last_coord;
 		if (me.Tgt != nil) {
 			var min_distance = me.direct_dist_m;
 			
 			for (var i = 0.00; i <= 1; i += 0.025) {
-				var t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
+				t_coord = me.interpolate(me.last_t_coord, me.t_coord, i);
 				var coord = me.interpolate(me.last_coord, me.coord, i);
 				var dist = coord.direct_distance_to(t_coord);
 				if (dist < min_distance) {
@@ -2108,7 +2127,7 @@ var AIM = {
 			}
 			if (me.before_last_coord != nil and me.before_last_t_coord != nil) {
 				for (var i = 0.00; i <= 1; i += 0.025) {
-					var t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
+					t_coord = me.interpolate(me.before_last_t_coord, me.last_t_coord, i);
 					var coord = me.interpolate(me.before_last_coord, me.last_coord, i);
 					var dist = coord.direct_distance_to(t_coord);
 					if (dist < min_distance) {
@@ -2128,6 +2147,19 @@ var AIM = {
 			print(phrase~"  Reason: "~reason~sprintf(" time %.1f", me.life_time));
 			if (min_distance < me.reportDist) {
 				me.sendMessage(phrase);
+
+                if (me.flareLock == FALSE and me.chaffLock == FALSE) {
+                    var msg = notifications.ArmamentNotification.new("mis", 4, 20+me.ID);
+                    msg.RelativeAltitude = explosion_coord.alt() - t_coord.alt();
+                    msg.Bearing = explosion_coord.course_to(t_coord);
+                    msg.Distance = min_distance;
+                    msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+                    #debug.dump(msg);
+                    f14.geoBridgedTransmitter.NotifyAll(msg);
+                }
+                else
+                  print("Not notifying as hit chaff/flares");
+
 			} else {
 				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
 			}
@@ -2168,6 +2200,17 @@ var AIM = {
 		if (me.Tgt != nil) {
 			var phrase = sprintf( me.type~" "~event~": %01.1f", me.direct_dist_m) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
 			print(phrase~"  Reason: "~reason~sprintf(" time %.1f", me.life_time));
+            if (me.flareLock == FALSE and me.chaffLock == FALSE){
+                var msg = notifications.ArmamentNotification.new("mis", 4, 20+me.ID);
+                msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
+                msg.Bearing = explosion_coord.course_to(me.t_coord);
+                msg.Distance = direct_dist_m;
+                msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+#debug.dump(msg);
+                f14.geoBridgedTransmitter.NotifyAll(msg);
+            }
+            else
+              print("Not notifying as hit chaff/flares");
 			me.sendMessage(phrase);
 		}
 		
