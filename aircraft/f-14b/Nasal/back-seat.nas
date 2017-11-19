@@ -85,6 +85,47 @@ var f14_aircraft_notification = notifications.PropertySyncNotification.new("F-14
 # PropertySyncNotification -> bridgedTransmitter -> MP -> GlobalTransmitter
 # AircraftControlNotification -> bridgedTransmitter -> MP -> GlobalTransmitter
 
+instruments_data_import = func {
+	if ( Pilot == nil ) { return }
+	PilotInstrString = Pilot.getNode("sim/multiplay/generic/string[1]", 1);
+	var str = PilotInstrString.getValue();
+	if ( str != nil ) {
+		var l = split(";", str);
+		# Todo: Create the needed nodes only at connection/de-connection time. 
+		# ias, mach, fuel_total, tc_mode, tc_bearing, tc_in_range, tc_range, steer_mode_code, cdi, radial.
+		if ( size(l) > 1 ) {
+			Pilot.getNode("instrumentation/airspeed-indicator/indicated-speed-kt", 1).setValue( l[0] );
+			Pilot.getNode("velocities/mach", 1).setValue( l[1] );
+			Pilot.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total", 1).setValue( l[2] );
+			Pilot.getNode("sim/model/f-14b/instrumentation/tacan/mode", 1).setValue( l[3] );
+			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
+			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
+			Pilot.getNode("instrumentation/tacan/indicated-distance-nm", 1).setValue( l[6] );
+			var SteerSubmodeCode = Pilot.getNode("sim/model/f-14b/controls/pilots-displays/steer-submode-code", 1);
+			SteerSubmodeCode.setValue( l[7] );
+
+			Pilot.getNode("sim/model/f-14b/instrumentation/hsd/needle-deflection", 1).setValue( l[8] );
+			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
+
+			if (size(l) > 11)
+			{
+			    var ac_powered = l[10] != nil and l[10] == "1";
+			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",ac_powered);
+			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",ac_powered); 
+			    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",ac_powered);
+		        setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",ac_powered);
+		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",ac_powered);
+		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered);
+		        setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
+		    }
+		}
+	}
+	#PilotInstrString2 = Pilot.getNode("sim/multiplay/generic/string[2]", 1);
+	#var str2 = PilotInstrString2.getValue();
+	#if ( str2 != nil ) {
+		#Pilot.getNode("instrumentation/radar/radar2-range", 1).setValue(str2);
+	#}
+}
 
 var acRoutedNotifications = [notifications.AircraftControlNotification.new(nil)];
 
@@ -97,8 +138,10 @@ var BackseatRecipient = emesary.Recipient.new("Backseat");
 emesary.GlobalTransmitter.Register(BackseatRecipient);
 
 var backseatExec = func{
-        awg_9.rdr_loop();
-        execTimer.restart(execRate);
+	check_pilot_callsign();
+    awg_9.rdr_loop();
+    execTimer.restart(execRate);
+    instruments_data_import(); # compatibility
 };
 var execRate = 0.04;
 var execTimer = maketimer(execRate, backseatExec);
@@ -109,7 +152,7 @@ BackseatRecipient.Receive = func(notification)
         if (notification.Callsign == PilotCallsign.getValue())
           {
               #print("Property update from ",notification.Callsign);
-              check_pilot_callsign();
+              #check_pilot_callsign();
               #instruments_data_import();
               #instruments_data_export();
           }
@@ -152,7 +195,6 @@ setlistener("sim/signals/fdm-initialized", func {
     setprop("sim/model/f-14b/controls/radar-awg-9/brightness" ,1);
 
 	# launch
-	check_pilot_callsign();
 	radardist.init();
 	awg_9.init();
     execTimer.start();

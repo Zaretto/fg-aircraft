@@ -718,8 +718,13 @@ var loadIFail = func () {
 setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 changeGuiLoad();
+#
+# only do this if not backseat
+if (getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[0]") != nil)
+{
 settimer(code_ct, 5);
 settimer(not, 11);
+}
 
 var re_init = func {
   # repair the aircraft
