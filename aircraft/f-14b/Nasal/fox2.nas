@@ -151,6 +151,56 @@ if ((major == 2017 and minor == 2 and pica >= 1) or (major == 2017 and minor > 2
 	offsetMethod = TRUE;
 }
 
+var missile_ids = {
+"aim-120"               :1,
+"AIM120"                :1,
+"AIM-120"               :1,
+"RB-99"                 :1,
+"aim-7"                 :2,
+"AIM-7"                 :2,
+"RB-71"                 :2,
+"aim-9"                 :3,
+"AIM9"                  :3,
+"AIM-9"                 :3,
+"RB-24"                 :4,
+"RB-24J"                :5,
+"RB-74"                 :3,
+"R74"                   :6,
+"MATRA-R530"            :7,
+"Meteor"                :8,
+"AIM-54"                :9,
+"Matra R550 Magic 2"    :10,
+"MatraR550Magic2"       :10,
+"Matra MICA"            :11,
+"MatraMica"             :11,
+"MatraMicaIR"           :12,
+"RB-15F"                :13,
+"SCALP"                 :14,
+"KN-06"                 :15,
+"GBU12"                 :16,
+"GBU16"                 :17,
+"ALARM"                 :18,
+"Sea Eagle"             :19,
+"SeaEagle"              :19,
+"AGM65"                 :20,
+"M71"                   :21,
+"M71R"                  :22,
+"RB-04E"                :23,
+"RB-05A"                :24,
+"RB-75"                 :20,
+"M90"                   :25,
+"MK-82"                 :26,
+"LAU-68"                :27,
+"M317"                  :28,
+"GBU-31"                :29,
+"AIM132"                :30,
+"STORMSHADOW"           :14,
+"R-60"                  :31,
+"R-27R1"                :32,
+"R-27T1"                :33,
+"FAB-500"               :34,
+"Exocet"                :35,
+};
 #
 # The radar will make sure to keep this variable updated.
 # Whatever is targeted and ready to be fired upon, should be set here.
@@ -214,6 +264,11 @@ var AIM = {
 # 0 is reserved for shells.
 # 1..240 are available for other items that collide.
 		m.ID                = p;
+        if (contains(missile_ids, type)) {
+            m.ID = missile_ids[type];
+print("Lookup missile ",type," ID=",m.ID);
+        }
+
 		m.stationName       = AcModel.getNode("armament/station-name").getValue();
 		m.pylon_prop        = props.globals.getNode(AcModel.getNode("armament/pylon-stations").getValue()).getChild(m.stationName, p+AcModel.getNode("armament/pylon-offset").getValue());
 		m.Tgt               = nil;
