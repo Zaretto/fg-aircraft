@@ -2204,13 +2204,14 @@ print("Lookup missile ",type," ID=",m.ID);
 				me.sendMessage(phrase);
 
                 if (me.flareLock == FALSE and me.chaffLock == FALSE) {
-                    var msg = notifications.ArmamentNotification.new("mis", 4, 20+me.ID);
-                    msg.RelativeAltitude = explosion_coord.alt() - t_coord.alt();
-                    msg.Bearing = explosion_coord.course_to(t_coord);
-                    msg.Distance = min_distance;
-                    msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
-                    #debug.dump(msg);
-                    f14.geoBridgedTransmitter.NotifyAll(msg);
+                    if(getprop("payload/armament/msg")){
+                        var msg = notifications.ArmamentNotification.new("mis", 4, 20+me.ID);
+                        msg.RelativeAltitude = explosion_coord.alt() - t_coord.alt();
+                        msg.Bearing = explosion_coord.course_to(t_coord);
+                        msg.Distance = min_distance;
+                        msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+                        f14.geoBridgedTransmitter.NotifyAll(msg);
+                    }
                 }
                 else
                   print("Not notifying as hit chaff/flares");
@@ -2256,13 +2257,14 @@ print("Lookup missile ",type," ID=",m.ID);
 			var phrase = sprintf( me.type~" "~event~": %01.1f", me.direct_dist_m) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
 			print(phrase~"  Reason: "~reason~sprintf(" time %.1f", me.life_time));
             if (me.flareLock == FALSE and me.chaffLock == FALSE){
-                var msg = notifications.ArmamentNotification.new("mis", 4, 20+me.ID);
-                msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
-                msg.Bearing = explosion_coord.course_to(me.t_coord);
-                msg.Distance = direct_dist_m;
-                msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
-#debug.dump(msg);
-                f14.geoBridgedTransmitter.NotifyAll(msg);
+                if(getprop("payload/armament/msg")){
+                    var msg = notifications.ArmamentNotification.new("mis", 4, 20+me.ID);
+                    msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
+                    msg.Bearing = explosion_coord.course_to(me.t_coord);
+                    msg.Distance = direct_dist_m;
+                    msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+                    f14.geoBridgedTransmitter.NotifyAll(msg);
+                }
             }
             else
               print("Not notifying as hit chaff/flares");

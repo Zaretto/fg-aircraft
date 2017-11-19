@@ -599,13 +599,14 @@ var impact_listener = func {
           var impact_name = ballistic.getNode("name").getValue();
           impact_name = "something"; #RJHTODO: for test
           if (impact_name != nil and impact_name != "") {
-              var msg = notifications.ArmamentNotification.new("shell", 4, 20);
-              msg.RelativeAltitude = impactPos.alt() - selectionPos.alt();
-              msg.Bearing = impactPos.course_to(selectionPos);
-              msg.Distance = distance;
-              msg.RemoteCallsign = awg_9.nearest_u.Callsign.getValue();
-#              debug.dump(msg);
-              geoBridgedTransmitter.NotifyAll(msg);
+              if(getprop("payload/armament/msg")){
+                  var msg = notifications.ArmamentNotification.new("shell", 4, 20);
+                  msg.RelativeAltitude = impactPos.alt() - selectionPos.alt();
+                  msg.Bearing = impactPos.course_to(selectionPos);
+                  msg.Distance = distance;
+                  msg.RemoteCallsign = awg_9.nearest_u.Callsign.getValue();
+                  geoBridgedTransmitter.NotifyAll(msg);
+              }
           } else
             print("Not notifying as didn't hit callsign");
 
