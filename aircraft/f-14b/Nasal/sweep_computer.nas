@@ -185,3 +185,38 @@ var computeSweep = func {
     }
     setprop("/fdm/jsbsim/fcs/wing-sweep-cmd",WingSweep);
 }
+
+setlistener("/controls/flight/wingsweep-cover", func(v) {
+    if (v != nil) {
+        if (v.getValue()) {
+            setprop("/fdm/jsbsim/fcs/wing-sweep-auto",0);
+            currentSweepMode = 1;
+        } else {
+            setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
+            currentSweepMode = 0;
+        }
+        updateSweepIndicators();
+    }
+}, 0, 0);
+
+setlistener("/controls/flight/wingsweep-guard", func(v) {
+    if (getprop("/controls/flight/wingsweep-cover")) {
+        if (v != nil) {
+            if (v.getValue()) {
+                if (getprop("/controls/flight/wing-sweep-cmd") >= 1) {
+                    setprop("/fdm/jsbsim/fcs/wing-sweep-auto",0);
+                    currentSweepMode = 4;
+                    getprop("/controls/flight/wing-sweep-cmd",1.2);
+                }
+            } else {
+                if (currentSweepMode == 4) {
+                    if (getprop("/controls/flight/wing-sweep-cmd") >= 1) {
+                        setprop("/controls/flight/wing-sweep-cmd",1.0);
+                    }
+                    currentSweepMode = 1;
+                }
+            }
+        }
+        updateSweepIndicators();
+    }
+}, 0, 0);
