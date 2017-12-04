@@ -6,6 +6,7 @@
 # Collision lights flasher
 var anti_collision_switch = props.globals.getNode("sim/model/f-14b/controls/lighting/anti-collision-switch");
 aircraft.light.new("sim/model/f-14b/lighting/anti-collision", [0.09, 1.20], anti_collision_switch);
+var RIO="";
 
 # Navigation lights steady/flash dimmed/bright
 var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting/position-flash-switch");

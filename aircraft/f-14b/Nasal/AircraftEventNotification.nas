@@ -11,12 +11,18 @@ var PropertySyncNotification =
 
         new_class.addIntProperty("TotalFuelLbs", "consumables/fuel/total-fuel-lbs", 2);
         new_class.addIntProperty("FuelDumpValue", "controls/fuel/dump-valve", 1);
+        new_class.addIntProperty("Engine0Afterburner", "engines/engine[0]/afterburner", 1);
         new_class.addIntProperty("Engine0Augmentation", "engines/engine[0]/augmentation-burner", 1);
+        new_class.addIntProperty("Engine0AugmentationAlight", "engines/engine[0]/augmentation-alight", 1);
         new_class.addIntProperty("Engine0N1","engines/engine[0]/n1", 1);
         new_class.addIntProperty("Engine0N2","engines/engine[0]/n2", 1);
+
         new_class.addIntProperty("Engine1N1","engines/engine[1]/n1", 1);
         new_class.addIntProperty("Engine1N2","engines/engine[1]/n2", 1);
+        new_class.addIntProperty("Engine1Afterburner", "engines/engine[1]/afterburner", 1);
         new_class.addIntProperty("Engine1Augmentation", "engines/engine[1]/augmentation-burner", 1);
+        new_class.addIntProperty("Engine1AugmentationAlight", "engines/engine[1]/augmentation-alight", 1);
+
         new_class.addIntProperty("ElectricsAcEssentialBus1", "fdm/jsbsim/systems/electrics/ac-essential-bus1", 1);
         new_class.addIntProperty("ElectricsAcEssentialBus2", "fdm/jsbsim/systems/electrics/ac-essential-bus2", 1);
         new_class.addIntProperty("ElectricsAcLeftMainBus", "fdm/jsbsim/systems/electrics/ac-left-main-bus", 1);
@@ -39,6 +45,8 @@ var PropertySyncNotification =
         new_class.addIntProperty("IASkt", "instrumentation/airspeed-indicator/indicated-speed-kt", 2);
         new_class.addIntProperty("FuelTotal", "sim/model/f-14b/instrumentation/fuel-gauges/total", 2);
         new_class.addIntProperty("CabinAltitde", "fdm/jsbsim/systems/ecs/cabin-altitude-ft", 2);
+
+        new_class.addIntProperty("RadarAWG9On","sim/model/f-14b/controls/radar-awg-9/on-off",1);
         new_class.addIntProperty("RadarRange", "instrumentation/radar/radar2-range", 2);
         new_class.addIntProperty("RadarStandby", "instrumentation/radar/radar-standby", 1);
         new_class.addIntProperty("RadarWCSMode", "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", 1);
@@ -89,6 +97,7 @@ var PropertySyncNotification =
         new_class.addNormProperty("SpeedbrakePosNorm","surface-positions/speedbrake-pos-norm", 1);
         new_class.addNormProperty("WingPosNorm","surface-positions/wing-pos-norm", 1);
         new_class.addStringProperty("Livery","sim/model/livery/file");
+
         return new_class;
     }
 };

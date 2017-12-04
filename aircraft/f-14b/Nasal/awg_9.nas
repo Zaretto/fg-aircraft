@@ -61,7 +61,6 @@ var tgts_list         = [];
 var cnt               = 0;
 # Dual-control vars: 
 var we_are_bs         = 0;
-var pilot_lock        = 0;
 
 # ECM warnings.
 var EcmAlert1 = props.globals.getNode("instrumentation/ecm/alert-type1", 1);

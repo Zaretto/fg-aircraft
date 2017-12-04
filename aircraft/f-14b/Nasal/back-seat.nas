@@ -133,7 +133,7 @@ var acRoutedNotifications = [notifications.AircraftControlNotification.new(nil)]
 # We could bridge GlobalTransmitter - however this way allows us to control what is sent.
 var acBridgedTransmitter = emesary.Transmitter.new("backseatSlaveBridge");
 var acOutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14backseat",acRoutedNotifications, ControlBridgeId);
-
+acOutgoingBridge.MPStringMaxLen = 300;
 var BackseatRecipient = emesary.Recipient.new("Backseat");
 emesary.GlobalTransmitter.Register(BackseatRecipient);
 
