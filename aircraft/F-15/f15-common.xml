@@ -1305,6 +1305,13 @@
             <path>Aircraft/F-15/Systems/instrumentation.xml</path>
         </instrumentation>
     </sim>
+	
+	<autopilot n="0">
+		<internal n="0">
+			<pitch-active type="bool">0</pitch-active>
+			<roll-active type="bool">0</roll-active>
+		</internal>
+	</autopilot>
 
     <payload>
         <weight n="0">
@@ -1787,9 +1794,10 @@
             <console-green type="double">0.0576</console-green>
             <console-blue type="double">0.0161</console-blue>
         </lighting>
-        <!--<flight>
-            <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
-        </flight>-->
+        <flight>
+			<aileron-norm type="double">0</aileron-norm>
+			<elevator-norm type="double">0</elevator-norm>
+        </flight>
         <gear>
             <nws-maneuvering type="bool">false</nws-maneuvering>
         </gear>
