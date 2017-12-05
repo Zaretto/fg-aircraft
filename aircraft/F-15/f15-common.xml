@@ -13,6 +13,9 @@
     <fdm>
         <jsbsim>
             <fcs>
+                <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
+                <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
+                
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
@@ -1305,6 +1308,17 @@
             <path>Aircraft/F-15/Systems/instrumentation.xml</path>
         </instrumentation>
     </sim>
+	
+	<autopilot n="0">
+		<internal n="0">
+			<pitch-active type="bool">0</pitch-active>
+			<roll-active type="bool">0</roll-active>
+		</internal>
+        <settings>
+            <aileron-deadzone>0.1</aileron-deadzone>
+            <elevator-deadzone>0.1</elevator-deadzone>
+        </settings>
+	</autopilot>
 
     <payload>
         <weight n="0">
@@ -1787,9 +1801,10 @@
             <console-green type="double">0.0576</console-green>
             <console-blue type="double">0.0161</console-blue>
         </lighting>
-        <!--<flight>
-            <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
-        </flight>-->
+        <flight>
+			<aileron-norm type="double">0</aileron-norm>
+			<elevator-norm type="double">0</elevator-norm>
+        </flight>
         <gear>
             <nws-maneuvering type="bool">false</nws-maneuvering>
         </gear>

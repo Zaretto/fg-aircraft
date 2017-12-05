@@ -479,24 +479,32 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "sim/model/f15/controls/windshield-heat",
                   "controls/pilots-displays/hsd-mode-nav",
                   "engines/engine[0]/running",
-                  "engines/engine[1]/running"
+                  "engines/engine[1]/running",
+# Radar Altimeter #########
+                  "sim/model/f15/instrumentation/radar-altimeter/limit-bug",
+# Air Speed Indicator #####
+                  "sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug",
+# Lighting ################
+                  "sim/model/f15/controls/lighting/hook-bypass",
+                  "controls/lighting/instruments-norm",
+                  "controls/lighting/panel-norm",
+                  "sim/model/f15/controls/lighting/anti-collision-switch",
+                  "sim/model/f15/controls/lighting/position-flash-switch",
+                  "sim/model/f15/controls/lighting/position-wing-switch",
+                  "autopilot/settings/aileron-deadzone",
+                  "autopilot/settings/elevator-deadzone"
 );
 
+setlistener("/autopilot/settings/elevator-deadzone", func(v){
+    if (v != nil)
+      setprop("/fdm/jsbsim/fcs/elevator-deadzone",v.getValue());
+}, 0, 0);
 
-# Air Speed Indicator #####
-aircraft.data.add("sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug");
+setlistener("/autopilot/settings/aileron-deadzone", func(v){
+    if (v != nil)
+      setprop("/fdm/jsbsim/fcs/aileron-deadzone",v.getValue());
+}, 0, 0);
 
-# Radar Altimeter #########
-aircraft.data.add("sim/model/f15/instrumentation/radar-altimeter/limit-bug");
-
-# Lighting ################
-aircraft.data.add(
-	"sim/model/f15/controls/lighting/hook-bypass",
-	"controls/lighting/instruments-norm",
-	"controls/lighting/panel-norm",
-	"sim/model/f15/controls/lighting/anti-collision-switch",
-	"sim/model/f15/controls/lighting/position-flash-switch",
-	"sim/model/f15/controls/lighting/position-wing-switch");
 
 # HSD #####################
 var hsd_mode_node = props.globals.getNode("sim/model/f15/controls/pilots-displays/hsd-mode-nav");
