@@ -8,10 +8,28 @@
     <property value="0">systems/hydraulics/emerg-gear-bleed</property>
     <property value="0">gear/damage-reset</property>
     <property value="2">position/aircraft-on-ground-last-value</property>
+	<!--<property value="0.1">fcs/aileron-deadzone</property>
+	<property value="0.1">fcs/elevator-deadzone</property>-->
     
     <channel name="Pitch">
+		<switch name="fcs/stick-pitch">
+			<default value="0"/>
+			<test value="fcs/elevator-cmd-norm">
+				/autopilot/internal/pitch-active NE 1
+			</test>
+		</switch>
+		
+		<switch name="fcs/css-pitch">
+			<default value="0"/>
+			<test logic="AND" value="/controls/flight/elevator-norm">
+				/autopilot/internal/pitch-active EQ 1
+				/controls/flight/elevator-norm NE 0
+			</test>
+		</switch>
+		
         <summer name="Pitch Trim Sum">
-            <input>fcs/elevator-cmd-norm</input>
+            <input>fcs/stick-pitch</input>
+            <input>fcs/css-pitch</input>
             <input>fcs/pitch-trim-cmd-norm</input>
             <input>fcs/pitch-damper-rate</input>
             <input>systems/afcs/elevator-cmd-delta</input>
@@ -159,8 +177,24 @@
 
     <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
     <channel name="Roll">
+		<switch name="fcs/stick-roll">
+			<default value="0"/>
+			<test value="fcs/aileron-cmd-norm">
+				/autopilot/internal/roll-active NE 1
+			</test>
+		</switch>
+		
+		<switch name="fcs/css-roll">
+			<default value="0"/>
+			<test logic="AND" value="/controls/flight/aileron-norm">
+				/autopilot/internal/roll-active EQ 1
+				/controls/flight/aileron-norm NE 0
+			</test>
+		</switch>
+		
         <summer name="fcs/roll-trim-sum-raw">
-            <input>fcs/aileron-cmd-norm</input>
+            <input>fcs/stick-roll</input>
+            <input>fcs/css-roll</input>
             <input>fcs/roll-trim-cmd-norm</input>
             <input>fcs/roll-trim-sas-cmd-norm</input>
             <input>fcs/roll-rate-limiter</input>

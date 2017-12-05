@@ -26,7 +26,7 @@
 	<filter>
 		<name>Magnetic Heading Error Normalizer</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>/autopilot/internal/heading-bug-error-deg</input>
 		<output>/autopilot/internal/heading-bug-error-deg-norm</output>
 		<min>-30</min>
@@ -36,27 +36,86 @@
 	<filter>
 		<name>True Heading Error Normalizer</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>/autopilot/internal/true-heading-error-deg</input>
 		<output>/autopilot/internal/true-heading-error-deg-norm</output>
 		<min>-30</min>
 		<max>30</max>
 	</filter>
 	
+	<logic>
+		<input>
+			<or>
+				<equals>
+					<property>/autopilot/locks/heading</property>
+					<value>wing-leveler</value>
+				</equals>
+				<equals>
+					<property>/autopilot/locks/heading</property>
+					<value>dg-heading-hold</value>
+				</equals>
+				<equals>
+					<property>/autopilot/locks/heading</property>
+					<value>true-heading-hold</value>
+				</equals>
+			</or>
+		</input>
+		<output>/autopilot/internal/roll-active</output>
+	</logic>
+	
+	<logic>
+		<input>
+			<or>
+				<equals>
+					<property>/autopilot/locks/altitude</property>
+					<value>pitch-hold</value>
+				</equals>
+				<equals>
+					<property>/autopilot/locks/altitude</property>
+					<value>vertical-speed-hold</value>
+				</equals>
+				<equals>
+					<property>/autopilot/locks/altitude</property>
+					<value>altitude-hold</value>
+				</equals>
+			</or>
+		</input>
+		<output>/autopilot/internal/pitch-active</output>
+	</logic>
+	
 	<filter>
 		<name>Aileron Normalizer</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
-			<expression>
-				<table>
-					<property>/controls/flight/aileron</property>
-					<entry><ind>-1.000</ind><dep>-1.0</dep></entry>
-					<entry><ind>-0.001</ind><dep>-0.0</dep></entry>
-					<entry><ind> 0.000</ind><dep> 0.0</dep></entry>
-					<entry><ind> 0.001</ind><dep> 0.0</dep></entry>
-					<entry><ind> 1.000</ind><dep> 1.0</dep></entry>
-				</table>
+			<expression> <!-- Richard's Deadzone Equation -->
+				<product>
+					<div>
+						<property>/controls/flight/aileron</property>
+						<pow>
+							<value>1</value>
+							<property>/controls/flight/aileron</property>
+						</pow>
+					</div>
+					<product>
+						<max>
+							<value>0</value>
+							<difference>
+								<abs>
+									<property>/controls/flight/aileron</property>
+								</abs>
+								<property>fcs/aileron-deadzone</property>
+							</difference>
+						</max>
+						<div>
+							<value>1.0</value>
+							<difference>
+								<value>1.0</value>
+								<property>fcs/aileron-deadzone</property>
+							</difference>
+						</div>
+					</product>
+				</product>
 			</expression>
 		</input>
 		<output>/controls/flight/aileron-norm</output>
@@ -65,17 +124,36 @@
 	<filter>
 		<name>Elevator Normalizer</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
-			<expression>
-				<table>
-					<property>/controls/flight/elevator</property>
-					<entry><ind>-1.000</ind><dep>-1.0</dep></entry>
-					<entry><ind>-0.001</ind><dep>-0.0</dep></entry>
-					<entry><ind> 0.000</ind><dep> 0.0</dep></entry>
-					<entry><ind> 0.001</ind><dep> 0.0</dep></entry>
-					<entry><ind> 1.000</ind><dep> 1.0</dep></entry>
-				</table>
+			<expression> <!-- Richard's Deadzone Equation -->
+				<product>
+					<div>
+						<property>/controls/flight/elevator</property>
+						<pow>
+							<value>1</value>
+							<property>/controls/flight/elevator</property>
+						</pow>
+					</div>
+					<product>
+						<max>
+							<value>0</value>
+							<difference>
+								<abs>
+									<property>/controls/flight/elevator</property>
+								</abs>
+								<property>/autopilot/settings/elevator-deadzone</property>
+							</difference>
+						</max>
+						<div>
+							<value>1.0</value>
+							<difference>
+								<value>1.0</value>
+								<property>/autopilot/settings/elevator-deadzone</property>
+							</difference>
+						</div>
+					</product>
+				</product>
 			</expression>
 		</input>
 		<output>/controls/flight/elevator-norm</output>
@@ -88,7 +166,7 @@
 	<filter>
 		<name>IT-CONTROLLER: HDG KP (P Gain)</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -106,7 +184,7 @@
 	<filter>
 		<name>IT-CONTROLLER: HDG LIMIT</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -193,7 +271,7 @@
 		<name>ROLL DEG SYNC</name>
 		<debug>false</debug>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<enable>
 			<condition>
 				<and>
@@ -290,7 +368,7 @@
 	<filter>
 		<name>IT-CONTROLLER: ROLL RATE CMD</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -307,7 +385,7 @@
 	<filter>
 		<name>IT-CONTROLLER: ROLL RATE KP (P Gain)</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -399,7 +477,7 @@
 				</or>
 			</condition>
 		</enable>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>0</input>
 		<output>/fdm/jsbsim/fcs/roll-trim-sas-cmd-norm</output>
 	</filter>
@@ -412,7 +490,7 @@
 		<name>ALTITUDE SYNC</name>
 		<debug>false</debug>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<enable>
 			<condition>
 				<and>
@@ -474,7 +552,7 @@
 	<filter>
 		<name>IT-CONTROLLER: FPM KP (P Gain)</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -610,7 +688,7 @@
 		<name>PITCH DEG SYNC 2</name>
 		<debug>false</debug>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<enable>
 			<condition>
 				<or>
@@ -641,7 +719,7 @@
 		<name>IT-CONTROLLER: TARGET PITCH CMD</name>
 		<debug>false</debug>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<condition>
 				<equals>
@@ -694,7 +772,7 @@
 	<filter>
 		<name>IT-CONTROLLER: PITCH RATE CMD</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -711,7 +789,7 @@
 	<filter>
 		<name>IT-CONTROLLER: PITCH RATE KP (P Gain)</name>
 		<type>gain</type>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>
 			<expression>
 				<table>
@@ -759,7 +837,7 @@
 			<property>/autopilot/internal/pitch-rate</property>
 		</reference>
 		<output>
-			<property>/fdm/jsbsim/systems/afcs/elevator-cmd-delta</property>
+			<property>/fdm/jsbsim/systems/afcs/elevator-cmd-pid</property>
 		</output>
 		<config>
 			<Kp>
@@ -796,212 +874,238 @@
 				</and>
 			</condition>
 		</enable>
-		<gain>1</gain>
+		<gain>1.0</gain>
 		<input>0</input>
+		<output>/fdm/jsbsim/systems/afcs/elevator-cmd-pid</output>
+	</filter>
+	
+	<filter>
+		<name>IT-CONTROLLER: ELEVATOR INVERT</name>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<input>
+			<condition>
+				<and>
+					<less-than-equals>
+						<property>/orientation/roll-deg</property>
+						<value>90</value>
+					</less-than-equals>
+					<greater-than-equals>
+						<property>/orientation/roll-deg</property>
+						<value>-90</value>
+					</greater-than-equals>
+				</and>
+			</condition>
+			<property>/fdm/jsbsim/systems/afcs/elevator-cmd-pid</property>
+		</input>
+		<input>
+			<property>/fdm/jsbsim/systems/afcs/elevator-cmd-pid</property>
+			<scale>-1.0</scale>
+		</input>
 		<output>/fdm/jsbsim/systems/afcs/elevator-cmd-delta</output>
 	</filter>
 
-    <!-- =============================================================== -->
-    <!-- Velocity Modes                                                  -->
-    <!-- =============================================================== -->
+ <!-- =============================================================== -->
+ <!-- Velocity Modes                                                  -->
+ <!-- =============================================================== -->
 
-    <pid-controller>
-        <name>Autothrottle knots</name>
-        <debug>false</debug>
-        <enable>
-            <condition>
-                <not>
-                    <or>
-                        <property>/gear/gear[0]/wow</property>
-                        <property>/gear/gear[1]/wow</property>
-                        <property>/gear/gear[2]/wow</property>
-                    </or>
-                </not>
-                <not>
-                    <equals>
-                        <property>/autopilot/locks/autothrottle-permit-augmentation</property>
-                        <value>1</value>
-                    </equals>
-                </not>
-                <equals>
-                    <property>autopilot/locks/speed</property>
-                    <value>speed-with-throttle</value>
-                </equals>
-                <greater-than>
-                    <property>/autopilot/settings/target-speed-kt</property>
-                    <value>2</value>
-                </greater-than>
-            </condition>
-        </enable>
-        <input>
-            <prop>/instrumentation/airspeed-indicator/indicated-speed-kt</prop>
-        </input>
-        <reference>
-            <prop>/autopilot/settings/target-speed-kt</prop>
-        </reference>
-        <output>
-            <property>/controls/engines/engine[0]/throttle</property>
-            <property>/controls/engines/engine[1]/throttle</property>
-        </output>
-        <config>
-            <Kp>0.1</Kp>
-            <beta>1.0</beta>
-            <alpha>0.1</alpha>
-            <gamma>0.0</gamma>
-            <Ti>10.0</Ti>
-            <Td>0.00001</Td>
-            <u_min>0.081</u_min>
-            <u_max>0.917</u_max>
-            <!-- No afterburner while A/T is on -->
-        </config>
-    </pid-controller>
+	<pid-controller>
+		<name>Autothrottle knots</name>
+		<debug>false</debug>
+		<enable>
+			<condition>
+				<not>
+					<or>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</or>
+				</not>
+				<not>
+					<equals>
+						<property>/autopilot/locks/autothrottle-permit-augmentation</property>
+						<value>1</value>
+					</equals>
+				</not>
+				<equals>
+					<property>autopilot/locks/speed</property>
+					<value>speed-with-throttle</value>
+				</equals>
+				<greater-than>
+					<property>/autopilot/settings/target-speed-kt</property>
+					<value>2</value>
+				</greater-than>
+			</condition>
+		</enable>
+		<input>
+			<prop>/instrumentation/airspeed-indicator/indicated-speed-kt</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/target-speed-kt</prop>
+		</reference>
+		<output>
+			<property>/controls/engines/engine[0]/throttle</property>
+			<property>/controls/engines/engine[1]/throttle</property>
+		</output>
+		<config>
+			<Kp>0.1</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.081</u_min>
+			<u_max>0.917</u_max>
+			<!-- No afterburner while A/T is on -->
+		</config>
+	</pid-controller>
 
-    <pid-controller>
-        <name>Autothrottle mach</name>
-        <debug>false</debug>
-        <enable>
-            <condition>
-                <not>
-                    <or>
-                        <property>/gear/gear[0]/wow</property>
-                        <property>/gear/gear[1]/wow</property>
-                        <property>/gear/gear[2]/wow</property>
-                    </or>
-                </not>
-                <not>
-                    <equals>
-                        <property>/autopilot/locks/autothrottle-permit-augmentation</property>
-                        <value>1</value>
-                    </equals>
-                </not>
-                <equals>
-                    <property>autopilot/locks/speed</property>
-                    <value>speed-with-throttle</value>
-                </equals>
-                <less-than-equals>
-                    <property>/autopilot/settings/target-speed-kt</property>
-                    <value>2</value>
-                </less-than-equals>
-            </condition>
-        </enable>
-        <input>
-            <prop>/instrumentation/airspeed-indicator/indicated-mach</prop>
-        </input>
-        <reference>
-            <prop>/autopilot/settings/target-speed-kt</prop>
-        </reference>
-        <output>
-            <property>/controls/engines/engine[0]/throttle</property>
-            <property>/controls/engines/engine[1]/throttle</property>
-        </output>
-        <config>
-            <Kp>50</Kp>
-            <beta>1.0</beta>
-            <alpha>0.1</alpha>
-            <gamma>0.0</gamma>
-            <Ti>10.0</Ti>
-            <Td>0.00001</Td>
-            <u_min>0.081</u_min>
-            <u_max>0.917</u_max>
-            <!-- No afterburner while A/T is on -->
-        </config>
-    </pid-controller>
+	<pid-controller>
+		<name>Autothrottle mach</name>
+		<debug>false</debug>
+		<enable>
+			<condition>
+				<not>
+					<or>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</or>
+				</not>
+				<not>
+					<equals>
+						<property>/autopilot/locks/autothrottle-permit-augmentation</property>
+						<value>1</value>
+					</equals>
+				</not>
+				<equals>
+					<property>autopilot/locks/speed</property>
+					<value>speed-with-throttle</value>
+				</equals>
+				<less-than-equals>
+					<property>/autopilot/settings/target-speed-kt</property>
+					<value>2</value>
+				</less-than-equals>
+			</condition>
+		</enable>
+		<input>
+			<prop>/instrumentation/airspeed-indicator/indicated-mach</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/target-speed-kt</prop>
+		</reference>
+		<output>
+			<property>/controls/engines/engine[0]/throttle</property>
+			<property>/controls/engines/engine[1]/throttle</property>
+		</output>
+		<config>
+			<Kp>50</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.081</u_min>
+			<u_max>0.917</u_max>
+			<!-- No afterburner while A/T is on -->
+		</config>
+	</pid-controller>
 
-    <!--Augmented autothrottle - like basic except can go to stage 5 a/b-->
-    <pid-controller>
-        <name>Autothrottle knots augmented</name>
-        <debug>false</debug>
-        <enable>
-            <condition>
-                <not>
-                    <or>
-                        <property>/gear/gear[0]/wow</property>
-                        <property>/gear/gear[1]/wow</property>
-                        <property>/gear/gear[2]/wow</property>
-                    </or>
-                </not>
-                <equals>
-                    <property>/autopilot/locks/autothrottle-permit-augmentation</property>
-                    <value>1</value>
-                </equals>
-                <equals>
-                    <property>autopilot/locks/speed</property>
-                    <value>speed-with-throttle</value>
-                </equals>
-                <greater-than>
-                    <property>/autopilot/settings/target-speed-kt</property>
-                    <value>2</value>
-                </greater-than>
-            </condition>
-        </enable>
-        <input>
-            <prop>/instrumentation/airspeed-indicator/indicated-speed-kt</prop>
-        </input>
-        <reference>
-            <prop>/autopilot/settings/target-speed-kt</prop>
-        </reference>
-        <output>
-            <property>/controls/engines/engine[0]/throttle</property>
-            <property>/controls/engines/engine[1]/throttle</property>
-        </output>
-        <config>
-            <Kp>0.1</Kp>
-            <beta>1.0</beta>
-            <alpha>0.1</alpha>
-            <gamma>0.0</gamma>
-            <Ti>10.0</Ti>
-            <Td>0.00001</Td>
-            <u_min>0.081</u_min>
-            <u_max>1.0</u_max>
-        </config>
-    </pid-controller>
+	<!--Augmented autothrottle - like basic except can go to stage 5 a/b-->
+	<pid-controller>
+		<name>Autothrottle knots augmented</name>
+		<debug>false</debug>
+		<enable>
+			<condition>
+				<not>
+					<or>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</or>
+				</not>
+				<equals>
+					<property>/autopilot/locks/autothrottle-permit-augmentation</property>
+					<value>1</value>
+				</equals>
+				<equals>
+					<property>autopilot/locks/speed</property>
+					<value>speed-with-throttle</value>
+				</equals>
+				<greater-than>
+					<property>/autopilot/settings/target-speed-kt</property>
+					<value>2</value>
+				</greater-than>
+			</condition>
+		</enable>
+		<input>
+			<prop>/instrumentation/airspeed-indicator/indicated-speed-kt</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/target-speed-kt</prop>
+		</reference>
+		<output>
+			<property>/controls/engines/engine[0]/throttle</property>
+			<property>/controls/engines/engine[1]/throttle</property>
+		</output>
+		<config>
+			<Kp>0.1</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.081</u_min>
+			<u_max>1.0</u_max>
+		</config>
+	</pid-controller>
 
-    <pid-controller>
-        <name>Autothrottle mach augmented</name>
-        <debug>false</debug>
-        <enable>
-            <condition>
-                <not>
-                    <or>
-                        <property>/gear/gear[0]/wow</property>
-                        <property>/gear/gear[1]/wow</property>
-                        <property>/gear/gear[2]/wow</property>
-                    </or>
-                </not>
-                <equals>
-                    <property>/autopilot/locks/autothrottle-permit-augmentation</property>
-                    <value>1</value>
-                </equals>
-                <equals>
-                    <property>autopilot/locks/speed</property>
-                    <value>speed-with-throttle</value>
-                </equals>
-                <less-than-equals>
-                    <property>/autopilot/settings/target-speed-kt</property>
-                    <value>2</value>
-                </less-than-equals>
-            </condition>
-        </enable>
-        <input>
-            <prop>/instrumentation/airspeed-indicator/indicated-mach</prop>
-        </input>
-        <reference>
-            <prop>/autopilot/settings/target-speed-kt</prop>
-        </reference>
-        <output>
-            <property>/controls/engines/engine[0]/throttle</property>
-            <property>/controls/engines/engine[1]/throttle</property>
-        </output>
-        <config>
-            <Kp>50</Kp>
-            <beta>1.0</beta>
-            <alpha>0.1</alpha>
-            <gamma>0.0</gamma>
-            <Ti>10.0</Ti>
-            <Td>0.00001</Td>
-            <u_min>0.081</u_min>
-            <u_max>1.0</u_max>
-        </config>
-    </pid-controller>
+	<pid-controller>
+		<name>Autothrottle mach augmented</name>
+		<debug>false</debug>
+		<enable>
+			<condition>
+				<not>
+					<or>
+						<property>/gear/gear[0]/wow</property>
+						<property>/gear/gear[1]/wow</property>
+						<property>/gear/gear[2]/wow</property>
+					</or>
+				</not>
+				<equals>
+					<property>/autopilot/locks/autothrottle-permit-augmentation</property>
+					<value>1</value>
+				</equals>
+				<equals>
+					<property>autopilot/locks/speed</property>
+					<value>speed-with-throttle</value>
+				</equals>
+				<less-than-equals>
+					<property>/autopilot/settings/target-speed-kt</property>
+					<value>2</value>
+				</less-than-equals>
+			</condition>
+		</enable>
+		<input>
+			<prop>/instrumentation/airspeed-indicator/indicated-mach</prop>
+		</input>
+		<reference>
+			<prop>/autopilot/settings/target-speed-kt</prop>
+		</reference>
+		<output>
+			<property>/controls/engines/engine[0]/throttle</property>
+			<property>/controls/engines/engine[1]/throttle</property>
+		</output>
+		<config>
+			<Kp>50</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.081</u_min>
+			<u_max>1.0</u_max>
+		</config>
+	</pid-controller>
 
 </PropertyList>
