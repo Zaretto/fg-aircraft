@@ -687,7 +687,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <property>fcs/hook-engage</property>
         <property>fcs/wing-sweep-pilot-dmd</property>
-        <property>systems/hook/tailhook-cmd-norm</property>
         <property>fcs/wing-sweep-auto</property>
         <property>fcs/spoiler-ground-brake-armed</property>
         <property>fcs/flap-cmd-sum</property>
@@ -695,6 +694,19 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <property value="1.0">Factor1</property>
 
+        <property value="0.84">tuning/ClDFM</property>
+        <property value="1.16">tuning/ClDAFM</property>
+        <property value="1.23">tuning/CdDFM</property>
+        <property value="1.0">tuning/CdADFM</property>
+        <property value="-1.12">tuning/CMDFM</property>
+        <property value="-1.00">tuning/CMADFM</property>
+
+        <!--<property value="0.79">tuning/ClDFM</property>
+        <property value="0.81">tuning/ClDAFM</property>
+        <property value="1.0">tuning/CdDFM</property>
+        <property value="1.0">tuning/CdADFM</property>
+        <property value="-1.29">tuning/CMADFM</property>
+        <property value="-1.00">tuning/CMDFM</property>-->
         <channel name="Wing Sweep">
             <aerosurface_scale name="Sweep Control">
                 <input>fcs/wing-sweep-cmd</input>
@@ -1857,6 +1869,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/ClDFM">
             <description>Delta Cl due to mean flap position</description>
             <product>
+                <p>tuning/ClDFM</p>
                 <table>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
@@ -1874,6 +1887,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/ClDAFM">
             <description>Delta Cl due to mean aux flap position</description>
             <product>
+                <p>tuning/ClDAFM</p>
                 <table>
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
@@ -2214,6 +2228,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cd due to mean flap position</description>
             <product>
                 <table>
+                    <p>tuning/CdDFM</p>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
@@ -2230,6 +2245,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cd due to mean flap position</description>
             <product>
                 <table>
+                    <p>tuning/CdADFM</p>
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
@@ -2992,6 +3008,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/CMDFM">
             <description>CM increment due to flap mean position</description>
             <product>
+                <p>tuning/CMDFM</p>
                 <table>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
@@ -3009,6 +3026,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>CM increment due to flap mean position</description>
             <product>
                 <table>
+                    <p>tuning/CMADFM</p>
+                    <v>-1</v>
                     <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
                     <independentVar lookup="column">aero/alpha-deg</independentVar>
                     <tableData>
