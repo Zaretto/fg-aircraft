@@ -56,31 +56,150 @@
 		</axis>
 	</animation>
 
-	<!-- Wing Sweep -->
-	<animation> 
-		<object-name>wing-sweep-handle</object-name>
-		<type>rotate</type>
-		<property>surface-positions/wing-pos-norm</property>
-		<interpolation>
-			<entry><ind>0</ind><dep>0</dep></entry>
-			<entry><ind>1</ind><dep>-54.6</dep></entry>
-		</interpolation>
-		<center>
-			<x-m>0.0027</x-m>
-			<y-m>0.0000</y-m>
-			<z-m>-0.1914</z-m>
-		</center>
-		<axis> 
-			<x>0</x>
-			<y>-1</y>
-			<z>0</z>
-		</axis>
-	</animation>controls/flight/flapscommand
+    <!-- Wing Sweep -->
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>sweep-cover-solid</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>controls/flight/wingsweep-cover</property>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>controls/flight/wingsweep-guard</property>
+                <value>0</value>
+            </binding>
 
+        </action>
+    </animation>
+    
+    <animation>
+        <object-name>sweep-cover-solid</object-name>
+        <type>rotate</type>
+        <property>controls/flight/wingsweep-cover</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>54.6</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>sweep-cover-solid-axis</object-name>
+        </axis>
+    </animation>
+    
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>wing-sweep-handle-guard</object-name>
+        <condition>
+            <and>
+                <greater-than>
+                    <property>controls/flight/wingsweep-cover</property>
+                    <value>0</value>
+                </greater-than>
+                <greater-than>
+                    <property>controls/flight/wing-sweep-cmd</property>
+                    <value>0.99</value>
+                </greater-than>
+                <property>gear/wow</property>
+            </and>
+        </condition>
+        <action>
+            <button>1</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>controls/flight/wingsweep-guard</property>
+            </binding>
+        </action>
+    </animation>
+
+	<animation>
+        <type>rotate</type>
+        <object-name>wing-sweep-handle-guard</object-name>
+        <property>controls/flight/wing-sweep-cmd</property>
+		<interpolation>
+			<entry><ind>0</ind><dep>-22</dep></entry>
+			<entry><ind>1</ind><dep>54.6</dep></entry>
+		</interpolation>
+        <axis>
+            <object-name>wing-sweep-handle-axis</object-name>
+        </axis>
+	</animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>wing-sweep-handle</object-name>
+        <property>controls/flight/wing-sweep-cmd</property>
+        <condition>
+            <and>
+                <less-than>
+                    <property>controls/flight/wingsweep-guard</property>
+                    <value>1</value>
+                </less-than>
+            </and>
+        </condition>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>-22</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>54.6</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>wing-sweep-handle-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/flight/wing-sweep-cmd</property>
+                <factor>0.01</factor>
+                <min>0.2941176470588235</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+            <!--<binding>
+                <command>nasal</command>
+                <script>f14.model_setprop("sim/model/f-14b/controls/radar-awg-9/brightness")</script>
+                -->
+            <!--<script>f14.notify_prop(f14.set_radar_DDD_brightness, "sim/model/f-14b/controls/radar-awg-9/brightness")</script>-->
+            <!--
+            </binding>-->
+        </action>
+    </animation>
+
+    <animation>
+        <object-name>wing-sweep-handle-guard</object-name>
+        <type>rotate</type>
+        <property>controls/flight/wingsweep-guard</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>-54.6</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>wing-sweep-handle-guard-axis</object-name>
+        </axis>
+    </animation>
 	<!-- Flap Lever -->
 	<animation> 
 		<object-name>flap-handle</object-name>
-		<type>rotate</type>
+		<type>knob</type>
 		<property>controls/flight/flapscommand</property>
 		<interpolation>
 			<entry><ind>0</ind><dep>0</dep></entry>
@@ -96,7 +215,18 @@
 			<y>-1</y>
 			<z>0</z>
 		</axis>
-	</animation>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/flight/flaps</property>
+                <factor>0.02857142857142857142857142857143</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
 
 	<animation>
 		<type>shader</type>

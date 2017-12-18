@@ -145,11 +145,9 @@ var az_scan = func() {
 			# existing as a displayable target in the radar targets nodes.
 			var type = c.getName();
 
-			if (c.getNode("valid") == nil or !c.getNode("valid").getValue() or isNotBehindTerrain(c) == 0) {
+			if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
 				continue;
 			}
-			var HaveRadarNode = c.getNode("radar");
-
             #
             # ARA 63 (Carrier ILS) support.
             # if this node has a tacan channel and we are
@@ -195,11 +193,17 @@ var az_scan = func() {
                     }
                     else
                     {
-                        # tuned tacan isn't carrier.
+                        # tuned tacan is not carrier.
                         f14.carrier_ara_63_heading = 0;
                     }
                 }
             }
+            #
+            # If behind terrain then move onto the next return.
+            if (isNotBehindTerrain(c) == 0)
+                continue;
+			var HaveRadarNode = c.getNode("radar");
+
 
 			if ((type == "multiplayer" or type == "tanker" or type == "aircraft" or type == "ship" or type == "groundvehicle") and HaveRadarNode != nil) {
 				var u = Target.new(c);

@@ -13,6 +13,9 @@
     <fdm>
         <jsbsim>
             <fcs>
+                <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
+                <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
+                
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
@@ -1311,6 +1314,10 @@
 			<pitch-active type="bool">0</pitch-active>
 			<roll-active type="bool">0</roll-active>
 		</internal>
+        <settings>
+            <aileron-deadzone>0.1</aileron-deadzone>
+            <elevator-deadzone>0.1</elevator-deadzone>
+        </settings>
 	</autopilot>
 
     <payload>

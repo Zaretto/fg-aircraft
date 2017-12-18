@@ -950,6 +950,9 @@
         </model>
 
         <multiplay>
+            <!-- Starting with 2017.3 F-14 only transmit using Emesary -->
+            <transmit-only-generics type="int">0</transmit-only-generics>
+            <transmit-only-generics-available type="int">1</transmit-only-generics-available>
             <generic>
                 <float n="0">0</float>
                 <!-- wing-sweep     -->
@@ -1490,13 +1493,18 @@
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
             <fake>0.0</fake>
             <DLC-engaged type="bool">false</DLC-engaged>
+            <flapscommand alias="/fdm/jsbsim/fcs/flap-cmd-norm"/>
+            <wing-sweep-cmd alias="/fdm/jsbsim/fcs/wing-sweep-pilot-dmd"/>
         </flight>
         <gear>
             <!-- Start with the Parking Brake on -->
             <!--			<brake-parking type="double">1.0</brake-parking> -->
         </gear>
-
     </controls>
+
+    <gear>
+        <wow alias="/fdm/jsbsim/gear/wow"/>
+    </gear>
 
     <engines>
         <engine n="0">

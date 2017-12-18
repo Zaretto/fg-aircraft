@@ -5,7 +5,7 @@
     <layout>vbox</layout>
     <default-padding>0</default-padding>
     <modal>false</modal>
-    <width>450</width>
+    <width>550</width>
     <valign>top</valign>
 
     <group>
@@ -105,12 +105,54 @@
                     </binding>
                 </slider>
             </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Aileron deadzone CSS</label>
+                </text>
+
+                <slider>
+                    <name>AileronDeadzoneForAutopilotCss</name>
+                    <property>/autopilot/settings/aileron-deadzone</property>
+                    <pref-width>250</pref-width>
+                    <live>1</live>
+                    <min>0</min>
+                    <max>0.4</max>
+                    <binding>
+                        <command>dialog-apply</command>
+                        <object-name>AileronDeadzoneForAutopilotCss</object-name>
+                    </binding>
+                </slider>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Elevator deadzone CSS</label>
+                </text>
+
+                <slider>
+                    <pref-width>250</pref-width>
+                    <name>ElevatorDeadzoneForAutopilotCss</name>
+                    <property>/autopilot/settings/elevator-deadzone</property>
+                    <width>20</width>
+                    <live>1</live>
+                    <min>0</min>
+                    <max>0.4</max>
+                    <binding>
+                        <command>dialog-apply</command>
+                        <object-name>ElevatorDeadzoneForAutopilotCss</object-name>
+                    </binding>
+                </slider>
+            </group>
+          
         </group>
 
 
     </group>
     <hrule/>
-    <group>
+    <!--<group>
         <layout>hbox</layout>
         <text>
             <halign>left</halign>
@@ -173,10 +215,10 @@
                     setprop("/sim/tower/altitude-ft",np.alt()+100);
                 </script>
             </binding>
-            <!--      <binding>
+            --><!--      <binding>
         <command>dialog-close</command>
       </binding>
--->
+--><!--
         </button>
     </group>
     <group>
@@ -198,10 +240,10 @@
                     fgcommand("reposition");
                 </script>
             </binding>
-            <!--      <binding>
+            --><!--      <binding>
         <command>dialog-close</command>
       </binding>
--->
+--><!--
         </button>
         <layout>hbox</layout>
         <default-padding>0</default-padding>
@@ -219,7 +261,7 @@
             </binding>
         </button>
     </group>
-    <hrule/>
+    <hrule/>-->
     <group>
         <layout>hbox</layout>
         <button>
