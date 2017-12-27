@@ -18,10 +18,17 @@ var currentG = 1.0;
 # 2017.3 or earlier FG compatibility fixes
 # Remove after 2017.4
 string.truncateAt = func(src, match){
-    var pos = find(match,src);
-    if (pos>=0)
-      return substr(src,0,pos);
+    var rv = nil;
+    call(func {
+    if (src != nil and match !=nil){
+        var pos = find(match,src);
+        if (pos>=0)
+          src=substr(src,0,pos);
+    }
+},
+        nil, var err = []);
     return src;
+
 }
 #
 #
