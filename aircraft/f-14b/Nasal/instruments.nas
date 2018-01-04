@@ -34,6 +34,7 @@ var carrier_pos_first_time = 1;
 var carrier_x_offset = 0;
 var carrier_y_offset = 0;
 var carrier_z_offset = 0;
+aircraft.ownship_pos = geo.Coord.new();
 
 aircraft.data.add(VtcRadialDeg, TcModeSwitch);
 
@@ -547,6 +548,8 @@ var main_loop = func {
 	mach = Mach.getValue();
 	awg_9.rdr_loop();
 	var a = cnt / 2;
+
+    aircraft.ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
 
 	burner +=1;
 	if ( burner == 3 ) { burner = 0 }

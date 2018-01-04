@@ -2,6 +2,8 @@
 # F-15 Radar routines. 
 # The F-15 doesn't have an awg_9, however this isn't an accurate simulation
 # of the radar so it works fine.
+# The scan and update is optimised. The AI list is only scanned when targets added or removed
+# and the update visibility is performed in a partitioned manner, with one partition per frame
 # ---------------------------
 # RWR (Radar Warning Receiver) is computed in the radar loop for better performance
 # AWG-9 Radar computes the nearest target for AIM-9.
@@ -13,6 +15,7 @@
 #             should be the same as nearest_u - but use active_u instead in 
 #             most of the code. nearest_u is kept for compatibility.
 # 
+
 var this_model = "f15";
 #var this_model = "f-14b";
 
@@ -41,7 +44,7 @@ var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable
 var SelectTargetCommand =props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 
 var myRadarStrength_rcs = 3.2;
-
+#var awg9_trace = 0;
 SelectTargetCommand.setIntValue(0);
 
 # variables for the partioned scanning.
@@ -204,6 +207,11 @@ var compute_rwr = func(radar_mode, u, u_rng){
 #em_by = em_by ~ "xpdr ";
     }
     # modes below 2 are on / emerg so they will show up on rwr
+#F-15 radar modes;
+# mode 3 = off
+# mode 2 = stby
+# mode 1 = opr
+# mode 0 = emerg
     if (radar_mode < 2 and !u.get_behind_terrain()) {
         # in this sense it is actually us that is illuminating them, but for TEWS this is fine.
         var horizon = u.get_horizon( our_alt );
@@ -391,28 +399,34 @@ var az_scan = func() {
                 u.set_visible(1);
                 if (u_rng != nil and (u_rng > range_radar2))
                   u.set_display(0);
-                else
-                  u.set_display(1);
+                else {
+                  if (radar_mode == 2)
+                    u.set_display(!u.get_rdr_standby());
+                  if (radar_mode < 2)
+                    u.set_display(1);
+                  else {
+                      msg = "radar not transmitting";
+                      u.set_display(0);
+                  }
+              }
             }
-#    print("UPDS: ",u.Callsign.getValue(),", ", msg);
-        } else {
+#if(awg9_trace)
+#    print("UPDS: ",u.Callsign.getValue(),", ", msg, "vis= ",u.get_visible(), " dis=",u.get_display(), " rng=",u_rng, " rr=",range_radar2);
+        } 
+#        else {
+#
+#            if (u_rng != nil and (u_rng > range_radar2)) {
+#                tgts_list[scan_tgt_idx].set_display(0);
+## still need to test for RWR warning indication even if outside of the radar range
+#                if ( !rwr_done and ecm_on and tgts_list[scan_tgt_idx].get_rdr_standby() == 0) {
+#                    rwr_done = rwr_warning_indication(tgts_list[scan_tgt_idx]); 
+#                }
+#                break;
+#            }
+#        }
+# end of scan update visibility
 
-            # the list is sorted by distance we can bail out of this loop the first time
-            # that a return is out of range.
-            # - obviously we cannot shortcut the entire list when updating visibility.
-            if (u_rng != nil and (u_rng > range_radar2)) {
-            
-                for (;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1) {
-                    tgts_list[scan_tgt_idx].set_display(0);
-                    # still need to test for RWR warning indication even if outside of the radar range
-                    if ( !rwr_done and ecm_on and tgts_list[scan_tgt_idx].get_rdr_standby() == 0) {
-                        rwr_done = rwr_warning_indication(tgts_list[scan_tgt_idx]); 
-                    }
-                }
-                break;
-            }
-        }
-
+# if target within radar range, and not acting (i.e. a RIO/backseat/copilot)
         if (u_rng != nil and (u_rng < range_radar2  and u.not_acting == 0 )) {
             u.get_deviation(our_true_heading);
         
@@ -425,12 +439,15 @@ var az_scan = func() {
             }
 
             if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld )
-              u.set_display(u.get_visible());
+                u.set_display(u.get_visible());
             else {
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
                 u.set_display(0);
             }
         }
 
+# RWR 
         compute_rwr(radar_mode, u, u_rng);
         # Test if target has a radar. Compute if we are illuminated. This propery used by ECM
         # over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
@@ -703,6 +720,7 @@ var isNotBehindTerrain = func(node) {
     # There is no terrain on earth that can be between these altitudes
     # so shortcut the whole thing and return now.
     if(MyCoord.alt() > 8900 and SelectCoord.alt() > 8900){
+#if(awg9_trace)
 #print("inbt: both above 8900");
         return 1;
     }
@@ -1496,3 +1514,9 @@ else
 # HUD field of view = 2 * math.atan2( 0.0764, 0.7186) * globals.R2D; # ~ 12.1375°
 # where 0.071 : virtual screen half width, 0.7186 : distance eye -> screen
 
+dump_tgt_list = func {
+    for (scan_tgt_idx=0;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1) {
+        var u = tgts_list[scan_tgt_idx];
+        print(scan_tgt_idx, " callsign ", u.get_Callsign(), " range ",u.get_range(), " display ", u.get_display(), " visible ",u.get_visible());
+    }
+}
