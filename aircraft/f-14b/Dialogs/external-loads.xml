@@ -90,7 +90,7 @@
               <legend>50k</legend>
               <binding>
                   <command>nasal</command>
-                  <script>f14.set_fuel(7897)</script>
+                  <script>f14.set_fuel(math.max(1000, 50000-(getprop("fdm/jsbsim/inertia/weight-lbs")-getprop("sim/model/f-14b/instrumentation/fuel-gauges/total"))))</script>
               </binding>
           </button>
           <button>

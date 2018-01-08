@@ -27,7 +27,8 @@ var TcModeSwitch     = props.globals.getNode("sim/model/f-14b/instrumentation/ta
 var TrueHdg          = props.globals.getNode("orientation/heading-deg");
 var MagHdg           = props.globals.getNode("orientation/heading-magnetic-deg");
 var MagDev           = props.globals.getNode("orientation/local-mag-dev", 1);
-
+var post_init_method = nil;
+var repos_gear_down = 0;
 var mag_dev = 0;
 var tc_mode = 0;
 var carrier_pos_first_time = 1;
@@ -424,6 +425,7 @@ var AB         = props.globals.getNode("engines/engine/afterburner", 1);
 var sb_i = 0.2;
 var alt_drag_factor = 25000;
 var alt_drag_factor2 = 20000;
+f14.usingJSBSim = 1;
 
 controls.stepSpoilers = func(s) {
 
@@ -746,7 +748,7 @@ var common_init = func {
         setprop("sim/model/f-14b/controls/AFCS/engage",0);
         if (getprop("/fdm/jsbsim/position/h-agl-ft") != nil)
         {
-            if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500) 
+            if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500 or repos_gear_down) 
             {
                 print("Starting with gear down as below 500 ft");
                 setprop("/controls/gear/gear-down", 1);
@@ -773,6 +775,10 @@ var common_init = func {
             }
         }
         common_carrier_init();
+    }
+    if (post_init_method != nil){
+        post_init_method();
+        post_init_method = nil;
     }
 }
 
@@ -853,6 +859,96 @@ sel_displays_sub_mode = func(group, which) {
 	elsif ( SteerModeVec.getBoolValue() ) { steer_mode_code = 4 }
 	SteerModeCode.setValue(steer_mode_code);
 }
+get_approach_onspeed = func{
+    total_mass_lbs = getprop("fdm/jsbsim/inertia/weight-lbs");
+    # MMF Model curve fit mass to onspeed
+    # y=(a*b+c*x^d)/(b+x^d)
+    # wher
+    # a =	-2.62993732562E+001
+    # b =	1.08584946812E+003
+    # c =	8.10788076735E+002
+    # d =	5.10014100237E-001
+    #Quadratic Fit:  y=a+bx+cx^2
+    #a =	4.58500000000E+001
+    #b =	2.05500000000E-003
+    #c =	-7.50000000000E-009
+
+    #return 2+(-26.2994*1085.85+810.79*math.pow(total_mass_lbs,0.51))/(1085.85+math.pow(total_mass_lbs,0.5100));
+    return 0.4+(45.85+0.002055*total_mass_lbs+-0.00000000750*total_mass_lbs*total_mass_lbs);
+}
+
+#
+# Carrier reposition methods
+carrier_approach_reposition = func {
+    var np = geo.Coord.new()
+    .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+    var magvar=getprop("/orientation/local-mag-dev");
+    var dist_m = 11000;
+    if (getprop("sim/presets/carrier-approach-dist-m") != nil)
+        dist_m  = getprop("sim/presets/carrier-approach-dist-m");
+    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+    np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
+    var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
+    lat = np.lat();
+    lon = np.lon();
+    onspeed = get_approach_onspeed();
+    print("Position to ",dist_m," height ",gs_height, " speed=",onspeed, " lat=",lat," lon=",lon);
+
+    setprop("controls/gear/gear-down",1);
+    setprop("sim/presets/trim", 1);
+    setprop("sim/presets/latitude-deg",np.lat());
+    setprop("sim/presets/longitude-deg",np.lon());
+    setprop("sim/presets/altitude-ft",gs_height);
+    setprop("sim/presets/airspeed-kt",onspeed);
+    setprop("sim/presets/pitch-deg",7);
+    #setprop("sim/presets/heading-deg",178-magvar);
+    setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+    setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
+    setprop("/sim/presets/carrier","");
+    setprop("/sim/presets/parkpos","");
+    setprop("position/latitude-deg",lat);
+    setprop("position/longitude-deg",lon);
+    setprop("position/altitude-ft",gs_height);
+    repos_gear_down = 1;
+    setprop("fdm/jsbsim/gear/gear-cmd-norm",1);
+    setprop("/controls/gear/brake-parking",0);
+    setprop("/controls/flight/elevator-trim", -0.3698032779);
+    setprop("/fdm/trim/trimmed", 0);
+    setprop("/fdm/trim/pitch-trim", -0.3698032779);
+    fgcommand("reposition");
+    post_init_method = func{
+        print("finish approach repos ");
+        print("finalize position ",onspeed," alt=",getprop("position/altitude-agl-ft"));
+        # v 0.41
+        #setprop("sim/latitude-deg",lat);
+        #setprop("sim/longitude-deg",lon);
+        #setprop("sim/altitude-ft",gs_height);
+        #    
+    setprop("fdm/jsbsim/gear/gear-cmd-norm",1);
+    setprop("/controls/gear/brake-parking",0);
+    setprop("/controls/flight/elevator-trim", -0.3698032779);
+    setprop("/fdm/trim/trimmed", 1);
+        f14.APC_on();
+        setprop ("fdm/jsbsim/systems/apc/target-vc-kts", onspeed);
+        setprop("fdm/jsbsim/gear/gear-cmd-norm",1);
+        setprop("/controls/gear/brake-parking",0);
+        #    setprop("sim/presets/airspeed-kt",onspeed);
+        np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+        np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
+        setprop("/sim/tower/latitude-deg",np.lat());
+        setprop("/controls/flight/flaps",1);
+        setprop("/controls/gear/gear-down",1);
+        setprop("/sim/tower/longitude-deg",np.lon());
+        setprop("/sim/tower/altitude-ft",np.alt()+100);
+    };
+}
 
 
 
+setlistener("fdm/jsbsim/systems/hook/arrestor-wire-available", func(v)
+{
+	if (v != nil and v.getValue() == 0 and getprop("fdm/jsbsim/systems/hook/funcs/hook-operational-efficiency") < 1)
+	{
+		setprop("/sim/messages/copilot", "Arrestor wire inoperable due to overspeed. Onspeed VC "~int(getprop("fdm/jsbsim/inertia/onspeed-kts"))~"kts ");
+	}
+},0,0);

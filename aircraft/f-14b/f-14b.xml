@@ -694,12 +694,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <property value="1.0">Factor1</property>
 
-        <property value="0.84">tuning/ClDFM</property>
-        <property value="1.16">tuning/ClDAFM</property>
-        <property value="1.23">tuning/CdDFM</property>
-        <property value="1.0">tuning/CdADFM</property>
-        <property value="-1.12">tuning/CMDFM</property>
-        <property value="-1.00">tuning/CMADFM</property>
+        <property  value="1.19">tuning/ClDFM</property>
+        <property  value="1.00">tuning/ClDAFM</property>
+        <property  value="1.00">tuning/CdDFM</property>
+        <property  value="1.0">tuning/CdADFM</property>
+        <property value="1.00">tuning/CMDFM</property>
+        <property value="1.00">tuning/CMADFM</property>
 
         <!--<property value="0.79">tuning/ClDFM</property>
         <property value="0.81">tuning/ClDAFM</property>
@@ -1330,7 +1330,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     systems/hydraulics/combined-system-pressure ne 1
                 </test>
                 <test value="fcs/flap-cmd-norm">
-                    fcs/flap-cmd-norm ne 0
+                    fcs/flap-cmd-norm ge 0.1428571
                     systems/hydraulics/combined-system-pressure ne 0
                     fcs/wing-sweep-pos-deg le 22
                 </test>
@@ -1341,14 +1341,22 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <output>fcs/aux-flap-total-dmd</output>
             </switch>
 
+            <pure_gain name="Flap Slat gain">
+                <input>fcs/flap-total-dmd</input>
+                <gain>2.33333348888889925925995061733</gain>
+                <clipto>
+                    <min>  0 </min>
+                    <max>  1 </max>
+                </clipto>
+            </pure_gain>
             <switch name="fcs/slat-total-dmd">
                 <default value="0"/>
                 <test value="fcs/slat-total-dmd">
                     systems/hydraulics/combined-system-pressure ne 1
                 </test>
 
-                <test value="1">
-                    fcs/flap-total-dmd ge 0.5
+                <test value="fcs/flap-slat-gain">
+                    fcs/flap-total-dmd gt 0
                     systems/hydraulics/combined-system-pressure ne 0
                     fcs/wing-sweep-pos-deg le 50
                 </test>
@@ -1870,33 +1878,96 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cl due to mean flap position</description>
             <product>
                 <p>tuning/ClDFM</p>
-                <table>
-                    <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
-                    <tableData>
-                            	-20     	  -5	      0 	  5 	 10 	 25 	 50
-                          0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                         10	-0.01400	-0.13160	0.13440	0.13160	0.12880	0.10920	0.01400
-                         35	-0.09016	-0.25872	0.25480	0.25872	0.29872	0.21560	0.22540
-                         50	-0.24500	-0.60200	0.59500	0.60200	0.58800	0.46200	0.24500
-                    </tableData>
-                </table>
-            </product>
-        </function>
+                    <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                            0	20	35
+                            -10	0.00000	0.22283	0.28372
+                            -5	0.00000	0.25918	0.31143
+                            -2	0.00000	0.27830	0.32799
+                            0	0.00000	0.29178	0.34148
+                            1	0.00000	0.29783	0.35145
+                            2	0.00000	0.30296	0.35764
+                            3	0.00000	0.30691	0.35756
+                            4	0.00000	0.30953	0.35071
+                            5	0.00000	0.31287	0.34542
+                            6	0.00000	0.31305	0.33646
+                            7	0.00000	0.30644	0.32584
+                            8	0.00000	0.29084	0.31279
+                            9	0.00000	0.26762	0.29785
+                            10	0.00000	0.24161	0.28066
+                            11	0.00000	0.21800	0.26500
+                            12	0.00000	0.19550	0.24924
+                            13	0.00000	0.17113	0.23190
+                            14	0.00000	0.16196	0.22693
+                            15	0.00000	0.15991	0.22854
+                            16	0.00000	0.15903	0.23139
+                            17	0.00000	0.15966	0.23468
+                            18	0.00000	0.15957	0.23552
+                            19	0.00000	0.16015	0.23463
+                            20	0.00000	0.15870	0.23152
+                            22	0.00000	0.15710	0.22296
+                            24	0.00000	0.15008	0.20985
+                            25	0.00000	0.14157	0.20120
+                            28	0.00000	0.11244	0.17356
+                            30	0.00000	0.09685	0.15899
+                            35	0.00000	0.08773	0.15676
+                            45	0.00000	0.07119	0.15138
+                            50	0.00000	0.07007	0.15963
+                            55	0.00000	0.06970	0.16611
+                            60	0.00000	0.06466	0.16827
 
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        
         <function name="aero/coefficients/ClDAFM">
             <description>Delta Cl due to mean aux flap position</description>
             <product>
                 <p>tuning/ClDAFM</p>
                 <table>
-                    <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                                   	 -20     	  -5	      0 	  5 	 10 	 25 	 50
-                            0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                           10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
-                           35	-0.03864	-0.11088	0.10920	0.11088	0.11088	0.09240	0.09660
-                           50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
+                        0	20	35
+                        -10	0.00000	0.11210	0.14273
+                        -5	0.00000	0.13038	0.15667
+                        -2	0.00000	0.14000	0.16500
+                        0	0.00000	0.14678	0.17178
+                        1	0.00000	0.14982	0.17680
+                        2	0.00000	0.15241	0.17991
+                        3	0.00000	0.15439	0.17987
+                        4	0.00000	0.15571	0.17642
+                        5	0.00000	0.15739	0.17376
+                        6	0.00000	0.15748	0.16926
+                        7	0.00000	0.15416	0.16391
+                        8	0.00000	0.14631	0.15735
+                        9	0.00000	0.13463	0.14984
+                        10	0.00000	0.12154	0.14119
+                        11	0.00000	0.10967	0.13331
+                        12	0.00000	0.09835	0.12538
+                        13	0.00000	0.08609	0.11666
+                        14	0.00000	0.08147	0.11416
+                        15	0.00000	0.08044	0.11497
+                        16	0.00000	0.08000	0.11640
+                        17	0.00000	0.08032	0.11806
+                        18	0.00000	0.08027	0.11848
+                        19	0.00000	0.08057	0.11803
+                        20	0.00000	0.07984	0.11647
+                        22	0.00000	0.07903	0.11216
+                        24	0.00000	0.07550	0.10557
+                        25	0.00000	0.07122	0.10121
+                        28	0.00000	0.05657	0.08731
+                        30	0.00000	0.04872	0.07998
+                        35	0.00000	0.04413	0.07886
+                        45	0.00000	0.03581	0.07615
+                        50	0.00000	0.03525	0.08030
+                        55	0.00000	0.03506	0.08356
+                        60	0.00000	0.03253	0.08465
+
+
                     </tableData>
                 </table>
             </product>
@@ -2229,13 +2300,44 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <product>
                 <table>
                     <p>tuning/CdDFM</p>
-                    <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                     <tableData>
-                            	-20 	 -5 	  0 	  5 	 10 	 25	 50
-                       0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                      10	0.01400	0.02268	0.01932	0.02268	0.02548	0.02856	0.09590
-                      35	0.09016	0.06894	0.06222	0.06894	0.09862	0.14286	0.55734
+                            0	     20	     50
+                        -10	0	0.00975	0.02444
+                        -5	0	0.00859	0.04723
+                        -2	0	0.01978	0.06830
+                        0	0	0.02890	0.08375
+                        1	0	0.03402	0.09082
+                        2	0	0.03927	0.09630
+                        3	0	0.04456	0.10054
+                        4	0	0.04980	0.10362
+                        5	0	0.05517	0.10669
+                        6	0	0.06010	0.10887
+                        7	0	0.06389	0.11023
+                        8	0	0.06604	0.11134
+                        9	0	0.06646	0.11161
+                        10	0	0.06576	0.11047
+                        11	0	0.06474	0.10940
+                        12	0	0.06407	0.10864
+                        13	0	0.06305	0.10629
+                        14	0	0.06166	0.10455
+                        15	0	0.06147	0.10403
+                        16	0	0.06135	0.10338
+                        17	0	0.06081	0.10283
+                        18	0	0.06101	0.10265
+                        19	0	0.06176	0.10334
+                        20	0	0.06154	0.10264
+                        22	0	0.06295	0.10257
+                        24	0	0.07362	0.11545
+                        25	0	0.07372	0.11588
+                        28	0	0.07829	0.11997
+                        30	0	0.08283	0.12416
+                        35	0	0.09637	0.13774
+                        45	0	0.10681	0.14473
+                        50	0	0.12454	0.16222
+                        55	0	0.16139	0.19573
+                        60	0	0.18901	0.21559
                     </tableData>
                 </table>
             </product>
@@ -3010,32 +3112,90 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <product>
                 <p>tuning/CMDFM</p>
                 <table>
-                    <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                     <tableData>
-                    	          0		  5	 	 10		 15		 20	 	 60
-                         0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                         5	0.01320	0.00396	0.00589	0.00762	0.00798	0.00342
-                        15	0.01520	0.00456	0.00649	0.01045	0.00798	0.00342
-                        35	0.01696	0.01523	0.01355	0.01092	0.01148	0.01148
+                        0	20	35
+                        -5	0.00000	-0.00330	-0.01404
+                        -2	0.00000	-0.01034	-0.01915
+                        0	0.00000	-0.01478	-0.02760
+                        1	0.00000	-0.01727	-0.03023
+                        2	0.00000	-0.01830	-0.03110
+                        3	0.00000	-0.01911	-0.03082
+                        4	0.00000	-0.01963	-0.02995
+                        5	0.00000	-0.01998	-0.02894
+                        6	0.00000	-0.02045	-0.02695
+                        7	0.00000	-0.02086	-0.02510
+                        8	0.00000	-0.02020	-0.02321
+                        9	0.00000	-0.01834	-0.02125
+                        10	0.00000	-0.01602	-0.01903
+                        11	0.00000	-0.01334	-0.01672
+                        12	0.00000	-0.01106	-0.01467
+                        13	0.00000	-0.00925	-0.01333
+                        14	0.00000	-0.00934	-0.01447
+                        15	0.00000	-0.00850	-0.01382
+                        16	0.00000	-0.00824	-0.01373
+                        17	0.00000	-0.00791	-0.01379
+                        18	0.00000	-0.00814	-0.01408
+                        19	0.00000	-0.00821	-0.01430
+                        20	0.00000	-0.00828	-0.01424
+                        22	0.00000	-0.00849	-0.01492
+                        24	0.00000	-0.00795	-0.01410
+                        25	0.00000	-0.00837	-0.01469
+                        28	0.00000	-0.00842	-0.01501
+                        30	0.00000	-0.00880	-0.01535
+                        35	0.00000	-0.00827	-0.01475
+                        45	0.00000	-0.00647	-0.01256
+                        50	0.00000	-0.00598	-0.01148
+                        55	0.00000	-0.00570	-0.01100
+                        60	0.00000	-0.00621	-0.00970
                     </tableData>
                 </table>
             </product>
         </function>
+
         <function name="aero/coefficients/CMDAFM">
             <description>CM increment due to flap mean position</description>
             <product>
                 <table>
                     <p>tuning/CMADFM</p>
-                    <v>-1</v>
-                    <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                    	          0		  5	 	 10		 15		 20	 	 60
-                         0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                         5	0.00594	0.00178	0.00265	0.00343	0.00359	0.00154
-                        15	0.00684	0.00205	0.00292	0.00470	0.00359	0.00154
-                        35	0.00763	0.00685	0.00610	0.00491	0.00517	0.00517
+                        0	20	35
+                        -5	0.00000	-0.00165	-0.00702
+                        -2	0.00000	-0.00517	-0.00958
+                        0	0.00000	-0.00739	-0.01380
+                        1	0.00000	-0.00863	-0.01511
+                        2	0.00000	-0.00915	-0.01555
+                        3	0.00000	-0.00955	-0.01541
+                        4	0.00000	-0.00981	-0.01498
+                        5	0.00000	-0.00999	-0.01447
+                        6	0.00000	-0.01023	-0.01348
+                        7	0.00000	-0.01043	-0.01255
+                        8	0.00000	-0.01010	-0.01160
+                        9	0.00000	-0.00917	-0.01063
+                        10	0.00000	-0.00801	-0.00951
+                        11	0.00000	-0.00667	-0.00836
+                        12	0.00000	-0.00553	-0.00734
+                        13	0.00000	-0.00462	-0.00666
+                        14	0.00000	-0.00467	-0.00724
+                        15	0.00000	-0.00425	-0.00691
+                        16	0.00000	-0.00412	-0.00686
+                        17	0.00000	-0.00395	-0.00690
+                        18	0.00000	-0.00407	-0.00704
+                        19	0.00000	-0.00411	-0.00715
+                        20	0.00000	-0.00414	-0.00712
+                        22	0.00000	-0.00425	-0.00746
+                        24	0.00000	-0.00398	-0.00705
+                        25	0.00000	-0.00418	-0.00735
+                        28	0.00000	-0.00421	-0.00750
+                        30	0.00000	-0.00440	-0.00768
+                        35	0.00000	-0.00413	-0.00738
+                        45	0.00000	-0.00324	-0.00628
+                        50	0.00000	-0.00299	-0.00574
+                        55	0.00000	-0.00285	-0.00550
+                        60	0.00000	-0.00311	-0.00485
                     </tableData>
                 </table>
             </product>
@@ -3412,31 +3572,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
     </external_reactions>
 
-    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
-        <simulation> ON </simulation>
-        <atmosphere> ON </atmosphere>
-        <massprops> ON </massprops>
-        <aerosurfaces> ON </aerosurfaces>
-        <rates> ON </rates>
-        <velocities> ON </velocities>
-        <forces> ON </forces>
-        <position> ON </position>
-        <coefficients> ON </coefficients>
-        <ground_reactions> ON </ground_reactions>
-        <fcs> ON </fcs>
-        <propulsion> ON </propulsion>
+    <output name="c:/temp/JSBOut.csv" type="CSV" rate="10">
+        <property>external_reactions/hook/magnitude</property>
+        <property>velocities/vc-kts</property>
+        <property>inertia/onspeed-kts</property>
+        <property>funcs/hook-operational-efficiency</property>
         <property>fcs/speedbrake-pos-norm</property>
-        <property>fcs/slat-pos-norm-deg</property>
-        <property>fcs/slat-cmd-norm</property>
-        <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
-        <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
-        <property>velocities/mach</property>
-        <property>systems/hook/tailhook-cmd-norm</property>
-        <property>systems/hook/hook-decel-force</property>
-        <property>forces/fbx-prop-lbs</property>
-        <property>gear/tailhook-pos-norm</property>
-        <property>fcs/wing-sweep-cadc-dmd</property>
-        <property>fcs/wing-sweep-dmd</property>
-        <property>fcs/wing-sweep-cmd</property>
-    </output>-->
+        <property>funcs/hook-functional</property>
+        <property>position/aircraft-on-ground</property>
+        <property>systems/hook/force</property>
+        <property>hook/arrestor-wire-available</property>
+    </output>
 </fdm_config>
