@@ -239,34 +239,7 @@
             <legend>Carrier Approach Repos</legend>
             <binding>
                 <command>nasal</command>
-                <script>
-                    var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
-                    var magvar=getprop("/orientation/local-mag-dev");
-                    var dist_m = 11000;
-                    if (getprop("sim/presets/carrier-approach-dist-m") != nil)
-                    dist_m  = getprop("sim/presets/carrier-approach-dist-m");
-                    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
-                    np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
-                    var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
-                    print("Position to ",dist_m," height ",gs_height);
-                    setprop("sim/presets/latitude-deg",np.lat());
-                    setprop("sim/presets/longitude-deg",np.lon());
-                    setprop("sim/presets/altitude-ft",gs_height);
-                    setprop("sim/presets/airspeed-kt",140);
-                    setprop("sim/presets/pitch-deg",7);
-                    #setprop("sim/presets/heading-deg",178-magvar);
-                    setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
-                    setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
-                    setprop("/sim/presets/carrier","");
-                    setprop("/sim/presets/parkpos","");
-                    fgcommand("reposition");
-                    setprop("sim/presets/airspeed-kt",140);
-                    np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
-                    np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
-                    setprop("/sim/tower/latitude-deg",np.lat());
-                    setprop("/sim/tower/longitude-deg",np.lon());
-                    setprop("/sim/tower/altitude-ft",np.alt()+100);
-                </script>
+                <script>f14_instruments.carrier_approach_reposition();</script>
             </binding>
             <!--      <binding>
         <command>dialog-close</command>
