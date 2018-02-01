@@ -12,6 +12,12 @@
         <type>rotate</type>
         <object-name>needle-fan-l</object-name>
         <property>engines/engine[0]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>2.25</factor>
         <center>
             <x-m>-5.7033</x-m>
@@ -28,6 +34,12 @@
         <type>rotate</type>
         <object-name>needle-fan-r</object-name>
         <property>engines/engine[1]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>2.25</factor>
         <center>
             <x-m>-5.7033</x-m>
@@ -45,6 +57,12 @@
         <type>rotate</type>
         <object-name>needle-temp-l</object-name>
         <property>engines/engine[0]/egt-degC</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>200</ind>
@@ -70,6 +88,12 @@
         <type>rotate</type>
         <object-name>needle-temp-r</object-name>
         <property>engines/engine[1]/egt-degC</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>200</ind>
@@ -95,6 +119,12 @@
         <type>rotate</type>
         <object-name>needle-fuel-l</object-name>
         <property>engines/engine[0]/fuel-flow_pph</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -120,6 +150,12 @@
         <type>rotate</type>
         <object-name>needle-fuel-r</object-name>
         <property>engines/engine[1]/fuel-flow_pph</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -147,6 +183,12 @@
         <type>rotate</type>
         <object-name>needle-nozl-l</object-name>
         <property>sim/multiplay/generic/float[10]</property>
+        <condition>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
         <factor>235</factor>
         <center>
             <x-m> -5.7037</x-m>
@@ -163,6 +205,12 @@
         <type>rotate</type>
         <object-name>needle-nozl-r</object-name>
         <property>sim/multiplay/generic/float[11]</property>
+        <condition>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+        </condition>
         <factor>235</factor>
         <center>
             <x-m> -5.7037</x-m>
@@ -253,6 +301,12 @@
         <type>rotate</type>
         <object-name>needle-oil-l</object-name>
         <property>engines/engine[0]/oil-pressure-psi</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0.0000</ind>
@@ -278,6 +332,12 @@
         <type>rotate</type>
         <object-name>needle-oil-r</object-name>
         <property>engines/engine[1]/oil-pressure-psi</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <interpolation>
             <entry>
                 <ind>0.0000</ind>
@@ -304,6 +364,12 @@
         <type>textranslate</type>
         <object-name>l-n1-1</object-name>
         <property>engines/engine[0]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -323,6 +389,12 @@
         <type>textranslate</type>
         <object-name>l-n1-2</object-name>
         <property>engines/engine[0]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -342,6 +414,12 @@
         <type>textranslate</type>
         <object-name>l-n1-3</object-name>
         <property>engines/engine[0]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -361,6 +439,12 @@
         <type>textranslate</type>
         <object-name>r-n1-1</object-name>
         <property>engines/engine[1]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -380,6 +464,12 @@
         <type>textranslate</type>
         <object-name>r-n1-2</object-name>
         <property>engines/engine[1]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -399,6 +489,12 @@
         <type>textranslate</type>
         <object-name>r-n1-3</object-name>
         <property>engines/engine[1]/n2</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -417,6 +513,12 @@
     <animation>
         <type>texmultiple</type>
         <object-name>l-egt-1</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <transform>
             <subtype>textranslate</subtype>
             <property>engines/engine[0]/egt-degC</property>
@@ -454,6 +556,12 @@
     <animation>
         <type>texmultiple</type>
         <object-name>l-egt-2</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <transform>
             <subtype>textranslate</subtype>
             <property>engines/engine[0]/egt-degC</property>
@@ -490,6 +598,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-egt-3</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[0]/egt-degC</property>
         <factor>0.01</factor>
         <offset>-10</offset>
@@ -509,6 +623,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-egt-4</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[0]/egt-degC</property>
         <factor>0.1</factor>
         <offset>-1</offset>
@@ -527,6 +647,12 @@
     <animation>
         <type>texmultiple</type>
         <object-name>r-egt-1</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <transform>
             <subtype>textranslate</subtype>
             <property>engines/engine[1]/egt-degC</property>
@@ -564,6 +690,12 @@
     <animation>
         <type>texmultiple</type>
         <object-name>r-egt-2</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <transform>
             <subtype>textranslate</subtype>
             <property>engines/engine[1]/egt-degC</property>
@@ -600,6 +732,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>r-egt-3</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[1]/egt-degC</property>
         <factor>0.01</factor>
         <offset>-10</offset>
@@ -619,6 +757,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>r-egt-4</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[1]/egt-degC</property>
         <factor>0.1</factor>
         <offset>-1</offset>
@@ -639,6 +783,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-ff-1</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[0]/fuel-flow_pph</property>
         <factor>0.00001</factor>
         <offset>-10000</offset>
@@ -658,6 +808,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-ff-2</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[0]/fuel-flow_pph</property>
         <factor>0.0001</factor>
         <offset>-1000</offset>
@@ -677,6 +833,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-ff-3</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[0]/fuel-flow_pph</property>
         <factor>0.001</factor>
         <offset>-100</offset>
@@ -695,6 +857,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>l-ff-4</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[0]/fuel-flow_pph</property>
         <factor>0.01</factor>
         <offset>-10</offset>
@@ -714,6 +882,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>r-ff-1</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[1]/fuel-flow_pph</property>
         <factor>0.00001</factor>
         <offset>-10000</offset>
@@ -733,6 +907,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>r-ff-2</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[1]/fuel-flow_pph</property>
         <factor>0.0001</factor>
         <offset>-1000</offset>
@@ -752,6 +932,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>r-ff-3</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[1]/fuel-flow_pph</property>
         <factor>0.001</factor>
         <offset>-100</offset>
@@ -771,6 +957,12 @@
     <animation>
         <type>textranslate</type>
         <object-name>r-ff-4</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
         <property>engines/engine[1]/fuel-flow_pph</property>
         <factor>0.01</factor>
         <offset>-10</offset>
