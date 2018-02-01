@@ -125,6 +125,7 @@ var F15HUD = {
         obj.window1.setVisible(0);
 
         obj.radarActiveTargetAvailable = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-available",1);
+        obj.radarActiveTargetDisplay = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-display",1);
         obj.radarActiveTargetCallsign = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-callsign",1);
         obj.radarActiveTargetType = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-type",1);
         obj.radarActiveTargetRange = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-range",1);
@@ -300,6 +301,7 @@ obj.dlzY = 70;
                                                                       "sim/model/f15/systems/armament/aim120/count",
                                                                       "sim/model/f15/systems/armament/aim7/count",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-available",
+                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-display",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-callsign",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-type",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-range",
@@ -328,8 +330,13 @@ obj.dlzY = 70;
 
                                                                                  #these labels aren't correct - but we don't have a full simulation of the targetting and missiles so 
                                                                                  #have no real idea on the details of how this works.
-                                                                                 obj.window4.setText(sprintf("RNG %3.1f", val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-range"].getValue()));
-                                                                                 obj.window5.setText(sprintf("CLO %-3d", val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-closure"].getValue()));
+                                                                                 if (val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-display"].getValue()){
+                                                                                     obj.window4.setText(sprintf("RNG %3.1f", val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-range"].getValue()));
+                                                                                     obj.window5.setText(sprintf("CLO %-3d", val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-closure"].getValue()));
+                                                                                 } else{
+                                                                                     obj.window4.setText("");
+                                                                                     obj.window5.setText("");
+                                                                                 }
                                                                                  obj.window6.setText(model);
                                                                                  obj.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
                                                                              }
@@ -448,6 +455,7 @@ return obj;
               me.radarActiveTargetCallsign.setValue("XXX");
 
             me.radarActiveTargetType.setValue(awg_9.active_u.ModelType);
+            me.radarActiveTargetDisplay.setValue(awg_9.active_u.get_display());
             me.radarActiveTargetRange.setValue(awg_9.active_u.get_range());
             me.radarActiveTargetClosure.setValue(awg_9.active_u.get_closure_rate());
         }
@@ -502,11 +510,11 @@ return obj;
                         if(devs[2])
                             tgt.setVisible(getprop("sim/model/f15/lighting/hud-diamond-switch/state"));
                         else
-                            tgt.setVisible(1);
+                            tgt.setVisible(u.get_display());
 
                         if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
                         {
-                            me.target_locked.setVisible(1);
+                            me.target_locked.setVisible(u.get_display());
                             me.target_locked.setTranslation (xc, yc);
                         }
                         else

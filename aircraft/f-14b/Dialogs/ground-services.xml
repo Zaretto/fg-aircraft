@@ -8,6 +8,16 @@
     <width>450</width>
     <valign>top</valign>
 
+    <nasal>
+        <open>
+            <![CDATA[
+                awg_9.find_carrier_by_tacan();
+            ]]>
+        </open>
+        <close>
+        </close>
+    </nasal>
+
     <group>
         <layout>hbox</layout>
         <default-padding>0</default-padding>
@@ -231,15 +241,16 @@
         <text>
             <halign>left</halign>
             <live>true</live>
-            <format>%8d M</format>
+            <format>%d M</format>
             <property>sim/presets/carrier-approach-dist-m</property>
             <label></label>
         </text>
         <button>
-            <legend>Carrier Approach Repos</legend>
+            <legend>Carrier Approach</legend>
             <binding>
                 <command>nasal</command>
                 <script>
+                    awg_9.find_carrier_by_tacan();
                     var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
                     var magvar=getprop("/orientation/local-mag-dev");
                     var dist_m = 11000;
@@ -249,6 +260,7 @@
                     np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
                     var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
                     print("Position to ",dist_m," height ",gs_height);
+                    setprop("/sim/presets/speed-set", "knots");
                     setprop("sim/presets/latitude-deg",np.lat());
                     setprop("sim/presets/longitude-deg",np.lon());
                     setprop("sim/presets/altitude-ft",gs_height);
@@ -281,6 +293,7 @@
             <binding>
                 <command>nasal</command>
                 <script>
+                    awg_9.find_carrier_by_tacan();
                     var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
                     var dist_m = 7;
                     np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
@@ -305,6 +318,7 @@
             <binding>
                 <command>nasal</command>
                 <script>
+                    awg_9.find_carrier_by_tacan();
                     var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
                     np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
                     setprop("/sim/tower/latitude-deg",np.lat());

@@ -67,3 +67,4 @@ var develev_to_devroll = func(dev_rad, elev_rad) {
 }
 
 
+aircraft.develev_to_devroll = develev_to_devroll;
