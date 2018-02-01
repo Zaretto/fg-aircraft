@@ -693,3 +693,17 @@ dynamic_view.register(func {
               me.default_plane(); 
    });
 
+var ElevatorTrim  = props.globals.getNode("controls/flight/elevator-trim", 1);
+var t_increment     = 0.0075;
+var trimUp = func {
+    e_trim       = ElevatorTrim.getValue();
+    e_trim += (CurrentIAS < 120.0) ? t_increment : t_increment * 14400 / (CurrentIAS*CurrentIAS);
+    if (e_trim > 1) e_trim = 1;
+    ElevatorTrim.setValue(e_trim);
+}
+var trimDown = func {
+    e_trim       = ElevatorTrim.getValue();
+    e_trim -= (CurrentIAS < 120.0) ? t_increment : t_increment * 14400 / (CurrentIAS*CurrentIAS);
+    if (e_trim < -1) e_trim = -1;
+    ElevatorTrim.setValue(e_trim);
+}
