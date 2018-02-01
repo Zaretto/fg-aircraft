@@ -333,7 +333,7 @@
 		<name>System Command: Roll Rate</name>
 		<debug>false</debug>
 		<type>gain</type>
-		<gain>-0.09</gain>
+		<gain>-1.8</gain>
 		<enable>
 			<condition>
 				<or>
@@ -359,27 +359,10 @@
 			<property>/autopilot/internal/target-roll</property>
 		</reference>
 		<output>
-			<property>/autopilot/internal/roll-rate-cmd</property>
+			<property>/autopilot/internal/roll-rate</property>
 		</output>   	
-		<min>-0.4</min>
-		<max>0.4</max>
-	</filter>
-	
-	<filter>
-		<name>IT-CONTROLLER: ROLL RATE CMD</name>
-		<type>gain</type>
-		<gain>1.0</gain>
-		<input>
-			<expression>
-				<table>
-					<property>/autopilot/internal/roll-rate-cmd</property> 
-					<entry><ind>-1</ind><dep>-20.0</dep></entry>
-					<entry><ind> 0</ind><dep>  0.0</dep></entry>
-					<entry><ind> 1</ind><dep> 20.0</dep></entry>
-				</table>
-			</expression>
-		</input>
-		<output>/autopilot/internal/roll-rate</output>
+		<min>-8.0</min>
+		<max>8.0</max>
 	</filter>
 	
 	<filter>
@@ -557,8 +540,8 @@
 			<expression>
 				<table>
 					<property>/velocities/mach</property>
-					<entry><ind>0.2</ind><dep>0.014</dep></entry>
-					<entry><ind>1.4</ind><dep>0.005</dep></entry>
+					<entry><ind>0.2</ind><dep>0.0023</dep></entry>
+					<entry><ind>1.4</ind><dep>0.0008</dep></entry>
 				</table>
 			</expression>
 		</input>
@@ -590,7 +573,6 @@
 		</enable>
 		<input>
 			<property>/autopilot/internal/vert-speed-fpm</property>
-			<scale>0.16667</scale>
 		</input>
 		<reference>
 			<condition>
@@ -600,7 +582,6 @@
 				</equals>
 			</condition>
 			<property>/autopilot/settings/vertical-speed-fpm</property>
-			<scale>0.16667</scale>
 		</reference>
 		<reference>
 			<condition>
@@ -610,7 +591,6 @@
 				</equals>
 			</condition>
 			<property>/autopilot/internal/target-fpm-alt</property>
-			<scale>0.16667</scale>
 		</reference>
 		<output>
 			<property>/autopilot/internal/target-pitch-deg</property>
@@ -737,7 +717,7 @@
 		<name>System Command: Pitch Rate</name>
 		<debug>false</debug>
 		<type>gain</type>
-		<gain>0.15</gain>
+		<gain>-0.9</gain>
 		<enable>
 			<condition>
 				<or>
@@ -763,27 +743,10 @@
 			<property>/autopilot/internal/target-pitch</property>
 		</reference>
 		<output>
-			<property>/autopilot/internal/pitch-rate-cmd</property>
+			<property>/autopilot/internal/pitch-rate</property>
 		</output>   	
-		<min>-0.8</min>
-		<max>0.8</max>
-	</filter>
-	
-	<filter>
-		<name>IT-CONTROLLER: PITCH RATE CMD</name>
-		<type>gain</type>
-		<gain>1.0</gain>
-		<input>
-			<expression>
-				<table>
-					<property>/autopilot/internal/pitch-rate-cmd</property> 
-					<entry><ind> 1</ind><dep>-6.0</dep></entry>
-					<entry><ind> 0</ind><dep> 0.0</dep></entry>
-					<entry><ind>-1</ind><dep> 6.0</dep></entry>
-				</table>
-			</expression>
-		</input>
-		<output>/autopilot/internal/pitch-rate</output>
+		<min>-4.8</min>
+		<max>4.8</max>
 	</filter>
 	
 	<filter>
