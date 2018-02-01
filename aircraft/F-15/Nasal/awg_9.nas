@@ -159,10 +159,13 @@ setlistener("/ai/models/model-removed", func(v){
 
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
-    our_ac_name = "f15c";
+    # map variants to the base
+    if(our_ac_name == "f-14a") our_ac_name = "f-14b";
+    if(our_ac_name == "f15d") our_ac_name = "f15c";
+	if (our_ac_name == "f-14b-bs") { we_are_bs = 1; }
+	if (our_ac_name == "f15-bs") we_are_bs = 1;
+
 	my_radarcorr = radardist.my_maxrange( our_ac_name ); # in kilometers
-	if (our_ac_name == "f15-bs")
-      we_are_bs = 1;
 }
 
 # Radar main processing entry point
@@ -237,8 +240,9 @@ var compute_rwr = func(radar_mode, u, u_rng){
 
     u.set_RWR_visible(emitting and u.get_visible());
 }
-
+var sweep_frame_inc = 0.2;
 var az_scan = func() {
+    cnt += sweep_frame_inc;
 
 	# Antena az scan. Angular speed is constant but angle covered varies (120 or 60 deg ATM).
 	var fld_frac = az_fld / 120;                    # the screen (and the max scan angle) covers 120 deg, but we may use less (az_fld).
@@ -400,12 +404,14 @@ var az_scan = func() {
                 if (u_rng != nil and (u_rng > range_radar2))
                   u.set_display(0);
                 else {
-                  if (radar_mode == 2)
+                  if (radar_mode == 2) {
+#msg = msg ~ " in stby";
                     u.set_display(!u.get_rdr_standby());
+                  }
                   if (radar_mode < 2)
                     u.set_display(1);
                   else {
-                      msg = "radar not transmitting";
+#msg = "radar not transmitting";
                       u.set_display(0);
                   }
               }
@@ -431,15 +437,30 @@ var az_scan = func() {
             u.get_deviation(our_true_heading);
         
             if (rcs.inRadarRange(u, range_radar2, myRadarStrength_rcs) == 0) {
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," not visible by rcs");
                 u.set_display(0);
                 u.set_visible(0);
             }
             else{
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," visible by rcs+++++++++++++++++++");
                 u.set_visible(!u.get_behind_terrain());
             }
-
-            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld )
+#
+#
+#
+#
+#
+#0;MP1 within  azimuth 49.52579977807609 field=-60->60
+#1;MP2 within  azimuth 126.4171942282486 field=-60->60
+#1;MP2 within  azimuth -130.0592982116802 field=-60->60  (s->w quadrant)
+#0;MP1 within  azimuth 164.2283073827575 field=-60->60
+            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld ){
                 u.set_display(u.get_visible());
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
+            }
             else {
 #                if(awg9_trace)
 #                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
@@ -669,8 +690,6 @@ var az_scan = func() {
 	swp_deg_last = swp_deg;
 	swp_dir_last = swp_dir;
 
-    cnt += 0.05;
-
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
         active_u = nil; armament.contact = active_u;
@@ -821,13 +840,12 @@ var hud_nearest_tgt = func() {
 		#var u_elev_deg = (90 - active_u.get_total_elevation(our_pitch));
 		var u_dev_rad = (90 - active_u.get_deviation(our_true_heading)) * D2R;
 		var u_elev_rad = (90 - active_u.get_total_elevation(our_pitch)) * D2R;
+#if(awg9_trace)
 #print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
-		if (
-			wcs_mode == "tws-auto"
+		if (wcs_mode == "tws-auto"
 			and active_u.get_display()
 			and active_u.deviation > l_az_fld
-			and active_u.deviation < r_az_fld
-		) {
+			and active_u.deviation < r_az_fld) {
 			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
 			var combined_dev_deg = devs[0];
 			var combined_dev_length =  devs[1];
@@ -1160,7 +1178,7 @@ else
 			if ( rbs != nil ) {
 				var l = split(";", rbs);
 				if ( size(l) > 0 ) {
-					if ( l[0] == "f15-bs" ) {
+					if ( l[0] == "f15-bs" or l[0] == "f-14b-bs" ) {
 						obj.not_acting = 1;
 					}
 				}
@@ -1221,8 +1239,8 @@ else
             obj.TimeLast       = obj.TgtsFiles.getNode("closure-last-time", 1);
             obj.RangeLast      = obj.TgtsFiles.getNode("closure-last-range-nm", 1);
             obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
-            obj.Visible.setIntValue(0);
-            obj.Display.setIntValue(0);
+            obj.Visible.setBoolValue(0);
+            obj.Display.setBoolValue(0);
         }
 		obj.TimeLast.setValue(ElapsedSec.getValue());
         var cur_range = obj.get_range();
@@ -1513,10 +1531,75 @@ else
 
 # HUD field of view = 2 * math.atan2( 0.0764, 0.7186) * globals.R2D; # ~ 12.1375°
 # where 0.071 : virtual screen half width, 0.7186 : distance eye -> screen
+dump_tgt = func (u){
+    print(scan_tgt_idx, " callsign ", u.get_Callsign(), " range ",u.get_range(), " display ", u.get_display(), " visible ",u.get_visible(), 
+          " ddd-relative-bearing=", u.RelBearing,
+          " ddd-echo-fading=", u.Fading,
+          " ddd-draw-range-nm=",u.DddDrawRangeNm,
+          " tid-draw-range-nm=",u.TidDrawRangeNm);
+}
 
 dump_tgt_list = func {
     for (scan_tgt_idx=0;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1) {
         var u = tgts_list[scan_tgt_idx];
-        print(scan_tgt_idx, " callsign ", u.get_Callsign(), " range ",u.get_range(), " display ", u.get_display(), " visible ",u.get_visible());
+        dump_tgt(u);
+    }
+}
+
+setlistener("/instrumentation/tacan/display/channel", func {
+                find_carrier_by_tacan();
+},0,0);
+#
+# Locate carrier based on TACAN. This used to be used for the ARA 63 (Carrier ILS) support - but this has
+# been replaced by the Emesary based notification model. However the ground services dialog uses this
+# for reposition - so replace the continual scanning (as part of the radar) with a one off method that can be
+# called as needed.
+find_carrier_by_tacan = func {
+    var raw_list = awg_9.Mp.getChildren();
+    var carrier_located = 0;
+    
+    foreach ( var c; raw_list ) {
+
+        var tchan = c.getNode("navaids/tacan/channel-ID");
+        if (tchan != nil and !we_are_bs) {
+            tchan = tchan.getValue();
+            if (tchan == getprop("/instrumentation/tacan/display/channel")) {
+# Tuned into this carrier (node) so use the offset.
+# Get the position of the glideslope; this is offset from the carrier position by
+# a smidgen. This is measured and is a point slightly in front of the TDZ where the
+# deck is marked with previous tyre marks (which seems as good a place as any to 
+# aim for).
+                if (c.getNode("position/global-x") != nil) {
+                    var x = c.getNode("position/global-x").getValue() + 88.7713542;
+                    var y = c.getNode("position/global-y").getValue() + 18.74631309;
+                    var z = c.getNode("position/global-z").getValue() + 115.6574875;
+
+                    f14.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
+
+                    var carrier_heading = c.getNode("orientation/true-heading-deg");
+                    if (carrier_heading != nil) {
+                        # relative offset of the course to the tdz
+                        # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
+                        # (i.e. this value is from tuning rather than calculation)
+                        f14.carrier_heading = carrier_heading.getValue();
+                        f14.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
+                    }
+                    else
+                    {
+                        f14.carrier_ara_63_heading = 0;
+                        print("Carrier heading invalid");
+                    }
+                    carrier_located = 1;
+                    f14.tuned_carrier_name = c.getNode("name").getValue();
+                    setprop("sim/model/f-14b/tuned-carrier",f14.tuned_carrier_name);
+                    return;
+                }
+                else
+                {
+                    # tuned tacan is not carrier.
+                    f14.carrier_ara_63_heading = 0;
+                }
+            }
+        }
     }
 }

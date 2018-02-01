@@ -44,7 +44,7 @@ var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable
 var SelectTargetCommand =props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 
 var myRadarStrength_rcs = 3.2;
-var awg9_trace = 0;
+#var awg9_trace = 0;
 SelectTargetCommand.setIntValue(0);
 
 # variables for the partioned scanning.
@@ -240,8 +240,9 @@ var compute_rwr = func(radar_mode, u, u_rng){
 
     u.set_RWR_visible(emitting and u.get_visible());
 }
-
+var sweep_frame_inc = 0.2;
 var az_scan = func() {
+    cnt += sweep_frame_inc;
 
 	# Antena az scan. Angular speed is constant but angle covered varies (120 or 60 deg ATM).
 	var fld_frac = az_fld / 120;                    # the screen (and the max scan angle) covers 120 deg, but we may use less (az_fld).
@@ -361,8 +362,6 @@ var az_scan = func() {
         scan_tgt_end = size(tgts_list);
     }
 
-    if (scan_update_visibility and awg9_trace)
-          print("\nscan_update_visibility: mode",radar_mode);
     for (;scan_tgt_idx < scan_tgt_end; scan_tgt_idx += 1) {
 
         u = tgts_list[scan_tgt_idx];
@@ -383,7 +382,7 @@ var az_scan = func() {
             # called infrequently so the list must not take into account something that may
            # change between invocations of the update.
             u.set_behind_terrain(0);
-var msg = "";
+#var msg = "";
 #pickingMethod = 0;
 #var v1 = isNotBehindTerrain(u.propNode);
 #pickingMethod = 1;
@@ -392,34 +391,34 @@ var msg = "";
                 u.set_display(0);
                 u.set_visible(0);
                 scan_hidden_by_rcs += 1;
-msg = "out of rcs range";
+#msg = "out of rcs range";
             } else if (isNotBehindTerrain(u.propNode) == 0) {
-msg = "behind terrain";
+#msg = "behind terrain";
                 u.set_behind_terrain(1);
                 u.set_display(0);
                 u.set_visible(0);
                 scan_hidden_by_terrain += 1;
             } else {
-msg = "visible";
+#msg = "visible";
                 scan_visible_count = scan_visible_count+1;
                 u.set_visible(1);
                 if (u_rng != nil and (u_rng > range_radar2))
                   u.set_display(0);
                 else {
                   if (radar_mode == 2) {
-                      msg = msg ~ " in stby";
+#msg = msg ~ " in stby";
                       u.set_display(!u.get_rdr_standby());
                   }
                   if (radar_mode < 2)
                     u.set_display(1);
                   else {
-                      msg = "radar not transmitting";
+#msg = "radar not transmitting";
                       u.set_display(0);
                   }
               }
             }
-if(awg9_trace)
-    print("UPDS: ",u.Callsign.getValue(),", ", msg, ", vis= ",u.get_visible(), " dis=",u.get_display(), " rng=",u_rng, " rr=",range_radar2);
+#if(awg9_trace)
+#    print("UPDS: ",u.Callsign.getValue(),", ", msg, "vis= ",u.get_visible(), " dis=",u.get_display(), " rng=",u_rng, " rr=",range_radar2);
         }
 #        else {
 #
@@ -439,18 +438,33 @@ if(awg9_trace)
             u.get_deviation(our_true_heading);
         
             if (rcs.inRadarRange(u, range_radar2, myRadarStrength_rcs) == 0) {
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," not visible by rcs");
                 u.set_display(0);
                 u.set_visible(0);
             }
             else{
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," visible by rcs+++++++++++++++++++");
                 u.set_visible(!u.get_behind_terrain());
             }
-
-            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld )
+#
+#
+#
+#
+#
+#0;MP1 within  azimuth 49.52579977807609 field=-60->60
+#1;MP2 within  azimuth 126.4171942282486 field=-60->60
+#1;MP2 within  azimuth -130.0592982116802 field=-60->60  (s->w quadrant)
+#0;MP1 within  azimuth 164.2283073827575 field=-60->60
+            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld ){
                 u.set_display(u.get_visible());
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
+            }
             else {
-                if(awg9_trace > 2)
-                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
                 u.set_display(0);
             }
         }
@@ -677,8 +691,6 @@ if(awg9_trace)
 	swp_deg_last = swp_deg;
 	swp_dir_last = swp_dir;
 
-    cnt += 0.05;
-
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
         active_u = nil; armament.contact = active_u;
@@ -728,8 +740,8 @@ var isNotBehindTerrain = func(node) {
     # There is no terrain on earth that can be between these altitudes
     # so shortcut the whole thing and return now.
     if(MyCoord.alt() > 8900 and SelectCoord.alt() > 8900){
-if(awg9_trace)
-print("inbt: both above 8900");
+#if(awg9_trace)
+#print("inbt: both above 8900");
         return 1;
     }
     if (pickingMethod == 1) {
@@ -829,8 +841,8 @@ var hud_nearest_tgt = func() {
 		#var u_elev_deg = (90 - active_u.get_total_elevation(our_pitch));
 		var u_dev_rad = (90 - active_u.get_deviation(our_true_heading)) * D2R;
 		var u_elev_rad = (90 - active_u.get_total_elevation(our_pitch)) * D2R;
-if(awg9_trace)
-print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
+#if(awg9_trace)
+#print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
 		if (wcs_mode == "tws-auto"
 			and active_u.get_display()
 			and active_u.deviation > l_az_fld
@@ -1228,8 +1240,8 @@ else
             obj.TimeLast       = obj.TgtsFiles.getNode("closure-last-time", 1);
             obj.RangeLast      = obj.TgtsFiles.getNode("closure-last-range-nm", 1);
             obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
-            obj.Visible.setIntValue(0);
-            obj.Display.setIntValue(0);
+            obj.Visible.setBoolValue(0);
+            obj.Display.setBoolValue(0);
         }
 		obj.TimeLast.setValue(ElapsedSec.getValue());
         var cur_range = obj.get_range();
