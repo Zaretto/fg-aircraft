@@ -82,6 +82,28 @@ ScanTgtUpdateCount.setIntValue(0);
 ScanVisibilityCheckInterval.setIntValue(12); # seconds
 ScanPartitionSize.setIntValue(10); # size of partition to run per frame.
 
+# Azimuth field quadrants.
+# 120 means +/-60, as seen in the diagram below.
+#  _______________________________________
+# |                   |                  |
+# |               _.--+---.              |
+# |           ,-''   0|    `--.          |
+# |         ,'        |        `.        |
+# |        /          |          \       |
+# |    -60/'-.        |         _,\+60   |
+# |      /    `-.     |     ,.-'   \     |
+# |     ; -90    `-._ |_.-''      90     |
+#....................::F..................
+# |     :             |             ;    |
+# |      \       TC   |            /     |
+# |       \           |           /      |
+# |        \          |          /       |
+# |         `.   -180 | +180   ,'        |
+# |           '--.    |    _.-'          |
+# |               `---+--''              |
+# |                   |                  |
+#  `''''''''''''''''''|'''''''''''''''''''
+
 #
 # local variables related to the simulation of the radar.
 var az_fld            = AzField.getValue();
@@ -1500,8 +1522,10 @@ else
             # AI/MP has no radar properties
             var self = geo.aircraft_position();
             me.get_Coord();
-            var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
-            e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+            if (me.coord != nil){
+                var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
+                e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+            }
         }
         return e;
     },
