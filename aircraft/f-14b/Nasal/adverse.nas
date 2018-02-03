@@ -39,6 +39,7 @@ var fixAirframe = func {
 	setprop ("sim/model/f-14b/wings/left-wing-torn", LeftWingTorn);
 	setprop ("sim/model/f-14b/wings/right-wing-torn", RightWingTorn);
     setprop ("fdm/jsbsim/aero/wing-asymmetry", 0);
+    repairMe();
 }
 var breakWing = func {
 		if (!RightWingTorn and !LeftWingTorn) {

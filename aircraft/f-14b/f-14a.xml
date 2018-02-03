@@ -128,7 +128,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <system file="hook"/>
     <system file="catapult"/>
     <system file="holdback"/>
-
+    <system file="f-14b-landing-gear"/>
+    
     <metrics>
         <wingarea       unit="FT2">   565 </wingarea>
         <wingspan       unit="FT" >    64 </wingspan>
@@ -273,6 +274,9 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <max_steer unit="DEG"> 89 </max_steer>
             <brake_group> NOSE </brake_group>
             <retractable>1</retractable>
+            <base-compression-norm>
+              <property>gear/kneel-compression-norm</property>
+            </base-compression-norm>
         </contact>
         <!-- 1 -->
         <contact type="BOGEY" name="LEFT_MLG">
@@ -683,7 +687,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <property>fcs/hook-engage</property>
         <property>fcs/wing-sweep-pilot-dmd</property>
-        <property>systems/hook/tailhook-cmd-norm</property>
         <property>fcs/wing-sweep-auto</property>
         <property>fcs/spoiler-ground-brake-armed</property>
         <property>fcs/flap-cmd-sum</property>
@@ -1314,7 +1317,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     systems/hydraulics/combined-system-pressure ne 1
                 </test>
                 <test value="fcs/flap-cmd-norm">
-                    fcs/flap-cmd-norm ne 0
+                    fcs/flap-cmd-norm ge 0.1428571
                     systems/hydraulics/combined-system-pressure ne 0
                     fcs/wing-sweep-pos-deg le 22
                 </test>
@@ -1325,14 +1328,22 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <output>fcs/aux-flap-total-dmd</output>
             </switch>
 
+            <pure_gain name="Flap Slat gain">
+                <input>fcs/flap-total-dmd</input>
+                <gain>2.33333348888889925925995061733</gain>
+                <clipto>
+                    <min>  0 </min>
+                    <max>  1 </max>
+                </clipto>
+            </pure_gain>
             <switch name="fcs/slat-total-dmd">
                 <default value="0"/>
                 <test value="fcs/slat-total-dmd">
                     systems/hydraulics/combined-system-pressure ne 1
                 </test>
 
-                <test value="1">
-                    fcs/flap-total-dmd ge 0.5
+                <test value="fcs/flap-slat-gain">
+                    fcs/flap-total-dmd gt 0
                     systems/hydraulics/combined-system-pressure ne 0
                     fcs/wing-sweep-pos-deg le 50
                 </test>
@@ -1854,14 +1865,45 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cl due to mean flap position</description>
             <product>
                 <table>
-                    <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                     <tableData>
-                            	-20     	  -5	      0 	  5 	 10 	 25 	 50
-                          0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                         10	-0.01400	-0.13160	0.13440	0.13160	0.12880	0.10920	0.01400
-                         35	-0.09016	-0.25872	0.25480	0.25872	0.29872	0.21560	0.22540
-                         50	-0.24500	-0.60200	0.59500	0.60200	0.58800	0.46200	0.24500
+                            0	20	35
+                            -10	0.00000	0.22283	0.28372
+                            -5	0.00000	0.25918	0.31143
+                            -2	0.00000	0.27830	0.32799
+                            0	0.00000	0.29178	0.34148
+                            1	0.00000	0.29783	0.35145
+                            2	0.00000	0.30296	0.35764
+                            3	0.00000	0.30691	0.35756
+                            4	0.00000	0.30953	0.35071
+                            5	0.00000	0.31287	0.34542
+                            6	0.00000	0.31305	0.33646
+                            7	0.00000	0.30644	0.32584
+                            8	0.00000	0.29084	0.31279
+                            9	0.00000	0.26762	0.29785
+                            10	0.00000	0.24161	0.28066
+                            11	0.00000	0.21800	0.26500
+                            12	0.00000	0.19550	0.24924
+                            13	0.00000	0.17113	0.23190
+                            14	0.00000	0.16196	0.22693
+                            15	0.00000	0.15991	0.22854
+                            16	0.00000	0.15903	0.23139
+                            17	0.00000	0.15966	0.23468
+                            18	0.00000	0.15957	0.23552
+                            19	0.00000	0.16015	0.23463
+                            20	0.00000	0.15870	0.23152
+                            22	0.00000	0.15710	0.22296
+                            24	0.00000	0.15008	0.20985
+                            25	0.00000	0.14157	0.20120
+                            28	0.00000	0.11244	0.17356
+                            30	0.00000	0.09685	0.15899
+                            35	0.00000	0.08773	0.15676
+                            45	0.00000	0.07119	0.15138
+                            50	0.00000	0.07007	0.15963
+                            55	0.00000	0.06970	0.16611
+                            60	0.00000	0.06466	0.16827
+
                     </tableData>
                 </table>
             </product>
@@ -1871,14 +1913,46 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cl due to mean aux flap position</description>
             <product>
                 <table>
-                    <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                                   	 -20     	  -5	      0 	  5 	 10 	 25 	 50
-                            0	 0.00000	 0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                           10	-0.00600	-0.05640	0.05760	0.05640	0.05520	0.04680	0.00600
-                           35	-0.03864	-0.11088	0.10920	0.11088	0.11088	0.09240	0.09660
-                           50	-0.10500	-0.25800	0.25500	0.25800	0.25200	0.19800	0.10500
+                        0	20	35
+                        -10	0.00000	0.09080	0.11561
+                        -5	0.00000	0.10561	0.12690
+                        -2	0.00000	0.11340	0.13365
+                        0	0.00000	0.11889	0.13914
+                        1	0.00000	0.12135	0.14321
+                        2	0.00000	0.12345	0.14573
+                        3	0.00000	0.12506	0.14569
+                        4	0.00000	0.12613	0.14290
+                        5	0.00000	0.12749	0.14075
+                        6	0.00000	0.12756	0.13710
+                        7	0.00000	0.12487	0.13277
+                        8	0.00000	0.11851	0.12745
+                        9	0.00000	0.10905	0.12137
+                        10	0.00000	0.09845	0.11436
+                        11	0.00000	0.08883	0.10798
+                        12	0.00000	0.07966	0.10156
+                        13	0.00000	0.06973	0.09449
+                        14	0.00000	0.06599	0.09247
+                        15	0.00000	0.06516	0.09313
+                        16	0.00000	0.06480	0.09428
+                        17	0.00000	0.06506	0.09563
+                        18	0.00000	0.06502	0.09597
+                        19	0.00000	0.06526	0.09560
+                        20	0.00000	0.06467	0.09434
+                        22	0.00000	0.06401	0.09085
+                        24	0.00000	0.06116	0.08551
+                        25	0.00000	0.05769	0.08198
+                        28	0.00000	0.04582	0.07072
+                        30	0.00000	0.03946	0.06478
+                        35	0.00000	0.03575	0.06388
+                        45	0.00000	0.02901	0.06168
+                        50	0.00000	0.02855	0.06504
+                        55	0.00000	0.02840	0.06768
+                        60	0.00000	0.02635	0.06857
+
+
                     </tableData>
                 </table>
             </product>
@@ -2210,13 +2284,44 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>Delta Cd due to mean flap position</description>
             <product>
                 <table>
-                    <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                     <tableData>
-                            	-20 	 -5 	  0 	  5 	 10 	 25	 50
-                       0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                      10	0.01400	0.02268	0.01932	0.02268	0.02548	0.02856	0.09590
-                      35	0.09016	0.06894	0.06222	0.06894	0.09862	0.14286	0.55734
+                            0	     20	     50
+                        -10	0	0.00975	0.02444
+                        -5	0	0.00859	0.04723
+                        -2	0	0.01978	0.06830
+                        0	0	0.02890	0.08375
+                        1	0	0.03402	0.09082
+                        2	0	0.03927	0.09630
+                        3	0	0.04456	0.10054
+                        4	0	0.04980	0.10362
+                        5	0	0.05517	0.10669
+                        6	0	0.06010	0.10887
+                        7	0	0.06389	0.11023
+                        8	0	0.06604	0.11134
+                        9	0	0.06646	0.11161
+                        10	0	0.06576	0.11047
+                        11	0	0.06474	0.10940
+                        12	0	0.06407	0.10864
+                        13	0	0.06305	0.10629
+                        14	0	0.06166	0.10455
+                        15	0	0.06147	0.10403
+                        16	0	0.06135	0.10338
+                        17	0	0.06081	0.10283
+                        18	0	0.06101	0.10265
+                        19	0	0.06176	0.10334
+                        20	0	0.06154	0.10264
+                        22	0	0.06295	0.10257
+                        24	0	0.07362	0.11545
+                        25	0	0.07372	0.11588
+                        28	0	0.07829	0.11997
+                        30	0	0.08283	0.12416
+                        35	0	0.09637	0.13774
+                        45	0	0.10681	0.14473
+                        50	0	0.12454	0.16222
+                        55	0	0.16139	0.19573
+                        60	0	0.18901	0.21559
                     </tableData>
                 </table>
             </product>
@@ -2737,22 +2842,22 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
                     <tableData>
-                               -20       -15           -10          -5             0        5           10          15          20
-                        -15	 0.14956560	0.10330000	0.07025313	0.05042500	0.04381563	0.05042500	0.07025313	0.10330000	0.14956560
-                        -10	 0.04367188	0.02247500	0.00733438	0.00175000	0.00477813	0.00175000	0.00733438	0.02247500	0.04367188
-                        -5	 0.00000000	0.00000000	0.00000000	0.00000000	0.00000000	0.00000000	0.00000000	0.00000000	0.00000000
-                        0	 0.06052187	0.06540000	0.06888437	0.07097500	0.07167180	0.07097500	0.06888437	0.06540000	0.06052187
-                        5	 0.02583125	0.03173750	0.03595625	0.03848750	0.03933125	0.03848750	0.03595625	0.03173750	0.02583125
-                        10	-0.04367188	-0.02247500	-0.00733438	0.00175000	0.00477813	0.00175000	-0.00733438	-0.02247500	-0.04367188
-                        15	-0.14956560	-0.10330000	-0.07025313	-0.05042500	-0.04381563	-0.05042500	-0.07025313	-0.10330000	-0.14956560
-                        20	-0.17724690	-0.12441880	-0.08668438	-0.06404375	-0.05649687	-0.06404375	-0.08668438	-0.12441880	-0.17724690
-                        25	-0.22480940	-0.18799370	-0.16169690	-0.14591870	-0.14065940	-0.14591870	-0.16169690	-0.18799370	-0.22480940
-                        30	-0.23872500	-0.23216250	-0.22747500	-0.22466250	-0.22372500	-0.22466250	-0.22747500	-0.23216250	-0.23872500
-                        35	-0.30000000	-0.30000000	-0.30000000	-0.30000000	-0.30000000	-0.30000000	-0.30000000	-0.30000000	-0.30000000
-                        40	-0.34905310	-0.37213130	-0.38861560	-0.39850630	-0.40180310	-0.39850630	-0.38861560	-0.37213130	-0.34905310
-                        45	-0.42481870	-0.44612500	-0.46134380	-0.47047500	-0.47351880	-0.47047500	-0.46134380	-0.44612500	-0.42481870
-                        50	-0.48083130	-0.51692500	-0.54270630	-0.55817500	-0.56333130	-0.55817500	-0.54270630	-0.51692500	-0.48083130
-                        55	-0.54004060	-0.58320000	-0.61402810	-0.63252500	-0.63869060	-0.63252500	-0.61402810	-0.58320000	-0.54004060
+                                  -20         -15         -10          -5           0           5          10          15         20
+                        -15  0.270609    0.234100    0.208022    0.192375    0.187159    0.192375    0.208022    0.234100    0.270609
+                        -10  0.164716    0.153275    0.145103    0.140200    0.138565    0.140200    0.145103    0.153275    0.164716
+                         -5  0.095212    0.099063    0.101812    0.103463    0.104012    0.103463    0.101812    0.099063    0.095212
+                          0  0.060522    0.065400    0.068884    0.070975    0.071672    0.070975    0.068884    0.065400    0.060522
+                          5  0.025831    0.031738    0.035956    0.038488    0.039331    0.038488    0.035956    0.031738    0.025831
+                         10 -0.043672   -0.022475   -0.007334    0.001750    0.004778    0.001750   -0.007334   -0.022475   -0.043672
+                         15 -0.149566   -0.103300   -0.070253   -0.050425   -0.043816   -0.050425   -0.070253   -0.103300   -0.149566
+                         20 -0.177247   -0.124419   -0.086684   -0.064044   -0.056497   -0.064044   -0.086684   -0.124419   -0.177247
+                         25 -0.224809   -0.187994   -0.161697   -0.145919   -0.140659   -0.145919   -0.161697   -0.187994   -0.224809
+                         30 -0.238725   -0.232163   -0.227475   -0.224663   -0.223725   -0.224663   -0.227475   -0.232163   -0.238725
+                         35 -0.300000   -0.300000   -0.300000   -0.300000   -0.300000   -0.300000   -0.300000   -0.300000   -0.300000
+                         40 -0.349053   -0.372131   -0.388616   -0.398506   -0.401803   -0.398506   -0.388616   -0.372131   -0.349053
+                         45 -0.424819   -0.446125   -0.461344   -0.470475   -0.473519   -0.470475   -0.461344   -0.446125   -0.424819
+                         50 -0.480831   -0.516925   -0.542706   -0.558175   -0.563331   -0.558175   -0.542706   -0.516925   -0.480831
+                         55 -0.540041   -0.583200   -0.614028   -0.632525   -0.638691   -0.632525   -0.614028   -0.583200   -0.540041
                     </tableData>
                 </table>
             </product>
@@ -2989,14 +3094,43 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>CM increment due to flap mean position</description>
             <product>
                 <table>
-                    <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                     <tableData>
-                    	          0		  5	 	 10		 15		 20	 	 60
-                         0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                         5	0.01320	0.00396	0.00589	0.00762	0.00798	0.00342
-                        15	0.01520	0.00456	0.00649	0.01045	0.00798	0.00342
-                        35	0.01696	0.01523	0.01355	0.01092	0.01148	0.01148
+                        0	20	35
+                        -5	0.00000	0.00330	0.01404
+                        -2	0.00000	0.01034	0.01915
+                        0	0.00000	0.01478	0.02760
+                        1	0.00000	0.01727	0.03023
+                        2	0.00000	0.01830	0.03110
+                        3	0.00000	0.01911	0.03082
+                        4	0.00000	0.01963	0.02995
+                        5	0.00000	0.01998	0.02894
+                        6	0.00000	0.02045	0.02695
+                        7	0.00000	0.02086	0.02510
+                        8	0.00000	0.02020	0.02321
+                        9	0.00000	0.01834	0.02125
+                        10	0.00000	0.01602	0.01903
+                        11	0.00000	0.01334	0.01672
+                        12	0.00000	0.01106	0.01467
+                        13	0.00000	0.00925	0.01333
+                        14	0.00000	0.00934	0.01447
+                        15	0.00000	0.00850	0.01382
+                        16	0.00000	0.00824	0.01373
+                        17	0.00000	0.00791	0.01379
+                        18	0.00000	0.00814	0.01408
+                        19	0.00000	0.00821	0.01430
+                        20	0.00000	0.00828	0.01424
+                        22	0.00000	0.00849	0.01492
+                        24	0.00000	0.00795	0.01410
+                        25	0.00000	0.00837	0.01469
+                        28	0.00000	0.00842	0.01501
+                        30	0.00000	0.00880	0.01535
+                        35	0.00000	0.00827	0.01475
+                        45	0.00000	0.00647	0.01256
+                        50	0.00000	0.00598	0.01148
+                        55	0.00000	0.00570	0.01100
+                        60	0.00000	0.00621	0.00970
                     </tableData>
                 </table>
             </product>
@@ -3005,14 +3139,43 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>CM increment due to flap mean position</description>
             <product>
                 <table>
-                    <independentVar lookup="row">fcs/aux-flap-pos-deg</independentVar>
-                    <independentVar lookup="column">aero/alpha-deg</independentVar>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                    	          0		  5	 	 10		 15		 20	 	 60
-                         0	0.00000	0.00000	0.00000	0.00000	0.00000	0.00000
-                         5	0.00594	0.00178	0.00265	0.00343	0.00359	0.00154
-                        15	0.00684	0.00205	0.00292	0.00470	0.00359	0.00154
-                        35	0.00763	0.00685	0.00610	0.00491	0.00517	0.00517
+                        0	20	35
+                        -5	0.00000	0.00213	0.00906
+                        -2	0.00000	0.00667	0.01236
+                        0	0.00000	0.00953	0.01780
+                        1	0.00000	0.01113	0.01949
+                        2	0.00000	0.01180	0.02006
+                        3	0.00000	0.01232	0.01988
+                        4	0.00000	0.01265	0.01932
+                        5	0.00000	0.01289	0.01867
+                        6	0.00000	0.01320	0.01739
+                        7	0.00000	0.01345	0.01619
+                        8	0.00000	0.01303	0.01496
+                        9	0.00000	0.01183	0.01371
+                        10	0.00000	0.01033	0.01227
+                        11	0.00000	0.00860	0.01078
+                        12	0.00000	0.00713	0.00947
+                        13	0.00000	0.00596	0.00859
+                        14	0.00000	0.00602	0.00934
+                        15	0.00000	0.00548	0.00891
+                        16	0.00000	0.00531	0.00885
+                        17	0.00000	0.00510	0.00890
+                        18	0.00000	0.00525	0.00908
+                        19	0.00000	0.00530	0.00922
+                        20	0.00000	0.00534	0.00918
+                        22	0.00000	0.00548	0.00962
+                        24	0.00000	0.00513	0.00909
+                        25	0.00000	0.00539	0.00948
+                        28	0.00000	0.00543	0.00968
+                        30	0.00000	0.00568	0.00991
+                        35	0.00000	0.00533	0.00952
+                        45	0.00000	0.00418	0.00810
+                        50	0.00000	0.00386	0.00740
+                        55	0.00000	0.00368	0.00710
+                        60	0.00000	0.00401	0.00626
                     </tableData>
                 </table>
             </product>
@@ -3307,6 +3470,22 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </aerodynamics>
 
     <external_reactions>
+        <!-- wake turbulence from other AI plane -->
+        <force name="ai-wake" frame="BODY">
+            <location unit="M">
+                <!-- Center of the main wing leading edge -->
+                <x> 7.1</x>
+                <y> 0.0 </y>
+                <z> 0.523 </z>
+            </location>
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </force>
+        <moment name="ai-wake" frame="BODY"/>
+        
         <force name="catapult" frame="BODY">
             <location unit="IN">
                 <x> 667 </x>
@@ -3373,31 +3552,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
     </external_reactions>
 
-    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
-        <simulation> ON </simulation>
-        <atmosphere> ON </atmosphere>
-        <massprops> ON </massprops>
-        <aerosurfaces> ON </aerosurfaces>
-        <rates> ON </rates>
-        <velocities> ON </velocities>
-        <forces> ON </forces>
-        <position> ON </position>
-        <coefficients> ON </coefficients>
-        <ground_reactions> ON </ground_reactions>
-        <fcs> ON </fcs>
-        <propulsion> ON </propulsion>
+    <!--<output name="c:/temp/JSBOut.csv" type="CSV" rate="10">
+        <property>external_reactions/hook/magnitude</property>
+        <property>velocities/vc-kts</property>
+        <property>inertia/onspeed-kts</property>
+        <property>funcs/hook-operational-efficiency</property>
         <property>fcs/speedbrake-pos-norm</property>
-        <property>fcs/slat-pos-norm-deg</property>
-        <property>fcs/slat-cmd-norm</property>
-        <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
-        <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
-        <property>velocities/mach</property>
-        <property>systems/hook/tailhook-cmd-norm</property>
-        <property>systems/hook/hook-decel-force</property>
-        <property>forces/fbx-prop-lbs</property>
-        <property>gear/tailhook-pos-norm</property>
-        <property>fcs/wing-sweep-cadc-dmd</property>
-        <property>fcs/wing-sweep-dmd</property>
-        <property>fcs/wing-sweep-cmd</property>
+        <property>funcs/hook-functional</property>
+        <property>position/aircraft-on-ground</property>
+        <property>systems/hook/force</property>
+        <property>hook/arrestor-wire-available</property>
     </output>-->
 </fdm_config>

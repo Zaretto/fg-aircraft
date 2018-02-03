@@ -3,11 +3,12 @@
 
 <system name="holdback">
 
-    <property value="0">systems/holdback/holdback-cmd</property>
+  <property value="0">systems/holdback/holdback-cmd</property>
 
-    <channel name="Holdback_Launchbar">
+  <!--- provides the nose strut kneeling either 14 inches down (kneel) or up (extd) -->
+  <channel name="Holdback_Launchbar">
 
-        <summer name="systems/holdback/total_thrust">
+    <summer name="systems/holdback/total_thrust">
             <input>propulsion/engine/thrust-lbs</input>
             <input>propulsion/engine[1]/thrust-lbs</input>
         </summer>

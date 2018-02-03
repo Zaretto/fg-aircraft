@@ -68,6 +68,14 @@
             date="08 September 2010"
             URL="http://www.f-15e.info/joomla/technology/fuel-system/95-fuel-dumping-system"
         />
+        <reference
+                refID="NASA TM-104278"
+                author="Compiled by Sheryll Goecke Powers"
+                title="An Electronic workshop on the Performance Seeking Control and Propulsion Controlled Aircraft Results of the F-15 Highly Integrated Digital Electronic Control Flight Research Program. Proceedings of the Electronic workshop"
+                date="1995"
+                URL="https://ntrs.nasa.gov/search.jsp?R=19950026588"
+        />
+
     </fileheader>
     <metrics>
         <wingarea unit="FT2">608</wingarea>
@@ -190,6 +198,26 @@
             </location>
             <weight unit="LBS">0</weight>
         </pointmass>
+        <pointmass name="CFT11">
+            <location unit="M" name="CFT left">
+                <location unit="IN">
+                    <x>420</x>
+                    <y>-33</y>
+                    <z>0</z>
+                </location>
+            </location>
+            <weight unit="LBS">0</weight>
+        </pointmass>
+        <pointmass name="CFT12">
+            <location unit="M" name="CFT right">
+                <location unit="IN">
+                    <x>420</x>
+                    <y>33</y>
+                    <z>0</z>
+                </location>
+            </location>
+            <weight unit="LBS">0</weight>
+        </pointmass>
     </mass_balance>
 
     <!--  Tire on concrete 1.00, ref: http://ffden-2.phys.uaf.edu/211_fall2002.web.dir/ben_townsend/staticandkineticfriction.htm
@@ -241,6 +269,49 @@
             <brake_group>RIGHT</brake_group>
             <retractable>1</retractable>
         </contact>
+
+        <!--These three contact points that are used to substitute for damaged gear. The z-position will be adjusted lower when the gear is damaged, and the damaged gear will be move upwards. This is really to make it
+            look about right and also to help with the dynamics --> 
+        <contact type="STRUCTURE" name="NOSE_LG_DOORS">
+            <location unit="IN">
+                <x>197</x>
+                <y>0</y>
+                <z>-30.6496063</z>
+            </location>
+                       <static_friction>1.2</static_friction>
+            <dynamic_friction>1.212</dynamic_friction>
+            <rolling_friction>1.413</rolling_friction>
+            <spring_coeff unit="LBS/FT">25200</spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC">5600</damping_coeff>
+
+        </contact>
+        <contact type="STRUCTURE" name="LEFT_MLG_DOORS">
+            <location unit="IN">
+                <x>451</x>
+                <y>-98</y>
+                <z>-30</z>
+            </location>
+                       <static_friction>1.2</static_friction>
+            <dynamic_friction>1.212</dynamic_friction>
+            <rolling_friction>1.413</rolling_friction>
+            <spring_coeff unit="LBS/FT">25200</spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC">5600</damping_coeff>
+
+        </contact>
+        <contact type="STRUCTURE" name="RIGHT_MLG_DOORS">
+            <location unit="IN">
+                <x>451</x>
+                <y>98</y>
+                <z>-30</z>
+            </location>
+           <static_friction>1.2</static_friction>
+            <dynamic_friction>1.212</dynamic_friction>
+            <rolling_friction>1.413</rolling_friction>
+            <spring_coeff unit="LBS/FT">25200</spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC">5600</damping_coeff>
+
+        </contact>
+        
         <contact type="STRUCTURE" name="LEFT_WING_TIP">
             <location unit="IN">
                 <x>472</x>
@@ -352,7 +423,7 @@
     </ground_reactions>
 
     <propulsion>
-        <engine file="F100-PW-229">
+        <engine file="F100-PW-100">
             <location unit="IN">
                 <x>682</x>
                 <y>-12</y>
@@ -366,6 +437,7 @@
             <feed>1</feed>
             <feed>2</feed>
             <feed>4</feed>
+            <feed>10</feed>
             <feed>6</feed>
             <feed>7</feed>
             <feed>9</feed>
@@ -382,7 +454,7 @@
                 </orient>
             </thruster>
         </engine>
-        <engine file="F100-PW-229">
+        <engine file="F100-PW-100">
             <location unit="IN">
                 <x>682</x>
                 <y>12</y>
@@ -395,6 +467,7 @@
             </orient>
             <feed>0</feed>
             <feed>2</feed>
+            <feed>11</feed>
             <feed>3</feed>
             <feed>5</feed>
             <feed>7</feed>
@@ -412,7 +485,8 @@
                 </orient>
             </thruster>
         </engine>
-        <tank type="FUEL">
+        <!-- numerically lower priority are used first.-->
+        <tank type="FUEL" name="0 Left Engine Feed">
             <!--0: Left Engine Feed-->
             <location unit="IN">
                 <x>453.87</x>
@@ -421,9 +495,9 @@
             </location>
             <capacity unit="LBS">1200</capacity>
             <contents unit="LBS">1200</contents>
-            <priority>10</priority>
+            <priority>12</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="1 Right Engine Feed">
             <!--1: Right Engine Feed-->
             <location unit="IN">
                 <x>396.79</x>
@@ -432,9 +506,9 @@
             </location>
             <capacity unit="LBS">1500</capacity>
             <contents unit="LBS">1500</contents>
-            <priority>9</priority>
+            <priority>11</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="2 Tank 1">
             <!--2: Tank 1-->
             <location unit="IN">
                 <x>307.42</x>
@@ -444,9 +518,9 @@
             <capacity unit="LBS">3300</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">3300</contents>
-            <priority>8</priority>
+            <priority>10</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="3 Left Wing Tank">
             <!--3: Left Wing Tank-->
             <location unit="IN">
                 <x>457.02</x>
@@ -458,7 +532,7 @@
             <contents unit="LBS">2750</contents>
             <priority>7</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="4 Right Wing Tank">
             <!--4: Right Wing Tank-->
             <location unit="IN">
                 <x>457.02</x>
@@ -468,9 +542,9 @@
             <capacity unit="LBS">2750</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">2750</contents>
-            <priority>6</priority>
+            <priority>7</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="5 Left External Wing Tank">
             <!--5: Left External Wing Tank-->
             <location unit="IN">
                 <x>420</x>
@@ -480,9 +554,9 @@
             <capacity unit="LBS">3950</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">3950</contents>
-            <priority>5</priority>
+            <priority>4</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="6 Right External Wing Tank">
             <!--6: Right External Wing Tank-->
             <location unit="IN">
                 <x>420</x>
@@ -494,7 +568,7 @@
             <contents unit="LBS">3950</contents>
             <priority>4</priority>
         </tank>
-        <tank type="FUEL">
+        <tank type="FUEL" name="7 External Tank">
             <!--7: External Tank-->
             <location unit="IN">
                 <x>386</x>
@@ -506,8 +580,33 @@
             <contents unit="LBS">3950</contents>
             <priority>3</priority>
         </tank>
-        <tank type="FUEL">
-            <!--8: Left Feed line-->
+        <tank type="FUEL" name="8 left conformal Tank">
+            <!--8: left conformal Tank-->
+            <location unit="IN">
+                <x>420</x>
+                <y>-33</y>
+                <z>0</z>
+            </location>
+            <capacity unit="LBS">4720</capacity>
+            <standpipe unit="LBS">100</standpipe>
+            <contents unit="LBS">4720</contents>
+            <priority>6</priority>
+        </tank>
+        <tank type="FUEL" name="9 Right conformal Tank">
+            <!--9: Right conformal Tank-->
+            <location unit="IN">
+                <x>420</x>
+                <y>33</y>
+                <z>0</z>
+            </location>
+            <capacity unit="LBS">4720</capacity>
+            <standpipe unit="LBS">100</standpipe>
+            <contents unit="LBS">4720</contents>
+            <priority>6</priority>
+        </tank>
+
+        <tank type="FUEL" name="10 Left Feed line">
+            <!--10: Left Feed line-->
             <location unit="IN">
                 <x>489</x>
                 <y>-38</y>
@@ -515,10 +614,10 @@
             </location>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
-            <priority>2</priority>
+            <priority>1</priority>
         </tank>
-        <tank type="FUEL">
-            <!--9: Right Feed line-->
+        <tank type="FUEL" name="11 Right Feed line">
+            <!--11: Right Feed line-->
             <location unit="IN">
                 <x>489</x>
                 <y>38</y>
@@ -528,10 +627,33 @@
             <contents unit="LBS">10</contents>
             <priority>1</priority>
         </tank>
+       
         <dump-rate unit="LBS/MIN">910</dump-rate>
     </propulsion>
 
     <external_reactions>
+        <!-- wake turbulence from other AI plane -->
+        <force name="ai-wake" frame="BODY">
+            <location unit="M">
+                <!-- Center of the main wing leading edge -->
+                <x> 9.40857</x>
+                <y> 0.0 </y>
+                <z> 0.63046 </z>
+            </location>
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </force>
+        <moment name="ai-wake" frame="BODY">
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </moment>
+       
         <force name="catapult" frame="BODY">
             <location unit="IN">
                 <x>667</x>
@@ -610,12 +732,475 @@
     <system file="f-15-electrics"/>
     <system file="catapult"/>
     <system file="f-15-cadc"/>
-    <system file="f-15-apc"/>
     <system file="f-15-ecs"/>
     <system file="f-15-engines"/>
     <system file="hook"/>
     <system file="flight-controls"/>
     <aerodynamics>
+
+        <function name="aero/coefficients/CFXAIML">
+            <description>DRAG INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00071389	 0.00041917	 0.00036861	 0.00027389	 0.00029806	 0.00029833	 0.00029306
+                        -5	 0.00033389	 0.00028778	 0.00028694	 0.00028083	 0.00027833	 0.00030694	 0.00031750
+                        0	 0.00027111	 0.00029250	 0.00029278	 0.00029306	 0.00029278	 0.00029194	 0.00026833
+                        5	 0.00026528	 0.00026694	 0.00027972	 0.00025972	 0.00028972	 0.00028944	 0.00028417
+                        10	 0.00029167	 0.00029083	 0.00029750	 0.00031528	 0.00029778	 0.00029778	 0.00029000
+                        15	 0.00031611	 0.00030278	 0.00030250	 0.00029722	 0.00030000	 0.00029694	 0.00028722
+                        20	 0.00031083	 0.00032111	 0.00031444	 0.00033083	 0.00030222	 0.00029083	 0.00027750
+                        25	 0.00031722	 0.00030194	 0.00033111	 0.00034972	 0.00033417	 0.00032306	 0.00026222
+                        30	 0.00031889	 0.00030639	 0.00031000	 0.00034583	 0.00029833	 0.00030306	 0.00029167
+                        40	 0.00029083	 0.00028500	 0.00028250	 0.00038639	 0.00027417	 0.00026750	 0.00025861
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFXAIMR">
+            <description>DRAG INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00071722	 0.00042444	 0.00037306	 0.00027389	 0.00029361	 0.00029306	 0.00029000
+                        -5	 0.00031750	 0.00030694	 0.00027833	 0.00028083	 0.00028694	 0.00028778	 0.00033389
+                        0	 0.00026833	 0.00029194	 0.00029278	 0.00029306	 0.00029278	 0.00029250	 0.00027111
+                        5	 0.00028417	 0.00028944	 0.00028972	 0.00025972	 0.00027972	 0.00026694	 0.00026556
+                        10	 0.00029028	 0.00029778	 0.00029778	 0.00031528	 0.00029750	 0.00029083	 0.00029139
+                        15	 0.00028722	 0.00029694	 0.00030000	 0.00029722	 0.00030250	 0.00030278	 0.00031611
+                        20	 0.00027750	 0.00029083	 0.00030250	 0.00033083	 0.00031444	 0.00032111	 0.00031083
+                        25	 0.00026222	 0.00032306	 0.00033417	 0.00034972	 0.00033111	 0.00030194	 0.00031694
+                        30	 0.00029194	 0.00030333	 0.00029833	 0.00034583	 0.00031000	 0.00030611	 0.00031889
+                        40	 0.00025861	 0.00026750	 0.00027417	 0.00038639	 0.00028250	 0.00028500	 0.00029083
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFYAIML">
+            <description>SIDE FORCE INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00143972	 0.00065556	 0.00032139	 0.00000000	 0.00000000	 0.00000000	 0.00000028
+                        -5	 0.00020361	 0.00000000	 0.00000000	 0.00000000	 0.00004056	 0.00000000	 0.00000000
+                        0	 0.00000000	 0.00000722	 0.00000250	 0.00000000	 0.00000083	 0.00000444	 0.00006694
+                        5	 0.00000000	 0.00000500	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00006944	 0.00000000	 0.00000000	 0.00000472	 0.00000000	 0.00001417
+                        15	 0.00002778	 0.00005028	 0.00000861	 0.00004667	 0.00003667	 0.00001417	 0.00003306
+                        20	 0.00009556	 0.00000000	 0.00003694	 0.00000528	 0.00003750	 0.00003500	 0.00002278
+                        25	 0.00012639	 0.00000000	 0.00001778	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        30	 0.00009222	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFYAIMR">
+            <description>SIDE FORCE INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00143778	 0.00065694	 0.00031889	 0.00000500	 0.00000000	 0.00000056	 0.00000000
+                        -5	 0.00014500	 0.00005222	 0.00000000	 0.00000000	 0.00001167	 0.00001667	 0.00000000
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000083	 0.00000000	 0.00000000	 0.00009944
+                        5	 0.00003194	 0.00001833	 0.00001167	 0.00000667	 0.00003778	 0.00000000	 0.00011111
+                        10	 0.00000000	 0.00001417	 0.00000000	 0.00001278	 0.00000944	 0.00000000	 0.00004444
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002472	 0.00000000
+                        25	 0.00005472	 0.00014500	 0.00008556	 0.00004083	 0.00000000	 0.00024639	 0.00000000
+                        30	 0.00026972	 0.00014361	 0.00007972	 0.00006250	 0.00005000	 0.00012472	 0.00000000
+                        40	 0.00018833	 0.00006806	 0.00004472	 0.00006250	 0.00003944	 0.00003556	 0.00003000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFZAIML">
+            <description>LIFT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00091417	 0.00105806	 0.00071278	 0.00105972	 0.00000139	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00006417	 0.00009111	 0.00031889	 0.00020611	 0.00000000	 0.00000000
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000139	 0.00000278	 0.00000000
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00003167	 0.00004694	 0.00056000	 0.00000000	 0.00000000	 0.00000000
+                        15	 0.00000417	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        20	 0.00000000	 0.00000000	 0.00003167	 0.00009056	 0.00000000	 0.00000000	 0.00000000
+                        25	 0.00000000	 0.00000611	 0.00006556	 0.00014083	 0.00025750	 0.00016750	 0.00000000
+                        30	 0.00000000	 0.00000000	 0.00000000	 0.00005833	 0.00000000	 0.00007472	 0.00008500
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00001472	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFZAIMR">
+            <description>LIFT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00086528	 0.00101500	 0.00068750	 0.00105944	 0.00002611	 0.00001694	 0.00001472
+                        -5	 0.00000000	 0.00000000	 0.00020611	 0.00031889	 0.00009083	 0.00006417	 0.00000000
+                        0	 0.00000000	 0.00000278	 0.00000139	 0.00000000	 0.00000000	 0.00000028	 0.00000000
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00000000	 0.00000000	 0.00056000	 0.00004667	 0.00003167	 0.00000000
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000389
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00009139	 0.00003194	 0.00000000	 0.00000000
+                        25	 0.00000000	 0.00016806	 0.00025778	 0.00014111	 0.00006583	 0.00000639	 0.00000000
+                        30	 0.00008500	 0.00007500	 0.00000000	 0.00005833	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00001472	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMLAIML">
+            <description>ROLLING MOMENT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00001306
+                        0	 0.00001583	 0.00000028	 0.00000083	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        5	 0.00002167	 0.00002500	 0.00000528	 0.00000806	 0.00001611	 0.00002667	 0.00006250
+                        10	 0.00000000	 0.00000167	 0.00000333	 0.00001722	 0.00003278	 0.00005056	 0.00008056
+                        15	 0.00000000	 0.00000472	 0.00001111	 0.00002972	 0.00004389	 0.00005528	 0.00006472
+                        20	 0.00000000	 0.00001222	 0.00000444	 0.00001083	 0.00003639	 0.00005028	 0.00004917
+                        25	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002500
+                        30	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMLAIMR">
+            <description>ROLLING MOMENT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00000000	 0.00001417	 0.00002972	 0.00002389	 0.00002917	 0.00003167	 0.00003639
+                        -5	 0.00000000	 0.00000361	 0.00000750	 0.00000778	 0.00000944	 0.00001000	 0.00002250
+                        0	 0.00000389	 0.00000111	 0.00000083	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000139
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002139
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000667
+                        25	 0.00000000	 0.00004222	 0.00005028	 0.00002778	 0.00002056	 0.00003528	 0.00002194
+                        30	 0.00004278	 0.00003917	 0.00003472	 0.00003611	 0.00003694	 0.00005139	 0.00004750
+                        40	 0.00005556	 0.00006056	 0.00006389	 0.00006778	 0.00006944	 0.00007528	 0.00008194
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMMAIML">
+            <description>PITCHING MOMENT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00072722	 0.00025028	 0.00058528	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00014000	 0.00000000
+                        0	 0.00002444	 0.00000000	 0.00000000	 0.00000722	 0.00001333	 0.00002222	 0.00005722
+                        5	 0.00017778	 0.00025333	 0.00022333	 0.00052500	 0.00015611	 0.00016028	 0.00017194
+                        10	 0.00018806	 0.00016750	 0.00016306	 0.00013250	 0.00021694	 0.00025250	 0.00029167
+                        15	 0.00018583	 0.00016972	 0.00018417	 0.00026222	 0.00025333	 0.00030278	 0.00035639
+                        20	 0.00025500	 0.00020417	 0.00021694	 0.00018917	 0.00029667	 0.00035333	 0.00042417
+                        25	 0.00027750	 0.00032639	 0.00035667	 0.00021389	 0.00037389	 0.00036333	 0.00046250
+                        30	 0.00034472	 0.00038806	 0.00043194	 0.00026861	 0.00046722	 0.00045528	 0.00044278
+                        40	 0.00048778	 0.00054278	 0.00056806	 0.00027694	 0.00058472	 0.00058083	 0.00056833
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMMAIMR">
+            <description>PITCHING MOMENT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00080917	 0.00032083	 0.00063250	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        -5	 0.00000000	 0.00014028	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        0	 0.00005750	 0.00002250	 0.00001361	 0.00000722	 0.00000000	 0.00000000	 0.00002389
+                        5	 0.00017250	 0.00016056	 0.00015611	 0.00052500	 0.00022306	 0.00025278	 0.00017750
+                        10	 0.00029222	 0.00025306	 0.00021750	 0.00013278	 0.00016306	 0.00016750	 0.00018778
+                        15	 0.00035667	 0.00030333	 0.00025333	 0.00026250	 0.00018444	 0.00017000	 0.00018556
+                        20	 0.00042472	 0.00035361	 0.00029722	 0.00018917	 0.00021722	 0.00020472	 0.00025500
+                        25	 0.00046333	 0.00036389	 0.00037472	 0.00021417	 0.00035667	 0.00032667	 0.00027806
+                        30	 0.00044389	 0.00045611	 0.00046750	 0.00026917	 0.00043222	 0.00038806	 0.00034472
+                        40	 0.00056917	 0.00058139	 0.00058556	 0.00027750	 0.00056833	 0.00054306	 0.00048806
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMNAIML">
+            <description>YAWING MOMENT INCREMENT DUE TO AIML</description>
+            <product>
+                <property>metrics/stores-aiml-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00077972	 0.00034667	 0.00012111	 0.00000000	 0.00000000	 0.00000833	 0.00006528
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00003583	 0.00002194	 0.00001278
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000056	 0.00002972	 0.00005917	 0.00016444
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00002139	 0.00005472	 0.00008306	 0.00014611
+                        10	 0.00000000	 0.00000000	 0.00001472	 0.00004306	 0.00006944	 0.00009889	 0.00016306
+                        15	 0.00000000	 0.00002167	 0.00004250	 0.00006500	 0.00009500	 0.00011694	 0.00017333
+                        20	 0.00001361	 0.00006333	 0.00006083	 0.00008778	 0.00011472	 0.00013917	 0.00018361
+                        25	 0.00003500	 0.00006889	 0.00007583	 0.00009194	 0.00010194	 0.00011139	 0.00018000
+                        30	 0.00005556	 0.00006833	 0.00008917	 0.00010361	 0.00011778	 0.00012361	 0.00013056
+                        40	 0.00003389	 0.00008167	 0.00010083	 0.00011972	 0.00014167	 0.00015417	 0.00017222
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMNAIMR">
+            <description>YAWING MOMENT INCREMENT DUE TO AIMR</description>
+            <product>
+                <property>metrics/stores-aimr-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -10	         -5	          0	          5	         10	         20
+                        -10	 0.00085889	 0.00042944	 0.00020028	 0.00003861	 0.00006167	 0.00009111	 0.00014444
+                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00002111	 0.00005778	 0.00008556	 0.00001667
+                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002750	 0.00005694	 0.00017444
+                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002528	 0.00009000	 0.00015167
+                        10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002167	 0.00007972
+                        15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00001222
+                        20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        25	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        30	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        
+        <function name="aero/coefficients/CFXTNK">
+            <description>DRAG INCREMENT DUE TO TANK CFXTNK(ALPHA,BETA)</description>
+            <product>
+                <property>metrics/stores-tank-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20
+                        -30	 0.01494000	 0.01114000	 0.01165000	 0.01049000	 0.00998000	 0.01049000	 0.01165000	 0.01114000	 0.01494000
+                        -20	 0.00897000	 0.00933000	 0.00799000	 0.00793000	 0.00779000	 0.00793000	 0.00799000	 0.00933000	 0.00897000
+                        -15	 0.00803000	 0.00752000	 0.00759000	 0.00581000	 0.00776000	 0.00581000	 0.00759000	 0.00752000	 0.00803000
+                        -10	 0.00715000	 0.00574000	 0.00694000	 0.00671000	 0.00631000	 0.00671000	 0.00694000	 0.00574000	 0.00715000
+                        -5	 0.00646000	 0.00677000	 0.00012000	 0.00634000	 0.00658000	 0.00634000	 0.00012000	 0.00677000	 0.00646000
+                        0	 0.00622000	 0.00633000	 0.00634000	 0.00632000	 0.00632000	 0.00632000	 0.00634000	 0.00633000	 0.00622000
+                        5	 0.00616000	 0.00633000	 0.00640000	 0.00645000	 0.00835000	 0.00645000	 0.00640000	 0.00633000	 0.00616000
+                        10	 0.00629000	 0.00646000	 0.00653000	 0.00677000	 0.01085000	 0.00677000	 0.00653000	 0.00646000	 0.00629000
+                        15	 0.00656000	 0.00660000	 0.00454000	 0.00854000	 0.01156000	 0.00854000	 0.00454000	 0.00660000	 0.00656000
+                        20	 0.00647000	 0.00683000	 0.00653000	 0.00297000	 0.01244000	 0.00297000	 0.00653000	 0.00683000	 0.00647000
+                        23	 0.00657000	 0.00156000	 0.00908000	 0.00722000	 0.01660000	 0.00722000	 0.00908000	 0.00156000	 0.00657000
+                        25	 0.00751000	 0.01074000	 0.01536000	 0.00885000	 0.01720000	 0.00885000	 0.01536000	 0.01074000	 0.00751000
+                        26	 0.00782000	 0.01228000	 0.01635000	 0.00698000	 0.05528000	 0.00698000	 0.01565000	 0.01228000	 0.00782000
+                        30	 0.00754000	 0.00872000	 0.01665000	 0.01537000	 0.01622000	 0.05153000	 0.01665000	 0.00872000	 0.00754000
+                        35	 0.01165000	 0.01919000	 0.00884000	 0.02168000	 0.02231000	 0.20168000	 0.00884000	 0.01919000	 0.01165000
+                        40	 0.01503000	 0.02090000	 0.02583000	 0.01221000	 0.03406000	 0.01221000	 0.02583000	 0.02090000	 0.01503000
+                        50	 0.02766000	 0.02222000	 0.02644000	 0.02182000	 0.03414000	 0.02180000	 0.02364000	 0.02222000	 0.02766000
+                        60	 0.01803000	 0.00781000	 0.02740000	 0.02934000	 0.00938000	 0.02934000	 0.02740000	 0.00781000	 0.01803000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFYTNK">
+            <description>SIDE FORCE INCREMENT DUE TO TANK CFYTNK(ALPHA,BETA)</description>
+            <product>
+                <property>metrics/stores-tank-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20
+                        -30	-0.00054000	-0.00035000	 0.00047000	-0.00033000	 0.00000000	 0.00033000	-0.00047000	 0.00035000	 0.00054000
+                        -20	 0.00067000	 0.00161000	-0.00042000	 0.00080000	 0.00000000	-0.00080000	 0.00042000	-0.00161000	-0.00067000
+                        -15	 0.00058000	 0.00067000	 0.00004000	-0.00094000	 0.00000000	 0.00094000	-0.00004000	-0.00067000	-0.00058000
+                        -10	 0.00063000	-0.00123000	-0.00126000	-0.00059000	 0.00000000	 0.00059000	 0.00126000	 0.00123000	-0.00063000
+                        -5	 0.00036000	 0.00154000	-0.00022000	 0.00031000	 0.00000000	-0.00031000	 0.00022000	-0.00154000	-0.00036000
+                        0	-0.00044000	-0.00016000	-0.00002000	-0.00001000	 0.00000000	 0.00001000	 0.00002000	 0.00016000	 0.00044000
+                        5	-0.00091000	-0.00050000	-0.00023000	 0.00006000	 0.00000000	-0.00006000	 0.00023000	 0.00050000	 0.00091000
+                        10	-0.00132000	-0.00086000	-0.00115000	 0.00004000	 0.00000000	-0.00004000	 0.00115000	 0.00086000	 0.00132000
+                        15	-0.00165000	-0.00209000	-0.00396000	-0.01229000	 0.00000000	 0.01229000	 0.00396000	 0.00209000	 0.00165000
+                        20	-0.00275000	-0.00190000	-0.00314000	-0.00133000	 0.00000000	 0.00133000	 0.00314000	 0.00190000	 0.00275000
+                        23	-0.00334000	 0.00871000	-0.00329000	 0.00328000	 0.00000000	-0.00328000	 0.00329000	-0.00871000	 0.00334000
+                        25	-0.00230000	 0.01054000	-0.00388000	-0.01503000	 0.00000000	 0.01503000	 0.00388000	-0.01054000	 0.00230000
+                        26	-0.00217000	 0.00222000	 0.05151000	-0.00454000	 0.00000000	 0.00454000	-0.05151000	-0.00222000	 0.00217000
+                        30	-0.00281000	-0.00095000	-0.03677000	 0.02608000	 0.00000000	-0.02608000	 0.03677000	 0.00095000	 0.00281000
+                        35	-0.01549000	 0.00803000	 0.02230000	 0.21438000	 0.00000000	-0.21438000	-0.02230000	-0.00803000	 0.01549000
+                        40	 0.00233000	-0.00521000	 0.00024000	-0.02601000	 0.00000000	 0.02601000	-0.00024000	 0.00521000	-0.00233000
+                        50	-0.01050000	-0.01282000	 0.06866000	-0.03090000	 0.00000000	 0.03090000	-0.06866000	 0.01282000	 0.01050000
+                        60	-0.00628000	 0.00516000	-0.00498000	-0.00229000	 0.00000000	 0.00229000	 0.00498000	-0.00516000	 0.00628000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CFZTNK">
+            <description>LIFT INCREMENT DUE TO TANK CFZTNK(ALPHA,BETA)</description>
+            <product>
+                <property>metrics/stores-tank-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20
+                        -30	-0.00264000	-0.00513000	-0.00480000	-0.00486000	-0.00399000	-0.00486000	-0.00480000	-0.00513000	-0.00264000
+                        -20	-0.00399000	-0.00304000	-0.00278000	-0.00254000	-0.00263000	-0.00254000	-0.00278000	-0.00304000	-0.00399000
+                        -15	-0.00326000	-0.00234000	-0.00332000	 0.00246000	-0.00409000	 0.00246000	-0.00332000	-0.00234000	-0.00326000
+                        -10	-0.00080000	 0.00196000	-0.00210000	-0.00243000	 0.00130000	-0.00243000	-0.00210000	 0.00196000	-0.00080000
+                        -5	-0.00023000	 0.00565000	 0.02331000	 0.00047000	-0.00109000	 0.00047000	 0.02331000	 0.00565000	-0.00023000
+                        0	 0.00007000	 0.00019000	 0.00017000	 0.00011000	 0.00007000	 0.00011000	 0.00017000	 0.00019000	 0.00007000
+                        5	 0.00092000	 0.00091000	 0.00085000	 0.00088000	-0.01105000	 0.00088000	 0.00085000	 0.00091000	 0.00092000
+                        10	 0.00171000	 0.00158000	 0.00148000	 0.00168000	-0.01438000	 0.00168000	 0.00148000	 0.00158000	 0.00171000
+                        15	 0.00228000	 0.00207000	-0.00818000	-0.00073000	 0.01240000	-0.00073000	-0.00818000	 0.00207000	 0.00228000
+                        20	 0.00247000	 0.00293000	 0.00095000	 0.00781000	-0.00237000	 0.00781000	 0.00095000	 0.00293000	 0.00247000
+                        23	 0.00241000	-0.00581000	 0.00506000	-0.00256000	 0.15926000	-0.00256000	 0.00506000	-0.00581000	 0.00241000
+                        25	 0.00316000	-0.01045000	 0.01101000	 0.00251000	 0.02846000	 0.00251000	 0.01101000	-0.01045000	 0.00316000
+                        26	 0.00363000	 0.00767000	 0.09835000	-0.00658000	 0.01467000	-0.00658000	 0.09835000	 0.00767000	 0.00363000
+                        30	 0.00327000	 0.00165000	-0.01121000	 0.22519000	 0.00469000	 0.22519000	-0.01121000	 0.00165000	 0.00327000
+                        35	-0.00054000	 0.00017000	 0.03253000	-0.15410000	 0.00576000	-0.15410000	 0.03253000	 0.00017000	-0.00054000
+                        40	-0.01403000	 0.00949000	 0.00335000	 0.01782000	-0.02610000	 0.01782000	 0.00335000	 0.00949000	-0.01403000
+                        50	 0.02362000	 0.01193000	-0.03809000	-0.00490000	 0.02710000	-0.00490000	-0.03809000	 0.01193000	 0.02362000
+                        60	 0.01674000	-0.00274000	 0.01833000	 0.02072000	 0.00641000	 0.02072000	 0.01833000	-0.00274000	 0.01674000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMLTNK">
+            <description>ROLLING MOMENT INCREMENT DUE TO TANK CMLTNK(ALPHA,BETA)</description>
+            <product>
+                <property>metrics/stores-tank-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20
+                        -30	 0.00484000	 0.00266000	 0.00168000	 0.00095000	 0.00000000	-0.00095000	-0.00168000	-0.00266000	-0.00484000
+                        -20	 0.00161000	 0.00070000	 0.00011000	-0.00005000	 0.00000000	 0.00005000	-0.00011000	-0.00070000	-0.00161000
+                        -15	 0.00106000	 0.00100000	 0.00037000	 0.00013000	 0.00000000	-0.00013000	-0.00037000	-0.00100000	-0.00106000
+                        -10	-0.00057000	-0.00168000	 0.00019000	 0.00069000	 0.00000000	-0.00069000	-0.00019000	 0.00168000	 0.00057000
+                        -5	-0.00022000	 0.00264000	 0.00767000	 0.00020000	 0.00000000	-0.00020000	-0.00767000	-0.00264000	 0.00022000
+                        0	-0.00112000	-0.00086000	-0.00053000	-0.00025000	 0.00000000	 0.00025000	 0.00053000	 0.00086000	 0.00112000
+                        5	-0.00214000	-0.00159000	-0.00099000	-0.00049000	 0.00000000	 0.00049000	 0.00099000	 0.00159000	 0.00214000
+                        10	-0.00292000	-0.00221000	-0.00120000	-0.00068000	 0.00000000	 0.00068000	 0.00120000	 0.00221000	 0.00292000
+                        15	-0.00349000	-0.00229000	-0.00215000	 0.00199000	 0.00000000	-0.00199000	 0.00215000	 0.00229000	 0.00349000
+                        20	-0.00378000	-0.00298000	-0.00095000	-0.00274000	 0.00000000	 0.00274000	 0.00095000	 0.00298000	 0.00378000
+                        23	-0.00370000	-0.00451000	-0.00494000	-0.00171000	 0.00000000	 0.00171000	 0.00494000	 0.00451000	 0.00370000
+                        25	-0.00416000	-0.00830000	 0.00003000	 0.00168000	 0.00000000	-0.00168000	-0.00003000	 0.00830000	 0.00416000
+                        26	-0.00464000	-0.00242000	-0.01231000	-0.00272000	 0.00000000	 0.00272000	 0.01231000	 0.00242000	 0.00464000
+                        30	-0.00517000	-0.00524000	 0.00556000	 0.00877000	 0.00000000	-0.00877000	-0.00556000	 0.00524000	 0.00517000
+                        35	-0.00650000	-0.00266000	-0.00217000	-0.06445000	 0.00000000	 0.06445000	 0.00217000	 0.00266000	 0.00650000
+                        40	 0.01871000	 0.00370000	 0.00082000	-0.00016000	 0.00000000	 0.00016000	-0.00082000	-0.00370000	-0.01871000
+                        50	-0.01123000	-0.01065000	 0.09544000	 0.01610000	 0.00000000	-0.01610000	-0.09544000	 0.01065000	 0.01123000
+                        60	-0.00069000	 0.02008000	-0.00655000	-0.00263000	 0.00000000	 0.00263000	 0.00655000	-0.02008000	 0.00069000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMMTNK">
+            <description>PITCHING MOMENT INCREMENT DUE TO TANK CMMTNK(ALPHA,BETA)</description>
+            <product>
+                <property>metrics/stores-tank-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20
+                        -30	-0.04700000	-0.04223000	-0.04187000	-0.04599000	-0.05145000	-0.04599000	-0.04187000	-0.04223000	-0.04700000
+                        -20	-0.02556000	-0.03518000	-0.03581000	-0.03671000	-0.03790000	-0.03671000	-0.03581000	-0.03518000	-0.02556000
+                        -15	-0.02056000	-0.02348000	-0.02284000	-0.03508000	-0.02415000	-0.03508000	-0.02284000	-0.02348000	-0.02056000
+                        -10	-0.01907000	-0.02676000	-0.01481000	-0.01321000	-0.02441000	-0.01321000	-0.01481000	-0.02676000	-0.01907000
+                        -5	-0.00693000	-0.02380000	-0.06122000	-0.01032000	-0.00568000	-0.01032000	-0.06122000	-0.02380000	-0.00693000
+                        0	 0.00203000	 0.00137000	 0.00090000	 0.00074000	 0.00064000	 0.00074000	 0.00090000	 0.00137000	 0.00203000
+                        5	 0.00908000	 0.00918000	 0.00912000	 0.00888000	 0.02537000	 0.00888000	 0.00912000	 0.00918000	 0.00908000
+                        10	 0.01534000	 0.01620000	 0.01612000	 0.01610000	 0.02633000	 0.01610000	 0.01612000	 0.01620000	 0.01534000
+                        15	 0.02088000	 0.02193000	 0.02742000	 0.02592000	 0.01763000	 0.02592000	 0.02742000	 0.02193000	 0.02088000
+                        20	 0.02639000	 0.02727000	 0.03123000	 0.02398000	 0.02838000	 0.02398000	 0.03123000	 0.02727000	 0.02639000
+                        23	 0.02813000	 0.05262000	 0.02052000	 0.03387000	 0.07043000	 0.03387000	 0.02052000	 0.05262000	 0.02813000
+                        25	 0.02768000	 0.08591000	 0.00954000	 0.03087000	-0.01407000	 0.03087000	 0.00954000	 0.08591000	 0.02768000
+                        26	 0.02757000	 0.04278000	-0.00223000	 0.03697000	 0.00252000	 0.03697000	-0.00223000	 0.04278000	 0.02757000
+                        30	 0.03093000	 0.02891000	-0.00480000	-0.45738000	 0.04480000	-0.45738000	-0.00480000	 0.02891000	 0.03093000
+                        35	 0.02504000	 0.04008000	 0.00572000	 0.16683000	 0.16370000	 0.16683000	 0.00572000	 0.04008000	 0.02504000
+                        40	 0.00587000	 0.02741000	 0.01562000	 0.01269000	 0.06869000	 0.01269000	 0.01562000	 0.02741000	 0.00587000
+                        50	 0.03523000	 0.04855000	 0.25839000	 0.09417000	 0.01945000	 0.09417000	 0.25839000	 0.04855000	 0.03523000
+                        60	 0.02757000	 0.03076000	 0.04160000	 0.04700000	 0.06928000	 0.04700000	 0.04160000	 0.03076000	 0.02757000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+        <function name="aero/coefficients/CMNTNK">
+            <description>YAWING MOMENT INCREMENT DUE TO TANK CMNTNK(ALPHA,BETA)</description>
+            <product>
+                <property>metrics/stores-tank-factor</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">aero/beta-deg</independentVar>
+                    <tableData>
+                        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20
+                        -30	-0.01148000	-0.01498000	-0.00988000	-0.00487000	 0.00000000	 0.00487000	 0.00988000	 0.01498000	 0.01148000
+                        -20	-0.02029000	-0.01627000	-0.01075000	-0.00452000	 0.00000000	 0.00452000	 0.01075000	 0.01627000	 0.02029000
+                        -15	-0.01974000	-0.01511000	-0.01016000	-0.00649000	 0.00000000	 0.00649000	 0.01016000	 0.01511000	 0.01974000
+                        -10	-0.02029000	-0.01597000	-0.01182000	-0.00515000	 0.00000000	 0.00515000	 0.01182000	 0.01597000	 0.02029000
+                        -5	-0.01984000	-0.01412000	-0.01054000	-0.00485000	 0.00000000	 0.00485000	 0.01054000	 0.01412000	 0.01984000
+                        0	-0.01958000	-0.01520000	-0.01034000	-0.00525000	 0.00000000	 0.00525000	 0.01034000	 0.01520000	 0.01958000
+                        5	-0.01918000	-0.01490000	-0.01018000	-0.00502000	 0.00000000	 0.00502000	 0.01018000	 0.01490000	 0.01918000
+                        10	-0.01858000	-0.01458000	-0.01055000	-0.00461000	 0.00000000	 0.00461000	 0.01055000	 0.01458000	 0.01858000
+                        15	-0.01774000	-0.01482000	-0.01332000	-0.01604000	 0.00000000	 0.01604000	 0.01332000	 0.01482000	 0.01774000
+                        20	-0.01753000	-0.01389000	-0.01223000	-0.00120000	 0.00000000	 0.00120000	 0.01223000	 0.01389000	 0.01753000
+                        23	-0.01676000	-0.00522000	-0.00949000	-0.00503000	 0.00000000	 0.00503000	 0.00949000	 0.00522000	 0.01676000
+                        25	-0.01521000	-0.00263000	-0.01129000	-0.02239000	 0.00000000	 0.02239000	 0.01129000	 0.00263000	 0.01521000
+                        26	-0.01441000	-0.00588000	 0.06784000	-0.01291000	 0.00000000	 0.01291000	-0.06784000	 0.00588000	 0.01441000
+                        30	-0.01368000	-0.00632000	-0.04500000	 0.06200000	 0.00000000	-0.06200000	 0.04500000	 0.00632000	 0.01368000
+                        35	-0.02048000	 0.01473000	 0.03058000	 0.15682000	 0.00000000	-0.15682000	-0.03058000	-0.01473000	 0.02048000
+                        40	 0.01864000	-0.01010000	-0.00659000	-0.01420000	 0.00000000	 0.01420000	 0.00659000	 0.01010000	-0.01864000
+                        50	-0.01680000	-0.01971000	-0.08768000	-0.02680000	 0.00000000	 0.02680000	 0.08768000	 0.01971000	 0.01680000
+                        60	-0.01177000	 0.00371000	-0.00597000	-0.00153000	 0.00000000	 0.00153000	 0.00597000	-0.00371000	 0.01177000
+                    </tableData>
+                </table>
+            </product>
+        </function>
         <function name="aero/coefficients/EPA43">
             <description>CNDR MULTIPLIER CLDR, CYDR DUE TO SPEEDBRAKE</description>
             <product>
@@ -726,50 +1311,64 @@
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.202		 1.25794500
-                        0.306		 1.14121500
-                        0.4		 1.06271780
-                        0.503		 1.02191240
-                        0.608		 1.00000000
-                        0.705		 0.99095090
-                        0.802		 1.00087010
-                        0.901		 1.01070930
-                        0.923		 1.04170840
-                        0.934		 1.07933440
-                        0.945		 1.12959800
-                        1.009		 1.88004830
-                        1.029		 2.02490370
-                        1.048		 2.14446970
-                        1.092		 2.23175260
-                        1.17		 2.26116200
-                        1.603		 2.18576420
-                        1.797		 2.13606970
-                        1.948		 2.08126270
-                        1.999		 2.06086000
-                        2.091		 2.03300270
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CdTNK">
-            <description>Incremental Cd due to external tanks</description>
-            <product>
-                <property>fcs/external-tanks-fitted</property>
-                <table>
-                    <independentVar lookup="row">velocities/mach</independentVar>
-                    <tableData>
-                        0.4		 0.00050000
-                        0.6		 0.00050000
-                        0.7		 0.00050000
-                        0.8		 0.00050000
-                        0.85		 0.00110000
-                        0.9		 0.00650000
-                        0.94		 0.00740000
-                        0.98		 0.00770000
-                        1		 0.00780000
-                        1.1		 0.00790000
-                        1.2		 0.00800000
-                        2		 0.00810000
+                    0.00	0.970823
+                    0.05	0.986678
+                    0.10	1.002532
+                    0.15	0.991628
+                    0.20	0.990755
+                    0.25	0.980929
+                    0.30	0.975929
+                    0.35	0.975057
+                    0.40	0.974185
+                    0.45	0.984329
+                    0.50	0.985522
+                    0.55	0.991244
+                    0.60	0.985422
+                    0.65	1.031429
+                    0.86	1.124908
+                    0.96	2.210327
+                    0.98	2.401153
+                    1.00	2.516143
+                    1.05	2.567031
+                    1.10	2.584163
+                    1.15	2.557796
+                    1.20	2.536296
+                    1.25	2.500102
+                    1.30	2.464500
+                    1.35	2.431602
+                    1.40	2.404051
+                    1.45	2.368622
+                    1.50	2.331418
+                    1.55	2.296837
+                    1.60	2.260551
+                    1.65	2.237153
+                    1.70	2.210755
+                    1.75	2.179908
+                    1.80	2.154255
+                    1.85	2.118265
+                    1.90	2.081051
+                    1.95	2.046469
+                    2.00	2.009633
+                    2.05	1.987357
+                    2.10	1.950612
+                    2.15	1.913582
+                    2.20	1.881765
+                    2.25	1.855888
+                    2.30	1.820163
+                    2.35	1.769806
+                    2.40	1.742827
+                    2.45	1.698551
+                    2.50	1.675827
+                    2.55	1.639357
+                    2.60	1.602571
+                    2.65	1.580714
+                    2.70	1.544357
+                    2.75	1.508918
+                    2.80	1.471704
+                    2.85	1.437122
+                    2.90	1.399908
+                    2.95	1.364296
+                    3.00	1.325949
                     </tableData>
                 </table>
             </product>
@@ -871,6 +1470,66 @@
                 </table>
             </product>
         </function>
+
+        <function name="aero/coefficients/DCdCFT">
+            <description>Cd increment due to conformal tanks</description>
+            <product>
+                <property>propulsion/cft</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <tableData>
+                         -30	0.0044058
+                         -20	0.0033306
+                         -15	0.0024402
+                         -10	0.0028182
+                          -5	0.0026628
+                           0	0.0026544
+                           5	0.002709
+                          10	0.0028434
+                          15	0.0035868
+                          20	0.003826074
+                          23	0.0030324
+                          25	0.003717
+                          26	0.0029316
+                          30	0.0064554
+                          35	0.0091056
+                          40	0.0105882
+                          50	0.0133644
+                          60	0.01467228
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
+        <function name="aero/coefficients/DCdGE">
+            <description>Delta drag due ground effect, NASA-TM-104278, p228</description>
+            <product>
+                <table>
+                    <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                    <independentVar lookup="column">velocities/w-aero-fps</independentVar>
+                    <tableData>
+                                 0.7         6.5
+                         0  	0.014888	0.040409
+                         1  	0.012193	0.033129
+                         3  	0.010844	0.029238
+                         4  	0.009267	0.021686
+                         6  	0.007690	0.015870
+                         8  	0.006561	0.011991
+                         9  	0.005545	0.009817
+                        11  	0.004191	0.007486
+                        13  	0.003286	0.006122
+                        16  	0.002598	0.004051
+                        18  	0.002024	0.002685
+                        22  	0.001558	0.001590
+                        25  	0.001093	0.000981
+                        27  	0.000744	0.000744
+                        29  	0.000000	0.000000
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
+
         <function name="aero/coefficients/CFZB">
             <description>BASIC LIFT</description>
             <product>
@@ -961,27 +1620,64 @@
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.202		 1.25794500
-                        0.306		 1.14121500
-                        0.4		 1.06271780
-                        0.503		 1.02191240
-                        0.608		 1.00000000
-                        0.705		 0.99095090
-                        0.802		 1.00087010
-                        0.901		 1.01070930
-                        0.923		 1.04170840
-                        0.934		 1.07933440
-                        0.945		 1.12959800
-                        1.009		 1.88004830
-                        1.029		 2.02490370
-                        1.048		 2.14446970
-                        1.092		 2.23175260
-                        1.17		 2.26116200
-                        1.603		 2.18576420
-                        1.797		 2.13606970
-                        1.948		 2.08126270
-                        1.999		 2.06086000
-                        2.091		 2.03300270
+                    0.00	0.970823
+                    0.05	0.986678
+                    0.10	1.002532
+                    0.15	0.991628
+                    0.20	0.990755
+                    0.25	0.980929
+                    0.30	0.975929
+                    0.35	0.975057
+                    0.40	0.974185
+                    0.45	0.984329
+                    0.50	0.985522
+                    0.55	0.991244
+                    0.60	0.985422
+                    0.65	1.031429
+                    0.86	1.124908
+                    0.96	2.210327
+                    0.98	2.401153
+                    1.00	2.516143
+                    1.05	2.567031
+                    1.10	2.584163
+                    1.15	2.557796
+                    1.20	2.536296
+                    1.25	2.500102
+                    1.30	2.464500
+                    1.35	2.431602
+                    1.40	2.404051
+                    1.45	2.368622
+                    1.50	2.331418
+                    1.55	2.296837
+                    1.60	2.260551
+                    1.65	2.237153
+                    1.70	2.210755
+                    1.75	2.179908
+                    1.80	2.154255
+                    1.85	2.118265
+                    1.90	2.081051
+                    1.95	2.046469
+                    2.00	2.009633
+                    2.05	1.987357
+                    2.10	1.950612
+                    2.15	1.913582
+                    2.20	1.881765
+                    2.25	1.855888
+                    2.30	1.820163
+                    2.35	1.769806
+                    2.40	1.742827
+                    2.45	1.698551
+                    2.50	1.675827
+                    2.55	1.639357
+                    2.60	1.602571
+                    2.65	1.580714
+                    2.70	1.544357
+                    2.75	1.508918
+                    2.80	1.471704
+                    2.85	1.437122
+                    2.90	1.399908
+                    2.95	1.364296
+                    3.00	1.325949
                     </tableData>
                 </table>
             </product>
@@ -1020,6 +1716,33 @@
                 </table>
             </product>
         </function>
+        <function name="aero/coefficients/DClGE">
+            <description>Delta Cl due ground effect, NASA-TM-104278, p228</description>
+            <product>
+                <table>
+                    <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                    <independentVar lookup="column">velocities/w-aero-fps</independentVar>
+                    <tableData>
+                                        0.7         6.5
+                             0  	0.1039090	0.0734851
+                             3  	0.0844895	0.0604182
+                             5  	0.0669446	0.0510854
+                             7  	0.0542444	0.0426352
+                            10  	0.0419074	0.0343156
+                            13  	0.0310507	0.0258929
+                            16  	0.0209326	0.0175744
+                            20  	0.0119226	0.0113901
+                            23  	0.0081328	0.0079730
+                            26  	0.0054696	0.0055229
+                            29  	0.0035576	0.0035576
+                            31  	0.0027785	0.0028405
+                            33  	0.0012513	0.0012513
+                            34  	0.0001122	0.0002520
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
         <function name="aero/coefficients/CMDFM">
             <description>CM increment due to flap mean position</description>
             <product>
@@ -1109,27 +1832,64 @@
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.202		 1.25794500
-                        0.306		 1.14121500
-                        0.4		 1.06271780
-                        0.503		 1.02191240
-                        0.608		 1.00000000
-                        0.705		 0.99095090
-                        0.802		 1.00087010
-                        0.901		 1.01070930
-                        0.923		 1.04170840
-                        0.934		 1.07933440
-                        0.945		 1.12959800
-                        1.009		 1.88004830
-                        1.029		 2.02490370
-                        1.048		 2.14446970
-                        1.092		 2.23175260
-                        1.17		 2.26116200
-                        1.603		 2.18576420
-                        1.797		 2.13606970
-                        1.948		 2.08126270
-                        1.999		 2.06086000
-                        2.091		 2.03300270
+                    0.00	0.970823
+                    0.05	0.986678
+                    0.10	1.002532
+                    0.15	0.991628
+                    0.20	0.990755
+                    0.25	0.980929
+                    0.30	0.975929
+                    0.35	0.975057
+                    0.40	0.974185
+                    0.45	0.984329
+                    0.50	0.985522
+                    0.55	0.991244
+                    0.60	0.985422
+                    0.65	1.031429
+                    0.86	1.124908
+                    0.96	2.210327
+                    0.98	2.401153
+                    1.00	2.516143
+                    1.05	2.567031
+                    1.10	2.584163
+                    1.15	2.557796
+                    1.20	2.536296
+                    1.25	2.500102
+                    1.30	2.464500
+                    1.35	2.431602
+                    1.40	2.404051
+                    1.45	2.368622
+                    1.50	2.331418
+                    1.55	2.296837
+                    1.60	2.260551
+                    1.65	2.237153
+                    1.70	2.210755
+                    1.75	2.179908
+                    1.80	2.154255
+                    1.85	2.118265
+                    1.90	2.081051
+                    1.95	2.046469
+                    2.00	2.009633
+                    2.05	1.987357
+                    2.10	1.950612
+                    2.15	1.913582
+                    2.20	1.881765
+                    2.25	1.855888
+                    2.30	1.820163
+                    2.35	1.769806
+                    2.40	1.742827
+                    2.45	1.698551
+                    2.50	1.675827
+                    2.55	1.639357
+                    2.60	1.602571
+                    2.65	1.580714
+                    2.70	1.544357
+                    2.75	1.508918
+                    2.80	1.471704
+                    2.85	1.437122
+                    2.90	1.399908
+                    2.95	1.364296
+                    3.00	1.325949
                     </tableData>
                 </table>
             </product>
@@ -1261,33 +2021,122 @@
                 </table>
             </product>
         </function>
+
+        <function name="aero/coefficients/DCMGE">
+            <description>Delta pitch moment due ground effect, NASA-TM-104278, p228</description>
+            <product>
+                <table>
+                    <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
+                    <independentVar lookup="column">velocities/w-aero-fps</independentVar>
+                    <independentVar lookup="table">fcs/flap-pos-deg</independentVar>
+                    <tableData breakPoint="0">
+                                   0.7         6.5
+                         0.0	-0.014767	-0.007937
+                         0.1	-0.014690	-0.007912
+                         0.4	-0.014111	-0.007729
+                         1.6	-0.012123	-0.007099
+                         3.7	-0.009725	-0.006025
+                         6.4	-0.007056	-0.004666
+                         8.4	-0.005538	-0.003887
+                        10.1	-0.004577	-0.003312
+                        11.3	-0.004206	-0.003037
+                        13.7	-0.003450	-0.002503
+                        14.7	-0.003087	-0.002366
+                        16.1	-0.002625	-0.002184
+                        19.0	-0.001958	-0.001755
+                        23.2	-0.001214	-0.000968
+                        26.9	-0.000605	-0.000741
+                        28.6	-0.000350	-0.000355
+                        36.6	-0.000127	-0.000125
+                    </tableData>
+                    <tableData breakPoint="35">
+                                   0.7         6.5
+                         0.0	-0.054720	-0.054720
+                         0.1	-0.035523	-0.035523
+                         0.4	-0.031475	-0.031475
+                         1.6	-0.026647	-0.026647
+                         3.7	-0.020908	-0.020908
+                         6.4	-0.013864	-0.013864
+                         8.4	-0.011128	-0.011128
+                        10.1	-0.008522	-0.008522
+                        11.3	-0.006567	-0.006567
+                        13.7	-0.004485	-0.004485
+                        14.7	-0.003182	-0.003182
+                        16.1	-0.002403	-0.002403
+                        19.0	-0.001760	-0.001760
+                        23.2	-0.001121	-0.001121
+                        26.9	-0.000741	-0.000741
+                        28.6	-0.000224	-0.000224
+                        36.6	-0.000120	-0.000120
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
         <function name="aero/coefficients/CLMach">
             <description>Roll Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
             <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.202		 1.25794500
-                        0.306		 1.14121500
-                        0.4		 1.06271780
-                        0.503		 1.02191240
-                        0.608		 1.00000000
-                        0.705		 0.99095090
-                        0.802		 1.00087010
-                        0.901		 1.01070930
-                        0.923		 1.04170840
-                        0.934		 1.07933440
-                        0.945		 1.12959800
-                        1.009		 1.88004830
-                        1.029		 2.02490370
-                        1.048		 2.14446970
-                        1.092		 2.23175260
-                        1.17		 2.26116200
-                        1.603		 2.18576420
-                        1.797		 2.13606970
-                        1.948		 2.08126270
-                        1.999		 2.06086000
-                        2.091		 2.03300270
+                    0.00	0.970823
+                    0.05	0.986678
+                    0.10	1.002532
+                    0.15	0.991628
+                    0.20	0.990755
+                    0.25	0.980929
+                    0.30	0.975929
+                    0.35	0.975057
+                    0.40	0.974185
+                    0.45	0.984329
+                    0.50	0.985522
+                    0.55	0.991244
+                    0.60	0.985422
+                    0.65	1.031429
+                    0.86	1.124908
+                    0.96	2.210327
+                    0.98	2.401153
+                    1.00	2.516143
+                    1.05	2.567031
+                    1.10	2.584163
+                    1.15	2.557796
+                    1.20	2.536296
+                    1.25	2.500102
+                    1.30	2.464500
+                    1.35	2.431602
+                    1.40	2.404051
+                    1.45	2.368622
+                    1.50	2.331418
+                    1.55	2.296837
+                    1.60	2.260551
+                    1.65	2.237153
+                    1.70	2.210755
+                    1.75	2.179908
+                    1.80	2.154255
+                    1.85	2.118265
+                    1.90	2.081051
+                    1.95	2.046469
+                    2.00	2.009633
+                    2.05	1.987357
+                    2.10	1.950612
+                    2.15	1.913582
+                    2.20	1.881765
+                    2.25	1.855888
+                    2.30	1.820163
+                    2.35	1.769806
+                    2.40	1.742827
+                    2.45	1.698551
+                    2.50	1.675827
+                    2.55	1.639357
+                    2.60	1.602571
+                    2.65	1.580714
+                    2.70	1.544357
+                    2.75	1.508918
+                    2.80	1.471704
+                    2.85	1.437122
+                    2.90	1.399908
+                    2.95	1.364296
+                    3.00	1.325949
                     </tableData>
                 </table>
             </product>
@@ -2828,27 +3677,64 @@
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.202		 1.25794500
-                        0.306		 1.14121500
-                        0.4		 1.06271780
-                        0.503		 1.02191240
-                        0.608		 1.00000000
-                        0.705		 0.99095090
-                        0.802		 1.00087010
-                        0.901		 1.01070930
-                        0.923		 1.04170840
-                        0.934		 1.07933440
-                        0.945		 1.12959800
-                        1.009		 1.88004830
-                        1.029		 2.02490370
-                        1.048		 2.14446970
-                        1.092		 2.23175260
-                        1.17		 2.26116200
-                        1.603		 2.18576420
-                        1.797		 2.13606970
-                        1.948		 2.08126270
-                        1.999		 2.06086000
-                        2.091		 2.03300270
+                    0.00	0.970823
+                    0.05	0.986678
+                    0.10	1.002532
+                    0.15	0.991628
+                    0.20	0.990755
+                    0.25	0.980929
+                    0.30	0.975929
+                    0.35	0.975057
+                    0.40	0.974185
+                    0.45	0.984329
+                    0.50	0.985522
+                    0.55	0.991244
+                    0.60	0.985422
+                    0.65	1.031429
+                    0.86	1.124908
+                    0.96	2.210327
+                    0.98	2.401153
+                    1.00	2.516143
+                    1.05	2.567031
+                    1.10	2.584163
+                    1.15	2.557796
+                    1.20	2.536296
+                    1.25	2.500102
+                    1.30	2.464500
+                    1.35	2.431602
+                    1.40	2.404051
+                    1.45	2.368622
+                    1.50	2.331418
+                    1.55	2.296837
+                    1.60	2.260551
+                    1.65	2.237153
+                    1.70	2.210755
+                    1.75	2.179908
+                    1.80	2.154255
+                    1.85	2.118265
+                    1.90	2.081051
+                    1.95	2.046469
+                    2.00	2.009633
+                    2.05	1.987357
+                    2.10	1.950612
+                    2.15	1.913582
+                    2.20	1.881765
+                    2.25	1.855888
+                    2.30	1.820163
+                    2.35	1.769806
+                    2.40	1.742827
+                    2.45	1.698551
+                    2.50	1.675827
+                    2.55	1.639357
+                    2.60	1.602571
+                    2.65	1.580714
+                    2.70	1.544357
+                    2.75	1.508918
+                    2.80	1.471704
+                    2.85	1.437122
+                    2.90	1.399908
+                    2.95	1.364296
+                    3.00	1.325949
                     </tableData>
                 </table>
             </product>
@@ -4058,27 +4944,64 @@
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.202		 1.25794500
-                        0.306		 1.14121500
-                        0.4		 1.06271780
-                        0.503		 1.02191240
-                        0.608		 1.00000000
-                        0.705		 0.99095090
-                        0.802		 1.00087010
-                        0.901		 1.01070930
-                        0.923		 1.04170840
-                        0.934		 1.07933440
-                        0.945		 1.12959800
-                        1.009		 1.88004830
-                        1.029		 2.02490370
-                        1.048		 2.14446970
-                        1.092		 2.23175260
-                        1.17		 2.26116200
-                        1.603		 2.18576420
-                        1.797		 2.13606970
-                        1.948		 2.08126270
-                        1.999		 2.06086000
-                        2.091		 2.03300270
+                    0.00	0.970823
+                    0.05	0.986678
+                    0.10	1.002532
+                    0.15	0.991628
+                    0.20	0.990755
+                    0.25	0.980929
+                    0.30	0.975929
+                    0.35	0.975057
+                    0.40	0.974185
+                    0.45	0.984329
+                    0.50	0.985522
+                    0.55	0.991244
+                    0.60	0.985422
+                    0.65	1.031429
+                    0.86	1.124908
+                    0.96	2.210327
+                    0.98	2.401153
+                    1.00	2.516143
+                    1.05	2.567031
+                    1.10	2.584163
+                    1.15	2.557796
+                    1.20	2.536296
+                    1.25	2.500102
+                    1.30	2.464500
+                    1.35	2.431602
+                    1.40	2.404051
+                    1.45	2.368622
+                    1.50	2.331418
+                    1.55	2.296837
+                    1.60	2.260551
+                    1.65	2.237153
+                    1.70	2.210755
+                    1.75	2.179908
+                    1.80	2.154255
+                    1.85	2.118265
+                    1.90	2.081051
+                    1.95	2.046469
+                    2.00	2.009633
+                    2.05	1.987357
+                    2.10	1.950612
+                    2.15	1.913582
+                    2.20	1.881765
+                    2.25	1.855888
+                    2.30	1.820163
+                    2.35	1.769806
+                    2.40	1.742827
+                    2.45	1.698551
+                    2.50	1.675827
+                    2.55	1.639357
+                    2.60	1.602571
+                    2.65	1.580714
+                    2.70	1.544357
+                    2.75	1.508918
+                    2.80	1.471704
+                    2.85	1.437122
+                    2.90	1.399908
+                    2.95	1.364296
+                    3.00	1.325949
                     </tableData>
                 </table>
             </product>
@@ -4086,9 +5009,13 @@
         <function name="aero/coefficients/CLIFT">
             <sum>
                 <property>aero/coefficients/CFZB</property>
+                <property>aero/coefficients/CFZTNK</property>
+                <property>aero/coefficients/CFZAIML</property>
+                <property>aero/coefficients/CFZAIMR</property>
                 <property>aero/coefficients/ClDFM</property>
                 <property>aero/coefficients/ClUC</property>
                 <property>aero/coefficients/DClRamp</property>
+                <property>aero/coefficients/DClGE</property>
             </sum>
         </function>
         <axis name="LIFT">
@@ -4104,11 +5031,15 @@
         <function name="aero/coefficients/CDRAG">
             <sum>
                 <property>aero/coefficients/CFXB</property>
-                <property>aero/coefficients/CdTNK</property>
+                <property>aero/coefficients/CFXTNK</property>
+                <property>aero/coefficients/CFXAIML</property>
+                <property>aero/coefficients/CFXAIMR</property>
                 <property>aero/coefficients/CdUC</property>
                 <property>aero/coefficients/CdDBRK</property>
                 <property>aero/coefficients/CdDFM</property>
                 <property>aero/coefficients/DCdRamp</property>
+                <property>aero/coefficients/DCdGE</property>
+                <property>aero/coefficients/DCdCFT</property>
             </sum>
         </function>
         <axis name="DRAG">
@@ -4130,6 +5061,9 @@
                 <property>aero/coefficients/CYDRD</property>
                 <property>aero/coefficients/CYDTD</property>
                 <property>aero/coefficients/CYRB</property>
+                <property>aero/coefficients/CFYTNK</property>
+                <property>aero/coefficients/CFYAIML</property>
+                <property>aero/coefficients/CFYAIMR</property>
             </sum>
         </function>
         <axis name="SIDE">
@@ -4151,6 +5085,9 @@
                 <property>aero/coefficients/CMLDRD</property>
                 <property>aero/coefficients/CMLDTD</property>
                 <property>aero/coefficients/CMLDCLB</property>
+                <property>aero/coefficients/CMLTNK</property>
+                <property>aero/coefficients/CMLAIML</property>
+                <property>aero/coefficients/CMLAIMR</property>
             </sum>
         </function>
         <axis name="ROLL">
@@ -4172,6 +5109,10 @@
                 <property>aero/coefficients/CMUC</property>
                 <property>aero/coefficients/CMDFM</property>
                 <property>aero/coefficients/DCMRamp</property>
+                <property>aero/coefficients/CMMTNK</property>
+                <property>aero/coefficients/DCMGE</property>
+                <property>aero/coefficients/CMMAIML</property>
+                <property>aero/coefficients/CMMAIMR</property>
             </sum>
         </function>
         <axis name="PITCH">
@@ -4194,6 +5135,9 @@
                 <property>aero/coefficients/CMNDTD</property>
                 <property>aero/coefficients/CMNDAD</property>
                 <property>aero/coefficients/CMNRB</property>
+                <property>aero/coefficients/CMNTNK</property>
+                <property>aero/coefficients/CMNAIML</property>
+                <property>aero/coefficients/CMNAIMR</property>
             </sum>
         </function>
         <axis name="YAW">
@@ -4209,9 +5153,9 @@
         </axis>
     </aerodynamics>
     <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
-        --><!--<simulation> ON </simulation>--><!--
+        <simulation> ON </simulation>
         <atmosphere> ON </atmosphere>
-        --><!--<massprops> ON </massprops>
+        <massprops> ON </massprops>
         <aerosurfaces> ON </aerosurfaces>
         <rates> ON </rates>
         <velocities> ON </velocities>
@@ -4220,7 +5164,27 @@
         <coefficients> ON </coefficients>
         <ground_reactions> ON </ground_reactions>
         <fcs> ON </fcs>
-        <propulsion> ON </propulsion>--><!--
+        <propulsion> ON </propulsion>
         <property>systems/ecs/windscreen-temperature-k</property>
     </output>-->
+    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+        <property>position/aircraft-on-ground</property>
+        <property>velocities/h-dot-fps</property>
+        <property>velocities/u-aero-fps</property>
+        <property>velocities/v-aero-fps</property>
+        <property>velocities/w-aero-fps</property>
+        
+        <property>gear/unit[0]/compression-ft</property>
+        <property>gear/unit[1]/compression-ft</property>
+        <property>gear/unit[2]/compression-ft</property>
+        
+        <property>gear/unit[0]/damaged</property>
+        <property>gear/unit[0]/WOW</property>
+
+        <property>gear/unit[1]/damaged</property>
+        <property>gear/unit[1]/WOW</property>
+
+        <property>gear/unit[2]/damaged</property>
+        <property>gear/unit[2]/WOW</property>
+</output>-->
 </fdm_config>

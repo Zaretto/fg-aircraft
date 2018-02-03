@@ -28,8 +28,31 @@
 			<property>sim/model/f-14b/systems/armament/launch-light</property>
 		</condition>
 	</animation>
+  
+  <animation>
+    <type>pick</type>
+    <visible>true</visible>
+    <object-name>launch-on</object-name>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <interval-sec>0.05</interval-sec>
+      <binding>
+        <command>property-assign</command>
+        <property>controls/armament/trigger</property>
+        <value>true</value>
+      </binding>
+      <mod-up>
+        <binding>
+          <command>property-assign</command>
+          <property>controls/armament/trigger</property>
+          <value>false</value>
+        </binding>
+      </mod-up>
+    </action>
+  </animation>
 
-	<animation>
+  <animation>
 		<type>rotate</type>
 		<object-name>sta-1-sw</object-name>
 		<property>sim/model/f-14b/controls/armament/station-selector[0]</property>
@@ -74,11 +97,11 @@
 		</action>
 	</animation>
 
-    <animation>
+   <animation>
         <type>knob</type>
 		<object-name>sta-3-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0474</y-m>
@@ -92,16 +115,18 @@
 
         <action>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[2]</property>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(3, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
 		<object-name>sta-4-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0485</y-m>
@@ -115,16 +140,18 @@
 
         <action>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(4, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
 		<object-name>sta-5-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0186</y-m>
@@ -138,16 +165,18 @@
 
         <action>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(5, -1000);
+                </script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
 		<object-name>sta-6-sw</object-name>
-		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
-        <factor>-30</factor>
+		<property>sim/model/f-14b/controls/armament/station-selector[6]</property>
+        <factor>30</factor>
         <center>
             <x-m>-0.0037</x-m>
             <y-m>-0.0186</y-m>
@@ -161,8 +190,10 @@
 
         <action>
             <binding>
-                <command>property-toggle</command>
-        		<property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+                <command>nasal</command>
+                <script>
+                    f14.station_selector(6, -1000);
+                </script>
             </binding>
         </action>
     </animation>
@@ -194,6 +225,7 @@
             </binding>
         </action>
     </animation>
+
 
 	<animation>
 		<type>rotate</type>
@@ -332,13 +364,4 @@
 			<blue>0.10</blue>
 		</emission>
 	</animation>
-
-
-
-	<animation>
-		<type>range</type>
-		<min-m>0</min-m>
-		<max-m>7</max-m>
-	</animation>
-
 </PropertyList>

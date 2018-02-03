@@ -169,6 +169,21 @@ var ext_loads_init = func() {
 #    {
 #		S.set_type(S.get_type()); # initialize bcode.
 #	}
+
+#
+# set the order of firing for the pylons. (for similar missiles). always works
+# left to right.
+    Station.firing_order = [];
+    append(Station.firing_order, Station.list[0]);
+    append(Station.firing_order, Station.list[10]);
+    append(Station.firing_order, Station.list[2]);
+    append(Station.firing_order, Station.list[8]);
+    append(Station.firing_order, Station.list[1]);
+    append(Station.firing_order, Station.list[9]);
+    append(Station.firing_order, Station.list[3]);
+    append(Station.firing_order, Station.list[6]);
+    append(Station.firing_order, Station.list[4]);
+    append(Station.firing_order, Station.list[7]);
 	update_wpstring();
 }
 var update_dialog_checkboxes = func
@@ -292,6 +307,24 @@ var ext_loads_set = func(s)
         setprop("consumables/fuel/tank[6]/selected",true);
         setprop("consumables/fuel/tank[7]/selected",true);
     }
+    elsif ( s == "Air Superiority" ) 
+    {
+        b_set = 5;
+        setprop("payload/weight[0]/selected","AIM-120");
+        setprop("payload/weight[1]/selected","Droptank");
+        setprop("payload/weight[2]/selected","AIM-120");
+        setprop("payload/weight[3]/selected","AIM-120");
+        setprop("payload/weight[4]/selected","AIM-120");
+        setprop("payload/weight[5]/selected","none");
+        setprop("payload/weight[6]/selected","AIM-120");
+        setprop("payload/weight[7]/selected","AIM-120");
+        setprop("payload/weight[8]/selected","AIM-120");
+        setprop("payload/weight[9]/selected","Droptank");
+        setprop("payload/weight[10]/selected","AIM-120");
+        setprop("consumables/fuel/tank[5]/selected",true);
+        setprop("consumables/fuel/tank[6]/selected",true);
+        setprop("consumables/fuel/tank[7]/selected",false);
+    } 
     update_dialog_checkboxes();
 	update_wpstring();
     arm_selector();

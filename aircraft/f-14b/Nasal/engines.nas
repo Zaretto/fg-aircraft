@@ -146,6 +146,7 @@ var computeNozzles = func {
             #
             # engine stall is detected in the engines system.
             var comp_stall_message="";
+        if (getprop("fdm/jsbsim/propulsion/engine[0]/P0-stall") != nil and getprop("fdm/jsbsim/propulsion/engine[1]/P0-stall") != nil) {
             if (getprop("fdm/jsbsim/propulsion/engine[0]/P0-stall") > 0.98 and !getprop("fdm/jsbsim/propulsion/engine[0]/stalled"))
             {
 #        print("Compressor stall left engine");
@@ -159,7 +160,7 @@ var computeNozzles = func {
             }
             setprop("engines/engine[0]/stalled", getprop("fdm/jsbsim/propulsion/engine[0]/stalled"));
             setprop("engines/engine[1]/stalled", getprop("fdm/jsbsim/propulsion/engine[1]/stalled"));
-
+        }
 # there will be a pop/bang when the compressor stalls; I did have a popup message but that
 # spoils the realism as if the pilot misses the sound they should still notice the gauges in their
 # scan and if they don't notice that's when there's likely to be a MIR.

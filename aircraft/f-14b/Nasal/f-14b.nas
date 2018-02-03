@@ -282,7 +282,7 @@ var timedMotions = func {
     {
         if (main_flap_generic != nil)
         {    
-    	    main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
+    	    #main_flap_generic.setDoubleValue(getprop("fdm/jsbsim/fcs/flap-pos-norm"));
         } 
 
         if (aux_flap_generic != nil)
@@ -400,9 +400,6 @@ var updateFCS = func {
     f14.engineControls();
 	f14.timedMotions ();
     f14.electricsFrame();
-#
-# slower rate
-    f14.update_weapons_over_mp();
 	f14.registerFCS (); # loop, once per frame.
 }
 
@@ -455,6 +452,8 @@ var quickstart = func() {
     setprop("sim/model/f-14b/controls/electrics/master-test-switch",0);
 	setprop("sim/model/f-14b/controls/electrics/r-gen-switch",1);
 
+#
+# Richard's quickstart method
     setprop("controls/engines/engine[0]/cutoff",0);
     setprop("controls/engines/engine[1]/cutoff",0);
     setprop("engines/engine[0]/out-of-fuel",0);
@@ -462,13 +461,13 @@ var quickstart = func() {
     setprop("engines/engine[1]/run",1);
     setprop("engines/engine[1]/run",1);
 
-setprop("/engines/engine[1]/cutoff",0);
-setprop("/engines/engine[0]/cutoff",0);
+    setprop("/engines/engine[1]/cutoff",0);
+    setprop("/engines/engine[0]/cutoff",0);
 
-setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
-setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
-setprop("/fdm/jsbsim/propulsion/set-running",1);
-setprop("/fdm/jsbsim/propulsion/set-running",0);
+    setprop("/fdm/jsbsim/propulsion/starter_cmd",1);
+    setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
+    setprop("/fdm/jsbsim/propulsion/set-running",1);
+    setprop("/fdm/jsbsim/propulsion/set-running",0);
 
 }
 
@@ -539,3 +538,15 @@ var rate2modules = func {
 # launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
 settimer (rate4modules, 1); 
 settimer (rate2modules, 1);
+
+
+var resetView = func () {
+  setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
+  setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
+  setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
+  setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
+}
+
+dynamic_view.register(func {
+              me.default_plane(); 
+   });

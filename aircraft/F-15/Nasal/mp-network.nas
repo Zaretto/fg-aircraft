@@ -45,16 +45,21 @@ var listen_to = func (pilot) {
         find("Aircraft/F-15/Models/F-15", pilot.getNode("sim/model/path").getValue()) != -1)
     {
 #		print("Accepted ",  pilot.getNode("sim/model/path").getValue());
+    setprop("/sim/walker/outside",0);
+
 		return 1;
 	}
     else
     {
+#    setprop("/sim/walker/outside",1);
+
 #		print("Not listening to ", pilot.getNode("sim/model/path").getValue());
 		return 0;
 	}
 }
 
 var when_disconnecting = func (pilot) {
+    setprop("/sim/walker/outside",1);
 }
 
 ###############################################################################
@@ -85,6 +90,7 @@ var update_ext_load = func(sender, state)
 	elsif ( str == "010") { o = "Offensive Counter Air" }
 	elsif ( str == "011") { o = "No Fly Zone" }
 	elsif ( str == "100") { o = "Ferry Flight" }
+	elsif ( str == "101") { o = "Air Superiority" }
 #print("Arm set ",o);
 
 	Wnode.getNode("external-load-set", 1).setValue(o);

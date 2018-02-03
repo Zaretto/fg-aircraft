@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<PropertyList>
+
+    <name>exterior-glass</name>
+
+    <inherits-from>Effects/model-combined-transparent</inherits-from>
+
+    <parameters>
+        <reflect-map-enabled type="int"><use>/sim/model/f15/reflect-map-enabled</use></reflect-map-enabled>
+        <reflection-correction type="float"><use>/sim/model/f15/reflection-correction</use></reflection-correction>
+        <reflection-dynamic type="int"><use>/sim/model/f15/reflection-dynamic</use></reflection-dynamic>
+        <reflection-enabled type="int"><use>/sim/model/f15/reflection-enabled</use></reflection-enabled>
+        <reflection-fresnel type="float"><use>/sim/model/f15/reflection-fresnel</use></reflection-fresnel>
+        <reflection-noise type="float"><use>/sim/model/f15/reflection-noise</use></reflection-noise>
+        <reflection-rainbow type="float"><use>/sim/model/f15/reflection-rainbow</use></reflection-rainbow>
+        <texture n= "5" >
+            <type>cubemap</type>
+            <images>
+                <positive-x>Aircraft/Generic/Effects/fgfs-sky2/1.png</positive-x>
+                <negative-x>Aircraft/Generic/Effects/fgfs-sky2/4.png</negative-x>
+                <positive-y>Aircraft/Generic/Effects/fgfs-sky2/2.png</positive-y>
+                <negative-y>Aircraft/Generic/Effects/fgfs-sky2/3.png</negative-y>
+                <positive-z>Aircraft/Generic/Effects/fgfs-sky2/6.png</positive-z>
+                <negative-z>Aircraft/Generic/Effects/fgfs-sky2/5.png</negative-z>
+            </images>
+        </texture>
+
+        <ambient-correction type="float">0.2</ambient-correction>
+        <rendering-hint>transparent</rendering-hint>
+        <transparent>true</transparent>
+        <rain-enabled type="int">1</rain-enabled>
+
+        <render-bin>
+            <bin-number>10</bin-number>
+            <bin-name>DepthSortedBin</bin-name>
+        </render-bin>
+    </parameters>
+
+</PropertyList>
+<!--
+setprop("/sim/model/f15/reflect-map-enabled",0);
+setprop("/sim/model/f15/reflection-correction",0.5);
+setprop("/sim/model/f15/reflection-dynamic",1);
+setprop("/sim/model/f15/reflection-enabled",1);
+setprop("/sim/model/f15/reflection-fresnel",0.0);
+setprop("/sim/model/f15/reflection-noise",0.1);
+setprop("/sim/model/f15/reflection-rainbow",0.3);
+-->
