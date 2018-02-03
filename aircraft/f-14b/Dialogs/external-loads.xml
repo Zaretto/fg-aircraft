@@ -92,20 +92,27 @@
             <script>f14.set_fuel(7000)</script>
           </binding>
         </button>
-        <button>
-          <legend>11000</legend>
-          <binding>
-            <command>nasal</command>
-            <script>f14.set_fuel(11000)</script>
-          </binding>
-        </button>
-        <button>
-          <legend>Quickstart</legend>
-          <binding>
-            <command>nasal</command>
-            <script>f14.quickstart()</script>
-          </binding>
-        </button>
+          <button>
+              <legend>11000</legend>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.set_fuel(11000)</script>
+              </binding>
+          </button>
+          <button>
+              <legend>50k</legend>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.set_fuel(math.max(1000, 50000-(getprop("fdm/jsbsim/inertia/weight-lbs")-getprop("sim/model/f-14b/instrumentation/fuel-gauges/total"))))</script>
+              </binding>
+          </button>
+          <button>
+              <legend>Quickstart</legend>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.quickstart()</script>
+              </binding>
+          </button>
       </group>
       <group>
 				<layout>hbox</layout>

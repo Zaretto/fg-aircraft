@@ -1277,7 +1277,7 @@
     <animation>
         <type>knob</type>
         <object-name>radio2-int-knob</object-name>
-        <property>/controls/lighting/radio2-brightness</property>
+        <property>sim/model/f15/lights/radio2-brightness</property>
         <factor>-300</factor>
         <center>
             <x-m>-5.298</x-m>
@@ -1293,7 +1293,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>/controls/lighting/radio2-brightness</property>
+                <property>sim/model/f15/lights/radio2-brightness</property>
                 <factor>0.1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -1301,7 +1301,35 @@
             </binding>
         </action>
     </animation>
-
+    <animation>
+        <object-name>radio2-freq-digit-1</object-name>
+        <object-name>radio2-freq-digit-2</object-name>
+        <object-name>radio2-freq-digit-3</object-name>
+        <object-name>radio2-freq-digit-4</object-name>
+        <object-name>radio2-freq-digit-5</object-name>
+        <object-name>radio2-freq-digit-6</object-name>
+        <object-name>radio2-chan-digit-1</object-name>
+        <object-name>radio2-chan-digit-2</object-name>
+        <type>select</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <object-name>radio2-freq-digits-off</object-name>
+        <type>select</type>
+        <condition>
+            <not>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+            </not>
+        </condition>
+    </animation>
     <animation>
         <object-name>radio2-freq-digit-1</object-name>
         <object-name>radio2-freq-digit-2</object-name>

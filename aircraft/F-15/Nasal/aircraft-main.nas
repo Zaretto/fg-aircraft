@@ -18,10 +18,17 @@ var currentG = 1.0;
 # 2017.3 or earlier FG compatibility fixes
 # Remove after 2017.4
 string.truncateAt = func(src, match){
-    var pos = find(match,src);
-    if (pos>=0)
-      return substr(src,0,pos);
+    var rv = nil;
+    call(func {
+    if (src != nil and match !=nil){
+        var pos = find(match,src);
+        if (pos>=0)
+          src=substr(src,0,pos);
+    }
+},
+        nil, var err = []);
     return src;
+
 }
 #
 #
@@ -686,3 +693,17 @@ dynamic_view.register(func {
               me.default_plane(); 
    });
 
+var ElevatorTrim  = props.globals.getNode("controls/flight/elevator-trim", 1);
+var t_increment     = 0.0075;
+var trimUp = func {
+    e_trim       = ElevatorTrim.getValue();
+    e_trim += (CurrentIAS < 120.0) ? t_increment : t_increment * 14400 / (CurrentIAS*CurrentIAS);
+    if (e_trim > 1) e_trim = 1;
+    ElevatorTrim.setValue(e_trim);
+}
+var trimDown = func {
+    e_trim       = ElevatorTrim.getValue();
+    e_trim -= (CurrentIAS < 120.0) ? t_increment : t_increment * 14400 / (CurrentIAS*CurrentIAS);
+    if (e_trim < -1) e_trim = -1;
+    ElevatorTrim.setValue(e_trim);
+}

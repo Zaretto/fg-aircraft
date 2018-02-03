@@ -2727,16 +2727,14 @@ setprop("payload/armament/hud/hud-sw-reticle-switch/enabled", 1);
 
 
 
-var eye_hud_m          = 0.6;#pilot: -3.30  hud: -3.9
-var hud_radius_m       = 0.100;
 
 #was in hud
 var develev_to_devroll = func(dev_rad, elev_rad) {
 	var clamped = 0;
 	# Deviation length on the HUD (at level flight),
 	# 0.6686m = distance eye <-> virtual HUD screen.
-	var h_dev = eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
-	var v_dev = eye_hud_m / ( math.sin(elev_rad) / math.cos(elev_rad) );
+	var h_dev = f14_hud.eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
+	var v_dev = f14_hud.eye_hud_m / ( math.sin(elev_rad) / math.cos(elev_rad) );
 	# Angle between HUD center/top <-> HUD center/symbol position.
 	# -90° left, 0° up, 90° right, +/- 180° down. 
 	var dev_deg =  math.atan2( h_dev, v_dev ) * R2D;
@@ -2746,7 +2744,7 @@ var develev_to_devroll = func(dev_rad, elev_rad) {
 	var combined_dev_length = math.sqrt((h_dev*h_dev)+(v_dev*v_dev));
 	# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
 	var abs_combined_dev_deg = math.abs( combined_dev_deg );
-	var clamp = hud_radius_m;
+	var clamp = f14_hud.hud_radius_m;
 	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
 		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;
 		if ( coef > 0.050 ) { coef = 0.050 }

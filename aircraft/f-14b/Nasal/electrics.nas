@@ -310,7 +310,7 @@ var runEMMISC = func {
         }
     }
 
-	if (getprop("gear/launchbar/position-norm") and (getprop("controls/engines/engine[0]/throttle") < 0.95 or getprop("controls/engines/engine[1]/throttle") < 0.95 ))
+	if (getprop("gear/launchbar/position-norm") and (getprop("controls/engines/engine[0]/throttle") < 0.9 or getprop("controls/engines/engine[1]/throttle") < 0.9 ))
     {
         if (!getprop("sim/model/f-14b/lights/ca-launch-bar"))
         {

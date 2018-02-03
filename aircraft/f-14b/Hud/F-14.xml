@@ -137,8 +137,12 @@
 		<height>100</height>
 		<option>vertical</option>
 		<input>
-			<property>velocities/vertical-speed-fps</property>
-			<factor>0.06</factor>
+            <property>velocities/vertical-speed-fps</property>
+            <factor>0.06</factor>
+            <!-- to use VSI - which is lagged - I think this is wrong so I've reverted this change for now 2018-01-31
+            <property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>
+			<factor>0.001</factor>
+            -->
 			<max>1.9</max>
 			<min>-1.9</min>
 		</input>
@@ -371,7 +375,9 @@
             </or>
         </condition>
         <input>
-            <property>velocities/vertical-speed-fps</property>
+<!--            <property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>
+            <factor>0.001</factor> -->
+             <property>velocities/vertical-speed-fps</property>
             <factor>0.06</factor>
         </input>
 
@@ -1043,8 +1049,8 @@
         <input>
             <property>instrumentation/tacan/indicated-distance-nm</property>
         </input>
-        <x>23</x>
-        <y>-90</y>
+        <x>40</x>
+        <y>-110</y>
         <format>TCN %3.1f</format>
         <halign>left</halign>
     </label>

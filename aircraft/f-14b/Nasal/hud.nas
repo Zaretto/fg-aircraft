@@ -8,8 +8,10 @@ var hud_alpha          = props.globals.getNode("sim[0]/hud/color/alpha", 1);
 var view               = props.globals.getNode("sim/current-view/name");
 var OurRoll            = props.globals.getNode("orientation/roll-deg");
 
-var eye_hud_m          = 0.6686;
-var hud_radius_m       = 0.105;
+#var eye_hud_m          = 0.39;# 0.4394; #0.6686;
+#var hud_radius_m       = 0.0695; #0.105;
+var eye_hud_m          = 0.46;
+var hud_radius_m       = 0.085;
 
 aircraft.data.add("sim/model/f-14b/controls/hud/intens", "sim/hud/current-color");
 
@@ -67,3 +69,4 @@ var develev_to_devroll = func(dev_rad, elev_rad) {
 }
 
 
+aircraft.develev_to_devroll = develev_to_devroll;

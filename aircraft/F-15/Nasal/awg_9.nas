@@ -2,6 +2,8 @@
 # F-15 Radar routines. 
 # The F-15 doesn't have an awg_9, however this isn't an accurate simulation
 # of the radar so it works fine.
+# The scan and update is optimised. The AI list is only scanned when targets added or removed
+# and the update visibility is performed in a partitioned manner, with one partition per frame
 # ---------------------------
 # RWR (Radar Warning Receiver) is computed in the radar loop for better performance
 # AWG-9 Radar computes the nearest target for AIM-9.
@@ -13,6 +15,7 @@
 #             should be the same as nearest_u - but use active_u instead in 
 #             most of the code. nearest_u is kept for compatibility.
 # 
+
 var this_model = "f15";
 #var this_model = "f-14b";
 
@@ -41,7 +44,7 @@ var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable
 var SelectTargetCommand =props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 
 var myRadarStrength_rcs = 3.2;
-
+#var awg9_trace = 0;
 SelectTargetCommand.setIntValue(0);
 
 # variables for the partioned scanning.
@@ -78,6 +81,28 @@ ScanTgtUpdateCount.setIntValue(0);
 
 ScanVisibilityCheckInterval.setIntValue(12); # seconds
 ScanPartitionSize.setIntValue(10); # size of partition to run per frame.
+
+# Azimuth field quadrants.
+# 120 means +/-60, as seen in the diagram below.
+#  _______________________________________
+# |                   |                  |
+# |               _.--+---.              |
+# |           ,-''   0|    `--.          |
+# |         ,'        |        `.        |
+# |        /          |          \       |
+# |    -60/'-.        |         _,\+60   |
+# |      /    `-.     |     ,.-'   \     |
+# |     ; -90    `-._ |_.-''      90     |
+#....................::F..................
+# |     :             |             ;    |
+# |      \       TC   |            /     |
+# |       \           |           /      |
+# |        \          |          /       |
+# |         `.   -180 | +180   ,'        |
+# |           '--.    |    _.-'          |
+# |               `---+--''              |
+# |                   |                  |
+#  `''''''''''''''''''|'''''''''''''''''''
 
 #
 # local variables related to the simulation of the radar.
@@ -156,10 +181,13 @@ setlistener("/ai/models/model-removed", func(v){
 
 init = func() {
 	var our_ac_name = getprop("sim/aircraft");
-    our_ac_name = "f15c";
+    # map variants to the base
+    if(our_ac_name == "f-14a") our_ac_name = "f-14b";
+    if(our_ac_name == "f15d") our_ac_name = "f15c";
+	if (our_ac_name == "f-14b-bs") { we_are_bs = 1; }
+	if (our_ac_name == "f15-bs") we_are_bs = 1;
+
 	my_radarcorr = radardist.my_maxrange( our_ac_name ); # in kilometers
-	if (our_ac_name == "f15-bs")
-      we_are_bs = 1;
 }
 
 # Radar main processing entry point
@@ -204,6 +232,11 @@ var compute_rwr = func(radar_mode, u, u_rng){
 #em_by = em_by ~ "xpdr ";
     }
     # modes below 2 are on / emerg so they will show up on rwr
+#F-15 radar modes;
+# mode 3 = off
+# mode 2 = stby
+# mode 1 = opr
+# mode 0 = emerg
     if (radar_mode < 2 and !u.get_behind_terrain()) {
         # in this sense it is actually us that is illuminating them, but for TEWS this is fine.
         var horizon = u.get_horizon( our_alt );
@@ -229,8 +262,9 @@ var compute_rwr = func(radar_mode, u, u_rng){
 
     u.set_RWR_visible(emitting and u.get_visible());
 }
-
+var sweep_frame_inc = 0.2;
 var az_scan = func() {
+    cnt += sweep_frame_inc;
 
 	# Antena az scan. Angular speed is constant but angle covered varies (120 or 60 deg ATM).
 	var fld_frac = az_fld / 120;                    # the screen (and the max scan angle) covers 120 deg, but we may use less (az_fld).
@@ -391,46 +425,72 @@ var az_scan = func() {
                 u.set_visible(1);
                 if (u_rng != nil and (u_rng > range_radar2))
                   u.set_display(0);
-                else
-                  u.set_display(1);
+                else {
+                  if (radar_mode == 2) {
+#msg = msg ~ " in stby";
+                    u.set_display(!u.get_rdr_standby());
+                  }
+                  if (radar_mode < 2)
+                    u.set_display(1);
+                  else {
+#msg = "radar not transmitting";
+                      u.set_display(0);
+                  }
+              }
             }
-#    print("UPDS: ",u.Callsign.getValue(),", ", msg);
-        } else {
+#if(awg9_trace)
+#    print("UPDS: ",u.Callsign.getValue(),", ", msg, "vis= ",u.get_visible(), " dis=",u.get_display(), " rng=",u_rng, " rr=",range_radar2);
+        } 
+#        else {
+#
+#            if (u_rng != nil and (u_rng > range_radar2)) {
+#                tgts_list[scan_tgt_idx].set_display(0);
+## still need to test for RWR warning indication even if outside of the radar range
+#                if ( !rwr_done and ecm_on and tgts_list[scan_tgt_idx].get_rdr_standby() == 0) {
+#                    rwr_done = rwr_warning_indication(tgts_list[scan_tgt_idx]); 
+#                }
+#                break;
+#            }
+#        }
+# end of scan update visibility
 
-            # the list is sorted by distance we can bail out of this loop the first time
-            # that a return is out of range.
-            # - obviously we cannot shortcut the entire list when updating visibility.
-            if (u_rng != nil and (u_rng > range_radar2)) {
-            
-                for (;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1) {
-                    tgts_list[scan_tgt_idx].set_display(0);
-                    # still need to test for RWR warning indication even if outside of the radar range
-                    if ( !rwr_done and ecm_on and tgts_list[scan_tgt_idx].get_rdr_standby() == 0) {
-                        rwr_done = rwr_warning_indication(tgts_list[scan_tgt_idx]); 
-                    }
-                }
-                break;
-            }
-        }
-
+# if target within radar range, and not acting (i.e. a RIO/backseat/copilot)
         if (u_rng != nil and (u_rng < range_radar2  and u.not_acting == 0 )) {
             u.get_deviation(our_true_heading);
         
             if (rcs.inRadarRange(u, range_radar2, myRadarStrength_rcs) == 0) {
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," not visible by rcs");
                 u.set_display(0);
                 u.set_visible(0);
             }
             else{
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," visible by rcs+++++++++++++++++++");
                 u.set_visible(!u.get_behind_terrain());
             }
-
-            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld )
-              u.set_display(u.get_visible());
+#
+#
+#
+#
+#
+#0;MP1 within  azimuth 49.52579977807609 field=-60->60
+#1;MP2 within  azimuth 126.4171942282486 field=-60->60
+#1;MP2 within  azimuth -130.0592982116802 field=-60->60  (s->w quadrant)
+#0;MP1 within  azimuth 164.2283073827575 field=-60->60
+            if (radar_mode < 2 and u.deviation > l_az_fld  and  u.deviation < r_az_fld ){
+                u.set_display(u.get_visible());
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
+            }
             else {
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
                 u.set_display(0);
             }
         }
 
+# RWR 
         compute_rwr(radar_mode, u, u_rng);
         # Test if target has a radar. Compute if we are illuminated. This propery used by ECM
         # over MP, should be standardized, like "ai/models/multiplayer[0]/radar/radar-standby".
@@ -652,8 +712,6 @@ var az_scan = func() {
 	swp_deg_last = swp_deg;
 	swp_dir_last = swp_dir;
 
-    cnt += 0.05;
-
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
         active_u = nil; armament.contact = active_u;
@@ -703,6 +761,7 @@ var isNotBehindTerrain = func(node) {
     # There is no terrain on earth that can be between these altitudes
     # so shortcut the whole thing and return now.
     if(MyCoord.alt() > 8900 and SelectCoord.alt() > 8900){
+#if(awg9_trace)
 #print("inbt: both above 8900");
         return 1;
     }
@@ -803,13 +862,12 @@ var hud_nearest_tgt = func() {
 		#var u_elev_deg = (90 - active_u.get_total_elevation(our_pitch));
 		var u_dev_rad = (90 - active_u.get_deviation(our_true_heading)) * D2R;
 		var u_elev_rad = (90 - active_u.get_total_elevation(our_pitch)) * D2R;
+#if(awg9_trace)
 #print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
-		if (
-			wcs_mode == "tws-auto"
+		if (wcs_mode == "tws-auto"
 			and active_u.get_display()
 			and active_u.deviation > l_az_fld
-			and active_u.deviation < r_az_fld
-		) {
+			and active_u.deviation < r_az_fld) {
 			var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
 			var combined_dev_deg = devs[0];
 			var combined_dev_length =  devs[1];
@@ -1142,7 +1200,7 @@ else
 			if ( rbs != nil ) {
 				var l = split(";", rbs);
 				if ( size(l) > 0 ) {
-					if ( l[0] == "f15-bs" ) {
+					if ( l[0] == "f15-bs" or l[0] == "f-14b-bs" ) {
 						obj.not_acting = 1;
 					}
 				}
@@ -1203,8 +1261,8 @@ else
             obj.TimeLast       = obj.TgtsFiles.getNode("closure-last-time", 1);
             obj.RangeLast      = obj.TgtsFiles.getNode("closure-last-range-nm", 1);
             obj.ClosureRate    = obj.TgtsFiles.getNode("closure-rate-kts", 1);
-            obj.Visible.setIntValue(0);
-            obj.Display.setIntValue(0);
+            obj.Visible.setBoolValue(0);
+            obj.Display.setBoolValue(0);
         }
 		obj.TimeLast.setValue(ElapsedSec.getValue());
         var cur_range = obj.get_range();
@@ -1463,8 +1521,10 @@ else
             # AI/MP has no radar properties
             var self = geo.aircraft_position();
             me.get_Coord();
-            var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
-            e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+            if (me.coord != nil){
+                var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
+                e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+            }
         }
         return e;
     },
@@ -1495,4 +1555,75 @@ else
 
 # HUD field of view = 2 * math.atan2( 0.0764, 0.7186) * globals.R2D; # ~ 12.1375°
 # where 0.071 : virtual screen half width, 0.7186 : distance eye -> screen
+dump_tgt = func (u){
+    print(scan_tgt_idx, " callsign ", u.get_Callsign(), " range ",u.get_range(), " display ", u.get_display(), " visible ",u.get_visible(), 
+          " ddd-relative-bearing=", u.RelBearing,
+          " ddd-echo-fading=", u.Fading,
+          " ddd-draw-range-nm=",u.DddDrawRangeNm,
+          " tid-draw-range-nm=",u.TidDrawRangeNm);
+}
 
+dump_tgt_list = func {
+    for (scan_tgt_idx=0;scan_tgt_idx < size(tgts_list); scan_tgt_idx += 1) {
+        var u = tgts_list[scan_tgt_idx];
+        dump_tgt(u);
+    }
+}
+
+setlistener("/instrumentation/tacan/display/channel", func {
+                find_carrier_by_tacan();
+},0,0);
+#
+# Locate carrier based on TACAN. This used to be used for the ARA 63 (Carrier ILS) support - but this has
+# been replaced by the Emesary based notification model. However the ground services dialog uses this
+# for reposition - so replace the continual scanning (as part of the radar) with a one off method that can be
+# called as needed.
+find_carrier_by_tacan = func {
+    var raw_list = awg_9.Mp.getChildren();
+    var carrier_located = 0;
+    
+    foreach ( var c; raw_list ) {
+
+        var tchan = c.getNode("navaids/tacan/channel-ID");
+        if (tchan != nil and !we_are_bs) {
+            tchan = tchan.getValue();
+            if (tchan == getprop("/instrumentation/tacan/display/channel")) {
+# Tuned into this carrier (node) so use the offset.
+# Get the position of the glideslope; this is offset from the carrier position by
+# a smidgen. This is measured and is a point slightly in front of the TDZ where the
+# deck is marked with previous tyre marks (which seems as good a place as any to 
+# aim for).
+                if (c.getNode("position/global-x") != nil) {
+                    var x = c.getNode("position/global-x").getValue() + 88.7713542;
+                    var y = c.getNode("position/global-y").getValue() + 18.74631309;
+                    var z = c.getNode("position/global-z").getValue() + 115.6574875;
+
+                    f14.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
+
+                    var carrier_heading = c.getNode("orientation/true-heading-deg");
+                    if (carrier_heading != nil) {
+                        # relative offset of the course to the tdz
+                        # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
+                        # (i.e. this value is from tuning rather than calculation)
+                        f14.carrier_heading = carrier_heading.getValue();
+                        f14.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
+                    }
+                    else
+                    {
+                        f14.carrier_ara_63_heading = 0;
+                        print("Carrier heading invalid");
+                    }
+                    carrier_located = 1;
+                    f14.tuned_carrier_name = c.getNode("name").getValue();
+                    setprop("sim/model/f-14b/tuned-carrier",f14.tuned_carrier_name);
+                    return;
+                }
+                else
+                {
+                    # tuned tacan is not carrier.
+                    f14.carrier_ara_63_heading = 0;
+                }
+            }
+        }
+    }
+}
