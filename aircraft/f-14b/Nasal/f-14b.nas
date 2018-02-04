@@ -492,12 +492,21 @@ var updateFCS = func {
     f14.electricsFrame();
      
 # emesary notification - basic properties
-     update_f14_aircraft_notification(f14_aircraft_notification);
-     bridgedTransmitter.NotifyAll(f14_aircraft_notification);
-
+     if (emesaryOnlyProperties) {
+           update_f14_aircraft_notification(f14_aircraft_notification);
+           bridgedTransmitter.NotifyAll(f14_aircraft_notification);
+       }
      f14.registerFCS (); # loop, once per frame.
 }
 
+var emesaryOnlyProperties = getprop("/sim/multiplay/transmit-filter-property-base");
+
+setlistener("/sim/multiplay/transmit-filter-property-base", func(v){
+    if (v != nil and v.getValue() > 0)
+      emesaryOnlyProperties = 1;
+    else
+      emesaryOnlyProperties = 0;
+}, 0,0);
 
 var startProcess = func {
 	settimer (updateFCS, 1.0);
