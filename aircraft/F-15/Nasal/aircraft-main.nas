@@ -14,6 +14,12 @@ var deltaT = 1.0;
 
 var currentG = 1.0;
 
+# Version checking based on the work of Joshua Davidson
+if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201720) {
+var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialogs/error-mismatch.xml");
+error_mismatch.open();
+}
+
 #
 # 2017.3 or earlier FG compatibility fixes
 # Remove after 2017.4
