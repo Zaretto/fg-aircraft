@@ -408,7 +408,7 @@ var az_scan = func() {
 #var v1 = isNotBehindTerrain(u.propNode);
 #pickingMethod = 1;
 #var v2 = isNotBehindTerrain(u.propNode);
-            if (rcs.inRadarRange(u, 200, myRadarStrength_rcs) == 0) {
+            if (rcs.isInRadarRange(u, 80, myRadarStrength_rcs) == 0) {
                 u.set_display(0);
                 u.set_visible(0);
                 scan_hidden_by_rcs += 1;
@@ -458,7 +458,7 @@ var az_scan = func() {
         if (u_rng != nil and (u_rng < range_radar2  and u.not_acting == 0 )) {
             u.get_deviation(our_true_heading);
         
-            if (rcs.inRadarRange(u, range_radar2, myRadarStrength_rcs) == 0) {
+            if (rcs.isInRadarRange(u, 80, myRadarStrength_rcs) == 0) {
 #                if(awg9_trace)
 #                  print(scan_tgt_idx,";",u.get_Callsign()," not visible by rcs");
                 u.set_display(0);
