@@ -713,3 +713,30 @@ var trimDown = func {
     if (e_trim < -1) e_trim = -1;
     ElevatorTrim.setValue(e_trim);
 }
+var last_weapon_selected = getprop("sim/model/f15/controls/armament/weapon-selector");
+setlistener("/controls/armament/weapon-selected", func(_wv){
+    var v = getprop("sim/model/f15/controls/armament/weapon-selector");
+    var delta = _wv.getValue() - last_weapon_selected;
+    v = v + delta;
+    if (v >= 3) v = 0;
+    if (v < 0) v = 3;
+    setprop("sim/model/f15/controls/armament/weapon-selector",v);
+    _wv.setValue(v);
+    last_weapon_selected = v;
+},0,0);
+
+setlistener("/controls/armament/target-selected", func(v){
+    setprop("sim/model/f15/instrumentation/radar-awg-9/select-target",v.getValue());
+},0,0);
+
+#  PropertyAdjustButton.new("Pickle", "/controls/armament/pickle-target", "1"),
+#  PropertyAdjustButton.new("Target next", "/controls/armament/target-selected", "1"),
+#  PropertyAdjustButton.new("Target previous", "/controls/armament/target-selected", "-1"),
+#  PropertyAdjustButton.new("Weapon next", "/controls/armament/weapon-selected", "1"),
+#  PropertyAdjustButton.new("Weapon previous", "/controls/armament/weapon-selected", "-1"),
+#  PropertyAdjustButton.new("Azimuth left", "/controls/radar/azimuth-deg", "-5"),
+#  PropertyAdjustButton.new("Azimuth right", "/controls/radar/azimuth-deg", "5"),
+#  PropertyAdjustButton.new("Elevation up", "/controls/radar/elevation-deg", "5"),
+#  PropertyAdjustButton.new("Elevation down", "/controls/radar/elevation-deg", "-5"),
+#  PropertyAdjustButton.new("Missile Reject", "/controls/armament/missile-reject", "1"),
+
