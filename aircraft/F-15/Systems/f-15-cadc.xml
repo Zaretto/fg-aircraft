@@ -198,69 +198,37 @@
         <fcs_function name="pb">
             <description>PB Denormalization</description>
             <function>
-                <quotient>
-                    <product>
-                        <property>metrics/bw-ft</property>
-                        <property>velocities/p-aero-rad_sec</property>
-                    </product>
-                    <!-- over -->
-                    <product>
-                        <value>2</value>
-                        <property>velocities/vt-fps</property>
-                    </product>
-                </quotient>
+                <product>
+                    <property>aero/bi2vel</property>
+                    <property>velocities/p-aero-rad_sec</property>
+                </product>
             </function>
-            <clipto>
-                <min> -1.00 </min>
-                <max>  1.00 </max>
-            </clipto>
             <output>aero/pb</output>
         </fcs_function>
 
         <fcs_function name="cbarq-2vo">
             <description>For denormalization</description>
             <function>
-                <quotient>
-                    <product>
-                        <property>metrics/cbarw-ft</property>
-                        <property>velocities/q-aero-rad_sec</property>
-                    </product>
-                    <!-- over -->
-                    <product>
-                        <value>2</value>
-                        <property>velocities/vt-fps</property>
-                    </product>
-                </quotient>
+                <product>
+                    <property>aero/ci2vel</property>
+                    <property>velocities/q-aero-rad_sec</property>
+                </product>
             </function>
-            <clipto>
-                <min> -2.01 </min>
-                <max>  2.01 </max>
-            </clipto>
             <output>aero/qb</output>
         </fcs_function>
+
         <fcs_function name="rb-2vo">
             <description>For denormalization</description>
             <function>
-                <quotient>
-                    <product>
-                        <property>metrics/bw-ft</property>
-                        <property>velocities/r-aero-rad_sec</property>
-                    </product>
-                    <!-- over -->
-                    <product>
-                        <value>2</value>
-                        <property>velocities/vt-fps</property>
-                    </product>
-                </quotient>
+                <product>
+                    <property>aero/bi2vel</property>
+                    <property>velocities/r-aero-rad_sec</property>
+                </product>
             </function>
-            <clipto>
-                <min> -1.00 </min>
-                <max>  1.00 </max>
-            </clipto>
             <output>aero/rb</output>
         </fcs_function>
 
-
+        
         <fcs_function name="aero-cos-alpha">
             <function>
                 <product>

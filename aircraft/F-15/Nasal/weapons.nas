@@ -77,6 +77,24 @@ var weapons_init = func()
                         release_aim9();
                     }
                 }, 0, 1);
+	setlistener("controls/armament/pickle", func(Trig)
+                {
+# this should release all locked missles. need to fix the logic to lock on missiles
+# so for now this will just work with the currently selected armament, but not the gun.
+                    var weapon_s = WeaponSelector.getValue();
+                    print("Pickle ",weapon_s," ",Trig.getBoolValue());
+                    if ( weapon_s == 0 ) {
+                        print("Pickle does not fire the gun");
+                    }
+                    elsif ( weapon_s == 1 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
+                    elsif ( weapon_s == 2 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
+                }, 0, 1);
 }
 
 

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<PropertyList>
+    <name>fgversion</name>
+	<layout>vbox</layout>
+
+	<group>
+		<layout>hbox</layout>
+		<text>
+			<halign>left</halign>
+			<label>FlightGear version 2016.1 required for correct operation of this F-14</label>
+		</text>
+	</group>
+	<group>
+		<layout>hbox</layout>
+		<text>
+			<halign>left</halign>
+			<label>The aircraft may fly but certain items (avionics, aramaments) will not operate correctly</label>
+		</text>
+	</group>
+	<group>
+		<layout>hbox</layout>
+		<text>
+			<halign>left</halign>
+			<label>You can choose to ignore this warning and continue at your own risk. Please do not report any faults.</label>
+		</text>
+	</group>
+	
+
+	<group>
+		<layout>hbox</layout>
+		<button>
+			<pref-width>300</pref-width>
+			<halign>center</halign>
+			<legend>FlightGear downloads</legend>
+			<binding>
+				<command>open-browser</command>
+				<path>https://sourceforge.net/projects/flightgear</path>
+			</binding>
+			<binding>
+				<command>dialog-show</command>
+				<dialog-name>exit</dialog-name>
+			</binding>
+		</button>
+		<button>
+			<pref-width>300</pref-width>
+			<halign>center</halign>
+			<legend>Ignore</legend>
+			<binding>
+				<command>dialog-close</command>
+			</binding>
+		</button>
+	</group>
+	
+</PropertyList>
