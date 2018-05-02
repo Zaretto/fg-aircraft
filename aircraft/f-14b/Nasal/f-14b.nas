@@ -461,6 +461,8 @@ var quickstart = func() {
     if(total_lbs < 400)
         set_fuel(5500);
 
+    set_sweep(0);
+
     setprop("sim/model/f-14b/controls/hud/on-off",1);
     setprop("sim/model/f-14b/controls/VDI/on-off",1);
     setprop("sim/model/f-14b/controls/HSD/on-off",1);
@@ -472,6 +474,9 @@ var quickstart = func() {
     setprop("sim/model/f-14b/controls/electrics/master-test-switch",0);
 	setprop("sim/model/f-14b/controls/electrics/r-gen-switch",1);
 
+    setprop("sim/model/f-14b/controls/SAS/yaw", 1);
+    setprop("sim/model/f-14b/controls/SAS/roll", 1);
+    setprop("sim/model/f-14b/controls/SAS/pitch", 1);
 #
 # Richard's quickstart method
     setprop("controls/engines/engine[0]/cutoff",0);
@@ -488,6 +493,82 @@ var quickstart = func() {
     setprop("/fdm/jsbsim/propulsion/cutoff_cmd",1);
     setprop("/fdm/jsbsim/propulsion/set-running",1);
     setprop("/fdm/jsbsim/propulsion/set-running",0);
+
+}
+var cold_and_dark = func()
+{
+    set_sweep(4);
+    setprop("sim/model/f-14b/controls/hud/on-off",0);
+    setprop("sim/model/f-14b/controls/VDI/on-off",0);
+    setprop("sim/model/f-14b/controls/HSD/on-off",0);
+
+    setprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/emerg-gen-guard-lever",0);
+	setprop("sim/model/f-14b/controls/electrics/emerg-gen-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/l-gen-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/master-test-switch",0);
+	setprop("sim/model/f-14b/controls/electrics/r-gen-switch",0);
+	setprop("sim/model/f-14b/controls/electrics/emerg-gen-switch",0);
+	setprop("sim/model/f-14b/controls/electrics/r-gen-switch",0);
+
+    setprop("controls/engines/engine[0]/cutoff",1-getprop("controls/engines/engine[0]/cutoff"));
+    setprop("controls/engines/engine[1]/cutoff",1-getprop("controls/engines/engine[1]/cutoff"));
+    
+    setprop("controls/lighting/aux-inst", 0);
+    setprop("controls/lighting/eng-inst", 0);
+    setprop("controls/lighting/flt-inst", 0);
+    setprop("controls/lighting/instruments-norm",0);
+    setprop("controls/lighting/l-console", 0);
+    setprop("controls/lighting/panel-norm", 0);
+    setprop("controls/lighting/panel-norm",0);
+    setprop("controls/lighting/r-console", 0);
+    setprop("controls/lighting/stby-inst", 0);
+    setprop("controls/lighting/warn-caution", 0);
+
+    setprop("sim/model/f-14b/controls/lighting/hook-bypass",0);
+    setprop("controls/lighting/instruments-norm",0);
+    setprop("controls/lighting/panel-norm",0);
+    setprop("sim/model/f-14b/controls/lighting/anti-collision-switch",0);
+    setprop("sim/model/f-14b/controls/lighting/position-flash-switch",0);
+    setprop("sim/model/f-14b/controls/lighting/position-wing-switch",0);
+    setprop("controls/lighting/taxi-light",0);
+    setprop("sim/model/f-14b/controls/SAS/yaw", 0);
+    setprop("sim/model/f-14b/controls/SAS/roll", 0);
+    setprop("sim/model/f-14b/controls/SAS/pitch", 0);
+
+
+    setprop("/controls/gear/brake-parking",1);
+    setprop("sim/model/f-14b/controls/HUD/brightness",0);
+    setprop("sim/model/f-14b/controls/HUD/on-off",false);
+    setprop("sim/model/f-14b/controls/MPCD/brightness",0);
+    setprop("sim/model/f-14b/controls/MPCD/on-off",0);
+    setprop("sim/model/f-14b/controls/TEWS/brightness",0);
+    setprop("sim/model/f-14b/controls/VSD/on-off",false);
+    setprop("sim/model/f-14b/controls/VSD/brightness",0);
+
+    setprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/emerg-gen-guard-lever",0);
+    setprop("sim/model/f-14b/controls/electrics/l-gen-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/master-test-switch",0);
+
+    setprop("sim/model/f-14b/lights/master-test-lights", 0);
+    setprop("sim/model/f-14b/lights/radio2-brightness",0);
+
+    setprop("sim/model/f-14b/controls/windshield-heat",0);
+
+    setprop("sim/model/f-14b/controls/fuel/dump-switch",0);
+    setprop("sim/model/f-14b/controls/fuel/refuel-probe-switch",0);
+    refuel_probe_switch_down();
+    refuel_probe_switch_down();
+
+    setprop("sim/model/f-14b/controls/engines/l-eec-switch",0);
+    setprop("sim/model/f-14b/controls/engines/r-eec-switch",0);
+    setprop("sim/model/f-14b/controls/electrics/emerg-gen-switch",0);
+    setprop("sim/model/f-14b/controls/engs/l-eng-master-guard",1);
+    setprop("sim/model/f-14b/controls/engs/r-eng-master-guard",1);
+    setprop("sim/model/f-14b/controls/electrics/jfs-starter",0);
+
+    setprop("fdm/jsbsim/systems/electrics/ground-power",0);
 
 }
 
