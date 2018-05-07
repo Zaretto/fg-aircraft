@@ -83,7 +83,7 @@
         <fcs_function name="fcs/differential-elevator-pos-norm">
             <function>
                 <product>
-                    <property>fcs/aileron-right-pos-norm</property>
+                    <property>fcs/aileron-pos-norm</property>
                     <value>0.3</value> <!-- mxaimum authority -->
                     <table>
                         <!-- Figure 4 Mechanmical lateral control authority.
@@ -177,21 +177,21 @@
 
     <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
     <channel name="Roll">
-		<switch name="fcs/stick-roll">
-			<default value="0"/>
-			<test value="fcs/aileron-cmd-norm">
-				/autopilot/internal/roll-active NE 1
-			</test>
-		</switch>
-		
-		<switch name="fcs/css-roll">
-			<default value="0"/>
-			<test logic="AND" value="/controls/flight/aileron-norm">
-				/autopilot/internal/roll-active EQ 1
-				/controls/flight/aileron-norm NE 0
-			</test>
-		</switch>
-		
+        <switch name="fcs/stick-roll">
+            <default value="0"/>
+            <test value="fcs/aileron-cmd-norm">
+                /autopilot/internal/roll-active NE 1
+            </test>
+        </switch>
+
+        <switch name="fcs/css-roll">
+            <default value="0"/>
+            <test logic="AND" value="/controls/flight/aileron-norm">
+                /autopilot/internal/roll-active EQ 1
+                /controls/flight/aileron-norm NE 0
+            </test>
+        </switch>
+
         <summer name="fcs/roll-trim-sum-raw">
             <input>fcs/stick-roll</input>
             <input>fcs/css-roll</input>
@@ -235,120 +235,11 @@
         <aerosurface_scale name="Aileron Control">
             <input>fcs/aileron-pos-norm</input>
             <range>
-                <min> -0.34910106475824751265491359748647</min>
-                <max>  0.34910106475824751265491359748647</max>
-            </range>
-            <output>fcs/aileron-pos-rad</output>
-        </aerosurface_scale>
-
-        <pure_gain name="fcs/aileron-left-pos-rad">
-            <input>fcs/aileron-pos-rad</input>
-            <gain>1</gain>
-            <output>fcs/aileron-left-pos-rad</output>
-        </pure_gain >
-
-        <pure_gain name="fcs/aileron-right-pos-rad">
-            <input>fcs/aileron-pos-rad</input>
-            <gain>1</gain>
-        </pure_gain >
-
-        <pure_gain name="fcs/aileron-left-pos-norm">
-            <input>fcs/aileron-pos-norm</input>
-            <gain>1</gain>
-        </pure_gain >
-        <pure_gain name="fcs/aileron-right-pos-norm">
-            <input>fcs/aileron-pos-norm</input>
-            <gain>1</gain>
-        </pure_gain >
-
-        <pure_gain name="fcs/aileron-right-pos-deg">
-            <input>fcs/aileron-right-pos-rad</input>
-            <gain>30</gain>
-        </pure_gain >
-        <pure_gain name="fcs/aileron-left-pos-deg">
-            <input>fcs/aileron-left-pos-rad</input>
-            <gain>30</gain>
-        </pure_gain >
-        <pure_gain name="fcs/aileron-pos-deg">
-            <input>fcs/aileron-right-pos-rad</input>
-            <gain>30</gain>
-        </pure_gain >
-
-        <aerosurface_scale name="left aileron normalization">
-            <input>fcs/left-aileron-pos-rad</input>
-            <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/left-aileron-pos-norm</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="Aileron Control">
-            <input>fcs/right-aileron-pos-norm</input>
-            <range>
                 <min> -20 </min>
                 <max>  20 </max>
             </range>
             <output>fcs/aileron-pos-deg</output>
         </aerosurface_scale>
-
-        <aerosurface_scale name="Left Aileron Control">
-            <input>fcs/aileron-pos-norm</input>
-            <range>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </range>
-            <output>fcs/left-aileron-pos-rad</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="Right Aileron Control">
-            <input>fcs/aileron-pos-norm</input>
-            <range>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </range>
-            <output>fcs/right-aileron-pos-rad</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="left aileron normalization">
-            <input>fcs/left-aileron-pos-rad</input>
-            <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/left-aileron-pos-norm</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="right aileron normalization">
-            <input>fcs/right-aileron-pos-rad</input>
-            <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/right-aileron-pos-norm</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="Aileron Control">
-            <input>fcs/right-aileron-pos-norm</input>
-            <range>
-                <min> -20 </min>
-                <max>  20 </max>
-            </range>
-            <output>fcs/aileron-pos-deg</output>
-        </aerosurface_scale>
-
     </channel>
 
     <channel name="Yaw">

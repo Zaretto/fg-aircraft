@@ -65,7 +65,7 @@ var Alpha = 0;
 var Throttle = 0;
 var e_trim = 0;
 var rudder_trim = 0;
-var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1);
+var aileron = props.globals.getNode("fdm/jsbsim/fcs/aileron-pos-norm", 1);
 var radarStandbyNode = props.globals.getNode("instrumentation/radar/radar-standby",1);
 var radarMPnode = props.globals.getNode("instrumentation/radar/radar-mode",1);
 
