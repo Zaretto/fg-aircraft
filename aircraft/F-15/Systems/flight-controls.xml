@@ -26,7 +26,16 @@
 				/controls/flight/elevator-norm NE 0
 			</test>
 		</switch>
-		
+
+        <!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
+            Kevin R. Scalera
+        Table 2.1: Control surface limits
+        Control Effector Deflection (deg) Rate Limit (deg/s)
+                DHT(L/R) -29.0 / 15.0 ±46
+                DAIL(L/R) -20.0 / 20.0 ±100
+                DRUD(L/R) -30.0 / 30.0 ±105
+                FLAPS(L/R) 0.0 / 35.0 ±18
+        -->
         <summer name="Pitch Trim Sum">
             <input>fcs/stick-pitch</input>
             <input>fcs/css-pitch</input>
@@ -68,12 +77,11 @@
             <traverse>
                 <setting>
                     <position>-1</position>
-                    <time>0.9</time>
+                    <time>0.6304</time>
                 </setting>
                 <setting>
                     <position>1</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.3260</time>
                 </setting>
             </traverse>
             <output>fcs/elevator-pos-rad</output>
@@ -221,12 +229,11 @@
             <traverse>
                 <setting>
                     <position>-1</position>
-                    <time>0.9</time>
+                    <time>0.2</time>
                 </setting>
                 <setting>
                     <position>1</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.2</time>
                 </setting>
             </traverse>
             <output>fcs/aileron-pos-norm</output>
@@ -336,13 +343,11 @@
             <traverse>
                 <setting>
                     <position>-0.35</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.2857</time>
                 </setting>
                 <setting>
                     <position>0.35</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.2857</time>
                 </setting>
             </traverse>
             <output>fcs/rudder-pos-rad</output>
@@ -388,7 +393,7 @@
                 </setting>
                 <setting>
                     <position> 30 </position>
-                    <time>    1.9 </time>
+                    <time>    1.944</time>
                 </setting>
             </traverse>
             <output>fcs/flap-pos-deg</output>
