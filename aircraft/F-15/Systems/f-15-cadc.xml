@@ -421,6 +421,7 @@
             <default value="0.0"/>
             <test logic="AND" value="1">
                 fcs/roll-sas-enable ne 0.0
+				autoflight/output/roll-master ne 1
             </test>
             <output>fcs/roll-sas-active</output>
         </switch>
@@ -483,6 +484,7 @@
                 fcs/elevator-cmd-norm ge -0.15
                 fcs/elevator-cmd-norm le 0.15
                 fcs/pitch-damper-enable ne 0.0
+				autoflight/output/pitch-master ne 1
             </test>
             <output>fcs/pitch-damper-active</output>
         </switch>
