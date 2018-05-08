@@ -8,22 +8,20 @@
     <property value="0">systems/hydraulics/emerg-gear-bleed</property>
     <property value="0">gear/damage-reset</property>
     <property value="2">position/aircraft-on-ground-last-value</property>
-	<!--<property value="0.1">fcs/aileron-deadzone</property>
-	<property value="0.1">fcs/elevator-deadzone</property>-->
     
     <channel name="Pitch">
 		<switch name="fcs/stick-pitch">
 			<default value="0"/>
 			<test value="fcs/elevator-cmd-norm">
-				/autopilot/internal/pitch-active NE 1
+				autoflight/input/pitch-switch ne 1
 			</test>
 		</switch>
 		
 		<switch name="fcs/css-pitch">
 			<default value="0"/>
-			<test logic="AND" value="/controls/flight/elevator-norm">
-				/autopilot/internal/pitch-active EQ 1
-				/controls/flight/elevator-norm NE 0
+			<test logic="AND" value="autoflight/ss/elevator-norm">
+				autoflight/input/pitch-switch eq 1
+				autoflight/ss/elevator-norm ne 0
 			</test>
 		</switch>
 
@@ -188,15 +186,15 @@
         <switch name="fcs/stick-roll">
             <default value="0"/>
             <test value="fcs/aileron-cmd-norm">
-                /autopilot/internal/roll-active NE 1
+                autoflight/input/roll-switch ne 1
             </test>
         </switch>
 
         <switch name="fcs/css-roll">
             <default value="0"/>
-            <test logic="AND" value="/controls/flight/aileron-norm">
-                /autopilot/internal/roll-active EQ 1
-                /controls/flight/aileron-norm NE 0
+            <test logic="AND" value="autoflight/ss/aileron-norm">
+                autoflight/input/roll-switch eq 1
+                autoflight/ss/aileron-norm ne 0
             </test>
         </switch>
 
@@ -204,7 +202,7 @@
             <input>fcs/stick-roll</input>
             <input>fcs/css-roll</input>
             <input>fcs/roll-trim-cmd-norm</input>
-            <input>fcs/roll-trim-sas-cmd-norm</input>
+            <input>autoflight/roll/roll-rate-demand</input>
             <input>fcs/roll-rate-limiter</input>
             <clipto>
                 <min> -1 </min>
@@ -271,13 +269,26 @@
                 <max>  0.1 </max>
             </clipto>
         </fcs_function>-->
+
+        <switch name="fcs/aileron-cmd-norm-ap-switched">
+            <default value="fcs/aileron-cmd-norm"/>
+            <test logic="AND" value="autoflight/ss/aileron-norm">
+                autoflight/input/roll-switch eq 1
+                autoflight/output/roll-master eq 0
+            </test>
+            <test logic="AND" value="0">
+                autoflight/input/roll-switch eq 1
+                autoflight/output/roll-master eq 1
+            </test>
+        </switch>
+
         <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
             <!--This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
                 The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.-->
             <description>ARI</description>
             <function>
                 <product>
-                    <property>fcs/aileron-cmd-norm</property>
+                    <property>fcs/aileron-cmd-norm-ap-switched</property>
                     <property>fcs/ari-lateral-enabled</property>
                     <table>
                         <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
