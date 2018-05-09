@@ -245,15 +245,6 @@
 			</test>
 		</switch>
 		
-		<switch name="autoflight/roll/heading/trigger">
-			<default value="0"/>
-			<test logic="OR" value="1">
-				autoflight/roll/gain-switch eq 1
-				autoflight/roll/heading/pi le -29.99
-				autoflight/roll/heading/pi ge 29.99
-			</test>
-		</switch>
-		
 		<fcs_function name="autoflight/roll/heading/bank-max">
 			<function>
 				<table>
@@ -270,6 +261,15 @@
 			<input>autoflight/roll/heading/bank-max</input>
 			<gain>-1.0</gain>
 		</pure_gain>
+		
+		<switch name="autoflight/roll/heading/trigger">
+			<default value="0"/>
+			<test logic="OR" value="1">
+				autoflight/roll/gain-switch eq 1
+				autoflight/roll/heading/pi le autoflight/roll/heading/bank-min
+				autoflight/roll/heading/pi ge autoflight/roll/heading/bank-max
+			</test>
+		</switch>
 		
 		<pid name="autoflight/roll/heading/pi-v">
 			<input>autoflight/roll/heading-error-deg</input>
