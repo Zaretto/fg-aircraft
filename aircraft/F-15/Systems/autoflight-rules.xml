@@ -62,6 +62,22 @@
 		<output>/fdm/jsbsim/autoflight/input/pitch-switch</output>
 	</logic>
 	
+	<logic>
+		<input>
+			<or>
+				<equals>
+					<property>/autopilot/locks/altitude</property>
+					<value>vertical-speed-hold</value>
+				</equals>
+				<equals>
+					<property>/autopilot/locks/altitude</property>
+					<value>altitude-hold</value>
+				</equals>
+			</or>
+		</input>
+		<output>/fdm/jsbsim/autoflight/input/vs-active</output>
+	</logic>
+	
 	<filter>
 		<name>HEADING MAGNETIC SYNC</name>
 		<debug>false</debug>
@@ -69,16 +85,16 @@
 		<gain>1.0</gain>
 		<enable>
 			<condition>
-				<and>
-					<equals>
+				<or>
+					<not-equals>
 						<property>/autopilot/locks/heading</property>
 						<value>dg-heading-hold</value>
-					</equals>
+					</not-equals>
 					<not-equals>
 						<property>/fdm/jsbsim/autoflight/output/roll-master</property>
 						<value>1</value>
 					</not-equals>
-				</and>
+				</or>
 			</condition>
 		</enable>
 		<input>
@@ -101,16 +117,16 @@
 		<gain>1.0</gain>
 		<enable>
 			<condition>
-				<and>
-					<equals>
+				<or>
+					<not-equals>
 						<property>/autopilot/locks/heading</property>
 						<value>true-heading-hold</value>
-					</equals>
+					</not-equals>
 					<not-equals>
 						<property>/fdm/jsbsim/autoflight/output/roll-master</property>
 						<value>1</value>
 					</not-equals>
-				</and>
+				</or>
 			</condition>
 		</enable>
 		<input>
