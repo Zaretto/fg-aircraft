@@ -106,16 +106,10 @@
 						<property>/autopilot/locks/heading</property>
 						<value>true-heading-hold</value>
 					</equals>
-					<or>
-						<not-equals>
-							<property>/fdm/jsbsim/autoflight/output/roll-master</property>
-							<value>1</value>
-						</not-equals>
-						<equals>
-							<property>/autopilot/settings/gps-driving-true-heading</property>
-							<value>1</value>
-						</equals>
-					</or>
+					<not-equals>
+						<property>/fdm/jsbsim/autoflight/output/roll-master</property>
+						<value>1</value>
+					</not-equals>
 				</and>
 			</condition>
 		</enable>
