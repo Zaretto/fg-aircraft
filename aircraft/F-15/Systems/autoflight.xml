@@ -13,7 +13,7 @@
 	<property value="0">autoflight/roll/master-pid</property>
 	<property value="0">autoflight/pitch/master-pid</property>
 	<property value="0">autoflight/input/vs-active</property>
-	<property value="0">autoflight/pitch/target-pitch-deg</property>
+	<property value="0">autoflight/pitch/vs/pid</property>
 	
 	<property value="0">autoflight/roll/p-gain</property>
 	<property value="0">autoflight/roll/i-gain</property>
@@ -238,12 +238,19 @@
 			</function>
 		</fcs_function>
 		
-		<switch name="autoflight/roll/heading/i-gain">
-			<default value="0"/>
-			<test value="0.001">
-				autoflight/roll/gain-switch eq 0
-			</test>
-		</switch>
+		<fcs_function name="autoflight/roll/heading/i-gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="column">autoflight/roll/gain-switch</independentVar>
+					<tableData>
+						     0      1  
+						0.4  0.005  0.000
+						1.5  0.010  0.000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 		
 		<fcs_function name="autoflight/roll/heading/bank-max">
 			<function>
@@ -262,12 +269,30 @@
 			<gain>-1.0</gain>
 		</pure_gain>
 		
+		<fcs_function name="autoflight/roll/heading/bank-trigger-max">
+			<function>
+				<sum>
+					<property>autoflight/roll/heading/bank-max</property>
+					<value>-0.1</value>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="autoflight/roll/heading/bank-trigger-min">
+			<function>
+				<sum>
+					<property>autoflight/roll/heading/bank-min</property>
+					<value>0.1</value>
+				</sum>
+			</function>
+		</fcs_function>
+		
 		<switch name="autoflight/roll/heading/trigger">
 			<default value="0"/>
 			<test logic="OR" value="1">
 				autoflight/roll/gain-switch eq 1
-				autoflight/roll/heading/pi le autoflight/roll/heading/bank-min
-				autoflight/roll/heading/pi ge autoflight/roll/heading/bank-max
+				autoflight/roll/heading/pi le autoflight/roll/heading/bank-trigger-min
+				autoflight/roll/heading/pi ge autoflight/roll/heading/bank-trigger-max
 			</test>
 		</switch>
 		
@@ -284,9 +309,25 @@
 			<output>autoflight/roll/heading/pi</output>
 		</pid>
 		
-		<!-- V/S and ALT HOLD -->
+		<!-- ALT HOLD -->
 		
-		<!-- ??? -->
+		<fcs_function name="autoflight/pitch/alt/error">
+			<function>
+				<difference>
+					<property>autoflight/pitch/altitude-2-sec-ahead</property>
+					<property>/autopilot/settings/target-altitude-ft</property>
+				</difference>
+			</function>
+		</fcs_function>
+		
+		<pure_gain name="autoflight/pitch/alt/vs-target">
+			<input>autoflight/pitch/alt/error</input>
+			<gain>-6</gain>
+			<clipto>
+				<min>-2000</min>
+				<max>2000</max>
+			</clipto>
+		</pure_gain>
 	
 	</channel>
 	
@@ -502,7 +543,7 @@
 		
 		<switch name="autoflight/pitch/target-pitch-deg">
 			<default value="/orientation/pitch-deg"/>
-			<test logic="AND" value="0"> <!-- autoflight/pitch/vs/target-pitch-deg -->
+			<test logic="AND" value="autoflight/pitch/vs/pid">
 				autoflight/output/pitch-master eq 1
 				autoflight/input/vs-active eq 1
 			</test>
