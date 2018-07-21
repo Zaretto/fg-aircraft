@@ -200,7 +200,8 @@ var carrier_ara_63_heading = nil;
 var wow = 1;
 setprop("fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("controls/flight/SAS-roll",0);
-var registerFCS = func {settimer (updateFCS, 0);}
+UPDATE_PERIOD = 0.0333; # update nasal at 30hz
+var registerFCS = func {settimer (updateFCS, UPDATE_PERIOD);}
 
 #
 #
