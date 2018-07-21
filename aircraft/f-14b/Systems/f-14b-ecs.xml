@@ -35,12 +35,11 @@
   <property value="6750">systems/ecs/windscreen-factor1</property>
   <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
 
-  <property value="0.008333">systems/ecs/windscreen-dt</property>
   <property value="46">systems/ecs/windscreen-heater-watts-second</property> <!--Watts per second ramp up on heater input consumption-->
   <property value="290">systems/ecs/windscreen-temperature-k</property>
   <property>systems/ecs/windscreen-heater-power-watts</property>
 
-  <channel name="Oxygen">
+  <channel name="Oxygen" execrate="4">
 
     <switch name="systems/ecs/oxygen-converter-qty-dmd">
       <default value="1000"/>
@@ -114,7 +113,7 @@
     </actuator>
 
   </channel>
-  <channel name="Pressurisation">
+  <channel name="Pressurisation"  execrate="4" >
 
     <switch name="systems/ecs/pressurisation-active">
       <default value="0.0"/>
@@ -199,7 +198,7 @@
       <output>systems/ecs/cabin-altitude-ft</output>
     </actuator>
   </channel>
-  <channel name="Temperature">
+  <channel name="Temperature" execrate="4" >
     
 <!-- simple model of windshield heating.-->
 
@@ -257,7 +256,7 @@
                   <property>systems/ecs/windscreen-heater-power-lv-watts</property>
                   <product>
                       <property>systems/ecs/windscreen-heater-watts-second</property>
-                      <property>systems/ecs/windscreen-dt</property>
+                      <property>simulation/channel-dt</property>
                   </product>
               </sum>
           </ifthen>
@@ -295,7 +294,7 @@
         <sum>
           <property>systems/ecs/windscreen-lv-temperature</property>
             <product>
-                <property>systems/ecs/windscreen-dt</property>
+                <property>simulation/channel-dt</property>
                 <difference>
                     <product>
                 <value>0.0017</value>
