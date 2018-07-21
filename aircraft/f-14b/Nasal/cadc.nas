@@ -17,8 +17,9 @@ var APCengaged = props.globals.getNode("sim/model/f-14b/systems/apc/engaged");
 var engaded = 0;
 var gear_down = props.globals.getNode("controls/gear/gear-down");
 var disengaged_light = props.globals.getNode("sim/model/f-14b/systems/apc/self-disengaged-light");
-var throttle_0 = props.globals.getNode("controls/engines/engine[0]/throttle");
-var throttle_1 = props.globals.getNode("controls/engines/engine[1]/throttle");
+var throttle_0 = props.globals.getNode("fdm/jsbsim/fcs/throttle-cmd-norm[0]");
+var throttle_1 = props.globals.getNode("fdm/jsbsim/fcs/throttle-cmd-norm[1]");
+#var apc_disengage_throttle = props.globals.getNode("/fdm/jsbsim/systems/apc/disengage");
 
 var computeAPC = func {
 	var t0 = throttle_0.getValue();
@@ -27,7 +28,7 @@ var computeAPC = func {
 #
 #
 # - nothing to do with APC - just here for convenience
-	if (t0 >= 0.98 or t1 >= 0.98)
+	if (t0 >= 0.91 or t1 >= 0.91)
     {
         if (getprop("controls/flight/speedbrake", 0))
         {
@@ -35,7 +36,7 @@ var computeAPC = func {
             setprop("controls/flight/speedbrake", 0);
         }
     }
-    
+#print("APC wow ",wow," throttles ",t0,":",t1," gear ",    gear_down.getBoolValue());
 #
 #
 # disengage if not correctly setup.
@@ -44,17 +45,19 @@ var computeAPC = func {
         # JSBSim has APC as FDM system
 		if ( wow 
 # gear check disabled for testing
-#           or !gear_down.getBoolValue() 
+            or !gear_down.getBoolValue() 
             or !getprop("engines/engine[0]/running")
             or !getprop("engines/engine[1]/running")
-#    		or t0 > 0.76 or t0 < 0.08
-#   		or t1 > 0.76 or t1 < 0.08 
+#    		or apc_disengage_throttle.getValue()
            ) 
         {
+print("APC Disengage");
+#apc_disengage_throttle.setValue(0);
 			APC_off()
 		}
 	}
 }
+
 
 var toggleAPC = func {
 	engaged = APCengaged.getBoolValue();
@@ -67,7 +70,7 @@ var toggleAPC = func {
 
 var APC_on = func {
 	if ( ! wow 
-        # and gear_down.getBoolValue()
+         and gear_down.getBoolValue()
         )
     {
 		APCengaged.setBoolValue(1);
@@ -76,7 +79,8 @@ var APC_on = func {
 		setprop ("autopilot/locks/speed", "APC");
         if(usingJSBSim){
     		setprop ("fdm/jsbsim/systems/apc/active",1);
-    		setprop ("fdm/jsbsim/systems/apc/target-vc-kts",getprop("fdm/jsbsim/velocities/vc-kts"));
+    		setprop ("fdm/jsbsim/systems/apc/target-alpha",14.7);
+#    		setprop ("fdm/jsbsim/systems/apc/target-vc-kts",getprop("fdm/jsbsim/velocities/vc-kts"));
     		setprop ("fdm/jsbsim/systems/apc/divergence-pid/initial-integrator-value",getprop("fdm/jsbsim/fcs/throttle-cmd-norm[1]") /  getprop("fdm/jsbsim/systems/apc/throttle-gain"));
 
         }
@@ -95,7 +99,8 @@ var APC_off = func {
 	setprop ("autopilot/locks/speed", "");
     if(usingJSBSim){
         setprop ("fdm/jsbsim/systems/apc/active",0);
-        setprop ("fdm/jsbsim/systems/apc/target-vc-kts",0);
+    		setprop ("fdm/jsbsim/systems/apc/target-alpha",0);
+#        setprop ("fdm/jsbsim/systems/apc/target-vc-kts",0);
     }
     setprop("sim/model/f-14b/controls/switch-throttle-mode", 0);
 
