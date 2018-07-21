@@ -166,7 +166,7 @@ var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/positio
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn");
 
-var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
+#var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
 var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
 var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
 var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]",1);
@@ -332,7 +332,7 @@ var timedMotions = func {
     	right_elev_generic.setDoubleValue(right_elev_output.getValue());
     }
 	slat_generic.setDoubleValue(slat_output.getValue());
-    wing_sweep_generic.setDoubleValue(currentSweep);
+    #wing_sweep_generic.setDoubleValue(currentSweep);
 	lighting_collision_generic.setIntValue(lighting_collision.getValue());
 	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
