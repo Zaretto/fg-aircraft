@@ -70,6 +70,7 @@ controls.gearDown = func(v) {
 
 # Landing gear handle animation 
 # -----------------------------
+var std_trim_rate = controls.TRIM_RATE;
 
 setlistener( "controls/gear/gear-down", func { ldg_hdl_main(); } );
 var ld_hdl = props.globals.getNode("sim/model/f-14b/controls/gear/ld-gear-handle-anim", 1);
@@ -77,10 +78,12 @@ var ld_hdl = props.globals.getNode("sim/model/f-14b/controls/gear/ld-gear-handle
 var ldg_hdl_main = func {
 	var pos = ld_hdl.getValue();
 	if ( getprop("controls/gear/gear-down") == 1 ) {
+controls.TRIM_RATE = std_trim_rate / 2;
 		if ( pos > -1 ) {
 			ldg_hdl_anim(-1, pos);
 		}
 	} elsif ( pos < 0 ) {
+controls.TRIM_RATE = std_trim_rate;
 		ldg_hdl_anim(1, pos);
 	}
 }
