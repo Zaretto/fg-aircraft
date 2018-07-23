@@ -52,6 +52,12 @@
                 <signals include="/Aircraft/Generic/flightrecorder/components/ai-models-carrier.xml">
                     <count type="int">4</count>
                 </signals>
+                <signals include="/Aircraft/Generic/flightrecorder/components/ai-models-escorts.xml">
+                    <count type="int">12</count>
+                </signals>
+                <signals include="/Aircraft/Generic/flightrecorder/components/ai-models-tanker.xml">
+                    <count type="int">4</count>
+                </signals>
                 <!-- Engine nozzles -->
                 <signal>
                     <type>float</type>
@@ -951,6 +957,7 @@
                      and/or the intialization procedure changes
                 -->
                 <overrides>
+                    <deck-offset-m type="double">-4.5</deck-offset-m> <!-- align with cat1 -->
                     <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
                     <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
                     <!--                    <init-delay type="int">0.1</init-delay> -->
