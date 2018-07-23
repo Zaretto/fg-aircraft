@@ -705,32 +705,40 @@ var common_carrier_init = func {
                         # in any case is this is less than 6 meters we'd be in the bilges so this probably means
                         # that the elevation data isn't valid so use hardcoded value of 65.2
                         current_pos = carrier_pos;
-                        var info = geodinfo(lat, lon);
-                        if (info != nil) 
-                        {
-                            print("the carrier deckj is is at elevation ", info[0], " m");
-                            ground_elevation = info[0]*3.28084; # convert to feet
-                            if (ground_elevation < 1) ground_elevation = 65.2;
+#                        var info = geodinfo(lat, lon);
+#                        if (info != nil) 
+#                        {
+#                            print("the carrier deckj is is at elevation ", info[0], " m");
+#                            ground_elevation = info[0]*3.28084; # convert to feet
+#                            if (ground_elevation < 1) ground_elevation = 65.2;
+#                        }
+var deckAltitudeNode = c.getNode("position/deck-altitude-feet");
+ground_elevation = 65;
+                        if (deckAltitudeNode != nil){
+                            ground_elevation =  deckAltitudeNode.getValue();
+                            print("Carrier deck from node ",ground_elevation);
                         }
                         if (ground_elevation < 6) ground_elevation = 65.2;
+                        print("Carrier deck now: ",ground_elevation);
                     }
                 }
             }
                    
-            setprop("/controls/gear/gear-down", 1);
-
             if (current_pos != nil)
             {
-                print("Adjusting launch position by 7meters");
-                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),7);
+                var offset = getprop("sim/model/f-14b/overrides/deck-offset-m");
+                print("Adjusting launch position by ",offset," meters");
+                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),offset);
             }
             setprop("/position/latitude-deg", current_pos.lat());
             setprop("/position/longitude-deg", current_pos.lon());
 
             print("Moving the aircraft into the launch position properly... for ",carrier, " alt ",ground_elevation," lat ", current_pos.lat(), " lon ",current_pos.lon());
 
-            setprop("/position/altitude-ft", ground_elevation+getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
-        }
+            #
+            # sim/model/f-14b/overrides/aircraft-agl-height is the known height of the aircraft (in feet) with gear down.
+            setprop("/position/altitude-ft", ground_elevation + getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
+         }
     }
 
 }
@@ -741,8 +749,8 @@ var common_init = func {
         #
         # part of the bombable integration. we don't have magnetos so we can use them
         # to detect damage
-        setprop("controls/engines/engine[0]/magnetos",1);
-        setprop("controls/engines/engine[1]/magnetos",1);
+        #setprop("controls/engines/engine[0]/magnetos",1);
+        #setprop("controls/engines/engine[1]/magnetos",1);
 
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
@@ -761,8 +769,7 @@ var common_init = func {
                 setprop("/controls/gear/gear-down", 1);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+                setprop("/fdm/jsbsim/gear/gear-pos-norm",1);
 
                 if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
                 {
@@ -776,8 +783,7 @@ var common_init = func {
                 setprop("/controls/gear/gear-down", 0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+                setprop("/fdm/jsbsim/gear/gear-pos-norm",0);
                 setprop("/controls/gear/brake-parking",0);
             }
         }
