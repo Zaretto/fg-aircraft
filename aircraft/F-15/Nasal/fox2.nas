@@ -2235,19 +2235,21 @@ var AIM = {
 		#print("search");
 		# search.
 		if (1==1 or contact != me.Tgt) {
-			#print("search2");
+#			if (contact != nil and contact.isValid() == TRUE)
+#              print("search2: tty=", contact.get_type(), " gnd=", me.target_gnd, " g=", me.guidance, " r=",contact.get_range());
 			if (contact != nil and contact.isValid() == TRUE and
 				(  (contact.get_type() == SURFACE and me.target_gnd == TRUE)
                 or (contact.get_type() == AIR and me.target_air == TRUE)
                 or (contact.get_type() == MARINE and me.target_sea == TRUE))) {
-				#print("search3");
+#				print("search3");
 				me.tagt = contact; # In the radar range and horizontal field.
 				me.rng = me.tagt.get_range();
 				me.total_elev  = deviation_normdeg(OurPitch.getValue(), me.tagt.getElevation()); # deg.
 				me.total_horiz = deviation_normdeg(OurHdg.getValue(), me.tagt.get_bearing());    # deg.
 				# Check if in range and in the seeker FOV.
-				if ((me.class!="A" or contact.get_Speed()>15) and ((me.guidance != "semi-radar" and me.guidance != "laser") or me.is_painted(me.tagt) == TRUE)
-				    and me.rng < me.max_fire_range_nm and me.rng > me.min_fire_range_nm and me.FOV_check(me.total_horiz, me.total_elev, me.fcs_fov) ) {
+				if ( (me.class!="A" or contact.get_Speed()>15)
+                     and ((me.guidance != "semi-radar" and me.guidance != "laser") or me.is_painted(me.tagt) == TRUE)
+ 				     and me.rng < me.max_fire_range_nm and me.rng > me.min_fire_range_nm and me.FOV_check(me.total_horiz, me.total_elev, me.fcs_fov) ) {
 					#print("search4");
 					me.status = MISSILE_LOCK;
 					me.SwSoundOnOff.setBoolValue(TRUE);

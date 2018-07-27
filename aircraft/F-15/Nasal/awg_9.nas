@@ -18,6 +18,26 @@
 
 var this_model = "f15";
 #var this_model = "f-14b";
+var knownShips = {
+    "missile_frigate":       nil,
+    "frigate":       nil,
+    "USS-LakeChamplain":     nil,
+    "USS-NORMANDY":     nil,
+    "USS-OliverPerry":     nil,
+    "USS-SanAntonio":     nil,
+};
+
+var knownSurface = {
+    "buk-m2":       nil,
+    "depot":       nil,
+    "truck":     nil,
+    "tower":     nil,
+};
+
+var AIR = 0;
+var MARINE = 1;
+var SURFACE = 2;
+var ORDNANCE = 3;
 
 var ElapsedSec        = props.globals.getNode("sim/time/elapsed-sec");
 var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
@@ -1148,23 +1168,18 @@ var Target = {
 
         obj.Model = c.getNode("model-short");
         var model_short = c.getNode("sim/model/path");
-        if(model_short != nil)
-        {
+        if(model_short != nil){
             var model_short_val = model_short.getValue();
-            if (model_short_val != nil and model_short_val != "")
-            {
-            var u = split("/", model_short_val); # give array
-            var s = size(u); # how many elements in array
+            if (model_short_val != nil and model_short_val != "") {
+                var u = split("/", model_short_val); # give array
+                var s = size(u); # how many elements in array
             var o = u[s-1];	 # the last element
             var m = size(o); # how long is this string in the last element
-            var e = m - 4;   # - 4 chars .xml
-            obj.ModelType = substr(o, 0, e); # the string without .xml
-}
-else
-            obj.ModelType = "";
-        }
-else
-{
+              var e = m - 4;   # - 4 chars .xml
+                obj.ModelType = substr(o, 0, e); # the string without .xml
+            } else
+              obj.ModelType = "";
+        } else {
             obj.ModelType = "";
         }
 
@@ -1273,6 +1288,8 @@ else
 
 		obj.deviation = nil;
 
+        obj.set_type_from_name(c.getName(), obj.ModelType);
+    
 		return obj;
 	},
 #
@@ -1280,6 +1297,31 @@ else
     get_az_field : func {
         return 60.0;
     },
+
+    set_type_from_name : func(type, mdl){
+
+        print ("set tgt Ttype ",type, " mdl=",mdl);
+    
+        if (type == "tanker" or type == "aircraft") {
+            me.target_classification = AIR;
+        } elsif (type=="carrier") {
+            me.target_classification = MARINE;
+        } elsif (type=="groundvehicle") {
+            me.target_classification = SURFACE;
+        } else {
+            # multiplayer:
+            if (contains(knownSurface,mdl)) {
+                me.target_classification = SURFACE;
+            } elsif (contains(knownShips,mdl)) {
+                me.target_classification = MARINE;
+            } elsif (me.get_altitude() < 5) {
+                me.target_classification = MARINE;
+            } elsif (me.get_Speed() < 60) {
+                me.target_classification = SURFACE;
+            }
+        }
+    },
+
 	get_heading : func {
 		var n = me.Heading.getValue();
         if (n != nil)
@@ -1499,11 +1541,7 @@ else
         return me.unique;
     },
     get_type: func {
-        var AIR = 0;
-        var MARINE = 1;
-        var SURFACE = 2;
-        var ORDNANCE = 3;
-        return AIR;
+        return me.target_classification;
     },
     isPainted: func {
         return 1;
