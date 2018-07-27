@@ -1287,7 +1287,7 @@ var Target = {
 		obj.RadarStandby = c.getNode("sim/multiplay/generic/int[2]");
 
 		obj.deviation = nil;
-
+        obj.target_classification = AIR; # default to AIR targets
         obj.set_type_from_name(c.getName(), obj.ModelType);
     
 		return obj;
