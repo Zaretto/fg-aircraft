@@ -167,9 +167,22 @@
         <type>select</type>
         <nopreview/>
         <object-name>central-pylons</object-name>
+        <condition>
+            <or>
+                <property>consumables/fuel/tank[7]/selected</property>
+                <equals>
+                    <property>payload/weight[5]/selected</property>
+                    <value>MK-84</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
         <object-name>tank-c</object-name>
         <condition>
-            <property>consumables/fuel/tank[7]/selected</property>
+                <property>consumables/fuel/tank[7]/selected</property>
         </condition>
     </animation>
 
@@ -312,4 +325,39 @@
             </equals>
         </condition>
     </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>mk84-l</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[1]/selected</property>
+                <value>MK-84</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>mk84-c</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[5]/selected</property>
+                <value>MK-84</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>mk84-r</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[9]/selected</property>
+                <value>MK-84</value>
+            </equals>
+        </condition>
+    </animation>
+
 </PropertyList>
