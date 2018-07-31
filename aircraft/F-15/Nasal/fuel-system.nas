@@ -91,6 +91,33 @@ var RprobeSw = props.globals.getNode("sim/model/f15/controls/fuel/refuel-probe-s
 var TotalFuelLbs  = props.globals.getNode("consumables/fuel/total-fuel-lbs", 1);
 var TotalFuelGals = props.globals.getNode("consumables/fuel/total-fuel-gals", 1);
 
+configure_cft = func() {
+    print("CFT changed");
+    if (Conformal_R == nil or Conformal_L == nil)
+      return;
+    if (getprop("fdm/jsbsim/propulsion/cft")){
+        Conformal_R.set_capacity(728);
+        Conformal_L.set_capacity(728);
+        Conformal_R.set_selected(1);
+        Conformal_L.set_selected(1);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",1000);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",1000);
+    } else {
+        Conformal_R.set_level(0);
+        Conformal_L.set_level(0);
+        Conformal_R.set_capacity(0);
+        Conformal_L.set_capacity(0);
+        Conformal_R.set_selected(0);
+        Conformal_L.set_selected(0);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",0);
+		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",0);
+    }
+}
+
+setlistener("fdm/jsbsim/propulsion/cft", func()
+{
+    configure_cft();
+});
 
 var init_fuel_system = func {
 
@@ -236,29 +263,6 @@ var calc_levels = func() {
 
 # Controls
 # --------
-configure_cft = func() {
-    print("CFT changed");
-    if (Conformal_R == nil or Conformal_L == nil)
-      return;
-    if (getprop("fdm/jsbsim/propulsion/cft")){
-        Conformal_R.set_capacity(728);
-        Conformal_L.set_capacity(728);
-		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",1000);
-		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",1000);
-    } else {
-        Conformal_R.set_level(0);
-        Conformal_L.set_level(0);
-        Conformal_R.set_capacity(0);
-        Conformal_L.set_capacity(0);
-		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",0);
-		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",0);
-    }
-}
-
-setlistener("fdm/jsbsim/propulsion/cft", func()
-{
-configure_cft();
-});
 
 setlistener("sim/model/f15/controls/fuel/dump-switch", func(v) {
     if (v != nil)

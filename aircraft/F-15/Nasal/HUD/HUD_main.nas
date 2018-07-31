@@ -300,6 +300,7 @@ obj.dlzY = 70;
                                                                       "sim/model/f15/systems/armament/aim9/count",
                                                                       "sim/model/f15/systems/armament/aim120/count",
                                                                       "sim/model/f15/systems/armament/aim7/count",
+                                                                      "sim/model/f15/systems/armament/agm/count",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-available",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-display",
                                                                       "sim/model/f15/instrumentation/radar-awg-9/active-target-callsign",
@@ -314,14 +315,14 @@ obj.dlzY = 70;
                                                                              obj.window2.setVisible(1);
                                                                              if (w_s == 0) {
                                                                                  obj.window2.setText(sprintf("%3d",val.property["sim/model/f15/systems/gun/rounds"].getValue()));
-                                                                             } else if (w_s == 1)
-                                                                               {
-                                                                                   obj.window2.setText(sprintf("S%dL", val.property["sim/model/f15/systems/armament/aim9/count"].getValue()));
-                                                                               } else if (w_s == 2)
-                                                                                 {
-                                                                                     obj.window2.setText(sprintf("M%dF", val.property["sim/model/f15/systems/armament/aim120/count"].getValue()
-                                                                                                                + val.property["sim/model/f15/systems/armament/aim7/count"].getValue()));
-                                                                                 }
+                                                                             } else if (w_s == 1) {
+                                                                                 obj.window2.setText(sprintf("S%2dL", val.property["sim/model/f15/systems/armament/aim9/count"].getValue()));
+                                                                             } else if (w_s == 2){
+                                                                                 obj.window2.setText(sprintf("M%2dF", val.property["sim/model/f15/systems/armament/aim120/count"].getValue()
+                                                                                                             + val.property["sim/model/f15/systems/armament/aim7/count"].getValue()));
+                                                                             } else if (w_s == 5){
+                                                                                 obj.window2.setText(sprintf("G%2d", val.property["sim/model/f15/systems/armament/agm/count"].getValue()));
+                                                                             }
                                                                              if (val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-available"].getValue() or 0) {
                                                                                  obj.window3.setText(val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-callsign"].getValue());
                                                                                  var model = "XX";

@@ -553,7 +553,7 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">3950</contents>
+            <contents unit="LBS">0</contents>
             <priority>4</priority>
         </tank>
         <tank type="FUEL" name="6 Right External Wing Tank">
@@ -565,7 +565,7 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">3950</contents>
+            <contents unit="LBS">0</contents>
             <priority>4</priority>
         </tank>
         <tank type="FUEL" name="7 External Tank">
@@ -577,7 +577,7 @@
             </location>
             <capacity unit="LBS">3950</capacity>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">3950</contents>
+            <contents unit="LBS">0</contents>
             <priority>3</priority>
         </tank>
         <tank type="FUEL" name="8 left conformal Tank">
@@ -589,7 +589,7 @@
             </location>
             <capacity unit="LBS">4720</capacity>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">4720</contents>
+            <contents unit="LBS">0</contents>
             <priority>6</priority>
         </tank>
         <tank type="FUEL" name="9 Right conformal Tank">
@@ -601,7 +601,7 @@
             </location>
             <capacity unit="LBS">4720</capacity>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">4720</contents>
+            <contents unit="LBS">0</contents>
             <priority>6</priority>
         </tank>
 
@@ -5019,9 +5019,10 @@
                 <property>aero/coefficients/DClGE</property>
             </sum>
         </function>
-        <axis name="LIFT">
+        <axis name="Z">
             <function name="aero/force/LIFT">
                 <product>
+<v>-1</v>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CLIFT</property>
@@ -5043,9 +5044,10 @@
                 <property>aero/coefficients/DCdCFT</property>
             </sum>
         </function>
-        <axis name="DRAG">
+        <axis name="X">
             <function name="aero/force/DRAG">
                 <product>
+<v>-1</v>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CDRAG</property>
@@ -5067,7 +5069,7 @@
                 <property>aero/coefficients/CFYAIMR</property>
             </sum>
         </function>
-        <axis name="SIDE">
+        <axis name="Y">
             <function name="aero/force/SIDE">
                 <product>
                     <property>aero/qbar-psf</property>
