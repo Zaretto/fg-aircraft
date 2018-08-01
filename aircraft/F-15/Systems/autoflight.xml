@@ -314,20 +314,48 @@
 		<fcs_function name="autoflight/pitch/alt/error">
 			<function>
 				<difference>
-					<property>autoflight/pitch/altitude-2-sec-ahead</property>
+					<property>/instrumentation/altimeter/indicated-altitude-ft</property>
 					<property>/autopilot/settings/target-altitude-ft</property>
+					<value>2</value>
 				</difference>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="autoflight/pitch/alt/gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.3 -7
+						2.4 -5
+					</tableData>
+				</table>
 			</function>
 		</fcs_function>
 		
 		<pure_gain name="autoflight/pitch/alt/vs-target">
 			<input>autoflight/pitch/alt/error</input>
-			<gain>-6</gain>
+			<gain>autoflight/pitch/alt/gain</gain>
 			<clipto>
 				<min>-2000</min>
 				<max>2000</max>
 			</clipto>
 		</pure_gain>
+		
+		<fcs_function name="autoflight/pitch/alt/predicted">
+			<function>
+				<sum>
+					<quotient>
+						<property>/instrumentation/gps/indicated-vertical-speed</property>
+						<product>
+							<property>autoflight/pitch/alt/gain</property>
+							<value>-1</value>
+						</product>
+					</quotient>
+					<property>/instrumentation/altimeter/indicated-altitude-ft</property>
+				</sum>
+			</function>
+		</fcs_function>
 	
 	</channel>
 	
