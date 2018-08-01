@@ -220,15 +220,6 @@
 		</period>
 	</filter>
 	
-	<predict-simple>
-		<name>ALTITUDE 2 SECONDS AHEAD</name>
-		<debug>false</debug>
-		<input>/instrumentation/altimeter/indicated-altitude-ft</input>
-		<output>/fdm/jsbsim/autoflight/pitch/altitude-2-sec-ahead</output>
-		<seconds>5.0</seconds>
-		<filter-gain>0.0</filter-gain>
-	</predict-simple>
-	
 	<filter>
 		<name>ALTITUDE SYNC</name>
 		<debug>false</debug>
@@ -254,7 +245,7 @@
 					<floor>
 						<div>
 							<sum>
-								<property>/fdm/jsbsim/autoflight/pitch/altitude-2-sec-ahead</property>
+								<property>/fdm/jsbsim/autoflight/pitch/alt/predicted</property>
 								<value>50</value>
 							</sum>
 							<value>100</value>
@@ -307,22 +298,6 @@
 		<output>/autopilot/settings/vertical-speed-fpm</output>
 		<min>-6000</min>
 		<max>6000</max>
-	</filter>
-	
-	<filter>
-		<name>IT-CONTROLLER: FPM KP (P Gain)</name>
-		<type>gain</type>
-		<gain>1.0</gain>
-		<input>
-			<expression>
-				<table>
-					<property>/velocities/mach</property>
-					<entry><ind>0.2</ind><dep>0.0021</dep></entry>
-					<entry><ind>1.4</ind><dep>0.0008</dep></entry>
-				</table>
-			</expression>
-		</input>
-		<output>/fdm/jsbsim/autoflight/pitch/vs/p-gain</output>
 	</filter>
 	
 	<filter>
@@ -384,7 +359,14 @@
 		</output>
 		<config>
 			<Kp>
-				<property>/fdm/jsbsim/autoflight/pitch/vs/p-gain</property>
+				<expression>
+					<table>
+						<property>/velocities/mach</property>
+						<entry><ind>0.2</ind><dep>0.0029</dep></entry>
+						<entry><ind>0.9</ind><dep>0.0010</dep></entry>
+						<entry><ind>2.4</ind><dep>0.0002</dep></entry>
+					</table>
+				</expression>
 			</Kp>
 			<Ti>2.0</Ti>
 			<Td>0.0001</Td>
@@ -401,7 +383,15 @@
 						</equals>
 					</and>
 				</condition>
-				<value>-15</value>
+				<expression>
+					<max>
+						<dif>
+							<property>/orientation/pitch-deg</property>
+							<value>5</value>
+						</dif>
+						<value>-15</value>
+					</max>
+				</expression>
 			</u_min>
 			<u_min>
 				<condition>
@@ -431,7 +421,15 @@
 						</equals>
 					</and>
 				</condition>
-				<value>30</value>
+				<expression>
+					<min>
+						<sum>
+							<property>/orientation/pitch-deg</property>
+							<value>5</value>
+						</sum>
+						<value>30</value>
+					</min>
+				</expression>
 			</u_max>
 			<u_max>
 				<condition>
