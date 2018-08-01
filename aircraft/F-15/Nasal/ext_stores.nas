@@ -525,15 +525,15 @@ setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)
 
 var calculate_weights=func
 {
-    var pw = 0;
+    var pw = getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[13]") + getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[14]");
     var ww = 0;
     var tw = 0;
     for (var payload_item=0; payload_item <= 10; payload_item = payload_item+1)
     {
         var w = getprop("payload/weight["~payload_item~"]/weight-lb");
-        if (payload_item == 1 or payload_item == 9) # Pylons
-            pw = pw + w;
-        else if (payload_item == 1 or payload_item == 5 or payload_item == 9) # Fuel
+        var is_tank = getprop("payload/weight["~payload_item~"]/selected") == "Droptank";
+        
+        if (is_tank and (payload_item == 1 or payload_item == 5 or payload_item == 9)) # Fuel
             tw = tw + w;
         else
             ww = ww + w;
