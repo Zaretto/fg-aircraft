@@ -715,9 +715,22 @@
 			<output>autoflight/pitch/master-pid</output>
 		</pid>
 		
+		<pure_gain name="autoflight/pitch/master-pid-inv">
+			<input>autoflight/pitch/master-pid</input>
+			<gain>-1.0</gain>
+		</pure_gain>
+		
+		<switch name="autoflight/pitch/master-pid-switched">
+			<default value="autoflight/pitch/master-pid"/>
+			<test logic="OR" value="autoflight/pitch/master-pid-inv">
+				attitude/roll-rad lt -1.5708
+				attitude/roll-rad gt 1.5708
+			</test>
+		</switch>
+		
 		<switch name="autoflight/pitch/pitch-rate-demand">
 			<default value="0"/>
-			<test logic="AND" value="autoflight/pitch/master-pid">
+			<test logic="AND" value="autoflight/pitch/master-pid-switched">
 				autoflight/output/pitch-master eq 1
 			</test>
 		</switch>
