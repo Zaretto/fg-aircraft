@@ -189,6 +189,7 @@ var apLoop = maketimer(1, func {
 
 			delta_angle = math.abs(geo.normdeg180(current_course - next_course));
 			max_bank = delta_angle * 1.5;
+			max_bank_limit = getprop("/fdm/jsbsim/autoflight/roll/heading/bank-max");
 			if (max_bank > max_bank_limit) {
 				max_bank = max_bank_limit;
 			}
