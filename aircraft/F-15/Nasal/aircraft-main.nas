@@ -10,6 +10,15 @@
 var true = 1;
 var false = 0;
 
+#
+# 2018.3 has improved stores handling - but this is turned 
+gui.external_stores_2018_1_compat = 0;
+
+var payload_dialog_reload = func(from) { 
+#    print("payload_dialog_reload: ",from);    
+    setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
+}
+
 var deltaT = 1.0;
 
 var currentG = 1.0;
