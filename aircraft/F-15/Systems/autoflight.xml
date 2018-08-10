@@ -545,6 +545,69 @@
 	
 	<channel name="Autoflight: Pitch Channel">
 		
+		<fcs_function name="autoflight/pitch/fpa">
+			<function>
+				<todegrees>
+					<difference>
+						<property>attitude/pitch-rad</property>
+						<property>aero/alpha-rad</property>
+					</difference>
+				</todegrees>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="autoflight/pitch/alpha-limit-min">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.2 -10
+						1.0  -6
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="autoflight/pitch/alpha-limit-max">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.2  13
+						1.0   9
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="autoflight/pitch/pitch-hld-min">
+			<function>
+				<sum>
+					<property>autoflight/pitch/fpa</property>
+					<property>autoflight/pitch/alpha-limit-min</property>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<pure_gain name="autoflight/pitch/pitch-hld-min-rad">
+			<input>autoflight/pitch/pitch-hld-min</input>
+			<gain>0.0174533</gain> <!-- DEG to RAD -->
+		</pure_gain>
+		
+		<fcs_function name="autoflight/pitch/pitch-hld-max">
+			<function>
+				<sum>
+					<property>autoflight/pitch/fpa</property>
+					<property>autoflight/pitch/alpha-limit-max</property>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<pure_gain name="autoflight/pitch/pitch-hld-max-rad">
+			<input>autoflight/pitch/pitch-hld-max</input>
+			<gain>0.0174533</gain> <!-- DEG to RAD -->
+		</pure_gain>
+		
 		<fcs_function name="autoflight/pitch/pitch-hld-target">
 			<function>
 				<ifthen>
@@ -566,6 +629,10 @@
 					<property>attitude/pitch-rad</property>
 				</ifthen>
 			</function>
+			<clipto> <!-- Limit AoA -->
+				<min>autoflight/pitch/pitch-hld-min-rad</min>
+				<max>autoflight/pitch/pitch-hld-max-rad</max>
+			</clipto>
 		</fcs_function>
 		
 		<switch name="autoflight/pitch/target-pitch-deg">
