@@ -592,6 +592,7 @@ Prop = {
 		obj.dumprate = obj.prop.getNode("dump-rate-lbs-hr", 1);
 		obj.running = obj.prop.getNode("running", 1);
 		obj.running.setBoolValue(running);
+        obj.prop.getNode("hidden", 1).setBoolValue(true);
 		obj.prop.getChild("selected", 0, 1).setBoolValue(connect);
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
 		obj.ppg.setDoubleValue(6.3);
