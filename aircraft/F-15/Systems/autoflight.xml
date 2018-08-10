@@ -254,13 +254,27 @@
 		
 		<fcs_function name="autoflight/roll/heading/bank-max">
 			<function>
-				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
-					<tableData>
-						0.2  30
-						1.0  60
-					</tableData>
-				</table>
+                <table>
+                    inertia/weight-lbs
+                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <independentVar lookup="column">inertia/weight-lbs</independentVar>
+                    <tableData>
+                                     0 38000 45000 55000 70000
+                        0            0     0     0    0      0
+                        150         10    10     5    5      5
+                        210         30    30    20    15    15
+                        600         60    60    50    50    50 
+                    </tableData>
+                    <!--<independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <independentVar lookup="column">atmosphere/density-altitude</independentVar>
+                    <tableData>
+                        0 20000 30000 35000 40000
+                        0          0     0     0    0      0
+                        150         10    10     5    5      5
+                        210         30    30    20    15    15
+                        600         60    60    60    60    60
+                    </tableData>-->
+                </table>
 			</function>
 		</fcs_function>
 		
@@ -320,25 +334,43 @@
 				</difference>
 			</function>
 		</fcs_function>
-		
-		<fcs_function name="autoflight/pitch/alt/gain">
-			<function>
-				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
-					<tableData>
-						0.3 -7
-						2.4 -5
-					</tableData>
-				</table>
-			</function>
-		</fcs_function>
-		
-		<pure_gain name="autoflight/pitch/alt/vs-target">
+
+        <fcs_function name="autoflight/pitch/alt/gain">
+            <function>
+                <table>
+                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <tableData>
+                        200 -7
+                        600 -5
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="autoflight/pitch/alt/max-rate-fpm">
+            <function>
+                <table>
+                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <independentVar lookup="column">inertia/weight-lbs</independentVar>
+                    <tableData>
+                               0 38000 45000 55000 70000
+                        300 2000  2000  1500  1000  1000
+                        600 6000  6000  3000  3000  2000
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <pure_gain name="autoflight/pitch/alt/vs-target">
 			<input>autoflight/pitch/alt/error</input>
 			<gain>autoflight/pitch/alt/gain</gain>
 			<clipto>
-				<min>-2000</min>
-				<max>2000</max>
+				<min>
+                    <property>-autoflight/pitch/alt/max-rate-fpm</property>
+                </min>
+				<max>
+                    <property>autoflight/pitch/alt/max-rate-fpm</property>
+                </max>
 			</clipto>
 		</pure_gain>
 		
