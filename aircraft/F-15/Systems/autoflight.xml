@@ -254,27 +254,17 @@
 		
 		<fcs_function name="autoflight/roll/heading/bank-max">
 			<function>
-                <table>
-                    inertia/weight-lbs
-                    <independentVar lookup="row">velocities/vc-kts</independentVar>
-                    <independentVar lookup="column">inertia/weight-lbs</independentVar>
-                    <tableData>
-                                     0 38000 45000 55000 70000
-                        0            0     0     0    0      0
-                        150         10    10     5    5      5
-                        210         30    30    20    15    15
-                        600         60    60    50    50    50 
-                    </tableData>
-                    <!--<independentVar lookup="row">velocities/vc-kts</independentVar>
-                    <independentVar lookup="column">atmosphere/density-altitude</independentVar>
-                    <tableData>
-                        0 20000 30000 35000 40000
-                        0          0     0     0    0      0
-                        150         10    10     5    5      5
-                        210         30    30    20    15    15
-                        600         60    60    60    60    60
-                    </tableData>-->
-                </table>
+				<table>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<independentVar lookup="column">inertia/weight-lbs</independentVar>
+					<tableData>
+						      0 38000 45000 55000 70000
+						  0   0     0     0     0     0
+						150  10    10     5     5     5
+						210  30    30    20    15    15
+						600  60    60    50    50    50 
+					</tableData>
+				</table>
 			</function>
 		</fcs_function>
 		
@@ -303,8 +293,10 @@
 		
 		<switch name="autoflight/roll/heading/trigger">
 			<default value="0"/>
-			<test logic="OR" value="1">
+			<test value="-1">
 				autoflight/roll/gain-switch eq 1
+			</test>
+			<test logic="OR" value="1">
 				autoflight/roll/heading/pi le autoflight/roll/heading/bank-trigger-min
 				autoflight/roll/heading/pi ge autoflight/roll/heading/bank-trigger-max
 			</test>
@@ -546,8 +538,10 @@
 		
 		<switch name="autoflight/roll/trigger">
 			<default value="0"/>
-			<test logic="OR" value="1">
+			<test value="-1">
 				autoflight/output/roll-master ne 1
+			</test>
+			<test logic="OR" value="1">
 				autoflight/roll/master-pid le -0.999
 				autoflight/roll/master-pid ge 0.999
 			</test>
@@ -797,8 +791,10 @@
 		
 		<switch name="autoflight/pitch/trigger">
 			<default value="0"/>
-			<test logic="OR" value="1">
+			<test value="-1">
 				autoflight/output/pitch-master ne 1
+			</test>
+			<test logic="OR" value="1">
 				autoflight/pitch/master-pid le -0.999
 				autoflight/pitch/master-pid ge 0.999
 			</test>
