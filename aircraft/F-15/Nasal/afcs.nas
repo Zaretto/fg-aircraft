@@ -172,7 +172,7 @@ setlistener("/autopilot/route-manager/current-wp", func {
 });
 
 # Calculates the optimum distance from waypoint to begin turning to next waypoint
-var apLoop = maketimer(1, func {
+var routeManagerUpdate = func {
 	if (getprop("/autopilot/route-manager/route/num") > 0 and getprop("/autopilot/route-manager/active") == 1) {
 		if ((getprop("/autopilot/route-manager/current-wp") + 1) < getprop("/autopilot/route-manager/route/num")) {
 			gnds_mps = getprop("/velocities/groundspeed-kt") * 0.5144444444444;
@@ -215,10 +215,4 @@ var apLoop = maketimer(1, func {
 			}
 		}
 	}
-});
-
-# Burn Baby Burn
-var start = setlistener("/sim/signals/fdm-initialized", func {
-	apLoop.start();
-	removelistener(start);
-});
+};
