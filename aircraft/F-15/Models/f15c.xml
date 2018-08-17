@@ -115,40 +115,54 @@ setprop("sim/model/f15/variant","C");
             
             var livery_update = aircraft.livery_update.new("Aircraft/F-15/Models/Liveries", 10 );
 
+# nasal module locator
+        var modelPath = split("/",self.getNode("sim/model/path").getValue());
+        var basePath = "";
+        if (size(modelPath) > 3)
+            basePath = string.join("/",modelPath[0:size(modelPath)-3]);
+
+        locate_nasal = func(nasal_file){
+            var fn_nasal_file = resolvepath("Nasal") ~ "/" ~ nasal_file;
+            if (io.stat(fn_nasal_file) == nil)
+              fn_nasal_file = getprop("/sim/fg-root") ~ "/Nasal/" ~ nasal_file;
+
+            if (io.stat(fn_nasal_file) == nil)
+              fn_nasal_file = getprop("/sim/fg-root") ~ basePath ~ "/Nasal/" ~ nasal_file;
+
+            if (io.stat(fn_nasal_file) == nil)
+              fn_nasal_file = resolvepath(basePath ~ "/Nasal") ~ "/" ~ nasal_file;
+
+            if (io.stat(fn_nasal_file) == nil)
+              fn_nasal_file = getprop("/sim/fg-root") ~ "/" ~ basePath ~ "Nasal/" ~ nasal_file;
+
+            if (io.stat(fn_nasal_file) == nil) {
+                print("Error could not locate ", fn_nasal_file);
+                return nil;
+            }
+
+            print("Loading ",nasal_file," from ",fn_nasal_file);
+            return fn_nasal_file;
+        };
+# end nasal file locator
+
             # Load the needed modules if it hasn't been done yet.
+            # - we assume that if we have the network we have the VSD. This should always be the case.
             if (!contains(globals, "f15_net"))
             {
                 print("LOAD F-15 mp network", self.getPath());
-                var fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
+                fn_net = locate_nasal("mp-network.nas");
 
-                if (io.stat(fn_net) == nil)
-                    fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+                if (fn_net != nil){
+                    io.load_nasal(fn_net, "f15_net");
 
-                if (io.stat(fn_net) == nil)
-                    fn_net = resolvepath("Aircraft/F-15/Nasal") ~ "/mp-network.nas";
+                    # Initialize network as observer.
+                    f15_net.mp_network_init(0);
+                }
 
-                if (io.stat(fn_net) == nil)
-                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/mp-network.nas";
+                var fn_vsd = locate_nasal("VSD/VSD_main.nas");
+                if (fn_vsd != nil)
+                  io.load_nasal(fn_vsd, "f15vsd");
 
-                print("Loading F-15 mp network from ",fn_net);
-                io.load_nasal(fn_net, "f15_net");
-
-var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
-
-                if (io.stat(fn_vsd) == nil)
-                    fn_vsd = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/VSD/VSD_main.nas";
-
-                if (io.stat(fn_vsd) == nil)
-                    fn_vsd = resolvepath("Aircraft/F-15/Nasal") ~ "/VSD/VSD_main.nas";
-
-                if (io.stat(fn_vsd) == nil)
-                fn_vsd = getprop("/sim/fg-root") ~ "/Aircraft/F-15/Nasal/VSD/VSD_main.nas";
-
-                print("Loading F-15 VSD from ",fn_vsd);
-                io.load_nasal(fn_vsd, "f15vsd");
-
-                # Initialize network as observer.
-                f15_net.mp_network_init(0);
                 emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Model", _module_id));
             }
             # set reasonable values for sound volumes
@@ -264,6 +278,13 @@ var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
         <object-name>CFT-left</object-name>
         <object-name>CFT-left-pylons</object-name>
         <object-name>CFT-right-pylons</object-name>
+        <object-name>tanks</object-name>
+        <object-name>mk-84</object-name>
+        <object-name>aim-9</object-name>
+        <object-name>aim-7</object-name>
+        <object-name>aim-120</object-name>
+        <object-name>rails</object-name>
+        <object-name>radio-call</object-name>
         <property-base>sim/model/livery</property-base>
         <texture-prop>texture</texture-prop>
         <texture>livery.AF80-0007.png</texture>
@@ -1417,15 +1438,22 @@ var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
     <!-- ******************************************************************* -->
     <!-- Cockpit                                                             -->
     <!-- ******************************************************************* -->
-    <model>
+    <!--<model>
         <path>Aircraft/F-15/Models/Cockpit/cockpit.xml</path>
         <offsets>
             <x-m>0</x-m>
             <y-m>0 </y-m>
             <z-m>0</z-m>
         </offsets>
+    </model>-->
+    <model>
+        <path>Aircraft/F-15/Models/Cockpit/all-interior.xml</path>
+        <offsets>
+            <x-m>0</x-m>
+            <y-m>0 </y-m>
+            <z-m>0</z-m>
+        </offsets>
     </model>
-
     <animation>
         <type>rotate</type>
         <object-name>Hook</object-name>
@@ -2021,7 +2049,7 @@ var fn_vsd = resolvepath("Nasal") ~ "/VSD/VSD_main.nas";
         <object-name>shader-test</object-name>
     </effect>-->
     <model>
-        <path>Stores/f15c-stores.xml</path>
+        <path>f15c-stores.xml</path>
         <name>F15-C loadout</name>
     </model>
 
