@@ -66,23 +66,29 @@
 
     <!-- Master Caution Button -->
     <animation>
-        <type>select</type>
         <object-name>master-caution-button-on</object-name>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <or>
-                <property>sim/model/f15/lights/master-test-lights</property>
-                <property>sim/model/f15/instrumentation/warnings/master-caution</property>
-            </or>
-        </condition>
+        <type>material</type>
+        <ambient>
+            <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </ambient>
+        <!--<diffuse>
+          <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+          <red>  1.000</red>
+          <green>1</green>
+          <blue> 1</blue>
+      </diffuse>-->
+        <emission>
+            <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
     </animation>
-
     <animation>
         <type>pick</type>
-        <visible>false</visible>
         <object-name>master-caution-button</object-name>
         <action>
             <button>0</button>
@@ -296,6 +302,129 @@
         </axis>
     </animation>
 
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-freq-chan-drum2</object-name>
+        <property>/instrumentation/comm[0]/preset-channel</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-freq-chan-drum1</object-name>
+        <property>/instrumentation/comm[0]/preset-channel</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    
+    <animation>
+        <type>knob</type>
+        <object-name>knob-freq-chan</object-name>
+        <property>/instrumentation/comm[0]/preset-channel</property>
+        <factor>3.6</factor>
+        <axis>
+            <object-name>knob-freq-chan-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>/instrumentation/comm[0]/preset-channel</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>99</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>hud-display-depr-knob</object-name>
+        <property>/instrumentation/hud/rtcl-depr</property>
+        <factor>1</factor>
+        <axis>
+            <object-name>hud-display-depr-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>/instrumentation/hud/rtcl-depr</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>360</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-display-depr100</object-name>
+        <property>/instrumentation/hud/rtcl-depr</property>
+        <factor>0.001</factor>
+        <step>100</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-display-depr10</object-name>
+        <property>/instrumentation/hud/rtcl-depr</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-display-depr0</object-name>
+        <property>/instrumentation/hud/rtcl-depr</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-video-minutes-remain10</object-name>
+        <property>/instrumentation/hud/video-minutes-remain</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-video-minutes-remain0</object-name>
+        <property>/instrumentation/hud/video-minutes-remain</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    
     <!-- Comm: Min 118.0
                Max 137.0
                Inc 0.025

@@ -248,15 +248,21 @@
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
-        <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
-        </center>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>total-5</object-name>
+        <property>sim/model/f15/instrumentation/fuel-gauges/total-display</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <factor>0.1</factor>
+        <step>1</step>
         <axis>
-            <x>0</x>
             <y>-1</y>
-            <z>0</z>
         </axis>
     </animation>
 

@@ -700,6 +700,104 @@
             </binding>
         </action>
     </animation>
+    <!--AA-->
+
+
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>r2-freq-radio2-chan-knob</object-name>
+        <property>/instrumentation/comm[1]/preset-channel</property>
+        <factor>3.6</factor>
+        <axis>
+            <object-name>r2-freq-radio2-chan-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>/instrumentation/comm[1]/preset-channel</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>99</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>radio2-chan-digit-2</object-name>
+        <property>/instrumentation/comm[1]/preset-channel</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>radio2-chan-digit-1</object-name>
+        <property>/instrumentation/comm[1]/preset-channel</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <!--iff-->
+    
+    <animation>
+        <type>textranslate</type>
+        <object-name>radar-chan-drum-0</object-name>
+        <property>/instrumentation/radar/channel</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>radar-chan-drum-10</object-name>
+        <property>/instrumentation/radar/channel</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>iff-m1-code-drum-0</object-name>
+        <property>/instrumentation/iff/mi-code</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>iff-m1-code-drum-10</object-name>
+        <property>/instrumentation/iff/mi-code</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    
     <!--IFF PANEL-->
 
     <animation>
