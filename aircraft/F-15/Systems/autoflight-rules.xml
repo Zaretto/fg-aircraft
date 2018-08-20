@@ -392,6 +392,10 @@
 							<value>5</value>
 						</dif>
 						<value>-15</value>
+						<sum> <!-- Limit AoA -->
+							<property>/fdm/jsbsim/autoflight/pitch/fpa</property>
+							<property>/fdm/jsbsim/autoflight/pitch/alpha-limit-min</property>
+						</sum>
 					</max>
 				</expression>
 			</u_min>
@@ -430,6 +434,10 @@
 							<value>5</value>
 						</sum>
 						<value>30</value>
+						<sum> <!-- Limit AoA -->
+							<property>/fdm/jsbsim/autoflight/pitch/fpa</property>
+							<property>/fdm/jsbsim/autoflight/pitch/alpha-limit-max</property>
+						</sum>
 					</min>
 				</expression>
 			</u_max>
@@ -467,12 +475,6 @@
 						<property>/gear/gear[2]/wow</property>
 					</or>
 				</not>
-				<not>
-					<equals>
-						<property>/autopilot/locks/autothrottle-permit-augmentation</property>
-						<value>1</value>
-					</equals>
-				</not>
 				<equals>
 					<property>autopilot/locks/speed</property>
 					<value>speed-with-throttle</value>
@@ -500,8 +502,16 @@
 			<Ti>10.0</Ti>
 			<Td>0.00001</Td>
 			<u_min>0.081</u_min>
+			<u_max>
+                <condition>
+                    <equals>
+                        <property>/autopilot/locks/autothrottle-permit-augmentation</property>
+                        <value>1</value>
+                    </equals>
+                </condition>
+                <value>6.0</value>
+            </u_max>
 			<u_max>1.0</u_max>
-			<!-- No afterburner while A/T is on -->
 		</config>
 	</pid-controller>
 
@@ -517,12 +527,6 @@
 						<property>/gear/gear[2]/wow</property>
 					</or>
 				</not>
-				<not>
-					<equals>
-						<property>/autopilot/locks/autothrottle-permit-augmentation</property>
-						<value>1</value>
-					</equals>
-				</not>
 				<equals>
 					<property>autopilot/locks/speed</property>
 					<value>speed-with-throttle</value>
@@ -550,106 +554,19 @@
 			<Ti>10.0</Ti>
 			<Td>0.00001</Td>
 			<u_min>0.081</u_min>
+            <u_max>
+                <condition>
+                    <equals>
+                        <property>/autopilot/locks/autothrottle-permit-augmentation</property>
+                        <value>1</value>
+                    </equals>
+                </condition>
+                <value>6.0</value>
+            </u_max>
 			<u_max>1.0</u_max>
-			<!-- No afterburner while A/T is on -->
 		</config>
 	</pid-controller>
 
-	<!--Augmented autothrottle - like basic except can go to stage 5 a/b-->
-	<pid-controller>
-		<name>Autothrottle knots augmented</name>
-		<debug>false</debug>
-		<enable>
-			<condition>
-				<not>
-					<or>
-						<property>/gear/gear[0]/wow</property>
-						<property>/gear/gear[1]/wow</property>
-						<property>/gear/gear[2]/wow</property>
-					</or>
-				</not>
-				<equals>
-					<property>/autopilot/locks/autothrottle-permit-augmentation</property>
-					<value>1</value>
-				</equals>
-				<equals>
-					<property>autopilot/locks/speed</property>
-					<value>speed-with-throttle</value>
-				</equals>
-				<greater-than>
-					<property>/autopilot/settings/target-speed-kt</property>
-					<value>3</value>
-				</greater-than>
-			</condition>
-		</enable>
-		<input>
-			<property>/instrumentation/airspeed-indicator/indicated-speed-kt</property>
-		</input>
-		<reference>
-			<property>/autopilot/settings/target-speed-kt</property>
-		</reference>
-		<output>
-			<property>/controls/engines/throttle-pid</property>
-		</output>
-		<config>
-			<Kp>0.1</Kp>
-			<beta>1.0</beta>
-			<alpha>0.1</alpha>
-			<gamma>0.0</gamma>
-			<Ti>10.0</Ti>
-			<Td>0.00001</Td>
-			<u_min>0.081</u_min>
-			<u_max>6.0</u_max>
-		</config>
-	</pid-controller>
-
-	<pid-controller>
-		<name>Autothrottle mach augmented</name>
-		<debug>false</debug>
-		<enable>
-			<condition>
-				<not>
-					<or>
-						<property>/gear/gear[0]/wow</property>
-						<property>/gear/gear[1]/wow</property>
-						<property>/gear/gear[2]/wow</property>
-					</or>
-				</not>
-				<equals>
-					<property>/autopilot/locks/autothrottle-permit-augmentation</property>
-					<value>1</value>
-				</equals>
-				<equals>
-					<property>autopilot/locks/speed</property>
-					<value>speed-with-throttle</value>
-				</equals>
-				<less-than-equals>
-					<property>/autopilot/settings/target-speed-kt</property>
-					<value>3</value>
-				</less-than-equals>
-			</condition>
-		</enable>
-		<input>
-			<property>/instrumentation/airspeed-indicator/indicated-mach</property>
-		</input>
-		<reference>
-			<property>/autopilot/settings/target-speed-kt</property>
-		</reference>
-		<output>
-			<property>/controls/engines/throttle-pid</property>
-		</output>
-		<config>
-			<Kp>50</Kp>
-			<beta>1.0</beta>
-			<alpha>0.1</alpha>
-			<gamma>0.0</gamma>
-			<Ti>10.0</Ti>
-			<Td>0.00001</Td>
-			<u_min>0.081</u_min>
-			<u_max>6.0</u_max>
-		</config>
-	</pid-controller>
-	
 	<filter>
 		<name>IT-CONTROLLER: Throttle Fixer</name> <!-- Fixes the output so the autothrottle can be smooth in afterburner -->
 		<type>gain</type>

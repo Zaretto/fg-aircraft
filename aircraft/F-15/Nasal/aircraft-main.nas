@@ -9,6 +9,15 @@
 ## Global constants ##
 var true = 1;
 var false = 0;
+var frameRateNode = props.getNode("/sim/frame-rate");
+#
+# 2018.3 has improved stores handling - but this is turned 
+gui.external_stores_2018_1_compat = 0;
+
+var payload_dialog_reload = func(from) { 
+#    print("payload_dialog_reload: ",from);    
+    setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
+}
 
 var deltaT = 1.0;
 
@@ -407,7 +416,10 @@ var r2_count = 0;
 
 var rate4modules = func {
     r4_count = r4_count - 1;
-    var frame_rate = getprop("/sim/frame-rate");
+    if (r4_count > 0)
+        return;
+
+    var frame_rate = frameRateNode.getValue();
 
     if (frame_rate <= 15 or frame_rate > 100)
         r4_count = 4;
@@ -422,6 +434,9 @@ var rate4modules = func {
     aircraft.update_weapons_over_mp();
     updateVolume();
     radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+    
+    aircraft.routeManagerUpdate();
+
 #	settimer (rate4modules, 0.20);
 
 #

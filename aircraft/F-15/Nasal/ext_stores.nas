@@ -67,7 +67,7 @@ Station =
                             prop.getParent().getNode("weight-lb").setValue(0);
                         calculate_weights();
                         update_wpstring();
-                    });
+                    },0,0);
 
 		return obj;
 	},
@@ -215,17 +215,16 @@ var update_dialog_checkboxes = func
 }
 
 var b_set = 0;
-setlistener("sim/model/f15/systems/external-loads/reload-demand", func
-            {
-                var v = getprop("sim/model/f15/systems/external-loads/external-load-set");
-                if (v != nil)
-                {
-                    # reload the current set
-                    ext_loads_set(v);
+setlistener("sim/model/f15/systems/external-loads/reload-demand", func {
+    var v = getprop("sim/model/f15/systems/external-loads/external-load-set");
+    if (v != nil) {
+        # reload the current set
+        ext_loads_set(v);
 
-                    #ensure that the missiles are appropriately selected.
-                    arm_selector();                }
-            });
+        #ensure that the missiles are appropriately selected.
+        arm_selector();
+    }
+},0,0);
 
 var ext_loads_set = func(s)
 {
@@ -351,6 +350,7 @@ var ext_loads_set = func(s)
     update_dialog_checkboxes();
 	update_wpstring();
     arm_selector();
+    payload_dialog_reload("ext_loads_set");
 }
 
 # Empties (or loads) corresponding Yasim tanks when de-selecting (or selecting)
@@ -443,30 +443,26 @@ var update_weapons_over_mp = func
 
 # Emergency jettison:
 # -------------------
-setlistener("controls/armament/emergency-jettison", func(v)
-            {
-                if (v.getValue() > 0.8)
-                {
-                    foreach(var T; Tank.list)
-                    {
-                        if (T.is_external())
-                            T.set_level_lbs(0);
-#                        printf("Set %s to 0",T.get_name());
-                    }
-                    setprop("controls/armament/station[1]/jettison-all",true);
-                    setprop("controls/armament/station[5]/jettison-all",true);
-                    setprop("controls/armament/station[9]/jettison-all",true);
-                    setprop("consumables/fuel/tank[5]/selected",false);
-                    setprop("consumables/fuel/tank[6]/selected",false);
-                    setprop("consumables/fuel/tank[7]/selected",false);
+setlistener("controls/armament/emergency-jettison", func(v) {
+    if (v.getValue() > 0.8) {
+        foreach (var T; Tank.list) {
+            if (T.is_external())
+              T.set_level_lbs(0);
+            #                        printf("Set %s to 0",T.get_name());
+        }
+        setprop("controls/armament/station[1]/jettison-all",true);
+        setprop("controls/armament/station[5]/jettison-all",true);
+        setprop("controls/armament/station[9]/jettison-all",true);
+        setprop("consumables/fuel/tank[5]/selected",false);
+        setprop("consumables/fuel/tank[6]/selected",false);
+        setprop("consumables/fuel/tank[7]/selected",false);
 
-                    foreach (var S; Station.list)
-                    {
-                        setprop("payload/weight["~S.index~"]/selected","none");
-                    }
-                    update_wpstring();
-                }
-            });
+        foreach (var S; Station.list) {
+            setprop("payload/weight["~S.index~"]/selected","none");
+        }
+        update_wpstring();
+    }
+},0,0);
 
 # Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
 
@@ -488,40 +484,37 @@ setlistener( "sim/ai/aircraft/impact/droptank", droptanks );
 
 update_dialog_checkboxes();
 
-setlistener("sim/model/f15/systems/external-loads/external-wing-tanks-demand", func
-            {
-                v = !getprop("sim/model/f15/systems/external-loads/external-wing-tanks");
-                setprop("consumables/fuel/tank[5]/selected", v);
-                setprop("consumables/fuel/tank[6]/selected",v);
-                if (v)
-                {
-                    setprop("payload/weight[1]/selected","Droptank");
-                    setprop("payload/weight[9]/selected","Droptank");
-                }
-                else
-                {
-                    setprop("payload/weight[1]/selected","none");
-                    setprop("payload/weight[9]/selected","none");
-                }
-                setprop("sim/model/f15/systems/external-loads/external-wing-tanks",v);
-            });
-setlistener("sim/model/f15/systems/external-loads/external-centre-tank-demand", func
-            {
-                v = !getprop("sim/model/f15/systems/external-loads/external-centre-tank");
-                setprop("consumables/fuel/tank[7]/selected", v);
-                if (v)
-                    setprop("payload/weight[5]/selected","Droptank");
-                else
-                    setprop("payload/weight[5]/selected","none");
-                setprop("sim/model/f15/systems/external-loads/external-centre-tank",v);
-            });
+update_stores_tanks = func(payload_idx){
+    payload_stores_node = sprintf("payload/weight[%d]/",payload_idx);
+    dialog_stores_node = sprintf("consumables/fuel/tank[%d]/selected",getprop(payload_stores_node~"tank"));
+    v = !getprop(dialog_stores_node~"selected");
+#    print("update_stores_tanks: ", payload_stores_node, " -> ", dialog_stores_node, " = ",v);
+    setprop(dialog_stores_node~"selected", v);
+    if (v)      {
+        setprop(payload_stores_node~"selected","Droptank");
+    }
+    else      {
+        setprop(payload_stores_node~"selected","none");
+    }
+    payload_dialog_reload("update_stores_tanks "~payload_idx);
+}
 
-setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)
-            {
-                print("External load set ",v.getValue());
-                ext_loads_set(v.getValue());
-            }
-    );
+setlistener("sim/model/f15/systems/external-loads/left-wing-tank-demand", func(v) {
+    update_stores_tanks(1);
+});
+
+setlistener("sim/model/f15/systems/external-loads/right-wing-tank-demand", func(v) {
+    update_stores_tanks(9);
+});
+
+setlistener("sim/model/f15/systems/external-loads/external-centre-tank-demand", func            {
+    update_stores_tanks(5);
+});
+
+setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)            {
+#    print("External load set ",v.getValue());
+    ext_loads_set(v.getValue());
+},0,0);
 
 var calculate_weights=func
 {
