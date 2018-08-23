@@ -29,6 +29,14 @@ var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialog
 error_mismatch.open();
 }
 
+var fixAirframe = func {
+# F-15 doesn't support wing detachment.
+    left_wing_torn.setValue(0);
+    right_wing_torn.setValue(0);
+	setprop ("fdm/jsbsim/gear/damage-reset", 1);
+	repairMe();
+	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
+}
 #
 # 2017.3 or earlier FG compatibility fixes
 # Remove after 2017.4
@@ -181,8 +189,13 @@ var position_flash_init  = func {
 
 var lighting_collision = props.globals.getNode("sim/model/f15/lighting/anti-collision/state", 1);
 var lighting_position  = props.globals.getNode("sim/model/f15/lighting/position/state", 1);
+
+# wing detachment.
 var left_wing_torn     = props.globals.getNode("sim/model/f15/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f15/wings/right-wing-torn");
+
+# 0, -1 (left) or 1 (right).
+var wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/float[3]",1);
 
 var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
 var aileron_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
@@ -195,7 +208,6 @@ var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1)
 # sim/multiplay/generic/int[2] used by radar standby.
 var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
 var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
-var wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/float[3]",1);
 var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[6]",1);
 
 #
@@ -498,7 +510,6 @@ var updateFCS = func {
 
 	#update functions
 	aircraft.computeEngines ();
-	aircraft.computeAdverse ();
 rate2modules();
 rate4modules();
 	aircraft.registerFCS (); # loop, once per frame.
