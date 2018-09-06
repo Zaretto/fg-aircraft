@@ -266,16 +266,6 @@
  </model>
  
 
-	<!--<model>
-		<path>Aircraft/f-14b/Models/Stores/aim-9/aim-9-0.xml</path>
-		<offsets>
-			<x-m>-11</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-			<pitch-deg>0</pitch-deg>
-		</offsets>
-	</model> Test purpose-->
-
     <effect>
         <inherits-from>Aircraft/f-14b/Models/Fx/exterior-glass</inherits-from>
         <object-name>Canopy_0</object-name>
@@ -442,6 +432,15 @@
 			<pitch-deg>0</pitch-deg>
 		</offsets>
 	</model>
+<!--	<model>
+		<path>Aircraft/f-14b/Models/Cockpit/all-interior.xml</path>
+		<offsets>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</offsets>
+	</model>
+-->
 
 	<!-- Hotspots-Pilot's Vertical Console Left -->
 	<panel>
@@ -580,28 +579,9 @@
 <!-- ******************************************************************* -->
 
 	<model>
-		<path>Aircraft/f-14b/Models/Stores/ext-stores.xml</path>
+		<path>Aircraft/f-14b/Models/Stores/stores-model.xml</path>
 	</model>
 
-	<!-- External Tanks -->
-	<model>
-		<path>Aircraft/f-14b/Models/Stores/Ext-Tanks/exttank-L.xml</path>
-		<offsets>
-			<x-m>1.1421</x-m>
-			<y-m>-1.4341</y-m>
-			<z-m>-2.1752</z-m>
-			<pitch-deg>3.2</pitch-deg>
-		</offsets>
-	</model>
-	<model>
-		<path>Aircraft/f-14b/Models/Stores/Ext-Tanks/exttank-R.xml</path>
-		<offsets>
-			<x-m>1.1421</x-m>
-			<y-m>1.4341</y-m>
-			<z-m>-2.1752</z-m>
-			<pitch-deg>3.2</pitch-deg>
-		</offsets>
-	</model>
 
 <!-- ******************************************************************* -->
 <!-- Lighting                                                            -->
@@ -1835,6 +1815,9 @@
 
 	<animation>
 		<type>rotate</type>
+		<object-name>gear-indexer-fast</object-name>
+		<object-name>gear-indexer-slow</object-name>
+		<object-name>gear-indexer-onspeed</object-name>
 		<object-name>NsGearStrut</object-name>
 		<object-name>LandingLight-on</object-name>
 		<object-name>LandingLight-off</object-name>
