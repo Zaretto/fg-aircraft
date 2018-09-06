@@ -1,10 +1,29 @@
-<?xml version="1.0"?>
-
 <PropertyList>
+  <path>stores-model.ac</path>
 
-	<model>
-		<path>Aircraft/f-14b/Models/Stores/ext-stores.ac</path>
-	</model>
+  <animation>
+    <type>select</type>
+    <nopreview />
+    <object-name>exttank-left</object-name>
+    <condition>
+      <equals>
+        <property>sim/model/f-14b/systems/external-loads/station[2]/type</property>
+        <value>external tank</value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <nopreview />
+    <object-name>exttank-right</object-name>
+    <condition>
+      <equals>
+        <property>sim/model/f-14b/systems/external-loads/station[7]/type</property>
+        <value>external tank</value>
+      </equals>
+    </condition>
+  </animation>
 
 	<!-- Pylons -->
 	<animation>
@@ -20,6 +39,7 @@
 			</not>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -41,6 +61,7 @@
 			</or>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -53,6 +74,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -78,6 +100,7 @@
 			</equals> 
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -89,6 +112,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -100,6 +124,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -111,6 +136,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -122,6 +148,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -160,6 +187,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -171,6 +199,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -182,6 +211,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -193,6 +223,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -204,6 +235,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -229,6 +261,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -240,6 +273,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -251,6 +285,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -275,6 +310,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -286,6 +322,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -297,6 +334,7 @@
 			</equals>
 		</condition>
 	</animation>
+
 	<animation>
 		<type>select</type>
 		<nopreview/>
@@ -307,11 +345,6 @@
 				<value>MK-83</value>
 			</equals>
 		</condition>
-	</animation>
-
-	<animation>
-		<type>range</type>
-		<max-m>900</max-m>
 	</animation>
 
 </PropertyList>
