@@ -49,13 +49,13 @@
                 <signals include="/Aircraft/Generic/flightrecorder/components/engine-jet.xml">
                     <count type="int">2</count>
                 </signals>
-                <signals include="/Aircraft/Generic/flightrecorder/components/ai-models-carrier.xml">
+                <signals include="flightrecorder/components/ai-models-carrier.xml">
                     <count type="int">4</count>
                 </signals>
-                <signals include="/Aircraft/Generic/flightrecorder/components/ai-models-escorts.xml">
+                <signals include="flightrecorder/components/ai-models-escorts.xml">
                     <count type="int">12</count>
                 </signals>
-                <signals include="/Aircraft/Generic/flightrecorder/components/ai-models-tanker.xml">
+                <signals include="flightrecorder/components/ai-models-tanker.xml">
                     <count type="int">4</count>
                 </signals>
                 <!-- Engine nozzles -->
@@ -497,6 +497,8 @@
         </hud>
 
         <model>
+            <!--path>Aircraft/f-14b/Models/F-14-model.xml</path-->
+            <!--fallback-model-index type="int">514</fallback-model-index-->
             <path>Aircraft/f-14b/Models/f-14b.xml</path>
             <livery>
                 <name type="string">nasa</name>
@@ -1795,7 +1797,12 @@
                 <desc>Reset view</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>f14.resetView();</script>
+                    <script>
+                        setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
+                        setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
+                        setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
+                        setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
+                    </script>
                 </binding>
             </key>
             
