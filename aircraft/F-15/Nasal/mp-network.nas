@@ -117,7 +117,7 @@ var update_ext_load = func(sender, state)
 			Station = Wnode.getChild ("station", s , 1);
 			Station.getNode("type", 1).setValue(o);
 			Station.getNode("selected", 1).setBoolValue(1);
-
+            payload.getNode("weight-lb", 1).setDoubleValue(222); # used to detect if rails / pylons required
 			c -= 3;
 #			print("arm ",str," ",s," ",o);
 		}
@@ -134,12 +134,24 @@ var update_ext_load = func(sender, state)
                 fuel_idx = 6;
 
 			o = "none";
-			str = chr(wpstr[c]);
-			if ( str == "1" ) { o = "Droptank"; tank_sel = 1; }
+			var cc = c-1;
+			str = chr(wpstr[cc]) ~ chr(wpstr[c]);
 			Station = Wnode.getChild ("station", s , 1);
-			Station.getNode("type", 1).setValue(o);
 			Station.getNode("selected", 1).setBoolValue(0);
-			c -= 1;
+			if ( str == "01" ) { 
+o = "Droptank"; 
+tank_sel = 1;
+			Station.getNode("selected", 1).setBoolValue(0);
+            } elsif ( str == "10") { 
+                o = "MK-84"; 
+                Station.getNode("selected", 1).setBoolValue(1);
+                Station.getNode("weight-lb", 1).setDoubleValue(222); # used to detect if rails / pylons required
+                payload.getNode("weight-lb", 1).setDoubleValue(222); # used to detect if rails / pylons required
+            }
+            Station.getNode("type", 1).setValue(o);
+
+            c -= 2;
+
             var fuel_n = FuelNode.getChild ("tank", fuel_idx, 1);
             fuel_idx = fuel_idx + 1;
             fuel_n.getNode("selected", 1).setBoolValue(tank_sel);

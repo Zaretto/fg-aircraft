@@ -33,6 +33,7 @@ Station =
 		obj.index = number;
 		obj.type = obj.prop.getNode("type", 1);
 		obj.bcode = 0;
+		obj.xbcode = 0;
         obj.set_type(getprop("payload/weight["~number~"]/selected"));
         obj.encode_length = 3; # bits for transmit
 		obj.display = obj.prop.initNode("display", 0, "INT");
@@ -56,6 +57,8 @@ Station =
                         prop.getParent().getNode("weight-lb").setValue(510);
                         elsif (v == "AIM-120")
                         prop.getParent().getNode("weight-lb").setValue(335);
+                        elsif (v == "MK-84")
+                        prop.getParent().getNode("weight-lb").setValue(2039);
                         elsif (v == "Droptank")
                         {
                             prop.getParent().getNode("weight-lb").setValue(271);
@@ -64,7 +67,7 @@ Station =
                             prop.getParent().getNode("weight-lb").setValue(0);
                         calculate_weights();
                         update_wpstring();
-                    });
+                    },0,0);
 
 		return obj;
 	},
@@ -72,25 +75,32 @@ Station =
     {
 		me.type.setValue(t);
 		me.bcode = 0;
+		me.xbcode = 0;
 		if ( t == "AIM-9" )
         {
 			me.bcode = 1;
+            me.xbcode = 1;
 		}
         elsif ( t == "AIM-7" )
         {
 			me.bcode = 2;
+            me.xbcode = 2;
 		} 
         elsif ( t == "AIM-120" )
         {
 			me.bcode = 3;
+            me.xbcode = 3;
 		} 
-        elsif ( t == "MK-83" )
+        elsif ( t == "MK-84" )
         {
 			me.bcode = 4;
+            me.xbcode = 2;
 		} 
         elsif ( t == "Droptank" )
         {
 			me.bcode = 5; # although 5 only bit 0 will be used
+            me.xbcode = 1;
+
 		}
 	},
     get_type : func ()
@@ -133,12 +143,13 @@ Station =
 
 var ext_loads_init = func() {
     print("F-15 External loads init");
+
     if (S0 == nil)
         S0 = Station.new(0);
     if (S1 == nil)
     {
         S1 = Station.new(1);
-        S1.encode_length=1;
+        S1.encode_length=2;
     }
     if (S2 == nil)
         S2 = Station.new(2);
@@ -149,7 +160,7 @@ var ext_loads_init = func() {
     if (S5 == nil)
     {
         S5 = Station.new(5);
-        S5.encode_length=1;
+        S5.encode_length=2;
     }
     if (S6 == nil)
         S6 = Station.new(6);
@@ -160,7 +171,7 @@ var ext_loads_init = func() {
     if (S9 == nil)
     {
         S9 = Station.new(9);
-        S9.encode_length=1;
+        S9.encode_length=2;
     }
     if (S10 == nil)
         S10 = Station.new(10);
@@ -174,6 +185,7 @@ var ext_loads_init = func() {
 # set the order of firing for the pylons. (for similar missiles). always works
 # left to right.
     Station.firing_order = [];
+    append(Station.firing_order, Station.list[5]);
     append(Station.firing_order, Station.list[0]);
     append(Station.firing_order, Station.list[10]);
     append(Station.firing_order, Station.list[2]);
@@ -185,6 +197,13 @@ var ext_loads_init = func() {
     append(Station.firing_order, Station.list[4]);
     append(Station.firing_order, Station.list[7]);
 	update_wpstring();
+
+    if (getprop("sim/model/f15/systems/external-loads/external-load-set") == "clean")  {
+#        print(" --> First run: reload Clean");
+first_time_run = 1;
+        ext_loads_set("Clean");
+    }
+
 }
 var update_dialog_checkboxes = func
 {
@@ -196,17 +215,16 @@ var update_dialog_checkboxes = func
 }
 
 var b_set = 0;
-setlistener("sim/model/f15/systems/external-loads/reload-demand", func
-            {
-                var v = getprop("sim/model/f15/systems/external-loads/external-load-set");
-                if (v != nil)
-                {
-                    # reload the current set
-                    ext_loads_set(v);
+setlistener("sim/model/f15/systems/external-loads/reload-demand", func {
+    var v = getprop("sim/model/f15/systems/external-loads/external-load-set");
+    if (v != nil) {
+        # reload the current set
+        ext_loads_set(v);
 
-                    #ensure that the missiles are appropriately selected.
-                    arm_selector();                }
-            });
+        #ensure that the missiles are appropriately selected.
+        arm_selector();
+    }
+},0,0);
 
 var ext_loads_set = func(s)
 {
@@ -233,6 +251,10 @@ var ext_loads_set = func(s)
         setprop("consumables/fuel/tank[5]/selected",false);
         setprop("consumables/fuel/tank[6]/selected",false);
         setprop("consumables/fuel/tank[7]/selected",false);
+
+        setprop("consumables/fuel/tank[5]/level-lbs",0);
+        setprop("consumables/fuel/tank[6]/level-lbs",0);
+        setprop("consumables/fuel/tank[7]/level-lbs",0);
 
     } 
     elsif ( s == "Standard Combat" )
@@ -328,6 +350,7 @@ var ext_loads_set = func(s)
     update_dialog_checkboxes();
 	update_wpstring();
     arm_selector();
+    payload_dialog_reload("ext_loads_set");
 }
 
 # Empties (or loads) corresponding Yasim tanks when de-selecting (or selecting)
@@ -377,6 +400,7 @@ var update_weapons_over_mp = func
         var aim9_count = 0;
         var aim7_count = 0;
         var aim120_count = 0;
+        var agm_count = 0;
 
         update_wp_next = cur_time + update_wp_frequency_s;
         update_wp_requested = false;
@@ -388,22 +412,25 @@ var update_weapons_over_mp = func
 # Use 3 bits for the load sheme (3 free additional shemes).
             var b = "0";
             var s = S.index;
-            var v = S.bcode;
-            b = bits.string(S.bcode,S.encode_length);
+            b = bits.string(S.xbcode,S.encode_length);
             b = substr(b, size(b)-S.encode_length, S.encode_length);
             b_wpstring = b_wpstring ~ b;
-#printf("%2d(%d): %-4s = %-32s (%d)    ",S.index,S.encode_length,b, b_wpstring, size(b_wpstring));
+#printf("%-5s: %2d(%d): %-4s = %-32s (%d)    ",S.get_type(),S.index,S.encode_length,b, b_wpstring, size(b_wpstring));
             if (S.get_type() == "AIM-9")
                 aim9_count = aim9_count+1;
-            if (S.get_type() == "AIM-7")
+            elsif (S.get_type() == "AIM-7")
                 aim7_count = aim7_count+1;
-            if (S.get_type() == "AIM-120")
+            elsif (S.get_type() == "AIM-120")
                 aim120_count = aim120_count+1;
+            elsif (S.get_type() == "MK-84")
+                agm_count = agm_count+1;
         }
 #    print("count ",aim9_count, aim7_count, aim120_count);
         setprop("sim/model/f15/systems/armament/aim9/count",aim9_count);
         setprop("sim/model/f15/systems/armament/aim7/count",aim7_count);
         setprop("sim/model/f15/systems/armament/aim120/count",aim120_count);
+        setprop("sim/model/f15/systems/armament/agm/count",agm_count);
+
         var set = WeaponsSet.getValue();
         b_wpstring = b_wpstring ~ bits.string(b_set,3);
 # Send the bits string as INT over MP.
@@ -416,30 +443,26 @@ var update_weapons_over_mp = func
 
 # Emergency jettison:
 # -------------------
-setlistener("controls/armament/emergency-jettison", func(v)
-            {
-                if (v.getValue() > 0.8)
-                {
-                    foreach(var T; Tank.list)
-                    {
-                        if (T.is_external())
-                            T.set_level_lbs(0);
-#                        printf("Set %s to 0",T.get_name());
-                    }
-                    setprop("controls/armament/station[1]/jettison-all",true);
-                    setprop("controls/armament/station[5]/jettison-all",true);
-                    setprop("controls/armament/station[9]/jettison-all",true);
-                    setprop("consumables/fuel/tank[5]/selected",false);
-                    setprop("consumables/fuel/tank[6]/selected",false);
-                    setprop("consumables/fuel/tank[7]/selected",false);
+setlistener("controls/armament/emergency-jettison", func(v) {
+    if (v.getValue() > 0.8) {
+        foreach (var T; Tank.list) {
+            if (T.is_external())
+              T.set_level_lbs(0);
+            #                        printf("Set %s to 0",T.get_name());
+        }
+        setprop("controls/armament/station[1]/jettison-all",true);
+        setprop("controls/armament/station[5]/jettison-all",true);
+        setprop("controls/armament/station[9]/jettison-all",true);
+        setprop("consumables/fuel/tank[5]/selected",false);
+        setprop("consumables/fuel/tank[6]/selected",false);
+        setprop("consumables/fuel/tank[7]/selected",false);
 
-                    foreach (var S; Station.list)
-                    {
-                        setprop("payload/weight["~S.index~"]/selected","none");
-                    }
-                    update_wpstring();
-                }
-            });
+        foreach (var S; Station.list) {
+            setprop("payload/weight["~S.index~"]/selected","none");
+        }
+        update_wpstring();
+    }
+},0,0);
 
 # Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
 
@@ -461,52 +484,49 @@ setlistener( "sim/ai/aircraft/impact/droptank", droptanks );
 
 update_dialog_checkboxes();
 
-setlistener("sim/model/f15/systems/external-loads/external-wing-tanks-demand", func
-            {
-                v = !getprop("sim/model/f15/systems/external-loads/external-wing-tanks");
-                setprop("consumables/fuel/tank[5]/selected", v);
-                setprop("consumables/fuel/tank[6]/selected",v);
-                if (v)
-                {
-                    setprop("payload/weight[1]/selected","Droptank");
-                    setprop("payload/weight[9]/selected","Droptank");
-                }
-                else
-                {
-                    setprop("payload/weight[1]/selected","none");
-                    setprop("payload/weight[9]/selected","none");
-                }
-                setprop("sim/model/f15/systems/external-loads/external-wing-tanks",v);
-            });
-setlistener("sim/model/f15/systems/external-loads/external-centre-tank-demand", func
-            {
-                v = !getprop("sim/model/f15/systems/external-loads/external-centre-tank");
-                setprop("consumables/fuel/tank[7]/selected", v);
-                if (v)
-                    setprop("payload/weight[5]/selected","Droptank");
-                else
-                    setprop("payload/weight[5]/selected","none");
-                setprop("sim/model/f15/systems/external-loads/external-centre-tank",v);
-            });
+update_stores_tanks = func(payload_idx){
+    payload_stores_node = sprintf("payload/weight[%d]/",payload_idx);
+    dialog_stores_node = sprintf("consumables/fuel/tank[%d]/selected",getprop(payload_stores_node~"tank"));
+    v = !getprop(dialog_stores_node~"selected");
+#    print("update_stores_tanks: ", payload_stores_node, " -> ", dialog_stores_node, " = ",v);
+    setprop(dialog_stores_node~"selected", v);
+    if (v)      {
+        setprop(payload_stores_node~"selected","Droptank");
+    }
+    else      {
+        setprop(payload_stores_node~"selected","none");
+    }
+    payload_dialog_reload("update_stores_tanks "~payload_idx);
+}
 
-setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)
-            {
-                print("External load set ",v.getValue());
-                ext_loads_set(v.getValue());
-            }
-    );
+setlistener("sim/model/f15/systems/external-loads/left-wing-tank-demand", func(v) {
+    update_stores_tanks(1);
+});
+
+setlistener("sim/model/f15/systems/external-loads/right-wing-tank-demand", func(v) {
+    update_stores_tanks(9);
+});
+
+setlistener("sim/model/f15/systems/external-loads/external-centre-tank-demand", func            {
+    update_stores_tanks(5);
+});
+
+setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)            {
+#    print("External load set ",v.getValue());
+    ext_loads_set(v.getValue());
+},0,0);
 
 var calculate_weights=func
 {
-    var pw = 0;
+    var pw = getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[13]") + getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[14]");
     var ww = 0;
     var tw = 0;
     for (var payload_item=0; payload_item <= 10; payload_item = payload_item+1)
     {
         var w = getprop("payload/weight["~payload_item~"]/weight-lb");
-        if (payload_item == 1 or payload_item == 9) # Pylons
-            pw = pw + w;
-        else if (payload_item == 1 or payload_item == 5 or payload_item == 9) # Fuel
+        var is_tank = getprop("payload/weight["~payload_item~"]/selected") == "Droptank";
+        
+        if (is_tank and (payload_item == 1 or payload_item == 5 or payload_item == 9)) # Fuel
             tw = tw + w;
         else
             ww = ww + w;

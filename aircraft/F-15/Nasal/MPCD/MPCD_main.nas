@@ -80,6 +80,10 @@ var MPCD_Station =
                 }
                 else mode = "MRM";
             }
+            elsif (na == "MK-84") {
+                na = "";
+                mode = "";
+            }
             elsif (na == "AIM-7") 
             {
                 na = "7M";
@@ -90,6 +94,94 @@ var MPCD_Station =
                         mode = "RDY";
                 }
                 else mode = "MRM";
+            }
+            me.status.setText(mode);
+            me.label.setText(na);
+
+            me.selected1.setVisible(sel);
+            if (mode == "RDY")
+            {
+                me.selected.setVisible(sel);
+                me.status.setColor(0,1,0);
+            }
+            else
+            {
+                me.selected.setVisible(0);
+                me.status.setColor(1,1,1);
+            }
+        }
+        else
+        {
+            me.status.setText("");
+            me.label.setText("");
+            me.selected.setVisible(0);
+            me.selected1.setVisible(0);
+        }
+    },
+};
+
+var MPCD_GroundStation =
+{
+	new : func (svg, ident)
+    {
+		var obj = {parents : [MPCD_GroundStation] };
+
+        obj.status = svg.getElementById("PACS_L_"~ident~"-g");
+        if (obj.status == nil)
+            print("Failed to load PACS_L_"~ident~"-g");
+
+        obj.label = svg.getElementById("PACS_V_"~ident~"-g");
+        if (obj.label == nil)
+            print("Failed to load PACS_V_"~ident~"-g");
+
+        obj.selected = svg.getElementById("PACS_R_"~ident~"-g");
+        if (obj.selected == nil)
+            print("Failed to load PACS_R_"~ident~"-g");
+
+        obj.selected1 = svg.getElementById("PACS_R1_"~ident~"-g");
+        if (obj.selected1 == nil)
+            print("Failed to load PACS_R1_"~ident~"-g");
+
+        obj.prop = "payload/weight["~ident~"]";
+        obj.ident = ident;
+
+        setlistener(obj.prop~"/selected", func(v)
+                    {
+                        obj.update();
+                    });
+        setlistener("sim/model/f15/controls/armament/weapons-updated", func
+                    {
+                        obj.update();
+                    });
+
+        obj.update();
+        return obj;
+    },
+
+    update: func
+    {
+        var weapon_mode = getprop("sim/model/f15/controls/armament/weapon-selector");
+        var na = getprop(me.prop~"/selected");
+        var sel = 0;
+        var mode = "STBY";
+        var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
+        var master_arm=getprop("sim/model/f15/controls/armament/master-arm-switch");
+
+        if (na != nil and na != "none")
+        {
+            if (na == "MK-84")
+            {
+                na = "84";
+                if (weapon_mode == 5)
+                {
+                    sel = getprop(sel_node);
+                    if (sel and master_arm)
+                        mode = "RDY";
+                }
+                else mode = "AG";
+            } else {
+                mode = "";
+                na = "";
             }
             me.status.setText(mode);
             me.label.setText(na);
@@ -196,6 +288,7 @@ var MPCD_Device =
 
         me.p1_1 = me.PFD.addPage("Aircraft Menu", "p1_1");
         me.p1_2 = me.PFD.addPage("Top Level PACS Menu", "p1_2");
+
         me.p1_3 = me.PFD.addPage("PACS Menu", "p1_3");
         me.p1_3.S0 = MPCD_Station.new(me.PFDsvg, 0);
         #1 droptank
@@ -208,6 +301,51 @@ var MPCD_Device =
         me.p1_3.S8 = MPCD_Station.new(me.PFDsvg, 8);
         #9 droptank
         me.p1_3.S10 = MPCD_Station.new(me.PFDsvg, 10);
+
+        me.p1_3.LBL_CHAFF = me.PFDsvg.getElementById("LBL_CHAFF");
+        me.p1_3.LBL_FLARE = me.PFDsvg.getElementById("LBL_FLARE");
+        me.p1_3.LBL_NONAVY = me.PFDsvg.getElementById("LBL_NONAVY");
+        me.p1_3.LBL_CMD_MSS = me.PFDsvg.getElementById("LBL_CMD_MSS");
+
+## AG page
+        me.p1_4 = me.PFD.addPage("PACS Menu", "p1_4");
+        me.p1_4.S0 = MPCD_GroundStation.new(me.PFDsvg, 0);
+        me.p1_4.S1 = MPCD_GroundStation.new(me.PFDsvg, 1);
+        me.p1_4.S2 = MPCD_GroundStation.new(me.PFDsvg, 2);
+        me.p1_4.S3 = MPCD_GroundStation.new(me.PFDsvg, 3);
+        me.p1_4.S4 = MPCD_GroundStation.new(me.PFDsvg, 4);
+        me.p1_4.S5 = MPCD_GroundStation.new(me.PFDsvg, 5);
+        me.p1_4.S6 = MPCD_GroundStation.new(me.PFDsvg, 6);
+        me.p1_4.S7 = MPCD_GroundStation.new(me.PFDsvg, 7);
+        me.p1_4.S8 = MPCD_GroundStation.new(me.PFDsvg, 8);
+        me.p1_4.S9 = MPCD_GroundStation.new(me.PFDsvg, 9);
+        me.p1_4.S10 = MPCD_GroundStation.new(me.PFDsvg, 10);
+
+        me.p1_4.LBL_CHAFF = me.PFDsvg.getElementById("LBL_CHAFF-g");
+        me.p1_4.LBL_FLARE = me.PFDsvg.getElementById("LBL_FLARE-g");
+        me.p1_4.LBL_NONAVY = me.PFDsvg.getElementById("LBL_NONAVY-g");
+        me.p1_4.LBL_CMD_MSS = me.PFDsvg.getElementById("LBL_CMD_MSS-g");
+        me.p1_4.LBL_CBT_g = me.PFDsvg.getElementById("LBL_CBT_g");
+        me.p1_4.LBL_CBT2_g = me.PFDsvg.getElementById("LBL_CBT2_g");
+        me.p1_4.LBL_CBT_g.setText("A/G");
+        me.p1_4.LBL_CBT2_g.setText("---");
+        var oo = me;
+        var update_flares = func(o) {
+            v = getprop("/ai/submodels/submodel[5]/count");
+            print("submodel [5]",v);
+            
+            o.p1_3.LBL_CHAFF.setText(sprintf("CHF %3d",v));
+            o.p1_3.LBL_FLARE.setText(sprintf(" FLR %2d",v));
+            o.p1_3.LBL_NONAVY.setText("GLOBAL");
+            o.p1_4.LBL_CHAFF.setText(sprintf("CHF %3d",v));
+            o.p1_4.LBL_FLARE.setText(sprintf(" FLR %2d",v));
+            o.p1_4.LBL_NONAVY.setText("GLOBAL");
+        };
+        update_flares(oo);
+        setlistener("ai/submodels/submodel[5]/flare-release", func {
+            update_flares(oo);
+        });
+
 
         me.pjitds_1 =  PFD_NavDisplay.new(me.PFD,"Situation", "mpcd-sit", "pjitds_1", "jtids_main");
         # use the radar range as the ND range.
@@ -267,6 +405,16 @@ var MPCD_Device =
                         }
                     }
             );
+        me.p1_4.gun_rounds = me.p1_4.addMenuItem(1, sprintf("HIGH\n%dM",getprop("sim/model/f15/systems/gun/rounds")), me.p1_4);
+        setlistener("sim/model/f15/systems/gun/rounds", func(v)
+                    {
+                        if (v != nil) {
+                            me.p1_4.gun_rounds.title = sprintf("HIGH\n%dM",v.getValue());
+                            me.PFD.updateMenus();
+                        }
+                    }
+            );
+
         me.PFD.selectPage(me.p1_1);
         me.mpcd_button_pushed = 0;
         # Connect the buttons - using the provided model index to get the right ones from the model binding
@@ -328,13 +476,13 @@ var MPCD_Device =
         me.p1_1.addMenuItem(4, "DTM", me.p1_2);
 
         me.p1_2.addMenuItem(1, "A/A", me.p1_3);
-        me.p1_2.addMenuItem(2, "A/G", me.p1_3);
+        me.p1_2.addMenuItem(2, "A/G", me.p1_4);
         me.p1_2.addMenuItem(3, "CBT JETT", me.p1_3);
         me.p1_2.addMenuItem(4, "WPN LOAD", me.p1_3);
         me.p1_2.addMenuItem(9, "M", me.p1_1);
 
         me.p1_3.addMenuItem(2, "SIT", me.pjitds_1);
-        me.p1_3.addMenuItem(3, "A/G", me.p1_3);
+        me.p1_3.addMenuItem(3, "A/G", me.p1_4);
         me.p1_3.addMenuItem(4, "2/2", me.p1_3);
         me.p1_3.addMenuItem(8, "TM\nPWR", me.p1_3);
         me.p1_3.addMenuItem(9, "M", me.p1_1);
@@ -342,6 +490,17 @@ var MPCD_Device =
         me.p1_3.addMenuItem(12, "FUEL", me.p1_3);
         me.p1_3.addMenuItem(14, "PYLON", me.p1_3);
         me.p1_3.addMenuItem(15, "MODE S", me.p1_3);
+
+        me.p1_4.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_4.addMenuItem(3, "A/A", me.p1_3);
+#        me.p1_4.addMenuItem(4, "2/2", me.p1_3);
+#        me.p1_4.addMenuItem(8, "TM\nPWR", me.p1_3);
+        me.p1_4.addMenuItem(9, "M", me.p1_1);
+#        me.p1_4.addMenuItem(10, "PYLON", me.p1_4);
+#        me.p1_4.addMenuItem(12, "FUEL", me.p1_4);
+#        me.p1_4.addMenuItem(14, "PYLON", me.p1_4);
+#        me.p1_4.addMenuItem(15, "MODE S", me.p1_3);
+
 
         me.pjitds_1.addMenuItem(9, "M", me.p1_1);
     },

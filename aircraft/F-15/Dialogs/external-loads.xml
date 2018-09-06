@@ -5,7 +5,7 @@
 	<layout>vbox</layout>
 	<default-padding>1</default-padding>
 	<modal>false</modal>
-	<width>865</width>
+	<width>730</width>
 
 	<empty>
 		<pref-height>6</pref-height>
@@ -35,13 +35,32 @@
 
 			<group>
 				<layout>hbox</layout>
+			<group>
+				<layout>vbox</layout>
 
 				<text>
-					<label>Centre External Tank</label>
+					<label>Left Wing Tank</label>
 				</text>
 
 				<checkbox>
-					<property>sim/model/f15/systems/external-loads/external-centre-tank</property>
+					<property>consumables/fuel/tank[5]/selected</property>
+					<live>true</live>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>sim/model/f15/systems/external-loads/left-wing-tank-demand</property>
+                        <value>true</value>
+                    </binding>
+                </checkbox>
+			</group>
+			<group>
+				<layout>vbox</layout>
+
+				<text>
+					<label>Centre Tank</label>
+				</text>
+
+				<checkbox>
+					<property>consumables/fuel/tank[7]/selected</property>
 					<live>true</live>
                     <binding>
                         <command>property-assign</command>
@@ -51,24 +70,52 @@
                 </checkbox>
 			</group>
 			<group>
-				<layout>hbox</layout>
+				<layout>vbox</layout>
 
 				<text>
-					<label>External Wing Tanks</label>
+					<label>Right Wing Tank</label>
 				</text>
 
 				<checkbox>
-					<property>sim/model/f15/systems/external-loads/external-wing-tanks</property>
+					<property>consumables/fuel/tank[6]/selected</property>
 					<live>true</live>
                     <binding>
                         <command>property-assign</command>
-                        <property>sim/model/f15/systems/external-loads/external-wing-tanks-demand</property>
+                        <property>sim/model/f15/systems/external-loads/right-wing-tank-demand</property>
                         <value>true</value>
                     </binding>
                 </checkbox>
 			</group>
+			</group>
+            <group>
+                <layout>hbox</layout>
+                <group>
+                    <layout>hbox</layout>
+                    <default-padding>0</default-padding>
+                <halign>left</halign>
+                <checkbox>
+                    <padding>12</padding>
+                    <property>sim/freeze/fuel</property>
+                    <live>true</live>
+                    <binding>
+                        <command>nasal</command>
+                        <script>aircraft.toggle_fuel_freeze()</script>
+                    </binding>
+                </checkbox>
+                <text>
+                    <label> Fuel Freeze:</label>
+                </text>
+            </group>
+            <button>
+                <legend>Quickstart</legend>
+                <binding>
+                    <command>nasal</command>
+                    <script>aircraft.quickstart()</script>
+                </binding>
+            </button>
+            </group>
 
-      <empty>
+            <empty>
 				<pref-height>2</pref-height>
 			</empty>
 
@@ -102,13 +149,6 @@
           <binding>
             <command>nasal</command>
             <script>aircraft.set_fuel(11000)</script>
-          </binding>
-        </button>
-        <button>
-          <legend>Quickstart</legend>
-          <binding>
-            <command>nasal</command>
-            <script>aircraft.quickstart()</script>
           </binding>
         </button>
       </group>
@@ -156,37 +196,52 @@
                         <label>xxxxxxxxxxxxxx</label>
                         <live>true</live>
                         <property>consumables/fuel/tank[5]/name</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[5]/selected</property>
+                        </enable>
                     </text>
 					<text>
 						<halign>left</halign>
                         <label>xxxxxxxxxxxxxx</label>
                         <live>true</live>
                         <property>consumables/fuel/tank[6]/name</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[6]/selected</property>
+                        </enable>
                     </text>
 					<text>
 						<halign>left</halign>
                         <label>xxxxxxxxxxxxxx</label>
                         <live>true</live>
                         <property>consumables/fuel/tank[7]/name</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[7]/selected</property>
+                        </enable>
                     </text>
 					<text>
 						<halign>left</halign>
                         <label>xxxxxxxxxxxxxx</label>
                         <live>true</live>
                         <property>consumables/fuel/tank[8]/name</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[8]/selected</property>
+                        </enable>
                     </text>
                     <text>
                         <halign>left</halign>
                         <label>xxxxxxxxxxxxxx</label>
                         <live>true</live>
                         <property>consumables/fuel/tank[9]/name</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[9]/selected</property>
+                        </enable>
                     </text>
                 </group>
 				<group> <!-- Sliders -->
 					<layout>vbox</layout>
 					<halign>right</halign>
 					<text>
-						<label>&lt;-&gt;</label>
+						<label>Level</label>
 					</text>
 					<slider>
 						<name>LFeed</name>
@@ -196,7 +251,7 @@
 						<max>182</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LExternal</object-name>
+							<object-name>LFeed</object-name>
 						</binding>
 					</slider>
 					<slider>
@@ -207,7 +262,7 @@
 						<max>228</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>RExternal</object-name>
+							<object-name>RFeed</object-name>
 						</binding>
 					</slider>
 					<slider>
@@ -218,7 +273,7 @@
 						<max>297</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LWing</object-name>
+							<object-name>Tank1</object-name>
 						</binding>
 					</slider>
 					<slider>
@@ -229,7 +284,7 @@
 						<max>417</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>RWing</object-name>
+							<object-name>LWing</object-name>
 						</binding>
 					</slider>
 					<slider>
@@ -240,62 +295,77 @@
 						<max>417</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>FWDfuselage</object-name>
+							<object-name>RWing</object-name>
 						</binding>
 					</slider>
 					<slider>
 						<name>ExtWingL</name>
 						<property>/consumables/fuel/tank[5]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[5]/selected</property>
+                        </enable>
 						<live>1</live>
 						<min>0</min>
 						<max>600</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>AFTFuselage</object-name>
+							<object-name>ExtWingL</object-name>
 						</binding>
 					</slider>
 					<slider>
 						<name>ExtWingR</name>
 						<property>/consumables/fuel/tank[6]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[6]/selected</property>
+                        </enable>
 						<live>1</live>
 						<min>0</min>
 						<max>600</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LBeamBox</object-name>
+							<object-name>ExtWingR</object-name>
 						</binding>
 					</slider>
 					<slider>
 						<name>CentreExternal</name>
 						<property>/consumables/fuel/tank[7]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[7]/selected</property>
+                        </enable>
 						<live>1</live>
 						<min>0</min>
 						<max>600</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>RBeamBox</object-name>
+							<object-name>CentreExternal</object-name>
 						</binding>
 					</slider>
 					<slider>
 						<name>LFeedLine</name>
 						<property>/consumables/fuel/tank[8]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[8]/selected</property>
+                        </enable>
 						<live>1</live>
 						<min>0</min>
 						<max>44.643</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LSump</object-name>
+							<object-name>LFeedLine</object-name>
 						</binding>
 					</slider>
                     <slider>
                         <name>RFeedLine</name>
                         <property>/consumables/fuel/tank[9]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[9]/selected</property>
+                        </enable>
                         <live>1</live>
                         <min>0</min>
                         <max>44.643</max>
                         <binding>
                             <command>dialog-apply</command>
-                            <object-name>RSump</object-name>
+                            <object-name>RFeedLine</object-name>
                         </binding>
                     </slider>
                 </group>
@@ -346,6 +416,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[5]/level-lbs</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[5]/selected</property>
+                        </enable>
 					</text>
 					<text>
 						<halign>right</halign>
@@ -353,6 +426,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[6]/level-lbs</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[6]/selected</property>
+                        </enable>
 					</text>
 					<text>
 						<halign>right</halign>
@@ -360,6 +436,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[7]/level-lbs</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[7]/selected</property>
+                        </enable>
 					</text>
 					<text>
 						<halign>right</halign>
@@ -367,6 +446,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[8]/level-lbs</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[8]/selected</property>
+                        </enable>
 					</text>
                     <text>
                         <halign>right</halign>
@@ -374,6 +456,9 @@
                         <live>true</live>
                         <format>%.1f</format>
                         <property>/consumables/fuel/tank[9]/level-lbs</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[9]/selected</property>
+                        </enable>
                     </text>
                 </group>
 				<group> <!-- Level Gallons -->
@@ -423,6 +508,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[5]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[5]/selected</property>
+                        </enable>
 					</text>
 					<text>
 						<halign>right</halign>
@@ -430,6 +518,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[6]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[6]/selected</property>
+                        </enable>
 					</text>
 					<text>
 						<halign>right</halign>
@@ -437,6 +528,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[7]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[7]/selected</property>
+                        </enable>
 					</text>
 					<text>
 						<halign>right</halign>
@@ -444,6 +538,9 @@
 						<live>true</live>
 						<format>%.1f</format>
 						<property>/consumables/fuel/tank[8]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[8]/selected</property>
+                        </enable>
 					</text>
                     <text>
                         <halign>right</halign>
@@ -451,6 +548,9 @@
                         <live>true</live>
                         <format>%.1f</format>
                         <property>/consumables/fuel/tank[9]/level-gal_us</property>
+                        <enable>
+			        		<property>/consumables/fuel/tank[9]/selected</property>
+                        </enable>
                     </text>
                 </group>
 			</group>
@@ -482,11 +582,11 @@
 				<text>
 					<label>Weapons Set : </label>
 				</text>
-				<text>
+				<!--<text>
 					<label>xxxxxxxxxxxxxxxxxx</label>
 					<live>true</live>
 					<property>sim/model/f15/systems/external-loads/external-load-set</property>
-				</text>
+				</text>-->
 			</group>
 
 			<empty>
@@ -686,20 +786,21 @@
 
             <group>
 				<layout>hbox</layout>
-
-				<text>
-					<label>Weapons MP messaging:</label>
-				</text>
-
+                <halign>left</halign>
 				<checkbox>
-					<property>sim/model/f15/systems/armament/mp-messaging</property>
+                        <padding>12</padding>
+                        <property>sim/model/f15/systems/armament/mp-messaging</property>
 					<live>true</live>
 					<binding>
 						<command>property-toggle</command>
 						<property>sim/model/f15/systems/armament/mp-messaging</property>
 					</binding>
 				</checkbox>
-			</group>
+                <text>
+                    <label>Weapons MP messaging:</label>
+                </text>
+
+            </group>
 			<!--<group>
 				<layout>hbox</layout>
 
@@ -827,24 +928,6 @@
 <!-- yasim/gross-weight-lbs -->
 				</text>
 			</group>
-
-            <group>
-                <layout>hbox</layout>
-                <layout>hbox</layout>
-                <default-padding>0</default-padding>
-                <text>
-                    <label>Fuel Freeze:</label>
-                </text>
-                <checkbox>
-                    <property>sim/freeze/fuel</property>
-                    <live>true</live>
-                    <binding>
-                        <command>nasal</command>
-                        <script>aircraft.toggle_fuel_freeze()</script>
-                    </binding>
-                </checkbox>
-            </group>
-
 
             <empty>
 				<pref-height>12</pref-height>
