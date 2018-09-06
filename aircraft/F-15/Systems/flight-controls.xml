@@ -679,7 +679,69 @@ emerg operation.
             position/aircraft-on-ground ne 0
         </test>-->
         </switch>
+        
+        <!--Gear that is damaged will be shown as half retracted; which will look kind of broken. These
+        three functions set the gear position based on the damage to the appropriate value-->
+        <fcs_function>
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <p>gear/unit[0]/damaged</p>
+                            <v>0</v>
+                        </gt>
+                        <gt>
+                            <p>gear/gear-pos-norm</p>
+                            <v>0.6</v>
+                        </gt>
+                    </and>
+                    <v>0.5</v>
+                    <p>gear/gear-pos-norm</p>
+                </ifthen>
+            </function>
+            <output>gear/unit[0]/pos-norm</output>
+        </fcs_function>
 
+        <fcs_function>
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <p>gear/unit[1]/damaged</p>
+                            <v>0</v>
+                        </gt>
+                        <gt>
+                            <p>gear/gear-pos-norm</p>
+                            <v>0.6</v>
+                        </gt>
+                    </and>
+                    <v>0.5</v>
+                    <p>gear/gear-pos-norm</p>
+                </ifthen>
+            </function>
+            <output>gear/unit[1]/pos-norm</output>
+        </fcs_function>
+        <fcs_function>
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <p>gear/unit[2]/damaged</p>
+                            <v>0</v>
+                        </gt>
+                        <gt>
+                            <p>gear/gear-pos-norm</p>
+                            <v>0.6</v>
+                        </gt>
+                    </and>
+                    <v>0.5</v>
+                    <p>gear/gear-pos-norm</p>
+                </ifthen>
+            </function>
+            <output>gear/unit[2]/pos-norm</output>
+        </fcs_function>
+        <!--End of gear damage handling-->
+        
         <switch>
             <default value="1"/>
             <test value="1">
