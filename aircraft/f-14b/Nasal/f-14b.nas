@@ -1,6 +1,6 @@
 # Utilities #########
 # Version checking based on the work of Joshua Davidson
-if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201610) {
+if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201620) {
 var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialogs/fg-version.xml");
 error_mismatch.open();
 }

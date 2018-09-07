@@ -10994,7 +10994,17 @@
       </binding>
     </release>
   </animation>
-  <!--Merged from f15-interior-back.xml-->
+    <animation>
+        <type>select</type>
+        <condition>
+            <equals>
+                <property>sim/model/f15/variant</property>
+                <value>C</value>
+            </equals>
+        </condition>
+        <object-name>avionics-bay</object-name>
+    </animation>
+        <!--Merged from f15-interior-back.xml-->
   <animation>
     <type>select</type>
     <condition>
@@ -11003,7 +11013,7 @@
         <value>D</value>
       </equals>
     </condition>
-    <object-name>interior-back</object-name>
+    <object-name>mm_f15-interior-back</object-name>
     <object-name>backseat-aoa-gauge</object-name>
     <object-name>backseat-pitch-ratio-panel</object-name>
     <object-name>backseat-backseat-comms-panel</object-name>
