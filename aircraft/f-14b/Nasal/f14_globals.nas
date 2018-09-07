@@ -12,7 +12,7 @@ var currentG = 1.0;
 #Variables
 
 var AutoSweep = true;
-var OverSweep = false;
+#var OverSweep = false;
 var WingSweep = 0.0; #Normalised wing sweep
 
 
