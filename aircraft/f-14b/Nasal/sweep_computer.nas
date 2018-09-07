@@ -28,12 +28,14 @@ var MachLo = 0.632;
 var MachHi = 0.973;
 var MachSweepRange = MachHi - MachLo;
 #
-var OverSweepAngle = 68.0;
+#var OverSweepAngle = 75.0;
+var beforeOverSweepMode  = 0;
+
 var SweepRate = 2.0;    # degrees per second
 var SweepVsMachLo = 22.0;  # for simplicity we will ignore the 21degrees sweep
 var SweepVsMachHi = 60.0;
 var currentSweepMode = 0; # 0=auto,1=man,2=off,3=emer,4=over
-if (usingJSBSim) setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
+if (usingJSBSim) setprop("/fdm/jsbsim/fcs/wing-sweep-mode",0);
 
 var minSweep = 0.2941176470588235;
 var maxSweepAuxFlaps = 0.3235294117647059;
@@ -70,24 +72,24 @@ var set_sweep = func(n) {
             {
         		if (getprop ("surface-positions/aux-flap-pos-norm") > 0.05) return;
             }
-    		WingSweep = 1.2;
+#            setprop("/fdm/jsbsim/fcs/wing-sweep-cmd",1.2);
         }
         else
         {
             #
             # if we get here then it means either an oversweep has been requested when not on the ground so set sweep to auto
-        	OverSweep = false;
+        	#OverSweep = false;
             currentSweepMode = 0;
         }
     }
-    if (n == 1)  ## manual - set to current position
+    if (n == 1 and currentSweepMode == 0)  ## manual from auto - set to current position
     {
         setprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd", currentSweep);
     }
     currentSweepMode = n;
     AutoSweep = currentSweepMode == 0;
-   	OverSweep = currentSweepMode == 4;
-    setprop("/fdm/jsbsim/fcs/wing-sweep-auto",AutoSweep);
+   	#OverSweep = currentSweepMode == 4;
+    setprop("/fdm/jsbsim/fcs/wing-sweep-mode",currentSweepMode);
     updateSweepIndicators();
 }
 
@@ -97,16 +99,27 @@ var maxSweepWithOnlyMainFlaps = 0.7352941176470588;
 
 set_sweep(0);
 
-var move_wing_sweep = func(delta){
-    var curval = getprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd");
-    if(curval < 0.2941176470588235) curval = 0.2941176470588235;
+var set_wing_sweep = func(pos){
+
+    if(pos < 0.2941176470588235) pos = 0.2941176470588235;
+
     if (currentSweepMode != 1)
     {
         set_sweep(1);
     }
+    if (pos > 0.2941176470588235 and pos < 1.1029411764705882352941176470588)
+    {
+        setprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd", pos);
+    }
+    print("wingsweep ",pos," ",getprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd"));
+}
+
+var move_wing_sweep = func(delta){
+    var curval = getprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd");
+
     if (delta < 0 and curval > 0.2941176470588235)
     {
-        setprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd", curval - wingsweep1Degree);
+        set_wing_sweep(curval - wingsweep1Degree);
     }
     
     if (delta > 0 and curval < 1)
@@ -115,18 +128,18 @@ var move_wing_sweep = func(delta){
         if(curval > maxSweepWithFlaps and getprop("controls/flight/flaps") > 0.4){
             curval = maxSweepWithFlaps;
         }
-        setprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd", curval);
+        set_wing_sweep(curval);
     }
-    print("wingsweep ",delta," ",curval,getprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd"));
 }
 
 var toggleOversweep = func {
-    if (OverSweep)
+    if (currentSweepMode == 4)
     {
-        set_sweep(0);
+        set_sweep(beforeOverSweepMode);
     }
     else
     {
+    beforeOverSweepMode = currentSweepMode ;
         set_sweep(4);
     }
 }
@@ -149,7 +162,7 @@ var computeSweep = func {
             if (currentSweep < cadc_sweep){
                 currentSweepMode = 0; 
                 updateSweepIndicators();
-                setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
+                setprop("/fdm/jsbsim/fcs/wing-sweep-mode",0);
             }
         }
         setprop("controls/flight/wing-sweep-cadc-dmd",cadc_sweep);
@@ -189,10 +202,10 @@ var computeSweep = func {
 setlistener("/controls/flight/wingsweep-cover", func(v) {
     if (v != nil) {
         if (v.getValue()) {
-            setprop("/fdm/jsbsim/fcs/wing-sweep-auto",0);
+            setprop("/fdm/jsbsim/fcs/wing-sweep-mode",1);
             currentSweepMode = 1;
         } else {
-            setprop("/fdm/jsbsim/fcs/wing-sweep-auto",1);
+            setprop("/fdm/jsbsim/fcs/wing-sweep-mode",0);
             currentSweepMode = 0;
         }
         updateSweepIndicators();
@@ -204,7 +217,7 @@ setlistener("/controls/flight/wingsweep-guard", func(v) {
         if (v != nil) {
             if (v.getValue()) {
                 if (getprop("/controls/flight/wing-sweep-cmd") >= 1) {
-                    setprop("/fdm/jsbsim/fcs/wing-sweep-auto",0);
+                    setprop("/fdm/jsbsim/fcs/wing-sweep-mode",1);
                     currentSweepMode = 4;
                     getprop("/controls/flight/wing-sweep-cmd",1.2);
                 }
@@ -220,3 +233,9 @@ setlistener("/controls/flight/wingsweep-guard", func(v) {
         updateSweepIndicators();
     }
 }, 0, 0);
+
+setlistener("/controls/flight/wings", func(v) {
+# rescale because 0.294118 is 20 degrees and the minimum range.
+    if (v != nil)
+        set_wing_sweep(v.getValue()* 0.7059 + (1/68*20) );
+},0,0);

@@ -8,31 +8,38 @@
     <property value="0">systems/hydraulics/emerg-gear-bleed</property>
     <property value="0">gear/damage-reset</property>
     <property value="2">position/aircraft-on-ground-last-value</property>
-	<!--<property value="0.1">fcs/aileron-deadzone</property>
-	<property value="0.1">fcs/elevator-deadzone</property>-->
     
     <channel name="Pitch">
 		<switch name="fcs/stick-pitch">
 			<default value="0"/>
 			<test value="fcs/elevator-cmd-norm">
-				/autopilot/internal/pitch-active NE 1
+				autoflight/input/pitch-switch ne 1
 			</test>
 		</switch>
 		
 		<switch name="fcs/css-pitch">
 			<default value="0"/>
-			<test logic="AND" value="/controls/flight/elevator-norm">
-				/autopilot/internal/pitch-active EQ 1
-				/controls/flight/elevator-norm NE 0
+			<test logic="AND" value="autoflight/ss/elevator-norm">
+				autoflight/input/pitch-switch eq 1
+				autoflight/ss/elevator-norm ne 0
 			</test>
 		</switch>
-		
+
+        <!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
+            Kevin R. Scalera
+        Table 2.1: Control surface limits
+        Control Effector Deflection (deg) Rate Limit (deg/s)
+                DHT(L/R) -29.0 / 15.0 ±46
+                DAIL(L/R) -20.0 / 20.0 ±100
+                DRUD(L/R) -30.0 / 30.0 ±105
+                FLAPS(L/R) 0.0 / 35.0 ±18
+        -->
         <summer name="Pitch Trim Sum">
             <input>fcs/stick-pitch</input>
             <input>fcs/css-pitch</input>
             <input>fcs/pitch-trim-cmd-norm</input>
             <input>fcs/pitch-damper-rate</input>
-            <input>systems/afcs/elevator-cmd-delta</input>
+            <input>autoflight/pitch/pitch-rate-demand</input>
             <input>systems/cadc/pitch-trim-compensation</input>
             <clipto>
                 <min> -1 </min>
@@ -68,12 +75,11 @@
             <traverse>
                 <setting>
                     <position>-1</position>
-                    <time>0.9</time>
+                    <time>0.6304</time>
                 </setting>
                 <setting>
                     <position>1</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.3260</time>
                 </setting>
             </traverse>
             <output>fcs/elevator-pos-rad</output>
@@ -83,7 +89,7 @@
         <fcs_function name="fcs/differential-elevator-pos-norm">
             <function>
                 <product>
-                    <property>fcs/aileron-right-pos-norm</property>
+                    <property>fcs/aileron-pos-norm</property>
                     <value>0.3</value> <!-- mxaimum authority -->
                     <table>
                         <!-- Figure 4 Mechanmical lateral control authority.
@@ -177,26 +183,26 @@
 
     <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
     <channel name="Roll">
-		<switch name="fcs/stick-roll">
-			<default value="0"/>
-			<test value="fcs/aileron-cmd-norm">
-				/autopilot/internal/roll-active NE 1
-			</test>
-		</switch>
-		
-		<switch name="fcs/css-roll">
-			<default value="0"/>
-			<test logic="AND" value="/controls/flight/aileron-norm">
-				/autopilot/internal/roll-active EQ 1
-				/controls/flight/aileron-norm NE 0
-			</test>
-		</switch>
-		
+        <switch name="fcs/stick-roll">
+            <default value="0"/>
+            <test value="fcs/aileron-cmd-norm">
+                autoflight/input/roll-switch ne 1
+            </test>
+        </switch>
+
+        <switch name="fcs/css-roll">
+            <default value="0"/>
+            <test logic="AND" value="autoflight/ss/aileron-norm">
+                autoflight/input/roll-switch eq 1
+                autoflight/ss/aileron-norm ne 0
+            </test>
+        </switch>
+
         <summer name="fcs/roll-trim-sum-raw">
             <input>fcs/stick-roll</input>
             <input>fcs/css-roll</input>
             <input>fcs/roll-trim-cmd-norm</input>
-            <input>fcs/roll-trim-sas-cmd-norm</input>
+            <input>autoflight/roll/roll-rate-demand</input>
             <input>fcs/roll-rate-limiter</input>
             <clipto>
                 <min> -1 </min>
@@ -221,12 +227,11 @@
             <traverse>
                 <setting>
                     <position>-1</position>
-                    <time>0.9</time>
+                    <time>0.2</time>
                 </setting>
                 <setting>
                     <position>1</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.2</time>
                 </setting>
             </traverse>
             <output>fcs/aileron-pos-norm</output>
@@ -235,120 +240,11 @@
         <aerosurface_scale name="Aileron Control">
             <input>fcs/aileron-pos-norm</input>
             <range>
-                <min> -0.34910106475824751265491359748647</min>
-                <max>  0.34910106475824751265491359748647</max>
-            </range>
-            <output>fcs/aileron-pos-rad</output>
-        </aerosurface_scale>
-
-        <pure_gain name="fcs/aileron-left-pos-rad">
-            <input>fcs/aileron-pos-rad</input>
-            <gain>1</gain>
-            <output>fcs/aileron-left-pos-rad</output>
-        </pure_gain >
-
-        <pure_gain name="fcs/aileron-right-pos-rad">
-            <input>fcs/aileron-pos-rad</input>
-            <gain>1</gain>
-        </pure_gain >
-
-        <pure_gain name="fcs/aileron-left-pos-norm">
-            <input>fcs/aileron-pos-norm</input>
-            <gain>1</gain>
-        </pure_gain >
-        <pure_gain name="fcs/aileron-right-pos-norm">
-            <input>fcs/aileron-pos-norm</input>
-            <gain>1</gain>
-        </pure_gain >
-
-        <pure_gain name="fcs/aileron-right-pos-deg">
-            <input>fcs/aileron-right-pos-rad</input>
-            <gain>30</gain>
-        </pure_gain >
-        <pure_gain name="fcs/aileron-left-pos-deg">
-            <input>fcs/aileron-left-pos-rad</input>
-            <gain>30</gain>
-        </pure_gain >
-        <pure_gain name="fcs/aileron-pos-deg">
-            <input>fcs/aileron-right-pos-rad</input>
-            <gain>30</gain>
-        </pure_gain >
-
-        <aerosurface_scale name="left aileron normalization">
-            <input>fcs/left-aileron-pos-rad</input>
-            <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/left-aileron-pos-norm</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="Aileron Control">
-            <input>fcs/right-aileron-pos-norm</input>
-            <range>
                 <min> -20 </min>
                 <max>  20 </max>
             </range>
             <output>fcs/aileron-pos-deg</output>
         </aerosurface_scale>
-
-        <aerosurface_scale name="Left Aileron Control">
-            <input>fcs/aileron-pos-norm</input>
-            <range>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </range>
-            <output>fcs/left-aileron-pos-rad</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="Right Aileron Control">
-            <input>fcs/aileron-pos-norm</input>
-            <range>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </range>
-            <output>fcs/right-aileron-pos-rad</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="left aileron normalization">
-            <input>fcs/left-aileron-pos-rad</input>
-            <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/left-aileron-pos-norm</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="right aileron normalization">
-            <input>fcs/right-aileron-pos-rad</input>
-            <domain>
-                <min> -0.22807 </min>
-                <max>  0.22807 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/right-aileron-pos-norm</output>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="Aileron Control">
-            <input>fcs/right-aileron-pos-norm</input>
-            <range>
-                <min> -20 </min>
-                <max>  20 </max>
-            </range>
-            <output>fcs/aileron-pos-deg</output>
-        </aerosurface_scale>
-
     </channel>
 
     <channel name="Yaw">
@@ -373,13 +269,26 @@
                 <max>  0.1 </max>
             </clipto>
         </fcs_function>-->
+
+        <switch name="fcs/aileron-cmd-norm-ap-switched">
+            <default value="fcs/aileron-cmd-norm"/>
+            <test logic="AND" value="autoflight/ss/aileron-norm">
+                autoflight/input/roll-switch eq 1
+                autoflight/output/roll-master eq 0
+            </test>
+            <test logic="AND" value="0">
+                autoflight/input/roll-switch eq 1
+                autoflight/output/roll-master eq 1
+            </test>
+        </switch>
+
         <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
             <!--This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
                 The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.-->
             <description>ARI</description>
             <function>
                 <product>
-                    <property>fcs/aileron-cmd-norm</property>
+                    <property>fcs/aileron-cmd-norm-ap-switched</property>
                     <property>fcs/ari-lateral-enabled</property>
                     <table>
                         <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
@@ -445,13 +354,11 @@
             <traverse>
                 <setting>
                     <position>-0.35</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.2857</time>
                 </setting>
                 <setting>
                     <position>0.35</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
+                    <time>0.2857</time>
                 </setting>
             </traverse>
             <output>fcs/rudder-pos-rad</output>
@@ -497,7 +404,7 @@
                 </setting>
                 <setting>
                     <position> 30 </position>
-                    <time>    1.9 </time>
+                    <time>    1.944</time>
                 </setting>
             </traverse>
             <output>fcs/flap-pos-deg</output>
@@ -772,7 +679,69 @@ emerg operation.
             position/aircraft-on-ground ne 0
         </test>-->
         </switch>
+        
+        <!--Gear that is damaged will be shown as half retracted; which will look kind of broken. These
+        three functions set the gear position based on the damage to the appropriate value-->
+        <fcs_function>
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <p>gear/unit[0]/damaged</p>
+                            <v>0</v>
+                        </gt>
+                        <gt>
+                            <p>gear/gear-pos-norm</p>
+                            <v>0.6</v>
+                        </gt>
+                    </and>
+                    <v>0.5</v>
+                    <p>gear/gear-pos-norm</p>
+                </ifthen>
+            </function>
+            <output>gear/unit[0]/pos-norm</output>
+        </fcs_function>
 
+        <fcs_function>
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <p>gear/unit[1]/damaged</p>
+                            <v>0</v>
+                        </gt>
+                        <gt>
+                            <p>gear/gear-pos-norm</p>
+                            <v>0.6</v>
+                        </gt>
+                    </and>
+                    <v>0.5</v>
+                    <p>gear/gear-pos-norm</p>
+                </ifthen>
+            </function>
+            <output>gear/unit[1]/pos-norm</output>
+        </fcs_function>
+        <fcs_function>
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <p>gear/unit[2]/damaged</p>
+                            <v>0</v>
+                        </gt>
+                        <gt>
+                            <p>gear/gear-pos-norm</p>
+                            <v>0.6</v>
+                        </gt>
+                    </and>
+                    <v>0.5</v>
+                    <p>gear/gear-pos-norm</p>
+                </ifthen>
+            </function>
+            <output>gear/unit[2]/pos-norm</output>
+        </fcs_function>
+        <!--End of gear damage handling-->
+        
         <switch>
             <default value="1"/>
             <test value="1">

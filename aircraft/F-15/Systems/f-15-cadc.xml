@@ -51,62 +51,121 @@
             <function>
                 <sum>
                     <ifthen>
-                        <ge>
+                        <eq>
                             <property>inertia/pointmass-weight-lbs[1]</property>
-                            <value>1</value>
-                        </ge>
+                            <value>271</value>
+                        </eq>
                         <value>0.3</value>
                         <value>0</value>
                     </ifthen>
                     <ifthen>
-                        <ge>
+                        <eq>
                             <property>inertia/pointmass-weight-lbs[5]</property>
-                            <value>1</value>
-                        </ge>
+                            <value>271</value>
+                        </eq>
                         <value>0.4</value>
                         <value>0</value>
                     </ifthen>
                     <ifthen>
-                        <ge>
+                        <eq>
                             <property>inertia/pointmass-weight-lbs[9]</property>
-                            <value>1</value>
-                        </ge>
+                            <value>271</value>
+                        </eq>
                         <value>0.3</value>
                         <value>0</value>
                     </ifthen>
                 </sum>
             </function>
         </fcs_function>
-        <fcs_function name="metrics/stores-tank-factor">
+
+        <!--LAU-128
+        Length	106.00 inches
+        Width	3.62 inches
+        Height	6.06 inches
+        Weight	87 lbs.-->
+
+        <fcs_function name="inertia/pylon-left-weight-lbs">
             <function>
                 <sum>
+                    <!--LAU-128-->
                     <ifthen>
-                        <ge>
-                            <property>inertia/pointmass-weight-lbs[1]</property>
-                            <value>1</value>
-                        </ge>
-                        <value>0.3</value>
+                        <or>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[0]</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[2]</property>
+                                <value>0</value>
+                            </gt>
+                        </or>
+                        <value>87</value>
                         <value>0</value>
                     </ifthen>
                     <ifthen>
-                        <ge>
-                            <property>inertia/pointmass-weight-lbs[5]</property>
-                            <value>1</value>
-                        </ge>
-                        <value>0.4</value>
-                        <value>0</value>
-                    </ifthen>
-                    <ifthen>
-                        <ge>
-                            <property>inertia/pointmass-weight-lbs[9]</property>
-                            <value>1</value>
-                        </ge>
-                        <value>0.3</value>
+                        <or>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[0]</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[1]</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[2]</property>
+                                <value>0</value>
+                            </gt>
+                        </or>
+                        <value>371</value>
                         <value>0</value>
                     </ifthen>
                 </sum>
             </function>
+            <output>inertia/pointmass-weight-lbs[13]</output>
         </fcs_function>
+        <fcs_function name="inertia/pylon-right-weight-lbs">
+            <function>
+                <sum>
+                    <!--LAU-128-->
+                    <ifthen>
+                        <or>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[8]</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[10]</property>
+                                <value>0</value>
+                            </gt>
+                        </or>
+                        <value>87</value>
+                        <value>0</value>
+                    </ifthen>
+                    <ifthen>
+                        <or>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[8]</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[9]</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>inertia/pointmass-weight-lbs[10]</property>
+                                <value>0</value>
+                            </gt>
+                        </or>
+                        <value>371</value>
+                        <value>0</value>
+                    </ifthen>
+                </sum>
+            </function>
+            <output>inertia/pointmass-weight-lbs[14]</output>
+        </fcs_function>
+
+        
         <fcs_function name="metrics/stores-aiml-factor">
             <function>
                 <sum>
@@ -114,6 +173,14 @@
                         <ge>
                             <property>inertia/pointmass-weight-lbs[0]</property>
                             <value>1</value>
+                        </ge>
+                        <value>0.35</value>
+                        <value>0</value>
+                    </ifthen>
+                    <ifthen>
+                        <ge>
+                            <property>inertia/pointmass-weight-lbs[1]</property>
+                            <value>400</value>
                         </ge>
                         <value>0.35</value>
                         <value>0</value>
@@ -174,6 +241,14 @@
                     </ifthen>
                     <ifthen>
                         <ge>
+                            <property>inertia/pointmass-weight-lbs[9]</property>
+                            <value>400</value>
+                        </ge>
+                        <value>0.35</value>
+                        <value>0</value>
+                    </ifthen>
+                    <ifthen>
+                        <ge>
                             <property>inertia/pointmass-weight-lbs[10]</property>
                             <value>1</value>
                         </ge>
@@ -198,69 +273,37 @@
         <fcs_function name="pb">
             <description>PB Denormalization</description>
             <function>
-                <quotient>
-                    <product>
-                        <property>metrics/bw-ft</property>
-                        <property>velocities/p-aero-rad_sec</property>
-                    </product>
-                    <!-- over -->
-                    <product>
-                        <value>2</value>
-                        <property>velocities/vt-fps</property>
-                    </product>
-                </quotient>
+                <product>
+                    <property>aero/bi2vel</property>
+                    <property>velocities/p-aero-rad_sec</property>
+                </product>
             </function>
-            <clipto>
-                <min> -1.00 </min>
-                <max>  1.00 </max>
-            </clipto>
             <output>aero/pb</output>
         </fcs_function>
 
         <fcs_function name="cbarq-2vo">
             <description>For denormalization</description>
             <function>
-                <quotient>
-                    <product>
-                        <property>metrics/cbarw-ft</property>
-                        <property>velocities/q-aero-rad_sec</property>
-                    </product>
-                    <!-- over -->
-                    <product>
-                        <value>2</value>
-                        <property>velocities/vt-fps</property>
-                    </product>
-                </quotient>
+                <product>
+                    <property>aero/ci2vel</property>
+                    <property>velocities/q-aero-rad_sec</property>
+                </product>
             </function>
-            <clipto>
-                <min> -2.01 </min>
-                <max>  2.01 </max>
-            </clipto>
             <output>aero/qb</output>
         </fcs_function>
+
         <fcs_function name="rb-2vo">
             <description>For denormalization</description>
             <function>
-                <quotient>
-                    <product>
-                        <property>metrics/bw-ft</property>
-                        <property>velocities/r-aero-rad_sec</property>
-                    </product>
-                    <!-- over -->
-                    <product>
-                        <value>2</value>
-                        <property>velocities/vt-fps</property>
-                    </product>
-                </quotient>
+                <product>
+                    <property>aero/bi2vel</property>
+                    <property>velocities/r-aero-rad_sec</property>
+                </product>
             </function>
-            <clipto>
-                <min> -1.00 </min>
-                <max>  1.00 </max>
-            </clipto>
             <output>aero/rb</output>
         </fcs_function>
 
-
+        
         <fcs_function name="aero-cos-alpha">
             <function>
                 <product>
@@ -453,6 +496,7 @@
             <default value="0.0"/>
             <test logic="AND" value="1">
                 fcs/roll-sas-enable ne 0.0
+                autoflight/output/roll-master ne 1
             </test>
             <output>fcs/roll-sas-active</output>
         </switch>
@@ -515,6 +559,7 @@
                 fcs/elevator-cmd-norm ge -0.15
                 fcs/elevator-cmd-norm le 0.15
                 fcs/pitch-damper-enable ne 0.0
+                autoflight/output/pitch-master ne 1
             </test>
             <output>fcs/pitch-damper-active</output>
         </switch>
@@ -924,4 +969,133 @@
         </switch>
     </channel>
 
+    <property value="0">systems/flyt/stress-run</property>
+
+    <channel name="airframe-stress-adder" execute="systems/flyt/stress-run">
+
+    </channel>
+    <property value="7.5">systems/flyt/max-g</property>
+    <property value="-3.0">systems/flyt/min-g</property>
+    <property value="0.02">systems/flyt/permanent-bend-factor</property> <!--MaxBend / max-g * 2-->
+    <property value="0.0213">systems/flyt/distortion-factor-per-g</property> <!-- 0.16 / MaxG -->
+
+    <channel name="airframe-stress">
+        <fcs_function name="systems/flyt/current-g-loading">
+            <function>
+                <sum>
+                    <property>accelerations/Nz</property>
+                    <v>-1</v>
+                </sum>
+                <!--<product>
+                    <quotient>
+                        <property>aero/force/LIFT</property>
+                        <property>inertia/weight-lbs</property>
+                    </quotient>
+                    <v>-1</v>
+                </product>-->
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/max-g-reached">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>gear/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <gt>
+                                <property>sim-time-sec</property>
+                                <v>1</v>
+                            </gt>
+                            <ge>
+                                <property>systems/flyt/current-g-loading</property>
+                                <property>systems/flyt/max-g-reached</property>
+                            </ge>
+                        </and>
+                        <property>systems/flyt/current-g-loading</property>
+                        <property>systems/flyt/max-g-reached</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+        </fcs_function>
+        
+        <fcs_function name="systems/flyt/min-g-reached">
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <property>sim-time-sec</property>
+                            <v>1</v>
+                        </gt>
+                        <lt>
+                            <property>systems/flyt/current-g-loading</property>
+                            <property>systems/flyt/min-g-reached</property>
+                        </lt>
+                    </and>
+                    <property>systems/flyt/current-g-loading</property>
+                    <property>systems/flyt/min-g-reached</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/permanent-bend-up">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>systems/flyt/max-g-reached</p>
+                        <p>systems/flyt/max-g</p>
+                    </gt>
+                    <product>
+                        <p>systems/flyt/permanent-bend-factor</p>
+                        <difference>
+                            <p>systems/flyt/max-g-reached</p>
+                            <p>systems/flyt/max-g</p>
+                        </difference>
+                    </product>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/permanent-bend-down">
+            <function>
+                <ifthen>
+                    <lt>
+                        <p>systems/flyt/min-g-reached</p>
+                        <p>systems/flyt/min-g</p>
+                    </lt>
+                    <product>
+                        <p>systems/flyt/permanent-bend-factor</p>
+                        <difference>
+                            <p>systems/flyt/min-g-reached</p>
+                            <p>systems/flyt/min-g</p>
+                        </difference>
+                    </product>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/permanent-bend">
+            <function>
+                <sum>
+                    <property>systems/flyt/permanent-bend-up</property>
+                    <property>systems/flyt/permanent-bend-down</property>
+                    </sum>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/wing-distortion">
+            <function>
+                <sum>
+                    <p>systems/flyt/permanent-bend</p>
+                    <product>
+                        <p>systems/flyt/current-g-loading</p>
+                        <p>systems/flyt/distortion-factor-per-g</p>
+                    </product>
+                </sum>
+            </function>
+            <output>fcs/wing-fold-pos-norm</output>
+        </fcs_function>
+    </channel>
 </system>

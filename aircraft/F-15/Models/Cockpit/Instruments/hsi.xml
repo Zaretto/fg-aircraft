@@ -7,7 +7,7 @@
     <path>hsi.ac</path>
     <animation>
         <type>rotate</type>
-        <object-name>hsi</object-name>
+        <object-name>group_hsi</object-name>
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -26,7 +26,7 @@
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>cdi</object-name>
+        <object-name>group_cdi</object-name>
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -593,7 +593,7 @@
 
     <!-- lighting -->
     <animation>
-        <object-name>mount</object-name>
+        <object-name>hsi-mount</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -617,7 +617,9 @@
     </animation>
 
     <animation>
-        <object-name>instrument</object-name>
+        <object-name>hsi-mount</object-name>
+        <object-name>group_cdi</object-name>
+        <object-name>group_hsi</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -641,8 +643,8 @@
 <!-- ALS Model Interior (Shadow) -->
     <effect>
         <name>f15interior</name>
-        <inherits-from>Effects/f15interior</inherits-from>
-        <object-name>mount</object-name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
+        <object-name>hsi-mount</object-name>
         <object-name>instrument</object-name>
     </effect>
 </PropertyList>

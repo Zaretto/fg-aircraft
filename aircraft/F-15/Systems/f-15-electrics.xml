@@ -288,6 +288,61 @@ DC Main Bus 28 V DC
               systems/electrics/dc-essential-bus2-powered ne 0
           </test>
       </switch>
-
+      <fcs_function name="systems/electrics/bound/flaps-transit-light">
+          <function>
+              <ifthen>
+                  <and>
+                      <gt>
+                          <property>systems/electrics/ac-essential-bus1</property>
+                          <value>0</value>
+                      </gt>
+                      <or>
+                          <gt>
+                              <property>/sim/model/f15/lights/master-test-lights</property>
+                              <value>0</value>
+                          </gt>
+                          <and>
+                              <gt>
+                                  <property>fcs/flap-pos-norm</property>
+                                  <value>0</value>
+                              </gt>
+                              <lt>
+                                  <property>fcs/flap-pos-norm</property>
+                                  <value>1.0</value>
+                              </lt>
+                          </and>
+                      </or>
+                  </and>
+                  <v>1</v>
+                  <v>0</v>
+              </ifthen>
+          </function>
+          <output>systems/electrics/flaps-transit-light</output>
+      </fcs_function>
+      <fcs_function name="systems/electrics/bound/flaps-down-light">
+          <function>
+              <ifthen>
+                  <and>
+                      <gt>
+                          <property>systems/electrics/ac-essential-bus1</property>
+                          <value>0</value>
+                      </gt>
+                      <or>
+                          <gt>
+                              <property>/sim/model/f15/lights/master-test-lights</property>
+                              <value>0</value>
+                          </gt>
+                          <ge>
+                              <property>fcs/flap-pos-norm</property>
+                              <value>1.0</value>
+                          </ge>
+                      </or>
+                  </and>
+                  <v>1</v>
+                  <v>0</v>
+              </ifthen>
+          </function>
+          <output>systems/electrics/flaps-down-light</output>
+      </fcs_function>
   </channel>
 </system>

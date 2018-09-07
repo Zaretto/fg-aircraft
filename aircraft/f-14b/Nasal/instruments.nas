@@ -563,12 +563,12 @@ var main_loop = func {
     {
 	    if ( getprop("sim/replay/time") > 0 ) 
           {
-              setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+#now recorded              setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
           }
         else
           {
               setprop ("/gear/gear[0]/compression-adjusted-ft", getprop("fdm/jsbsim/gear/unit[0]/compression-adjusted-ft"));
-              setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+#              setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
           }
     }
 	else
@@ -647,6 +647,8 @@ var common_carrier_init = func {
 
     if(on_carrier)
     {
+        repos_gear_down = 1;
+
         var ground_elevation = getprop("/position/ground-elev-ft");
         if (ground_elevation == nil)
             ground_elevation = 65.2;
@@ -703,32 +705,40 @@ var common_carrier_init = func {
                         # in any case is this is less than 6 meters we'd be in the bilges so this probably means
                         # that the elevation data isn't valid so use hardcoded value of 65.2
                         current_pos = carrier_pos;
-                        var info = geodinfo(lat, lon);
-                        if (info != nil) 
-                        {
-                            print("the carrier deckj is is at elevation ", info[0], " m");
-                            ground_elevation = info[0]*3.28084; # convert to feet
-                            if (ground_elevation < 1) ground_elevation = 65.2;
+#                        var info = geodinfo(lat, lon);
+#                        if (info != nil) 
+#                        {
+#                            print("the carrier deckj is is at elevation ", info[0], " m");
+#                            ground_elevation = info[0]*3.28084; # convert to feet
+#                            if (ground_elevation < 1) ground_elevation = 65.2;
+#                        }
+var deckAltitudeNode = c.getNode("position/deck-altitude-feet");
+ground_elevation = 65;
+                        if (deckAltitudeNode != nil){
+                            ground_elevation =  deckAltitudeNode.getValue();
+                            print("Carrier deck from node ",ground_elevation);
                         }
                         if (ground_elevation < 6) ground_elevation = 65.2;
+                        print("Carrier deck now: ",ground_elevation);
                     }
                 }
             }
                    
-            setprop("/controls/gear/gear-down", 1);
-
             if (current_pos != nil)
             {
-                print("Adjusting launch position by 7meters");
-                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),7);
+                var offset = getprop("sim/model/f-14b/overrides/deck-offset-m");
+                print("Adjusting launch position by ",offset," meters");
+                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),offset);
             }
             setprop("/position/latitude-deg", current_pos.lat());
             setprop("/position/longitude-deg", current_pos.lon());
 
             print("Moving the aircraft into the launch position properly... for ",carrier, " alt ",ground_elevation," lat ", current_pos.lat(), " lon ",current_pos.lon());
 
-            setprop("/position/altitude-ft", ground_elevation+getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
-        }
+            #
+            # sim/model/f-14b/overrides/aircraft-agl-height is the known height of the aircraft (in feet) with gear down.
+            setprop("/position/altitude-ft", ground_elevation + getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
+         }
     }
 
 }
@@ -739,8 +749,8 @@ var common_init = func {
         #
         # part of the bombable integration. we don't have magnetos so we can use them
         # to detect damage
-        setprop("controls/engines/engine[0]/magnetos",1);
-        setprop("controls/engines/engine[1]/magnetos",1);
+        #setprop("controls/engines/engine[0]/magnetos",1);
+        #setprop("controls/engines/engine[1]/magnetos",1);
 
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
@@ -759,8 +769,7 @@ var common_init = func {
                 setprop("/controls/gear/gear-down", 1);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+                setprop("/fdm/jsbsim/gear/gear-pos-norm",1);
 
                 if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
                 {
@@ -774,8 +783,7 @@ var common_init = func {
                 setprop("/controls/gear/gear-down", 0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+                setprop("/fdm/jsbsim/gear/gear-pos-norm",0);
                 setprop("/controls/gear/brake-parking",0);
             }
         }
@@ -948,6 +956,112 @@ carrier_approach_reposition = func {
     };
 }
 
+
+f14_instruments.carrier_case_1_approach_reposition = func {
+if (f14.carrier_ara_63_position == nil)
+{
+print("No carrier");
+return;
+}
+
+print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
+    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+
+    var np = geo.Coord.new()
+    .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+    var magvar=getprop("/orientation/local-mag-dev");
+
+    var dist_m = -560;
+    var gs_height = 800;
+    var fuel = 3500;   #lbs
+    var onspeed =325;
+
+#    if (getprop("sim/presets/carrier-approach-dist-m") != nil)
+#        dist_m  = getprop("sim/presets/carrier-approach-dist-m");
+    np.apply_course_distance(f14.carrier_ara_63_heading-90, dist_m);
+    lat = np.lat();
+    lon = np.lon();
+    f14.set_fuel(fuel);
+
+    print("Position to ",dist_m," height ",gs_height, " speed=",onspeed, " lat=",lat," lon=",lon);
+
+    setprop("controls/gear/gear-down",0);
+    setprop("/controls/flight/flaps",0);
+    setprop("/controls/gear/gear-down",0);
+    setprop("fdm/jsbsim/gear/gear-cmd-norm",0);
+    setprop("/controls/gear/brake-parking",0);
+    setprop("fdm/jsbsim/gear/gear-cmd-norm",0);
+    setprop("/controls/gear/brake-parking",0);
+    setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",0);
+setprop("/controls/flight/flaps",0);
+setprop("/controls/gear/gear-down",0);
+
+    setprop("sim/presets/trim", 1);
+    setprop("sim/presets/latitude-deg",np.lat());
+    setprop("sim/presets/longitude-deg",np.lon());
+    setprop("sim/presets/altitude-ft",gs_height);
+    setprop("sim/presets/airspeed-kt",onspeed);
+    setprop("sim/presets/pitch-deg",0);
+
+setprop("/sim/presets/speed-set", "uvw");
+var KTS_TO_FPS = 1.68781;
+
+setprop("/sim/presets/uBody-fps",KTS_TO_FPS * onspeed);
+setprop("/sim/presets/vBody-fps",0);
+setprop("/sim/presets/wBody-fps",0);
+
+    #setprop("sim/presets/heading-deg",178-magvar);
+    setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+    setprop("/sim/presets/carrier","");
+    setprop("/sim/presets/parkpos","");
+    setprop("position/latitude-deg",lat);
+    setprop("position/longitude-deg",lon);
+    setprop("position/altitude-ft",gs_height);
+
+    repos_gear_down = 0;
+
+var elevator_trim = -0.089647;
+
+    setprop("/controls/flight/elevator-trim", elevator_trim);
+    setprop("/fdm/trim/pitch-trim", elevator_trim);
+
+    setprop("/fdm/trim/trimmed", 1);
+    fgcommand("reposition");
+
+    post_init_method = func{
+        print("F-14: finish approach repos ************************");
+        print("finalize position ",onspeed," alt=",getprop("position/altitude-agl-ft"));
+        setprop("/controls/flight/elevator-trim", elevator_trim);
+        setprop("/fdm/trim/pitch-trim", elevator_trim);
+
+        # v 0.41
+        #setprop("sim/latitude-deg",lat);
+        #setprop("sim/longitude-deg",lon);
+        #setprop("sim/altitude-ft",gs_height);
+        #    
+
+        setprop("fdm/jsbsim/gear/gear-cmd-norm",0);
+        setprop("/controls/gear/brake-parking",0);
+
+        #    setprop("/controls/flight/elevator-trim", -0.3698032779);
+        #    setprop("/controls/flight/elevator-trim", -0.0);
+        #    setprop("/fdm/trim/trimmed", 1);
+        #        f14.APC_on();
+        #        setprop ("fdm/jsbsim/systems/apc/target-vc-kts", onspeed);
+
+        #    setprop("sim/presets/airspeed-kt",onspeed);
+
+        np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+        np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
+
+        setprop("/sim/tower/latitude-deg",np.lat());
+        setprop("/sim/tower/longitude-deg",np.lon());
+        setprop("/sim/tower/altitude-ft",np.alt()+100);
+    };
+}
+#0.3nm from carrier overhead
+#f14_instruments.carrier_case_1_approach_reposition();
+#break at the bow if formation lead 0.6nm
 
 
 setlistener("fdm/jsbsim/systems/hook/arrestor-wire-available", func(v)

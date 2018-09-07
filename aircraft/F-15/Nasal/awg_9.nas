@@ -18,6 +18,26 @@
 
 var this_model = "f15";
 #var this_model = "f-14b";
+var knownShips = {
+    "missile_frigate":       nil,
+    "frigate":       nil,
+    "USS-LakeChamplain":     nil,
+    "USS-NORMANDY":     nil,
+    "USS-OliverPerry":     nil,
+    "USS-SanAntonio":     nil,
+};
+
+var knownSurface = {
+    "buk-m2":       nil,
+    "depot":       nil,
+    "truck":     nil,
+    "tower":     nil,
+};
+
+var AIR = 0;
+var MARINE = 1;
+var SURFACE = 2;
+var ORDNANCE = 3;
 
 var ElapsedSec        = props.globals.getNode("sim/time/elapsed-sec");
 var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
@@ -81,6 +101,28 @@ ScanTgtUpdateCount.setIntValue(0);
 
 ScanVisibilityCheckInterval.setIntValue(12); # seconds
 ScanPartitionSize.setIntValue(10); # size of partition to run per frame.
+
+# Azimuth field quadrants.
+# 120 means +/-60, as seen in the diagram below.
+#  _______________________________________
+# |                   |                  |
+# |               _.--+---.              |
+# |           ,-''   0|    `--.          |
+# |         ,'        |        `.        |
+# |        /          |          \       |
+# |    -60/'-.        |         _,\+60   |
+# |      /    `-.     |     ,.-'   \     |
+# |     ; -90    `-._ |_.-''      90     |
+#....................::F..................
+# |     :             |             ;    |
+# |      \       TC   |            /     |
+# |       \           |           /      |
+# |        \          |          /       |
+# |         `.   -180 | +180   ,'        |
+# |           '--.    |    _.-'          |
+# |               `---+--''              |
+# |                   |                  |
+#  `''''''''''''''''''|'''''''''''''''''''
 
 #
 # local variables related to the simulation of the radar.
@@ -386,7 +428,7 @@ var az_scan = func() {
 #var v1 = isNotBehindTerrain(u.propNode);
 #pickingMethod = 1;
 #var v2 = isNotBehindTerrain(u.propNode);
-            if (rcs.inRadarRange(u, 200, myRadarStrength_rcs) == 0) {
+            if (rcs.isInRadarRange(u, 80, myRadarStrength_rcs) == 0) {
                 u.set_display(0);
                 u.set_visible(0);
                 scan_hidden_by_rcs += 1;
@@ -436,7 +478,7 @@ var az_scan = func() {
         if (u_rng != nil and (u_rng < range_radar2  and u.not_acting == 0 )) {
             u.get_deviation(our_true_heading);
         
-            if (rcs.inRadarRange(u, range_radar2, myRadarStrength_rcs) == 0) {
+            if (rcs.isInRadarRange(u, 80, myRadarStrength_rcs) == 0) {
 #                if(awg9_trace)
 #                  print(scan_tgt_idx,";",u.get_Callsign()," not visible by rcs");
                 u.set_display(0);
@@ -1126,23 +1168,18 @@ var Target = {
 
         obj.Model = c.getNode("model-short");
         var model_short = c.getNode("sim/model/path");
-        if(model_short != nil)
-        {
+        if(model_short != nil){
             var model_short_val = model_short.getValue();
-            if (model_short_val != nil and model_short_val != "")
-            {
-            var u = split("/", model_short_val); # give array
-            var s = size(u); # how many elements in array
+            if (model_short_val != nil and model_short_val != "") {
+                var u = split("/", model_short_val); # give array
+                var s = size(u); # how many elements in array
             var o = u[s-1];	 # the last element
             var m = size(o); # how long is this string in the last element
-            var e = m - 4;   # - 4 chars .xml
-            obj.ModelType = substr(o, 0, e); # the string without .xml
-}
-else
-            obj.ModelType = "";
-        }
-else
-{
+              var e = m - 4;   # - 4 chars .xml
+                obj.ModelType = substr(o, 0, e); # the string without .xml
+            } else
+              obj.ModelType = "";
+        } else {
             obj.ModelType = "";
         }
 
@@ -1250,7 +1287,9 @@ else
 		obj.RadarStandby = c.getNode("sim/multiplay/generic/int[2]");
 
 		obj.deviation = nil;
-
+        obj.target_classification = AIR; # default to AIR targets
+        obj.set_type_from_name(c.getName(), obj.ModelType);
+    
 		return obj;
 	},
 #
@@ -1258,6 +1297,31 @@ else
     get_az_field : func {
         return 60.0;
     },
+
+    set_type_from_name : func(type, mdl){
+
+        print ("set tgt Ttype ",type, " mdl=",mdl);
+    
+        if (type == "tanker" or type == "aircraft") {
+            me.target_classification = AIR;
+        } elsif (type=="carrier") {
+            me.target_classification = MARINE;
+        } elsif (type=="groundvehicle") {
+            me.target_classification = SURFACE;
+        } else {
+            # multiplayer:
+            if (contains(knownSurface,mdl)) {
+                me.target_classification = SURFACE;
+            } elsif (contains(knownShips,mdl)) {
+                me.target_classification = MARINE;
+            } elsif (me.get_altitude() < 5) {
+                me.target_classification = MARINE;
+            } elsif (me.get_Speed() < 60) {
+                me.target_classification = SURFACE;
+            }
+        }
+    },
+
 	get_heading : func {
 		var n = me.Heading.getValue();
         if (n != nil)
@@ -1477,11 +1541,7 @@ else
         return me.unique;
     },
     get_type: func {
-        var AIR = 0;
-        var MARINE = 1;
-        var SURFACE = 2;
-        var ORDNANCE = 3;
-        return AIR;
+        return me.target_classification;
     },
     isPainted: func {
         return 1;
@@ -1499,8 +1559,10 @@ else
             # AI/MP has no radar properties
             var self = geo.aircraft_position();
             me.get_Coord();
-            var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
-            e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+            if (me.coord != nil){
+                var angleInv = armament.AIM.clamp(self.distance_to(me.coord)/self.direct_distance_to(me.coord), -1, 1);
+                e = (self.alt()>me.coord.alt()?-1:1)*math.acos(angleInv)*R2D;
+            }
         }
         return e;
     },

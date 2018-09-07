@@ -530,8 +530,8 @@
             <splash-texture>Aircraft/F-15/f15c-splash.jpg</splash-texture>
         </startup>
         <systems>
-            <autopilot>
-                <path>Aircraft/F-15/Systems/f-15-AFCS.xml</path>
+            <autopilot n="0">
+                <path>Aircraft/F-15/Systems/autoflight-rules.xml</path>
             </autopilot>
         </systems>
 
@@ -863,6 +863,16 @@
                             <target-range-nm type="double">0</target-range-nm>
                             <sound-volume type="double">0.12</sound-volume>
                         </aim7>
+                        <mk84>
+                            <count type="int">0</count>
+                            <nearest-target type="int">-1</nearest-target>
+                            <target-range-nm type="double">0</target-range-nm>
+                            <sound-volume type="double">0.12</sound-volume>
+                        </mk84>
+                        <agm>
+                            <count type="int">0</count>
+                        </agm>
+
                         <launch-light type="bool">false</launch-light>
                         <system-running type="bool">false</system-running>
                     </armament>
@@ -890,7 +900,7 @@
                         <external-wing-tanks type="bool">false</external-wing-tanks>
                         <external-centre-tank-demand type="bool">false</external-centre-tank-demand>
                         <external-wing-tanks-demand type="bool">false</external-wing-tanks-demand>
-                        <external-load-set type="string">Clean</external-load-set>
+                        <external-load-set type="string">clean</external-load-set>
                         <external-tanks type="bool">false</external-tanks>
                         <station n="0">
                             <type type="string">-</type>
@@ -1081,7 +1091,7 @@
         <menubar>
             <default>
                 <menu n="50">
-                    <label>F-15 Eagle </label>
+                    <label>F-15 Eagle</label>
                     <item n="0">
                         <label>Repair Airframe</label>
                         <binding>
@@ -1331,19 +1341,19 @@
             </opt>
             <opt>
                 <name>AIM-9</name>
-                <lbs>190.0</lbs>
+                <lbs>196</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>335</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
         <weight n="1">
             <name>Left Wing (Station 2)</name>
-            <tank>2</tank>
+            <tank>5</tank>
             <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]"/>
-            <selected>none</selected>
+            <selected>Droptank</selected>
             <opt>
                 <name>none</name>
                 <lbs>0</lbs>
@@ -1352,6 +1362,10 @@
                 <name>Droptank</name>
                 <lbs>271.0</lbs>
                 <gals>600</gals>
+            </opt>
+            <opt>
+                <name>MK-84</name>
+                <lbs>2039</lbs>
             </opt>
         </weight>
 
@@ -1365,11 +1379,11 @@
             </opt>
             <opt>
                 <name>AIM-9</name>
-                <lbs>190.0</lbs>
+                <lbs>196</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>335</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
@@ -1384,11 +1398,11 @@
             </opt>
             <opt>
                 <name>AIM-7</name>
-                <lbs>510.0</lbs>
+                <lbs>510</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>345.0</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
@@ -1402,11 +1416,11 @@
             </opt>
             <opt>
                 <name>AIM-7</name>
-                <lbs>510.0</lbs>
+                <lbs>510</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>345.0</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
@@ -1414,9 +1428,9 @@
 
         <weight n="5">
             <name>Center Station 5</name>
-            <tank>3</tank>
+            <tank>7</tank>
             <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[5]"/>
-            <selected>none</selected>
+            <selected>Droptank</selected>
             <opt>
                 <name>none</name>
                 <lbs>0</lbs>
@@ -1426,7 +1440,10 @@
                 <lbs>271.0</lbs>
                 <gals>600</gals>
             </opt>
-
+            <opt>
+                <name>MK-84</name>
+                <lbs>2039</lbs>
+            </opt>
         </weight>
 
 
@@ -1440,11 +1457,11 @@
             </opt>
             <opt>
                 <name>AIM-7</name>
-                <lbs>510.0</lbs>
+                <lbs>510</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>345.0</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
@@ -1459,11 +1476,11 @@
             </opt>
             <opt>
                 <name>AIM-7</name>
-                <lbs>510.0</lbs>
+                <lbs>510</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>345.0</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
@@ -1480,19 +1497,19 @@
             </opt>
             <opt>
                 <name>AIM-9</name>
-                <lbs>190.0</lbs>
+                <lbs>196</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>335</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
         <weight n="9">
             <name>Right Wing Station 8</name>
-            <tank>4</tank>
+            <tank>6</tank>
             <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[9]"/>
-            <selected>none</selected>
+            <selected>Droptank</selected>
             <opt>
                 <name>none</name>
                 <lbs>0</lbs>
@@ -1501,6 +1518,10 @@
                 <name>Droptank</name>
                 <lbs>271.0</lbs>
                 <gals>600</gals>
+            </opt>
+            <opt>
+                <name>MK-84</name>
+                <lbs>2039</lbs>
             </opt>
         </weight>
 
@@ -1514,11 +1535,11 @@
             </opt>
             <opt>
                 <name>AIM-9</name>
-                <lbs>190.0</lbs>
+                <lbs>196</lbs>
             </opt>
             <opt>
                 <name>AIM-120</name>
-                <lbs>335</lbs>
+                <lbs>348</lbs>
             </opt>
         </weight>
 
@@ -1676,6 +1697,46 @@
                 <DLZ-optimal-alt-feet type="double">30000</DLZ-optimal-alt-feet>
                 <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
             </aim-7>
+            <mk-84>
+                <short-name type="string">MK84</short-name>
+                <long-name type="string">MK-84 General Purpose Bomb</long-name>
+                <fire-msg type="string">Bombs away</fire-msg>
+                <class type="string">GM</class>
+                <max-fire-range-nm type="double"> 8 </max-fire-range-nm>
+                <min-fire-range-nm type="double"> 0 </min-fire-range-nm>
+                <guidance type="string">laser</guidance>
+                <navigation type="string">direct</navigation>
+                <loft-altitude type="int"> 0 </loft-altitude>
+                <terrain-follow type="bool">false</terrain-follow>
+                <FCS-field-deg type="int"> 240 </FCS-field-deg>
+                <seeker-field-deg type="int"> 360 </seeker-field-deg>
+                <max-g type="double"> 1.5 </max-g>
+                <thrust-lbf-stage-1 type="double"> 0 </thrust-lbf-stage-1>
+                <thrust-lbf-stage-2 type="double"> 0 </thrust-lbf-stage-2>
+                <stage-1-duration-sec type="double"> 0 </stage-1-duration-sec>
+                <stage-2-duration-sec type="double"> 0 </stage-2-duration-sec>
+                <weight-launch-lbs type="double"> 500 </weight-launch-lbs>
+                <weight-warhead-lbs type="double"> 190 </weight-warhead-lbs>
+                <weight-fuel-lbm type="double"> 0 </weight-fuel-lbm>
+                <drag-coeff type="double"> 0.012 </drag-coeff>
+                <cross-section-sqft type="double"> 0.63 </cross-section-sqft>
+                <arming-time-sec type="double"> 3 </arming-time-sec>
+                <min-speed-for-guiding-mach type="double"> 0 </min-speed-for-guiding-mach>
+                <self-destruct-time-sec type="double"> 10000 </self-destruct-time-sec>
+                <all-aspect type="bool">true</all-aspect>
+                <lock-on-sun-deg type="double"> 0 </lock-on-sun-deg>
+                <seeker-angular-speed-dps type="double"> 0 </seeker-angular-speed-dps>
+                <rail type="bool">false</rail>
+                <max-report-distance type="double"> 275 </max-report-distance>
+                <vol-search type="double"> 0.075 </vol-search>
+                <vol-track type="double"> 0.25 </vol-track>
+                <vol-track-weak type="double"> 0.175 </vol-track-weak>
+                <drop-time type="double">0</drop-time>
+                <deploy-time type="double">0</deploy-time>
+                <lateral-dps type="double"> -10 </lateral-dps>
+                <max-pitch-deg type="double">-90</max-pitch-deg>
+                <hit-everything-nearby type="bool">true</hit-everything-nearby>
+            </mk-84>
         </armament>
 
     </payload>
@@ -2273,12 +2334,10 @@
             <file>Aircraft/F-15/Nasal/liveries.nas</file>
             <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
             <file>Aircraft/F-15/Nasal/flaps_computer.nas</file>
-            <file>Aircraft/F-15/Nasal/cadc.nas</file>
             <file>Aircraft/F-15/Nasal/engines.nas</file>
             <file>Aircraft/F-15/Nasal/gear.nas</file>
             <file>Aircraft/F-15/Nasal/hud.nas</file>
             <file>Aircraft/F-15/Nasal/engines.nas</file>
-            <file>Aircraft/F-15/Nasal/adverse.nas</file>
             <file>Aircraft/F-15/Nasal/fuel-system.nas</file>
             <file>Aircraft/F-15/Nasal/electrics.nas</file>
             <file>Aircraft/F-15/Nasal/instruments.nas</file>

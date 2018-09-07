@@ -25,6 +25,7 @@ var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
 var Current_srm   = nil;
+var Current_agm   = nil;
 var Current_mrm   = nil;
 var Current_missile   = nil;
 var sel_missile_count = 0;
@@ -76,6 +77,28 @@ var weapons_init = func()
                     {
                         release_aim9();
                     }
+                    elsif ( weapon_s == 5 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
+                }, 0, 1);
+	setlistener("controls/armament/pickle", func(Trig)
+                {
+# this should release all locked missles. need to fix the logic to lock on missiles
+# so for now this will just work with the currently selected armament, but not the gun.
+                    var weapon_s = WeaponSelector.getValue();
+                    print("Pickle ",weapon_s," ",Trig.getBoolValue());
+                    if ( weapon_s == 0 ) {
+                        print("Pickle does not fire the gun");
+                    }
+                    elsif ( weapon_s == 1 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
+                    elsif ( weapon_s == 2 and Trig.getBoolValue())
+                    {
+                        release_aim9();
+                    }
                 }, 0, 1);
 }
 
@@ -97,7 +120,15 @@ var armament_update = func {
 		# Turn Current_srm.status to stand by.
 		#set_status_current_aim9(-1);
 	}
-    if (WeaponSelector.getValue() == 1) {
+
+    if (WeaponSelector.getValue() == 5) {
+        if (Current_agm != nil and Current_agm.status == 1) {
+            setprop("sim/model/f15/systems/armament/launch-light",1);
+        } else {
+            setprop("sim/model/f15/systems/armament/launch-light",0);
+        }
+    } 
+    elsif (WeaponSelector.getValue() == 1) {
         if (Current_srm != nil and Current_srm.status == 1) {
             setprop("sim/model/f15/systems/armament/launch-light",1);
         } else {
@@ -157,12 +188,23 @@ var missile_code_from_ident= func(mty)
             return "aim9";
         else if (mty == "AIM-7")
             return "aim7";
+        else if (mty == "MK-82")
+            return "mk82";
+        else if (mty == "MK-83")
+            return "mk83";
+        else if (mty == "MK-84")
+            return "mk84";
         else if (mty == "AIM-120")
             return "aim120";
 }
 var get_sel_missile_count = func()
 {
-        if (WeaponSelector.getValue() == 1)
+        if (WeaponSelector.getValue() == 5)
+        {
+            Current_missile = Current_agm;
+            return getprop("sim/model/f15/systems/armament/agm/count");
+        }
+        else if (WeaponSelector.getValue() == 1)
         {
             Current_missile = Current_srm;
             return getprop("sim/model/f15/systems/armament/aim9/count");
@@ -182,7 +224,8 @@ var update_sw_ready = func()
     	sel_missile_count = get_sel_missile_count();
         var pylon = -1;
 		if ( (WeaponSelector.getValue() == 1 and (Current_srm == nil or Current_srm.status == 2)  and sel_missile_count > 0 )
-             or (WeaponSelector.getValue() == 2 and (Current_mrm == nil or Current_mrm.status == 2)  and sel_missile_count > 0 ))
+             or (WeaponSelector.getValue() == 2 and (Current_mrm == nil or Current_mrm.status == 2)  and sel_missile_count > 0 )
+             or (WeaponSelector.getValue() == 5 and (Current_agm == nil or Current_agm.status == 2)  and sel_missile_count > 0 ))
         {
             print("Missile: sel_missile_count = ", sel_missile_count - 1);
             foreach (var S; Station.firing_order)
@@ -198,7 +241,7 @@ var update_sw_ready = func()
             }
             if (pylon >= 0)
             {
-                if (S.get_type() == "AIM-9" or S.get_type() == "AIM-7" or S.get_type() == "AIM-120")
+                if (S.get_type() == "AIM-9" or S.get_type() == "AIM-7" or S.get_type() == "AIM-120" or S.get_type() == "MK-84")
                 {
                     print(S.get_type()," new !! ", pylon, " sel_missile_count - 1 = ", sel_missile_count - 1);
                     if (WeaponSelector.getValue() == 1) {
@@ -207,14 +250,17 @@ var update_sw_ready = func()
                     } elsif (WeaponSelector.getValue() == 2) {
                         armament.AIM.new(pylon, S.get_type(), S.get_type());
                         Current_mrm = armament.AIM.active[pylon];
+                    } elsif (WeaponSelector.getValue() == 5) {
+                        armament.AIM.new(pylon, S.get_type(), S.get_type());
+                        Current_agm = armament.AIM.active[pylon];
                     }
                 }
                 else
                     print ("Cannot fire ",S.get_type());
 
             }
-            else
-                print("Error no missile available");
+#            else
+#                print("Error no missile available");
         }
         elsif (Current_missile != nil and Current_missile.status == -1)
         {
@@ -231,9 +277,8 @@ var update_sw_ready = func()
 
 var release_aim9 = func()
 {
-print("RELEASE AIM-9 status: ");
 	if (Current_missile != nil) {
-print(" status: ", Current_missile.status);
+        print("RELEASE MISSILE status: ", Current_missile.status);
 		if ( Current_missile.status == 1 ) {
 			var phrase = Current_missile.brevity~" at: " ~ Current_missile.Tgt.Callsign.getValue();
 			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
@@ -252,6 +297,7 @@ setprop("sim/model/f15/systems/armament/launch-light",0);
             arm_selector();
 		}
 	}
+    else print("No current missile to release");
 }
 
 var set_status_current_aim9 = func(n)
@@ -353,6 +399,15 @@ var arm_selector = func() {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);
 	} 
+    elsif ( weapon_s == 5 ) # AG
+    {
+		if (Current_agm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
+        {
+            Current_missile = Current_agm;
+			Current_missile.status = 0;	
+			Current_missile.search();	
+		}
+	} 
     elsif ( weapon_s == 1 )
     {
 		# AIM-9: (SRM)
@@ -378,30 +433,37 @@ var arm_selector = func() {
 		SwSoundVol.setValue(0);
 		set_status_current_aim9(-1);	
 	}
-    var sel=1; # only the next will be selected
-	foreach (var S; Station.firing_order)
-    {
-        S.set_selected(0);
-        if (weapon_s == 2)
-        {
-            if (S.bcode == 2 or S.bcode == 3)
-            {
-                S.set_selected(sel);
-                sel=0;
-            }
-        }
-        else if (weapon_s == 1)
-        {
-            if (S.bcode == 1)
-            {
-                S.set_selected(sel);
-                sel=0;
-            }
-        }
-#        printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
-		S.set_type(S.get_type()); # initialize bcode.
-	}
-    setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
+    if (Station.firing_order == nil){
+        print(" --> arm_selector : weapons not ready");
+    }
+    else {
+        var sel=1; # only the next will be selected
+        foreach (var S; Station.firing_order)
+          {
+              S.set_selected(0);
+              if (weapon_s == 2) {
+                  if (S.bcode == 2 or S.bcode == 3) {
+                      S.set_selected(sel);
+                      sel=0;
+                  }
+              } else if (weapon_s == 1) {
+                  if (S.bcode == 1) {
+                      S.set_selected(sel);
+                      sel=0;
+                  }
+              } else if (weapon_s == 5) {
+                  if (S.bcode == 4) # MK-84
+                    {
+                        S.set_selected(sel);
+                        sel=0;
+                    }
+              }
+#printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
+#              printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
+              S.set_type(S.get_type()); # initialize bcode.
+          }
+        setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
+    }
 }
 
 setlistener("/payload/weight[0]/selected", func(v)

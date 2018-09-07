@@ -49,13 +49,6 @@
 					</binding>
 				</checkbox>
 			</group>
-
-      <empty>
-				<pref-height>2</pref-height>
-			</empty>
-
-			<hrule/>
-
       <group>
         <layout>hbox</layout>
         <button>
@@ -73,21 +66,31 @@
           </binding>
         </button>
         <button>
-          <legend>7000</legend>
+          <legend>7k</legend>
           <binding>
             <command>nasal</command>
             <script>f14.set_fuel(7000)</script>
           </binding>
         </button>
+        <button>
+          <legend>3.5k</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(3500)</script>
+          </binding>
+        </button>
+      </group>
+      <group>
+        <layout>hbox</layout>
           <button>
-              <legend>11000</legend>
+              <legend>11k</legend>
               <binding>
                   <command>nasal</command>
                   <script>f14.set_fuel(11000)</script>
               </binding>
           </button>
           <button>
-              <legend>50k</legend>
+              <legend>50klb total</legend>
               <binding>
                   <command>nasal</command>
                   <script>f14.set_fuel(math.max(1000, 50000-(getprop("fdm/jsbsim/inertia/weight-lbs")-getprop("sim/model/f-14b/instrumentation/fuel-gauges/total"))))</script>
@@ -101,6 +104,9 @@
               </binding>
           </button>
       </group>
+
+			<hrule/>
+
       <group>
 				<layout>hbox</layout>
 			
@@ -343,83 +349,6 @@
 						<live>true</live>
 						<format>%.3f</format>
 						<property>/consumables/fuel/tank[5]/level-lbs</property>
-					</text>
-				</group>
-				<group> <!-- Level Gallons -->
-					<layout>vbox</layout>
-					<halign>right</halign>
-					<text>
-						<label>Gallons</label>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[8]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[9]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[6]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[7]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[0]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[1]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[2]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[4]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[3]/level-gal_us</property>
-					</text>
-					<text>
-						<halign>right</halign>
-						<label>xxxxxxx</label>
-						<live>true</live>
-						<format>%.3f</format>
-						<property>/consumables/fuel/tank[5]/level-gal_us</property>
 					</text>
 				</group>
 

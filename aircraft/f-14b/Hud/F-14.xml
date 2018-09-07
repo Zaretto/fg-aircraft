@@ -375,8 +375,10 @@
             </or>
         </condition>
         <input>
-            <property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>
-            <factor>0.001</factor>
+<!--            <property>instrumentation/vertical-speed-indicator/indicated-speed-fpm</property>
+            <factor>0.001</factor> -->
+             <property>velocities/vertical-speed-fps</property>
+            <factor>0.06</factor>
         </input>
 
         <x>-70</x>
@@ -516,7 +518,7 @@
         <input>
             <property>autopilot/route-manager/wp/id</property>
         </input>
-        <x>20</x>
+        <x>10</x>
         <y>8</y>
         <width>28</width>
         <height>10</height>
@@ -536,12 +538,32 @@
         <input>
             <property>autopilot/route-manager/wp/dist</property>
         </input>
-        <x>32</x>
+        <x>50</x>
         <y>2</y>
         <width>28</width>
         <height>10</height>
         <halign>left</halign>
         <format>%7.1f</format>
+        <box>false</box>
+    </label>
+    <label>
+        <name>Waypoint ETA</name>
+        <condition>
+            <property>sim/hud/extended-mode</property>
+            <property>/autopilot/route-manager/active</property>
+            <or>
+                <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
+            </or>
+        </condition>
+        <input>
+            <property>autopilot/route-manager/wp/eta</property>
+        </input>
+        <x>10</x>
+        <y>2</y>
+        <width>28</width>
+        <height>10</height>
+        <halign>left</halign>
+        <format>ETA %s</format>
         <box>false</box>
     </label>
 
@@ -1047,8 +1069,8 @@
         <input>
             <property>instrumentation/tacan/indicated-distance-nm</property>
         </input>
-        <x>23</x>
-        <y>-90</y>
+        <x>40</x>
+        <y>-110</y>
         <format>TCN %3.1f</format>
         <halign>left</halign>
     </label>

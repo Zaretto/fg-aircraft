@@ -29,7 +29,10 @@
             </greater-than>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
-                <property>controls/armament/ag-mode</property>
+                <equals>
+                    <property>sim/model/f15/controls/armament/weapon-selector</property>
+                    <value>5</value>
+                </equals>
             </or>
         </condition>
     </animation>
@@ -84,10 +87,10 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>controls/armament/ag-mode</property>
-                <factor>1</factor>
+                <property>sim/model/f15/controls/armament/weapon-selector</property>
+                <factor>5</factor>
                 <min>0</min>
-                <max>1</max>
+                <max>5</max>
                 <wrap>false</wrap>
             </binding>
         </action>
@@ -231,7 +234,7 @@
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f15panel-left</name>
-        <inherits-from>Effects/f15panel-right</inherits-from>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15panel-right</inherits-from>
         <object-name>arm-models-panel</object-name>
     </effect>
     

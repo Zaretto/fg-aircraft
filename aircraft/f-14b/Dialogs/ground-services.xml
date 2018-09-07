@@ -5,7 +5,7 @@
     <layout>vbox</layout>
     <default-padding>0</default-padding>
     <modal>false</modal>
-    <width>450</width>
+    <width>650</width>
     <valign>top</valign>
 
     <nasal>
@@ -246,10 +246,21 @@
             <label></label>
         </text>
         <button>
-            <legend>Carrier Approach</legend>
+            <legend>Carrier Straight In</legend>
             <binding>
                 <command>nasal</command>
                 <script>f14_instruments.carrier_approach_reposition();</script>
+            </binding>
+            <!--      <binding>
+        <command>dialog-close</command>
+      </binding>
+-->
+        </button>
+        <button>
+            <legend>Case 1 - overhead</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.carrier_case_1_approach_reposition();</script>
             </binding>
             <!--      <binding>
         <command>dialog-close</command>
@@ -300,6 +311,107 @@
         </button>
     </group>
     <hrule/>
+      <group>
+        <layout>hbox</layout>
+        <button>
+          <legend>Full</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(22000)</script> <!-- more than can be held will just be ignored by the set_fuel logic -->
+          </binding>
+        </button>
+        <button>
+          <legend>7k</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(7000)</script>
+          </binding>
+        </button>
+        <button>
+          <legend>3.5k</legend>
+          <binding>
+            <command>nasal</command>
+            <script>f14.set_fuel(3500)</script>
+          </binding>
+        </button>
+          <button>
+              <legend>11k</legend>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.set_fuel(11000)</script>
+              </binding>
+          </button>
+          <button>
+              <legend>50klb total</legend>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.set_fuel(math.max(1000, 50000-(getprop("fdm/jsbsim/inertia/weight-lbs")-getprop("sim/model/f-14b/instrumentation/fuel-gauges/total"))))</script>
+              </binding>
+          </button>
+          <button>
+              <legend>Quickstart</legend>
+              <binding>
+                  <command>nasal</command>
+                  <script>f14.quickstart()</script>
+              </binding>
+          </button>
+      </group>
+    <hrule/>
+				<group> <!-- Weapons Sets -->
+					<layout>hbox</layout>
+                    <!-- button>
+                        <legend>Reload gun</legend>
+                        <equal>true</equal>
+                        <binding>
+                            <command>nasal</command>
+                            <script>
+                                setprop("/ai/submodels/submodel[3]/count",135);
+                                setprop("/sim/model/f-14b/systems/gun/rounds",675);
+                            </script>
+                        </binding>
+                    </button-->
+                    <button>
+						<legend>Clean</legend>
+						<equal>true</equal>
+						<binding>
+							<command>nasal</command>
+							<script>f14.ext_loads_set("Clean")</script>
+						</binding>
+					</button>
+					<button>
+						<legend>FAD</legend>
+						<equal>true</equal>
+						<binding>
+							<command>nasal</command>
+							<script>f14.ext_loads_set("FAD")</script>
+						</binding>
+					</button>
+					<button>
+						<legend>FAD light</legend>
+						<equal>true</equal>
+						<binding>
+							<command>nasal</command>
+							<script>f14.ext_loads_set("FAD light")</script>
+						</binding>
+					</button>
+					<button>
+						<legend>FAD heavy</legend>
+						<equal>true</equal>
+						<binding>
+							<command>nasal</command>
+							<script>f14.ext_loads_set("FAD heavy")</script>
+						</binding>
+                    </button>
+                    <button>
+                        <legend>Bombcat</legend>
+                        <equal>true</equal>
+                        <binding>
+                            <command>nasal</command>
+                            <script>f14.ext_loads_set("Bombcat")</script>
+                        </binding>
+                    </button>
+                </group>
+    <hrule/>
     <group>
         <layout>hbox</layout>
         <button>
@@ -311,7 +423,8 @@
             </binding>
         </button>
     </group>
-    <!--<group>
+<!--
+    <group>
         <layout>vbox</layout>
         <group>
             <layout>hbox</layout>
@@ -386,7 +499,32 @@
             </text>
         </group>
     </group>
-   
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>CdDAFM</name>
+                <property>fdm/jsbsim/tuning/CdDAFM</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-2</min>
+                <max>2</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CdDAFM</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CdDAFM 0.00</label>
+                <live>true</live>
+                <format>CdDAFM %.2f</format>
+                <property>fdm/jsbsim/tuning/CdDAFM</property>
+            </text>
+        </group>
+    </group>
+
     <group>
         <layout>vbox</layout>
         <group>
@@ -436,6 +574,7 @@
                 <property>fdm/jsbsim/tuning/CMADFM</property>
             </text>
         </group>
-    </group>-->
-    
+    </group>
+-->
+   
 </PropertyList>

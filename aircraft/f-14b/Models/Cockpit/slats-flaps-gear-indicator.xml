@@ -146,8 +146,7 @@
 		</condition>
 	</animation>
 
-
-	<!-- lighting -->
+    <!-- lighting -->
     <animation>
         <object-name>mount</object-name>
         <type>material</type>
@@ -173,56 +172,63 @@
     </animation>
 
     <animation>
-        <object-name>symbols</object-name>
+        <object-name>instrument</object-name>
         <type>material</type>
-            <condition>
-                <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </greater-than>
-                <greater-than-equals>
-                    <property>controls/lighting/instruments-norm</property>
-                    <property>controls/lighting/dome-norm</property>
-                </greater-than-equals>
-                <not>
-                    <property>/sim/rendering/rembrandt/enabled</property>
-                </not>
-            </condition>
-            <emission>
-                <factor-prop>controls/lighting/instruments-norm</factor-prop>
-                <red>  1.1000</red>
-                <green>0.576</green>
-                <blue> 0.161</blue>
-                <red-prop>controls/lighting/instrument-red</red-prop>
-                <green-prop>controls/lighting/instrument-green</green-prop>
-                <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than-equals>
+                <property>controls/lighting/instruments-norm</property>
+                <property>controls/lighting/dome-norm</property>
+            </greater-than-equals>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
 
-            </emission>
-        </animation>
-        <animation>
-            <object-name>symbols</object-name>
-            <type>material</type>
-            <condition>
-                <greater-than>
-                    <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </greater-than>
-                <greater-than>
-                    <property>controls/lighting/dome-norm</property>
-                    <property>controls/lighting/instruments-norm</property>
-                </greater-than>
-                <not>
-                    <property>/sim/rendering/rembrandt/enabled</property>
-                </not>
-            </condition>
-            <emission>
-                <factor-prop>controls/lighting/dome-norm</factor-prop>
-                <red>  1.1000</red>
-                <green>0.576</green>
-                <blue> 0.161</blue>
-                <red-prop>controls/lighting/instrument-red</red-prop>
-                <green-prop>controls/lighting/instrument-green</green-prop>
-                <blue-prop>controls/lighting/instrument-blue</blue-prop>
-            </emission>
-        </animation>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/dome-norm</property>
+                <property>controls/lighting/instruments-norm</property>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>controls/lighting/dome-norm</factor-prop>
+            <red>  1.1000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>controls/lighting/instrument-red</red-prop>
+            <green-prop>controls/lighting/instrument-green</green-prop>
+            <blue-prop>controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <effect>
+        <name>f14-interior</name>
+        <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+
 </PropertyList>
