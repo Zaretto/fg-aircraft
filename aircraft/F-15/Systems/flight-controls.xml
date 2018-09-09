@@ -237,6 +237,17 @@
             <output>fcs/aileron-pos-norm</output>
         </kinematic>
 
+        <pure_gain name="fcs/left-aileron-pos-norm">
+            <input>fcs/aileron-pos-norm</input>
+            <gain>1</gain>
+            <output>fcs/left-aileron-pos-norm</output>
+        </pure_gain >
+        <pure_gain name="fcs/right-aileron-pos-norm">
+            <input>fcs/aileron-pos-norm</input>
+            <gain>1</gain>
+            <output>fcs/right-aileron-pos-norm</output>
+        </pure_gain >
+
         <aerosurface_scale name="Aileron Control">
             <input>fcs/aileron-pos-norm</input>
             <range>
