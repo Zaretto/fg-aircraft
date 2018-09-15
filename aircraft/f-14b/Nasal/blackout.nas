@@ -51,7 +51,8 @@ var slow_time_recover   =   15;
 
 ## Do not modify anything below this line ##
 
-var fdm = "jsb";
+var fdm = getprop("/sim/flight-model") or "jsb";
+
 var g1_log = math.log10(1);
 var blackout_onset_log = math.log10(blackout_onset);
 var blackout_fast_log = math.log10(blackout_fast);
@@ -60,34 +61,46 @@ var redout_fast_log = math.log10(invert(redout_fast));
 
 var blackout = 0;
 var redout   = 0;
+redout_enabled = props.getNode("sim/rendering/redout/enabled", 1);
+redout_parameters_blackout_onset_g = props.getNode("sim/rendering/redout/parameters/blackout-onset-g",1);
+redout_parameters_blackout_complete_g = props.getNode("sim/rendering/redout/parameters/blackout-complete-g",1);
+redout_parameters_redout_onset_g = props.getNode("sim/rendering/redout/parameters/redout-onset-g",1);
+redout_parameters_redout_complete_g = props.getNode("sim/rendering/redout/parameters/redout-complete-g",1);
+redout_parameters_onset_blackout_sec = props.getNode("sim/rendering/redout/parameters/onset-blackout-sec",1);
+redout_parameters_fast_blackout_sec = props.getNode("sim/rendering/redout/parameters/fast-blackout-sec",1);
+redout_parameters_onset_redout_sec = props.getNode("sim/rendering/redout/parameters/onset-redout-sec",1);
+redout_parameters_fast_redout_sec = props.getNode("sim/rendering/redout/parameters/fast-redout-sec",1);
+redout_parameters_recover_fast_sec = props.getNode("sim/rendering/redout/parameters/recover-fast-sec",1);
+redout_parameters_recover_slow_sec = props.getNode("sim/rendering/redout/parameters/recover-slow-sec",1);
+
+current_view_internal = props.getNode("/sim/current-view/internal",1);
+redout_red = props.getNode("/sim/rendering/redout/red",1);
+redout_alpha = props.getNode("/sim/rendering/redout/alpha",1);
+
+# default these to jsbsim - will be changed in the init if required.
+z_accel = props.getNode("accelerations/pilot/z-accel-fps_sec");
+z_accel_factor = -0.03108099707838627463169018462112; # 1/32.174;
+
 
 var redout_loop = func {
-	setprop("sim/rendering/redout/enabled", 1);# enable the Fg default redout/blackout system.
-	setprop("sim/rendering/redout/parameters/blackout-onset-g", blackout_onset);
-	setprop("sim/rendering/redout/parameters/blackout-complete-g", blackout_fast);
-	setprop("sim/rendering/redout/parameters/redout-onset-g", redout_onset);
-	setprop("sim/rendering/redout/parameters/redout-complete-g", redout_fast);
-	setprop("sim/rendering/redout/parameters/onset-blackout-sec", blackout_onset_time);
-	setprop("sim/rendering/redout/parameters/fast-blackout-sec", blackout_fast_time);
-	setprop("sim/rendering/redout/parameters/onset-redout-sec", redout_onset_time);
-	setprop("sim/rendering/redout/parameters/fast-redout-sec", redout_fast_time);
-	setprop("sim/rendering/redout/parameters/recover-fast-sec", fast_time_recover);
-	setprop("sim/rendering/redout/parameters/recover-slow-sec", slow_time_recover);
-
-    settimer(redout_loop, 0.5);
+    redout_enabled.setValue(1);
+    redout_parameters_blackout_onset_g.setValue( blackout_onset);
+    redout_parameters_blackout_complete_g.setValue( blackout_fast);
+    redout_parameters_redout_onset_g.setValue( redout_onset);
+    redout_parameters_redout_complete_g.setValue( redout_fast);
+    redout_parameters_onset_blackout_sec.setValue( blackout_onset_time);
+    redout_parameters_fast_blackout_sec.setValue( blackout_fast_time);
+    redout_parameters_onset_redout_sec.setValue( redout_onset_time);
+    redout_parameters_fast_redout_sec.setValue( redout_fast_time);
+    redout_parameters_recover_fast_sec.setValue( fast_time_recover);
+    redout_parameters_recover_slow_sec.setValue( slow_time_recover);
 }
 
 var blackout_loop = func {
-	setprop("/sim/rendering/redout/enabled", 0);# disable the Fg default redout/blackout system.
+    redout_enabled.setValue(0); # disable the Fg default redout/blackout system.
 	var dt = getprop("sim/time/delta-sec");
-	var g = 0;
-	if (fdm == "jsb") {
-		# JSBSim
-		g = -getprop("accelerations/pilot/z-accel-fps_sec")/32.174;
-	} else {
-		# Yasim
-		g = getprop("/accelerations/pilot-g[0]");
-	}
+	var g = z_accel.getValue() * z_accel_factor;
+
 	if (g == nil) {
 		g = 1;
 	}
@@ -149,33 +162,42 @@ var blackout_loop = func {
 
 	var sum = blackout - redout;
 
-	if (getprop("/sim/current-view/internal") == 0) {
-		# not inside aircraft
-		setprop("/sim/rendering/redout/red", 0);
-    	setprop("/sim/rendering/redout/alpha", 0);
+	# when not inside aircraft disable this, otherwise set the values according to 
+    # the net G effect as acting on the pilot
+	if (current_view_internal.getValue() == 0) {
+        redout_red.setValue(0);
+        redout_alpha.setValue(0);
 	} elsif (sum < 0) {
-		setprop("/sim/rendering/redout/red", 1);
-    	setprop("/sim/rendering/redout/alpha", -1 * sum);
+        redout_red.setValue(1);
+        redout_alpha.setValue(-1 * sum);
     } else {
-    	setprop("/sim/rendering/redout/red", 0);
-    	setprop("/sim/rendering/redout/alpha", sum);
+    	redout_red.setValue(0);
+        redout_alpha.setValue(sum);
     }
-
-    settimer(blackout_loop, 0);
 }
 
+redoutTimer = maketimer(0.5, redout_loop);
+blackoutTimer = maketimer(0, blackout_loop);
 
 var blackout_init = func {
 	fdm = getprop("/sim/flight-model");
 
+    if (fdm == "jsb") {
+        z_accel = props.getNode("accelerations/pilot/z-accel-fps_sec");
+        z_accel_factor = -0.031080997; # 1/32.174 with sign convention change
+    } else {
+        z_accel = props.getNode("/accelerations/pilot-g[0]");
+        z_accel_factor=1
+    }
+
 	if (getprop("sim/rendering/redout/internal/log/g-force") == nil) {
-		blackout_loop();
+        redoutTimer.stop();
+        blackoutTimer.start();
 	} else {
-		redout_loop();
+        redoutTimer.start();
+        blackoutTimer.stop();
 	}
 }
-
-
 
 var blackout_init_listener = setlistener("sim/signals/fdm-initialized", func {
 	blackout_init();

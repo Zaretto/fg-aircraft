@@ -114,9 +114,8 @@ var main_loop = func {
 			#}
 		#}
 	}
-	settimer(main_loop, UPDATE_PERIOD);
 }
-
+backseatUpdateTimer = maketimer(UPDATE_PERIOD, main_loop);
 
 # Init ####################
 var init = func {
@@ -145,7 +144,7 @@ var init = func {
 	check_pilot_callsign();
 	radardist.init();
 	awg_9.init();
-	settimer(main_loop, 0.5);
+    backseatUpdateTimer.start();
 }
 
 setlistener("sim/signals/fdm-initialized", init);
