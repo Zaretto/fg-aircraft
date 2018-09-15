@@ -823,7 +823,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <default value="0"/>
 
                 <test value="fcs/roll-trim-actuator">
-                    fcs/wing-sweep-cmd le 0.9117647058823529
+                    fcs/wing-sweep-dmd le 0.9117647058823529
                     systems/hydraulics/combined-system-pressure ne 0
                 </test>
             </switch>
@@ -867,7 +867,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <default value="fcs/spoilers-zeropos"/>
 
                 <test value="0">
-                    aero/wing-asymmetry lt  0
+                    systems/flyt/wing-asymmetry lt  0
                 </test>
 
                 <test value="1">
@@ -900,7 +900,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <default value="fcs/spoilers-zeropos"/>
 
                 <test value="0">
-                    aero/wing-asymmetry gt  0
+                    systems/flyt/wing-asymmetry gt  0
                 </test>
 
                 <test value="1">
@@ -1116,7 +1116,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </channel>
 
         <property value="0">fcs/yaw-damper-enable</property>
-        <property value="0">aero/wing-asymmetry</property>
         <property value="0">fcs/pitch-damper-enable</property>
         <property value="0">fcs/roll-sas-enable</property>
         <property value="0">fcs/external-tanks-fitted</property>
@@ -1603,7 +1602,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <sum>
                         <table>
                             <independentVar lookup="row">velocities/mach</independentVar>
-                            <independentVar lookup="column">fcs/wing-sweep-cmd</independentVar>
+                            <independentVar lookup="column">fcs/wing-sweep-dmd</independentVar>
                             <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
                             <tableData>
                                 0.294117647       1.0
@@ -1732,9 +1731,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                     <tableData>
-                                0                   5              50
+                        0                   5              50
                         0.00 	0.294117647   0.294117647	 0.294117647
                         0.448	0.294117647	  0.294117647	 0.294117647
+                        0.65	0.294117647	  0.294117647	 0.294117647
                         0.711	0.308823529	  0.294117647	 0.294117647
                         0.913   1	          0.735294117	 0.735294117
                     </tableData>
@@ -2077,8 +2077,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/ClDasym">
             <description>Delta Cl due to wing asymmetry</description>
             <product>
-                <property>aero/wing-asymmetry</property> <!-- sqr to remove the sign (value either -1, 0 or 1 -->
-                <property>aero/wing-asymmetry</property>
+                <property>systems/flyt/wing-asymmetry</property> <!-- sqr to remove the sign (value either -1, 0 or 1 -->
+                <property>systems/flyt/wing-asymmetry</property>
                 <property>aero/coefficients/ClBAS</property>
                 <value>-0.3</value>
             </product>
@@ -2543,8 +2543,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/CdDasym">
             <description>Delta Cl due to wing asymmetry</description>
             <product>
-                <property>aero/wing-asymmetry</property> <!-- sqr to remove the sign (value either -1, 0 or 1 -->
-                <property>aero/wing-asymmetry</property>
+                <property>systems/flyt/wing-asymmetry</property> <!-- sqr to remove the sign (value either -1, 0 or 1 -->
+                <property>systems/flyt/wing-asymmetry</property>
                 <property>aero/coefficients/CdBAS</property>
                 <value>-0.3</value>
             </product>
@@ -2857,7 +2857,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/CLDasym">
             <description>Delta CL due to wing asymmetry</description>
             <product>
-                <property>aero/wing-asymmetry</property>
+                <property>systems/flyt/wing-asymmetry</property>
                 <property>aero/coefficients/ClSweepFactor</property>
                 <value>0.076</value>
             </product>
@@ -3509,7 +3509,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/CNDasym">
             <description>Delta CN due to wing asymmetry</description>
             <product>
-                <property>aero/wing-asymmetry</property>
+                <property>systems/flyt/wing-asymmetry</property>
                 <value>0.01293512</value>
             </product>
         </function>

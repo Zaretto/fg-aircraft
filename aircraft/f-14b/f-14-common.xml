@@ -951,8 +951,8 @@
                     </external-loads>
                 </systems>
                 <wings>
-                    <left-wing-torn type="bool">false</left-wing-torn>
-                    <right-wing-torn type="bool">false</right-wing-torn>
+                    <left-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-left"/>
+                    <right-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-right"/>
                     <damage-enabled type="bool">false</damage-enabled>
                 </wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
@@ -1036,6 +1036,7 @@
             </camera-group>
             <redout>
                 <parameters>
+                    <locked-by-airframe type="bool">true</locked-by-airframe>
                     <blackout-complete-g>7.9</blackout-complete-g>
                     <blackout-onset-g>5.5</blackout-onset-g>
                 </parameters>
@@ -2200,6 +2201,9 @@
     </rotors>
 
     <nasal>
+        <notifications>
+            <file>Aircraft/f16/Nasal/M_frame_notification.nas</file>
+        </notifications>
       <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
@@ -2237,6 +2241,7 @@
             <file>Aircraft/f-14b/Nasal/an-arc-159v1.nas</file>
         </an_arc_159v1>
         <f14>
+            <file>Aircraft/f-14b/Nasal/M_exec.nas</file>
             <file>Aircraft/f-14b/Nasal/liveries.nas</file>
             <file>Aircraft/f-14b/Nasal/f14_globals.nas</file>
             <file>Aircraft/f-14b/Nasal/flaps_computer.nas</file>
@@ -2247,7 +2252,6 @@
             <file>Aircraft/f-14b/Nasal/engines.nas</file>
             <file>Aircraft/f-14b/Nasal/spoilers.nas</file>
             <file>Aircraft/f-14b/Nasal/SAS.nas</file>
-            <file>Aircraft/f-14b/Nasal/adverse.nas</file>
             <file>Aircraft/f-14b/Nasal/f-14b.nas</file>
             <file>Aircraft/f-14b/Nasal/ext_stores.nas</file>
             <file>Aircraft/f-14b/Nasal/fuel-system.nas</file>
