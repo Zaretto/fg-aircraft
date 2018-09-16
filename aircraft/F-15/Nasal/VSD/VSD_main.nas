@@ -12,6 +12,7 @@
 #viewport size  236x256
 #center at 118,219
 #pixels per deg = 21.458507963
+var DTOR = math.pi / 180.0;
 
 var VSD_Device =
 {
@@ -33,6 +34,21 @@ var VSD_Device =
                     "mipmapping": 1     
             });                          
 
+        input = {
+               pitch:  "orientation/pitch-deg",
+               roll:  "orientation/roll-deg",
+#               altitude:  "position/altitude-ft",
+               heading:  "orientation/heading-deg",
+               target_display:  "sim/model/f15/instrumentation/radar-awg-9/hud/target-display",
+               radar2_range: "instrumentation/radar/radar2-range",
+               vc_kts:  "fdm/jsbsim/velocities/vc-kts",
+               groundspeed_kt: "velocities/groundspeed-kt"
+        };
+
+        foreach (var name; keys(input)) {
+            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(designation, name, input[name]));
+        }
+
         if (target_module_id != nil)
         {
             print("Backseat VSD ",target_module_id);
@@ -49,7 +65,7 @@ var VSD_Device =
                     "node": model_element
                         });
         }
-        dev_canvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 1.00);
+        dev_canvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 0.00);
 # Create a group for the parsed elements
         obj.VSDsvg = dev_canvas.createGroup();
         var pres = canvas.parsesvg(obj.VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg");
@@ -98,143 +114,163 @@ var VSD_Device =
 
         obj.vsd_on = 1;
 
+        var pitch_offset = 12;
+        var pitch_factor = 1.98;
+        obj.update_items = 
+          [
+           props.UpdateManager.FromHashList(["pitch","roll"], 0.025, func(notification)
+                                            {
+                                                obj.horizon_line.setTranslation (0.0, notification.pitch * pitch_factor+pitch_offset);                                           
+                                                obj.horizon_line.setRotation (notification.roll * DTOR);
+                                            }
+                                           ),
+
+           props.UpdateManager.FromHashValue("target_display", 0.025, func(target_display)
+                                             {   
+                                                 #       window3.setText (sprintf("%s: %3.1f", getprop("sim/model/f15/instrumentation/radar-awg-9/hud/target"), getprop("sim/model/f15/instrumentation/radar-awg-9/hud/distance")));
+                                                 if (target_display) {
+                                                     obj.nofire_cross.setVisible(1);
+                                                     obj.target_circle.setVisible(1);
+                                                 } else {
+                                                     #       window3.setText ("");
+                                                     obj.nofire_cross.setVisible(0);
+                                                     obj.target_circle.setVisible(0);
+                                                 }
+                                             }
+                                            ),
+
+           props.UpdateManager.FromHashList(["radar2_range"], 0.025, func(notification)
+                                            {
+                                                obj.window4.setText (sprintf("%3d", notification.radar2_range));
+                                            }
+                                           ),
+           props.UpdateManager.FromHashValue("w1", nil, func(val)
+                                             {
+                                                 obj.window1.setText(val);
+                                             }
+                                            ),
+           props.UpdateManager.FromHashValue("w2", nil, func(val)
+                                             {
+                                                 obj.window2.setText(val);
+                                             }
+                                            ),
+           props.UpdateManager.FromHashValue("w3", nil, func(val)
+                                             {
+                                                 obj.window3.setText(val);
+                                             }
+                                            ),
+          ];
         return obj;
     },
 
-        addPages : func
+ addPages : func
     {
-        me.me.page1_1 = MPCD.addPage("Aircraft Menu", "me.page1_1");
-
-        me.page1_1.update = func
-        {
-            var sec = getprop("instrumentation/clock/indicated-sec");
-            me.page1_1.time.setText(getprop("sim/time/gmt-string")~"Z");
-            var cdt = getprop("sim/time/gmt");
-
-            if (cdt != nil)
-                me.page1_1.date.setText(substr(cdt,5,2)~"/"~substr(cdt,8,2)~"/"~substr(cdt,2,2)~"Z");
-        };
     },
 
-        update : func
-    {
-        if(!me.vsd_on)
-            return;
+ update : func(notification) {
+     if (!me.vsd_on)
+       return;
+     
+     #        var roll_rad = -notification.roll*3.14159/180.0;
 
-        var pitch = getprop("orientation/pitch-deg");
-        var roll = getprop("orientation/roll-deg");
-        var alt = getprop("position/altitude-ft");
-        var roll_rad = -roll*3.14159/180.0;
-        var heading = getprop("orientation/heading-deg");
-        var pitch_offset = 12;
-        var pitch_factor = 1.98;
+     var target_idx=1;
 
+     # do this every fourth frame. this is primarily for optimisation however it is conceivably like this
+     # in the aircraft because of the lag between the computers on the 1553 bus.
+     if ( !math.mod(notifications.frameNotification.FrameCount,4)) {
 
-        me.horizon_line.setTranslation (0.0, pitch * pitch_factor+pitch_offset);                                           
-        me.horizon_line.setRotation (roll_rad);
-
-        if (getprop("sim/model/f15/instrumentation/radar-awg-9/hud/target-display"))
-        {   
-#       window3.setText (sprintf("%s: %3.1f", getprop("sim/model/f15/instrumentation/radar-awg-9/hud/target"), getprop("sim/model/f15/instrumentation/radar-awg-9/hud/distance")));
-            me.nofire_cross.setVisible(1);
-            me.target_circle.setVisible(1);
-        }
-        else
-        {
-#       window3.setText ("");
-            me.nofire_cross.setVisible(0);
-            me.target_circle.setVisible(0);
-        }
-var w1 = "     VS BST   MEM  ";
-
-    var target_idx=1;
-    me.window4.setText (sprintf("%3d", getprop("instrumentation/radar/radar2-range")));
-    var w3_22="";
-    var w3_7 = sprintf("T %d",getprop("fdm/jsbsim/velocities/vc-kts"));
-    var w2 = "";
-    var designated = 0;
-    var active_found = 0;
-    foreach( u; awg_9.tgts_list ) 
-    {
-        if (u.get_display() == 1) {
-            var callsign = "XX";
-            if (u.Callsign != nil)
-                callsign = u.Callsign.getValue();
-            var model = "XX";
-            if (u.ModelType != "")
-                model = u.ModelType;
-            if (target_idx < me.max_symbols)
-            {
-                tgt = me.tgt_symbols[target_idx];
-                if (tgt != nil)
-                {
-    #                    if (u.airbone and !designated)
-    #                    if (target_idx == 0)
-    #                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
-                    if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
-    #if (u == awg_9.active_u)
-                    {
-                        designated = 1;
-                        active_found = 1;
-                        tgt.setVisible(0);
-                        tgt = me.tgt_symbols[0];
-                        tgt.setVisible(1);
-    #                    w2 = sprintf("%-4d", u.get_closure_rate());
-    #                    w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
-    #                    var aspect = u.get_reciprocal_bearing()/10;
-    #                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
-                    }
+         var designated = 0;
+         var active_found = 0;
+         foreach ( u; awg_9.tgts_list ) {
+             if (u.get_display() == 1) {
+                 var callsign = "XX";
+                 if (u.Callsign != nil)
+                   callsign = u.Callsign.getValue();
+                 var model = "XX";
+                 if (u.ModelType != "")
+                   model = u.ModelType;
+                 if (target_idx < me.max_symbols) {
+                     tgt = me.tgt_symbols[target_idx];
+                     if (tgt != nil) {
+                         #                    if (u.airbone and !designated)
+                         #                    if (target_idx == 0)
+                         #                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
+                         if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
+                           #if (u == awg_9.active_u)
+                           {
+                               designated = 1;
+                               active_found = 1;
+                               tgt.setVisible(0);
+                               tgt = me.tgt_symbols[0];
+                               tgt.setVisible(1);
+                               #                    w2 = sprintf("%-4d", u.get_closure_rate());
+                               #                    w3_22 = sprintf("%3d-%1.1f %.5s %.4s",u.get_bearing(), u.get_range(), callsign, model);
+                               #                    var aspect = u.get_reciprocal_bearing()/10;
+                               #                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
+                           }
                     
-                    var xc = u.get_deviation(heading);
-                    var yc = -u.get_total_elevation(pitch);
-                    #tgt.setVisible(1);
-                    tgt.setTranslation (xc*1.55, yc*1.85);#Leto: the factors is to let display correspond to 120 degrees wide and height.
-                    tgt.setVisible(1);
-                    tgt.update();
-    #tgt.setCenter (118,830 - pitch * pitch_factor-pitch_offset);
-    #tgt.setRotation (roll_rad);
-                }
-            }
-            if (!designated)
-                target_idx = target_idx+1;
-            designated = 0;
-        }
-    }
-    if (awg_9.active_u != nil)
-    {
-        if (awg_9.active_u.Callsign != nil)
-            callsign = awg_9.active_u.Callsign.getValue();
+                         var xc = u.get_deviation(notification.heading);
+                         var yc = -u.get_total_elevation(notification.pitch);
+                         #tgt.setVisible(1);
+                         tgt.setTranslation (xc*1.55, yc*1.85); #Leto: the factors is to let display correspond to 120 degrees wide and height.
+                         tgt.setVisible(1);
+                         tgt.update();
+                         #tgt.setCenter (118,830 - notification.pitch * pitch_factor-pitch_offset);
+                         #tgt.setRotation (roll_rad);
+                     }
+                 }
+                 if (!designated)
+                   target_idx = target_idx+1;
+                 designated = 0;
+             }
+         }
+         if (active_found == 0) {
+             me.tgt_symbols[0].setVisible(0);
+         }
+         for (var nv = target_idx; nv < me.max_symbols;nv += 1) {
+             tgt = me.tgt_symbols[nv];
+             if (tgt != nil) {
+                 tgt.setVisible(0);
+             }
+         }
+     }
+     #    if ( math.mod(notifications.frameNotification.FrameCount,2)){
 
-        var model = "XX";
-        if (awg_9.active_u.ModelType != "")
-            model = awg_9.active_u.ModelType;
+     # update text at the slowest rate (when frame count is 0)
+     if ( !notifications.frameNotification.FrameCount) {
+         var w1 = "     VS BST   MEM  ";
+         var w3_22="";
+         var w3_7 = sprintf("T %d",notification.vc_kts);
+         var w2 = "";
 
-        w2 = sprintf("%-4d", awg_9.active_u.get_closure_rate());
-        w3_22 = sprintf("%3d-%1.1f %.5s %.4s",awg_9.active_u.get_bearing(), awg_9.active_u.get_range(), callsign, model);
-        var aspect = awg_9.active_u.get_reciprocal_bearing()/10;
-        w1 = sprintf("%4d %2d%s %2d %d", awg_9.active_u.get_TAS(), aspect, aspect < 180 ? "r" : "l", awg_9.active_u.get_heading(), awg_9.active_u.get_altitude());
-    }
-    me.window1.setText(w1);
-    me.window2.setText(w2);
-#    window3.setText(sprintf("G%3.0f %3s-%4s%s %s %s",
-        me.window3.setText(sprintf("G%3.0f %s %s",
-                                   getprop("velocities/groundspeed-kt"),
+         if (awg_9.active_u != nil) {
+             if (awg_9.active_u.Callsign != nil)
+               callsign = awg_9.active_u.Callsign.getValue();
+
+             var model = "XX";
+             if (awg_9.active_u.ModelType != "")
+               model = awg_9.active_u.ModelType;
+
+             w2 = sprintf("%-4d", awg_9.active_u.get_closure_rate());
+             w3_22 = sprintf("%3d-%1.1f %.5s %.4s",awg_9.active_u.get_bearing(), awg_9.active_u.get_range(), callsign, model);
+             var aspect = awg_9.active_u.get_reciprocal_bearing()/10;
+             w1 = sprintf("%4d %2d%s %2d %d", awg_9.active_u.get_TAS(), aspect, aspect < 180 ? "r" : "l", awg_9.active_u.get_heading(), awg_9.active_u.get_altitude());
+         }
+         notification.w1 = w1;
+         notification.w2 = w2;
+         #    window3.setText(sprintf("G%3.0f %3s-%4s%s %s %s",
+         notification.w3 = sprintf("G%3.0f %s %s",
+                                   notification.groundspeed_kt,
                                    w3_7 , 
-                                   w3_22));
-        for(var nv = target_idx; nv < me.max_symbols;nv += 1)
-        {
-            tgt = me.tgt_symbols[nv];
-            if (tgt != nil)
-            {
-                tgt.setVisible(0);
-            }
-        }
-    if (active_found == 0) {
-        me.tgt_symbols[0].setVisible(0);
-    }
-}
-}
-;
+                                   w3_22);
+     }
+     #
+     # the rest we can update every frame as they use the property manager.
+     foreach (var update_item; me.update_items) {
+         update_item.update(notification);
+     }
+ }  
+};
 
 var VSD_array = [];
 
@@ -251,7 +287,7 @@ var ModelEventsRecipient =
         var new_class = emesary.Recipient.new(_ident);
         new_class.Receive = func(notification)
         {
-            if (notification.NotificationType == "F15Update4")
+            if (notification.NotificationType == "FrameNotification")
             {
                 if (!size(VSD_array))
                   return;
@@ -260,7 +296,7 @@ var ModelEventsRecipient =
                   VSD_frame_device_update_id = 0;
 
                 if (VSD_frame_device_update_id < size(VSD_array))
-                  VSD_array[VSD_frame_device_update_id].update();
+                  VSD_array[VSD_frame_device_update_id].update(notification);
 
                 VSD_frame_device_update_id += 1;
             }

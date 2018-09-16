@@ -23,9 +23,11 @@
     <property value="0">systems/afcs/SAS-roll-demand</property>
     <property value="0">gear/gear-asym</property>
 
+    <!-- these are defined by an alias in the -set file
     <property value="0">fcs/yaw-damper-enable</property>
     <property value="0">fcs/pitch-damper-enable</property>
-    <property value="0">fcs/roll-sas-enable</property>
+    <property value="0">fcs/roll-damper-enable </property>
+    -->
     <property value="0">fcs/aim-fitted</property>
     <property value="0">fcs/steer-maneuver</property>
     <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
@@ -495,7 +497,7 @@
         <switch name="fcs/roll-sas-active">
             <default value="0.0"/>
             <test logic="AND" value="1">
-                fcs/roll-sas-enable ne 0.0
+                fcs/roll-damper-enable  ne 0.0
                 autoflight/output/roll-master ne 1
             </test>
             <output>fcs/roll-sas-active</output>
