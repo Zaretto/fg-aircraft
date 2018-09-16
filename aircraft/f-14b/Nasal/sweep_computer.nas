@@ -57,7 +57,7 @@ var updateSweepIndicators = func {
 }
 
 var set_sweep = func(n) {
-    print("Set sweep ",n);
+#    print("Set sweep ",n);
     if (n == 4) 
     {
     	if ( wow )
@@ -111,7 +111,7 @@ var set_wing_sweep = func(pos){
     {
         setprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd", pos);
     }
-    print("wingsweep ",pos," ",getprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd"));
+#    print("wingsweep ",pos," ",getprop("fdm/jsbsim/fcs/wing-sweep-pilot-dmd"));
 }
 
 var move_wing_sweep = func(delta){
@@ -158,13 +158,13 @@ var computeSweep = func {
 
         var cadc_sweep = getprop("fdm/jsbsim/fcs/wing-sweep-cadc-dmd");
         WingSweep = currentSweep;
-        if(currentSweepMode == 1){
-            if (currentSweep < cadc_sweep){
-                currentSweepMode = 0; 
-                updateSweepIndicators();
-                setprop("/fdm/jsbsim/fcs/wing-sweep-mode",0);
-            }
-        }
+#        if(currentSweepMode == 1){
+#            if (currentSweep < cadc_sweep){
+#                currentSweepMode = 0; 
+#                updateSweepIndicators();
+#                setprop("/fdm/jsbsim/fcs/wing-sweep-mode",0);
+#            }
+#        }
         setprop("controls/flight/wing-sweep-cadc-dmd",cadc_sweep);
         setprop("controls/flight/wing-sweep",getprop("fdm/jsbsim/fcs/wing-sweep-dmd"));
         setprop("surface-positions/wing-pos-norm", getprop("fdm/jsbsim/fcs/wing-sweep-dmd"));
