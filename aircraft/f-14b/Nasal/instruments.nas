@@ -855,7 +855,6 @@ var init = func {
 
     common_init();
     f14.external_load_loopTimer.start();
-    main_loop_launched = 1;
 }
 
 setlistener("sim/signals/fdm-initialized", init);

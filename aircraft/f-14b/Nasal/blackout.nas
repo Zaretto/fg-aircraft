@@ -177,7 +177,10 @@ var blackout_loop = func {
 }
 
 redoutTimer = maketimer(0.5, redout_loop);
+redoutTimer.simulatedTime = 1;
+
 blackoutTimer = maketimer(0, blackout_loop);
+redoutTimer.simulatedTime = 1;
 
 var blackout_init = func {
 	fdm = getprop("/sim/flight-model");
@@ -194,8 +197,11 @@ var blackout_init = func {
         redoutTimer.stop();
         blackoutTimer.start();
 	} else {
-        redoutTimer.start();
-        blackoutTimer.stop();
+        if (getprop("sim/rendering/redout/parameters/locked-by-airframe"))
+            redoutTimer.start();
+        else
+            redoutTimer.stop();
+    blackoutTimer.stop();
 	}
 }
 

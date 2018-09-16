@@ -355,7 +355,11 @@ var jfs_starting = 0;
 var jfs_shutdown_timer = 0;
 
 var shutdownTimer = maketimer(6, jfs_invoke_shutdown);
+shutdownTimer.simulatedTime = 1;
+
 var startupTimer = maketimer(11, jfs_set_running);
+startupTimer.simulatedTime = 1;
+
 #startupTimer.singleShot=1;
 var jfsShutdownTime = 55; # time after crank switch set to centre that the JFS will turn off.
 var jfsStartupTime = 10; # amount of time it takes JFS to be ready - before the start will be able to turn the engine (i.e. how long before starter_cmd is set)

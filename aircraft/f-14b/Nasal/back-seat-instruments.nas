@@ -116,6 +116,7 @@ var main_loop = func {
 	}
 }
 backseatUpdateTimer = maketimer(UPDATE_PERIOD, main_loop);
+backseatUpdateTimer.simulatedTime = 1;
 
 # Init ####################
 var init = func {

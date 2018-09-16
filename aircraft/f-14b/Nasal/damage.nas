@@ -316,6 +316,7 @@ var processCallsigns = func () {
   }
 }
 processCallsignsTimer = maketimer(1.5, processCallsigns);
+processCallsignsTimer.simulatedTime = 1;
 processCallsignsTimer.start();
 
 
@@ -341,6 +342,7 @@ var sendMis = func () {
   setprop("sim/multiplay/generic/string[13]", str);
 }
 sendMisTimer = maketimer(0.05, sendMis);
+sendMisTimer.simulatedTime = 1;
 
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.
@@ -466,6 +468,7 @@ var code_ct = func () {
   setprop("sim/multiplay/generic/string[15]", final);
 }
 code_ctTimer = maketimer(2, code_ct);
+code_ctTimer.simulatedTime = 1;
 
 var not = func {
   if (getprop("payload/armament/msg") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
@@ -522,6 +525,7 @@ var not = func {
   }
 }
 notTimer = maketimer(60, not);
+notTimer.simulatedTime = 1;
 
 var changeGuiLoad = func()
 {#return;
