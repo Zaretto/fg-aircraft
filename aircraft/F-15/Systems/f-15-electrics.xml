@@ -227,17 +227,19 @@ DC Main Bus 28 V DC
           </test>
       </switch>
       <!-- directly control instrumentation (for those items that don't provide a method to do this) -->
-      <switch name="/instrumentation/comm[0]/serviceable">
+      <switch name="systems/electrics/comm0-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus1-powered ne 0
           </test>
+          <output>/instrumentation/comm[0]/serviceable</output>
       </switch>
-      <switch name="/instrumentation/comm[1]/serviceable">
+      <switch name="systems/electrics/comm1-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus2-powered ne 0
           </test>
+          <output>/instrumentation/comm[1]/serviceable</output>
       </switch>
       <switch name="/instrumentation/adf[0]/serviceable">
           <default value="0"/>
@@ -252,41 +254,47 @@ DC Main Bus 28 V DC
           </test>
       </switch>
 
-      <switch name="/instrumentation/comm[0]/serviceable">
+      <switch name="tied-instrumentation-comm0-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus1-powered ne 0
           </test>
+          <output>/instrumentation/comm[0]/serviceable</output>
       </switch>
-      <switch name="/instrumentation/comm[1]/serviceable">
+      <switch name="tied-instrumentation-comm1-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus2-powered ne 0
           </test>
+          <output>/instrumentation/comm[1]/serviceable</output>
       </switch>
-      <switch name="/instrumentation/attitude-indicator/serviceable">
+      <switch name="tied-instrumentation-attitude-indicator-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus1-powered ne 0
           </test>
+          <output>/instrumentation/attitude-indicator/serviceable</output>
       </switch>
-      <switch name="/instrumentation/nav[0]/serviceable">
+      <switch name="tied-instrumentation-nav0-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus1-powered ne 0
           </test>
+          <output>/instrumentation/nav[0]/serviceable</output>
       </switch>
-      <switch name="/instrumentation/nav[1]/serviceable">
+      <switch name="tied-instrumentation-nav1-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus2-powered ne 0
           </test>
+          <output>/instrumentation/nav[1]/serviceable</output>
       </switch>
-      <switch name="/instrumentation/nav[2]/serviceable">
+      <switch name="tied-instrumentation-nav2-serviceable">
           <default value="0"/>
           <test value="1">
               systems/electrics/dc-essential-bus2-powered ne 0
           </test>
+          <output>/instrumentation/nav[2]/serviceable</output>
       </switch>
       <fcs_function name="systems/electrics/bound/flaps-transit-light">
           <function>
