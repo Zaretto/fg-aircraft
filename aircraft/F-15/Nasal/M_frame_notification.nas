@@ -42,6 +42,12 @@ var FrameNotification =
         {
             if (notification.NotificationType == "FrameNotificationAddProperty")
             {
+                var root_node = props.globals;
+                if (notification.root_node != nil){
+#                    print("Notification: using root node ",notification.root_node.getPath());
+                    root_node = notification.root_node;
+                }
+
                 if (new_class.monitored_properties[notification.variable] != nil 
                     and new_class.monitored_properties[notification.variable].getPath() != notification.property
                     and new_class.monitored_properties[notification.variable].getPath() != "/"~notification.property)
@@ -49,8 +55,9 @@ var FrameNotification =
 #                else if (new_class.monitored_properties[notification.variable] == nil)
 #                  print("[INFO]: (",notification.module,") FrameNotification.",notification.variable, " = ",notification.property);
 
-                new_class.monitored_properties[notification.variable] = props.globals.getNode(notification.property,1);
+                new_class.monitored_properties[notification.variable] = root_node.getNode(notification.property,1);
 
+                  print("[INFO]: (",notification.module,") FrameNotification.",notification.variable, " = ",notification.property, " -> ", new_class.monitored_properties[notification.variable].getPath() );
 #debug.dump(new_class.monitored_properties);
 #                foreach (var mp; keys(new_class.monitored_properties)){
 #                    print(" ",mp, " = ",new_class.monitored_properties[mp].getPath());
@@ -76,12 +83,15 @@ var FrameNotification =
 
 var FrameNotificationAddProperty = 
 {
-    new: func(module, variable, property)
+    new: func(module, variable, property, root_node=nil)
     {
         var new_class = emesary.Notification.new("FrameNotificationAddProperty", variable);
+        if (root_node == nil)
+          root_node = props.globals;
         new_class.module = module ;
         new_class.variable = variable;
         new_class.property = property;
+        new_class.root_node = root_node;
         return new_class;
     },
 };

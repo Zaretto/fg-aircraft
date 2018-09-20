@@ -14,6 +14,43 @@
 #pixels per deg = 21.458507963
 var DTOR = math.pi / 180.0;
 
+var lvx = 0;
+var lvy = 0;
+var lvz = 0;
+var ltime = 0;
+var curtimen = props.globals.getNode("/sim/time/elapsed-sec");
+
+#
+# calculate groundspeed based on vector product of ECEF 
+calc_groundspeed_kt = func(node) {
+    var vxn = node.getNode("position/global-x");
+    var vyn = node.getNode("position/global-y");
+    var vzn = node.getNode("position/global-z");
+    if (vxn == nil or vyn == nil or vzn == nil or curtimen == nil){
+        return;
+    }
+    var vx = vxn.getValue();    
+    var vy = vyn.getValue();    
+    var vz = vzn.getValue();    
+    var curtime = curtimen.getValue();
+
+    if (lvx != 0) {
+        var nvtime = curtime - ltime;
+        if (nvtime < 4)
+          return;
+        var nvx = vx - lvx;
+        var nvy = vy - lvy;
+        var nvz = vz - lvz;
+        var vv = math.sqrt(nvx*nvx + nvy*nvy + nvz*nvz)/nvtime;
+#        print("nvx ",nvx, " nvy ",nvy, " vv ",vv*1.94384, " (",nvtime,")");
+        node.getNode("velocities/groundspeed-kt").setValue(vv*1.94384);
+    }
+    lvx = vx;
+    lvy = vy;
+    lvz = vz;
+    ltime=curtime;
+}
+
 var VSD_Device =
 {
 #
@@ -22,52 +59,28 @@ var VSD_Device =
 # Parameters
 # - designation - Flightdeck Legend for this
 # - model_element - name of the 3d model element that is to be used for drawing
-    new : func(designation, model_element, target_module_id)
+    new : func(designation, model_element, target_module_id, root_node)
     {
+#print(designation," root ",root_node.getPath());
         var obj = {parents : [VSD_Device] };
         obj.designation = designation;
         obj.model_element = model_element;
-        var dev_canvas= canvas.new({
+        obj.root_node = root_node;
+        obj.target_module_id = target_module_id;
+        obj.dev_canvas= canvas.new({
                 "name": designation,
                     "size": [1024,1024], 
                     "view": [276,278],                       
                     "mipmapping": 1     
             });                          
+    obj.placement = nil;
+    obj.bindDisplay(target_module_id, model_element);
 
-        input = {
-               pitch:  "orientation/pitch-deg",
-               roll:  "orientation/roll-deg",
-#               altitude:  "position/altitude-ft",
-               heading:  "orientation/heading-deg",
-               target_display:  "sim/model/f15/instrumentation/radar-awg-9/hud/target-display",
-               radar2_range: "instrumentation/radar/radar2-range",
-               vc_kts:  "fdm/jsbsim/velocities/vc-kts",
-               groundspeed_kt: "velocities/groundspeed-kt"
-        };
+    obj.bindProperties(designation, root_node);
 
-        foreach (var name; keys(input)) {
-            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(designation, name, input[name]));
-        }
-
-        if (target_module_id != nil)
-        {
-            print("Backseat VSD ",target_module_id);
-            dev_canvas.addPlacement({
-                    "module-id": target_module_id,
-                        type: "scenery-object",
-                        "node": model_element
-                        });
-        }
-        else
-        {
-            print("Front seat VSD");
-            dev_canvas.addPlacement({
-                    "node": model_element
-                        });
-        }
-        dev_canvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 0.00);
+        obj.dev_canvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 0.00);
 # Create a group for the parsed elements
-        obj.VSDsvg = dev_canvas.createGroup();
+        obj.VSDsvg = obj.dev_canvas.createGroup();
         var pres = canvas.parsesvg(obj.VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg");
 # Parse an SVG file and add the parsed elements to the given group
         printf("VSD : %s Load SVG %s",designation,pres);
@@ -99,6 +112,8 @@ var VSD_Device =
         obj.horizon_line = obj.VSDsvg.getElementById("horizon_line");
         obj.nofire_cross =  obj.VSDsvg.getElementById("nofire_cross");
         obj.target_circle = obj.VSDsvg.getElementById("target_circle");
+        obj.nofire_cross.setVisible(0);
+        obj.target_circle.setVisible(0);
         for (var i = 0; i < obj.max_symbols; i += 1)
         {
             var name = "target_friendly_"~i;
@@ -162,6 +177,46 @@ var VSD_Device =
           ];
         return obj;
     },
+    bindProperties: func(designation, root_node)
+    {
+        input = {
+               pitch:  "orientation/pitch-deg",
+               roll:  "orientation/roll-deg",
+                 #               altitude:  "position/altitude-ft",
+               heading:  "orientation/heading-deg",
+               target_display:  "sim/model/f15/instrumentation/radar-awg-9/hud/target-display",
+               radar2_range: "instrumentation/radar/radar2-range",
+#               vc_kts:  "velocities/groundspeed-kt",
+               vc_kts:  "instrumentation/airspeed-indicator/true-speed-kt",
+               groundspeed_kt: "velocities/groundspeed-kt"
+                };
+
+        print("F-15VSD: new, using root ",root_node.getPath());
+        foreach (var name; keys(input)) {
+            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(designation, name, input[name], root_node));
+        }
+    },
+    bindDisplay : func (target_module_id, model_element){
+        if (me.placement != nil){
+            var pnode = me.placement.getNode("module-id");
+            print("VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
+            pnode.setValue(target_module_id);
+            return;
+          }
+        if (target_module_id != nil){
+            print("Backseat VSD ",target_module_id);
+            me.placement = me.dev_canvas.addPlacement({
+                                     "module-id": target_module_id,
+                                   type: "scenery-object",
+                                     "node": model_element
+                                    });
+        } else {
+            print("Front seat VSD");
+            me.placement = me.dev_canvas.addPlacement({
+                                     "node": model_element
+                                    });
+        }
+    } ,
 
  addPages : func
     {
@@ -208,13 +263,20 @@ var VSD_Device =
                                #                    var aspect = u.get_reciprocal_bearing()/10;
                                #                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
                            }
-                    
-                         var xc = u.get_deviation(notification.heading);
-                         var yc = -u.get_total_elevation(notification.pitch);
-                         #tgt.setVisible(1);
-                         tgt.setTranslation (xc*1.55, yc*1.85); #Leto: the factors is to let display correspond to 120 degrees wide and height.
-                         tgt.setVisible(1);
-                         tgt.update();
+                         if (notification.heading == nil or notification.pitch == nil)
+                           print("VSD: can't display target (a) h=",notification.heading, " p=",notification.pitch);
+                         else {
+                             var xc = u.get_deviation(notification.heading);
+                             var yc = -u.get_total_elevation(notification.pitch);
+                             if (xc == nil or yc == nil)
+                               print("VSD: can't display target (b) xc=",xc, " yc=",yc);
+                             else {
+                                 #tgt.setVisible(1);
+                                 tgt.setTranslation (xc*1.55, yc*1.85); #Leto: the factors is to let display correspond to 120 degrees wide and height.
+                                 tgt.setVisible(1);
+                                 tgt.update();
+                             }
+                         }
                          #tgt.setCenter (118,830 - notification.pitch * pitch_factor-pitch_offset);
                          #tgt.setRotation (roll_rad);
                      }
@@ -238,9 +300,14 @@ var VSD_Device =
 
      # update text at the slowest rate (when frame count is 0)
      if ( !notifications.frameNotification.FrameCount) {
+         #
+         # need to calculate ground speed as this isn't transmitted.
+         if (me.target_module_id != nil)
+           calc_groundspeed_kt(me.root_node);
+
          var w1 = "     VS BST   MEM  ";
          var w3_22="";
-         var w3_7 = sprintf("T %d",notification.vc_kts);
+         var w3_7 = sprintf("T %1.0f",notification.vc_kts);
          var w2 = "";
 
          if (awg_9.active_u != nil) {
@@ -302,17 +369,31 @@ var ModelEventsRecipient =
             }
             else if (notification.NotificationType == "F15Model")
             {
+                root_node = props.globals;
                 print("F15D receive model notification",notification.NotificationType," V=",notification.Ident);
+                if (notification.root_node != nil) {
+                    print("F-15VSD: Using path ",notification.root_node.getPath());
+                    root_node = notification.root_node;
+                }
                 #
                 # 
                 # Create and append all of the VSDs in the cockpit.
                 # - VSD_Device.new( Identity, Canvas3dSurface, model index)
                 #                 
+                var designation = "F-15 VSD";
+                var textureImage = "VSDImage";
                 if (!size(VSD_array)) {
-                    VSD = VSD_Device.new("F-15 VSD", "VSDImage", notification.Ident);
+                    VSD = VSD_Device.new(designation, textureImage, notification.Ident, root_node);
                     append(VSD_array, VSD);
                     print("VSD initialization finished ",notification.Ident);
                 }
+                else  {
+                    foreach (var vsd; VSD_array) {
+                        vsd.bindDisplay(notification.Ident, textureImage);
+                        vsd.bindProperties(designation, root_node);
+                    }
+                }
+
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;

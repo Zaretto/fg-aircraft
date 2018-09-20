@@ -163,8 +163,12 @@ setprop("sim/model/f15/variant","C");
                 if (fn_vsd != nil)
                   io.load_nasal(fn_vsd, "f15vsd");
 
-                emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Model", _module_id));
             }
+            # ensure that everyone knows that we have just been loaded.
+            var modelNotification = emesary.Notification.new("F15Model", _module_id);
+            modelNotification.root_node = self;
+            emesary.GlobalTransmitter.NotifyAll(modelNotification);
+
             # set reasonable values for sound volumes
             setprop("fdm/jsbsim/systems/sound/engine-efflux-l-volume",0.3);
             setprop("fdm/jsbsim/systems/sound/engine-efflux-r-volume",0.3);
