@@ -170,16 +170,6 @@
  </model>
  
 
-	<!--<model>
-		<path>Aircraft/f-14b/Models/Stores/aim-9/aim-9-0.xml</path>
-		<offsets>
-			<x-m>-11</x-m>
-			<y-m>0</y-m>
-			<z-m>0</z-m>
-			<pitch-deg>0</pitch-deg>
-		</offsets>
-	</model> Test purpose-->
-
     <effect>
         <inherits-from>Aircraft/f-14b/Models/Fx/exterior-glass</inherits-from>
         <object-name>Canopy_0</object-name>
@@ -197,20 +187,11 @@
 
     <effect>
         <name>f14glass</name>
-        <inherits-from>Effects/f14glass</inherits-from>
+        <inherits-from>Aircraft/f-14b/Models/Effects/f14glass</inherits-from>
         <object-name>Canopy_0Inside</object-name>
         <object-name>Windshield_0Inside</object-name>
     </effect>
 
-    <animation>
-		<type>select</type>
-		<object-name>Windshield_0Inside</object-name>
-		<condition>
-			<not>
-				<property>sim/rendering/rembrandt/enabled</property>
-			</not>
-		</condition>
-	</animation>
 	<model>
 		<path>Aircraft/f-14b/Models/f14-fx.xml</path>
 		<offsets>
@@ -346,6 +327,15 @@
 			<pitch-deg>0</pitch-deg>
 		</offsets>
 	</model>
+<!--	<model>
+		<path>Aircraft/f-14b/Models/Cockpit/all-interior.xml</path>
+		<offsets>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+			<z-m>0</z-m>
+		</offsets>
+	</model>
+-->
 
 	<!-- Hotspots-Pilot's Vertical Console Left -->
 	<panel>
@@ -484,28 +474,9 @@
 <!-- ******************************************************************* -->
 
 	<model>
-		<path>Aircraft/f-14b/Models/Stores/ext-stores.xml</path>
+		<path>Aircraft/f-14b/Models/Stores/stores-model.xml</path>
 	</model>
 
-	<!-- External Tanks -->
-	<model>
-		<path>Aircraft/f-14b/Models/Stores/Ext-Tanks/exttank-L.xml</path>
-		<offsets>
-			<x-m>1.1421</x-m>
-			<y-m>-1.4341</y-m>
-			<z-m>-2.1752</z-m>
-			<pitch-deg>3.2</pitch-deg>
-		</offsets>
-	</model>
-	<model>
-		<path>Aircraft/f-14b/Models/Stores/Ext-Tanks/exttank-R.xml</path>
-		<offsets>
-			<x-m>1.1421</x-m>
-			<y-m>1.4341</y-m>
-			<z-m>-2.1752</z-m>
-			<pitch-deg>3.2</pitch-deg>
-		</offsets>
-	</model>
 
 <!-- ******************************************************************* -->
 <!-- Lighting                                                            -->
@@ -536,8 +507,139 @@
 				<blue>0.078</blue>
 			</emission>
 	</animation>
+    <animation>
+        <object-name>gear-indexer-slow</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+                <and>
+                    <greater-than-equals>
+                        <property>orientation/alpha-indicated-deg</property>
+                        <property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg-start</property>
+                    </greater-than-equals>
+                    <or>
+                        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                        <and>
+                            <less-than>
+                                <property>gear/tailhook/position-norm</property>
+                                <value>0.4</value>
+                            </less-than>
+                            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                        </and>
+                        <greater-than>
+                            <property>gear/tailhook/position-norm</property>
+                            <value>0.5</value>
+                        </greater-than>
+                    </or>
+                </and>
+            </or>
+        </condition>
+        <emission>
+            <!--<factor-prop>sim/model/f-14b/controls/lighting/formation</factor-prop>-->
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>gear-indexer-onspeed</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+                <and>
 
-<!-- ******************************************************************* -->
+                    <greater-than-equals>
+                        <property>orientation/alpha-indicated-deg</property>
+                        <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-start</property>
+                    </greater-than-equals>
+                    <less-than-equals>
+                        <property>orientation/alpha-indicated-deg</property>
+                        <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-end</property>
+                    </less-than-equals>
+
+                    <equals>
+                        <property>gear/gear[0]/position-norm</property>
+                        <value>1</value>
+                    </equals>
+                    <or>
+                        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                        <and>
+                            <less-than>
+                                <property>gear/tailhook/position-norm</property>
+                                <value>0.4</value>
+                            </less-than>
+                            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                        </and>
+                        <greater-than>
+                            <property>gear/tailhook/position-norm</property>
+                            <value>0.5</value>
+                        </greater-than>
+                    </or>
+                </and>
+            </or>
+        </condition>
+        <emission>
+            <!--<factor-prop>sim/model/f-14b/controls/lighting/formation</factor-prop>-->
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>gear-indexer-fast</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <or>
+                <property>sim/model/f-14b/lights/master-test-lights</property>
+                <and>
+                    <less-than-equals>
+                        <property>orientation/alpha-indicated-deg</property>
+                        <property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg-end</property>
+                    </less-than-equals>
+                    <equals>
+                        <property>gear/gear[0]/position-norm</property>
+                        <value>1</value>
+                    </equals>
+                    <or>
+                        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                        <and>
+                            <less-than>
+                                <property>gear/tailhook/position-norm</property>
+                                <value>0.4</value>
+                            </less-than>
+                            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                        </and>
+                        <greater-than>
+                            <property>gear/tailhook/position-norm</property>
+                            <value>0.5</value>
+                        </greater-than>
+                    </or>
+                </and>
+            </or>
+        </condition>
+        <emission>
+            <!--<factor-prop>sim/model/f-14b/controls/lighting/formation</factor-prop>-->
+            <red>1</red>
+            <green>1</green>
+            <blue>1</blue>
+        </emission>
+    </animation>
+
+    <!-- ******************************************************************* -->
 <!-- fuselage animations                                                 -->
 <!-- ******************************************************************* -->
 
@@ -587,7 +689,7 @@
 		<interpolation>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>46</dep></entry>
-			<entry><ind>1.2</ind><dep>52</dep></entry>
+			<entry><ind>1.1</ind><dep>52</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>1.247</x-m>
@@ -689,7 +791,7 @@
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>0.294117647</ind><dep>0</dep></entry>
 			<entry><ind>1</ind><dep>-46</dep></entry>
-			<entry><ind>1.2</ind><dep>-52</dep></entry>
+			<entry><ind>1.1</ind><dep>-52</dep></entry>
 		</interpolation>
 		<center>
 			<x-m>1.247</x-m>
@@ -1608,6 +1710,9 @@
 
 	<animation>
 		<type>rotate</type>
+		<object-name>gear-indexer-fast</object-name>
+		<object-name>gear-indexer-slow</object-name>
+		<object-name>gear-indexer-onspeed</object-name>
 		<object-name>NsGearStrut</object-name>
 		<object-name>LandingLight-on</object-name>
 		<object-name>LandingLight-off</object-name>

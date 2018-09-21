@@ -1,5 +1,17 @@
-var UPDATE_PERIOD = 0.05;
-var main_loop_launched = 0; # Used to avoid to start the main loop twice.
+ #---------------------------------------------------------------------------
+ #
+ # Title                : F-14 instruments and commands
+ #
+ # File Type            : Implementation File
+ #
+ # Description          : Instrument outputs, command handling.
+ #
+ # Authors              : xii
+ #                      : Richard Harrison (richard@zaretto.com)
+ #
+ # Copyright (C) 2018 Authors           Released under GPL V2
+ #
+ #---------------------------------------------------------------------------*/
 
 
 # TACAN: nav[1]
@@ -547,72 +559,95 @@ return;
 var cnt = 0;
 var ArmSysRunning = props.globals.getNode("sim/model/f-14b/systems/armament/system-running");
 
-var main_loop = func {
-	cnt += 1;
-	# done each 0.05 sec.
-	mach = Mach.getValue();
-	awg_9.rdr_loop();
-	var a = cnt / 2;
+var instruments_exec = {
+	new : func (_ident){
+        print("instruments_exec: init");
+        var obj = { parents: [instruments_exec]};
+#        input = {
+#               name : "property",
+#        };
+#
+#        foreach (var name; keys(input)) {
+#            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident, name, input[name]));
+#        }
 
-    aircraft.ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
+        #
+        # recipient that will be registered on the global transmitter and connect this
+        # subsystem to allow subsystem notifications to be received
+        obj.recipient = emesary.Recipient.new(_ident~".Subsystem");
+        obj.recipient.instruments_exec = obj;
 
-	burner +=1;
-	if ( burner == 3 ) { burner = 0 }
-	BurnerN.setValue(burner);
+        obj.recipient.Receive = func(notification)
+        {
+            if (notification.NotificationType == "FrameNotification")
+            {
+                me.instruments_exec.update(notification);
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
 
-	if (f14.usingJSBSim)
-    {
-	    if ( getprop("sim/replay/time") > 0 ) 
-          {
-              setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
-          }
-        else
-          {
-              setprop ("/gear/gear[0]/compression-adjusted-ft", getprop("fdm/jsbsim/gear/unit[0]/compression-adjusted-ft"));
-              setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
-          }
-    }
-	else
-		setprop ("/orientation/alpha-indicated-deg", getprop("/orientation/alpha-deg"));
+        emesary.GlobalTransmitter.Register(obj.recipient);
 
-	if ( ( a ) == int( a )) {
-		# done each 0.1 sec, cnt even.
-		inc_ticker();
-		tacan_update();
-        ara_63_update();
-		f14_hud.update_hud();
-		g_min_max();
-		f14_chronograph.update_chrono();
+		return obj;
+	},
+    update : func(notification) {
+#        print("Exec instruments: dT",notification.dT, " frame=",notification.FrameCount);        
+        aircraft.ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
+        
+        burner +=1;
+        if ( burner == 3 ) { burner = 0 }
+        BurnerN.setValue(burner);
 
-		if (( cnt == 6 ) or ( cnt == 12 )) {
-			# done each 0.3 sec.
-			f14.fuel_update();
-			if ( cnt == 12 ) {
-				# done each 0.6 sec.
-				local_mag_deviation();
-				nav1_freq_update();
-				cnt = 0;
-			}
-		}
-	} else {
-		# done each 0.1 sec, cnt odd.
-		awg_9.hud_nearest_tgt();
-		instruments_data_export();
-		if ( ArmSysRunning.getBoolValue() ) {
-			f14.armament_update();
-		}
-		if (( cnt == 5 ) or ( cnt == 11 )) {
-			# done each 0.3 sec.
-			afcs_filters();
-			compute_drag();
-			if ( cnt == 11 ) {
-				# done each 0.6 sec.
-				compute_drag();
-			}
-		}
-	}
-	settimer(main_loop, UPDATE_PERIOD);
-}
+        if (f14.usingJSBSim) {
+            if ( getprop("sim/replay/time") > 0 ) {
+                #now recorded              setprop ("/orientation/alpha-indicated-deg", (getprop("/orientation/alpha-deg") - 0.797) / 0.8122);
+            } else {
+                setprop ("/gear/gear[0]/compression-adjusted-ft", getprop("fdm/jsbsim/gear/unit[0]/compression-adjusted-ft"));
+                #              setprop ("/orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+            }
+        } else
+          setprop ("/orientation/alpha-indicated-deg", getprop("/orientation/alpha-deg"));
+
+        # every other frame
+        if ( !math.mod(notifications.frameNotification.FrameCount,2)){
+            # even frame
+            inc_ticker();
+            tacan_update();
+            ara_63_update();
+            f14_hud.update_hud();
+            g_min_max();
+            f14_chronograph.update_chrono();
+
+            if (notifications.frameNotification.FrameCount == 6 or notifications.frameNotification.FrameCount == 12 ) {
+                # done each 0.3 sec.
+                f14.fuel_update();
+                if ( notifications.frameNotification.FrameCount == 12 ) {
+                    # done each 0.6 sec.
+                    local_mag_deviation();
+                    nav1_freq_update();
+                }
+            }
+        } else {
+            # odd frame
+            awg_9.hud_nearest_tgt();
+            instruments_data_export();
+            if ( ArmSysRunning.getBoolValue() ) {
+                f14.armament_update();
+            }
+            if (notifications.frameNotification.FrameCount == 5 or notifications.frameNotification.FrameCount == 11 ) {
+                # done each 0.3 sec.
+                afcs_filters();
+                compute_drag();
+                if ( notifications.frameNotification.FrameCount == 11 ) {
+                    # done each 0.6 sec.
+                    compute_drag();
+                }
+            }
+        }
+    },
+};
+subsystem = instruments_exec.new("instruments_exec");
 
 var common_carrier_init = func {
 
@@ -659,6 +694,7 @@ var common_carrier_init = func {
                 print("Special init for Carrier cat launch");
                 setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
                 setprop("gear/launchbar/position-norm",1);
+                repos_gear_down = 1;
             }
 
             var current_pos = geo.Coord.new().set_latlon(getprop("/position/latitude-deg"), getprop("/position/longitude-deg"));
@@ -704,32 +740,40 @@ var common_carrier_init = func {
                         # in any case is this is less than 6 meters we'd be in the bilges so this probably means
                         # that the elevation data isn't valid so use hardcoded value of 65.2
                         current_pos = carrier_pos;
-                        var info = geodinfo(lat, lon);
-                        if (info != nil) 
-                        {
-                            print("the carrier deckj is is at elevation ", info[0], " m");
-                            ground_elevation = info[0]*3.28084; # convert to feet
-                            if (ground_elevation < 1) ground_elevation = 65.2;
+#                        var info = geodinfo(lat, lon);
+#                        if (info != nil) 
+#                        {
+#                            print("the carrier deckj is is at elevation ", info[0], " m");
+#                            ground_elevation = info[0]*3.28084; # convert to feet
+#                            if (ground_elevation < 1) ground_elevation = 65.2;
+#                        }
+var deckAltitudeNode = c.getNode("position/deck-altitude-feet");
+ground_elevation = 65;
+                        if (deckAltitudeNode != nil){
+                            ground_elevation =  deckAltitudeNode.getValue();
+                            print("Carrier deck from node ",ground_elevation);
                         }
                         if (ground_elevation < 6) ground_elevation = 65.2;
+                        print("Carrier deck now: ",ground_elevation);
                     }
                 }
             }
                    
-            setprop("/controls/gear/gear-down", 1);
-
             if (current_pos != nil)
             {
-                print("Adjusting launch position by 7meters");
-                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),7);
+                var offset = getprop("sim/model/f-14b/overrides/deck-offset-m");
+                print("Adjusting launch position by ",offset," meters");
+                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),offset);
             }
             setprop("/position/latitude-deg", current_pos.lat());
             setprop("/position/longitude-deg", current_pos.lon());
 
             print("Moving the aircraft into the launch position properly... for ",carrier, " alt ",ground_elevation," lat ", current_pos.lat(), " lon ",current_pos.lon());
 
-            setprop("/position/altitude-ft", ground_elevation+getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
-        }
+            #
+            # sim/model/f-14b/overrides/aircraft-agl-height is the known height of the aircraft (in feet) with gear down.
+            setprop("/position/altitude-ft", ground_elevation + getprop("sim/model/f-14b/overrides/aircraft-agl-height"));
+         }
     }
 
 }
@@ -740,8 +784,8 @@ var common_init = func {
         #
         # part of the bombable integration. we don't have magnetos so we can use them
         # to detect damage
-        setprop("controls/engines/engine[0]/magnetos",1);
-        setprop("controls/engines/engine[1]/magnetos",1);
+        #setprop("controls/engines/engine[0]/magnetos",1);
+        #setprop("controls/engines/engine[1]/magnetos",1);
 
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
@@ -756,12 +800,14 @@ var common_init = func {
         {
             if (getprop("/fdm/jsbsim/position/h-agl-ft") < 500 or repos_gear_down) 
             {
-                print("Starting with gear down as below 500 ft");
+                if (repos_gear_down)
+                  print("Starting with gear down as repos_gear_down set to ",repos_gear_down);
+                else
+                  print("Starting with gear down as below 500 ft");
                 setprop("/controls/gear/gear-down", 1);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",1);
+                setprop("/fdm/jsbsim/gear/gear-pos-norm",1);
 
                 if (getprop("/fdm/jsbsim/position/h-agl-ft") < 50) 
                 {
@@ -775,8 +821,7 @@ var common_init = func {
                 setprop("/controls/gear/gear-down", 0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
                 setprop("/fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-                setprop("/fdm/jsbsim/fcs/gear/gear-pos-norm",0);
+                setprop("/fdm/jsbsim/gear/gear-pos-norm",0);
                 setprop("/controls/gear/brake-parking",0);
             }
         }
@@ -810,11 +855,7 @@ var init = func {
 	}
 
     common_init();
-    if ( ! main_loop_launched ) {
-        settimer(main_loop, 0.5);
-#        settimer(f14.external_load_loop, 3);
-        main_loop_launched = 1;
-    }
+#    f14.external_load_loopTimer.start();
 }
 
 setlistener("sim/signals/fdm-initialized", init);
@@ -949,6 +990,112 @@ carrier_approach_reposition = func {
     };
 }
 
+
+f14_instruments.carrier_case_1_approach_reposition = func {
+if (f14.carrier_ara_63_position == nil)
+{
+print("No carrier");
+return;
+}
+
+print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
+    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+
+    var np = geo.Coord.new()
+    .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+    var magvar=getprop("/orientation/local-mag-dev");
+
+    var dist_m = -560;
+    var gs_height = 800;
+    var fuel = 3500;   #lbs
+    var onspeed =325;
+
+#    if (getprop("sim/presets/carrier-approach-dist-m") != nil)
+#        dist_m  = getprop("sim/presets/carrier-approach-dist-m");
+    np.apply_course_distance(f14.carrier_ara_63_heading-90, dist_m);
+    lat = np.lat();
+    lon = np.lon();
+    f14.set_fuel(fuel);
+
+    print("Position to ",dist_m," height ",gs_height, " speed=",onspeed, " lat=",lat," lon=",lon);
+
+    setprop("controls/gear/gear-down",0);
+    setprop("/controls/flight/flaps",0);
+    setprop("/controls/gear/gear-down",0);
+    setprop("fdm/jsbsim/gear/gear-cmd-norm",0);
+    setprop("/controls/gear/brake-parking",0);
+    setprop("fdm/jsbsim/gear/gear-cmd-norm",0);
+    setprop("/controls/gear/brake-parking",0);
+    setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",0);
+setprop("/controls/flight/flaps",0);
+setprop("/controls/gear/gear-down",0);
+
+    setprop("sim/presets/trim", 1);
+    setprop("sim/presets/latitude-deg",np.lat());
+    setprop("sim/presets/longitude-deg",np.lon());
+    setprop("sim/presets/altitude-ft",gs_height);
+    setprop("sim/presets/airspeed-kt",onspeed);
+    setprop("sim/presets/pitch-deg",0);
+
+setprop("/sim/presets/speed-set", "uvw");
+var KTS_TO_FPS = 1.68781;
+
+setprop("/sim/presets/uBody-fps",KTS_TO_FPS * onspeed);
+setprop("/sim/presets/vBody-fps",0);
+setprop("/sim/presets/wBody-fps",0);
+
+    #setprop("sim/presets/heading-deg",178-magvar);
+    setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+    setprop("/sim/presets/carrier","");
+    setprop("/sim/presets/parkpos","");
+    setprop("position/latitude-deg",lat);
+    setprop("position/longitude-deg",lon);
+    setprop("position/altitude-ft",gs_height);
+
+    repos_gear_down = 0;
+
+var elevator_trim = -0.089647;
+
+    setprop("/controls/flight/elevator-trim", elevator_trim);
+    setprop("/fdm/trim/pitch-trim", elevator_trim);
+
+    setprop("/fdm/trim/trimmed", 1);
+    fgcommand("reposition");
+
+    post_init_method = func{
+        print("F-14: finish approach repos ************************");
+        print("finalize position ",onspeed," alt=",getprop("position/altitude-agl-ft"));
+        setprop("/controls/flight/elevator-trim", elevator_trim);
+        setprop("/fdm/trim/pitch-trim", elevator_trim);
+
+        # v 0.41
+        #setprop("sim/latitude-deg",lat);
+        #setprop("sim/longitude-deg",lon);
+        #setprop("sim/altitude-ft",gs_height);
+        #    
+
+        setprop("fdm/jsbsim/gear/gear-cmd-norm",0);
+        setprop("/controls/gear/brake-parking",0);
+
+        #    setprop("/controls/flight/elevator-trim", -0.3698032779);
+        #    setprop("/controls/flight/elevator-trim", -0.0);
+        #    setprop("/fdm/trim/trimmed", 1);
+        #        f14.APC_on();
+        #        setprop ("fdm/jsbsim/systems/apc/target-vc-kts", onspeed);
+
+        #    setprop("sim/presets/airspeed-kt",onspeed);
+
+        np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+        np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
+
+        setprop("/sim/tower/latitude-deg",np.lat());
+        setprop("/sim/tower/longitude-deg",np.lon());
+        setprop("/sim/tower/altitude-ft",np.alt()+100);
+    };
+}
+#0.3nm from carrier overhead
+#f14_instruments.carrier_case_1_approach_reposition();
+#break at the bow if formation lead 0.6nm
 
 
 setlistener("fdm/jsbsim/systems/hook/arrestor-wire-available", func(v)

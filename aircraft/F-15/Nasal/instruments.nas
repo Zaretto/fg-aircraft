@@ -8,7 +8,7 @@
 
 var UPDATE_PERIOD = 0.05;
 var main_loop_launched = 0; # Used to avoid to start the main loop twice.
-
+var first_time_run = 0;
 
 # TACAN: nav[1]
 var nav1_as_selected = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );; # the selected frequency if overriden from the tacan
@@ -789,12 +789,15 @@ var common_init = func
         }
     }
     common_carrier_init();
+    configure_cft();
 }
 
 # Init ####################
 var init = func {
 	print("Initializing f15 Systems");
-    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Model", nil));
+    var modelNotification = emesary.Notification.new("F15Model", nil);
+    modelNotification.root_node = props.globals;
+    emesary.GlobalTransmitter.NotifyAll(modelNotification);
     emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Init", 1));
 	ext_loads_init();
 	init_fuel_system();
@@ -835,7 +838,16 @@ setlistener("sim/position-finalized", func (is_done) {
     common_init();
 #        common_carrier_init();
     }
-
+    if(first_time_run)  {
+        print(">> First time run");
+        setprop("consumables/fuel/tank[5]/selected",false);
+        setprop("consumables/fuel/tank[6]/selected",false);
+        setprop("consumables/fuel/tank[7]/selected",false);
+        
+        setprop("consumables/fuel/tank[5]/level-lbs",0);
+        setprop("consumables/fuel/tank[6]/level-lbs",0);
+        setprop("consumables/fuel/tank[7]/level-lbs",0);
+    }
 });
 setlistener("sim/signals/reinit", func (reinit) {
     if (reinit.getValue()) {

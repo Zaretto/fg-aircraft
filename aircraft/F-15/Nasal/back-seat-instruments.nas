@@ -5,6 +5,9 @@
 #
 
 var UPDATE_PERIOD = 0.03;
+var acLat = props.getNode("/position/latitude-deg",1);
+var acLon = props.getNode("/position/longitude-deg",1);
+var acAlt = props.getNode("/position/altitude-ft",1);
 
 # Check pilot's aircraft path from it's callsign.
 var PilotCallsign = props.globals.getNode("/sim/remote/pilot-callsign");
@@ -103,6 +106,7 @@ instruments_data_import = func
         Pilot.getNode("fdm/jsbsim/systems/electrics/ac-left-main-bus",1).setValue(ac_main);
         Pilot.getNode("fdm/jsbsim/systems/electrics/ac-right-main-bus",1).setValue(ac_main);
         Pilot.getNode("fdm/jsbsim/systems/electrics/dc-main-bus",1).setValue(ac_main);
+        setprop("/instrumentation/radar/serviceable",1);
     }
     if (engines_engine0_egt_degC != nil)
       Pilot.getNode("engines/engine[0]/egt-degC",1).setDoubleValue(engines_engine0_egt_degC);
@@ -129,6 +133,12 @@ instruments_data_import = func
         Pilot.getNode("instrumentation/transponder/inputs/digit[2]", 1).setValue( substr(transponder_id,1,1) );
         Pilot.getNode("instrumentation/transponder/inputs/digit[3]", 1).setValue( substr(transponder_id,0,1) );
     }
+    # need to set these for the radar.
+    acLat.setValue(Pilot.getNode("/position/latitude-deg",1).getValue());
+    acLon.setValue(Pilot.getNode("/position/longitude-deg",1).getValue());
+    acAlt.setValue(Pilot.getNode("/position/altitude-ft",1).getValue());
+    Pilot.getNode("instrumentation/airspeed-indicator/true-speed-kt",1).setValue(Pilot.getNode("velocities/true-airspeed-kt",1).getValue());
+
 #			Pilot.getNode("sim/model/f15/instrumentation/tacan/mode", 1)
 #			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
 #			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
@@ -147,10 +157,9 @@ var backseat_update = maketimer(UPDATE_PERIOD, func
 	awg_9.rdr_loop();
     check_pilot_callsign();
     instruments_data_import();
-    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Update4", 1));
+#    emesary.GlobalTransmitter.NotifyAll(notificationUpdate4);
 
     #		instruments_data_export();
-    backseat_update.restart(UPDATE_PERIOD);
 });
 
 

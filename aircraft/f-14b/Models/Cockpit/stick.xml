@@ -11,8 +11,14 @@
 		<object-name>stick-mast</object-name>
 		<property>controls/flight/elevator</property>
 		<factor>20</factor>
-		<center><z-m>0.0153</z-m></center>
-		<axis><y>-1</y></axis>
+		<center>
+			<x-m>0</x-m>
+			<y-m>0</y-m>
+            <z-m>0.0153</z-m>
+        </center>
+		<axis>
+            <y>-1</y>
+        </axis>
 	</animation>
 
 	<animation>
@@ -51,7 +57,11 @@
 			<y-m>0</y-m>
 			<z-m>0.4402</z-m>
 		</center>
-		<axis><y>1</y></axis>
+		<axis>
+          <x>0</x>
+          <y>1</y>
+          <z>0</z>
+        </axis>
 	</animation>
 
 
@@ -78,7 +88,7 @@
 
         <effect>
             <name>f14-interior</name>
-            <inherits-from>Effects/f14interior</inherits-from>
+            <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
             <object-name>stick-group</object-name>
         </effect>
 

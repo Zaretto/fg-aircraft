@@ -10,18 +10,35 @@
 
 <system name="APC">
 
-    <property value="1.2"> systems/apc/pid-kp </property>
-    <property value="0.002"> systems/apc/pid-ki </property>
-    <property value="0.0034"> systems/apc/pid-kd </property>
-    <property value="0.3"> systems/apc/throttle-gain </property>
+    <property value="8"> systems/apc/pid-kd </property>
+    <property value="0"> systems/apc/pid-ki </property>
+    <property value="10"> systems/apc/pid-kp </property>
+    <property value="100"> systems/apc/max-diff</property>
+    <property value="-100"> systems/apc/min-diff</property>
 
-    <property value="23.12"> systems/apc/lag-constant </property>
-    <property value="335"> systems/apc/max-KTS </property>
-    <property value="0">systems/apc/target-vc-kts</property>
+    <property value="1.0"> systems/apc/throttle-gain </property>
+
+    <property value="0">systems/apc/target-alpha</property>
     <property value="0">systems/apc/active</property>
 
     <channel name="APC">
 
+<!-- doesn't work because the APC is overwriting the throttle values to control the engines
+    <switch name="systems/apc/disengage-flag">
+          <default value="0"/>
+            <test value="0">
+                systems/apc/active eq 0
+           </test>
+          <test  value="systems/apc/disengage">
+             systems/apc/disengage ne 0
+          </test>
+          <test  logic="OR" value="1">
+            fcs/throttle-pos-norm[0] ne systems/apc/throttle-cmd[0]
+            fcs/throttle-pos-norm[1] ne systems/apc/throttle-cmd[1]
+          </test>
+          <output>systems/apc/disengage</output>
+    </switch>
+-->
         <!-- ensure within operating envelope -->
         <switch name="systems/apc/trigger">
             <default value="0.0"/>
@@ -31,29 +48,24 @@
                     propulsion/engine[0]/set-running == 0
                     propulsion/engine[1]/set-running == 0
                     systems/apc/active ne 0
-                    systems/apc/target-vc-kts gt 110
+                    systems/apc/target-alpha gt 110
                 </and>
             </test>
 
         </switch>
 
         <summer name="systems/apc/divergence">
-            <input> systems/apc/target-vc-kts </input>
-            <input> -velocities/vc-kts </input>
+            <input> aero/alpha-indicated-deg </input>
+            <input> -systems/apc/target-alpha </input>
             <clipto>
-                <min>-systems/apc/max-KTS </min>
-                <max> systems/apc/max-KTS </max>
+                <min> systems/apc/min-diff </min>
+                <max> systems/apc/max-diff</max>
             </clipto>
         </summer>
 
-        <lag_filter name="systems/apc/divergence-lag">
-            <input> systems/apc/divergence </input>
-            <c1> systems/apc/lag-constant </c1>
-        </lag_filter>
-
         <switch name="systems/apc/switch">
             <default value="0.0"/>
-            <test value="systems/apc/divergence-lag">
+            <test value="systems/apc/divergence">
                 systems/apc/active == 1
             </test>
         </switch>
@@ -72,12 +84,12 @@
             <output>systems/apc/divergence-pid-contents</output>
         </pure_gain>
 
-        <pure_gain name="systems/apc/throttle-cmd-out">
+        <pure_gain name="">
             <input> systems/apc/divergence-pid </input>
             <gain> systems/apc/throttle-gain </gain>
             <clipto>
                 <min> -1</min>
-                <max> 0.88</max>
+                <max> 0.913</max>
             </clipto>
             <output>systems/apc/throttle-cmd-delta</output>
         </pure_gain>

@@ -9,6 +9,15 @@
 ## Global constants ##
 var true = 1;
 var false = 0;
+var frameRateNode = props.getNode("/sim/frame-rate");
+#
+# 2018.3 has improved stores handling - but this is turned 
+gui.external_stores_2018_1_compat = 0;
+
+var payload_dialog_reload = func(from) { 
+#    print("payload_dialog_reload: ",from);    
+    setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
+}
 
 var deltaT = 1.0;
 
@@ -20,6 +29,14 @@ var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialog
 error_mismatch.open();
 }
 
+var fixAirframe = func {
+# F-15 doesn't support wing detachment.
+    left_wing_torn.setValue(0);
+    right_wing_torn.setValue(0);
+	setprop ("fdm/jsbsim/gear/damage-reset", 1);
+	repairMe();
+	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
+}
 #
 # 2017.3 or earlier FG compatibility fixes
 # Remove after 2017.4
@@ -65,7 +82,7 @@ var Alpha = 0;
 var Throttle = 0;
 var e_trim = 0;
 var rudder_trim = 0;
-var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1);
+var aileron = props.globals.getNode("fdm/jsbsim/fcs/aileron-pos-norm", 1);
 var radarStandbyNode = props.globals.getNode("instrumentation/radar/radar-standby",1);
 var radarMPnode = props.globals.getNode("instrumentation/radar/radar-mode",1);
 
@@ -172,8 +189,13 @@ var position_flash_init  = func {
 
 var lighting_collision = props.globals.getNode("sim/model/f15/lighting/anti-collision/state", 1);
 var lighting_position  = props.globals.getNode("sim/model/f15/lighting/position/state", 1);
+
+# wing detachment.
 var left_wing_torn     = props.globals.getNode("sim/model/f15/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f15/wings/right-wing-torn");
+
+# 0, -1 (left) or 1 (right).
+var wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/float[3]",1);
 
 var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
 var aileron_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
@@ -186,7 +208,6 @@ var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1)
 # sim/multiplay/generic/int[2] used by radar standby.
 var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
 var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
-var wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/float[3]",1);
 var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[6]",1);
 
 #
@@ -200,7 +221,8 @@ var carrier_ara_63_heading = nil;
 var wow = 1;
 setprop("fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("controls/flight/SAS-roll",0);
-var registerFCS = func {settimer (updateFCS, 0);}
+UPDATE_PERIOD = 0.0333; # update nasal at 30hz
+var registerFCS = func {settimer (updateFCS, UPDATE_PERIOD);}
 
 #
 #
@@ -406,21 +428,24 @@ var r2_count = 0;
 
 var rate4modules = func {
     r4_count = r4_count - 1;
-    var frame_rate = getprop("/sim/frame-rate");
+    if (r4_count > 0)
+        return;
+
+    var frame_rate = frameRateNode.getValue();
 
     if (frame_rate <= 15 or frame_rate > 100)
         r4_count = 4;
     else
         r4_count = (int)(frame_rate * 0.26667);
 
-    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Update4",4));
-    aircraft.updateTEWS();
-    aircraft.updateMPCD();
     aircraft.electricsFrame();
 	aircraft.computeNWS ();
     aircraft.update_weapons_over_mp();
     updateVolume();
     radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+    
+    aircraft.routeManagerUpdate();
+
 #	settimer (rate4modules, 0.20);
 
 #
@@ -447,7 +472,10 @@ var rate2modules = func {
 #        r2_count = (int)(frame_rate * 0.1333);
 
     aircraft.updateHUD();
+    aircraft.updateTEWS();
+    aircraft.updateMPCD();
 #	settimer (rate2modules, 0.1);
+
     setprop("/environment/aircraft-effects/frost-level", getprop("fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
 }
 #
@@ -483,7 +511,6 @@ var updateFCS = func {
 
 	#update functions
 	aircraft.computeEngines ();
-	aircraft.computeAdverse ();
 rate2modules();
 rate4modules();
 	aircraft.registerFCS (); # loop, once per frame.

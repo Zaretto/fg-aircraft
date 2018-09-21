@@ -314,10 +314,10 @@ var processCallsigns = func () {
       callsign_struct[callsign] = player;
     }
   }
-  settimer(processCallsigns, 1.5);
 }
-
-processCallsigns();
+processCallsignsTimer = maketimer(1.5, processCallsigns);
+processCallsignsTimer.simulatedTime = 1;
+processCallsignsTimer.start();
 
 
 
@@ -603,8 +603,9 @@ var code_ct = func () {
   }
   var final = "ct"~cu~ff~rl~rf~rp~a~dm~tm~rd~ml~sf~ifa;
   setprop("sim/multiplay/generic/string[15]", final);
-  settimer(code_ct, 2);
 }
+code_ctTimer = maketimer(2, code_ct);
+code_ctTimer.simulatedTime = 1;
 
 var not = func {
   if (getprop("payload/armament/msg") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
@@ -617,7 +618,6 @@ var not = func {
         var bits = spl[1];
         msg = "I ";
         if (bits == "000000000000") {
-          settimer(not, 60);
           return;
         }
         if (substr(bits,0,1) == "1") {
@@ -660,8 +660,9 @@ var not = func {
     }
     setprop("/sim/multiplay/chat", msg);
   }
-  settimer(not, 60);
 }
+notTimer = maketimer(60, not);
+notTimer.simulatedTime = 1;
 
 var changeGuiLoad = func()
 {#return;
@@ -722,8 +723,8 @@ changeGuiLoad();
 # only do this if not backseat
 if (getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[0]") != nil)
 {
-settimer(code_ct, 5);
-settimer(not, 11);
+code_ctTimer.start();
+notTimer.start();
 }
 
 var re_init = func {
@@ -738,4 +739,6 @@ var re_init = func {
   setprop("ai/submodels/submodel[4]/count", 100);
   setprop("ai/submodels/submodel[5]/count", 100);
 }
+
+setlistener("/sim/signals/reinit", re_init, 0, 0);
 

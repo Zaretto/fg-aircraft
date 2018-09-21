@@ -21,7 +21,7 @@
     <property value="0.01"> systems/jt9d/engine[0]/c-oil-temperature-lag </property>
     <property value="0"> systems/jt9d/engine[0]/oil-temperature-R </property>
     <property value="21"> systems/jt9d/engine[0]/c-epr-t1-lag</property>
-    <property value="1">systems/jt9d/engine[0]/epr-t1-dmd-factor</property>
+<property value="1">systems/jt9d/engine[0]/epr-t1-dmd-factor</property>
 
     <property value="1">propulsion/engine[0]/set-running </property>
     <property value="1">propulsion/engine[1]/set-running </property>
@@ -88,7 +88,7 @@
 
                         <independentVar lookup="column">atmosphere/T-R</independentVar>
                         <tableData>
-                                    394.67	459.67	518.67	579.67
+                            394.67	459.67	518.67	579.67
                             0.00	1.0 	1.0 	1.0 	1.0
                             0.01	1.05335	1.02663	1.01772	1.00881
                             0.13	1.12676	1.07328	1.04802	1.02724
@@ -123,7 +123,7 @@
                         <independentVar lookup="row">systems/jt9d/engine[0]/inlet-mach</independentVar>
                         <independentVar lookup="column">position/h-sl-ft</independentVar>
                         <tableData>
-                                   0    	15000   	36065
+                            0    	15000   	36065
                             0.0	-0.000000	-0.000000	-0.000000
                             0.1	-0.019076	-0.000000	-0.000000
                             0.2	-0.042277	-0.006561	-0.005187
@@ -177,7 +177,7 @@
                         <independentVar lookup="row">systems/jt9d/engine[0]/epr-internal</independentVar>
                         <independentVar lookup="column">systems/jt9d/engine[0]/inlet-mach</independentVar>
                         <tableData>
-                                        0.0     0.1     0.2     0.3     0.4     0.5     0.6     0.7     0.8     0.9      1.00
+                            0.0     0.1     0.2     0.3     0.4     0.5     0.6     0.7     0.8     0.9      1.00
                             0.75        0.00    0.00    0.00    0.00    0.00    2.89    14.92   33.52   49.67   59.08   65.61
                             0.80        0.00    0.00    0.00    0.00    3.41    18.78   33.84   50.14   60.04   66.72   71.22
                             0.90        0.00    0.00    0.00    18.62   35.93   49.68   60.39   67.78   72.96   76.02   78.71
@@ -199,17 +199,17 @@
             <function>
                 <description>EPR ~ Transients</description>
                 <product>
-                    <property>systems/jt9d/engine[0]/epr-t1-dmd-factor</property>
+<property>systems/jt9d/engine[0]/epr-t1-dmd-factor</property>
                     <table>
                         <independentVar lookup="row">systems/jt9d/engine[0]/n1</independentVar>
                         <tableData>
-                            0   0.6
-                            25  0.16
-                            33  0.3
-                            40  0.5
-                            60  1.7
-                            70 2.0
-                            100 3
+0   0.6
+25  0.16
+33  0.3
+40  0.5
+60  1.7
+70 2.0
+100 3
                         </tableData>
                     </table>
                 </product>
@@ -224,7 +224,7 @@
                         <independentVar lookup="row">systems/jt9d/engine[0]/epr</independentVar>
                         <independentVar lookup="column">systems/jt9d/engine[0]/inlet-mach</independentVar>
                         <tableData>
-                                          0    0.1     0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
+                            0    0.1     0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
                             0.64        -425    -409    -118    36      3       213     349     429     469     539
                             0.70        -275    -259    4       148     145     327     444     523     605     687
                             0.80        -11     5       217     344     393     527     610     687     732     765
@@ -259,7 +259,7 @@
         <fcs_function name="systems/jt9d/engine[0]/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Figure 8, NASA-TM-104326 </description>
-                <!-- See also F14-AAD-1 Figure 2-13 -->
+<!-- See also F14-AAD-1 Figure 2-13 -->
                 <product>
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
@@ -345,7 +345,7 @@
                         <independentVar lookup="row">systems/jt9d/engine[0]/epr-internal</independentVar>
                         <independentVar lookup="column">systems/jt9d/engine[0]/inlet-mach</independentVar>
                         <tableData>
-                                     0.0    0.1      0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
+                            0.0    0.1      0.3     0.4     0.5     0.6     0.7     0.8     0.9     1
                             1.00     50      51      62      67      71      75      77      79      81      82
                             1.10     68      69      73      76      78      81      83      84      85      86
                             1.20     78      79      81      82      84      86      87      88      88      89
@@ -365,10 +365,10 @@
                     <table>
                         <independentVar lookup="row">systems/jt9d/engine[0]/n2</independentVar>
                         <tableData>
-                            0   0
-                            22  12
-                            50  30
-                            100 48
+0   0
+22  12
+50  30
+100 48
                         </tableData>
                     </table>
                 </product>
@@ -391,7 +391,7 @@
                         <independentVar lookup="row">systems/jt9d/engine[0]/epr</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                                     0   	0.1 	0.2	    0.3	    0.4	    0.5	    0.6	    0.7	    0.8	    0.9	    1
+                            0   	0.1 	0.2	    0.3	    0.4	    0.5	    0.6	    0.7	    0.8	    0.9	    1
                             0.705	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.074
                             0.790	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.000	0.069	0.124	0.196
                             0.920	0.000	0.000	0.000	0.000	0.000	0.052	0.140	0.197	0.252	0.305	0.357
@@ -644,30 +644,3 @@
         </summer>
     </channel>
 </system>
-<!--include into main model with the following; adjust the x,y,z position as appropriate
-    
-    <force frame="BODY" name="F110-GE-400-1">
-        <location unit="IN">
-            <x> 667 </x>
-            <y> -45 </y>
-            <z> -10 </z>
-        </location>
-        <direction>
-            <x>  -0.9995 </x>
-            <y>   0.0    </y>
-            <z>   0.01 </z>
-        </direction>
-    </force>
-    <force frame="BODY" name="F110-GE-400-2">
-        <location unit="IN">
-            <x> 667 </x>
-            <y> 45 </y>
-            <z> -10 </z>
-        </location>
-        <direction>
-            <x>  -0.9995 </x>
-            <y>   0.0    </y>
-            <z>   0.01 </z>
-        </direction>
-    </force>
-    -->
