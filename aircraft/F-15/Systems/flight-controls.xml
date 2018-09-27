@@ -3,14 +3,21 @@
    |  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
    Longitudinal travel: -10 to 15cm
 -->
-    <property value="1">fcs/ari-lateral-enabled</property>
     <property value="1">gear/serviceable</property>
     <property value="0">systems/hydraulics/emerg-gear-bleed</property>
     <property value="0">gear/damage-reset</property>
     <property value="2">position/aircraft-on-ground-last-value</property>
     
     <channel name="Pitch">
-		<switch name="fcs/stick-pitch">
+        <switch name="fcs/ari-lateral-enabled">
+            <default value="1"/>
+            <test value="0" logic="OR">
+                systems/hydraulics/flight-system-pressure ne 1
+                autoflight/input/pitch-switch ne 1
+            </test>
+        </switch>
+
+        <switch name="fcs/stick-pitch">
 			<default value="0"/>
 			<test value="fcs/elevator-cmd-norm">
 				autoflight/input/pitch-switch ne 1
@@ -49,9 +56,6 @@
 
         <switch name="fcs/pitch-trim-actuator">
             <default value="fcs/pitch-trim-sum"/>
-            <test value="fcs/pitch-trim-actuator">
-                systems/hydraulics/flight-system-pressure ne 1
-            </test>
         </switch>
 
         <aerosurface_scale name="Elevator Control">
@@ -217,9 +221,6 @@
 
         <switch name="fcs/roll-trim-actuator-norm">
             <default value="fcs/roll-trim-sum-norm"/>
-            <test value="fcs/roll-trim-actuator-norm">
-                systems/hydraulics/flight-system-pressure ne 1
-            </test>
         </switch>
 
         <kinematic name="aileron position">
@@ -322,12 +323,14 @@
         <!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
         <switch name="fcs/ari-lateral-rudder-pos-norm">
             <default value="fcs/ari-lateral-rudder-demand-norm"/>
-            <test value="0">
+            <test value="0" logic="OR">
+                fcs/ari-lateral-enabled eq 0
                 velocities/mach ge 0.9
             </test>
             <test value="0" logic="OR">
                 velocities/mach ge 0.9
                 position/aircraft-on-ground ne 0
+                fcs/ari-lateral-enabled eq 0
             </test>
         </switch>
 
@@ -356,9 +359,6 @@
 
         <switch name="fcs/rudder-actuator-pos">
             <default value="fcs/rudder-sum"/>
-            <test value="fcs/rudder-actuator-pos">
-                systems/hydraulics/flight-system-pressure ne 1
-            </test>
         </switch>
         <kinematic name="Rudder Control">
             <input>fcs/rudder-actuator-pos</input>

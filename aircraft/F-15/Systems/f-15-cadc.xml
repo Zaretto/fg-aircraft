@@ -452,6 +452,7 @@
             <description>Aircraft on ground</description>
             <default value="systems/cadc/pitch-ratio-dmd"/>
             <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
+                systems/hydraulics/flight-system-pressure ne 1
                 systems/cadc/pitch-ratio-emergency ne 0
             </test>
             <test value="1" logic="OR">
@@ -486,6 +487,7 @@
             <default value="systems/cadc/roll-ratio-dmd"/>
             <test value="0.5" logic="OR">
                 systems/cadc/roll-ratio-emergency ne 0
+                systems/hydraulics/flight-system-pressure ne 1
             </test>
             <test value="1" logic="OR">
                 gear/gear-pos-norm ne 0
@@ -586,10 +588,10 @@
             <table>
                 <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
                 <tableData>
-                    -6.2    -1.0
+                    -6.2    1.0
                     -1.4     0.0
                     1.4     0.0
-                    6.2    -1.0
+                    6.2    1.0
                 </tableData>
             </table>
             <gain>fcs/roll-sas-active</gain>
