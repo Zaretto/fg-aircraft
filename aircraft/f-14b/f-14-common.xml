@@ -498,7 +498,7 @@
 
         <model>
             <!--path>Aircraft/f-14b/Models/F-14-model.xml</path-->
-            <!--fallback-model-index type="int">514</fallback-model-index-->
+            <fallback-model-index type="int">514</fallback-model-index>
             <path>Aircraft/f-14b/Models/f-14b.xml</path>
             <livery>
                 <name type="string">nasa</name>
@@ -951,15 +951,16 @@
                     </external-loads>
                 </systems>
                 <wings>
-                    <left-wing-torn type="bool">false</left-wing-torn>
-                    <right-wing-torn type="bool">false</right-wing-torn>
+                    <left-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-left"/>
+                    <right-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-right"/>
                     <damage-enabled type="bool">false</damage-enabled>
                 </wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
                 -->
                 <overrides>
-                    <deck-offset-m type="double">-4.5</deck-offset-m> <!-- align with cat1 -->
+                    <deck-offset-m type="double">-4.5</deck-offset-m>
+                    <!-- align with cat1 -->
                     <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
                     <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
                     <!--                    <init-delay type="int">0.1</init-delay> -->
@@ -1035,6 +1036,7 @@
             </camera-group>
             <redout>
                 <parameters>
+                    <locked-by-airframe type="bool">true</locked-by-airframe>
                     <blackout-complete-g>7.9</blackout-complete-g>
                     <blackout-onset-g>5.5</blackout-onset-g>
                 </parameters>
@@ -2199,6 +2201,9 @@
     </rotors>
 
     <nasal>
+        <notifications>
+            <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
+        </notifications>
       <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
@@ -2216,6 +2221,7 @@
         </rcs>
         <awg_9>
             <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
+            <file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file>
         </awg_9>
         <dual_control_tools>
             <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
@@ -2236,6 +2242,7 @@
             <file>Aircraft/f-14b/Nasal/an-arc-159v1.nas</file>
         </an_arc_159v1>
         <f14>
+            <file>Aircraft/f-14b/Nasal/M_exec.nas</file>
             <file>Aircraft/f-14b/Nasal/liveries.nas</file>
             <file>Aircraft/f-14b/Nasal/f14_globals.nas</file>
             <file>Aircraft/f-14b/Nasal/flaps_computer.nas</file>
@@ -2246,7 +2253,6 @@
             <file>Aircraft/f-14b/Nasal/engines.nas</file>
             <file>Aircraft/f-14b/Nasal/spoilers.nas</file>
             <file>Aircraft/f-14b/Nasal/SAS.nas</file>
-            <file>Aircraft/f-14b/Nasal/adverse.nas</file>
             <file>Aircraft/f-14b/Nasal/f-14b.nas</file>
             <file>Aircraft/f-14b/Nasal/ext_stores.nas</file>
             <file>Aircraft/f-14b/Nasal/fuel-system.nas</file>

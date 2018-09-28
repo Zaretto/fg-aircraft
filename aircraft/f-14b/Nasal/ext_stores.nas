@@ -256,8 +256,9 @@ var external_load_loop = func() {
 			update_wpstring();
 		}
 	}
-	settimer(external_load_loop, 10);
 }
+var external_load_loopTimer = maketimer(10, external_load_loop);
+external_load_loopTimer.simulatedTime = 1;
 
 Station = {
 	new : func (number, weight_number){

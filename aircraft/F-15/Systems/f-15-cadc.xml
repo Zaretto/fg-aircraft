@@ -23,9 +23,11 @@
     <property value="0">systems/afcs/SAS-roll-demand</property>
     <property value="0">gear/gear-asym</property>
 
+    <!-- these are defined by an alias in the -set file
     <property value="0">fcs/yaw-damper-enable</property>
     <property value="0">fcs/pitch-damper-enable</property>
-    <property value="0">fcs/roll-sas-enable</property>
+    <property value="0">fcs/roll-damper-enable </property>
+    -->
     <property value="0">fcs/aim-fitted</property>
     <property value="0">fcs/steer-maneuver</property>
     <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
@@ -450,6 +452,7 @@
             <description>Aircraft on ground</description>
             <default value="systems/cadc/pitch-ratio-dmd"/>
             <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
+                systems/hydraulics/flight-system-pressure ne 1
                 systems/cadc/pitch-ratio-emergency ne 0
             </test>
             <test value="1" logic="OR">
@@ -484,6 +487,7 @@
             <default value="systems/cadc/roll-ratio-dmd"/>
             <test value="0.5" logic="OR">
                 systems/cadc/roll-ratio-emergency ne 0
+                systems/hydraulics/flight-system-pressure ne 1
             </test>
             <test value="1" logic="OR">
                 gear/gear-pos-norm ne 0
@@ -495,7 +499,7 @@
         <switch name="fcs/roll-sas-active">
             <default value="0.0"/>
             <test logic="AND" value="1">
-                fcs/roll-sas-enable ne 0.0
+                fcs/roll-damper-enable  ne 0.0
                 autoflight/output/roll-master ne 1
             </test>
             <output>fcs/roll-sas-active</output>
@@ -584,10 +588,10 @@
             <table>
                 <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
                 <tableData>
-                    -6.2    -1.0
+                    -6.2    1.0
                     -1.4     0.0
                     1.4     0.0
-                    6.2    -1.0
+                    6.2    1.0
                 </tableData>
             </table>
             <gain>fcs/roll-sas-active</gain>

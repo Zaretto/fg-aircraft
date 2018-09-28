@@ -438,7 +438,6 @@ var rate4modules = func {
     else
         r4_count = (int)(frame_rate * 0.26667);
 
-    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Update4",4));
     aircraft.electricsFrame();
 	aircraft.computeNWS ();
     aircraft.update_weapons_over_mp();
@@ -476,6 +475,7 @@ var rate2modules = func {
     aircraft.updateTEWS();
     aircraft.updateMPCD();
 #	settimer (rate2modules, 0.1);
+
     setprop("/environment/aircraft-effects/frost-level", getprop("fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
 }
 #

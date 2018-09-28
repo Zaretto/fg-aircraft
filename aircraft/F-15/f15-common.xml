@@ -540,6 +540,7 @@
         </sound>
 
         <model>
+            <fallback-model-index type="int">515</fallback-model-index>
             <path>Aircraft/F-15/Models/f15c.xml</path>
             <hide-pilot type="bool">false</hide-pilot >
             <hide-backseater type="bool">false</hide-backseater>
@@ -1199,9 +1200,10 @@
             <type>lookfrom</type>
             <internal archive="y">true</internal>
             <config>
+                <!-- -0.001565762004 -->
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <!--<y-offset-m archive="y">1.4874214034</y-offset-m>-->
-                <y-offset-m archive="y">1.4000519827</y-offset-m>
+                <y-offset-m archive="y">1.401951318</y-offset-m>
                 <z-offset-m archive="y">-5</z-offset-m>
                 <pitch-offset-deg>-8</pitch-offset-deg>
                 <default-field-of-view-deg>85</default-field-of-view-deg>
@@ -2290,6 +2292,9 @@
         <props>
             <file>Nasal/PropertyUpdateManager.nas</file>
         </props>
+        <notifications>
+            <file>Nasal/M_frame_notification.nas</file>
+        </notifications>
         <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
@@ -2328,6 +2333,7 @@
             <file>Aircraft/F-15/Nasal/rcs.nas</file>
         </rcs>
         <aircraft>
+            <file>Aircraft/F-15/Nasal/M_exec.nas</file>
             <file>Nasal/canvas/MFD_Generic.nas</file>
             <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/Generic/an_spn_46.nas</file>
