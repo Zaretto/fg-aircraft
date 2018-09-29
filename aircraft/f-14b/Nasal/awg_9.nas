@@ -172,7 +172,6 @@ setlistener("/ai/models/model-added", func(v){
         scan_update_tgt_list = 1;
     }
 });
-
 setlistener("/ai/models/model-removed", func(v){
     if (!scan_update_tgt_list) {
         scan_update_tgt_list = 1;
@@ -326,7 +325,7 @@ var az_scan = func() {
             {
                 if (active_u != nil)
                     active_u = nil;
-                armament.contact = active_u;
+                armament .contact = active_u;
             }
 
             foreach( var c; raw_list )
@@ -1570,4 +1569,26 @@ dump_tgt_list = func {
         dump_tgt(u);
     }
 }
+
+#
+# This is the emesary recipient that will update the Radar when a FrameNotification is
+# received.
+
+var RadarRecipient = 
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident~".RADAR");
+
+        new_class.Receive = func(notification)
+          {
+              rdr_loop(notification);
+              return emesary.Transmitter.ReceiptStatus_OK;
+          }
+        return new_class;
+    },
+};
+#print ("awg_9: ",this_model," intiialize *****************************************************************************");
+var aircraft_radar = RadarRecipient.new(this_model);
+emesary.GlobalTransmitter.Register(aircraft_radar );
 
