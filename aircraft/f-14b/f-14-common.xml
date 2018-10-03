@@ -631,7 +631,7 @@
                         <hsd-mode-nav type="int">1</hsd-mode-nav>
                         <!-- 1 = NAV, 0 = TID, -1 = ECM -->
                     </pilots-displays>
-                    <radar-awg-9>
+                    <radar-awg-9> <!-- part of the DDD in the backseat -->
                         <on-off type="bool">true</on-off>
                         <brightness type="double">1</brightness>
                     </radar-awg-9>
@@ -781,15 +781,7 @@
                         <rd-rot-light type="bool">false</rd-rot-light>
                         <jat-light type="bool">false</jat-light>
                         <irot-light type="bool">false</irot-light>
-                        <wcs-mode>
-                            <pd-stt type="bool">false</pd-stt>
-                            <pulse-stt type="bool">false</pulse-stt>
-                            <pd-srch type="bool">false</pd-srch>
-                            <rws type="bool">false</rws>
-                            <tws-auto type="bool">false</tws-auto>
-                            <tws-man type="bool">false</tws-man>
-                            <pulse-srch type="bool">true</pulse-srch>
-                        </wcs-mode>
+                        <wcs-mode type="int">3</wcs-mode> <!-- pulse search -->
                     </radar-awg-9>
                     <tacan>
                         <xy-switch type="bool">0</xy-switch>
@@ -856,10 +848,10 @@
                         <numeral-1 type="int">1</numeral-1>
                     </utilities>
                     <external-loads>
-                        <external-load-set type="string">Clean</external-load-set>
+                        <external-load-set type="int">0</external-load-set>
                         <external-tanks type="bool">false</external-tanks>
                         <station n="0">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -868,7 +860,7 @@
                             </offsets>
                         </station>
                         <station n="1">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -877,7 +869,7 @@
                             </offsets>
                         </station>
                         <station n="2">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -886,7 +878,7 @@
                             </offsets>
                         </station>
                         <station n="3">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -895,7 +887,7 @@
                             </offsets>
                         </station>
                         <station n="4">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -904,7 +896,7 @@
                             </offsets>
                         </station>
                         <station n="5">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -913,7 +905,7 @@
                             </offsets>
                         </station>
                         <station n="6">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -922,7 +914,7 @@
                             </offsets>
                         </station>
                         <station n="7">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0</x-m>
@@ -931,7 +923,7 @@
                             </offsets>
                         </station>
                         <station n="8">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -940,7 +932,7 @@
                             </offsets>
                         </station>
                         <station n="9">
-                            <type type="string">-</type>
+                            <id type="int">0</id>
                             <selected type="bool">false</selected>
                             <offsets>
                                 <x-m>0.4795</x-m>
@@ -1025,6 +1017,7 @@
                 <string n="15" type="string"></string>
                 <!-- instruments -->
                 <!-- <string n="2" type="string">50</string>      free -->
+                <string n="19" type="string"></string>      <!-- Emesary -->
             </generic>
             <!-- set default aircaft model to us; I find it hard to see the glider. -->
             <!--<default-model>Aircraft/f-14b/Models/f14.ac</default-model>-->
@@ -2155,6 +2148,8 @@
                 <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
             </aim-7>
             <aim-54><!-- aim-54c Phoenix -->
+                <sound-on-off type="bool">false</sound-on-off>
+                <sound-volume type="double">0.0</sound-volume>
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <vol-track-weak type="double">0.10</vol-track-weak>
@@ -2211,6 +2206,7 @@
 
     <nasal>
         <notifications>
+            <file>Aircraft/f-14b/Nasal/AircraftEventNotification.nas</file>
             <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
         </notifications>
       <aar>
@@ -2256,6 +2252,8 @@
         </an_arc_159v1>
         <f14>
             <file>Aircraft/f-14b/Nasal/M_exec.nas</file>
+            <file>Aircraft/f-14b/Nasal/AircraftControlInterface.nas</file>
+            <file>Aircraft/f-14b/Nasal/AircraftControlRecipient.nas</file>
             <file>Aircraft/f-14b/Nasal/liveries.nas</file>
             <file>Aircraft/f-14b/Nasal/f14_globals.nas</file>
             <file>Aircraft/f-14b/Nasal/flaps_computer.nas</file>

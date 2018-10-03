@@ -36,16 +36,58 @@ var ext_loads_init = func() {
 	foreach (var S; Station.list) {
 		S.set_type(S.get_type()); # initialize bcode.
 	}
-	update_wpstring();
+#	update_wpstring();
 }
 
+var preset_loads = {
+"-": 0,
+"Clean": 0,
+"FAD": 1,
+"FAD light":2,
+"FAD heavy":3,
+"Bombcat":4
+};
+var preset_loads_lookup = {
+	0: "-",
+0: "Clean",
+1: "FAD",
+2: "FAD light",
+3: "FAD heavy",
+4: "Bombcat"
+};
+var armament_types = {
+		"Clean": 0,
+		"AIM-9": 9,
+		"AIM-7": 7,
+		"AIM-54": 54,
+		"MK-83": 83,
+		"external tank":10,
+};
+var armament_types_lookup = {
+		 0: "Clean",
+		 9: "AIM-9",
+		 7: "AIM-7",
+		54: "AIM-54",
+		83: "MK-83",
+		10: "external tank",
+};
+
+var ext_loads_refresh = func() {
+    foreach (var S; Station.list)
+    {
+        S.set_description_from_type();
+        print(S.get_type());
+    }
+    setprop("sim/model/f-14b/systems/external-loads/external-load-set-description", 
+            preset_loads_lookup[int(getprop("sim/model/f-14b/systems/external-loads/external-load-set"))]);
+}
 
 var ext_loads_set = func(s) {
 	# Load sets: Clean, FAD, FAD light, FAD heavy, Bombcat
 	# Load set defines which weapons are mounted.
 	# It also defines which pylons are mounted, a pylon may
 	# support several weapons.
-	WeaponsSet.setValue(s);
+	WeaponsSet.setIntValue(preset_loads[s]);
 	if ( s == "Clean" ) {
 		PylonsWeight.setValue(0);
 		WeaponsWeight.setValue(0);
@@ -132,7 +174,7 @@ var ext_loads_set = func(s) {
 		S9.set_type("AIM-9");
 		S9.set_weight_lb(53 + 340 + 191 + 510); # AIM-9rail, wing pylon, AIM-9M, AIM-7M 
 	}
-	update_wpstring();
+#	update_wpstring();
 }
 
 # Empties (or loads) corresponding Yasim tanks when de-selecting (or selecting)
@@ -162,7 +204,7 @@ var toggle_ext_tank_selected = func() {
 		Left_External.set_selected(0);
 		Right_External.set_selected(0);
 	}
-	update_wpstring();
+#	update_wpstring();
 }
 
 var init_set_stores_mass = func {
@@ -174,37 +216,37 @@ var init_set_stores_mass = func {
     }
 }
 
-var update_wpstring = func {
-	var b_wpstring = "";
-	foreach (var S; Station.list) {
-		# Use 3 bits per weapon pylon (3 free additional wps types).
-		# Use 1 bit per fuel tank.
-		# Use 3 bits for the load sheme (3 free additional shemes).
-		var b = "0";
-		var s = S.index;
-		if ( s != 2 and s != 7) {
-			b = bits.string(S.bcode,3);
-		} else {
-			b = S.bcode;
-		}
-		b_wpstring = b_wpstring ~ b;
-	}
-	var set = WeaponsSet.getValue();
-	var b_set = 0;
-	if ( set == "FAD" ) {
-		b_set = 1;
-	} elsif ( set == "FAD light" ) {
-		b_set = 2;
-	} elsif ( set == "FAD heavy" ) {
-		b_set = 3;
-	} elsif ( set == "Bombcat" ) {
-		b_set = 4;
-	}
-	b_wpstring = b_wpstring ~ bits.string(b_set,3);
-	# Send the bits string as INT over MP.
-	var b_stores = bits.value(b_wpstring);
-	f14_net.send_wps_state(b_stores);
-}
+# var update_wpstring = func {
+# 	var b_wpstring = "";
+# 	foreach (var S; Station.list) {
+# 		# Use 3 bits per weapon pylon (3 free additional wps types).
+# 		# Use 1 bit per fuel tank.
+# 		# Use 3 bits for the load sheme (3 free additional shemes).
+# 		var b = "0";
+# 		var s = S.index;
+# 		if ( s != 2 and s != 7) {
+# 			b = bits.string(S.bcode,3);
+# 		} else {
+# 			b = S.bcode;
+# 		}
+# 		b_wpstring = b_wpstring ~ b;
+# 	}
+# 	var set = WeaponsSet.getValue();
+# 	var b_set = 0;
+# 	if ( set == "FAD" ) {
+# 		b_set = 1;
+# 	} elsif ( set == "FAD light" ) {
+# 		b_set = 2;
+# 	} elsif ( set == "FAD heavy" ) {
+# 		b_set = 3;
+# 	} elsif ( set == "Bombcat" ) {
+# 		b_set = 4;
+# 	}
+# 	b_wpstring = b_wpstring ~ bits.string(b_set,3);
+# 	# Send the bits string as INT over MP.
+# 	var b_stores = bits.value(b_wpstring);
+# 	f14_net.send_wps_state(b_stores);
+# }
 
 # Emergency jettison:
 # -------------------
@@ -225,7 +267,7 @@ var emerg_jettison = func {
 		Right_External.set_selected(0);
 	}
 	ExtTanks.setBoolValue(0);
-	update_wpstring();
+#	update_wpstring();
 }
 
 # Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
@@ -246,26 +288,26 @@ var droptanks = func(n) {
 
 setlistener( "sim/ai/aircraft/impact/droptank", droptanks );
 
-var external_load_loop = func() {
-	# Whithout this periodic update the MP AI model wont have its external load
-	# uptodate before being manually updated by the pilot *when* in range of
-	# the observer.
-	var mp_nbr = size(props.globals.getNode("/ai/models").getChildren("multiplayer"));
-	if ( mp_nbr != nil ) {
-		if ( mp_nbr > 0 ) {
-			update_wpstring();
-		}
-	}
-}
-var external_load_loopTimer = maketimer(10, external_load_loop);
-external_load_loopTimer.simulatedTime = 1;
+# var external_load_loop = func() {
+# 	# Whithout this periodic update the MP AI model wont have its external load
+# 	# uptodate before being manually updated by the pilot *when* in range of
+# 	# the observer.
+# 	var mp_nbr = size(props.globals.getNode("/ai/models").getChildren("multiplayer"));
+# 	if ( mp_nbr != nil ) {
+# 		if ( mp_nbr > 0 ) {
+# 			update_wpstring();
+# 		}
+# 	}
+# 	settimer(external_load_loop, 10);
+# }
 
 Station = {
 	new : func (number, weight_number){
 		var obj = {parents : [Station] };
 		obj.prop = props.globals.getNode("sim/model/f-14b/systems/external-loads/").getChild ("station", number , 1);
 		obj.index = number;
-		obj.type = obj.prop.getNode("type", 1);
+		obj.type = obj.prop.getNode("id", 1);
+		obj.description = obj.prop.getNode("description", 1);
 		obj.display = obj.prop.initNode("display", 0, "INT");
 
         if(usingJSBSim)
@@ -288,22 +330,31 @@ Station = {
 		return obj;
 	},
 	set_type : func (t) {
-		me.type.setValue(t);
 		me.bcode = 0;
 		if ( t == "AIM-9" ) {
-			me.bcode = 1;
+			me.bcode = 9;
 		} elsif ( t == "AIM-7" ) {
-			me.bcode = 2;
+			me.bcode = 7;
 		} elsif ( t == "AIM-54" ) {
-			me.bcode = 3;
+			me.bcode = 54;
 		} elsif ( t == "MK-83" ) {
-			me.bcode = 4;
+			me.bcode = 83;
 		} elsif ( t == "external tank" ) {
-			me.bcode = 1;
+			me.bcode = 10;
 		}
+		me.type.setIntValue(me.bcode);
+        me.description.setValue(t);
 	},
+    set_description_from_type : func () {
+        me.description.setValue(me.get_type());
+    },
 	get_type : func () {
-		return me.type.getValue();	
+        if (me.type.getValue() != "")
+        {
+            if (contains(armament_types_lookup, int(me.type.getValue())))
+                return armament_types_lookup[int(me.type.getValue())];
+        }
+		return me.type.getValue()~".";
 	},
 	set_display : func (n) {
 		me.display.setValue(n);
@@ -329,11 +380,3 @@ Station = {
 	},
 	list : [],
 };
-
-
-
-
-
-
-
-

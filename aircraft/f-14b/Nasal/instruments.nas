@@ -13,6 +13,9 @@
  #
  #---------------------------------------------------------------------------*/
 
+var UPDATE_PERIOD = 0.05;
+var main_loop_launched = 0; # Used to avoid to start the main loop twice.
+
 
 # TACAN: nav[1]
 var nav1_as_selected = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );; # the selected frequency if overriden from the tacan
@@ -317,8 +320,8 @@ aircraft.data.add(	bingo,
 					fwd_lvl_gal_us, aft_lvl_gal_us, Lbb_lvl_gal_us, Lsp_lvl_gal_us,
 					Rbb_lvl_gal_us, Rsp_lvl_gal_us, Lw_lvl_gal_us, Rw_lvl_gal_us,
 					Le_lvl_gal_us, Re_lvl_gal_us,
-					"sim/model/f-14b/systems/external-loads/station[2]/type",
-					"sim/model/f-14b/systems/external-loads/station[7]/type",
+					"sim/model/f-14b/systems/external-loads/station[2]/id",
+					"sim/model/f-14b/systems/external-loads/station[7]/id",
 					"consumables/fuel/tank[8]/selected",
 					"consumables/fuel/tank[9]/selected",
 					"sim/model/f-14b/systems/external-loads/external-tanks",
@@ -498,7 +501,7 @@ var compute_drag = func {
 
 # Send basic instruments data over MP for backseaters.
 var InstrString = props.globals.getNode("sim/multiplay/generic/string[1]", 1);
-var InstrString2 = props.globals.getNode("sim/multiplay/generic/string[2]", 1);
+#var InstrString2 = props.globals.getNode("sim/multiplay/generic/string[2]", 1);
 var IAS = props.globals.getNode("instrumentation/airspeed-indicator/indicated-speed-kt");
 var FuelTotal = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total");
 var TcBearing = props.globals.getNode("instrumentation/tacan/indicated-mag-bearing-deg");
@@ -514,6 +517,7 @@ var SteerModeVec = props.globals.getNode("sim/model/f-14b/controls/pilots-displa
 var SteerModeCode = props.globals.getNode("sim/model/f-14b/controls/pilots-displays/steer-submode-code");
 
 instruments_data_export = func {
+return;
 	# Air Speed indicator.
 	var ias            = sprintf( "%01.1f", IAS.getValue());
 	# Mach

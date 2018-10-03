@@ -405,16 +405,8 @@
 						<rd-rot-light type="bool">false</rd-rot-light>
 						<jat-light type="bool">false</jat-light>
 						<irot-light type="bool">false</irot-light>
-						<wcs-mode>
-							<pd-stt type="bool">false</pd-stt>
-							<pulse-stt type="bool">false</pulse-stt>
-							<pd-srch type="bool">false</pd-srch>
-							<rws type="bool">false</rws>
-							<tws-auto type="bool">false</tws-auto>
-							<tws-man type="bool">false</tws-man>
-							<pulse-srch type="bool">true</pulse-srch>
-						</wcs-mode>
-					</radar-awg-9>
+                        <wcs-mode type="int">3</wcs-mode> <!-- pulse search -->
+                    </radar-awg-9>
 
 				</instrumentation>
 
@@ -578,35 +570,41 @@
 
 	</sim>
 
-	<nasal>
-		<radardist>
-			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
-		</radardist>
+    <nasal>
+        <radardist>
+            <file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
+        </radardist>
         <vector>
             <file>Aircraft/f-14b/Nasal/vector.nas</file>
         </vector>
         <rcs>
             <file>Aircraft/f-14b/Nasal/rcs.nas</file>
         </rcs>
-		<awg_9>
-			<file>Aircraft/f-14b/Nasal/awg_9.nas</file>
-		</awg_9>
-		<dual_control_tools>
-			<file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
-		</dual_control_tools>
-		<aircraft_dual_control>
-			<file>Aircraft/f-14b/DualControl/f-14b-dual-control.nas</file>
-		</aircraft_dual_control>
-		<dual_control>
-			<file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
-		</dual_control>
-		<BS_instruments>
-			<file>Aircraft/f-14b/Nasal/back-seat-instruments.nas</file>
-		</BS_instruments>
-		<armament>
+        <armament>
             <file>Aircraft/f-14b/Nasal/fox2.nas</file>
+            <file>Aircraft/f-14b/Nasal/damage.nas</file>
         </armament>
-	</nasal>
-
-
+        <notifications>
+            <file>Aircraft/f-14b/Nasal/AircraftEventNotification.nas</file>
+        </notifications>
+        <awg_9>
+            <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
+        </awg_9>
+        <dual_control_tools>
+            <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
+        </dual_control_tools>
+        <aircraft_dual_control>
+            <file>Aircraft/f-14b/DualControl/f-14b-dual-control.nas</file>
+        </aircraft_dual_control>
+        <dual_control>
+            <file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
+        </dual_control>
+        <f14>
+            <file>Aircraft/f-14b/Nasal/AircraftControlInterface.nas</file>
+            <file>Aircraft/f-14b/Nasal/back-seat.nas</file>
+        </f14>
+        <notifications>
+            <file>Aircraft/f-14b/Nasal/AircraftEventNotification.nas</file>
+        </notifications>
+    </nasal>
 </PropertyList>
