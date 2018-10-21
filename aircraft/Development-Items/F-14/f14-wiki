@@ -1,0 +1,418 @@
+{{Infobox aircraft
+|image = F-14.jpg
+|alt = External view
+|image2 = F-14b cockpit.jpg
+|alt2 = Cockpit view
+|name = Grumman F-14B Tomcat
+|type = Interceptor, air superiority and multirole combat aircraft 
+|liverydbid = 42
+|authors = Richard Harrison, Alexis Bory and Enrique Laso
+|status-fdm = 5
+|status-systems	= 5
+|status-cockpit	= 5
+|status-model = 5
+|fdm = [[JSBSim]] (f-14a) and [[YASim]] (f-14b)
+|fgname = f-14a
+f-14b
+|ready = dualcontrol/airrefuel
+|download = http://www.flightgear.org/download/aircraft-v3-2/
+}}
+
+The '''Grumman F-14 Tomcat''' is a fourth-generation, supersonic, [[:Category:Twinjets|twinjet]], two-seat, [[:Category:Variable-sweep wing aircraft|variable-sweep wing]] [[:Category:Fighter aircraft|fighter]] aircraft. The Tomcat was developed for the United States Navy's Naval Fighter Experimental (VFX) program following the collapse of the {{Wikipedia|F-111B}} project. The F-14 was the first of the American teen-series fighters, which were designed incorporating the experience of air combat against [[:Category:Mikoyan and Gurevich|MiG]] fighters during the Vietnam War.
+
+The F-14 first flew in December 1970 and made its first deployment in 1974 with the U.S. Navy aboard USS Enterprise (CVN-65), replacing the [[McDonnell F-4 Phantom II|McDonnell Douglas F-4 Phantom II]]. The F-14 served as the U.S. Navy's primary maritime air superiority fighter, fleet defense interceptor and tactical reconnaissance platform. In the 1990s, it added the Low Altitude Navigation and Targeting Infrared for Night ({{Wikipedia|LANTIRN}}) pod system and began performing precision ground-attack missions.
+
+The Tomcat was retired from the U.S. Navy's active fleet on 22 September 2006, having been supplanted by the Boeing F/A-18E and F Super Hornets. As of early 2015, the F-14 is in service with only the Islamic Republic of Iran Air Force, having been exported to Iran in 1976, when the U.S. had amicable diplomatic relations with Iran.
+
+The variant modeled in FlightGear is the '''F-14B''', the second variant, which had new, more powerful {{Wikipedia|General Electric F110|GE F110-GE400}} engines.  The F-14B is included as part of the base package, which means that it comes preinstalled with FlightGear.
+
+== Primary Instruments ==
+=== VDI ===
+[[File:F-14-vdi.jpg|thumb|F-14 vdi]]
+
+The F-14 uses a Vertical Display Indicator (VDI) as the primary attitude reference instrument; there is a standby ADI just to the right.
+
+The centre screen has a top part representing the sky and an artificially generated ground representation. When performing a carrier landing there will be flight director bars shown to reference the vertical deviation from the glideslope and deviation from the centre line. Carrier landings require the right TACAN channel to be selected (for the carrier) and the ARA-63 to be turned on. When the primary nav is tuned to a civilian ILS frequency this will also be shown on the display although the ARA-63 specific carrier lights will not illuminate
+
+The lights on the side of the VDI that are relevant for a carrier landing are
+
+* LANDING CHK - displayed when between 6 nm and 4.5nm from from carrier and tuned correctly
+* ACL READY - displayed when tuned correctly and system operating
+* AP CPLR - displayed when system operating and within correct altitude. The AP CPLR system is not available.
+* WAVE OFF - displayed when landing should be aborted as outside of the parameters for a good landing.
+* 10 SECONDS - displayed when about 10 seconds from touchdown trap
+
+Other lights on the VDI 
+* AP REF - Autopilot operating
+* REDUCE SPEED - Overspeed for flaps; or over the speed bug on the ASI
+* ALT LOW - below alt bug on Altimeter
+
+==== VDI Controls ====
+There are controls for
+
+* HUD BRT - HUD Brightness
+* VDI BRT - VDI Brightness
+* VDI CONTR - VDI Contrast
+* FILTER - Changes the color of the HUD between red and green
+* HUD TRIM - non operational
+* VDI TRIM - non operational
+
+=== HUD Lights ===
+[[File:F-14-hud-lights.jpg|thumb|HUD lights]]
+
+The HUD lights contains three sections; from left to right 
+
+* AoA Indexer
+* Warnings
+* ECM/RWR status
+
+==== AoA Indexer ====
+The AoA Indexer has three lights; out of which up to two can be shown at any one time. These lights are illuminated whenever the gear is down.
+
+* Green V - AoA too high.
+* Green V and Orange O - AoA starting to get too high
+* Orange O - (the donut) - this is the ideal AoA for an approach. Normally the aircraft is trimmed for pitch on the final approach and primarily throttles are used to control the AoA
+* Red upside down V and Orange O - AoA starting to get too low
+* Red upside down V AoA too low.
+
+==== Warnings ====
+* WHEELS - Landing gear not locked and down - displayed when flaps are down and throttle below 80%
+* BRAKES - Wheel brakes are engaged; {{Key press|Shift-B}} to disengage.
+* NWS ENGA - Nose Wheel steering is active (below 80 knots)
+* AUTO THROT - APC has disengaged abnormally.
+
+=== Caution Warnings ===
+[[File:F-14-caution-panel-all.jpg|thumb|F-14 Caution Panel]]
+
+There is a set of caution warnings that can be shown on the panel on the left console. When a light illuminates on the caution panel the '''MASTER CAUTION''' on the glareshield will also illuminate until pushed. Once pushed the caution panel warning will remain and the '''MASTER CAUTION''' light will be extinguished.
+
+Relevant warnings;
+* START VALVE - the engine crank selector on the engine controls panel has been set whilst the engine is running
+* L INLET - malfunction in the Left Inlet system
+* R INLET - malfunction in the Right Inlet system
+* OIL PRESS - oil pressure on at least one engine is below the minimum. 
+* L RAMPS - malfunction in the left ramp system
+* R RAMPS - malfunction in the right ramp system
+* L GEN - Left generator inoperable (i.e. engine RPM below operating speed)
+* R GEN - Right generator inoperable (i.e. engine RPM below operating speed)
+* LAD / CANOPY - Ladder and/or canopy is open or not correctly latched closed
+* BINGO - The fuel has fallen below the Bingo bug as set on the fuel gauge
+* HYD PRESS - One of the hydraulic systems is below the minimum operating pressure (1800 psi). Use the hydraulic gauge to determine which system isn't functioning. Normally the Bidirectional transfer pump will keep provide pressure to the other hydraulic system from the good hydraulic system; unless the '''HYD TRANSFER'' switch on the right console is set to '''SHUTOFF'''
+* L FUEL PRESS - The fuel pressure in the left engine is low
+* R FUEL PRESS - The fuel pressure in the right engine is low
+* L FUEL LOW - Low fuel in the left engine tanks
+* R FUEL LOW - Low fuel in the right engine tanks
+* TRANS/RECT - The trans/rect is not operating correctly to provide DC power. This is also shown when using external power
+* LAUNCH BAR - Illuminated when insufficient power (< 85%) when the launchbar is engaged for a catapult launch
+
+=== Engine Gauges === 
+[[File:F14-engine-gauges.jpg|thumb|Engine gauges]]
+
+== Right Console ==
+
+== Keyboard controls ==
+=== Flight controls ===
+{| class="prettytable"
+|{{Key press|Home}}
+|Increase elevator trim
+|-
+|{{Key press|End}}
+|Decrease elevator trim
+|-
+|{{Key press|<nowiki>]</nowiki>}} or {{Key press|f}}
+|Lower flaps
+|-
+|{{Key press|<nowiki>[</nowiki>}} or {{Key press|Shift|F}}
+|Raise flaps
+|-
+|{{Key press|Ctrl|b}}
+|Toggle speed brakes
+|-
+|{{Key press|k}}
+|Increase speed brakes
+|-
+|{{Key press|j}}
+|Decrease speed brakes
+|}
+
+=== Automatic flight controls ===
+{| class="prettytable"
+|{{Key press|a}}
+|Toggle APC (Landing Automatic Power Control)
+|-
+|{{Key press|Ctrl|d}}
+|Toggle DLC (Landing Direct Lift Control)
+|-
+|{{Key press|d}}
+|DLC increase
+|-
+|{{Key press|Shift|D}}
+|DLC decrease
+|-
+|{{Key press|Ctrl|t}}
+|Toggle {{Wikipedia|Aircraft flight control systems|AFCS] (Defaut Attitude Mode)
+|-
+|{{Key press|Ctrl|a}}
+|Enable AFCS Altitude Mode
+|-
+|{{Key press|<nowiki>*</nowiki>}}
+|Engage AFCS Altitude Mode
+|-
+|{{Key press|Ctrl|h}}
+|Enable AFCS Heading Mode
+|-
+|{{Key press|Ctrl|s}}
+|Toggle ground spoilers armed
+|}
+
+=== HSD - radar and RWR ===
+{| class="prettytable"
+|{{Key press|h}}
+|Cycles through HSD modes: radar - compas - ECM (RWR)
+|-
+|{{Key press|Shift|E}}
+|Decrease Radar Range
+|-
+|{{Key press|Shift|R}}
+|Increase Radar Range
+|-
+|{{Key press|Ctrl|q}}
+|Toggles Radar Standby Mode. In standby mode the radar doesn't emit and the "STAND BY" words are displayed on the HSD screen when in TID mode.
+|}
+
+=== Carrier operations ===
+See also [[Howto:Carrier]] and [[Carrier over MP]]
+{| class="prettytable"
+|{{Key press|Shift|O}}
+|Lower the hook
+|-
+|{{Key press|o}}
+|Raise the hook
+|-
+|{{Key press|Shift|L}}
+|Engage launch bar (keep holding until engaged)
+|-
+|{{Key press|Shift|C}}
+|Release catapult
+|-
+|}
+
+=== Weapons ===
+{| class="prettytable"
+|{{Key press|Ctrl|w}}
+|Cycle through master arm switch modes (see master arm switch in cockpit).
+|-
+|{{Key press|w}}
+|Cycle Stick Weapon Mode Selector (see Weapon Mode knob selector on side of joystick in cockpit).  Four positions: Off, Gun, SW, SP-PH.  
+|-
+|{{Key press|Ctrl|m}}
+|Toggle AIM-9 selection (must have at least one AIM-9 loaded through Tomcat Controls/Fuel & Stores menu)
+|-
+|{{Key press|e}}
+|Trigger M61A1 Vulcan gun or AIM-9 missiles (depending on stick weapon mode selection)
+|-
+|}
+
+=== Flaps  ===
+[[File:F-14-wing-devices.jpg|thumb|F-14 Wing Devices]]
+
+The F-14 has three different types of lift augmentation on the wings. Flaps, Auxiliary Flaps and Slats.
+
+Maneuvering flaps and slats are automatically activated by the CADC to improve performance at high AoA and lower speeds. The 
+
+Maneuvering flaps are disabled when wings are swept outside of the permissible region for flap or slat deployment.
+
+In the picture the slats are at the front, the spoilers on the top, and the flaps at the back. The auxiliary flaps are next to the fuselage and the main flaps are behind and below the spoilers.
+
+=== Wing Sweep (JSBSim only) ===
+[[File:F14-glareshield.jpg|thumb|F14-glareshield]]
+
+The JSBSim version has full aerodynamic affects of wing sweep modelled. The Wing Sweep can be controlled via the keyboard or by using the Sweep gauge in the cockpit. Use the mousewheel to over the sweep angle indication to adjust the required angle of sweep. The legends to the right of the wing sweep gauge can be clicked to any of the possible modes.
+
+The CADC will provide automatic wing sweep based on Mach number. The wings cannot be swept further forwards than the CADC automatic value (to protect the airframe).
+
+The main flaps operate until the wings are swept to 55 degrees; the auxiliary flaps are only available with the wings swept to 22 degrees. Interlocks operate to prevent flap deployment with unsuitable wing sweep. 
+
+It is possible to land with fully swept wings; however this should only be used in emergency situations as the landing speed is significantly increase.
+
+{| class="prettytable"
+|{{Key press|<}}
+|Sweep Wings Forwards
+|-
+|{{Key press|>}}
+|Sweep Wings Aft
+|-
+|{{Key press|{{=}}}}
+|Wing Sweep to Automatic
+|-
+|}
+
+=== Miscellaneous ===
+{| class="prettytable"
+|{{Key press|c}}
+|Toggle canopy and access ladder
+|-
+|{{Key press|u}}
+|Toggle refuelling probe, three states
+|-
+|{{Key press|Ctrl|o}}
+|Toggle oversweep (on ground only, otherwise sweep is automatic)
+|-
+|{{Key press|Ctrl|v}}
+|Toggle between RIO (Radar Intercept Officer) and pilot view
+|-
+|}
+
+== Gallery ==
+<gallery mode="packed">
+F-14-multiple-cat-launch.jpg|F-14 USS Carl Vinson Multiple Cat Launch
+F-14-final-approach-ksfo.jpg|F-14 final approach KSFO
+F-14-formation-takeoff-lsgs-sion.jpg|F-14 Formation Takeoff (LSGS) Sion
+F14-top-full-burners.jpg|F14 high speed pass
+F-14-wings-fully-swept.jpg|F-14 with wings fully swept
+F14 Nimitz locked in catapult.jpg|Locked in catapult, flaps set, full afterburner, ready for take-off.
+F14 Nimitz going down with elevator.jpg|Going below deck on the elevator.
+F-14_cockpit.jpg|The pilot's "office".
+SunsetF-14.png|A nice dusk scene with the F-14.
+F14 air-to-air refuelling tanker almost reached.jpg|[[Howto:Aerial refueling|Air-to-air refueling]] with the F-14B.
+</gallery>
+
+== Aircraft help ==
+{{Note|This section might be out of date because of more recent developments, including the addition of a new [[JSBSim]] FDM.}}
+
+=== Engine Start (JSBSim) ===
+The engines can be quickstarted from the Tomcat Controls menu. 
+
+[[File:F14-engine-controls-panel.jpg|thumb|Engine Controls Panel]]
+
+To perform a manual engine start, follow the instructions below. It is usual to start the right engine first to ensure that the flight hydraulics system is pressurized first.
+
+Engine start procedure: 
+
+* Ensure that external air is connected (Tomcat Controls menu, Ground Services dialog)
+* Ensure that the fuel shut off values are pulled out for the engine to be started. (Upper left and right of the glareshield)
+* On the Engine Controls panel (left console next to the throttles) select Engine Crank (L or R)
+* As the engine spools up the hydraulically powered emergency electrical generator will provide backup power
+* When the engine reaches 18% RPM push in the appropriate fuel shutoff valve.
+* Monitor EGT and if the value goes above 1200 Degrees C shutdown the engine using the fuel shutoff value (this will never happen with the current engines model)
+* Repeat the process for the left engine.
+
+[[File:F14-engine-gauges.jpg|thumb|F14-engine-gauges]]
+
+=== Engine Shutdown (JSBSim) ===
+[[File:F14-glareshield.jpg|thumb|F14-glareshield]]
+
+Ensure that the wings are correctly swept, flaps raised and parking brake engaged.
+
+Pull both of the fuel shutoff valves on the glareshield. These are the yellow and black striped items on the glareshield picture.
+
+One the fuel shutoff value is pulled the appropriate engine will spool down and stop. When both engines are stopped there will be no hydraulic and electrical power and the cockpit will become dark.
+
+=== Engine Start (yasim) ===
+The engine starts automatically when there is fuel in the appropriate tank.  Add fuel in Tomcat Controls menu under Fuel and Stores.
+
+=== On Shore Takeoff ===
+* Ensure wingsweep is set to automatic and wings are not overswept.
+* Check air brake in.
+* Use the Tomcat Controls menu, Fuel and Payload dialog to set the required fuel load and payload
+* Select up to 25 degrees of flaps depending on the aircraft weight. On the yasim model the flaps are either up or down.
+* Release parking brakes ({{Key press|Shift-B})
+* Select MIL thrust; or afterburners if conditions dictate. It is usual operating procedure on an F-14B to not use afterburners on take off unless heavily loaded as in the event of engine failure after rotation the resulting yaw moment is likely to result in an uncontrolled departure.
+* At around 145 knots pull back on the stick until the nose raises at which point maintain stick pressure and when 250 feet AGL raise the gear. By 200 knots the flaps should be fully retracted. Note that as the flaps are retracted the longitudinal balance of the aircraft changes and it will tend to pitch down slightly which should be corrected by using the pitch trim. 
+
+=== Autopilot Operation ===
+* The main mode is '''Attitude Hold Mode''', {{Key press|Ctrl|t}}. Other Modes need this main mode activated before being selected. Switching off '''Attitude Mode''' disables all other modes . When in '''Attitude Mode''', the autopilot disengages whenever a certain pressure is put on the stick, and it re-engages when the stick is back in the centre position. '''Attitude Hold Mode''' will hold pitch attitudes up to plus or minus 30 degrees, and bank angles up to plus or minus 60 degrees. 
+* It shall be switched off for aerobatics and inverted flight.
+
+==== Autopilot Altitude Mode ====
+* Once in the Attitude Mode, you can select '''Altitude Mode''' by hitting {{Key press|Ctrl|a}}, then the '''AP REF''' indicator, (left of the '''VDI''') will illuminate, when at the desired altitude using normal stick control, engage by hitting {{Key press|<nowiki>*</nowiki>}} (asterisk). The autopilot will then maintain your altitude.
+{{caution|At high speeds, it is imperative to stabilize your aircraft prior to engaging Altitude Mode}}
+
+==== Autopilot Heading Mode ====
+* Once in the Attitude Mode, you can select '''Heading Mode''' by hitting {{Key press|Ctrl|h}}. After manoeuvring the aircraft into the desired reference heading, release the control stick at a bank angle of less than 5 degrees. The autopilot will then hold the aircraft on the selected heading.
+
+* To follow a route manager route; activate the route from the route manager and press {{Key press|Ctrl|h}} a second time or select "GT" on the AFCS panel just below the throttles.
+
+[[File:F-14b-sas-switches.png|thumb|270px|SAS Panel.]]
+* Autopilot needs '''SAS''' channels to be engaged, which is the default . '''SAS''' Pitch and Roll channels may be disengaged by actuating switches located on the '''AFCS''' ('''Automatic/Analog Flight Control System''') panel.
+
+=== Approach Power Compensator (APC) ===
+* The '''APC''' is a closed loop system that automatically regulates basic engine thrust to maintain a specific indicated airspeed - which is usually used to maintain the correct approach angle of attack for landing. 
+* (yasim) Prior to engaging '''APC''', gear handle must be down with weight off wheels, and the throttles must be set between 98 percent rpm and 68 percent rpm, (as shown on the panel gauges). On the JSBSim version the APC can be used at any time to maintain the current airspeed.
+* Type {{Key press|a}} to toggle the '''APC on/off'''. APC is also disengaged by setting the throttles to MIL, (98 percent rpm) or idle, (68 percent rpm) or raising the landing gear handle or when weight on the wheels. 
+* When disengaged the '''AUTO THROT''' caution light, (on the left side of the HUD) illuminates for 10 seconds.
+
+=== Landing Direct Lift Control, (DLC) Operation (yasim only) ===
+* During landing approaches, the spoilers and horizontal stabilizers can be controlled simultaneously to provide glidepath correction without changing power setting or angle of attack.
+
+[[File:F14 approaching Nimitz.jpg|270px|thumb|Approaching Nimitz carrier: flaps set, hook lowered]]
+
+=== Spoilers ===
+[[File:F14-engine-left-vertical-console.jpg|thumb|F14-engine-left-vertical-console]]
+
+Each wing has a set of spoilers that are used to augment the roll rate during normal flight controlled by the CADC when wings are swept forwards more than 55 degrees. The spoilers can also act as brakes to provide extra retardation upon touchdown.
+
+To engage ground spoilers set the '''ANTI SKID SPOILER BK''' switch on the bottom of left vertical console to '''BOTH''' or use {{Key press|Ctrl|s}}. After touch down and pull the throttles to idle, and then the spoilers are fully deployed.
+
+=== Weapons operation ===
+
+At the moment, only the gun and the AIM-9s are operational, others ordinances are displayed under the wing, their weight is correct but they aren't usable.
+
+You must have the latest F-14B package from [[Git]] for weapons operations.
+
+* '''Gun:''' At startup, the ammunition store is filled with 675 round. It's not possible to refill without quitting FG; even File/Reset does not reset the ammunition round (but see the Note below). To fire the M61A1 Vulcan:
+** Select HUD A/A Mode on the Display panel, on pilot's right console. A multikey shortcut is also available (:AHa). Having the HUD in this mode is not mandatory though there won't be any symbology available for the gun in other HD modes.
+** Select Gun mode with the Stick Weapon Mode Selector ({{Key press|w}}). A pipper, the G symbol with a number showing approximately the remaining rounds x 100 and a closure rate scale are displayed in the HUD. The closure rate scale is active only if a target is locked by the radar with TWS AUTO mode (diamond on the HUD).
+** Switch Master Arm on, the X on the G symbol means Master Arm off or in training mode. 
+** Press {{Key press|e}} to fire the gun.  
+** Note: You can manually reload ammunition using the Internal Properties (/-key). Set /ai/submodels/submodel[3]/count to 135 and /sim/model/f-14b/systems/gun/rounds to 675.
+
+
+* '''Sidewinders:''' Crudely modeled on AIM-9L available data.
+** Select a weapons set using the menu: Tomcat Controls > Fuel and Stores: "FAD light" has 4 sidewinders, "FAD", "FAD heavy" and "Bombcat" have 2 of them.
+** Select HUD A/A Mode on the Display panel, on pilot's right console. A multikey shortcut is also available (:AHa).
+** Select SW mode with the Stick Weapon Mode Selector ({{Key press|w}}).
+** Switch to the back seater's view ({{Key press|Ctrl|v}}).
+** Select pylons 1 and 8, down position, on the Armament panel, on RIO's left console. A shortcut toggles these two switches so you can select or deselect all AIM-9 in one keyboard stroke ({{Key press|Ctrl|m}}) without leaving pilot's view.   
+** Switch back to the pilot's view ({{Key press|Ctrl|v}}).
+** Switch Master Arm on, you hear the search signal of the seeker head, a low volume buzz sound.
+** Now prior to be fired, the AIM-9 must have a lock on a target.  Multiplayers, AI aircraft, and AI tankers can be locked. The minimal lock distance is 10 NM, the target must be approximately inside a 80° cone centred on datum line. When locked, the signal buzz volume becomes louder. For best results try to shoot ({{Key press|e}}) at a 3 to 6 NM range and with the target centred on the aircraft velocity vector. The missile will explode at the smaller distance possible. However if this distance is above 70 meters, it will continue its trajectory without guidance.
+
+{{#ev:youtube|ibHrZyAQ1C4|||A tutorial video explaining how to fire the F-14B's missiles.|frame}}
+
+== Pilot's Cockpit ==
+[[File:F-14b-pilots-display-control-panel.jpg|thumb|270px|Pilot's Display Control Panel.]]
+=== Displays Control Panel ===
+* The Display Control Panel is located on the right side of the pilot's main panel, under the Hook lever. The '''3 botom switches''' respectively turn the '''VDI''', '''HUD''' and '''HSD''' displays '''on/off'''. The '''HSD MODE''' switch is also available, it selects '''NAV''' or '''TID''' or '''ECM''' mode. This can also be achieved by cycling through these 3 modes with the {{Key press|h}} key. (''Note: the '''NAV MODE''' push buttons - '''TO''', '''CRUISE''', '''A/A''', '''A/G''', '''LDG''' - are not operational yet.'')
+** '''VDI: Vertical Display Indicator'''. Shows the aircraft attitude in roll and pitch, with an artifitial horizon and magnetic heading.
+** '''HUD: Head UP Display'''.
+** '''HSD: Horizontal Situation Display'''. HSD shows either:
+*** in '''NAV''' mode: compas with navigation indications,
+*** in '''TID''' mode (Tactical Information Display): an horizontal representation of the tactical situation (that is information provided by the RIO from what he sees in his radar displays).
+*** in '''ECM''' mode: a representation of radar threats around the aircraft.
+
+=== VHF ===
+* Located on the RIO's left console, 3 bands: 30-88 MHz, 108-174 MHz, 225-400 MHz. Modes '''TR''' and '''TR-G''' set '''COMM1'''. Mode '''DF''' sets '''NAV1''', that is '''Direction Finder''' displayed with the single needle in both '''BDHIs''' (Bearing, Distance, Heading Indicator) . You have Comm *or* DF. Storing frequencies (up to 20 channels) '''a - PRESET'''  select the desired channel, '''b - READ''' tune the desired frequency, '''c - LOAD''' stores the frequency in the previously selected channel.
+
+=== UHF ===
+* Located on the pilot's left console, 225-400 Mhz. ADF is not enabled on this radio.
+
+=== External links ===
+* {{Wikipedia|F-14 Tomcat}}
+* {{Git link|3=master|4=Aircraft/f-14b|text=Git repo}}
+* [http://zaretto.com/f-14b Development page, additional information, and alternative download]
+* [http://www.flightgear.org/tours/the-f-14b-is-back/ Post about the updated F-14B] (flightgear.org)
+* [http://www.globalsecurity.org/military/systems/aircraft/f-14.htm F-14 Tomcat] (GlobalSecurity.org)
+* [http://www.fas.org/man/dod-101/sys/ac/f-14.htm F-14 Tomcat]  (FAS.org)
+* [http://www.anft.net/f-14/ Home of M.A.T.S.]
+* [http://www.navyair.com/LSO_NATOPS_Manual.pdf NATOPS Landing Signal Officer Manual]
+* [http://www.youtube.com/watch?v=w3VKND7HrB8 YouTube video] about F-14 air combat maneuvering against the [[Northrop T-38 Talon|T-38]], [[Douglas A-4 Skyhawk|A-4]] and [[McDonnell F-4 Phantom II|F-4]] at Naval Air Station Miramar, San Diego (the real '''''TOPGUN''''').
+
+{{Grumman}}
+{{Air-to-air refueling}}
+
+[[Category:Carrier-based aircraft]]
+[[Category:Fighter aircraft]]
+[[Category:Twinjets]]
+[[Category:Variable-sweep wing aircraft]]
+[[Category:Interceptor aircraft]]

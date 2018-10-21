@@ -1,0 +1,132 @@
+<!-- development notes 
+     firstly the elements that we replace to allow easy run time tuning, one bit goes into the -set file, the other bit replaces the 
+     element parameters above
+
+this bit goes into the property tree root (via the PropertyList in the -set 
+<flame>
+        <base_flame_b type="float">0.8</base_flame_b>
+        <base_flame_density type="float">0.6</base_flame_density>
+        <base_flame_g type="float">0.9</base_flame_g>
+        <base_flame_r type="float">0.9</base_flame_r>
+        <deflection_coeff type="float">0</deflection_coeff>
+        <flame_color_high_b type="float">0.8</flame_color_high_b>
+        <flame_color_high_g type="float">0.85</flame_color_high_g>
+        <flame_color_high_r type="float">0.9</flame_color_high_r>
+        <flame_color_low_b type="float">0.07</flame_color_low_b>
+        <flame_color_low_g type="float">0.15</flame_color_low_g>
+        <flame_color_low_r type="float">0.35</flame_color_low_r>
+        <flame_radius_fraction type="float">0.8</flame_radius_fraction>
+        <noise_scale type="float">0.3</noise_scale>
+        <noise_strength type="float">0.2</noise_strength>
+        <thrust_collimation type="float">0.1</thrust_collimation>
+        <thrust_density type="float">0.7</thrust_density>
+        <use_noise type="int">1</use_noise>
+        <use_shocks type="int">1</use_shocks>
+</flame>
+this bit goes min f15flame.eff
+    <parameters>
+        <flame_color_low_r type="float"><use>/flame/flame_color_low_r</use></flame_color_low_r>
+        <flame_color_low_g type="float"><use>/flame/flame_color_low_g</use></flame_color_low_g>
+        <flame_color_low_b type="float"><use>/flame/flame_color_low_b</use></flame_color_low_b>
+        <flame_color_high_r type="float"><use>/flame/flame_color_high_r</use></flame_color_high_r>
+        <flame_color_high_g type="float"><use>/flame/flame_color_high_g</use></flame_color_high_g>
+        <flame_color_high_b type="float"><use>/flame/flame_color_high_b</use></flame_color_high_b>
+        <base_flame_r type="float"><use>/flame/base_flame_r</use></base_flame_r>
+        <base_flame_g type="float"><use>/flame/base_flame_g</use></base_flame_g>
+        <base_flame_b type="float"><use>/flame/base_flame_b</use></base_flame_b>
+        <use_shocks type="int"><use>/flame/use_shocks</use></use_shocks>
+        <use_noise type="int"><use>/flame/use_noise</use></use_noise>
+        <thrust_collimation type="float"><use>/flame/thrust_collimation</use></thrust_collimation>
+        <thrust_density type="float"><use>/flame/thrust_density</use></thrust_density>
+        <base_flame_density type="float"><use>/flame/base_flame_density</use></base_flame_density>
+        <noise_strength type="float"><use>/flame/noise_strength</use></noise_strength>
+        <noise_scale type="float"><use>/flame/noise_scale</use></noise_scale>
+        <deflection_coeff type="float"><use>/flame/deflection_coeff</use></deflection_coeff>
+        <flame_radius_fraction type="float"><use>/flame/flame_radius_fraction</use></flame_radius_fraction>
+    </parameters>
+-->
+<!-- notes about parameters -->
+    <!-- dev - 1:
+    base_flame_density  0.8
+    deflection_coeff  0
+    flame_color_high_b  1
+    flame_color_high_g  1
+    flame_color_high_r  1
+    flame_color_low_b  0.1
+    flame_color_low_g  0.2
+    flame_color_low_r  0.2
+    flame_radius_fraction  0.5
+    noise_scale  0.1
+    noise_strength  0
+    thrust_collimation  0.27
+    thrust_density  0.4
+    use_noise  1
+    use_shocks  1-->
+    <!--base_flame_density  0.1
+    deflection_coeff  0
+    flame_color_high_b  2
+    flame_color_high_g  2
+    flame_color_high_r  2
+    flame_color_low_b  0.62
+    flame_color_low_g  0.75
+    flame_color_low_r  0.94
+    flame_radius_fraction  0.8
+    noise_scale  0.3
+    noise_strength  0.2
+    thrust_collimation  0.2
+    thrust_density  0.5
+    use_noise  1
+    use_shocks  1-->
+
+    <!--dev 3:
+    base_flame_density  0.1
+    deflection_coeff  0
+    flame_color_high_b  0.8
+    flame_color_high_g  0.8
+    flame_color_high_r  0.8
+    flame_color_low_b  0.62
+    flame_color_low_g  0.75
+    flame_color_low_r  0.94
+    flame_radius_fraction  0.8
+    noise_scale  0.3
+    noise_strength  0.2
+    thrust_collimation  0.2
+    thrust_density  0.8
+    use_noise  1
+    use_shocks  1-->
+
+    <!--dev4; adjusted collimation
+    base_flame_density  0.1
+    deflection_coeff  0
+    flame_color_high_b  0.8
+    flame_color_high_g  0.8
+    flame_color_high_r  0.8
+    flame_color_low_b  0.62
+    flame_color_low_g  0.75
+    flame_color_low_r  0.94
+    flame_radius_fraction  0.7
+    noise_scale  0.6
+    noise_strength  0.2
+    thrust_collimation  0.01
+    thrust_density  0.8
+    use_noise  1
+    use_shocks  1-->
+
+    <!-- dev5: adjusted colours and density.
+    flame  
+ base_flame_density  0.1 
+ deflection_coeff  0 
+ flame_color_high_b  1 
+ flame_color_high_g  1 
+ flame_color_high_r  1 
+ flame_color_low_b  0.08 
+ flame_color_low_g  0.5 
+ flame_color_low_r  0.9 
+ flame_radius_fraction  0.8 
+ noise_scale  0.6 
+ noise_strength  0.2 
+ thrust_collimation  0.01 
+ thrust_density  0.8 
+ use_noise  1 
+ use_shocks  1 
+-->

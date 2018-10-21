@@ -1,6 +1,6 @@
 # Utilities #########
 # Version checking based on the work of Joshua Davidson
-if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201610) {
+if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201620) {
 var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialogs/fg-version.xml");
 error_mismatch.open();
 }
@@ -166,7 +166,7 @@ var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/positio
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn");
 
-var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
+#var wing_sweep_generic  = props.globals.getNode("sim/multiplay/generic/float[0]",1);
 var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
 var aux_flap_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
 var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]",1);
@@ -332,7 +332,7 @@ var timedMotions = func {
     	right_elev_generic.setDoubleValue(right_elev_output.getValue());
     }
 	slat_generic.setDoubleValue(slat_output.getValue());
-    wing_sweep_generic.setDoubleValue(currentSweep);
+    #wing_sweep_generic.setDoubleValue(currentSweep);
 	lighting_collision_generic.setIntValue(lighting_collision.getValue());
 	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
@@ -356,82 +356,110 @@ setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engi
 var wow = 1;
 setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("/controls/flight/SAS-roll",0);
-var registerFCS = func {settimer (updateFCS, 0);}
 
-var updateFCS = func {
-	 aircraft.rain.update();
+var F14_exec = {
+	new : func (_ident){
+        print("F14_exec: init");
+        var obj = { parents: [F14_exec]};
+#        input = {
+#               name : "property",
+#        };
+#
+#        foreach (var name; keys(input)) {
+#            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident, name, input[name]));
+#        }
 
-	#Fectch most commonly used values
-	CurrentIAS = getprop ("/velocities/airspeed-kt");
-	CurrentMach = getprop ("/velocities/mach");
-	CurrentAlt = getprop ("/position/altitude-ft");
-	wow = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
+        #
+        # recipient that will be registered on the global transmitter and connect this
+        # subsystem to allow subsystem notifications to be received
+        obj.recipient = emesary.Recipient.new(_ident~".Subsystem");
+        obj.recipient.F14_exec = obj;
 
-	Alpha = getprop ("/orientation/alpha-indicated-deg");
-	Throttle = getprop ("/controls/engines/engine/throttle");
-	e_trim = getprop ("/controls/flight/elevator-trim");
-	deltaT = getprop ("sim/time/delta-sec");
-
-    if(usingJSBSim)
-    {
-        currentG = getprop ("accelerations/pilot-gdamped");
-        # use interpolate to make it take 1.2seconds to affect the demand
-
-        var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
-        var roll_mode = getprop("autopilot/locks/heading");
-
-        if(roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
-            setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
-        else
+        obj.recipient.Receive = func(notification)
         {
-            var roll = getprop("orientation/roll-deg");
-            if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
-            else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
+            if (notification.NotificationType == "FrameNotification")
+            {
+                me.F14_exec.update(notification);
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
 
-#print("AFCS ",roll," DMD ",dmd_afcs_roll, " SAS=", getprop("/controls/flight/SAS-roll"), " cur=",getprop("fdm/jsbsim/fcs/roll-trim-cmd-norm"));
-            if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
-            if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
+        emesary.GlobalTransmitter.Register(obj.recipient);
 
-            interpolate("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",dmd_afcs_roll,0.1);
+		return obj;
+	},
+    update : func(notification) {
+        aircraft.rain.update();
+
+        if(usingJSBSim){
+            if ( math.mod(notifications.frameNotification.FrameCount,2)){
+                setprop("environment/aircraft-effects/frost-level", getprop("/fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
+            }
         }
-    }
-    else
-    {
-        currentG = getprop ("accelerations/pilot-g");
-		setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
-		setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
-        setprop("engines/engine[0]/fuel-flow_pph",getprop("engines/engine[0]/fuel-flow-gph")*1.46551724137931);
-        setprop("engines/engine[1]/fuel-flow_pph",getprop("engines/engine[1]/fuel-flow-gph")*1.46551724137931);
 
-    }
+        #Fectch most commonly used values
+        CurrentIAS = getprop ("/velocities/airspeed-kt");
+        CurrentMach = getprop ("/velocities/mach");
+        CurrentAlt = getprop ("/position/altitude-ft");
+        wow = getprop ("/gear/gear[1]/wow") or getprop ("/gear/gear[2]/wow");
 
-	#update functions
-	f14.computeSweep ();
-	f14.computeFlaps ();
-	f14.computeSpoilers ();
-	f14.computeNozzles ();
-    if (!usingJSBSim){
-	    f14.computeSAS ();
-    }
-	f14.computeAdverse ();
-	f14.computeNWS ();
-	f14.computeAICS ();
-	f14.computeAPC ();
-    f14.engineControls();
-	f14.timedMotions ();
-    f14.electricsFrame();
-	f14.registerFCS (); # loop, once per frame.
-}
+        Alpha = getprop ("/orientation/alpha-indicated-deg");
+        Throttle = getprop ("/controls/engines/engine/throttle");
+        e_trim = getprop ("/controls/flight/elevator-trim");
+        deltaT = getprop ("sim/time/delta-sec");
 
+        if (usingJSBSim) {
+            currentG = getprop ("accelerations/pilot-gdamped");
+            # use interpolate to make it take 1.2seconds to affect the demand
 
-var startProcess = func {
-	settimer (updateFCS, 1.0);
-	position_flash_init();
+            var dmd_afcs_roll = getprop("/controls/flight/SAS-roll");
+            var roll_mode = getprop("autopilot/locks/heading");
+
+            if (roll_mode != "dg-heading-hold" and roll_mode != "wing-leveler" and roll_mode != "true-heading-hold" )
+              setprop("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",0);
+            else {
+                var roll = getprop("orientation/roll-deg");
+                if (dmd_afcs_roll < -0.11) dmd_afcs_roll = -0.11;
+                else if (dmd_afcs_roll > 0.11) dmd_afcs_roll = 0.11;
+
+                #print("AFCS ",roll," DMD ",dmd_afcs_roll, " SAS=", getprop("/controls/flight/SAS-roll"), " cur=",getprop("fdm/jsbsim/fcs/roll-trim-cmd-norm"));
+                if (roll < -45 and dmd_afcs_roll < 0) dms_afcs_roll = 0;
+                if (roll > 45 and dmd_afcs_roll > 0) dms_afcs_roll = 0;
+
+                interpolate("fdm/jsbsim/fcs/roll-trim-sas-cmd-norm",dmd_afcs_roll,0.1);
+            }
+        } else {
+            currentG = getprop ("accelerations/pilot-g");
+            setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
+            setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
+            setprop("engines/engine[0]/fuel-flow_pph",getprop("engines/engine[0]/fuel-flow-gph")*1.46551724137931);
+            setprop("engines/engine[1]/fuel-flow_pph",getprop("engines/engine[1]/fuel-flow-gph")*1.46551724137931);
+
+        }
+
+        #update functions
+        f14.computeSweep ();
+        f14.computeFlaps ();
+        f14.computeSpoilers ();
+        f14.computeNozzles ();
+        if (!usingJSBSim) {
+            f14.computeSAS ();
+        }
+#        f14.computeAdverse ();
+        f14.computeNWS ();
+        f14.computeAICS ();
+        f14.computeAPC ();
+        f14.engineControls();
+        f14.timedMotions ();
+        f14.electricsFrame();
+    },
+};
+
+subsystem = F14_exec.new("F14_exec");
+
+position_flash_init();
 slat_output.setDoubleValue(0);
-
-}
-
-setlistener("/sim/signals/fdm-initialized", startProcess);
 
 #----------------------------------------------------------------------------
 # View change: Ctrl-V switchback to view #0 but switch to Rio view when already
@@ -626,21 +654,6 @@ var splash_vec_loop = func
 
 splash_vec_loop();
 
-var rate4modules = func {
-	settimer (rate4modules, 0.20);
-}
-
-var rate2modules = func {
-	settimer (rate2modules, 0.04);
-    if(usingJSBSim)
-        setprop("environment/aircraft-effects/frost-level", getprop("/fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
-}
-#
-# launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
-settimer (rate4modules, 1); 
-settimer (rate2modules, 1);
-
-
 var resetView = func () {
   setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
   setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
@@ -651,3 +664,18 @@ var resetView = func () {
 dynamic_view.register(func {
               me.default_plane(); 
    });
+
+var fixAirframe = func {
+    setprop ("fdm/jsbsim/systems/flyt/damage-reset", 1);
+    repairMe();
+}
+
+setlistener("sim/model/f-14b/wings/damage-enabled", func(v){
+print("Damage enabled ",v.getValue());
+    if (v.getValue())
+      setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",1);
+    else
+      setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",0);
+  },0,0);
+
+setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",getprop("sim/model/f-14b/wings/damage-enabled"));

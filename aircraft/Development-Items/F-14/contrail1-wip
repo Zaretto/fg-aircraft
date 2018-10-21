@@ -1,0 +1,124 @@
+<PropertyList>
+
+<particlesystem>
+<type>connected</type>
+   <name>smoke</name>
+   <texture>vapour2.png</texture>
+
+   <emissive type="bool">false</emissive>
+   <lighting type="bool">false</lighting>
+
+   <condition>
+     <and>
+        <not><property>sim/model/f-14b/fx/smoke</property></not>
+       <greater-than>
+         <property>/engines/engine[0]/n2</property>
+         <value>50</value>
+       </greater-than>
+       <greater-than>
+         <property>/position/altitude-ft</property>
+         <value>19000</value>
+       </greater-than>
+       <less-than>
+         <property>environment/temperature-degc</property>
+         <value>-40</value>
+       </less-than>
+     </and>
+   </condition>
+
+   <attach>world</attach>
+
+               <placer>
+                        <type>segments</type>
+                        <vertex>
+                                <x-m>0</x-m>
+                                <y-m>0</y-m>
+                                <z-m>0</z-m>
+                        </vertex>
+                        <vertex>
+                                <x-m>1</x-m>
+                                <y-m>0</y-m>
+                                <z-m>0</z-m>
+                        </vertex>
+                        <vertex>
+                                <x-m>2</x-m>
+                                <y-m>0</y-m>
+                                <z-m>0</z-m>
+                        </vertex>
+                </placer>
+
+   <shooter>
+     <theta-min-deg>89</theta-min-deg>
+      <theta-max-deg>91</theta-max-deg>
+      <phi-min-deg>-2</phi-min-deg>
+      <phi-max-deg>2</phi-max-deg>
+      <speed-mps>
+        <value>0</value>
+        <spread>0</spread>
+      </speed-mps>
+      <rotation-speed>
+        <x-min-deg-sec>0</x-min-deg-sec>
+        <y-min-deg-sec>0</y-min-deg-sec>
+        <z-min-deg-sec>0</z-min-deg-sec>
+        <x-max-deg-sec>0</x-max-deg-sec>
+        <y-max-deg-sec>0</y-max-deg-sec>
+        <z-max-deg-sec>0</z-max-deg-sec>
+      </rotation-speed>
+   </shooter>
+
+<!--                                <property alias="../../../../params/speed-kts" />
+                                <factor>2.5</factor>
+                                <spread>100</spread>
+                        </particles-per-sec>
+-->
+   <counter>
+     <particles-per-sec>
+       <value>40</value>
+       <spread>0</spread>
+     </particles-per-sec>
+   </counter>
+      
+   <align>billboard</align>
+
+   <particle>
+     <start>
+       <color>
+         <red><value>   0.18 </value></red>
+         <green><value> 0.8 </value></green>
+         <blue><value>  0.8 </value></blue>
+         <alpha><value> 0.2 </value></alpha>
+       </color>
+       <size>
+         <value>2</value>
+       </size>
+     </start>
+
+     <end>
+       <color>
+         <red><value>   1.0 </value></red>
+         <green><value> 1.0 </value></green>
+         <blue><value>  1.0 </value></blue>
+         <alpha><value> 0.6 </value></alpha>
+       </color>
+       <size>
+         <value>2</value>
+       </size>
+     </end>
+
+     <life-sec>
+       <value>60</value>
+     </life-sec>
+        
+      <mass-kg>71.9</mass-kg>
+      <radius-m>1</radius-m>
+   </particle>
+
+   <program>
+     <fluid>               air  </fluid>
+     <gravity type="bool"> true </gravity>
+     <wind typ="bool">     true </wind>
+   </program>
+
+ </particlesystem>
+
+</PropertyList>

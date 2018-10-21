@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Logitech Extreme 3D Pro</name>
+  <axis>
+    <desc type="string">Aileron</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/aileron</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="1">
+    <desc type="string">Elevator</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/elevator</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">-1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="2">
+    <desc type="string">Throttle2</desc>
+      <binding>
+          <command>property-scale</command>
+          <property>/controls/engines/throttle-dmd</property>
+          <offset type="double">-1.0</offset>
+          <factor type="double">-0.5</factor>
+      </binding>
+      <binding>
+          <command type="string">nasal</command>
+          <script type="string">
+              <![CDATA[ 
+              #
+              # this uses the two buttons on the joystick (next to the throttle control)
+              # to allow independent control of the engines. The lower button toggles the left engine
+              # and the upper the right engine
+                    if (getprop("/controls/engines/engine[0]/active") == nil)
+                        setprop("/controls/engines/engine[0]/active",1);
+                    if (getprop("/controls/engines/engine[1]/active") == nil)
+                        setprop("/controls/engines/engine[1]/active",1);
+
+                    if (getprop("/controls/engines/engine[0]/active"))
+                    setprop("/controls/engines/engine[0]/throttle", getprop("/controls/engines/throttle-dmd"));
+                    if (getprop("/controls/engines/engine[1]/active"))
+                    setprop("/controls/engines/engine[1]/throttle", getprop("/controls/engines/throttle-dmd"));
+]]>
+          </script>
+          <module type="string">__js0</module>
+      </binding>
+  </axis>
+  <axis n="3">
+    <desc type="string">Rudder</desc>
+    <binding>
+      <command type="string">property-scale</command>
+      <property type="string">/controls/flight/rudder</property>
+      <dead-band type="double">0</dead-band>
+      <factor type="double">1</factor>
+      <offset type="double">0</offset>
+    </binding>
+  </axis>
+  <axis n="4">
+    <desc type="string">View Direction</desc>
+    <number>
+      <unix type="string">4</unix>
+      <windows type="string">6</windows>
+      <mac type="string">4</mac>
+    </number>
+    <low>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-heading-offset-deg</property>
+        <step type="double">5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-heading-offset-deg</property>
+        <step type="double">-5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </high>
+    <binding n="0" type="string">
+    </binding>
+    <binding n="0">
+      <setting type="double">0</setting>
+    </binding>
+  </axis>
+  <axis n="5">
+    <desc type="string">View Elevation</desc>
+    <number>
+      <unix type="string">5</unix>
+      <windows type="string">7</windows>
+      <mac type="string">5</mac>
+    </number>
+    <low>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-pitch-offset-deg</property>
+        <step type="double">5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-pitch-offset-deg</property>
+        <step type="double">-5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </high>
+    <binding n="0" type="string">
+    </binding>
+    <binding n="0">
+      <setting type="double">0</setting>
+    </binding>
+  </axis>
+  <button>
+    <desc type="string">Trigger</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.trigger(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.trigger(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="1">
+    <desc type="string">Custom</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">property-adjust</command>
+      <property type="string">sim/model/f15/controls/armament/weapon-selector</property>
+      <step type="string">1</step>
+      <min type="string">0</min>
+      <max type="string">3</max>
+      <repeat type="string">false</repeat>
+      <wrap type="string">true</wrap>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <button n="2">
+    <desc type="string">Elevator Trim Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="3">
+    <desc type="string">View Decrease</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">view.decrease(0.75);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="4">
+    <desc type="string">Elevator Trim Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="5">
+    <desc type="string">View Increase</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">view.increase(0.75);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="6">
+    <desc type="string">Flaps Down</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="7">
+    <desc type="string">Flaps Up</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(-1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="8">
+    <desc type="string">Gear Down</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.gearDown(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.gearDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="9">
+    <desc type="string">Gear Up</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.gearDown(-1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.gearDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+    <button n="10">
+        <desc type="string">LeftTHrottle</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command>property-toggle</command>
+            <property>/controls/engines/engine[0]/active</property>
+        </binding>
+        <binding>
+            <command type="string">nasal</command>
+            <script type="string">
+                <!-- when the refuelling hatch is open, this button is used to view the refuelling hatch to make lining up less impossible ... 
+                     otherwise this will cycle through the armaments -->
+                <![CDATA[ 
+                    if (getprop("/controls/engines/engine[0]/active"))
+{
+#setprop("/controls/engines/engine[0]/throttle", getprop("/controls/engines/throttle-dmd"));
+                    gui.popupTip("Left Engine Control Active");
+}
+else
+                    gui.popupTip("Left Engine Control Inactive");
+                    if (getprop("/controls/engines/engine[1]/active"))
+                    setprop("/controls/engines/engine[1]/throttle", getprop("/controls/engines/throttle-dmd"));
+]]>
+            </script>
+            <module type="string">__js0</module>
+        </binding>
+    </button>
+    <button n="11">
+        <desc type="string">LeftTHrottle</desc>
+        <repeatable type="string">false</repeatable>
+        <binding>
+            <command>property-toggle</command>
+            <property>/controls/engines/engine[1]/active</property>
+        </binding>
+        <binding>
+            <command type="string">nasal</command>
+            <script type="string">
+                <![CDATA[ 
+                    if (getprop("/controls/engines/engine[0]/active"))
+setprop("/controls/engines/engine[0]/throttle", getprop("/controls/engines/throttle-dmd"));
+
+if (getprop("/controls/engines/engine[1]/active"))
+{
+#setprop("/controls/engines/engine[1]/throttle", getprop("/controls/engines/throttle-dmd"));
+                    gui.popupTip("Right Engine Control Active");
+}
+else
+                    gui.popupTip("Right Engine Control Inactive");
+]]>
+            </script>
+            <module type="string">__js0</module>
+        </binding>
+    </button>
+</PropertyList>

@@ -314,10 +314,10 @@ var processCallsigns = func () {
       callsign_struct[callsign] = player;
     }
   }
-  settimer(processCallsigns, 1.5);
 }
-
-processCallsigns();
+processCallsignsTimer = maketimer(1.5, processCallsigns);
+processCallsignsTimer.simulatedTime = 1;
+processCallsignsTimer.start();
 
 
 #f14b
@@ -340,9 +340,9 @@ var sendMis = func () {
     }
   }
   setprop("sim/multiplay/generic/string[13]", str);
-  settimer(sendMis,0.05);
 }
-
+sendMisTimer = maketimer(0.05, sendMis);
+sendMisTimer.simulatedTime = 1;
 
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.
@@ -355,7 +355,7 @@ var logTime = func{
   }
 }
 
-#sendMis(); use emmisary for this
+#sendMisTimer.start(); ; use emesary for this
 
 var ct = func (type) {
   if (type == "c-u") {
@@ -466,8 +466,9 @@ var code_ct = func () {
   }
   var final = "ct"~cu~ff~rl~rf~rp~a~dm~tm~rd~ml~sf~ifa;
   setprop("sim/multiplay/generic/string[15]", final);
-  settimer(code_ct, 2);
 }
+code_ctTimer = maketimer(2, code_ct);
+code_ctTimer.simulatedTime = 1;
 
 var not = func {
   if (getprop("payload/armament/msg") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
@@ -480,7 +481,6 @@ var not = func {
         var bits = spl[1];
         msg = "I ";
         if (bits == "000000000000") {
-          settimer(not, 60);
           return;
         }
         if (substr(bits,0,1) == "1") {
@@ -523,8 +523,9 @@ var not = func {
     }
     setprop("/sim/multiplay/chat", msg);
   }
-  settimer(not, 60);
 }
+notTimer = maketimer(60, not);
+notTimer.simulatedTime = 1;
 
 var changeGuiLoad = func()
 {#return;
@@ -581,8 +582,8 @@ setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 changeGuiLoad();
-settimer(code_ct, 5);
-settimer(not, 11);
+code_ctTimer.start();
+notTimer.start();
 
 var re_init = func {
   # repair the aircraft

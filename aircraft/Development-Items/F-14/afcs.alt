@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--
+        Description: F14 AFCS  
+        Author: Richard Harrison (rjh@zaretto.com)
+        References: F14-AAD-1 
+                    JSBSim p51d/Systems/autothrottle.xml
+-->
+
+
+<system name="AFCS">
+
+    <property value="0.001"> systems/afcs/altitude-hold-pid-kp </property>
+    <property value="0"> systems/afcs/altitude-hold-pid-ki </property>
+    <property value="0"> systems/afcs/altitude-hold-pid-kd </property>
+    <property value="0.3"> systems/afcs/altitude-hold-elevator-gain </property>
+
+    <property value="23.12"> systems/afcs/altitude-hold-lag-constant </property>
+    <property value="0">systems/afcs/target-altitude-ft</property>
+    <property value="0">systems/afcs/altitude-hold-active</property>
+
+    <channel name="AFCS">
+
+        <!-- ensure within operating envelope -->
+        <switch name="systems/afcs/altitude-hold-trigger">
+            <default value="0.0"/>
+
+            <test value="1.0">
+                <and>
+                    propulsion/engine[0]/set-running == 0
+                    propulsion/engine[1]/set-running == 0
+                    systems/afcs/altitude-hold-active ne 0
+                </and>
+            </test>
+
+        </switch>
+
+        <summer name="systems/afcs/altitude-hold-divergence">
+            <input> systems/afcs/target-altitude-ft </input>
+            <input> -position/h-agl-ft </input>
+        </summer>
+
+
+
+        <lag_filter name="systems/afcs/altitude-hold-alt-diff">
+            <input> systems/afcs/altitude-hold-divergence </input>
+            <c1> systems/afcs/altitude-hold-lag-constant </c1>
+            <gain>0.0166666666666667</gain> <!-- from fpm to fps -->
+            <clipto>
+                <min> -1000</min>
+                <max>  1000</max>
+            </clipto>
+        </lag_filter>
+
+        <summer name="systems/afcs/altitude-hold-vsi">
+            <input> systems/afcs/altitude-hold-alt-diff </input>
+            <input> -velocities/h-dot-fps  </input>
+        </summer>
+
+
+        <switch name="systems/afcs/altitude-hold-dmd">
+            <default value="0.0"/>
+
+<!--        <test value="systems/afcs/altitude-hold-vsi"> -->
+            <test value="systems/afcs/altitude-hold-alt-diff">
+                systems/afcs/altitude-hold-active == 1
+            </test>
+        </switch>
+
+        <pid name="systems/afcs/altitude-hold-divergence-pid">
+            <input>systems/afcs/altitude-hold-dmd</input>
+            <kp> systems/afcs/altitude-hold-pid-kp </kp>
+            <ki> systems/afcs/altitude-hold-pid-ki </ki>
+            <kd> systems/afcs/altitude-hold-pid-kd </kd>
+            <trigger> systems/afcs/altitude-hold-trigger </trigger>
+        </pid>
+
+        <pure_gain name="systems/afcs/altitude-hold-divergence-pid-contents">
+            <input> systems/afcs/altitude-hold-divergence-pid </input>
+            <gain> 1.0 </gain>
+            <output>systems/afcs/altitude-hold-divergence-pid-contents</output>
+        </pure_gain>
+
+        <pure_gain name="systems/afcs/elevator-cmd-1">
+            <input> systems/afcs/altitude-hold-divergence-pid </input>
+            <gain> -systems/afcs/altitude-hold-elevator-gain </gain>
+            <clipto>
+                <min> -0.1754385964912281</min>
+                <max> 0.1754385964912281</max>
+            </clipto>
+            <output>systems/afcs/elevator-cmd-1</output>
+        </pure_gain>
+            <output></output>
+
+        <switch name="systems/afcs/elevator-cmd-delta">
+            <default value="0.0"/>
+
+            <test value="systems/afcs/elevator-cmd-1">
+                attitude/theta-deg le 10
+                systems/afcs/elevator-cmd-1 lt 0
+                velocities/h-dot-fps le 14
+            </test>
+            <test value="systems/afcs/elevator-cmd-1">
+                attitude/theta-deg ge -10
+                systems/afcs/elevator-cmd-1 gt 0
+                velocities/h-dot-fps ge -14
+            </test>
+
+        </switch>
+
+    </channel>
+</system>

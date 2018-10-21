@@ -2,7 +2,7 @@
 
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <sim>
-        <minimum-fg-version>2016.1</minimum-fg-version>
+        <minimum-fg-version>2016.2</minimum-fg-version>
         <description>Grumman F-14A</description>
         <author>Richard Harrison, Enrique Laso, Alexis Bory, Nikolai V. Chr.</author>
         <status>production</status>
@@ -48,6 +48,15 @@
                 <signals include="/Aircraft/Generic/flightrecorder/components/surfaces.xml"/>
                 <signals include="/Aircraft/Generic/flightrecorder/components/engine-jet.xml">
                     <count type="int">2</count>
+                </signals>
+                <signals include="flightrecorder/components/ai-models-carrier.xml">
+                    <count type="int">4</count>
+                </signals>
+                <signals include="flightrecorder/components/ai-models-escorts.xml">
+                    <count type="int">12</count>
+                </signals>
+                <signals include="flightrecorder/components/ai-models-tanker.xml">
+                    <count type="int">4</count>
                 </signals>
                 <!-- Engine nozzles -->
                 <signal>
@@ -225,6 +234,15 @@
                     <type>float</type>
                     <property type="string">gear/gear[0]/compression-adjusted-ft</property>
                 </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">orientation/alpha-indicated-deg</property>
+                </signal>
+                <signal>
+                    <type>float</type>
+                    <property type="string">sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                </signal>
+
             </config>
         </flight-recorder>
 
@@ -301,7 +319,7 @@
             </key>
             <key>
                 <name>Ctrl-o</name>
-                <desc>Toggle oversweep (on ground only, otherwise sweep is automatic)</desc>
+                <desc>Toggle Wing Oversweep (on ground only)</desc>
             </key>
             <line>__________________________________________________</line>
             <key>
@@ -370,11 +388,11 @@
             </key>
             <key>
                 <name>&gt;</name>
-                <desc>Wing Sweep increase.</desc>
+                <desc>Wing Sweep aft.</desc>
             </key>
             <key>
                 <name>&lt;</name>
-                <desc>Wing Sweep decrease.</desc>
+                <desc>Wing Sweep forward.</desc>
             </key>
             <key>
                 <name>=</name>
@@ -429,7 +447,7 @@
             <line>     Wing sweep can be control automatically or manually with the CADC. When using manual control the auto control be</line>
             <line>     reactivated when CADC values require more sweep than is demanded by the pilot. Keys: "&gt;" "&lt;" manual sweep; '=' for</line>
             <line>     auto mode. The mode can be selected by clicking on the indicator on the gauge and position by using the mouse wheel over</line>
-            <line>     the indicator</line>
+            <line>     the indicator. The wing sweep control on the throttle quadrant is also active, use middle button to unlock the oversweep guard.</line>
             <line>__________________________________________________</line>
             <line>VHF: Located on the RIO's left console, 3 bands: 30-88 Mhz, 108-174 Mhz, 225-400 Mhz. Modes TR and TR-G set COMM1. Mode DF sets NAV1,</line>
             <line>that is Direction Finder displayed with the single needle in both BDHIs. You have Comm *or* DF. Storing frequencies (up to 20 channels) a- PRESET</line>
@@ -479,6 +497,8 @@
         </hud>
 
         <model>
+            <!--path>Aircraft/f-14b/Models/F-14-model.xml</path-->
+            <fallback-model-index type="int">514</fallback-model-index>
             <path>Aircraft/f-14b/Models/f-14b.xml</path>
             <livery>
                 <name type="string">nasa</name>
@@ -931,14 +951,16 @@
                     </external-loads>
                 </systems>
                 <wings>
-                    <left-wing-torn type="bool">false</left-wing-torn>
-                    <right-wing-torn type="bool">false</right-wing-torn>
+                    <left-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-left"/>
+                    <right-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-right"/>
                     <damage-enabled type="bool">false</damage-enabled>
                 </wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
                 -->
                 <overrides>
+                    <deck-offset-m type="double">-4.5</deck-offset-m>
+                    <!-- align with cat1 -->
                     <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
                     <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
                     <!--                    <init-delay type="int">0.1</init-delay> -->
@@ -951,7 +973,7 @@
             <transmit-only-generics type="int">0</transmit-only-generics>
             <transmit-only-generics-available type="int">1</transmit-only-generics-available>
             <generic>
-                <float n="0">0</float>
+                <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
                 <!--smoke-->
@@ -1014,6 +1036,7 @@
             </camera-group>
             <redout>
                 <parameters>
+                    <locked-by-airframe type="bool">true</locked-by-airframe>
                     <blackout-complete-g>7.9</blackout-complete-g>
                     <blackout-onset-g>5.5</blackout-onset-g>
                 </parameters>
@@ -1115,8 +1138,8 @@
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <y-offset-m archive="y">0.3485</y-offset-m>
                 <z-offset-m archive="y">-5.4</z-offset-m>
-                <pitch-offset-deg>-14.7</pitch-offset-deg>
-                <default-field-of-view-deg>55</default-field-of-view-deg>
+                <pitch-offset-deg>-21.87</pitch-offset-deg>
+                <default-field-of-view-deg>87.4</default-field-of-view-deg>
                 <limits>
                     <enabled type="bool">true</enabled>
                     <left>
@@ -1175,8 +1198,8 @@
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <y-offset-m archive="y">0.43</y-offset-m>
                 <z-offset-m archive="y">-3.58</z-offset-m>
-                <pitch-offset-deg>-23</pitch-offset-deg>
-                <default-field-of-view-deg>90</default-field-of-view-deg>
+                <pitch-offset-deg>-24.2</pitch-offset-deg>
+                <default-field-of-view-deg>99</default-field-of-view-deg>
                 <limits>
                     <enabled type="bool">true</enabled>
                     <left>
@@ -1268,6 +1291,29 @@
     </environment>
     <fdm>
         <jsbsim>
+            <!--tuning>
+                <ClDFM type="double">1.63</ClDFM>
+                <ClDAFM type="double">1.59</ClDAFM>
+                <CdDFM type="double">1.21</CdDFM>
+                <CdDAFM type="double">1.59</CdDAFM>
+                <CMDFM type="double">0.37</CMDFM>
+                <CMADFM type="double">0.64</CMADFM>
+            </tuning-->
+            <tuning>
+                <!--ClDFM type="double">1.42</ClDFM>
+                <ClDAFM type="double">1.38</ClDAFM>
+                <CdDFM type="double">1.21</CdDFM>
+                <CdDAFM type="double">1.59</CdDAFM>
+                <CMDFM type="double">0.37</CMDFM>
+                <CMADFM type="double">0.64</CMADFM-->
+
+                <ClDFM type="double">1.53</ClDFM>
+                <ClDAFM type="double">1.45</ClDAFM>
+                <CdDFM type="double">1.21</CdDFM>
+                <CdDAFM type="double">1.59</CdDAFM>
+                <CMDFM type="double">2.00</CMDFM>
+                <CMADFM type="double">0.89</CMADFM>
+            </tuning>
             <systems>
                 <hook>
                     <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
@@ -1303,7 +1349,9 @@
             </propulsion>
         </jsbsim>
     </fdm>
-
+    <orientation>
+        <alpha-indicated-deg alias="/fdm/jsbsim/aero/alpha-indicated-deg"/>
+    </orientation>
     <systems>
         <refuel>
             <type>probe</type>
@@ -1703,6 +1751,15 @@
                 </binding>
             </key>
 
+            <key n="74">
+               <name>K</name>
+               <desc>Decrease speedbrak</desc>
+               <binding>
+                  <command>nasal</command>
+                  <script>controls.stepSpoilers(-1)</script>
+               </binding>
+            </key>
+
             <!-- map keys for launch-bar -->
             <key n="76">
                 <name>L</name>
@@ -1751,7 +1808,12 @@
                 <desc>Reset view</desc>
                 <binding>
                     <command>nasal</command>
-                    <script>f14.resetView();</script>
+                    <script>
+                        setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
+                        setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
+                        setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
+                        setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
+                    </script>
                 </binding>
             </key>
             
@@ -1903,6 +1965,14 @@
                     <command>property-assign</command>
                     <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
                     <value>-1</value>
+                </binding>
+            </key>
+            <key n="124">
+                <name>|</name>
+                <desc>Trim to elevator position</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>controls.setElevatorTrimToPosition()</script>
                 </binding>
             </key>
 
@@ -2140,6 +2210,9 @@
     </rotors>
 
     <nasal>
+        <notifications>
+            <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
+        </notifications>
       <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
@@ -2155,8 +2228,13 @@
         <rcs>
             <file>Aircraft/f-14b/Nasal/rcs.nas</file>
         </rcs>
+        <armament>
+            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
+            <file>Aircraft/f-14b/Nasal/damage.nas</file>
+        </armament>
         <awg_9>
             <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
+            <file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file>
         </awg_9>
         <dual_control_tools>
             <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
@@ -2177,6 +2255,7 @@
             <file>Aircraft/f-14b/Nasal/an-arc-159v1.nas</file>
         </an_arc_159v1>
         <f14>
+            <file>Aircraft/f-14b/Nasal/M_exec.nas</file>
             <file>Aircraft/f-14b/Nasal/liveries.nas</file>
             <file>Aircraft/f-14b/Nasal/f14_globals.nas</file>
             <file>Aircraft/f-14b/Nasal/flaps_computer.nas</file>
@@ -2187,7 +2266,6 @@
             <file>Aircraft/f-14b/Nasal/engines.nas</file>
             <file>Aircraft/f-14b/Nasal/spoilers.nas</file>
             <file>Aircraft/f-14b/Nasal/SAS.nas</file>
-            <file>Aircraft/f-14b/Nasal/adverse.nas</file>
             <file>Aircraft/f-14b/Nasal/f-14b.nas</file>
             <file>Aircraft/f-14b/Nasal/ext_stores.nas</file>
             <file>Aircraft/f-14b/Nasal/fuel-system.nas</file>
@@ -2208,10 +2286,6 @@
         <f14_afcs>
             <file>Aircraft/f-14b/Nasal/afcs.nas</file>
         </f14_afcs>
-        <armament>
-            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
-            <file>Aircraft/f-14b/Nasal/damage.nas</file>
-        </armament>
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>

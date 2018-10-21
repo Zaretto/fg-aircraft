@@ -23,9 +23,11 @@
     <property value="0">systems/afcs/SAS-roll-demand</property>
     <property value="0">gear/gear-asym</property>
 
+    <!-- these are defined by an alias in the -set file
     <property value="0">fcs/yaw-damper-enable</property>
     <property value="0">fcs/pitch-damper-enable</property>
-    <property value="0">fcs/roll-sas-enable</property>
+    <property value="0">fcs/roll-damper-enable </property>
+    -->
     <property value="0">fcs/aim-fitted</property>
     <property value="0">fcs/steer-maneuver</property>
     <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
@@ -450,6 +452,7 @@
             <description>Aircraft on ground</description>
             <default value="systems/cadc/pitch-ratio-dmd"/>
             <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
+                systems/hydraulics/flight-system-pressure ne 1
                 systems/cadc/pitch-ratio-emergency ne 0
             </test>
             <test value="1" logic="OR">
@@ -484,6 +487,7 @@
             <default value="systems/cadc/roll-ratio-dmd"/>
             <test value="0.5" logic="OR">
                 systems/cadc/roll-ratio-emergency ne 0
+                systems/hydraulics/flight-system-pressure ne 1
             </test>
             <test value="1" logic="OR">
                 gear/gear-pos-norm ne 0
@@ -495,7 +499,7 @@
         <switch name="fcs/roll-sas-active">
             <default value="0.0"/>
             <test logic="AND" value="1">
-                fcs/roll-sas-enable ne 0.0
+                fcs/roll-damper-enable  ne 0.0
                 autoflight/output/roll-master ne 1
             </test>
             <output>fcs/roll-sas-active</output>
@@ -584,10 +588,10 @@
             <table>
                 <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
                 <tableData>
-                    -6.2    -1.0
+                    -6.2    2.0
                     -1.4     0.0
                     1.4     0.0
-                    6.2    -1.0
+                    6.2    2.0
                 </tableData>
             </table>
             <gain>fcs/roll-sas-active</gain>
@@ -969,4 +973,133 @@
         </switch>
     </channel>
 
+    <property value="0">systems/flyt/stress-run</property>
+
+    <channel name="airframe-stress-adder" execute="systems/flyt/stress-run">
+
+    </channel>
+    <property value="7.5">systems/flyt/max-g</property>
+    <property value="-3.0">systems/flyt/min-g</property>
+    <property value="0.02">systems/flyt/permanent-bend-factor</property> <!--MaxBend / max-g * 2-->
+    <property value="0.0213">systems/flyt/distortion-factor-per-g</property> <!-- 0.16 / MaxG -->
+
+    <channel name="airframe-stress">
+        <fcs_function name="systems/flyt/current-g-loading">
+            <function>
+                <sum>
+                    <property>accelerations/Nz</property>
+                    <v>-1</v>
+                </sum>
+                <!--<product>
+                    <quotient>
+                        <property>aero/force/LIFT</property>
+                        <property>inertia/weight-lbs</property>
+                    </quotient>
+                    <v>-1</v>
+                </product>-->
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/max-g-reached">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>gear/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <gt>
+                                <property>sim-time-sec</property>
+                                <v>1</v>
+                            </gt>
+                            <ge>
+                                <property>systems/flyt/current-g-loading</property>
+                                <property>systems/flyt/max-g-reached</property>
+                            </ge>
+                        </and>
+                        <property>systems/flyt/current-g-loading</property>
+                        <property>systems/flyt/max-g-reached</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+        </fcs_function>
+        
+        <fcs_function name="systems/flyt/min-g-reached">
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <property>sim-time-sec</property>
+                            <v>1</v>
+                        </gt>
+                        <lt>
+                            <property>systems/flyt/current-g-loading</property>
+                            <property>systems/flyt/min-g-reached</property>
+                        </lt>
+                    </and>
+                    <property>systems/flyt/current-g-loading</property>
+                    <property>systems/flyt/min-g-reached</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/permanent-bend-up">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>systems/flyt/max-g-reached</p>
+                        <p>systems/flyt/max-g</p>
+                    </gt>
+                    <product>
+                        <p>systems/flyt/permanent-bend-factor</p>
+                        <difference>
+                            <p>systems/flyt/max-g-reached</p>
+                            <p>systems/flyt/max-g</p>
+                        </difference>
+                    </product>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/permanent-bend-down">
+            <function>
+                <ifthen>
+                    <lt>
+                        <p>systems/flyt/min-g-reached</p>
+                        <p>systems/flyt/min-g</p>
+                    </lt>
+                    <product>
+                        <p>systems/flyt/permanent-bend-factor</p>
+                        <difference>
+                            <p>systems/flyt/min-g-reached</p>
+                            <p>systems/flyt/min-g</p>
+                        </difference>
+                    </product>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/permanent-bend">
+            <function>
+                <sum>
+                    <property>systems/flyt/permanent-bend-up</property>
+                    <property>systems/flyt/permanent-bend-down</property>
+                    </sum>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/wing-distortion">
+            <function>
+                <sum>
+                    <p>systems/flyt/permanent-bend</p>
+                    <product>
+                        <p>systems/flyt/current-g-loading</p>
+                        <p>systems/flyt/distortion-factor-per-g</p>
+                    </product>
+                </sum>
+            </function>
+            <output>fcs/wing-fold-pos-norm</output>
+        </fcs_function>
+    </channel>
 </system>

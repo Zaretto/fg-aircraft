@@ -252,8 +252,8 @@ obj.dlzY = 70;
                             props.UpdateManager.FromPropertyHashList(["sim/model/f15/instrumentation/g-meter/g-max-mooving-average", "fdm/jsbsim/systems/cadc/ows-maximum-g"], 0.1, func(val)
                                                                      {
                                                                          obj.window8.setText(sprintf("%02d %02d", 
-                                                                                                     val.property["sim/model/f15/instrumentation/g-meter/g-max-mooving-average"].getValue()*10, 
-                                                                                                     val.property["fdm/jsbsim/systems/cadc/ows-maximum-g"].getValue()*10));
+                                                                                                     math.round(val.property["sim/model/f15/instrumentation/g-meter/g-max-mooving-average"].getValue()*10.0), 
+                                                                                                     math.round(val.property["fdm/jsbsim/systems/cadc/ows-maximum-g"].getValue()*10.0)));
                                                                      }),
                             props.UpdateManager.FromPropertyHashList(["orientation/alpha-indicated-deg", 
                                                                       "controls/gear/brake-parking", 

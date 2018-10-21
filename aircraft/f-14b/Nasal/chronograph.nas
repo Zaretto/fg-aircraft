@@ -44,13 +44,3 @@ var update_chrono = func {
 		elapsed_sec.setValue( e_sec );
 	}
 }
-
-# Uncomment the following if update_chrono() has to be launched standalone.
-# Otherwise launch update_chrono() from a centralized loop which save some
-# CPU cycles.
-
-#var chrono_loop = func {
-#	update_chrono();
-#	settimer(chrono_loop, 0.1);
-#}
-#settimer(chrono_loop, 0.5);

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+
+<PropertyList> 
+
+  <path>compass.ac</path>
+
+  <animation> 
+    <!-- Objets opaques -->
+    <object-name>Compass</object-name>
+    <object-name>background</object-name>
+    <object-name>fond</object-name>
+    <object-name>face</object-name>
+    <object-name>knob</object-name>
+    <object-name>visses	</object-name>
+    <object-name>face_emit</object-name>
+    <!-- Objets transparents -->
+    <object-name>vitre	</object-name>
+  </animation>
+<!--
+  <animation>
+    <type>noshadow</type>
+    <object-name>vitre</object-name>
+    <condition>
+      <not><property>sim/rendering/rembrandt/enabled</property></not>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>shader</type>
+    <shader>chrome</shader>
+    <texture>Aircraft/Generic/Effects/glass_shader.png</texture>
+    <object-name>vitre</object-name>
+    <condition>
+      <not><property>sim/rendering/rembrandt/enabled</property></not>
+    </condition>
+  </animation>
+-->
+  <animation>
+    <type>material</type>
+    <object-name>face</object-name>
+    <object-name>Compass</object-name>
+    <condition>
+      <and>
+        <not><property>sim/rendering/rembrandt/enabled</property></not>
+        <property>systems/electrical/outputs/instrument-lights</property>
+      </and>
+    </condition>
+    <emission>
+	   <red>0.2</red>
+	   <green>0.25</green>
+	   <blue>0.7035</blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>vitre</object-name>
+    <condition>
+             <not-equals>
+		<property>/environment/atmosphere/altitude-half-to-sun</property>
+                <value>0</value>
+             </not-equals>
+   </condition>
+  </animation>
+
+  <effect>
+    <inherits-from>Effects/model-transparent</inherits-from>
+    <object-name>vitre</object-name>
+<!--
+    <condition>
+      <property>sim/rendering/rembrandt/enabled</property>
+    </condition>
+-->
+  </effect>
+
+    <animation>
+    <type>select</type>
+    <object-name>face_emit</object-name>
+       <condition>
+	   <and>
+             <equals>
+		<property>/environment/atmosphere/altitude-half-to-sun</property>
+                <value>0</value>
+             </equals>
+             <equals>
+                <property>sim/rendering/rembrandt/enabled</property>
+                <value>true</value>
+             </equals>
+	   </and>
+       </condition>
+    </animation> 
+
+    <animation>
+    <type>material</type>
+    <object-name>face_emit</object-name>
+    <object-name>face</object-name>
+    <object-name>Compass</object-name>
+       <condition>
+	   <and>
+             <equals>
+		<property>/environment/atmosphere/altitude-half-to-sun</property>
+                <value>0</value>
+	      </equals>
+	      <equals>
+	        <property>/sim/model/lights/FluorLamp[0]</property>
+	        <value>true</value>
+	      </equals>
+	      <equals>
+	        <property>/sim/model/lights/FluorLamp[1]</property>
+	        <value>true</value>
+	      </equals>
+	   </and>
+       </condition>
+       <emission>
+	   <red>0.2</red>
+	   <green>0.25</green>
+	   <blue>0.7035</blue>
+       </emission>
+   </animation>
+
+   <animation>
+    <type>material</type>
+    <object-name>face_emit</object-name>
+    <object-name>face</object-name>
+    <object-name>Compass</object-name>
+       <condition>
+             <equals>
+		<property>/environment/atmosphere/altitude-half-to-sun</property>
+                <value>0</value>
+	      </equals>
+	   <or>
+	      <equals>
+	        <property>/sim/model/lights/FluorLamp[0]</property>
+	        <value>true</value>
+	      </equals>
+	      <equals>
+	        <property>/sim/model/lights/FluorLamp[1]</property>
+	        <value>true</value>
+	      </equals>
+	   </or>
+       </condition>
+       <emission>
+		 <red>0.10</red>
+		 <green>0.125</green>
+		 <blue>0.3417</blue>
+       </emission>
+   </animation>
+
+  <animation> 
+    <type>rotate</type>
+    <object-name>Compass</object-name>
+    <object-name>face_emit</object-name>
+    <property>instrumentation/magnetic-compass/indicated-heading-deg</property>
+    <center> 
+      <x-m> -0.030 </x-m>
+      <y-m>  0.002 </y-m>
+      <z-m>  0.000 </z-m>
+    </center>
+    <axis> 
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 1 </z>
+    </axis>
+  </animation>
+
+</PropertyList>
+

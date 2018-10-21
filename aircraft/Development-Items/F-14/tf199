@@ -1,0 +1,4 @@
+rm flight-199.pdf flight-199.ps JSBOut.csv
+/cygdrive/i/temp/jsbsim/debug/jsbsim.exe --root=c:\\users\\richard\\dev\\flightgear\\aircraft\\f-14b\\ --script=qtg\\flight-299.xml
+./prep_plot.exe "JSBOut.csv" --out=flight-199 --plot=qtg\\f199_plot.xml| gnuplot.exe ; ps2pdf flight-199.ps ; rm flight-199.ps; 
+cmd /c "explorer flight-199.pdf"
