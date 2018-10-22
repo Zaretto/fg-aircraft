@@ -7,17 +7,22 @@
     <property value="0">systems/hydraulics/emerg-gear-bleed</property>
     <property value="0">gear/damage-reset</property>
     <property value="2">position/aircraft-on-ground-last-value</property>
-    
-    <channel name="Pitch">
-        <switch name="fcs/ari-lateral-enabled">
-            <default value="1"/>
-            <test value="0" logic="OR">
-                systems/hydraulics/flight-system-pressure ne 1
-                autoflight/input/pitch-switch ne 1
-            </test>
-        </switch>
 
-        <switch name="fcs/stick-pitch">
+	<!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
+		Kevin R. Scalera
+		Table 2.1: Control surface limits
+		Control Effector Deflection (deg) Rate Limit (deg/s)
+			DHT(L/R) -29.0 / 15.0 ±46
+			DAIL(L/R) -20.0 / 20.0 ±100
+			DRUD(L/R) -30.0 / 30.0 ±105
+			FLAPS(L/R) 0.0 / 35.0 ±18
+	-->
+	
+	<!-- Begin Flight Control System by Joshua Davidson (it0uchpods) -->
+	
+	<channel name="Common">
+		
+		<switch name="fcs/stick-pitch">
 			<default value="0"/>
 			<test value="fcs/elevator-cmd-norm">
 				autoflight/input/pitch-switch ne 1
@@ -31,363 +36,341 @@
 				autoflight/ss/elevator-norm ne 0
 			</test>
 		</switch>
+		
+		<switch name="fcs/stick-roll">
+			<default value="0"/>
+			<test value="fcs/aileron-cmd-norm">
+				autoflight/input/roll-switch ne 1
+			</test>
+		</switch>
 
-        <!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
-            Kevin R. Scalera
-        Table 2.1: Control surface limits
-        Control Effector Deflection (deg) Rate Limit (deg/s)
-                DHT(L/R) -29.0 / 15.0 ±46
-                DAIL(L/R) -20.0 / 20.0 ±100
-                DRUD(L/R) -30.0 / 30.0 ±105
-                FLAPS(L/R) 0.0 / 35.0 ±18
-        -->
-        <summer name="Pitch Trim Sum">
-            <input>fcs/stick-pitch</input>
-            <input>fcs/css-pitch</input>
-            <input>fcs/pitch-trim-cmd-norm</input>
-            <input>fcs/pitch-damper-rate</input>
-            <input>autoflight/pitch/pitch-rate-demand</input>
-            <input>systems/cadc/pitch-trim-compensation</input>
-            <clipto>
-                <min> -1 </min>
-                <max>  1 </max>
-            </clipto>
-        </summer>
+		<switch name="fcs/css-roll">
+			<default value="0"/>
+			<test logic="AND" value="autoflight/ss/aileron-norm">
+				autoflight/input/roll-switch eq 1
+				autoflight/ss/aileron-norm ne 0
+			</test>
+		</switch>
+	
+	</channel>
+	
+	<channel name="Elevons">
+		
+		<switch name="fcs/ari-lateral-enabled">
+			<default value="1"/>
+			<test value="0" logic="OR">
+				systems/hydraulics/flight-system-pressure ne 1
+				autoflight/input/pitch-switch ne 1
+			</test>
+		</switch>
+		
+		<summer name="fcs/pitch-input-sum">
+			<input>fcs/stick-pitch</input> <!-- Stick Input with A/P off -->
+			<input>fcs/css-pitch</input> <!-- Stick Input in CSS A/P mode -->
+			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
+			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
+			<input>systems/cadc/pitch-trim-compensation</input> <!-- CAS Pitch Trim Compensation -->
+			<clipto>
+				<min>-1.0</min>
+				<max>0.51724</max>
+			</clipto>
+		</summer>
+		
+		<pure_gain name="fcs/pitch-input-deg">
+			<input>fcs/pitch-input-sum</input>
+			<gain>29.0</gain>
+			<clipto>
+				<min>-29.0</min>
+				<max>15.0</max>
+			</clipto>
+		</pure_gain>
 
-        <switch name="fcs/pitch-trim-actuator">
-            <default value="fcs/pitch-trim-sum"/>
-        </switch>
-
-        <aerosurface_scale name="Elevator Control">
-            <input>fcs/pitch-trim-actuator</input>
-            <!-- maybe this should take into account the trim limits from the AAP -->
-            <range>
-                <min> -0.50877 </min>
-                <max>  0.26315 </max>
-            </range>
-            <output>fcs/elevator-pos-raw-demand</output>
-        </aerosurface_scale>
-
-        <pure_gain name="tied/fcs-elevator-control">
-            <input>fcs/elevator-pos-raw-demand</input>
-            <gain>systems/cadc/pitch-ratio</gain>
-            <output>fcs/elevator-pos-demand</output>
-        </pure_gain >
-
-        <kinematic name="tied/fcs-elevator-position">
-            <input>fcs/elevator-pos-demand</input>
-            <traverse>
-                <setting>
-                    <position>-1</position>
-                    <time>0.6304</time>
-                </setting>
-                <setting>
-                    <position>1</position>
-                    <time>0.3260</time>
-                </setting>
-            </traverse>
-            <output>fcs/elevator-pos-rad</output>
-        </kinematic>
-
-        <!-- dtd is washed out with elevator position http://www.f15sim.com/operation/f15_lat_control.html -->
-        <fcs_function name="fcs/differential-elevator-pos-norm">
-            <function>
-                <product>
-                    <property>fcs/aileron-pos-norm</property>
-                    <value>0.3</value> <!-- mxaimum authority -->
-                    <table>
-                        <!-- Figure 4 Mechanmical lateral control authority.
-      ** iv; Vc Kts
-      ** stabilator maximum
-      ** dv: full stock aileron deflection degrees
--->
-                        <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
-                        <independentVar lookup="column">velocities/vc-kts</independentVar>
-                        <tableData>
-                            635.0	664.3	668.2	714.8	741.3	768.0	794.7
-                        -24	0.16	0.16	0.16	0.16	0.16	0.16	0.16
-                        -23	0.16	0.16	0.16	0.16	0.16	0.16	0.16
-                        -22	0.16	0.16	0.16	0.16	0.16	0.15	0.16
-                        -21	0.16	0.16	0.16	0.16	0.16	0.15	0.16
-                        -20	0.16	0.16	0.16	0.16	0.16	0.15	0.16
-                        -19	0.16	0.16	0.16	0.16	0.16	0.15	0.16
-                        -18	0.19	0.19	0.20	0.20	0.19	0.19	0.19
-                        -17	0.29	0.30	0.30	0.30	0.30	0.29	0.24
-                        -16	0.39	0.40	0.40	0.40	0.40	0.38	0.24
-                        -15	0.50	0.50	0.51	0.50	0.50	0.38	0.24
-                        -14	0.60	0.60	0.61	0.61	0.50	0.38	0.24
-                        -13	0.70	0.70	0.71	0.63	0.50	0.38	0.24
-                        -12	0.80	0.81	0.75	0.63	0.50	0.38	0.24
-                        -11	0.91	0.87	0.75	0.63	0.50	0.38	0.25
-                        -10	1.00	0.87	0.75	0.63	0.50	0.38	0.25
-                        -9	1.00	0.87	0.75	0.63	0.50	0.38	0.25
-                        -8	1.00	0.87	0.75	0.63	0.50	0.38	0.25
-                        -7	1.00	0.88	0.75	0.63	0.50	0.38	0.25
-                        -6	1.00	0.88	0.75	0.63	0.50	0.38	0.25
-                        -5	1.00	0.88	0.75	0.63	0.50	0.38	0.25
-                        -4	0.90	0.88	0.75	0.63	0.50	0.38	0.25
-                        -3	0.79	0.80	0.75	0.63	0.50	0.38	0.25
-                        -2	0.69	0.69	0.69	0.63	0.50	0.38	0.25
-                        -1	0.58	0.59	0.59	0.59	0.50	0.38	0.25
-                        0	0.47	0.49	0.48	0.49	0.48	0.38	0.25
-                        1	0.37	0.39	0.38	0.40	0.38	0.38	0.25
-                        2	0.26	0.28	0.27	0.30	0.28	0.28	0.25
-                        3	0.25	0.25	0.24	0.25	0.25	0.24	0.25
-                        4	0.25	0.25	0.24	0.25	0.24	0.24	0.25
-                        5	0.25	0.25	0.24	0.25	0.24	0.24	0.25
-                        6	0.24	0.25	0.24	0.25	0.24	0.24	0.25
-                        7	0.24	0.25	0.24	0.25	0.24	0.24	0.25
-                        8	0.24	0.25	0.24	0.25	0.24	0.24	0.25
-                        9	0.24	0.25	0.24	0.25	0.24	0.24	0.25
-                        10	0.24	0.25	0.24	0.25	0.24	0.24	0.25
-                        11	0.24	0.25	0.24	0.25	0.24	0.24	0.25
-                        12	0.24	0.24	0.24	0.24	0.24	0.24	0.25
-                        13	0.24	0.24	0.24	0.24	0.24	0.24	0.25
-                        14	0.24	0.24	0.24	0.24	0.24	0.24	0.25
-                        15	0.24	0.24	0.24	0.24	0.24	0.24	0.24
-                        16	0.24	0.24	0.24	0.24	0.24	0.24	0.24
-                        </tableData>
-                        <!--<independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
-                        <tableData>
-                            -24     0
-                              0     0.3
-                             16     0
-                        </tableData>-->
-                    </table>
-                </product>
-            </function>
-        </fcs_function>
-
-        <aerosurface_scale name="fcs/differential-elevator-pos-deg">
-            <input>fcs/differential-elevator-pos-norm</input>
-            <domain>
-                <min>  -1 </min>
-                <max>   1 </max>
-            </domain>
-            <range>
-                <min> -6.66667 </min>
-                <max>  6.66667 </max>
-            </range>
-        </aerosurface_scale>
-
-        <aerosurface_scale name="elevator normalization">
-            <input>fcs/elevator-pos-rad</input>
-            <domain>
-                <min>  -0.57895 </min>
-                <max>   0.21053 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/elevator-pos-norm</output>
-        </aerosurface_scale>
-    </channel>
-
-
-    <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
-    <channel name="Roll">
-        <switch name="fcs/stick-roll">
-            <default value="0"/>
-            <test value="fcs/aileron-cmd-norm">
-                autoflight/input/roll-switch ne 1
-            </test>
-        </switch>
-
-        <switch name="fcs/css-roll">
-            <default value="0"/>
-            <test logic="AND" value="autoflight/ss/aileron-norm">
-                autoflight/input/roll-switch eq 1
-                autoflight/ss/aileron-norm ne 0
-            </test>
-        </switch>
-
-        <summer name="fcs/roll-trim-sum-raw">
-            <input>fcs/stick-roll</input>
-            <input>fcs/css-roll</input>
-            <input>fcs/roll-trim-cmd-norm</input>
-            <input>autoflight/roll/roll-rate-demand</input>
-            <input>fcs/roll-rate-limiter</input>
-            <clipto>
-                <min> -1 </min>
-                <max>  1 </max>
-            </clipto>
-        </summer>
-
-        <pure_gain name="fcs/roll-trim-sum-norm">
-            <input>fcs/roll-trim-sum-raw</input>
-            <gain>systems/cadc/roll-ratio</gain>
-        </pure_gain >
-
-        <switch name="fcs/roll-trim-actuator-norm">
-            <default value="fcs/roll-trim-sum-norm"/>
-        </switch>
-
-        <kinematic name="aileron position">
-            <input>fcs/roll-trim-actuator-norm</input>
-            <traverse>
-                <setting>
-                    <position>-1</position>
-                    <time>0.2</time>
-                </setting>
-                <setting>
-                    <position>1</position>
-                    <time>0.2</time>
-                </setting>
-            </traverse>
-            <output>fcs/aileron-pos-norm</output>
-        </kinematic>
-
-        <pure_gain name="tied/fcs-left-aileron-pos-norm">
-            <input>fcs/aileron-pos-norm</input>
-            <gain>1</gain>
-            <output>fcs/left-aileron-pos-norm</output>
-        </pure_gain >
-        <pure_gain name="tied/fcs-right-aileron-pos-norm">
-            <input>fcs/aileron-pos-norm</input>
-            <gain>1</gain>
-            <output>fcs/right-aileron-pos-norm</output>
-        </pure_gain >
-
-        <aerosurface_scale name="Aileron Control">
-            <input>fcs/aileron-pos-norm</input>
-            <range>
-                <min> -20 </min>
-                <max>  20 </max>
-            </range>
-            <output>fcs/aileron-pos-deg</output>
-        </aerosurface_scale>
-    </channel>
-
-    <channel name="Yaw">
-
-        <!-- rudder limits +/-30deg 40 deg/sec-->
-        <!-- stabilizer limits +/7deg 30 deg/sec-->
-        <!--<fcs_function name="fcs/ari-longitudinal-rudder-demand-norm">
-            <description>ARI</description>
-            <function>
-                <table>
-                    <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
-                    ?? or stick position ??
-                    <tableData>
-                        -30     0.1
-                        0     0
-                        30     -0.1
-                    </tableData>
-                </table>
-            </function>
-            <clipto>
-                <min> -0.1 </min>
-                <max>  0.1 </max>
-            </clipto>
-        </fcs_function>-->
-
-        <switch name="fcs/aileron-cmd-norm-ap-switched">
-            <default value="fcs/aileron-cmd-norm"/>
-            <test logic="AND" value="autoflight/ss/aileron-norm">
-                autoflight/input/roll-switch eq 1
-                autoflight/output/roll-master eq 0
-            </test>
-            <test logic="AND" value="0">
-                autoflight/input/roll-switch eq 1
-                autoflight/output/roll-master eq 1
-            </test>
-        </switch>
-
-        <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
-            <!--This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
-                The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.-->
-            <description>ARI</description>
-            <function>
-                <product>
-                    <property>fcs/aileron-cmd-norm-ap-switched</property>
-                    <property>fcs/ari-lateral-enabled</property>
-                    <table>
-                        <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
-                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                        <tableData>
-                            0	30
-                            -24	-0.923	-0.818
-                            0	-0.105	0.000
-                            15	0.406	0.511
-                        </tableData>
-                    </table>
-                </product>
-            </function>
-            <clipto>
-                <min> -1.0 </min>
-                <max>  1.0 </max>
-            </clipto>
-        </fcs_function>
-
-        <!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
-        <switch name="fcs/ari-lateral-rudder-pos-norm">
-            <default value="fcs/ari-lateral-rudder-demand-norm"/>
-            <test value="0" logic="OR">
-                fcs/ari-lateral-enabled eq 0
-                velocities/mach ge 0.9
-            </test>
-            <test value="0" logic="OR">
-                velocities/mach ge 0.9
-                position/aircraft-on-ground ne 0
-                fcs/ari-lateral-enabled eq 0
-            </test>
-        </switch>
-
-        <summer name="fcs/rudder-command-raw-sum">
-            <input>fcs/rudder-cmd-norm</input>
-            <input>fcs/yaw-trim-cmd-norm</input>
-            <input>fcs/ari-lateral-rudder-pos-norm</input>
-            <clipto>
-                <min> -1 </min>
-                <max>  1 </max>
-            </clipto>
-        </summer>
-        <pure_gain name="fcs/rudder-command-sum">
-            <input>fcs/rudder-command-raw-sum</input>
-            <gain>systems/cadc/rudder-effectivity</gain>
-        </pure_gain >
-
-        <summer name="Rudder Sum">
-            <input>fcs/rudder-command-sum</input>
-            <input>fcs/yaw-damper-dmd</input>
-            <clipto>
-                <min> -1.1 </min>
-                <max>  1.1 </max>
-            </clipto>
-        </summer>
-
-        <switch name="fcs/rudder-actuator-pos">
-            <default value="fcs/rudder-sum"/>
-        </switch>
-        <kinematic name="Rudder Control">
-            <input>fcs/rudder-actuator-pos</input>
-            <traverse>
-                <setting>
-                    <position>-0.35</position>
-                    <time>0.2857</time>
-                </setting>
-                <setting>
-                    <position>0.35</position>
-                    <time>0.2857</time>
-                </setting>
-            </traverse>
-            <output>fcs/rudder-pos-rad</output>
-        </kinematic>
-
-        <aerosurface_scale name="rudder normalization">
-            <input>fcs/rudder-pos-rad</input>
-            <domain>
-                <min> -0.35 </min>
-                <max>  0.35 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/rudder-pos-norm</output>
-        </aerosurface_scale>
-    </channel>
+		<summer name="fcs/roll-elevon-input-sum">
+			<input>fcs/stick-roll</input> <!-- Stick Input with A/P off -->
+			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
+			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
+			<input>autoflight/roll/roll-rate-demand</input> <!-- A/P Roll Demand -->
+			<input>fcs/roll-rate-limiter</input> <!-- CAS Roll Rate Limiter -->
+			<clipto>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</clipto>
+		</summer>
+		
+		<fcs_function name="fcs/roll-elevon-input-deg">
+			<description>
+				http://www.f15sim.com/operation/f15_lat_control.html
+				Figure 4 Mechanmical lateral control authority.
+					** iv; Vc Kts
+					** stabilator maximum
+					** dv: full stock aileron deflection degrees
+			</description>
+			<function>
+				<product>
+					<property>fcs/roll-elevon-input-sum</property>
+					<value>8.7</value> <!-- Maximum Roll Authority, 29 degrees * 0.3 -->
+					<property>systems/cadc/roll-ratio</property>
+					<table>
+						<independentVar lookup="row">fcs/pitch-input-deg</independentVar>
+						<independentVar lookup="column">velocities/vc-kts</independentVar>
+						<tableData>
+							     635.0 664.3 668.2 714.8 741.3 768.0 794.7
+							-24  0.16  0.16  0.16  0.16  0.16  0.16  0.16
+							-23  0.16  0.16  0.16  0.16  0.16  0.16  0.16
+							-22  0.16  0.16  0.16  0.16  0.16  0.15  0.16
+							-21  0.16  0.16  0.16  0.16  0.16  0.15  0.16
+							-20  0.16  0.16  0.16  0.16  0.16  0.15  0.16
+							-19  0.16  0.16  0.16  0.16  0.16  0.15  0.16
+							-18  0.19  0.19  0.20  0.20  0.19  0.19  0.19
+							-17  0.29  0.30  0.30  0.30  0.30  0.29  0.24
+							-16  0.39  0.40  0.40  0.40  0.40  0.38  0.24
+							-15  0.50  0.50  0.51  0.50  0.50  0.38  0.24
+							-14  0.60  0.60  0.61  0.61  0.50  0.38  0.24
+							-13  0.70  0.70  0.71  0.63  0.50  0.38  0.24
+							-12  0.80  0.81  0.75  0.63  0.50  0.38  0.24
+							-11  0.91  0.87  0.75  0.63  0.50  0.38  0.25
+							-10  1.00  0.87  0.75  0.63  0.50  0.38  0.25
+							 -9  1.00  0.87  0.75  0.63  0.50  0.38  0.25
+							 -8  1.00  0.87  0.75  0.63  0.50  0.38  0.25
+							 -7  1.00  0.88  0.75  0.63  0.50  0.38  0.25
+							 -6  1.00  0.88  0.75  0.63  0.50  0.38  0.25
+							 -5  1.00  0.88  0.75  0.63  0.50  0.38  0.25
+							 -4  0.90  0.88  0.75  0.63  0.50  0.38  0.25
+							 -3  0.79  0.80  0.75  0.63  0.50  0.38  0.25
+							 -2  0.69  0.69  0.69  0.63  0.50  0.38  0.25
+							 -1  0.58  0.59  0.59  0.59  0.50  0.38  0.25
+							  0  0.47  0.49  0.48  0.49  0.48  0.38  0.25
+							  1  0.37  0.39  0.38  0.40  0.38  0.38  0.25
+							  2  0.26  0.28  0.27  0.30  0.28  0.28  0.25
+							  3  0.25  0.25  0.24  0.25  0.25  0.24  0.25
+							  4  0.25  0.25  0.24  0.25  0.24  0.24  0.25
+							  5  0.25  0.25  0.24  0.25  0.24  0.24  0.25
+							  6  0.24  0.25  0.24  0.25  0.24  0.24  0.25
+							  7  0.24  0.25  0.24  0.25  0.24  0.24  0.25
+							  8  0.24  0.25  0.24  0.25  0.24  0.24  0.25
+							  9  0.24  0.25  0.24  0.25  0.24  0.24  0.25
+							 10  0.24  0.25  0.24  0.25  0.24  0.24  0.25
+							 11  0.24  0.25  0.24  0.25  0.24  0.24  0.25
+							 12  0.24  0.24  0.24  0.24  0.24  0.24  0.25
+							 13  0.24  0.24  0.24  0.24  0.24  0.24  0.25
+							 14  0.24  0.24  0.24  0.24  0.24  0.24  0.25
+							 15  0.24  0.24  0.24  0.24  0.24  0.24  0.24
+							 16  0.24  0.24  0.24  0.24  0.24  0.24  0.24
+						</tableData>
+					</table>
+				</product>
+			</function>
+		</fcs_function>
+		
+		<summer name="fcs/elevon-left-cmd">
+			<input>fcs/pitch-input-deg</input>
+			<input>fcs/roll-elevon-input-deg</input>
+			<clipto>
+				<min>-29.0</min>
+				<max>15.0</max>
+			</clipto>
+		</summer>
+		
+		<actuator name="fcs/elevon-left">
+			<input>fcs/elevon-left-cmd</input>
+			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
+			<lag>26.7</lag>
+			<output>/sim/multiplay/generic/float[4]</output>
+		</actuator>
+		
+		<summer name="fcs/elevon-right-cmd">
+			<input>fcs/pitch-input-deg</input>
+			<input>-fcs/roll-elevon-input-deg</input>
+			<clipto>
+				<min>-29.0</min>
+				<max>15.0</max>
+			</clipto>
+		</summer>
+		
+		<actuator name="fcs/elevon-right">
+			<input>fcs/elevon-right-cmd</input>
+			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
+			<lag>26.7</lag>
+			<output>/sim/multiplay/generic/float[5]</output>
+		</actuator>
+		
+		<fcs_function name="fcs/elevon-diff-aero-deg">
+			<function>
+				<sum>
+					<product>
+						<property>fcs/elevon-left</property>
+						<value>0.5</value>
+					</product>
+					<product>
+						<property>fcs/elevon-right</property>
+						<value>-0.5</value>
+					</product>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="fcs/elevon-aero-deg">
+			<function>
+				<sum>
+					<product>
+						<property>fcs/elevon-left</property>
+						<value>0.5</value>
+					</product>
+					<product>
+						<property>fcs/elevon-right</property>
+						<value>0.5</value>
+					</product>
+				</sum>
+			</function>
+		</fcs_function>
+	
+	</channel>
+	
+	<channel name="Ailerons">
+		
+		<summer name="fcs/roll-aileron-input-sum">
+			<input>fcs/stick-roll</input> <!-- Stick Input with A/P off -->
+			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
+			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
+			<input>autoflight/roll/roll-rate-demand</input> <!-- A/P Roll Demand -->
+			<input>fcs/roll-rate-limiter</input> <!-- CAS Roll Rate Limiter -->
+			<clipto>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</clipto>
+		</summer>
+		
+		<pure_gain name="fcs/roll-aileron-ratio-input">
+			<input>fcs/roll-aileron-input-sum</input>
+			<gain>systems/cadc/roll-ratio</gain>
+		</pure_gain>
+		
+		<pure_gain name="fcs/aileron-input-deg">
+			<input>fcs/roll-aileron-ratio-input</input>
+			<gain>20.0</gain>
+		</pure_gain>
+		
+		<actuator name="fcs/aileron-left">
+			<input>fcs/aileron-input-deg</input>
+			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
+			<lag>26.7</lag>
+			<output>/sim/multiplay/generic/float[2]</output>
+		</actuator>
+		
+		<actuator name="fcs/aileron-right">
+			<input>-fcs/aileron-input-deg</input>
+			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
+			<lag>26.7</lag>
+			<output>/sim/multiplay/generic/float[3]</output>
+		</actuator>
+		
+		<fcs_function name="fcs/aileron-aero-deg">
+			<function>
+				<sum>
+					<product>
+						<property>fcs/aileron-left</property>
+						<value>0.5</value>
+					</product>
+					<product>
+						<property>fcs/aileron-right</property>
+						<value>-0.5</value>
+					</product>
+				</sum>
+			</function>
+		</fcs_function>
+	
+	</channel>
+	
+	<channel name="Yaw">
+		
+		<switch name="fcs/aileron-cmd-norm-ap-switched">
+			<default value="fcs/aileron-cmd-norm"/>
+			<test logic="AND" value="autoflight/ss/aileron-norm">
+				autoflight/input/roll-switch eq 1
+				autoflight/output/roll-master eq 0
+			</test>
+			<test logic="AND" value="0">
+				autoflight/input/roll-switch eq 1
+				autoflight/output/roll-master eq 1
+			</test>
+		</switch>
+		
+		<fcs_function name="fcs/ari-lateral-rudder-demand-norm">
+			<description>
+				This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
+				The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.
+			</description>
+			<function>
+				<product>
+					<property>fcs/aileron-cmd-norm-ap-switched</property>
+					<property>fcs/ari-lateral-enabled</property>
+					<table>
+						<independentVar lookup="row">fcs/elevon-aero-deg</independentVar>
+						<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+						<tableData>
+							     0      30
+							-24 -0.923 -0.818
+							  0 -0.105  0.000
+							 15  0.406  0.511
+						</tableData>
+					</table>
+				</product>
+			</function>
+			<clipto>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</clipto>
+		</fcs_function>
+		
+		<!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
+		<switch name="fcs/ari-lateral-rudder-pos-norm">
+			<default value="fcs/ari-lateral-rudder-demand-norm"/>
+			<test logic="OR" value="0">
+				fcs/ari-lateral-enabled eq 0
+				velocities/mach ge 0.9
+			</test>
+			<test logic="OR" value="0">
+				velocities/mach ge 0.9
+				position/aircraft-on-ground ne 0
+				fcs/ari-lateral-enabled eq 0
+			</test>
+		</switch>
+		
+		<summer name="fcs/yaw-input-sum">
+			<input>fcs/rudder-cmd-norm</input>
+			<input>fcs/yaw-trim-cmd-norm</input>
+			<input>fcs/ari-lateral-rudder-pos-norm</input>
+			<input>fcs/yaw-damper-dmd</input>
+			<clipto>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</clipto>
+		</summer>
+		
+		<pure_gain name="fcs/yaw-effectivity-input">
+			<input>fcs/yaw-input-sum</input>
+			<gain>systems/cadc/rudder-effectivity</gain>
+		</pure_gain>
+		
+		<pure_gain name="fcs/rudder-input-deg">
+			<input>fcs/yaw-effectivity-input</input>
+			<gain>30.0</gain>
+			<clipto>
+				<min>-30.0</min>
+				<max>30.0</max>
+			</clipto>
+		</pure_gain>
+		
+		<actuator name="fcs/rudder-aero-deg">
+			<input>fcs/rudder-input-deg</input>
+			<rate_limit>3150</rate_limit> <!-- 105 * 30 degrees -->
+			<lag>22.7</lag>
+			<output>/sim/multiplay/generic/float[1]</output>
+		</actuator>
+	
+	</channel>
+	
+	<!-- End Flight Control System by Joshua Davidson (it0uchpods) -->
 
     <channel name="Flaps">
         <switch name="fcs/flap-total-dmd">

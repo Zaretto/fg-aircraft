@@ -732,7 +732,7 @@
                 <output>systems/NWS/engaged</output>
             </switch>
 
-            <scheduled_gain name="fcs/steer-pos-deg">
+            <scheduled_gain name="rubbish/steer-pos-deg"> <!-- Prevent failed to tie object error -JD -->
                 <input>fcs/steer-cmd-norm</input>
                 <table>
                     <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
@@ -1415,7 +1415,7 @@
             <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30
                         -20	 0.74553106	 0.69300407	 0.64069530	 0.58898578	 0.53824093	 0.48880644	 0.44100423	 0.39512876	 0.35144360	 0.31017830	 0.27152574	 0.23563999	 0.20263468
@@ -1556,7 +1556,7 @@
             <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30
                         -20	-1.18316951	-1.15605351	-1.12739696	-1.09719988	-1.06546225	-1.03218409	-0.99736539	-0.96100615	-0.92310637	-0.88366606	-0.84268520	-0.80016381	-0.75610188
@@ -1787,7 +1787,7 @@
             <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30
                         -20	 0.45952289	 0.37945456	 0.31014266	 0.24943593	 0.19518306	 0.14523277	 0.09743376	 0.04963476	-0.00031553	-0.05456840	-0.11527513	-0.18458703	-0.26465536
@@ -2230,7 +2230,7 @@
         <function name="aero/coefficients/CMLDAD">
             <description>ROLLING MOMENT DUE TO AILERON DEFLECTION (CLDA)</description>
             <product>
-                <property>fcs/aileron-pos-deg</property>
+                <property>fcs/aileron-aero-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
@@ -2359,14 +2359,14 @@
         <function name="aero/coefficients/CMLDRD">
             <description>ROLLING MOMENT DUE TO RUDDER DEFLECTION -(CLD)</description>
             <product>
-                <property>fcs/rudder-pos-deg</property>
+                <property>fcs/rudder-aero-deg</property>
                 <value>
                     0.85 <!-- DRFLX1 -->
                 </value>
                 <property>aero/coefficients/EPA43</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/rudder-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/rudder-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          1	          2	          3	          4	          9	         14	         19	         24	         29
                         -20	 0.00003464	 0.00004739	 0.00005451	 0.00005664	 0.00005443	 0.00004851	 0.00003953	 0.00003742	 0.00003522	 0.00003294	 0.00003057	 0.00001771	 0.00000358	-0.00001116	-0.00002587	-0.00003991
@@ -2432,10 +2432,10 @@
                 <value>
                     0.975 <!-- DTFLX1 -->
                 </value>
-                <property>fcs/differential-elevator-pos-deg</property>
+                <property>fcs/elevon-diff-aero-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30
                         -20	 0.00002169	 0.00036227	 0.00063181	 0.00079244	 0.00084328	 0.00080929	 0.00073001	 0.00064845	 0.00059987	 0.00060063	 0.00063696	 0.00065382	 0.00054371
@@ -2629,7 +2629,7 @@
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <independentVar lookup="table">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="table">fcs/elevon-aero-deg</independentVar>
                     <tableData breakPoint="-30">
                         -20	       -15	       -10	        -5	         0	         1	         2	         3	         4	         9	        14	        19
                         -20	 0.18323943	 0.12554427	 0.06784919	 0.01015419	 0.00000000	 0.01065652	 0.01389486	 0.01023565	 0.00130726	-0.05631019	-0.11400525	-0.17170039
@@ -3492,7 +3492,7 @@
         <function name="aero/coefficients/CYDAD">
             <description>SIDE FORCE DUE TO AILERON DEFLECTION</description>
             <product>
-                <property>fcs/aileron-pos-deg</property>
+                <property>fcs/aileron-aero-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
@@ -3556,14 +3556,14 @@
         <function name="aero/coefficients/CYDRD">
             <description>SIDE FORCE DUE TO RUDDER DEFLECTION</description>
             <product>
-                <property>fcs/rudder-pos-deg</property>
+                <property>fcs/rudder-aero-deg</property>
                 <value>
                     0.89 <!-- DRFLX5 -->
                 </value>
                 <property>aero/coefficients/EPA43</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/rudder-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/rudder-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          1	          2	          3	          4	          9	         14	         19	         24	         29
                         -20	-0.00151306	 0.00018306	 0.00149969	 0.00247584	 0.00315049	 0.00356264	 0.00375129	 0.00376563	 0.00377290	 0.00377342	 0.00376749	 0.00365209	 0.00342237	 0.00311733	 0.00277595	 0.00243724
@@ -3629,10 +3629,10 @@
                 <value>
                     0.975 <!-- DTFLX5 -->
                 </value>
-                <property>fcs/differential-elevator-pos-deg</property>
+                <property>fcs/elevon-diff-aero-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30
                         -20	 0.00477977	 0.00326443	 0.00201393	 0.00111242	 0.00057204	 0.00035313	 0.00038458	 0.00058409	 0.00087848	 0.00122399	 0.00162656	 0.00216213	 0.00299694
@@ -3831,7 +3831,7 @@
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <independentVar lookup="table">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="table">fcs/elevon-aero-deg</independentVar>
                     <tableData breakPoint="-30">
                         -20	       -15	       -10	        -5	         0	         1	         2	         3	         4	         9	        14	        19
                         -20	-0.02713148	-0.01745239	-0.00688538	 0.00461678	 0.00000000	-0.01452356	-0.01198660	-0.00949006	-0.00703358	 0.00466128	 0.01541153	 0.02526443
@@ -4566,7 +4566,7 @@
         <function name="aero/coefficients/CMNDAD">
             <description>YAWING MOMENT DUE TO AILERON DEFLECTION -CNDA</description>
             <product>
-                <property>fcs/aileron-pos-deg</property>
+                <property>fcs/aileron-aero-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
@@ -4630,7 +4630,7 @@
         <function name="aero/coefficients/CMNDRDr">
             <description>YAWING MOMENT DUE TO RUDDER DEFLECTION -CNDR</description>
             <product>
-                <property>fcs/rudder-pos-deg</property>
+                <property>fcs/rudder-aero-deg</property>
                 <value>
                     0.89 <!-- DRFLX3 -->
                 </value>
@@ -4703,10 +4703,10 @@
                 <value>
                     0.975 <!-- DTFLX3 -->
                 </value>
-                <property>fcs/differential-elevator-pos-deg</property>
+                <property>fcs/elevon-diff-aero-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
+                    <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
                     <tableData>
                         -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30
                         -20	 0.00163093	 0.00139340	 0.00116573	 0.00094789	 0.00073989	 0.00054174	 0.00035343	 0.00017496	 0.00000633	-0.00015245	-0.00030139	-0.00044049	-0.00056975
