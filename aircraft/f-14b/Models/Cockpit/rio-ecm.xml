@@ -12,17 +12,17 @@
 		<condition>
 			<or>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>RIO View</value>
 				</equals>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>Back-seat View</value>
 				</equals>
 			</or>
 			<property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
             <greater-than>
-              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+              <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>1</value>
             </greater-than>
 		</condition>

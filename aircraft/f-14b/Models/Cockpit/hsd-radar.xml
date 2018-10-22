@@ -16,7 +16,7 @@
 			</equals>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -248,7 +248,7 @@
 <or>
 			<property>instrumentation/radar/radar-standby</property>
             <less-than>
-              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+              <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>1</value>
             </less-than>
 </or>
@@ -259,10 +259,13 @@
 		<object-name>pulse-srch</object-name>
 		<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch</property>
+            <equals>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <value>3</value>
+            </equals>
 		</condition>
 	</animation>
 	<animation>
@@ -270,10 +273,13 @@
 		<object-name>tws-auto</object-name>
 		<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-			<property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto</property>
+            <equals>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <value>6</value>
+            </equals>
 		</condition>
 	</animation>
 	<animation>
@@ -281,7 +287,7 @@
 		<object-name>az-field-120</object-name>
 		<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
 			<equals>
@@ -295,7 +301,7 @@
 		<object-name>az-field-60</object-name>
 		<condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
 			<equals>
@@ -310,7 +316,7 @@
 		<object-name>center-cross</object-name>
 		<condition>
 			<equals>
-				<property>sim/current-view/name</property>
+				<property>/sim/current-view/name</property>
 				<value>RIO View</value>
 			</equals>
 		</condition>
@@ -320,7 +326,7 @@
 		<object-name>horizon-line</object-name>
 		<condition>
 			<equals>
-				<property>sim/current-view/name</property>
+				<property>/sim/current-view/name</property>
 				<value>RIO View</value>
 			</equals>
 		</condition>
@@ -6597,7 +6603,7 @@
 		<type>material</type>
         <condition>
                <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                   <value>0</value>
                 </greater-than>
         </condition>

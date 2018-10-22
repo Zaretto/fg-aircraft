@@ -13,11 +13,11 @@
 		<condition>
 			<or>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>RIO View</value>
 				</equals>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>Back-seat View</value>
 				</equals>
 			</or>
@@ -57,7 +57,7 @@
 			</not>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 		</condition>
@@ -69,7 +69,7 @@
 <or>
 			<property>sim/model/f-14b/controls/HSD/on-off</property>
                <less-than>
-                   <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                   <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                    <value>1</value>
                 </less-than>
 </or>
@@ -81,7 +81,7 @@
 		<condition>
 <or>
                <less-than>
-                   <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                   <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                    <value>1</value>
                 </less-than>
 			<not>
@@ -98,7 +98,7 @@
 		<object-name>compass-rose</object-name>
 		<condition>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                   <value>0</value>
                 </greater-than>
 			<not>
@@ -300,11 +300,11 @@
 		<type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
         <emission>
