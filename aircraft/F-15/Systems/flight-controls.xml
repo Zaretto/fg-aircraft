@@ -3,10 +3,13 @@
    |  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
    Longitudinal travel: -10 to 15cm
 -->
-    <property value="1">gear/serviceable</property>
-    <property value="0">systems/hydraulics/emerg-gear-bleed</property>
-    <property value="0">gear/damage-reset</property>
-    <property value="2">position/aircraft-on-ground-last-value</property>
+	<property value="1">gear/serviceable</property>
+	<property value="0">systems/hydraulics/emerg-gear-bleed</property>
+	<property value="0">gear/damage-reset</property>
+	<property value="2">position/aircraft-on-ground-last-value</property>
+	<property value="1">fcs/roll-ratio-calc</property>
+	<property value="0">systems/cadc/pitch-ratio-emergency</property>
+	<property value="0">systems/cadc/roll-ratio-emergency</property>
 
 	<!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
 		Kevin R. Scalera
@@ -56,46 +59,133 @@
 	
 	<channel name="Elevons">
 		
-		<switch name="fcs/ari-lateral-enabled">
-			<default value="1"/>
-			<test value="0" logic="OR">
-				systems/hydraulics/flight-system-pressure ne 1
-				autoflight/input/pitch-switch ne 1
-			</test>
-		</switch>
+		<fcs_function name="fcs/pitch-trim-compensation">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+					<tableData>
+						     0         35
+						  0 -0.288600 -0.122750
+						200 -0.188860 -0.102750
+						310 -0.061875  0.022125
+						415 -0.037920  0.076125
+						520  0.020500  0.076125
+						620  0.001877  0.076125
+						740  0.134250  0.076125
+						820  0.174000  0.076125
+						900  0.216250  0.076125
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 		
 		<summer name="fcs/pitch-input-sum">
 			<input>fcs/stick-pitch</input> <!-- Stick Input with A/P off -->
 			<input>fcs/css-pitch</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
 			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
-			<input>systems/cadc/pitch-trim-compensation</input> <!-- CAS Pitch Trim Compensation -->
+			<input>fcs/pitch-trim-compensation</input> <!-- CAS Pitch Trim Compensation -->
 			<clipto>
 				<min>-1.0</min>
 				<max>0.51724</max>
 			</clipto>
 		</summer>
 		
-		<pure_gain name="fcs/pitch-input-deg">
+		<fcs_function name="fcs/pitch-ratio-calc"> <!-- Guesses, I found no data -->
+			<function>
+				<product>
+					<table>
+						<independentVar lookup="row">velocities/mach</independentVar>
+						<independentVar lookup="column">atmosphere/density-altitude</independentVar>
+						<tableData>
+							      0     65000
+							0.32  1.00  1.00
+							0.70  0.35  0.83
+							1.55  0.02  0.46
+						</tableData>
+					</table>
+				</product>
+			</function>
+			<clipto>
+				<min>0.01</min>
+				<max>1.0</max>
+			</clipto>
+		</fcs_function>
+		
+		<switch name="fcs/pitch-ratio">
+			<default value="fcs/pitch-ratio-calc"/>
+			<test logic="OR" value="0.5">
+				systems/hydraulics/flight-system-pressure ne 1
+				systems/cadc/pitch-ratio-emergency ne 0
+			</test>
+			<test value="1.0">
+				gear/gear-pos-norm ne 0
+			</test>
+		</switch>
+		
+		<pure_gain name="fcs/pitch-ratio-input">
 			<input>fcs/pitch-input-sum</input>
+			<gain>fcs/pitch-ratio</gain>
+		</pure_gain>
+		
+		<pure_gain name="fcs/pitch-input-deg">
+			<input>fcs/pitch-ratio-input</input>
 			<gain>29.0</gain>
 			<clipto>
 				<min>-29.0</min>
 				<max>15.0</max>
 			</clipto>
 		</pure_gain>
-
+		
 		<summer name="fcs/roll-elevon-input-sum">
 			<input>fcs/stick-roll</input> <!-- Stick Input with A/P off -->
 			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
 			<input>autoflight/roll/roll-rate-demand</input> <!-- A/P Roll Demand -->
-			<input>fcs/roll-rate-limiter</input> <!-- CAS Roll Rate Limiter -->
+			<!--input>fcs/roll-rate-limiter</input--> <!-- CAS Roll Rate Limiter -->
 			<clipto>
 				<min>-1.0</min>
 				<max>1.0</max>
 			</clipto>
 		</summer>
+		
+		<fcs_function name="fcs/roll-ratio-calc"> <!-- Guesses, I found no data -->
+			<function>
+				<product>
+					<table>
+						<independentVar lookup="row">velocities/mach</independentVar>
+						<independentVar lookup="column">atmosphere/density-altitude</independentVar>
+						<tableData>
+							      0     30000 65000
+							0.10  1.00  1.00  1.00
+							0.30  0.65  0.71  0.83
+							0.50  0.41  0.44  0.59
+							0.70  0.28  0.34  0.37
+							1.10  0.16  0.25  0.27
+							1.30  0.14  0.18  0.22
+							1.55  0.13  0.14  0.20
+							2.00  0.05  0.10  0.13
+						</tableData>
+					</table>
+				</product>
+			</function>
+			<clipto>
+				<min>0.01</min>
+				<max>1.0</max>
+			</clipto>
+		</fcs_function>
+		
+		<switch name="fcs/roll-ratio">
+			<default value="fcs/roll-ratio-calc"/>
+			<test logic="OR" value="0.5">
+				systems/cadc/roll-ratio-emergency ne 0
+				systems/hydraulics/flight-system-pressure ne 1
+			</test>
+			<test value="1.0">
+				gear/gear-pos-norm ne 0
+			</test>
+		</switch>
 		
 		<fcs_function name="fcs/roll-elevon-input-deg">
 			<description>
@@ -109,7 +199,7 @@
 				<product>
 					<property>fcs/roll-elevon-input-sum</property>
 					<value>8.7</value> <!-- Maximum Roll Authority, 29 degrees * 0.3 -->
-					<property>systems/cadc/roll-ratio</property>
+					<property>fcs/roll-ratio</property>
 					<table>
 						<independentVar lookup="row">fcs/pitch-input-deg</independentVar>
 						<independentVar lookup="column">velocities/vc-kts</independentVar>
@@ -233,7 +323,7 @@
 			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
 			<input>autoflight/roll/roll-rate-demand</input> <!-- A/P Roll Demand -->
-			<input>fcs/roll-rate-limiter</input> <!-- CAS Roll Rate Limiter -->
+			<!--input>fcs/roll-rate-limiter</input--> <!-- CAS Roll Rate Limiter -->
 			<clipto>
 				<min>-1.0</min>
 				<max>1.0</max>
@@ -242,7 +332,7 @@
 		
 		<pure_gain name="fcs/roll-aileron-ratio-input">
 			<input>fcs/roll-aileron-input-sum</input>
-			<gain>systems/cadc/roll-ratio</gain>
+			<gain>fcs/roll-ratio</gain>
 		</pure_gain>
 		
 		<pure_gain name="fcs/aileron-input-deg">
@@ -282,6 +372,14 @@
 	</channel>
 	
 	<channel name="Yaw">
+		
+		<switch name="fcs/ari-lateral-enabled">
+			<default value="1"/>
+			<test value="0" logic="OR">
+				systems/hydraulics/flight-system-pressure ne 1
+				autoflight/input/pitch-switch ne 1
+			</test>
+		</switch>
 		
 		<switch name="fcs/aileron-cmd-norm-ap-switched">
 			<default value="fcs/aileron-cmd-norm"/>

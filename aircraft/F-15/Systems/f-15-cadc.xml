@@ -7,20 +7,10 @@
 
 <system name="CADC">
 
-    <property value="0.008"> systems/afcs/altitude-hold-pid-kp </property>
-    <property value="0.0008"> systems/afcs/altitude-hold-pid-ki </property>
-    <property value="0.0025"> systems/afcs/altitude-hold-pid-kd </property>
-    <property value="1.2"> systems/afcs/altitude-hold-elevator-gain </property>
-    <property value="2"> systems/afcs/altitude-hold-lag-constant </property>
-
     <property value="0">systems/afcs/target-altitude-ft</property>
     <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/gear-warn-silence-dmd</property>
-    <property value="0">systems/cadc/pitch-ratio-emergency</property>
-    <property value="0">systems/cadc/roll-ratio-emergency</property>
 
-    <property value="0">systems/afcs/heading-hold-active</property>
-    <property value="0">systems/afcs/SAS-roll-demand</property>
     <property value="0">gear/gear-asym</property>
 
     <!-- these are defined by an alias in the -set file
@@ -30,7 +20,6 @@
     -->
     <property value="0">fcs/aim-fitted</property>
     <property value="0">fcs/steer-maneuver</property>
-    <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
     <property>systems/NWS/engaged</property>
 
     <property value="0">propulsion/inlet/l-inlet-ramp-emerg</property>
@@ -390,107 +379,6 @@
             </function>
         </fcs_function>
 
-        <fcs_function name="systems/cadc/pitch-trim-compensation">
-            <function>
-                <!--Maintain the aircraft pitch trim for speed and flaps. The PTC system relieves the pilot of the task of compensating for pitch trim for speed and flaps with large longitudinal stick motions.-->
-                <description>Pitch Trim Compensator (PTC)</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                        <tableData>
-                                          0          35
-                              0    -0.28860   -0.122750
-                            200   -0.188860   -0.102750
-                            310   -0.061875    0.022125
-                            415   -0.037920    0.076125
-                            520    0.020500    0.076125
-                            620    0.001877    0.076125
-                            740    0.134250    0.076125
-                            820    0.174000    0.076125
-                            900    0.216250    0.076125
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-        
-
-        <fcs_function name="systems/cadc/pitch-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of elevator</description>
-                <product>
-                    <sum>
-                        <value>1</value>
-                        <abs>
-                            <property>inertia/cg-x-mac-percent</property>
-                        </abs>
-                    </sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0      1.0
-                            300    1.0
-                            400    0.7
-                            500    0.4
-                            600    0.2
-                            900    0.05
-                            1100   0.08
-                        </tableData>
-                    </table>
-                </product>
-            </function>
-            <clipto>
-                <min> -1 </min>
-                <max> 1 </max>
-            </clipto>
-
-        </fcs_function>
-        <switch name="systems/cadc/pitch-ratio">
-            <description>Aircraft on ground</description>
-            <default value="systems/cadc/pitch-ratio-dmd"/>
-            <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
-                systems/hydraulics/flight-system-pressure ne 1
-                systems/cadc/pitch-ratio-emergency ne 0
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-pos-norm ne 0
-            </test>
-        </switch>
-
-        <fcs_function name="systems/cadc/roll-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of aileron</description>
-                <product>
-                <sum>
-                        <value>1</value>
-                        <abs>
-                            <property>inertia/cg-x-mac-percent</property>
-                        </abs>
-                    </sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                              0  1.0
-                            180  1.0
-                            400  0.4
-                            1000 0.12
-                        </tableData>
-                    </table>
-                </product>
-            </function>
-        </fcs_function>
-        <switch name="systems/cadc/roll-ratio">
-            <description>Roll ratio actual</description>
-            <default value="systems/cadc/roll-ratio-dmd"/>
-            <test value="0.5" logic="OR">
-                systems/cadc/roll-ratio-emergency ne 0
-                systems/hydraulics/flight-system-pressure ne 1
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-pos-norm ne 0
-            </test>
-        </switch>
     </channel>
 
     <channel name="SAS">
@@ -540,59 +428,6 @@
                 </tableData>
             </table>
             <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>
-        <!--<scheduled_gain name="Yaw Damper Rate">
-            <input>velocities/r-aero-rad_sec</input>
-            <table>
-                <independentVar lookup="row">velocities/ve-kts</independentVar>
-                <tableData>
-                    30     0.00
-                    60     1.6
-                    400     0.5
-                    800     0.5
-                </tableData>
-            </table>
-            <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>-->
-
-        <switch name="fcs/pitch-damper-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                fcs/elevator-cmd-norm ge -0.15
-                fcs/elevator-cmd-norm le 0.15
-                fcs/pitch-damper-enable ne 0.0
-                autoflight/output/pitch-master ne 1
-            </test>
-            <output>fcs/pitch-damper-active</output>
-        </switch>
-
-        <scheduled_gain name="Pitch Damper Rate">
-            <!-- Figure 2-57 F14AAD-1  -->
-            <input>velocities/q-aero-rad_sec</input>
-            <table>
-                <independentVar lookup="row">velocities/ve-kts</independentVar>
-                <tableData>
-                    30     0.00
-                    60     1
-                </tableData>
-            </table>
-            <gain>fcs/pitch-damper-active</gain>
-            <min> -0.2857142857142857 </min>
-            <max>  0.2857142857142857 </max>
-        </scheduled_gain>
-
-        <scheduled_gain name="fcs/roll-rate-limiter">
-            <input>fcs/aileron-cmd-norm</input>
-            <table>
-                <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
-                <tableData>
-                    -6.2    2.0
-                    -1.4     0.0
-                    1.4     0.0
-                    6.2    2.0
-                </tableData>
-            </table>
-            <gain>fcs/roll-sas-active</gain>
         </scheduled_gain>
     </channel>
 
