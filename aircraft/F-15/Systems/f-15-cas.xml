@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+
+<!-- McDonnell Douglas F-15 Control Augmentation System -->
+<!-- (c) 2018 Joshua Davidson (it0uchpods) -->
+
+<system name="cas">
+	
+	<property value="0">cas/ari-input</property>
+	<property value="0">cas/beta-pd</property>
+	<property value="0">cas/beta-p-gain</property>
+	<property value="0">cas/beta-d-gain</property>
+	
+	<channel name="Libraries">
+		
+		<switch name="cas/yaw-cas-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				fcs/yaw-damper-enable ne 0
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
+		<fcs_function name="cas/beta-p-gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.3  3.0
+						0.7  1.1
+						1.1  0.0
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="cas/beta-d-gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.3  5.0
+						0.7  2.9
+						1.1  0.0
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+	
+	</channel>
+	
+	<channel name="Yaw Axis">
+		
+		<scheduled_gain name="cas/yaw-damper">
+			<input>velocities/r-aero-rad_sec</input>
+			<table>
+				<independentVar>velocities/mach</independentVar>
+				<tableData>
+					0.3 -3.18
+					0.7 -2.14
+					1.1 -1.32
+					1.3 -1.01
+					1.5 -0.72
+					2.1 -0.59
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2</min>
+				<max>0.2</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<switch name="cas/beta">
+			<default value="0"/>
+			<test logic="AND" value="aero/beta-rad">
+				cas/ari-input le 0.04
+				cas/ari-input ge -0.04
+				/controls/flight/rudder le 0.04
+				/controls/flight/rudder ge -0.04
+				cas/yaw-cas-active eq 1
+			</test>
+		</switch>
+		
+		<pid name="cas/beta-pd-v">
+			<input>cas/beta</input>
+			<kp>gain-p</kp>
+			<ki>0.0</ki>
+			<kd>gain-d</kd>
+			<output>cas/beta-pd</output>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</pid>
+		
+		<summer name="cas/yaw-cmd">
+			<input>cas/yaw-damper</input>
+			<input>cas/beta-pd</input>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</summer>
+		
+		<switch name="cas/yaw-output">
+			<default value="0"/>
+			<test value="cas/yaw-cmd">
+				cas/yaw-cas-active eq 1
+			</test>
+		</switch>
+	
+	</channel>
+
+</system>

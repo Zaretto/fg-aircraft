@@ -7,8 +7,6 @@
 
 <system name="CADC">
 
-    <property value="0">systems/afcs/target-altitude-ft</property>
-    <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/gear-warn-silence-dmd</property>
 
     <property value="0">gear/gear-asym</property>
@@ -364,74 +362,7 @@
             <output>metrics/aero-rp-x-in</output>
         </fcs_function>
 
-        <fcs_function name="systems/cadc/rudder-effectivity">
-            <function>
-                <description>High speed CADC control effectivity limitation of rudder</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0.00  1.0
-                            800 0.7
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-
     </channel>
-
-    <channel name="SAS">
-        <switch name="fcs/roll-sas-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                fcs/roll-damper-enable  ne 0.0
-                autoflight/output/roll-master ne 1
-            </test>
-            <output>fcs/roll-sas-active</output>
-        </switch>
-
-        <switch name="fcs/yaw-damper-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                fcs/yaw-damper-enable ne 0.0
-            </test>
-            <output>fcs/yaw-damper-active</output>
-        </switch>
-
-        <scheduled_gain name="fcs/yaw-damper-sum">
-            <input>velocities/r-aero-rad_sec</input>
-            <table>
-                <independentVar>velocities/vc-kts</independentVar>
-                <tableData>
-                    0   0
-                    80  0
-                    120	3.6251
-                    650 1.65
-                    890 1.00
-                    1000 0.5
-                </tableData>
-            </table>
-            <clipto>
-                <min>-0.2000</min>
-                <max>0.2000</max>
-            </clipto>
-        </scheduled_gain>
-
-        <scheduled_gain name="fcs/yaw-damper-dmd">
-            <input>fcs/yaw-damper-sum</input>
-            <table>
-                <independentVar>aero/qbar-psf</independentVar>
-                <tableData>
-                    2.9900	0.0000
-                    3.0000	1.0000
-                </tableData>
-            </table>
-            <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>
-    </channel>
-
-  
 
     <channel name="SoundFX" execrate="4">
         <fcs_function name="fcs/flap-windfx-volume">

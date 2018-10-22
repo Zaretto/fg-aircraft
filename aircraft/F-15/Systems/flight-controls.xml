@@ -372,34 +372,39 @@
 	
 	<channel name="Yaw">
 		
+		<switch name="fcs/ari-mach-switch"> <!-- Prevents switch from rapidly going back and forth -->
+			<default value="fcs/ari-mach-switch"/>
+			<test value="1">
+				velocities/mach le 0.9925
+			</test>
+			<test value="0">
+				velocities/mach ge 1.0075
+			</test>
+		</switch>
+		
 		<switch name="fcs/ari-lateral-enabled">
-			<default value="1"/>
-			<test value="0" logic="OR">
-				systems/hydraulics/flight-system-pressure ne 1
-				autoflight/input/pitch-switch ne 1
+			<default value="0"/>
+			<test logic="AND" value="1">
+				position/aircraft-on-ground eq 0
+				autoflight/output/roll-master ne 1
+				systems/hydraulics/flight-system-pressure eq 1
+				fcs/ari-mach-switch eq 1
 			</test>
 		</switch>
 		
-		<switch name="fcs/aileron-cmd-norm-ap-switched">
-			<default value="fcs/aileron-cmd-norm"/>
-			<test logic="AND" value="autoflight/ss/aileron-norm">
-				autoflight/input/roll-switch eq 1
-				autoflight/output/roll-master eq 0
-			</test>
-			<test logic="AND" value="0">
-				autoflight/input/roll-switch eq 1
-				autoflight/output/roll-master eq 1
-			</test>
-		</switch>
+		<pure_gain name="fcs/ari-aileron-input">
+			<input>fcs/aileron-cmd-norm</input>
+			<gain>fcs/roll-ratio</gain>
+		</pure_gain>
 		
-		<fcs_function name="fcs/ari-lateral-rudder-demand-norm">
+		<fcs_function name="fcs/rudder-ari">
 			<description>
 				This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
 				The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.
 			</description>
 			<function>
 				<product>
-					<property>fcs/aileron-cmd-norm-ap-switched</property>
+					<property>fcs/ari-aileron-input</property>
 					<property>fcs/ari-lateral-enabled</property>
 					<table>
 						<independentVar lookup="row">fcs/elevon-aero-deg</independentVar>
@@ -417,40 +422,43 @@
 				<min>-1.0</min>
 				<max>1.0</max>
 			</clipto>
+			<output>cas/ari-input</output>
 		</fcs_function>
 		
-		<!-- http://www.f15sim.com/operation/f15_flight_control_system.htm -->
-		<switch name="fcs/ari-lateral-rudder-pos-norm">
-			<default value="fcs/ari-lateral-rudder-demand-norm"/>
-			<test logic="OR" value="0">
-				fcs/ari-lateral-enabled eq 0
-				velocities/mach ge 0.9
+		<switch name="fcs/rudder-gain"> <!-- Prevents gain from rapidly going back and forth -->
+			<default value="fcs/rudder-gain"/>
+			<test value="0.5"> <!-- 15 degrees -->
+				velocities/mach le 1.4925
 			</test>
-			<test logic="OR" value="0">
-				velocities/mach ge 0.9
-				position/aircraft-on-ground ne 0
-				fcs/ari-lateral-enabled eq 0
+			<test value="0.166666666"> <!-- 5 degrees -->
+				velocities/mach ge 1.5075
 			</test>
 		</switch>
 		
+		<fcs_function name="fcs/rudder-input-limited">
+			<function>
+				<product>
+					<sum>
+						<property>fcs/rudder-cmd-norm</property>
+						<property>fcs/yaw-trim-cmd-norm</property>
+					</sum>
+					<property>fcs/rudder-gain</property>
+				</product>
+			</function>
+		</fcs_function>
+		
 		<summer name="fcs/yaw-input-sum">
-			<input>fcs/rudder-cmd-norm</input>
-			<input>fcs/yaw-trim-cmd-norm</input>
-			<input>fcs/ari-lateral-rudder-pos-norm</input>
-			<input>fcs/yaw-damper-dmd</input>
+			<input>fcs/rudder-input-limited</input>
+			<input>fcs/rudder-ari</input>
+			<input>-cas/yaw-output</input>
 			<clipto>
 				<min>-1.0</min>
 				<max>1.0</max>
 			</clipto>
 		</summer>
 		
-		<pure_gain name="fcs/yaw-effectivity-input">
-			<input>fcs/yaw-input-sum</input>
-			<gain>systems/cadc/rudder-effectivity</gain>
-		</pure_gain>
-		
 		<pure_gain name="fcs/rudder-input-deg">
-			<input>fcs/yaw-effectivity-input</input>
+			<input>fcs/yaw-input-sum</input>
 			<gain>30.0</gain>
 			<clipto>
 				<min>-30.0</min>
