@@ -1,3 +1,7 @@
+debug_fixup = func(u) {
+#u.Bearing.setValue(u.get_rel_bearing());
+#dump_tgt(0,u);
+};
  #---------------------------------------------------------------------------
 #
  #	Title                : Radar simulation.
@@ -581,11 +585,11 @@ var az_scan = func(notification) {
             if (radar_mode < 2 and math.abs(u.deviationA) < az_fld/2 and math.abs(u.deviationE) < HoField.getValue()/2) {#richard, I had to fix 2 bugs here.
                 u.set_display(u.get_visible() and !RadarStandby.getValue() and u.get_type() != ORDNANCE);
 #                if(awg9_trace)
-#                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
+#                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ",u.deviationA," field=",l_az_fld,"->",r_az_fld);
             }
             else {
 #                if(awg9_trace)
-#                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviation," field=",l_az_fld,"->",r_az_fld);
+#                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviationA," field=",l_az_fld,"->",r_az_fld);
                 u.set_display(0);
             }
         } else {
@@ -623,6 +627,8 @@ var az_scan = func(notification) {
 
                   # Compute mp position in our DDD display. (Bearing/horizontal + Range/Vertical).
                   u.set_relative_bearing( ddd_screen_width / az_fld * u.deviationA );
+                  u.BBearing.setValue(u.get_bearing());#awg_9.ddd_screen_width*awg_9.az_fld /  u.deviationA);
+debug_fixup(u);
                   var factor_range_radar = 0.0657 / range_radar2; # 0.0657m : length of the distance range on the DDD screen.
                   u.set_ddd_draw_range_nm( factor_range_radar * u_rng );
                   u_fading = 1;
@@ -1421,9 +1427,8 @@ else
             obj.EcmSignal      = obj.TgtsFiles.getNode("ecm-signal", 1);
             obj.EcmSignalNorm  = obj.TgtsFiles.getNode("ecm-signal-norm", 1);
             obj.EcmTypeNum     = obj.TgtsFiles.getNode("ecm_type_num", 1);
-            obj.Display        = obj.TgtsFiles.getNode("display", 1);
-            obj.Display.setValue(0);
-            obj.Visible        = obj.TgtsFiles.getNode("visible", 1);
+            obj.Display        = obj.TgtsFiles.getNode("display", 1, 0, "BOOL");
+            obj.Visible        = obj.TgtsFiles.getNode("visible", 1, 0, "BOOL");
             obj.Behind_terrain = obj.TgtsFiles.getNode("behind-terrain", 1);
             obj.RWRVisible     = obj.TgtsFiles.getNode("rwr-visible", 1);
             obj.Fading         = obj.TgtsFiles.getNode("ddd-echo-fading", 1);
