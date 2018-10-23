@@ -9,7 +9,7 @@
 	<property value="2">position/aircraft-on-ground-last-value</property>
 	<property value="0">systems/cadc/pitch-ratio-emergency</property>
 	<property value="0">systems/cadc/roll-ratio-emergency</property>
-
+	
 	<!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
 		Kevin R. Scalera
 		Table 2.1: Control surface limits
@@ -97,11 +97,21 @@
 					<table>
 						<independentVar lookup="row">velocities/mach</independentVar>
 						<independentVar lookup="column">atmosphere/density-altitude</independentVar>
-						<tableData>
-							      0     65000
-							0.32  1.00  1.00
-							0.70  0.35  0.83
-							1.55  0.02  0.46
+						<tableData> <!-- Low and ultra high mach excluded, as the manual shows, they differ from the standard -->
+							      0      15000  30000  45000  65000
+							0.50  1.000  1.000  1.000  1.000  1.000
+							0.70  0.450  0.590  1.000  1.000  1.000
+							0.80  0.340  0.425  1.000  1.000  1.000
+							0.90  0.230  0.260  0.340  1.000  1.000
+							1.00  0.182  0.214  0.285  0.875  1.000
+							1.10  0.135  0.168  0.230  0.360  1.000
+							1.20  0.125  0.155  0.217  0.342  1.000
+							1.30  0.115  0.141  0.204  0.324  0.804
+							1.50  0.104  0.122  0.178  0.275  0.513
+							1.75  0.097  0.112  0.166  0.260  0.490
+							2.00  0.092  0.102  0.152  0.250  0.423
+							2.25  0.085  0.094  0.138  0.225  0.400
+							2.50  0.084  0.089  0.130  0.200  0.381
 						</tableData>
 					</table>
 				</product>
