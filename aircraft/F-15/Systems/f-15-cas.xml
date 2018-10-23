@@ -6,11 +6,24 @@
 <system name="cas">
 	
 	<property value="0">cas/ari-input</property>
+	<property value="0">cas/roll-rate-pd</property>
 	<property value="0">cas/beta-pd</property>
 	<property value="0">cas/beta-p-gain</property>
 	<property value="0">cas/beta-d-gain</property>
+	<property value="0">gain-p</property>
+	<property value="0">gain-d</property>
 	
 	<channel name="Libraries">
+		
+		<switch name="cas/roll-cas-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				fcs/roll-damper-enable ne 0
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+				autoflight/output/roll-master ne 1
+			</test>
+		</switch>
 		
 		<switch name="cas/yaw-cas-active">
 			<default value="0"/>
@@ -49,10 +62,70 @@
 	
 	</channel>
 	
+	<channel name="Roll Axis"> <!-- FIXME: No gains -->
+		
+		<fcs_function name="cas/roll-rate-demand">
+			<function>
+				<sum>
+					<table>
+						<independentVar lookup="row">/controls/flight/aileron</independentVar>
+						<tableData>
+							-1.00 -213.1
+							-0.04    0.0
+							 0.00    0.0
+							 0.04    0.0
+							 1.00  213.1
+						</tableData>
+					</table>
+					<table>
+						<independentVar lookup="row">/controls/flight/aileron-trim</independentVar>
+						<tableData>
+							-1.00 -24.5
+							-0.04   0.0
+							 0.00   0.0
+							 0.04   0.0
+							 1.00  24.5
+						</tableData>
+					</table>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<lag_filter name="cas/roll-rate-lag">
+			<input>cas/roll-rate-demand</input>
+			<c1>165.6</c1>
+		</lag_filter>
+		
+		<summer name="cas/roll-rate-error">
+			<input>/orientation/roll-rate-degps</input>
+			<input>-cas/roll-rate-lag</input>
+		</summer>
+		
+		<pid name="cas/roll-rate-pd-v"> <!-- Only P and D componets used -->
+			<input>cas/roll-rate-error</input>
+			<kp>gain-p</kp>
+			<ki>0.0</ki>
+			<kd>gain-d</kd>
+			<output>cas/roll-rate-pd</output>
+			<clipto>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</clipto>
+		</pid>
+		
+		<switch name="cas/roll-output">
+			<default value="0"/>
+			<test value="cas/roll-rate-pd">
+				cas/roll-cas-active eq 1
+			</test>
+		</switch>
+	
+	</channel>
+	
 	<channel name="Yaw Axis">
 		
 		<scheduled_gain name="cas/yaw-damper">
-			<input>velocities/r-aero-rad_sec</input>
+			<input>velocities/r-rad_sec</input>
 			<table>
 				<independentVar>velocities/mach</independentVar>
 				<tableData>
@@ -83,9 +156,9 @@
 		
 		<pid name="cas/beta-pd-v">
 			<input>cas/beta</input>
-			<kp>gain-p</kp>
+			<kp>cas/beta-p-gain</kp>
 			<ki>0.0</ki>
-			<kd>gain-d</kd>
+			<kd>cas/beta-d-gain</kd>
 			<output>cas/beta-pd</output>
 			<clipto>
 				<min>-0.3</min>
