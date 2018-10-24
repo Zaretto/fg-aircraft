@@ -213,19 +213,23 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
+                <property>instrumentation/altimeter/setting-inhg-demand</property>
                
                 <factor>0.01</factor>
                 <min>27.90</min>
                 <max>31.40</max>
                 <wrap>false</wrap>
             </binding>
+            <binding>
+                <command>nasal</command>
+                <script>f14.notify_prop(f14.altimeter_setting_inhg, "instrumentation/altimeter/setting-inhg-demand")</script>
+            </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
         <object-name>stby-reset-knob</object-name>
-        <property>instrumentation/altimeter/setting-stby</property>
+        <property>instrumentation/altimeter/setting-stby-demand</property>
         <factor>-90</factor>
         <center>
             <x-m>0.0197</x-m>
@@ -241,12 +245,16 @@ a synchro overrides the barometric mechanism and positions the pointer to true a
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>instrumentation/altimeter/setting-stby-demand</property>
 
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
                 <wrap>false</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>f14.notify_prop(f14.altimeter_setting_stby, "instrumentation/altimeter/setting-stby-demand")</script>
             </binding>
         </action>
     </animation>

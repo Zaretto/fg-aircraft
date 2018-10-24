@@ -348,8 +348,61 @@ setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engi
 
 }
 
+#
+#
+# Use Emesary (with bridge notifications) to communicate all of the shared properties over MP.
+
+##
+## These are the notifications that will be bridged.
+#var routedNotifications = [notifications.PropertySyncNotification.new(nil), notifications.GeoEventNotification.new(nil)];
+var routedNotifications = [notifications.PropertySyncNotification.new(nil)];
+var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil)];
+
+# To seperate out the incoming and outgoing we will have a dedicated transmitter for sending notifications over MP.
+# We could bridge GlobalTransmitter - however this way allows us to control what is sent.
+var bridgedTransmitter = emesary.Transmitter.new("outgoingBridge");
+
+#
+# The bridge requires two sides; the outgoing and incoming. The outgoing will forwards all received notifications via 
+# MP; and these will be received by a similarly equipped craft. All received notifications are, by default, sent via the
+# global transmitter; and therefore there needs to be no differentiation (in our code) as to where the notification comes 
+# from.
+var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp",routedNotifications, 19, "", bridgedTransmitter);
+var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications, 19, emesary.GlobalTransmitter);
+
+var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
+var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
+var geoincomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
+#
+# This is the notification (derived from Nasal/PropertySyncNotificationBase) that will allow properties to be transmitted over MP
+var f14_aircraft_notification = notifications.PropertySyncNotification.new("F-14"~getprop("/sim/multiplay/callsign"));
+
+var debugRecipient = emesary.Recipient.new("Debug");
+debugRecipient.Receive = func(notification)
+{
+    if (notification.NotificationType == "GeoEventNotification")
+    {
+        print("recv: ",notification.NotificationType, " ", notification.Ident);
+		debug.dump(notification);
+    }
+#    if (notification.NotificationType == "PropertySyncNotification")
+#    {
+#        print("recv: ",notification.NotificationType, " ", notification.Ident);
+#		debug.dump(notification);
+#    }
+    return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
+}
+#emesary.GlobalTransmitter.Register(debugRecipient);
+
+setprop("/sim/startup/terminal-ansi-colors",0);
+var get_int_prop = func(s){
+if(getprop(s)!=nil) return getprop(s);
+return 0;
+}
 
 
+var update_f14_aircraft_notification = func(obj) {
+}
 #----------------------------------------------------------------------------
 # FCS update
 #----------------------------------------------------------------------------
@@ -471,8 +524,12 @@ var F14_exec = {
         f14.engineControls();
         f14.timedMotions ();
         f14.electricsFrame();
+# emesary notification - basic properties
+     update_f14_aircraft_notification(f14_aircraft_notification);
+     bridgedTransmitter.NotifyAll(f14_aircraft_notification);
     },
 };
+
 
 subsystem = F14_exec.new("F14_exec");
 

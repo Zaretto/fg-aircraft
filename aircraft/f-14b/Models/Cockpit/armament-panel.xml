@@ -77,9 +77,14 @@
 			<repeatable>false</repeatable>
 			<interval-sec>0.05</interval-sec>
 			<binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
+            </binding>
+
+            <binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(0, -1);
+					f14.notify_value(f14.station_selector_0, -1);
 				</script>
 			</binding>
 		</action>
@@ -95,7 +100,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(0, 1);
+					f14.notify_value(f14.station_selector_0, 1);
 				</script>
 			</binding>
 		</action>
@@ -121,7 +126,7 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(3, -1000);
+					f14.notify_value(f14.station_selector_3, 0);
                 </script>
             </binding>
         </action>
@@ -146,7 +151,7 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(4, -1000);
+					f14.notify_value(f14.station_selector_4, 0);
                 </script>
             </binding>
         </action>
@@ -171,7 +176,7 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(5, -1000);
+					f14.notify_value(f14.station_selector_5, 0);
                 </script>
             </binding>
         </action>
@@ -196,7 +201,7 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(6, -1000);
+					f14.notify_value(f14.station_selector_6, 0);
                 </script>
             </binding>
         </action>
@@ -258,7 +263,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(7, -1);
+					f14.notify_value(f14.station_selector_7, -1);
 				</script>
 			</binding>
 		</action>
@@ -274,7 +279,7 @@
 			<binding>
 				<command>nasal</command>
 				<script>
-					f14.station_selector(7, 1);
+					f14.notify_value(f14.station_selector_7, 1);
 				</script>
 			</binding>
 		</action>

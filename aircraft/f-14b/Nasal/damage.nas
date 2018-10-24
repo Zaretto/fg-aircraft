@@ -328,21 +328,57 @@ var sendMis = func () {
     var mid = m;
     m = armament.AIM.active[m];
     if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
+      #var lat = m.latN.getValue();
+      #var lon = m.lonN.getValue();
+      #var alt = m.altN.getValue();
       #print();
       #print(mid);
       #print(lat);
       #print(lon);
       #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
+      #str = str~mid~";"~lat~";"~lon~";"~alt~":";
+      var msg = notifications.GeoEventNotification.new("mis", mid, 2, 20+mid);
+      msg.Position.set_latlon(m.latN.getValue(), m.lonN.getValue(), m.altN.getValue());
+      geoBridgedTransmitter.GlobalTransmitter.NotifyAll(msg);
     }
   }
-  setprop("sim/multiplay/generic/string[13]", str);
+#  setprop("sim/multiplay/generic/string[13]", str);
+  settimer(sendMis,0.1);
 }
-sendMisTimer = maketimer(0.05, sendMis);
-sendMisTimer.simulatedTime = 1;
+
+#
+# Create emesary recipient for handling other craft's missile positioins.
+var DamageRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+
+        new_class.Receive = func(notification)
+        {
+            if (!notification.FromIncomingBridge)
+                return emesary.Transmitter.ReceiptStatus_NotProcessed;
+
+            if (notification.NotificationType == "GeoEventNotification") {
+#
+#
+# This will be where movement and damage notifications are received. 
+# This can replace MP chat for damage notifications 
+# and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
+# to receive notifications from all other suitably equipped models.
+                print("Event received from ",notification.Callsign, " pos (lat=",notification.Position.lat(), ", lon=",notification.Position.lon(),", ",notification.Position.alt()," ft. Name=",
+                      notification.Name," Kind=",notification.Kind, " SecKind=",notification.SecondaryKind);
+#                debug.dump(notification);
+                return emesary.Transmitter.ReceiptStatus_OK;
+    }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+  }
+        return new_class;
+}
+};
+
+damage_recipient = DamageRecipient.new("DamageRecipient");
+emesary.GlobalTransmitter.Register(damage_recipient);
 
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.
