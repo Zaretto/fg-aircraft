@@ -44,7 +44,7 @@ calc_groundspeed_kt = func(node) {
         var vv = math.sqrt(nvx*nvx + nvy*nvy + nvz*nvz)/nvtime;
 #        print("nvx ",nvx, " nvy ",nvy, " vv ",vv*1.94384, " (",nvtime,")");
         if (node != nil)
-          node.getNode("velocities/groundspeed-kt",1).setValue(vv*1.94384);
+          node.getNode("velocities/groundspeed-kt",1).setDoubleValue(vv*1.94384);
     }
     lvx = vx;
     lvy = vy;
