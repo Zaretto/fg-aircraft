@@ -200,7 +200,8 @@ var VSD_Device =
     bindDisplay : func (target_module_id, model_element){
         if (me.placement != nil){
             var pnode = me.placement.getNode("module-id");
-            print("VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
+if (pnode == nil) return;
+#            print("VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
             pnode.setValue(target_module_id);
             return;
           }
