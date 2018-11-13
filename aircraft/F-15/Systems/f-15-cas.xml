@@ -23,6 +23,16 @@
 			</test>
 		</switch>
 		
+		<switch name="cas/pitch-cas-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				fcs/pitch-damper-enable ne 0
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+				autoflight/output/pitch-master ne 1
+			</test>
+		</switch>
+		
 		<switch name="cas/yaw-cas-active">
 			<default value="0"/>
 			<test logic="AND" value="1">
@@ -99,15 +109,74 @@
 			<input>-cas/roll-rate-lag</input>
 		</summer>
 		
-		<pure_gain name="cas/roll-rate-p">
+		<scheduled_gain name="cas/roll-rate-p">
 			<input>cas/roll-rate-error</input>
-			<gain>-0.015</gain>
-		</pure_gain>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150 -0.015
+					950 -0.011
+				</tableData>
+			</table>
+		</scheduled_gain>
 		
 		<switch name="cas/roll-output">
 			<default value="0"/>
 			<test value="cas/roll-rate-p">
 				cas/roll-cas-active eq 1
+			</test>
+		</switch>
+	
+	</channel>
+	
+	<channel name="Pitch Axis">
+		
+		<scheduled_gain name="cas/pitch-q-feedback">
+			<input>velocities/q-rad_sec</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  1.0
+					950  0.7
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<fcs_function name="cas/pitch-g-fixed">
+			<function>
+				<ifthen>
+					<eq>
+						<property>position/aircraft-on-ground</property>
+						<value>0</value>
+					</eq>
+					<difference>
+						<product>
+							<property>forces/load-factor</property>
+							<value>-1.0</value>
+						</product>
+						<value>1.0</value>
+					</difference>
+					<value>0.0</value>
+				</ifthen>
+			</function>
+		</fcs_function>
+		
+		<summer name="cas/pitch-output-sum">
+			<input>cas/pitch-q-feedback</input>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</summer>
+		
+		<switch name="cas/pitch-output">
+			<default value="0"/>
+			<test value="cas/pitch-output-sum">
+				cas/pitch-cas-active eq 1
 			</test>
 		</switch>
 	
