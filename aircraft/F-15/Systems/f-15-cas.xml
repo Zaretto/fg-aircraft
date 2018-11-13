@@ -6,12 +6,10 @@
 <system name="cas">
 	
 	<property value="0">cas/ari-input</property>
-	<property value="0">cas/roll-rate-pd</property>
 	<property value="0">cas/beta-pd</property>
 	<property value="0">cas/beta-p-gain</property>
 	<property value="0">cas/beta-d-gain</property>
 	<property value="0">gain-p</property>
-	<property value="0">gain-d</property>
 	
 	<channel name="Libraries">
 		
@@ -62,7 +60,7 @@
 	
 	</channel>
 	
-	<channel name="Roll Axis"> <!-- FIXME: No gains -->
+	<channel name="Roll Axis">
 		
 		<fcs_function name="cas/roll-rate-demand">
 			<function>
@@ -71,9 +69,9 @@
 						<independentVar lookup="row">/controls/flight/aileron</independentVar>
 						<tableData>
 							-1.00 -213.1
-							-0.04    0.0
+							-0.01    0.0
 							 0.00    0.0
-							 0.04    0.0
+							 0.01    0.0
 							 1.00  213.1
 						</tableData>
 					</table>
@@ -81,9 +79,9 @@
 						<independentVar lookup="row">/controls/flight/aileron-trim</independentVar>
 						<tableData>
 							-1.00 -24.5
-							-0.04   0.0
+							-0.01   0.0
 							 0.00   0.0
-							 0.04   0.0
+							 0.01   0.0
 							 1.00  24.5
 						</tableData>
 					</table>
@@ -101,21 +99,14 @@
 			<input>-cas/roll-rate-lag</input>
 		</summer>
 		
-		<pid name="cas/roll-rate-pd-v"> <!-- Only P and D componets used -->
+		<pure_gain name="cas/roll-rate-p">
 			<input>cas/roll-rate-error</input>
-			<kp>gain-p</kp>
-			<ki>0.0</ki>
-			<kd>gain-d</kd>
-			<output>cas/roll-rate-pd</output>
-			<clipto>
-				<min>-1.0</min>
-				<max>1.0</max>
-			</clipto>
-		</pid>
+			<gain>-0.015</gain>
+		</pure_gain>
 		
 		<switch name="cas/roll-output">
 			<default value="0"/>
-			<test value="cas/roll-rate-pd">
+			<test value="cas/roll-rate-p">
 				cas/roll-cas-active eq 1
 			</test>
 		</switch>
@@ -146,10 +137,10 @@
 		<switch name="cas/beta">
 			<default value="0"/>
 			<test logic="AND" value="aero/beta-rad">
-				cas/ari-input le 0.04
-				cas/ari-input ge -0.04
-				/controls/flight/rudder le 0.04
-				/controls/flight/rudder ge -0.04
+				cas/ari-input le 0.02
+				cas/ari-input ge -0.02
+				/controls/flight/rudder le 0.02
+				/controls/flight/rudder ge -0.02
 				cas/yaw-cas-active eq 1
 			</test>
 		</switch>
