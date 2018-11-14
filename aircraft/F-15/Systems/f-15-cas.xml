@@ -72,7 +72,7 @@
 	
 	<channel name="Roll Axis">
 		
-		<fcs_function name="cas/roll-rate-demand">
+		<fcs_function name="cas/roll-rate-demand"> <!-- TM-72861 - Figure 21 -->
 			<function>
 				<sum>
 					<table>
@@ -114,7 +114,7 @@
 			<table>
 				<independentVar>velocities/vc-kts</independentVar>
 				<tableData>
-					150 -0.015
+					150 -0.018
 					950 -0.011
 				</tableData>
 			</table>
@@ -136,8 +136,8 @@
 			<table>
 				<independentVar>velocities/vc-kts</independentVar>
 				<tableData>
-					150  1.0
-					950  0.7
+					150  1.5
+					950  0.9
 				</tableData>
 			</table>
 			<clipto>
@@ -146,27 +146,46 @@
 			</clipto>
 		</scheduled_gain>
 		
-		<fcs_function name="cas/pitch-g-fixed">
+		<fcs_function name="cas/pitch-g-demand"> <!-- TM-72861 - Figure 18 -->
 			<function>
-				<ifthen>
-					<eq>
-						<property>position/aircraft-on-ground</property>
-						<value>0</value>
-					</eq>
-					<difference>
-						<product>
-							<property>forces/load-factor</property>
-							<value>-1.0</value>
-						</product>
-						<value>1.0</value>
-					</difference>
-					<value>0.0</value>
-				</ifthen>
+				<table>
+					<independentVar lookup="row">/controls/flight/elevator</independentVar>
+					<tableData>
+						-1.00  8.05
+						-0.54  3.58
+						-0.01  1.00
+						 0.00  1.00
+						 0.01  1.00
+						 0.70 -1.62
+						 1.00 -3.99
+					</tableData>
+				</table>
 			</function>
 		</fcs_function>
 		
+		<summer name="cas/pitch-g-error">
+			<input>/accelerations/pilot-g</input>
+			<input>-cas/pitch-g-demand</input>
+		</summer>
+		
+		<scheduled_gain name="cas/pitch-g-feedback">
+			<input>cas/pitch-g-error</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  0.05
+					950  0.02
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</scheduled_gain>
+		
 		<summer name="cas/pitch-output-sum">
 			<input>cas/pitch-q-feedback</input>
+			<input>cas/pitch-g-feedback</input>
 			<clipto>
 				<min>-0.2857142857142857</min>
 				<max>0.2857142857142857</max>
