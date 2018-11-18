@@ -14,15 +14,16 @@ var message_id = nil;
 
 ###############################################################################
 # Send message wrappers.
-var send_wps_state = func (state) {
-#	print("Message to send: ",state);
+var send_wps_state = func (bstate) {
 	if (typeof(broadcast) != "hash") {
 		print("Error: send_wps_state: typeof(broadcast) != hash");
 		return;
 	}
-	broadcast.send(message_id["ext_load_state"] ~ Binary.encodeInt(state));
-#	print(message_id["ext_load_state"]," ",Binary.encodeInt(state));
-#	print(message_id["ext_load_state"] ~ Binary.encodeInt(state));
+    state = bits.value(bstate);
+#	print("Message to send: ",bstate, " -> iseq=", Binary.decodeDouble(Binary.encodeDouble(state)) == state);
+	broadcast.send(message_id["ext_load_state"] ~ Binary.encodeDouble(state));
+#	print(message_id["ext_load_state"]," ",Binary.encodeDouble(state));
+#	print(message_id["ext_load_state"] ~ Binary.encodeDouble(state));
 }
 
 ###############################################################################
@@ -32,7 +33,7 @@ var handle_message = func (sender, msg) {
 #	debug.dump(msg);
 	var type = msg[0];
 	if (type == message_id["ext_load_state"][0]) {
-		var state = Binary.decodeInt(substr(msg, 1));
+		var state = Binary.decodeDouble(substr(msg, 1));
 #	print("ext_load_state:", msg, " ", state);
 	update_ext_load(sender, state);
 	}
@@ -84,17 +85,6 @@ var update_ext_load = func(sender, state)
 
 	var c = 31;
 	var o = "";
-	var str = chr(wpstr[29]) ~ chr(wpstr[30]) ~ chr(wpstr[31]);
-	if ( str == "000" ) { o = "Clean" }
-	elsif ( str == "001") { o = "Standard Combat" }
-	elsif ( str == "010") { o = "Offensive Counter Air" }
-	elsif ( str == "011") { o = "No Fly Zone" }
-	elsif ( str == "100") { o = "Ferry Flight" }
-	elsif ( str == "101") { o = "Air Superiority" }
-#print("Arm set ",o);
-
-	Wnode.getNode("external-load-set", 1).setValue(o);
-	c -= 3;
 	var s = 10;
 
 	while (s >= 0) 
