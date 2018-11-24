@@ -9,7 +9,7 @@
 	<property value="0">cas/beta-pd</property>
 	<property value="0">cas/beta-p-gain</property>
 	<property value="0">cas/beta-d-gain</property>
-	<property value="0">gain-p</property>
+	<property value="0">gain</property>
 	
 	<channel name="Libraries">
 		
@@ -241,9 +241,25 @@
 			</clipto>
 		</pid>
 		
+		<scheduled_gain name="cas/ari">
+			<input>velocities/p-rad_sec</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  0.10
+					950  0.02
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</scheduled_gain>
+		
 		<summer name="cas/yaw-cmd">
 			<input>cas/yaw-damper</input>
 			<input>cas/beta-pd</input>
+			<input>cas/ari</input>
 			<clipto>
 				<min>-0.3</min>
 				<max>0.3</max>
