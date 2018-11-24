@@ -347,6 +347,24 @@ var ext_loads_set = func(s)
         setprop("consumables/fuel/tank[6]/selected",true);
         setprop("consumables/fuel/tank[7]/selected",false);
     } 
+    elsif ( s == "Ground Attack" ) 
+    {
+        b_set = 6;
+        setprop("payload/weight[0]/selected","AIM-120");
+        setprop("payload/weight[1]/selected","MK-84");
+        setprop("payload/weight[2]/selected","AIM-120");
+        setprop("payload/weight[3]/selected","AIM-120");
+        setprop("payload/weight[4]/selected","AIM-120");
+        setprop("payload/weight[5]/selected","MK-84");
+        setprop("payload/weight[6]/selected","AIM-120");
+        setprop("payload/weight[7]/selected","AIM-120");
+        setprop("payload/weight[8]/selected","AIM-120");
+        setprop("payload/weight[9]/selected","MK-84");
+        setprop("payload/weight[10]/selected","AIM-120");
+        setprop("consumables/fuel/tank[5]/selected",false);
+        setprop("consumables/fuel/tank[6]/selected",false);
+        setprop("consumables/fuel/tank[7]/selected",false);
+    } 
     update_dialog_checkboxes();
 	update_wpstring();
     arm_selector();
@@ -432,10 +450,9 @@ var update_weapons_over_mp = func
         setprop("sim/model/f15/systems/armament/agm/count",agm_count);
 
         var set = WeaponsSet.getValue();
-        b_wpstring = b_wpstring ~ bits.string(b_set,3);
+        b_wpstring = b_wpstring;
 # Send the bits string as INT over MP.
-        var b_stores = bits.value(b_wpstring);
-        f15_net.send_wps_state(b_stores);
+        f15_net.send_wps_state(b_wpstring);
 #        print("MP String ",b_wpstring,":",b_stores);
 
     }

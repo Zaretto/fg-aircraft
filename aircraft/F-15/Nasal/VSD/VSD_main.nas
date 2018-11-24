@@ -43,7 +43,8 @@ calc_groundspeed_kt = func(node) {
         var nvz = vz - lvz;
         var vv = math.sqrt(nvx*nvx + nvy*nvy + nvz*nvz)/nvtime;
 #        print("nvx ",nvx, " nvy ",nvy, " vv ",vv*1.94384, " (",nvtime,")");
-        node.getNode("velocities/groundspeed-kt").setValue(vv*1.94384);
+        if (node != nil)
+          node.getNode("velocities/groundspeed-kt",1).setDoubleValue(vv*1.94384);
     }
     lvx = vx;
     lvy = vy;
@@ -199,7 +200,8 @@ var VSD_Device =
     bindDisplay : func (target_module_id, model_element){
         if (me.placement != nil){
             var pnode = me.placement.getNode("module-id");
-            print("VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
+if (pnode == nil) return;
+#            print("VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
             pnode.setValue(target_module_id);
             return;
           }
