@@ -43,10 +43,10 @@
 		<fcs_function name="autoflight/ss/delay">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<tableData>
-						0.4  0.25
-						0.7  0.02
+						250  0.20
+						450  0.07
 					</tableData>
 				</table>
 			</function>
@@ -345,7 +345,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">inertia/weight-lbs</independentVar>
 					<tableData>
-						        0 38000 45000 55000 70000
+						     0    38000 45000 55000 70000
 						300  2000  2000  1500  1000  1000
 						600  6000  6000  3000  3000  2000
 					</tableData>
@@ -491,14 +491,14 @@
 		<fcs_function name="autoflight/roll/p-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
 						     0    1  
-						0.3  0.0 -1.6
-						0.5  0.0 -0.7
-						1.0  0.0 -0.6
-						2.4  0.0 -0.4
+						200  0.0 -1.8
+						320  0.0 -1.4
+						600  0.0 -0.9
+						950  0.0 -0.5
 					</tableData>
 				</table>
 			</function>
@@ -507,14 +507,14 @@
 		<fcs_function name="autoflight/roll/i-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
 						     0    1  
-						0.3  0.0 -1.8
-						0.5  0.0 -1.4
-						1.0  0.0 -0.8
-						2.4  0.0 -0.6
+						200  0.0 -0.8
+						320  0.0 -0.7
+						600  0.0 -0.4
+						950  0.0 -0.2
 					</tableData>
 				</table>
 			</function>
@@ -523,14 +523,14 @@
 		<fcs_function name="autoflight/roll/d-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0       1  
-						0.3  0.0000 -0.0100
-						0.5  0.0000 -0.0030
-						1.0  0.0000 -0.0010
-						2.4  0.0000 -0.0002
+						     0      1  
+						200  0.000 -0.100
+						320  0.000 -0.050
+						600  0.000 -0.010
+						950  0.000 -0.005
 					</tableData>
 				</table>
 			</function>
