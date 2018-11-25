@@ -1224,7 +1224,6 @@
         </function>
         <function name="aero/coefficients/EPA43">
             <description>CNDR MULTIPLIER CLDR, CYDR DUE TO SPEEDBRAKE</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/speedbrake-pos-norm</independentVar>
@@ -1285,7 +1284,6 @@
                         60	 1.00000000	 1.00000000	 1.00000000	 1.00000000	 1.00000000	 1.00000000	 1.00000000	 1.00000000	 1.00000000	 1.00000000
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CdDBRK">
             <description>Drag due to speedbrakes</description>
@@ -1309,7 +1307,6 @@
         </function>
         <function name="aero/coefficients/CdDFM">
             <description>Delta Cd due to mean flap position</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
@@ -1324,11 +1321,9 @@
                         50	 0.00000000	 0.09590000	 0.55734000
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CdMach">
             <description>Drag mach factor (NASA CR-152391-VOL-1 Figure 3-2 p54)</description>
-            <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
@@ -1392,7 +1387,6 @@
                     3.00	1.325949
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CdUC">
             <description>Cd increment due to gear</description>
@@ -1412,7 +1406,6 @@
         </function>
         <function name="aero/coefficients/CFXB">
             <description>BASIC DRAG</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
@@ -1473,7 +1466,6 @@
                         60	 1.76895684	 1.76162731	 1.75895906	 1.76095209	 1.76760642	 1.77892203	 1.79489894	 1.81553713	 1.84083660	 1.87079737	 1.90541942	 1.94470276	 1.98864739
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/DCdRamp">
             <description>Cd increment due to ramps, NASA TP-3627, p14 Figure 10</description>
@@ -1524,7 +1516,6 @@
 
         <function name="aero/coefficients/DCdGE">
             <description>Delta drag due ground effect, NASA-TM-104278, p228</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
                     <independentVar lookup="column">velocities/w-aero-fps</independentVar>
@@ -1547,13 +1538,11 @@
                         29  	0.000000	0.000000
                     </tableData>
                 </table>
-            </product>
         </function>
 
 
         <function name="aero/coefficients/CFZB">
             <description>BASIC LIFT</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
@@ -1614,11 +1603,9 @@
                         60	 1.12441409	 1.15153009	 1.18018664	 1.21038373	 1.24212135	 1.27539951	 1.31021821	 1.34657745	 1.38447723	 1.42391754	 1.46489840	 1.50741979	 1.55148172
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/ClDFM">
             <description>Delta Cl due to mean  flap position</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
@@ -1633,11 +1620,9 @@
                         50	 0.00000000	 0.01400000	 0.22540000	 0.24500000
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/ClMach">
             <description>Lift Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
-            <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
@@ -1701,7 +1686,6 @@
                     3.00	1.325949
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/ClUC">
             <description>Cl increment due to gear</description>
@@ -1739,7 +1723,6 @@
         </function>
         <function name="aero/coefficients/DClGE">
             <description>Delta Cl due ground effect, NASA-TM-104278, p228</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
                     <independentVar lookup="column">velocities/w-aero-fps</independentVar>
@@ -1761,12 +1744,10 @@
                             34  	0.0001122	0.0002520
                     </tableData>
                 </table>
-            </product>
         </function>
 
         <function name="aero/coefficients/CMDFM">
             <description>CM increment due to flap mean position</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
@@ -1780,11 +1761,9 @@
                         60	 0.00000000	 0.00342000	 0.00342000	 0.01148000
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CMM1">
             <description>BASIC PITCHING MOMENT - CM</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
@@ -1845,11 +1824,9 @@
                         60	-0.34713052	-0.39789356	-0.43790016	-0.46930160	-0.49424917	-0.51489417	-0.53338787	-0.55188158	-0.57252658	-0.59747415	-0.62887559	-0.66888219	-0.71964523
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CMMach">
             <description>Pitch Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
-            <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
@@ -1913,7 +1890,6 @@
                     3.00	1.325949
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CMMQ">
             <description>PITCH DAMPING DERIVATIVE - CMQ</description>
@@ -2045,7 +2021,6 @@
 
         <function name="aero/coefficients/DCMGE">
             <description>Delta pitch moment due ground effect, NASA-TM-104278, p228</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/h_b-mac-ft</independentVar>
                     <independentVar lookup="column">velocities/w-aero-fps</independentVar>
@@ -2091,12 +2066,10 @@
                         36.6	-0.000120	-0.000120
                     </tableData>
                 </table>
-            </product>
         </function>
 
         <function name="aero/coefficients/CLMach">
             <description>Roll Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
-            <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
@@ -2160,11 +2133,9 @@
                     3.00	1.325949
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CML1">
             <description>BASIC ROLLING MOMENT - CL(BETA)</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2225,7 +2196,6 @@
                         60	 0.04674521	 0.03468392	 0.02266739	 0.01070864	 0.00000000	-0.00119197	-0.00356653	-0.00594423	-0.00832496	-0.02027060	-0.03227661	-0.04432999
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CMLDAD">
             <description>ROLLING MOMENT DUE TO AILERON DEFLECTION (CLDA)</description>
@@ -2627,7 +2597,6 @@
         </function>
         <function name="aero/coefficients/CFYB">
             <description>BASIC SIDE FORCE</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -3361,7 +3330,6 @@
                         60	-0.06124988	-0.13239269	-0.20353543	-0.27467810	 0.00000000	 0.09815129	 0.18026256	 0.24008304	 0.27272786	 0.21776397	 0.14662125	 0.07547845
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CFYP">
             <description>SIDE FORCE DUE TO ROLL RATE (CYP)</description>
@@ -3696,7 +3664,6 @@
         </function>
         <function name="aero/coefficients/CyMach">
             <description>Yaw factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
-            <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
@@ -3760,11 +3727,9 @@
                     3.00	1.325949
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CYRB">
             <description>ASYMMETRIC CY AT HIGH ALPHA</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -3825,11 +3790,9 @@
                         60	 0.00000000	 0.00000000	 0.00000000	 0.14792225	 0.00001110	 0.03451504	 0.07422621	 0.11133461	 0.13803006	 0.02087472	 0.00000000	 0.00000000
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CMN1">
             <description>BASIC YAWING MOMENT - CN (BETA)</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -4563,7 +4526,6 @@
                         60	 0.03923286	 0.03721770	 0.03388877	 0.02929329	 0.00000000	-0.02473675	-0.02594772	-0.02711105	-0.02822637	-0.03306949	-0.03665551	-0.03893720
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CMNDAD">
             <description>YAWING MOMENT DUE TO AILERON DEFLECTION -CNDA</description>
@@ -4898,7 +4860,6 @@
         </function>
         <function name="aero/coefficients/CMNRB">
             <description>ASYMMETRIC CN AT HIGH ALPHA</description>
-            <product>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -4959,11 +4920,9 @@
                         60	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.01392576	 0.00056448
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CNMach">
             <description>Yaw Mach factor (NASA-TM-84643 Figure 3 Clalpha) and values for AOA derived from NASA-aaia-2000-0900 Figure 4</description>
-            <product>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
@@ -5027,7 +4986,6 @@
                     3.00	1.325949
                     </tableData>
                 </table>
-            </product>
         </function>
         <function name="aero/coefficients/CLIFT">
             <sum>

@@ -583,7 +583,7 @@ emerg operation.
                     </and>
                     <sum>
                         <property>gear/emerg-pos</property>
-                        <ifthen><not><property>gear/unit[0]/locked</property><value>1.0</value></not>
+                        <ifthen><not><eq><property>gear/unit[0]/locked</property><value>1.0</value></eq></not>
                             <table>
                                 <independentVar lookup="row">gear/emerg-pos</independentVar>
                                 <independentVar lookup="column">accelerations/Nz</independentVar>

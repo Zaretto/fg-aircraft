@@ -48,7 +48,7 @@
             <input> -metrics/aero-rp-x-in</input>
             <output>inertia/cg-x-offset-chord-in</output>
         </summer>
-       <!-- figure out the factor for the fuel tank aero -->
+        <!-- figure out the factor for the fuel tank aero -->
         <fcs_function name="metrics/stores-tank-factor">
             <function>
                 <sum>
@@ -167,7 +167,7 @@
             <output>inertia/pointmass-weight-lbs[14]</output>
         </fcs_function>
 
-        
+
         <fcs_function name="metrics/stores-aiml-factor">
             <function>
                 <sum>
@@ -305,25 +305,21 @@
             <output>aero/rb</output>
         </fcs_function>
 
-        
+
         <fcs_function name="aero-cos-alpha">
             <function>
-                <product>
-                    <cos>
-                        <property>aero/alpha-rad</property>
-                    </cos>
-                </product>
+                <cos>
+                    <property>aero/alpha-rad</property>
+                </cos>
             </function>
             <output>aero/cos-alpha</output>
         </fcs_function>
 
         <fcs_function name="aero-sin-alpha">
             <function>
-                <product>
-                    <sin>
-                        <property>aero/alpha-rad</property>
-                    </sin>
-                </product>
+                <sin>
+                    <property>aero/alpha-rad</property>
+                </sin>
             </function>
             <output>aero/sin-alpha</output>
         </fcs_function>
@@ -364,15 +360,13 @@
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/mach</independentVar>
-                        <tableData>
-                            0.00    419
-                            2.4     445
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <tableData>
+                        0.00    419
+                        2.4     445
+                    </tableData>
+                </table>
             </function>
             <output>metrics/aero-rp-x-in</output>
         </fcs_function>
@@ -380,15 +374,13 @@
         <fcs_function name="systems/cadc/rudder-effectivity">
             <function>
                 <description>High speed CADC control effectivity limitation of rudder</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0.00  1.0
-                            800 0.7
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <tableData>
+                        0.00  1.0
+                        800 0.7
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -396,24 +388,22 @@
             <function>
                 <!--Maintain the aircraft pitch trim for speed and flaps. The PTC system relieves the pilot of the task of compensating for pitch trim for speed and flaps with large longitudinal stick motions.-->
                 <description>Pitch Trim Compensator (PTC)</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                        <tableData>
-                                          0          35
-                              0    -0.28860   -0.122750
-                            200   -0.188860   -0.102750
-                            310   -0.061875    0.022125
-                            415   -0.037920    0.076125
-                            520    0.020500    0.076125
-                            620    0.001877    0.076125
-                            740    0.134250    0.076125
-                            820    0.174000    0.076125
-                            900    0.216250    0.076125
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">velocities/vc-kts</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                    <tableData>
+                        0          35
+                        0    -0.28860   -0.122750
+                        200   -0.188860   -0.102750
+                        310   -0.061875    0.022125
+                        415   -0.037920    0.076125
+                        520    0.020500    0.076125
+                        620    0.001877    0.076125
+                        740    0.134250    0.076125
+                        820    0.174000    0.076125
+                        900    0.216250    0.076125
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
         
@@ -626,25 +616,23 @@
         <fcs_function name="propulsion/inlet/ramp1-position-demand-deg">
             <description>Inlet Ramp angle demand. NASA TP-3627, p14 Figure 10</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <tableData>
-                                0.00    0
-                                0.2     0
-                                0.8     4
-                            </tableData>
-                        </table>
-                        <table>
-                            <independentVar lookup="row">aero/alpha-deg</independentVar>
-                            <tableData>
-                                0     0
-                                9     16
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <tableData>
+                            0.00    0
+                            0.2     0
+                            0.8     4
+                        </tableData>
+                    </table>
+                    <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <tableData>
+                            0     0
+                            9     16
+                        </tableData>
+                    </table>
+                </sum>
             </function>
             <clipto>
                 <min> 0 </min>
@@ -704,18 +692,14 @@
         <fcs_function name="propulsion/inlet/ramp4-position-demand-deg">
             <description>Inlet Ramp 4 angle demand estimated</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <tableData>
-                                0.00    0
-                                1.00     0
-                                2.0     12
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <tableData>
+                        0.00    0
+                        1.00     0
+                        2.0     12
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> 0 </min>
@@ -874,24 +858,20 @@
         <fcs_function name="systems/cadc/ows-maximum-g">
             <description>OWS Maximum G</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">inertia/weight-lbs</independentVar>
-                            <independentVar lookup="column">systems/cadc/ows-config</independentVar>
-                            <tableData>
-                                0 	  1
-                                30000	9.17246	9.17246
-                                40000	7.98735	7.98735
-                                50000	6.52254	6.52254
-                                60000	5.53311	5.53311
-                                70000	4.88988	4.88988
-                                80000	4.21992	4.21992
-                                90000	3.55546	3.55546
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">inertia/weight-lbs</independentVar>
+                    <independentVar lookup="column">systems/cadc/ows-config</independentVar>
+                    <tableData>
+                        0 	  1
+                        30000	9.17246	9.17246
+                        40000	7.98735	7.98735
+                        50000	6.52254	6.52254
+                        60000	5.53311	5.53311
+                        70000	4.88988	4.88988
+                        80000	4.21992	4.21992
+                        90000	3.55546	3.55546
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> 3 </min>
@@ -902,24 +882,20 @@
         <fcs_function name="systems/cadc/ows-minimum-g">
             <description>OWS Minimum G</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">inertia/weight-lbs</independentVar>
-                            <independentVar lookup="column">systems/cadc/ows-config</independentVar>
-                            <tableData>
-	                                           0        1
-                                30000	-3.08691	-1.77556
-                                40000	-2.66257	-1.73824
-                                50000	-2.15729	-1.42432
-                                60000	-1.76466	-1.19887
-                                70000	-1.56284	-1.01345
-                                80000	-1.38809	-0.865616
-                                90000	-1.20380	-0.721602
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">inertia/weight-lbs</independentVar>
+                    <independentVar lookup="column">systems/cadc/ows-config</independentVar>
+                    <tableData>
+                        0        1
+                        30000	-3.08691	-1.77556
+                        40000	-2.66257	-1.73824
+                        50000	-2.15729	-1.42432
+                        60000	-1.76466	-1.19887
+                        70000	-1.56284	-1.01345
+                        80000	-1.38809	-0.865616
+                        90000	-1.20380	-0.721602
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> -5 </min>
