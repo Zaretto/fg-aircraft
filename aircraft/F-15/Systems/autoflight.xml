@@ -47,6 +47,7 @@
 					<tableData>
 						250  0.20
 						450  0.07
+						950  0.02
 					</tableData>
 				</table>
 			</function>
@@ -225,14 +226,13 @@
 		<fcs_function name="autoflight/roll/heading/p-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/roll/gain-switch</independentVar>
 					<tableData>
 						     0    1  
-						0.2  1.8  0.0
-						1.0  3.7  0.0
-						1.5  3.9  0.0
-						2.1  4.1  0.0
+						200  1.8  0.0
+						600  3.7  0.0
+						950  4.1  0.0
 					</tableData>
 				</table>
 			</function>
@@ -241,12 +241,12 @@
 		<fcs_function name="autoflight/roll/heading/i-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/roll/gain-switch</independentVar>
 					<tableData>
 						     0      1  
-						0.4  0.005  0.000
-						1.5  0.010  0.000
+						250  0.005  0.000
+						950  0.010  0.000
 					</tableData>
 				</table>
 			</function>
@@ -585,7 +585,7 @@
 		<fcs_function name="autoflight/pitch/alpha-limit-min">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<tableData>
 						300 -10
 						600  -6
@@ -744,14 +744,14 @@
 		<fcs_function name="autoflight/pitch/p-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
 						     0  1  
-						0.3  0  16
-						0.5  0  11
-						1.0  0  4
-						2.4  0  3
+						200  0  14
+						320  0  9
+						600  0  5
+						950  0  4
 					</tableData>
 				</table>
 			</function>
@@ -760,14 +760,14 @@
 		<fcs_function name="autoflight/pitch/i-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
 						     0  1  
-						0.3  0  35
-						0.5  0  28
-						1.0  0  6
-						2.4  0  5
+						200  0  13
+						320  0  8
+						600  0  4
+						950  0  3
 					</tableData>
 				</table>
 			</function>
@@ -776,14 +776,14 @@
 		<fcs_function name="autoflight/pitch/d-gain">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0       1  
-						0.3  0.0000  0.0500
-						0.5  0.0000  0.0400
-						1.0  0.0000  0.0100
-						2.4  0.0000  0.0010
+						     0     1  
+						200  0.00  0.30
+						320  0.00  0.20
+						600  0.00  0.18
+						950  0.00  0.15
 					</tableData>
 				</table>
 			</function>
