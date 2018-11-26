@@ -271,8 +271,20 @@
 			<input>fcs/elevon-left-cmd</input>
 			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
 			<lag>26.7</lag>
-			<output>/sim/multiplay/generic/float[4]</output>
 		</actuator>
+		
+		<aerosurface_scale name="fcs/elevon-left-norm">
+			<input>fcs/elevon-left</input>
+			<domain>
+				<min>-29.0</min>
+				<max>29.0</max>
+			</domain>
+			<range>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</range>
+			<output>/sim/multiplay/generic/float[4]</output>
+		</aerosurface_scale>
 		
 		<summer name="fcs/elevon-right-cmd">
 			<input>fcs/pitch-input-deg</input>
@@ -287,8 +299,20 @@
 			<input>fcs/elevon-right-cmd</input>
 			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
 			<lag>26.7</lag>
-			<output>/sim/multiplay/generic/float[5]</output>
 		</actuator>
+		
+		<aerosurface_scale name="fcs/elevon-right-norm">
+			<input>fcs/elevon-right</input>
+			<domain>
+				<min>-29.0</min>
+				<max>29.0</max>
+			</domain>
+			<range>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</range>
+			<output>/sim/multiplay/generic/float[5]</output>
+		</aerosurface_scale>
 		
 		<fcs_function name="fcs/elevon-diff-aero-deg">
 			<function>
@@ -346,8 +370,20 @@
 			<input>fcs/aileron-input-deg</input>
 			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
 			<lag>26.7</lag>
-			<output>/sim/multiplay/generic/float[2]</output>
 		</actuator>
+		
+		<aerosurface_scale name="fcs/aileron-left-norm">
+			<input>fcs/aileron-left</input>
+			<domain>
+				<min>-20.0</min>
+				<max>20.0</max>
+			</domain>
+			<range>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</range>
+			<output>/sim/multiplay/generic/float[2]</output>
+		</aerosurface_scale>
 		
 		<actuator name="fcs/aileron-right">
 			<input>-fcs/aileron-input-deg</input>
@@ -355,6 +391,19 @@
 			<lag>26.7</lag>
 			<output>/sim/multiplay/generic/float[3]</output>
 		</actuator>
+		
+		<aerosurface_scale name="fcs/aileron-right-norm">
+			<input>fcs/aileron-right</input>
+			<domain>
+				<min>-20.0</min>
+				<max>20.0</max>
+			</domain>
+			<range>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</range>
+			<output>/sim/multiplay/generic/float[3]</output>
+		</aerosurface_scale>
 		
 		<fcs_function name="fcs/aileron-aero-deg">
 			<function>
@@ -476,6 +525,19 @@
 			<lag>22.7</lag>
 			<output>/sim/multiplay/generic/float[1]</output>
 		</actuator>
+		
+		<aerosurface_scale name="fcs/rudder-aero-norm">
+			<input>fcs/rudder-aero-deg</input>
+			<domain>
+				<min>-30.0</min>
+				<max>30.0</max>
+			</domain>
+			<range>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</range>
+			<output>/sim/multiplay/generic/float[1]</output>
+		</aerosurface_scale>
 	
 	</channel>
 	
