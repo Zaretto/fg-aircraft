@@ -14,16 +14,15 @@ var message_id = nil;
 
 ###############################################################################
 # Send message wrappers.
-var send_wps_state = func (bstate) {
+var send_wps_state = func (state) {
+#	print("Message to send: ",state);
 	if (typeof(broadcast) != "hash") {
 		print("Error: send_wps_state: typeof(broadcast) != hash");
 		return;
 	}
-    state = bits.value(bstate);
-#	print("Message to send: ",bstate, " -> iseq=", Binary.decodeDouble(Binary.encodeDouble(state)) == state);
-	broadcast.send(message_id["ext_load_state"] ~ Binary.encodeDouble(state));
-#	print(message_id["ext_load_state"]," ",Binary.encodeDouble(state));
-#	print(message_id["ext_load_state"] ~ Binary.encodeDouble(state));
+	broadcast.send(message_id["ext_load_state"] ~ Binary.encodeInt(state));
+#	print(message_id["ext_load_state"]," ",Binary.encodeInt(state));
+#	print(message_id["ext_load_state"] ~ Binary.encodeInt(state));
 }
 
 ###############################################################################
@@ -33,7 +32,7 @@ var handle_message = func (sender, msg) {
 #	debug.dump(msg);
 	var type = msg[0];
 	if (type == message_id["ext_load_state"][0]) {
-		var state = Binary.decodeDouble(substr(msg, 1));
+		var state = Binary.decodeInt(substr(msg, 1));
 #	print("ext_load_state:", msg, " ", state);
 	update_ext_load(sender, state);
 	}
