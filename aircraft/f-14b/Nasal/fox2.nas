@@ -1790,7 +1790,7 @@ var AIM = {
 		            me.raw_steer_signal_elev += me.gravComp;
 				}
 				return;
-			} elsif (find("APN", me.navigation)) {
+			} elsif (find("APN", me.navigation)!=-1) {
 				me.apn = 1;
 			} else {
 				me.apn = 0;
@@ -1875,7 +1875,7 @@ var AIM = {
 			me.last_t_norm_speed = me.t_LOS_norm_speed_fps;
 
 			# acceleration perpendicular to instantaneous line of sight in feet/sec^2
-			me.acc_lateral_fps2 = me.pro_constant*me.line_of_sight_rate_rps*me.horz_closing_rate_fps+me.apn*me.pro_constant*me.t_LOS_norm_acc_fps2/2;
+			me.acc_lateral_fps2 = me.pro_constant*me.line_of_sight_rate_rps*me.horz_closing_rate_fps+me.apn*me.t_LOS_norm_acc_fps2;
 			#printf("horz acc = %.1f + %.1f", proportionality_constant*line_of_sight_rate_rps*horz_closing_rate_fps, proportionality_constant*t_LOS_norm_acc/2);
 
 			# now translate that sideways acc to an angle:
@@ -1883,8 +1883,8 @@ var AIM = {
 			me.commanded_lateral_vector_length_fps = me.acc_lateral_fps2*me.dt;
 
 			#isosceles triangle:
-			me.raw_steer_signal_head = math.asin(me.clamp((me.commanded_lateral_vector_length_fps*0.5)/me.velocity_vector_length_fps,-1,1))*R2D*2;
-			#me.raw_steer_signal_head = math.atan2(me.commanded_lateral_vector_length_fps, me.velocity_vector_length_fps)*R2D; # flawed, its not a right triangle
+			#me.raw_steer_signal_head = math.asin(me.clamp((me.commanded_lateral_vector_length_fps*0.5)/me.velocity_vector_length_fps,-1,1))*R2D*2;
+			me.raw_steer_signal_head = math.atan2(me.commanded_lateral_vector_length_fps, me.velocity_vector_length_fps)*R2D; # flawed, its not a right triangle
 
 			#printf("Proportional lead: %0.1f deg horz", -(me.curr_deviation_h-me.raw_steer_signal_head));
 
@@ -1923,13 +1923,13 @@ var AIM = {
 					me.last_t_elev_norm_speed          = me.t_LOS_elev_norm_speed;
 					#printf("Target acc. perpendicular to LOS (positive up): %.1f G.", me.t_LOS_elev_norm_acc/g_fps);
 
-					me.acc_upwards_fps2 = me.pro_constant*me.line_of_sight_rate_up_rps*me.vert_closing_rate_fps+me.apn*me.pro_constant*me.t_LOS_elev_norm_acc/2;
+					me.acc_upwards_fps2 = me.pro_constant*me.line_of_sight_rate_up_rps*me.vert_closing_rate_fps+me.apn*me.t_LOS_elev_norm_acc;
 					#printf("vert acc = %.2f + %.2f G", me.pro_constant*me.line_of_sight_rate_up_rps*me.vert_closing_rate_fps/g_fps, (me.apn*me.pro_constant*me.t_LOS_elev_norm_acc/2)/g_fps);
 					me.velocity_vector_length_fps = me.clamp(me.old_speed_fps, 0.0001, 1000000);
 					me.commanded_upwards_vector_length_fps = me.acc_upwards_fps2*me.dt;
 
-					me.raw_steer_signal_elev = math.asin(me.clamp((me.commanded_upwards_vector_length_fps*0.5)/me.velocity_vector_length_fps,-1,1))*R2D*2;
-					#me.raw_steer_signal_elev = math.atan2(me.commanded_upwards_vector_length_fps, me.velocity_vector_length_fps)*R2D;
+					#me.raw_steer_signal_elev = math.asin(me.clamp((me.commanded_upwards_vector_length_fps*0.5)/me.velocity_vector_length_fps,-1,1))*R2D*2;
+					me.raw_steer_signal_elev = math.atan2(me.commanded_upwards_vector_length_fps, me.velocity_vector_length_fps)*R2D;
 
 					# now compensate for the predicted gravity drop of attitude:				
 		            me.attitudePN = math.atan2(-(me.speed_down_fps+g_fps * me.dt), me.speed_horizontal_fps ) * R2D;

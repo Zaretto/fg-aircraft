@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+
+<!-- McDonnell Douglas F-15 Control Augmentation System -->
+<!-- (c) 2018 Joshua Davidson (it0uchpods) -->
+
+<system name="cas">
+	
+	<property value="0">cas/ari-input</property>
+	<property value="0">cas/beta-pd</property>
+	<property value="0">cas/beta-p-gain</property>
+	<property value="0">cas/beta-d-gain</property>
+	<property value="0">gain</property>
+	
+	<channel name="Libraries">
+		
+		<switch name="cas/roll-cas-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				fcs/roll-damper-enable ne 0
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+				autoflight/output/roll-master ne 1
+			</test>
+		</switch>
+		
+		<switch name="cas/pitch-cas-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				fcs/pitch-damper-enable ne 0
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+				autoflight/output/pitch-master ne 1
+			</test>
+		</switch>
+		
+		<switch name="cas/yaw-cas-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				fcs/yaw-damper-enable ne 0
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
+		<fcs_function name="cas/beta-p-gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.3  3.0
+						0.7  1.1
+						1.1  0.0
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="cas/beta-d-gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/mach</independentVar>
+					<tableData>
+						0.3  5.0
+						0.7  2.9
+						1.1  0.0
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+	
+	</channel>
+	
+	<channel name="Roll Axis">
+		
+		<fcs_function name="cas/roll-rate-demand"> <!-- TM-72861 - Figure 21 -->
+			<function>
+				<sum>
+					<table>
+						<independentVar lookup="row">/controls/flight/aileron</independentVar>
+						<tableData>
+							-1.00 -213.1
+							-0.01    0.0
+							 0.00    0.0
+							 0.01    0.0
+							 1.00  213.1
+						</tableData>
+					</table>
+					<table>
+						<independentVar lookup="row">/controls/flight/aileron-trim</independentVar>
+						<tableData>
+							-1.00 -24.5
+							-0.01   0.0
+							 0.00   0.0
+							 0.01   0.0
+							 1.00  24.5
+						</tableData>
+					</table>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<lag_filter name="cas/roll-rate-lag">
+			<input>cas/roll-rate-demand</input>
+			<c1>165.6</c1>
+		</lag_filter>
+		
+		<summer name="cas/roll-rate-error">
+			<input>/orientation/roll-rate-degps</input>
+			<input>-cas/roll-rate-lag</input>
+		</summer>
+		
+		<scheduled_gain name="cas/roll-rate-p">
+			<input>cas/roll-rate-error</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150 -0.018
+					950 -0.011
+				</tableData>
+			</table>
+		</scheduled_gain>
+		
+		<switch name="cas/roll-output">
+			<default value="0"/>
+			<test value="cas/roll-rate-p">
+				cas/roll-cas-active eq 1
+			</test>
+		</switch>
+	
+	</channel>
+	
+	<channel name="Pitch Axis">
+		
+		<scheduled_gain name="cas/pitch-q-feedback">
+			<input>velocities/q-rad_sec</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  1.5
+					950  0.9
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<fcs_function name="cas/pitch-g-demand"> <!-- TM-72861 - Figure 18 -->
+			<function>
+				<table>
+					<independentVar lookup="row">/controls/flight/elevator</independentVar>
+					<tableData>
+						-1.00  8.05
+						-0.54  3.58
+						-0.01  1.00
+						 0.00  1.00
+						 0.01  1.00
+						 0.70 -1.62
+						 1.00 -3.99
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
+		<summer name="cas/pitch-g-error">
+			<input>/accelerations/pilot-g</input>
+			<input>-cas/pitch-g-demand</input>
+		</summer>
+		
+		<scheduled_gain name="cas/pitch-g-feedback">
+			<input>cas/pitch-g-error</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  0.05
+					950  0.02
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<summer name="cas/pitch-output-sum">
+			<input>cas/pitch-q-feedback</input>
+			<input>cas/pitch-g-feedback</input>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</summer>
+		
+		<switch name="cas/pitch-output">
+			<default value="0"/>
+			<test value="cas/pitch-output-sum">
+				cas/pitch-cas-active eq 1
+			</test>
+		</switch>
+	
+	</channel>
+	
+	<channel name="Yaw Axis">
+		
+		<scheduled_gain name="cas/yaw-damper">
+			<input>velocities/r-rad_sec</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150 -3.2
+					950 -0.5
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2</min>
+				<max>0.2</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<switch name="cas/beta">
+			<default value="0"/>
+			<test logic="AND" value="aero/beta-rad">
+				cas/ari-input le 0.02
+				cas/ari-input ge -0.02
+				/controls/flight/rudder le 0.02
+				/controls/flight/rudder ge -0.02
+				cas/yaw-cas-active eq 1
+			</test>
+		</switch>
+		
+		<pid name="cas/beta-pd-v"> <!-- Only P and D are used -->
+			<input>cas/beta</input>
+			<kp>cas/beta-p-gain</kp>
+			<ki>0.0</ki>
+			<kd>cas/beta-d-gain</kd>
+			<output>cas/beta-pd</output>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</pid>
+		
+		<scheduled_gain name="cas/ari">
+			<input>velocities/p-rad_sec</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  0.10
+					950  0.02
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<summer name="cas/yaw-cmd">
+			<input>cas/yaw-damper</input>
+			<input>cas/beta-pd</input>
+			<input>cas/ari</input>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</summer>
+		
+		<switch name="cas/yaw-output">
+			<default value="0"/>
+			<test value="cas/yaw-cmd">
+				cas/yaw-cas-active eq 1
+			</test>
+		</switch>
+	
+	</channel>
+
+</system>

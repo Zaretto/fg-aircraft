@@ -56,41 +56,33 @@
         <fcs_function name="propulsion/engine[0]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
-                <sum>
-                    <product>
-                        <table>
-                            <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
-                            <tableData>
-                                0	18.2
-                                10	12.7
-                                24	8.45
-                                42	5.25
-                                56	4.77
-                                100	4.4
-                            </tableData>
-                        </table>
-                    </product>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
+                    <tableData>
+                        0	18.2
+                        10	12.7
+                        24	8.45
+                        42	5.25
+                        56	4.77
+                        100	4.4
+                    </tableData>
+                </table>
             </function>
         </fcs_function >
         <fcs_function name="propulsion/engine[0]/c-egt-lag">
             <description>EGT LAG N1 %</description>
             <function>
-                <sum>
-                    <product>
-                        <table>
-                            <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
-                            <tableData>
-                                0	3.20
-                                10	2.15
-                                24	0.99
-                                42	0.56
-                                56	0.25
-                                100	0.21
-                            </tableData>
-                        </table>
-                    </product>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
+                    <tableData>
+                        0	3.20
+                        10	2.15
+                        24	0.99
+                        42	0.56
+                        56	0.25
+                        100	0.21
+                    </tableData>
+                </table>
             </function>
         </fcs_function >
 
@@ -110,22 +102,20 @@
         <fcs_function name="propulsion/engine[0]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/mach</independentVar>
-                        <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
-                        <tableData>
-                            0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
-                            0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
-                            0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
-                            0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
-                            0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
-                            0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
-                            0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
-                            0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
+                    <tableData>
+                        0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
+                        0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
+                        0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
+                        0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
+                        0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
+                        0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
+                        0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
+                        0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -137,31 +127,29 @@
         <fcs_function name="propulsion/engine[0]/PB">
             <description>Engine 0 SS Burner pressure ratio</description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
-                        <independentVar lookup="column">velocities/mach</independentVar>
-                        <tableData>
-                                0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                            0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
-                            24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
-                            32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
-                            40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
-                            48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
-                            56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
-                            63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
-                            71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
-                            79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
-                            87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
-                            95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
-                            97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
-                            98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
-                            100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                    <independentVar lookup="column">velocities/mach</independentVar>
+                    <tableData>
+                        0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
+                        0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                        8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                        16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
+                        24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
+                        32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
+                        40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
+                        48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
+                        56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
+                        63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
+                        71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
+                        79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
+                        87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
+                        95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
+                        97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
+                        98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
+                        100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
         <fcs_function name="propulsion/engine[0]/augmentation-stage">
@@ -266,6 +254,7 @@
             <function>
                 <sum>
                     <property>propulsion/engine[0]/augmentation-alight</property>
+                    <v>0</v>
                 </sum>
             </function>
         </fcs_function>
@@ -273,16 +262,14 @@
         <fcs_function name="propulsion/engine[0]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
-                        <tableData>
-                            0.00	0
-                            1.00	86
-                            5.00	171
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
+                    <tableData>
+                        0.00	0
+                        1.00	86
+                        5.00	171
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -360,16 +347,14 @@
         <fcs_function name="propulsion/engine[0]/alt/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <product>
-                    <table>
-                        <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
-                        <tableData>
-                            0.0 	0.81807
-                            0.2235	0.81807
-                            1.0000	0.15248
-                        </tableData>
-                    </table>
-                </product>
+                <table>
+                    <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
+                    <tableData>
+                        0.0 	0.81807
+                        0.2235	0.81807
+                        1.0000	0.15248
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -401,41 +386,33 @@
         <fcs_function name="propulsion/engine[1]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
-                <sum>
-                    <product>
-                        <table>
-                            <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
-                            <tableData>
-                                0	18.2
-                                10	12.7
-                                24	8.45
-                                42	5.25
-                                56	4.77
-                                100	4.4
-                            </tableData>
-                        </table>
-                    </product>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
+                    <tableData>
+                        0	18.2
+                        10	12.7
+                        24	8.45
+                        42	5.25
+                        56	4.77
+                        100	4.4
+                    </tableData>
+                </table>
             </function>
         </fcs_function >
         <fcs_function name="propulsion/engine[1]/c-egt-lag">
             <description>EGT LAG N1 %</description>
             <function>
-                <sum>
-                    <product>
-                        <table>
-                            <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
-                            <tableData>
-                                0	3.20
-                                10	2.15
-                                24	0.99
-                                42	0.56
-                                56	0.25
-                                100	0.21
-                            </tableData>
-                        </table>
-                    </product>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
+                    <tableData>
+                        0	3.20
+                        10	2.15
+                        24	0.99
+                        42	0.56
+                        56	0.25
+                        100	0.21
+                    </tableData>
+                </table>
             </function>
         </fcs_function >
 
@@ -455,22 +432,20 @@
         <fcs_function name="propulsion/engine[1]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/mach</independentVar>
-                        <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
-                        <tableData>
-                            0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
-                            0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
-                            0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
-                            0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
-                            0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
-                            0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
-                            0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
-                            0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
+                    <tableData>
+                        0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
+                        0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
+                        0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
+                        0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
+                        0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
+                        0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
+                        0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
+                        0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -482,31 +457,29 @@
         <fcs_function name="propulsion/engine[1]/PB">
             <description>Engine 0 SS Burner pressure ratio</description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
-                        <independentVar lookup="column">velocities/mach</independentVar>
-                        <tableData>
-                            0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                            0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
-                            24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
-                            32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
-                            40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
-                            48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
-                            56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
-                            63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
-                            71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
-                            79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
-                            87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
-                            95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
-                            97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
-                            98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
-                            100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                    <independentVar lookup="column">velocities/mach</independentVar>
+                    <tableData>
+                        0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
+                        0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                        8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
+                        16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
+                        24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
+                        32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
+                        40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
+                        48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
+                        56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
+                        63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
+                        71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
+                        79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
+                        87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
+                        95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
+                        97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
+                        98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
+                        100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
         <fcs_function name="propulsion/engine[1]/augmentation-stage">
@@ -611,6 +584,7 @@
             <function>
                 <sum>
                     <property>propulsion/engine[1]/augmentation-alight</property>
+                    <v>0</v>
                 </sum>
             </function>
         </fcs_function>
@@ -618,16 +592,14 @@
         <fcs_function name="propulsion/engine[1]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[1]/augmentation-stage</independentVar>
-                        <tableData>
-                            0.00	0
-                            1.00	86
-                            5.00	171
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[1]/augmentation-stage</independentVar>
+                    <tableData>
+                        0.00	0
+                        1.00	86
+                        5.00	171
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -705,16 +677,14 @@
         <fcs_function name="propulsion/engine[1]/alt/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <product>
-                    <table>
-                        <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
-                        <tableData>
-                            0.0 	0.81807
-                            0.2235	0.81807
-                            1.0000	0.15248
-                        </tableData>
-                    </table>
-                </product>
+                <table>
+                    <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
+                    <tableData>
+                        0.0 	0.81807
+                        0.2235	0.81807
+                        1.0000	0.15248
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 

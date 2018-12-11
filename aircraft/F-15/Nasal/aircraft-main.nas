@@ -500,13 +500,6 @@ var updateFCS = func {
 	e_trim = getprop("controls/flight/elevator-trim");
 	deltaT = getprop ("sim/time/delta-sec");
 
-    # the FDM has a combined aileron deflection so split this for animation purposes.
-    var current_aileron = aileron.getValue();
-    var elevator_deflection_due_to_aileron_deflection =  current_aileron / 3.33; # 20 aileron - 6 elevator. should come from the DTD
-    left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
-    right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
-    aileron_generic.setDoubleValue(-current_aileron);
-
     currentG = getprop ("accelerations/pilot-gdamped");
 
 	#update functions
@@ -767,3 +760,8 @@ setlistener("/controls/armament/target-selected", func(v){
 #  PropertyAdjustButton.new("Elevation down", "/controls/radar/elevation-deg", "-5"),
 #  PropertyAdjustButton.new("Missile Reject", "/controls/armament/missile-reject", "1"),
 
+setlistener("/controls/flight/elevator-trim", func {
+	if (getprop("/controls/flight/elevator-trim") > 0.51724) {
+		setprop("/controls/flight/elevator-trim", 0.51724);
+	}
+});

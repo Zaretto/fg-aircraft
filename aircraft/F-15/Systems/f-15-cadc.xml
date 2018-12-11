@@ -7,20 +7,8 @@
 
 <system name="CADC">
 
-    <property value="0.008"> systems/afcs/altitude-hold-pid-kp </property>
-    <property value="0.0008"> systems/afcs/altitude-hold-pid-ki </property>
-    <property value="0.0025"> systems/afcs/altitude-hold-pid-kd </property>
-    <property value="1.2"> systems/afcs/altitude-hold-elevator-gain </property>
-    <property value="2"> systems/afcs/altitude-hold-lag-constant </property>
-
-    <property value="0">systems/afcs/target-altitude-ft</property>
-    <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/gear-warn-silence-dmd</property>
-    <property value="0">systems/cadc/pitch-ratio-emergency</property>
-    <property value="0">systems/cadc/roll-ratio-emergency</property>
 
-    <property value="0">systems/afcs/heading-hold-active</property>
-    <property value="0">systems/afcs/SAS-roll-demand</property>
     <property value="0">gear/gear-asym</property>
 
     <!-- these are defined by an alias in the -set file
@@ -30,7 +18,6 @@
     -->
     <property value="0">fcs/aim-fitted</property>
     <property value="0">fcs/steer-maneuver</property>
-    <property value="0.5">systems/cadc/pitch-ratio-emergency-value</property>
     <property>systems/NWS/engaged</property>
 
     <property value="0">propulsion/inlet/l-inlet-ramp-emerg</property>
@@ -38,8 +25,6 @@
 
     <property>fcs/hook-engage</property>
     <property>fcs/flap-cmd-sum</property>
-    <property>fcs/roll-trim-sas-cmd-norm</property>
-	<property>systems/afcs/elevator-cmd-delta</property>
 
     <channel name="extra-aero">
         <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
@@ -167,7 +152,7 @@
             <output>inertia/pointmass-weight-lbs[14]</output>
         </fcs_function>
 
-        
+
         <fcs_function name="metrics/stores-aiml-factor">
             <function>
                 <sum>
@@ -305,25 +290,21 @@
             <output>aero/rb</output>
         </fcs_function>
 
-        
+
         <fcs_function name="aero-cos-alpha">
             <function>
-                <product>
-                    <cos>
-                        <property>aero/alpha-rad</property>
-                    </cos>
-                </product>
+                <cos>
+                    <property>aero/alpha-rad</property>
+                </cos>
             </function>
             <output>aero/cos-alpha</output>
         </fcs_function>
 
         <fcs_function name="aero-sin-alpha">
             <function>
-                <product>
-                    <sin>
-                        <property>aero/alpha-rad</property>
-                    </sin>
-                </product>
+                <sin>
+                    <property>aero/alpha-rad</property>
+                </sin>
             </function>
             <output>aero/sin-alpha</output>
         </fcs_function>
@@ -364,241 +345,18 @@
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/mach</independentVar>
-                        <tableData>
-                            0.00    419
-                            2.4     445
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <tableData>
+                        0.00    419
+                        2.4     445
+                    </tableData>
+                </table>
             </function>
             <output>metrics/aero-rp-x-in</output>
         </fcs_function>
 
-        <fcs_function name="systems/cadc/rudder-effectivity">
-            <function>
-                <description>High speed CADC control effectivity limitation of rudder</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0.00  1.0
-                            800 0.7
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-
-        <fcs_function name="systems/cadc/pitch-trim-compensation">
-            <function>
-                <!--Maintain the aircraft pitch trim for speed and flaps. The PTC system relieves the pilot of the task of compensating for pitch trim for speed and flaps with large longitudinal stick motions.-->
-                <description>Pitch Trim Compensator (PTC)</description>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                        <tableData>
-                                          0          35
-                              0    -0.28860   -0.122750
-                            200   -0.188860   -0.102750
-                            310   -0.061875    0.022125
-                            415   -0.037920    0.076125
-                            520    0.020500    0.076125
-                            620    0.001877    0.076125
-                            740    0.134250    0.076125
-                            820    0.174000    0.076125
-                            900    0.216250    0.076125
-                        </tableData>
-                    </table>
-                </sum>
-            </function>
-        </fcs_function>
-        
-
-        <fcs_function name="systems/cadc/pitch-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of elevator</description>
-                <product>
-                    <sum>
-                        <value>1</value>
-                        <abs>
-                            <property>inertia/cg-x-mac-percent</property>
-                        </abs>
-                    </sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0      1.0
-                            300    1.0
-                            400    0.7
-                            500    0.4
-                            600    0.2
-                            900    0.05
-                            1100   0.08
-                        </tableData>
-                    </table>
-                </product>
-            </function>
-            <clipto>
-                <min> -1 </min>
-                <max> 1 </max>
-            </clipto>
-
-        </fcs_function>
-        <switch name="systems/cadc/pitch-ratio">
-            <description>Aircraft on ground</description>
-            <default value="systems/cadc/pitch-ratio-dmd"/>
-            <test value="systems/cadc/pitch-ratio-emergency-value" logic="OR">
-                systems/hydraulics/flight-system-pressure ne 1
-                systems/cadc/pitch-ratio-emergency ne 0
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-pos-norm ne 0
-            </test>
-        </switch>
-
-        <fcs_function name="systems/cadc/roll-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of aileron</description>
-                <product>
-                <sum>
-                        <value>1</value>
-                        <abs>
-                            <property>inertia/cg-x-mac-percent</property>
-                        </abs>
-                    </sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                              0  1.0
-                            180  1.0
-                            400  0.4
-                            1000 0.12
-                        </tableData>
-                    </table>
-                </product>
-            </function>
-        </fcs_function>
-        <switch name="systems/cadc/roll-ratio">
-            <description>Roll ratio actual</description>
-            <default value="systems/cadc/roll-ratio-dmd"/>
-            <test value="0.5" logic="OR">
-                systems/cadc/roll-ratio-emergency ne 0
-                systems/hydraulics/flight-system-pressure ne 1
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-pos-norm ne 0
-            </test>
-        </switch>
     </channel>
-
-    <channel name="SAS">
-        <switch name="fcs/roll-sas-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                fcs/roll-damper-enable  ne 0.0
-                autoflight/output/roll-master ne 1
-            </test>
-            <output>fcs/roll-sas-active</output>
-        </switch>
-
-        <switch name="fcs/yaw-damper-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                fcs/yaw-damper-enable ne 0.0
-            </test>
-            <output>fcs/yaw-damper-active</output>
-        </switch>
-
-        <scheduled_gain name="fcs/yaw-damper-sum">
-            <input>velocities/r-aero-rad_sec</input>
-            <table>
-                <independentVar>velocities/vc-kts</independentVar>
-                <tableData>
-                    0   0
-                    80  0
-                    120	3.6251
-                    650 1.65
-                    890 1.00
-                    1000 0.5
-                </tableData>
-            </table>
-            <clipto>
-                <min>-0.2000</min>
-                <max>0.2000</max>
-            </clipto>
-        </scheduled_gain>
-
-        <scheduled_gain name="fcs/yaw-damper-dmd">
-            <input>fcs/yaw-damper-sum</input>
-            <table>
-                <independentVar>aero/qbar-psf</independentVar>
-                <tableData>
-                    2.9900	0.0000
-                    3.0000	1.0000
-                </tableData>
-            </table>
-            <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>
-        <!--<scheduled_gain name="Yaw Damper Rate">
-            <input>velocities/r-aero-rad_sec</input>
-            <table>
-                <independentVar lookup="row">velocities/ve-kts</independentVar>
-                <tableData>
-                    30     0.00
-                    60     1.6
-                    400     0.5
-                    800     0.5
-                </tableData>
-            </table>
-            <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>-->
-
-        <switch name="fcs/pitch-damper-active">
-            <default value="0.0"/>
-            <test logic="AND" value="1">
-                fcs/elevator-cmd-norm ge -0.15
-                fcs/elevator-cmd-norm le 0.15
-                fcs/pitch-damper-enable ne 0.0
-                autoflight/output/pitch-master ne 1
-            </test>
-            <output>fcs/pitch-damper-active</output>
-        </switch>
-
-        <scheduled_gain name="Pitch Damper Rate">
-            <!-- Figure 2-57 F14AAD-1  -->
-            <input>velocities/q-aero-rad_sec</input>
-            <table>
-                <independentVar lookup="row">velocities/ve-kts</independentVar>
-                <tableData>
-                    30     0.00
-                    60     1
-                </tableData>
-            </table>
-            <gain>fcs/pitch-damper-active</gain>
-            <min> -0.2857142857142857 </min>
-            <max>  0.2857142857142857 </max>
-        </scheduled_gain>
-
-        <scheduled_gain name="fcs/roll-rate-limiter">
-            <input>fcs/aileron-cmd-norm</input>
-            <table>
-                <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
-                <tableData>
-                    -6.2    2.0
-                    -1.4     0.0
-                    1.4     0.0
-                    6.2    2.0
-                </tableData>
-            </table>
-            <gain>fcs/roll-sas-active</gain>
-        </scheduled_gain>
-    </channel>
-
-  
 
     <channel name="SoundFX" execrate="4">
         <fcs_function name="fcs/flap-windfx-volume">
@@ -626,25 +384,23 @@
         <fcs_function name="propulsion/inlet/ramp1-position-demand-deg">
             <description>Inlet Ramp angle demand. NASA TP-3627, p14 Figure 10</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <tableData>
-                                0.00    0
-                                0.2     0
-                                0.8     4
-                            </tableData>
-                        </table>
-                        <table>
-                            <independentVar lookup="row">aero/alpha-deg</independentVar>
-                            <tableData>
-                                0     0
-                                9     16
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <tableData>
+                            0.00    0
+                            0.2     0
+                            0.8     4
+                        </tableData>
+                    </table>
+                    <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <tableData>
+                            0     0
+                            9     16
+                        </tableData>
+                    </table>
+                </sum>
             </function>
             <clipto>
                 <min> 0 </min>
@@ -874,24 +630,20 @@
         <fcs_function name="systems/cadc/ows-maximum-g">
             <description>OWS Maximum G</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">inertia/weight-lbs</independentVar>
-                            <independentVar lookup="column">systems/cadc/ows-config</independentVar>
-                            <tableData>
-                                0 	  1
-                                30000	9.17246	9.17246
-                                40000	7.98735	7.98735
-                                50000	6.52254	6.52254
-                                60000	5.53311	5.53311
-                                70000	4.88988	4.88988
-                                80000	4.21992	4.21992
-                                90000	3.55546	3.55546
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">inertia/weight-lbs</independentVar>
+                    <independentVar lookup="column">systems/cadc/ows-config</independentVar>
+                    <tableData>
+                        0 	  1
+                        30000	9.17246	9.17246
+                        40000	7.98735	7.98735
+                        50000	6.52254	6.52254
+                        60000	5.53311	5.53311
+                        70000	4.88988	4.88988
+                        80000	4.21992	4.21992
+                        90000	3.55546	3.55546
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> 3 </min>
@@ -902,24 +654,20 @@
         <fcs_function name="systems/cadc/ows-minimum-g">
             <description>OWS Minimum G</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">inertia/weight-lbs</independentVar>
-                            <independentVar lookup="column">systems/cadc/ows-config</independentVar>
-                            <tableData>
-	                                           0        1
-                                30000	-3.08691	-1.77556
-                                40000	-2.66257	-1.73824
-                                50000	-2.15729	-1.42432
-                                60000	-1.76466	-1.19887
-                                70000	-1.56284	-1.01345
-                                80000	-1.38809	-0.865616
-                                90000	-1.20380	-0.721602
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">inertia/weight-lbs</independentVar>
+                    <independentVar lookup="column">systems/cadc/ows-config</independentVar>
+                    <tableData>
+                        0        1
+                        30000	-3.08691	-1.77556
+                        40000	-2.66257	-1.73824
+                        50000	-2.15729	-1.42432
+                        60000	-1.76466	-1.19887
+                        70000	-1.56284	-1.01345
+                        80000	-1.38809	-0.865616
+                        90000	-1.20380	-0.721602
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> -5 </min>

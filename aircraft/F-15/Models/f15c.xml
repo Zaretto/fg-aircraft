@@ -206,14 +206,6 @@ setprop("sim/model/f15/variant","C");
         <inherits-from>Effects/f15test</inherits-from>
         <object-name>deftest</object-name>
     </effect>-->
-    <model>
-        <path>f-15c-canopy.xml</path>
-        <name>F-15C-Canopy</name>
-    </model>
-    <model>
-        <path>f-15d-canopy.xml</path>
-        <name>F-15D-Canopy</name>
-    </model>
 
     <animation>
         <type>material</type>
@@ -1452,6 +1444,7 @@ setprop("sim/model/f15/variant","C");
     </model>-->
     <model>
         <path>Aircraft/F-15/Models/Cockpit/all-interior.xml</path>
+        <usage>interior</usage>
         <offsets>
             <x-m>0</x-m>
             <y-m>0 </y-m>
@@ -1637,7 +1630,7 @@ setprop("sim/model/f15/variant","C");
         <type>rotate</type>
         <object-name>StabilatorL</object-name>
         <property>sim/multiplay/generic/float[4]</property>
-        <factor>25</factor>
+        <factor>29</factor>
         <center>
             <x-m>7.9652</x-m>
             <y-m>-1.7929</y-m>
@@ -1654,7 +1647,7 @@ setprop("sim/model/f15/variant","C");
         <type>rotate</type>
         <object-name>StabilatorR</object-name>
         <property>sim/multiplay/generic/float[5]</property>
-        <factor>25</factor>
+        <factor>29</factor>
         <center>
             <x-m>7.9652</x-m>
             <y-m>-1.7929</y-m>
@@ -1671,7 +1664,7 @@ setprop("sim/model/f15/variant","C");
         <type>rotate</type>
         <object-name>AileronL</object-name>
         <property>sim/multiplay/generic/float[2]</property>
-        <factor>-30</factor>
+        <factor>20</factor>
         <axis>
             <x1-m>5.0335</x1-m>
             <y1-m>-5.3892</y1-m>
@@ -1685,8 +1678,8 @@ setprop("sim/model/f15/variant","C");
     <animation>
         <type>rotate</type>
         <object-name>AileronR</object-name>
-        <property>sim/multiplay/generic/float[2]</property>
-        <factor>-30</factor>
+        <property>sim/multiplay/generic/float[3]</property>
+        <factor>-20</factor>
         <axis>
             <x1-m>5.0335</x1-m>
             <y1-m>5.4368</y1-m>
@@ -1729,8 +1722,8 @@ setprop("sim/model/f15/variant","C");
     <animation>
         <type>rotate</type>
         <object-name>rudder</object-name>
-        <property>surface-positions/rudder-pos-norm</property>
-        <factor>-30</factor>
+        <property>sim/multiplay/generic/float[1]</property>
+        <factor>30</factor>
         <axis>
             <x1-m>7.7720</x1-m>
             <y1-m>-1.7059</y1-m>
@@ -1743,8 +1736,8 @@ setprop("sim/model/f15/variant","C");
     <animation>
         <type>rotate</type>
         <object-name>rudder.001</object-name>
-        <property>surface-positions/rudder-pos-norm</property>
-        <factor>-30</factor>
+        <property>sim/multiplay/generic/float[1]</property>
+        <factor>30</factor>
         <axis>
             <x1-m>7.7720</x1-m>
             <y1-m>1.7596</y1-m>
@@ -2052,10 +2045,6 @@ setprop("sim/model/f15/variant","C");
         <inherits-from>Aircraft/F-15/Models/Effects/f15test</inherits-from>
         <object-name>shader-test</object-name>
     </effect>-->
-    <model>
-        <path>f15c-stores.xml</path>
-        <name>F15-C loadout</name>
-    </model>
 
     <!--Wing Bend-->
     <animation>
@@ -2202,5 +2191,627 @@ setprop("sim/model/f15/variant","C");
             </binding>
         </action>
     </animation>
+
+   <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <equals>
+                    <property>sim/model/f15/variant</property>
+                    <value>D</value>
+                </equals>
+            </not>
+        </condition>
+        <object-name>f15c-canopy</object-name>
+    </animation>
+    <!-- Uncomment this section for FG 3.5 ALS Glass effects -->
+    <effect>
+        <name>f15glass</name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15glass</inherits-from>
+        <object-name>CanopyGlassInside</object-name>
+    </effect>
+    <effect>
+        <name>f15windshield</name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15windshield</inherits-from>
+        <object-name>WindscreenGlassInside</object-name>
+    </effect>
+    <!-- Canopy -->
+    <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <object-name>CanopyMirrors</object-name >
+        <object-name>CanopyWire</object-name >
+        <object-name>StandbyCompass</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
+        <property>canopy/position-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0.25</ind>
+                <dep>0.0</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>20.0</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-2.36</x-m>
+            <y-m>0.0</y-m>
+            <z-m>1.4</z-m>
+        </center>
+        <axis>
+            <x>0.0</x>
+            <y>1.0</y>
+            <z>0.0</z>
+        </axis>
+    </animation>
+    <!-- Timing from https://www.youtube.com/watch?v=MSWz55b_jtE 2:25-->
+    <animation>
+        <type>translate</type>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyGlass</object-name>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <object-name>CanopyMirrors</object-name >
+        <object-name>CanopyWire</object-name >
+        <object-name>StandbyCompass</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
+        <property>canopy/position-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0.0</ind>
+                <dep>0.0</dep>
+            </entry>
+            <entry>
+                <ind>0.25</ind>
+                <dep>0.01</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-2.36</x-m>
+            <y-m>0.0</y-m>
+            <z-m>1.4</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+        </axis>
+    </animation>
+    <animation>
+        <type>shader</type>
+        <shader>chrome</shader>
+        <texture>Aircraft/F-15/Models/glass_shader.png</texture>
+        <object-name>WindscreenGlass</object-name>
+        <object-name>CanopyGlass</object-name>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>StandbyCompassSphere</object-name>
+        <property>instrumentation/magnetic-compass/indicated-heading-deg</property>
+        <center>
+            <x-m>-5.5611</x-m>
+            <y-m>0.1851</y-m>
+            <z-m>1.5392</z-m>
+        </center>
+        <axis>
+            <z>1</z>
+        </axis>
+    </animation>
+
+    <!--<animation>
+        <object-name>StandbyCompassMount</object-name>
+            <type>material</type>
+            <condition>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </greater-than>
+                <not>
+                    <property>/sim/rendering/rembrandt/enabled</property>
+                </not>
+            </condition>
+            <emission>
+                <factor-prop>/controls/lighting/panel-norm</factor-prop>
+                <red>  1.000</red>
+                <green>0.576</green>
+                <blue> 0.161</blue>
+                <red-prop>/controls/lighting/panel-red</red-prop>
+                <green-prop>/controls/lighting/panel-green</green-prop>
+                <blue-prop>/controls/lighting/panel-blue</blue-prop>
+            </emission>
+        </animation>-->
+
+
+    <animation>
+        <type>material</type>
+        <object-name>StandbyCompassSphere</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+            <property>/controls/lighting/stby-inst</property>
+        </condition>
+        <emission>
+            <factor-prop>/controls/lighting/aux-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>/controls/lighting/instrument-red</red-prop>
+            <green-prop>/controls/lighting/instrument-green</green-prop>
+            <blue-prop>/controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    
+    <animation>
+        <type>select</type>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/systems/armament/launch-light</property>
+            </or>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <!-- The ready light comes on when the system is ready. We will do this when the door is open.
+         ref: NASA video https://www.youtube.com/watch?v=Wqo8DIKcYtk 
+     -->
+    <animation>
+        <type>select</type>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <greater-than>
+                    <property>sim/multiplay/generic/float[6]</property>
+                    <value>0.9</value>
+                </greater-than>
+            </or>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>material</type>
+        <object-name>Canopy</object-name>
+        <object-name>WindscreenCanopyFrame</object-name>
+        <property-base>sim/model/livery</property-base>
+        <texture-prop>texture</texture-prop>
+        <texture>livery.AF80-0007.png</texture>
+    </animation>
+    <effect>
+        <name>f15interior</name>
+        <object-name>StandbyCompassMount</object-name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
+        <object-name>CanopyMirrors</object-name >
+        <object-name>CanopyWire</object-name >
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>WindscreenCanopyFrame</object-name>
+        <object-name>Canopy</object-name>
+        <object-name>CanopyBackCover</object-name>
+        <object-name>CanopyFasteners</object-name>
+        <object-name>WindscreenFasteners</object-name>
+        <object-name>CanopyRefuelReadyLightLamp</object-name>
+        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyRefuelReadyLight</object-name>
+    </effect>
+
+   <animation>
+        <type>select</type>
+        <condition>
+            <equals>
+                <property>sim/model/f15/variant</property>
+                <value>D</value>
+            </equals>
+        </condition>
+        <object-name>f15d-canopy</object-name>
+    </animation>
+    <animation>
+        <type>select</type>
+        <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <object-name>CanopyGlassInside</object-name>
+        <object-name>WindscreenGlassInside</object-name>
+    </animation>
+   <effect>
+        <name>f15canopy-glass</name>
+        <inherits-from>Effects/exterior-glass</inherits-from>
+        <object-name>WindscreenGlass</object-name>
+        <object-name>CanopyGlass</object-name>
+    </effect>
+    <!-- Pylons -->
+    <!-- Left Wing -->
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>su59-l</object-name>
+        <condition>
+            <or>
+                <property>payload/weight[0]/weight-lb</property>
+                <property>payload/weight[1]/weight-lb</property>
+                <property>payload/weight[2]/weight-lb</property>
+                <property>payload/weight[5]/weight-lb</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>adu552-l1</object-name>
+        <object-name>lau128-l1</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>payload/weight[0]/selected</property>
+                    <value>AIM-9</value>
+                </equals>
+                <equals>
+                    <property>payload/weight[0]/selected</property>
+                    <value>AIM-120</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim9-l1</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[0]/selected</property>
+                <value>AIM-9</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-l1</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[0]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-l3</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[3]/selected</property>
+                <value>AIM-7</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-l4</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[4]/selected</property>
+                <value>AIM-7</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-l3</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[3]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-l4</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[4]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>adu552-l2</object-name>
+        <object-name>lau128-l2</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>payload/weight[2]/selected</property>
+                    <value>AIM-9</value>
+                </equals>
+                <equals>
+                    <property>payload/weight[2]/selected</property>
+                    <value>AIM-120</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim9-l2</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[2]/selected</property>
+                <value>AIM-9</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-l2</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[2]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>tank-l</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[1]/selected</property>
+                <value>Droptank</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>tank-r</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[9]/selected</property>
+                <value>Droptank</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>su59-c</object-name>
+        <condition>
+            <property>payload/weight[5]/weight-lb</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>tank-c</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[5]/selected</property>
+                <value>Droptank</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <!-- Right Wing -->
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>su59-r</object-name>
+        <condition>
+            <or>
+                <property>payload/weight[8]/weight-lb</property>
+                <property>payload/weight[9]/weight-lb</property>
+                <property>payload/weight[10]/weight-lb</property>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>adu552-r1</object-name>
+        <object-name>lau128-r1</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>payload/weight[8]/selected</property>
+                    <value>AIM-9</value>
+                </equals>
+                <equals>
+                    <property>payload/weight[8]/selected</property>
+                    <value>AIM-120</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim9-r1</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[8]/selected</property>
+                <value>AIM-9</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-r1</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[8]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-r3</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[6]/selected</property>
+                <value>AIM-7</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-r4</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[7]/selected</property>
+                <value>AIM-7</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-r3</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[6]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-r4</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[7]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>adu552-r2</object-name>
+        <object-name>lau128-r2</object-name>
+        <condition>
+            <or>
+                <equals>
+                    <property>payload/weight[10]/selected</property>
+                    <value>AIM-9</value>
+                </equals>
+                <equals>
+                    <property>payload/weight[10]/selected</property>
+                    <value>AIM-120</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim9-r2</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[10]/selected</property>
+                <value>AIM-9</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim120-r2</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[10]/selected</property>
+                <value>AIM-120</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>mk84-l</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[1]/selected</property>
+                <value>MK-84</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>mk84-c</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[5]/selected</property>
+                <value>MK-84</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>mk84-r</object-name>
+        <condition>
+            <equals>
+                <property>payload/weight[9]/selected</property>
+                <value>MK-84</value>
+            </equals>
+        </condition>
+    </animation>
+
 
 </PropertyList>

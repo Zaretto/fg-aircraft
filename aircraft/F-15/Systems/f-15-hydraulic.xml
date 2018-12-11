@@ -219,6 +219,15 @@ engines at 11 percent rpm.
     </channel>
 
     <channel name="bleed" execrate="4">
+        <fcs_function name="fcs/elevator-normalization">
+            <function>
+                <quotient>
+                    <property>fcs/elevon-aero-deg</property>
+                    <value>29.0</value>
+                </quotient>
+            </function>
+        </fcs_function>
+
         <summer name="systems/hydraulics/elevator-bleed">
             <input>-fcs/elevator-cmd-norm</input>
             <input>-fcs/elevator-normalization</input>
