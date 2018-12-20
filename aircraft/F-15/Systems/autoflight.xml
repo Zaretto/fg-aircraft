@@ -453,14 +453,10 @@
 			</test>
 		</switch>
 		
-		<fcs_function name="autoflight/roll/roll-rad-error">
-			<function>
-				<difference>
-					<property>attitude/roll-rad</property>
-					<property>autoflight/roll/roll-rad-input</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/roll/roll-rad-error">
+			<input>attitude/roll-rad</input>
+			<input>-autoflight/roll/roll-rad-input</input>
+		</summer>
 		
 		<pure_gain name="autoflight/roll/roll-rate-p"> <!-- Calculate optimum roll rate -->
 			<input>autoflight/roll/roll-rad-error</input>
@@ -479,14 +475,10 @@
 			</function>
 		</fcs_function>
 		
-		<fcs_function name="autoflight/roll/roll-rate-error">
-			<function>
-				<difference>
-					<property>autoflight/roll/p-rad_sec</property>
-					<property>autoflight/roll/roll-rate-p</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/roll/roll-rate-error">
+			<input>autoflight/roll/p-rad_sec</input>
+			<input>-autoflight/roll/roll-rate-p</input>
+		</summer>
 		
 		<fcs_function name="autoflight/roll/p-gain">
 			<function>
@@ -706,14 +698,10 @@
 			</test>
 		</switch>
 		
-		<fcs_function name="autoflight/pitch/pitch-rad-error">
-			<function>
-				<difference>
-					<property>attitude/pitch-rad</property>
-					<property>autoflight/pitch/pitch-rad-input</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/pitch/pitch-rad-error">
+			<input>attitude/pitch-rad</input>
+			<input>-autoflight/pitch/pitch-rad-input</input>
+		</summer>
 		
 		<pure_gain name="autoflight/pitch/pitch-rate-p"> <!-- Calculate optimum pitch rate -->
 			<input>autoflight/pitch/pitch-rad-error</input>
@@ -732,14 +720,10 @@
 			</function>
 		</fcs_function>
 		
-		<fcs_function name="autoflight/pitch/pitch-rate-error">
-			<function>
-				<difference>
-					<property>autoflight/pitch/thetadot-rad_sec</property>
-					<property>autoflight/pitch/pitch-rate-p</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/pitch/pitch-rate-error">
+			<input>autoflight/pitch/thetadot-rad_sec</input>
+			<input>-autoflight/pitch/pitch-rate-p</input>
+		</summer>
 		
 		<fcs_function name="autoflight/pitch/p-gain">
 			<function>
