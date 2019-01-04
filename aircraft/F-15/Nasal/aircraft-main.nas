@@ -183,6 +183,7 @@ var position_flash_init  = func {
 		position.switch(1);
 	}
 }
+setprop("sim/multiplay/visibility-range-nm", 200);
 
 # Flight control system ######################### 
 
