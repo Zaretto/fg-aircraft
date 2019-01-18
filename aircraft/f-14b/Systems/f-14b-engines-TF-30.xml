@@ -33,9 +33,9 @@ and Robert J. Shaw,  May 1985
     <channel name="engine-control">
         <!-- Throttles uses the APC value - which will either be the demanded for APC or the input value from throttle-cmd -->
         <scheduled_gain name="ThrottleL">
-            <input>systems/apc/throttle-cmd[0]</input>
+            <input>fcs/throttle-cmd-norm[0]</input>
             <table>
-                <independentVar>systems/apc/throttle-cmd[0]</independentVar>
+                <independentVar>fcs/throttle-cmd-norm[0]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
                     0.00    0.0
@@ -51,9 +51,9 @@ and Robert J. Shaw,  May 1985
         </scheduled_gain>
 
         <scheduled_gain name="ThrottleR">
-            <input>systems/apc/throttle-cmd[1]</input>
+            <input>fcs/throttle-cmd-norm[1]</input>
             <table>
-                <independentVar>systems/apc/throttle-cmd[1]</independentVar>
+                <independentVar>fcs/throttle-cmd-norm[1]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
                     0.00    0.0
