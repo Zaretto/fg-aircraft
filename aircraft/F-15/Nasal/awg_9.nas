@@ -764,15 +764,16 @@ var isNotBehindTerrain = func(node) {
         print("isNotBehindTerrain, node is nil");
         return 3;
     }
-
+	var nodename="";
     call(func {
+		nodename = node.getPath();
         x = node.getNode("position/global-x").getValue();
         y = node.getNode("position/global-y").getValue();
         z = node.getNode("position/global-z").getValue(); },
         nil, var err = []);
 
     if(x == nil or y == nil or z == nil) {
-        print("Failed to get position from node");#: ",node.string, " x=",x," y=",y," z=",z);
+        print("Failed to get position from node ",nodename);#: ",node.string, " x=",x," y=",y," z=",z);
         return 2;
     }
     var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
