@@ -427,56 +427,50 @@ var r4_count = 0;
 var r2_count = 0;
 
 var rate4modules = func {
-    r4_count = r4_count - 1;
-    if (r4_count > 0)
+    if (r4_count == 0)
+      aircraft.electricsFrame();
+    elsif (r4_count == 1)
+      aircraft.computeNWS ();
+    elsif (r4_count == 2)
+      aircraft.update_weapons_over_mp();
+    elsif (r4_count == 3)
+      updateVolume();
+    elsif (r4_count == 4)
+      radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+    elsif (r4_count == 5)
+      aircraft.routeManagerUpdate();
+    elsif (r4_count == 6) {
+        if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
+            setprop("fdm/jsbsim/propulsion/refuel",0);
+            setprop("fdm/jsbsim/propulsion/ground-refuel",0);
+        }
+    } else {
+        r4_count = 0;
         return;
-
-    var frame_rate = frameRateNode.getValue();
-
-    if (frame_rate <= 15 or frame_rate > 100)
-        r4_count = 4;
-    else
-        r4_count = (int)(frame_rate * 0.26667);
-
-    aircraft.electricsFrame();
-	aircraft.computeNWS ();
-    aircraft.update_weapons_over_mp();
-    updateVolume();
-    radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
-    
-    aircraft.routeManagerUpdate();
-
-#	settimer (rate4modules, 0.20);
-
-#
-# ensure that we're not ground refuelling in air...
-if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1))
-{
-setprop("fdm/jsbsim/propulsion/refuel",0);
-setprop("fdm/jsbsim/propulsion/ground-refuel",0);
-}
+    }
+    r4_count += 1;
 
 }
 #
 #
 # rate 2 modules; nominally at half rate.
+var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
+var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
 var rate2modules = func {
-    r2_count = r2_count - 1;
-    if (r2_count > 0)
+    acFrost.setValue(sysFrost.getValue());
+      aircraft.updateHUD();
+    if (r2_count == 0)
+;
+    elsif (r2_count == 1)
+      aircraft.updateTEWS();
+    elsif (r2_count == 2){
+        awg_9.rdr_loop();
+        aircraft.updateMPCD();
+    } else {
+        r2_count = 0;
         return;
-
-#    var frame_rate = getprop("/sim/frame-rate");
-#    if (frame_rate <= 15 or frame_rate > 100)
-        r2_count = 2;
-#    else
-#        r2_count = (int)(frame_rate * 0.1333);
-
-    aircraft.updateHUD();
-    aircraft.updateTEWS();
-    aircraft.updateMPCD();
-#	settimer (rate2modules, 0.1);
-
-    setprop("/environment/aircraft-effects/frost-level", getprop("fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
+    }
+    r2_count += 1;
 }
 #
 # launch the timers; the time here isn't important as it will be rescheduled within the rate module exec

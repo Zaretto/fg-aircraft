@@ -575,8 +575,6 @@ var main_loop = func {
 
     ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
 
-	awg_9.rdr_loop();
-
 	burner +=1;
 	if ( burner == 3 ) { burner = 0 }
 	BurnerN.setValue(burner);
