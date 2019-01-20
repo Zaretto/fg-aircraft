@@ -551,3 +551,8 @@ var econt_temp = func(n) {
     setprop("sim/model/f-14b/controls/switch-temp", n);
 }
 
+setlistener("/fdm/jsbsim/systems/apc/milthrust", func {
+	if (getprop("/fdm/jsbsim/systems/apc/milthrust") == 1) {
+		f14.econt_throttle_mode(0); # Kill APC
+	}
+}, 0, 0); # the 2 zeros make this not update unless the value actually changes
