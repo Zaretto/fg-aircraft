@@ -18,12 +18,27 @@
     <property value="0">propulsion/engine[0]/P0-stall</property>
     <property value="0">propulsion/engine[1]/P0-stall</property>
     <channel name="engine-control">
+        <switch name="fcs/throttle-switched[0]">
+            <default value="fcs/throttle-cmd-norm[0]"/>
+            <test logic="AND" value="fcs/throttle-apc">
+                systems/apc/active eq 1
+                position/aircraft-on-ground eq 0
+            </test>
+        </switch>
+
+        <switch name="fcs/throttle-switched[1]">
+            <default value="fcs/throttle-cmd-norm[1]"/>
+            <test logic="AND" value="fcs/throttle-apc">
+                systems/apc/active eq 1
+                position/aircraft-on-ground eq 0
+            </test>
+        </switch>
 
         <!-- Throttles uses the APC value - which will either be the demanded for APC or the input value from throttle-cmd -->
         <scheduled_gain name="ThrottleL">
-            <input>fcs/throttle-cmd-norm[0]</input>
+            <input>fcs/throttle-switched[0]</input>
             <table>
-                <independentVar>fcs/throttle-cmd-norm[0]</independentVar>
+                <independentVar>fcs/throttle-switched[0]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
                     0.00    0.0
@@ -39,9 +54,9 @@
         </scheduled_gain>
 
         <scheduled_gain name="ThrottleR">
-            <input>fcs/throttle-cmd-norm[1]</input>
+            <input>fcs/throttle-switched[1]</input>
             <table>
-                <independentVar>fcs/throttle-cmd-norm[1]</independentVar>
+                <independentVar>fcs/throttle-switched[1]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
                     0.00    0.0
