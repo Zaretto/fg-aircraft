@@ -132,7 +132,11 @@ var F15HUD = {
         obj.radarActiveTargetClosure = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-closure",1);
         obj.navRangeDisplay = props.globals.getNode("sim/model/f15/instrumentation/hud/nav-range-display",1);
         obj.navRangeETA = props.globals.getNode("sim/model/f15/instrumentation/hud/nav-range-eta",1);
-
+        obj.diamondSwitchProperty = props.globals.getNode("sim/model/f15/lighting/hud-diamond-switch/state");
+        obj.currentTime = props.globals.getNode("sim/time/elapsed-sec");
+obj.currentViewX = props.globals.getNode("/sim/current-view/x-offset-m");
+obj.currentViewY = props.globals.getNode("/sim/current-view/y-offset-m");
+        
         obj.radarActiveTargetAvailable.setValue(0);
         obj.radarActiveTargetCallsign.setValue("");
         obj.radarActiveTargetType.setValue("");
@@ -431,8 +435,8 @@ return obj;
         if(me.FocusAtInfinity)
           {
               # parallax correction
-              var current_x = getprop("/sim/current-view/x-offset-m");
-              var current_y = getprop("/sim/current-view/y-offset-m");
+              var current_x = me.currentViewX.getValue();
+              var current_y = me.currentViewY.getValue();
               #        var current_z = getprop("/sim/current-view/z-offset-m");
         
               var dx = me.view[0] - current_x;
