@@ -53,6 +53,18 @@
 				autoflight/ss/aileron-norm ne 0
 			</test>
 		</switch>
+		
+		<fcs_function name="fcs/aileron-droop">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<tableData>
+						62  20
+						77   0
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 	
 	</channel>
 	
@@ -258,7 +270,7 @@
 			</function>
 		</fcs_function>
 		
-		<summer name="fcs/elevon-left-cmd">
+		<summer name="fcs/elevon-left-input">
 			<input>fcs/pitch-input-deg</input>
 			<input>fcs/roll-elevon-input-deg</input>
 			<clipto>
@@ -266,6 +278,13 @@
 				<max>15.0</max>
 			</clipto>
 		</summer>
+		
+		<switch name="fcs/elevon-left-cmd">
+			<default value="0"/> <!-- They don't really droop since they are mounted in the center -->
+			<test value="fcs/elevon-left-input">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
 		
 		<actuator name="fcs/elevon-left">
 			<input>fcs/elevon-left-cmd</input>
@@ -286,7 +305,7 @@
 			<output>/sim/multiplay/generic/float[4]</output>
 		</aerosurface_scale>
 		
-		<summer name="fcs/elevon-right-cmd">
+		<summer name="fcs/elevon-right-input">
 			<input>fcs/pitch-input-deg</input>
 			<input>-fcs/roll-elevon-input-deg</input>
 			<clipto>
@@ -294,6 +313,13 @@
 				<max>15.0</max>
 			</clipto>
 		</summer>
+		
+		<switch name="fcs/elevon-right-cmd">
+			<default value="0"/> <!-- They don't really droop since they are mounted in the center -->
+			<test value="fcs/elevon-right-input">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
 		
 		<actuator name="fcs/elevon-right">
 			<input>fcs/elevon-right-cmd</input>
@@ -366,8 +392,15 @@
 			<gain>20.0</gain>
 		</pure_gain>
 		
+		<switch name="fcs/aileron-left-cmd">
+			<default value="fcs/aileron-droop"/>
+			<test value="fcs/aileron-input-deg">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/aileron-left">
-			<input>fcs/aileron-input-deg</input>
+			<input>fcs/aileron-left-cmd</input>
 			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
 			<lag>26.7</lag>
 		</actuator>
@@ -385,8 +418,15 @@
 			<output>/sim/multiplay/generic/float[2]</output>
 		</aerosurface_scale>
 		
+		<switch name="fcs/aileron-right-cmd">
+			<default value="fcs/aileron-droop"/>
+			<test value="-fcs/aileron-input-deg">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/aileron-right">
-			<input>-fcs/aileron-input-deg</input>
+			<input>fcs/aileron-right-cmd</input>
 			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
 			<lag>26.7</lag>
 			<output>/sim/multiplay/generic/float[3]</output>
@@ -519,8 +559,15 @@
 			</clipto>
 		</pure_gain>
 		
+		<switch name="fcs/rudder-input-deg-cmd">
+			<default value="0"/>
+			<test value="fcs/rudder-input-deg">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/rudder-aero-deg">
-			<input>fcs/rudder-input-deg</input>
+			<input>fcs/rudder-input-deg-cmd</input>
 			<rate_limit>3150</rate_limit> <!-- 105 * 30 degrees -->
 			<lag>22.7</lag>
 			<output>/sim/multiplay/generic/float[1]</output>
