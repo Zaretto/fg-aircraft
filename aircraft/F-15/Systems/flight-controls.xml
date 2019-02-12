@@ -288,7 +288,7 @@
 		
 		<actuator name="fcs/elevon-left">
 			<input>fcs/elevon-left-cmd</input>
-			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
+			<rate_limit>46</rate_limit>
 			<lag>26.7</lag>
 		</actuator>
 		
@@ -323,7 +323,7 @@
 		
 		<actuator name="fcs/elevon-right">
 			<input>fcs/elevon-right-cmd</input>
-			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
+			<rate_limit>46</rate_limit>
 			<lag>26.7</lag>
 		</actuator>
 		
@@ -352,20 +352,46 @@
 			</function>
 		</fcs_function>
 		
+		<!-- Begin FCS hack by Joshua Davidson (it0uchpods) -->
+		
+		<!-- 46 per second is just too slow to make the A/P feedback to work properly. So we pass it faster, only when the A/P is actively controlling pitch, including when stick is moved. -->
+		<!-- To the pilot's animations, it looks correct. This is only for A/P feedback and is passed directly to the Aerodynamics. Differential Elevons are OK since ailerons are there too. -->
+		<!-- Yes, it's hackish, but the elevons are just SO SLOW that the A/P won't work well. Whatever tricks McDD did, I don't know them. -->
+		<switch name="fcs/elevon-f-r">
+			<default value="46"/>
+			<test value="250">
+				autoflight/output/pitch-master eq 1
+			</test>
+		</switch>
+		
+		<actuator name="fcs/elevon-left-f">
+			<input>fcs/elevon-left-cmd</input>
+			<rate_limit>fcs/elevon-f-r</rate_limit>
+			<lag>26.7</lag>
+		</actuator>
+		
+		<actuator name="fcs/elevon-right-f">
+			<input>fcs/elevon-right-cmd</input>
+			<rate_limit>fcs/elevon-f-r</rate_limit>
+			<lag>26.7</lag>
+		</actuator>
+		
 		<fcs_function name="fcs/elevon-aero-deg">
 			<function>
 				<sum>
 					<product>
-						<property>fcs/elevon-left</property>
+						<property>fcs/elevon-left-f</property>
 						<value>0.5</value>
 					</product>
 					<product>
-						<property>fcs/elevon-right</property>
+						<property>fcs/elevon-right-f</property>
 						<value>0.5</value>
 					</product>
 				</sum>
 			</function>
 		</fcs_function>
+		
+		<!-- End FCS hack by Joshua Davidson (it0uchpods) -->
 	
 	</channel>
 	
@@ -401,7 +427,7 @@
 		
 		<actuator name="fcs/aileron-left">
 			<input>fcs/aileron-left-cmd</input>
-			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
+			<rate_limit>100</rate_limit>
 			<lag>26.7</lag>
 		</actuator>
 		
@@ -427,7 +453,7 @@
 		
 		<actuator name="fcs/aileron-right">
 			<input>fcs/aileron-right-cmd</input>
-			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
+			<rate_limit>100</rate_limit>
 			<lag>26.7</lag>
 			<output>/sim/multiplay/generic/float[3]</output>
 		</actuator>
@@ -568,7 +594,7 @@
 		
 		<actuator name="fcs/rudder-aero-deg">
 			<input>fcs/rudder-input-deg-cmd</input>
-			<rate_limit>3150</rate_limit> <!-- 105 * 30 degrees -->
+			<rate_limit>105</rate_limit>
 			<lag>22.7</lag>
 		</actuator>
 		
