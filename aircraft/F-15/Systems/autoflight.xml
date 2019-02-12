@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- McDonnell Douglas F-15 Autoflight System -->
-<!-- (c) 2018 Joshua Davidson (it0uchpods) -->
+<!-- (c) 2019 Joshua Davidson (it0uchpods) -->
 
 <system name="autoflight">
 	
@@ -478,6 +478,10 @@
 		<summer name="autoflight/roll/roll-rate-error">
 			<input>autoflight/roll/p-rad_sec</input>
 			<input>-autoflight/roll/roll-rate-p</input>
+			<clipto>
+				<min>-0.349066</min>
+				<max>0.349066</max>
+			</clipto>
 		</summer>
 		
 		<fcs_function name="autoflight/roll/p-gain">
@@ -486,7 +490,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0    1  
+						     0    1
 						200  0.0 -1.8
 						320  0.0 -1.4
 						600  0.0 -0.9
@@ -502,7 +506,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0    1  
+						     0    1
 						200  0.0 -0.8
 						320  0.0 -0.7
 						600  0.0 -0.4
@@ -518,7 +522,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0      1  
+						     0      1
 						200  0.000 -0.100
 						320  0.000 -0.050
 						600  0.000 -0.010
@@ -723,6 +727,10 @@
 		<summer name="autoflight/pitch/pitch-rate-error">
 			<input>autoflight/pitch/thetadot-rad_sec</input>
 			<input>-autoflight/pitch/pitch-rate-p</input>
+			<clipto>
+				<min>-0.174533</min>
+				<max>0.174533</max>
+			</clipto>
 		</summer>
 		
 		<fcs_function name="autoflight/pitch/p-gain">
@@ -731,7 +739,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0  1  
+						     0  1
 						200  0  14
 						320  0  9
 						600  0  5
@@ -747,7 +755,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0  1  
+						     0  1
 						200  0  13
 						320  0  8
 						600  0  4
@@ -763,7 +771,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0     1  
+						     0     1
 						200  0.00  0.30
 						320  0.00  0.20
 						600  0.00  0.18
@@ -780,7 +788,7 @@
 			</test>
 			<test logic="OR" value="1">
 				autoflight/pitch/master-pid le -0.999
-				autoflight/pitch/master-pid ge 0.999
+				autoflight/pitch/master-pid ge 0.519
 			</test>
 		</switch>
 		
@@ -791,8 +799,8 @@
 			<kd>autoflight/pitch/d-gain</kd>
 			<trigger>autoflight/pitch/trigger</trigger>
 			<clipto>
-				<min>-1.0</min>
-				<max>1.0</max>
+				<min>-0.999</min>
+				<max>0.519</max>
 			</clipto>
 			<output>autoflight/pitch/master-pid</output>
 		</pid>
@@ -812,7 +820,7 @@
 		
 		<switch name="autoflight/pitch/pitch-rate-demand">
 			<default value="0"/>
-			<test logic="AND" value="autoflight/pitch/master-pid-switched">
+			<test value="autoflight/pitch/master-pid-switched">
 				autoflight/output/pitch-master eq 1
 			</test>
 		</switch>
