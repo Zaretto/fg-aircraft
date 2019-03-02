@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- McDonnell Douglas F-15 Control Augmentation System -->
-<!-- (c) 2018 Joshua Davidson (it0uchpods) -->
+<!-- (c) 2019 Joshua Davidson (it0uchpods) -->
 
 <system name="cas">
 	
@@ -131,8 +131,13 @@
 	
 	<channel name="Pitch Axis">
 		
-		<scheduled_gain name="cas/pitch-q-feedback">
+		<washout_filter name="cas/q-washout">
 			<input>velocities/q-rad_sec</input>
+			<c1>0.5</c1>
+		</washout_filter>
+		
+		<scheduled_gain name="cas/pitch-q-feedback">
+			<input>cas/q-washout</input>
 			<table>
 				<independentVar>velocities/vc-kts</independentVar>
 				<tableData>
@@ -164,7 +169,7 @@
 		</fcs_function>
 		
 		<summer name="cas/pitch-g-error">
-			<input>/accelerations/pilot-g</input>
+			<input>accelerations/Nz</input>
 			<input>-cas/pitch-g-demand</input>
 		</summer>
 		
@@ -203,8 +208,13 @@
 	
 	<channel name="Yaw Axis">
 		
-		<scheduled_gain name="cas/yaw-damper">
+		<washout_filter name="cas/r-washout">
 			<input>velocities/r-rad_sec</input>
+			<c1>0.5</c1>
+		</washout_filter>
+		
+		<scheduled_gain name="cas/yaw-rate-damper">
+			<input>cas/r-washout</input>
 			<table>
 				<independentVar>velocities/vc-kts</independentVar>
 				<tableData>
@@ -213,10 +223,34 @@
 				</tableData>
 			</table>
 			<clipto>
-				<min>-0.2</min>
-				<max>0.2</max>
+				<min>-0.3</min>
+				<max>0.3</max>
 			</clipto>
 		</scheduled_gain>
+		
+		<scheduled_gain name="cas/yaw-accel-damper">
+			<input>accelerations/Ny</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  0.05
+					950  0.01
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<summer name="cas/yaw-damper">
+			<input>cas/yaw-rate-damper</input>
+			<input>cas/yaw-accel-damper</input>
+			<clipto>
+				<min>-0.3</min>
+				<max>0.3</max>
+			</clipto>
+		</summer>
 		
 		<switch name="cas/beta">
 			<default value="0"/>
