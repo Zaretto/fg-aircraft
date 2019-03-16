@@ -11,11 +11,11 @@
 		<condition>
 			<or>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>RIO View</value>
 				</equals>
 				<equals>
-					<property>sim/current-view/name</property>
+					<property>/sim/current-view/name</property>
 					<value>Back-seat View</value>
 				</equals>
 			</or>
@@ -41,7 +41,7 @@
 <or>
 			<property>sim/model/f-14b/controls/TID/on-off</property>
                <less-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                   <value>0</value>
                 </less-than>
 </or>
@@ -53,7 +53,7 @@
 		<condition>
 <or>
             <less-than>
-              <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+              <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>1</value>
             </less-than>
 			<not>
@@ -69,7 +69,7 @@
 		<type>select</type>
 		<condition>
                <greater-than>
-                  <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                  <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                   <value>0</value>
                 </greater-than>
 			<property>sim/model/f-14b/instrumentation/rio-nav-display/standby-light</property>
@@ -82,11 +82,11 @@
 		<type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
 		<emission>
@@ -102,7 +102,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <greater-than-equals>
@@ -129,7 +129,7 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <greater-than>
@@ -156,11 +156,11 @@
     <type>material</type>
     <condition>
       <greater-than>
-        <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
         <value>0</value>
       </greater-than>
       <not>
-        <property>sim/rendering/rembrandt/enabled</property>
+        <property>/sim/rendering/rembrandt/enabled</property>
       </not>
     </condition>
     <emission>
@@ -173,6 +173,37 @@
       <blue-prop>controls/lighting/dome-blue</blue-prop>
     </emission>
   </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>TID-brightness-knob</object-name>
+        <property>sim/model/f-14b/controls/TID/brightness</property>
+        <factor>230</factor>
+        <center>
+            <x-m>0.09482</x-m>
+            <y-m>0.07908</y-m>
+            <z-m>0.14837</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/TID/brightness</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+            <!--<binding>
+                <command>nasal</command>
+                <script>f14.notify_prop(f14.set_radar_TID_brightness, "sim/model/f-14b/controls/TID/brightness")</script>
+            </binding>-->
+        </action>
+    </animation>
 
   <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
   <effect>
@@ -194,11 +225,11 @@
         <type>material</type>
         <condition>
             <greater-than>
-                <property>/fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/rendering/rembrandt/enabled</property>
+                <property>/sim/rendering/rembrandt/enabled</property>
             </not>
         </condition>
         <emission>
