@@ -63,6 +63,11 @@
 			<c1>8.6</c1>
 		</lag_filter>
 		
+		<lag_filter name="autoflight/ss/yaw-input">
+			<input>/controls/flight/rudder</input>
+			<c1>8.6</c1>
+		</lag_filter>
+		
 		<fcs_function name="autoflight/ss/aileron-norm">
 			<function>
 				<product>
@@ -127,6 +132,38 @@
 			</function>
 		</fcs_function>
 		
+		<fcs_function name="autoflight/ss/rudder-norm">
+			<function>
+				<product>
+					<quotient>
+						<property>/controls/flight/rudder</property>
+						<pow>
+							<value>1</value>
+							<property>/controls/flight/rudder</property>
+						</pow>
+					</quotient>
+					<product>
+						<max>
+							<value>0</value>
+							<difference>
+								<abs>
+									<property>/controls/flight/rudder</property>
+								</abs>
+								<property>/autopilot/settings/rudder-deadzone</property>
+							</difference>
+						</max>
+						<quotient>
+							<value>1.0</value>
+							<difference>
+								<value>1.0</value>
+								<property>/autopilot/settings/rudder-deadzone</property>
+							</difference>
+						</quotient>
+					</product>
+				</product>
+			</function>
+		</fcs_function>
+		
 		<pure_gain name="/autopilot/settings/aileron-deadzone-neg">
 			<input>/autopilot/settings/aileron-deadzone</input>
 			<gain>-1.0</gain>
@@ -137,13 +174,20 @@
 			<gain>-1.0</gain>
 		</pure_gain>
 		
+		<pure_gain name="/autopilot/settings/rudder-deadzone-neg">
+			<input>/autopilot/settings/rudder-deadzone</input>
+			<gain>-1.0</gain>
+		</pure_gain>
+		
 		<switch name="autoflight/ss/force">
 			<default value="0"/>
 			<test logic="OR" value="1">
-				autoflight/ss/roll-input gt /autopilot/settings/aileron-deadzone
 				autoflight/ss/roll-input lt /autopilot/settings/aileron-deadzone-neg
-				autoflight/ss/pitch-input gt /autopilot/settings/elevator-deadzone
+				autoflight/ss/roll-input gt /autopilot/settings/aileron-deadzone
 				autoflight/ss/pitch-input lt /autopilot/settings/elevator-deadzone-neg
+				autoflight/ss/pitch-input gt /autopilot/settings/elevator-deadzone
+				autoflight/ss/yaw-input lt /autopilot/settings/rudder-deadzone-neg
+				autoflight/ss/yaw-input gt /autopilot/settings/rudder-deadzone
 			</test>
 		</switch>
 		
@@ -251,7 +295,7 @@
 			<function>
 				<sum>
 					<property>autoflight/roll/heading/bank-max</property>
-					<value>-0.1</value>
+					<value>-0.01</value>
 				</sum>
 			</function>
 		</fcs_function>
@@ -260,7 +304,7 @@
 			<function>
 				<sum>
 					<property>autoflight/roll/heading/bank-min</property>
-					<value>0.1</value>
+					<value>0.01</value>
 				</sum>
 			</function>
 		</fcs_function>
@@ -381,10 +425,6 @@
 						<eq>
 							<property>autoflight/roll/att-hold-active</property>
 							<value>1</value>
-						</eq>
-						<eq>
-							<property>autoflight/ss/active</property>
-							<value>0</value>
 						</eq>
 						<eq>
 							<property>autoflight/roll/att-hold-switch</property>
@@ -650,10 +690,6 @@
 						<eq>
 							<property>autoflight/pitch/att-hold-active</property>
 							<value>1</value>
-						</eq>
-						<eq>
-							<property>autoflight/ss/active</property>
-							<value>0</value>
 						</eq>
 						<eq>
 							<property>autoflight/pitch/att-hold-switch</property>
