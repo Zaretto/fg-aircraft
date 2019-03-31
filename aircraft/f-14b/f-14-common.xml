@@ -784,15 +784,7 @@
                         <rd-rot-light type="bool">false</rd-rot-light>
                         <jat-light type="bool">false</jat-light>
                         <irot-light type="bool">false</irot-light>
-                        <wcs-mode>
-                            <pd-stt type="bool">false</pd-stt>
-                            <pulse-stt type="bool">false</pulse-stt>
-                            <pd-srch type="bool">false</pd-srch>
-                            <rws type="bool">false</rws>
-                            <tws-auto type="bool">false</tws-auto>
-                            <tws-man type="bool">false</tws-man>
-                            <pulse-srch type="bool">true</pulse-srch>
-                        </wcs-mode>
+                        <wcs-mode type="int">3</wcs-mode> <!-- pulse search -->
                     </radar-awg-9>
                     <tacan>
                         <xy-switch type="bool">0</xy-switch>
@@ -972,7 +964,7 @@
         </model>
 
         <multiplay>
-            <!-- Starting with 2017.3 F-14 only transmit using Emesary -->
+            <!-- Starting with 2017.3 F-14 can only transmit using Emesary -->
             <transmit-only-generics type="int">0</transmit-only-generics>
             <transmit-only-generics-available type="int">1</transmit-only-generics-available>
             <generic>
@@ -2052,14 +2044,30 @@
             <switch-position type="int">1</switch-position>
         </tacan>
         <radar>
-            <az-field type="double">120</az-field>
-            <enabled type="bool">true</enabled>
-            <range type="double">120</range>
-            <radar2-range type="double">50</radar2-range>
-            <radar-standby type="bool">0</radar-standby>
-            <symbols-enabled type="bool">true</symbols-enabled>
-            <serviceable type="bool">true</serviceable>
-            <radar-mode type="int">1</radar-mode>
+<az-field type="int">120</az-field>
+<cycle-range type="bool">false</cycle-range>
+<debug-mode type="bool">true</debug-mode>
+<display-rdr type="bool">true</display-rdr>!
+<enabled type="bool">true</enabled>!
+<ho-field type="int">120</ho-field><!-- bars -->!
+<limited-select type="bool">true</limited-select>
+<radar-mode type="int">1</radar-mode>!
+<radar-standby type="bool">false</radar-standby>
+<radar2-range type="double">50</radar2-range><!-- default range -->
+<range type="double">160</range>
+<range-selected type="double">50</range-selected>
+<ranges n="0"><entry type="int">5</entry></ranges>
+<ranges n="1"><entry type="int">10</entry></ranges>
+<ranges n="2"><entry type="int">20</entry></ranges>
+<ranges n="3"><entry type="int">50</entry></ranges>
+<ranges n="4"><entry type="int">100</entry></ranges>
+<ranges n="5"><entry type="int">200</entry></ranges>
+<ref-range type="double">70</ref-range>
+<ref-strength type="double">3.8</ref-strength>
+<scan_partition_size type="double">10</scan_partition_size>!
+<scan_visibility_check_interval type="double">3</scan_visibility_check_interval>!
+<serviceable type="bool">true</serviceable>!
+<symbols-enabled type="bool">true</symbols-enabled>!
         </radar>
         <ecm>
             <enabled type="bool">true</enabled>
@@ -2161,6 +2169,8 @@
                 <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
             </aim-7>
             <aim-54><!-- aim-54c Phoenix -->
+                <sound-on-off type="bool">false</sound-on-off>
+                <sound-volume type="double">0.0</sound-volume>
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <vol-track-weak type="double">0.10</vol-track-weak>
@@ -2238,10 +2248,6 @@
             <file>Aircraft/f-14b/Nasal/fox2.nas</file>
             <file>Aircraft/f-14b/Nasal/damage.nas</file>
         </armament>
-        <awg_9>
-            <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
-            <file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file>
-        </awg_9>
         <dual_control_tools>
             <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
         </dual_control_tools>
@@ -2279,6 +2285,12 @@
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
             <file>Aircraft/f-14b/Nasal/crash-and-stress.nas</file>
         </f14>
+        <awg_9> 
+            <!-- needs to be after the f14 modules - as otherwise the recipient will be registered before
+                 the one that populates the aircraft fields in the notification -->
+            <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
+            <file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file>
+        </awg_9>
         <f14_hud>
             <file>Aircraft/f-14b/Nasal/hud.nas</file>
         </f14_hud>

@@ -395,6 +395,7 @@ var F14_exec = {
         {
             if (notification.NotificationType == "FrameNotification")
             {
+                # this needs to be executed before the radar.
                 me.F14_exec.update(notification);
                 ownship_pos.set_latlon(ownshipLat.getValue(), ownshipLon.getValue());
                 notification.ownship_pos = ownship_pos;
