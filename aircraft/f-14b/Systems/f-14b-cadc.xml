@@ -29,7 +29,6 @@
             <function>
                 <description>Manoeuver slat/flap ful extension max alt/mn</description>
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93  -->
-                <sum>
                     <table>
                         <independentVar lookup="row">position/h-sl-ft</independentVar>
                         <tableData>
@@ -44,7 +43,6 @@
                             40000	0.8643
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -52,7 +50,6 @@
             <function>
                 <description>Manoeuver flap partial extension max alt/mn</description>
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93  -->
-                <sum>
                     <table>
                         <independentVar lookup="row">position/h-sl-ft</independentVar>
                         <tableData>
@@ -67,14 +64,12 @@
                             40000	0.8765
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
         <fcs_function name="systems/cadc/manuv-flapslat-extension-aoa">
             <function>
                 <description>Manoeuver flapslat extension schedule, NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93 </description>
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <tableData>
@@ -92,7 +87,6 @@
                             0.8558	5.49
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -100,7 +94,6 @@
             <function>
                 <description>Manoeuver flapslat retraction schedule</description>
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-52: p. 2-93  -->
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <tableData>
@@ -118,7 +111,6 @@
                             0.8672	2.73
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -126,7 +118,6 @@
         <fcs_function name="systems/cadc/manuv-flap-extension-calc">
             <function>
                 <description>NAVAIR 01-F14AAD-1 S 2.21.2.4 p. 2-92 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -143,14 +134,12 @@
                             55	0.28571	0.28571	0.18571	0.18571	0.18571	0.00000	0.00000
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
         <fcs_function name="systems/cadc/manuv-slat-extension-calc">
             <function>
                 <description>NAVAIR 01-F14AAD-1 S 2.21.2.4 p. 2-92 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -164,7 +153,6 @@
                             55	0.429412	0.429412    0.429412	0.429412	0.000000	0.000000
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 

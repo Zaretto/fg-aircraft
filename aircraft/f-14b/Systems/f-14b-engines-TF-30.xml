@@ -216,8 +216,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[0]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                             <tableData>
@@ -229,15 +227,11 @@ and Robert J. Shaw,  May 1985
                                 100	4.4
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
         <fcs_function name="propulsion/engine[0]/c-egt-lag">
             <description>EGT LAG N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                             <tableData>
@@ -249,8 +243,6 @@ and Robert J. Shaw,  May 1985
                                 100	0.21
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
 
@@ -263,6 +255,7 @@ and Robert J. Shaw,  May 1985
                 </quotient>
             </function>
             <clipto>
+                <min>0</min>
                 <max>1.43</max>
             </clipto>
         </fcs_function>
@@ -270,7 +263,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[0]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
@@ -285,7 +277,6 @@ and Robert J. Shaw,  May 1985
                             0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -297,7 +288,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[0]/PB">
             <description>Engine 0 SS Burner pressure ratio</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -321,7 +311,6 @@ and Robert J. Shaw,  May 1985
                             100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
         <fcs_function name="propulsion/engine[0]/augmentation-stage">
@@ -424,16 +413,15 @@ and Robert J. Shaw,  May 1985
         </actuator>
         <fcs_function name="propulsion/engine[0]/augmentation-alight-v">
             <function>
-                <sum>
+                <integer>
                     <property>propulsion/engine[0]/augmentation-alight</property>
-                </sum>
+                </integer>
             </function>
         </fcs_function>
         <!-- EGT equations -->
         <fcs_function name="propulsion/engine[0]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
                         <tableData>
@@ -442,7 +430,6 @@ and Robert J. Shaw,  May 1985
                             5.00	171
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -520,7 +507,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[0]/alt/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
@@ -529,7 +515,6 @@ and Robert J. Shaw,  May 1985
                             1.0000	0.15248
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
@@ -680,8 +665,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[1]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                             <tableData>
@@ -693,15 +676,11 @@ and Robert J. Shaw,  May 1985
                                 100	4.4
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
         <fcs_function name="propulsion/engine[1]/c-egt-lag">
             <description>EGT LAG N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                             <tableData>
@@ -713,8 +692,6 @@ and Robert J. Shaw,  May 1985
                                 100	0.21
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
 
@@ -727,6 +704,7 @@ and Robert J. Shaw,  May 1985
                 </quotient>
             </function>
             <clipto>
+                <min>0</min>
                 <max>1.43</max>
             </clipto>
         </fcs_function>
@@ -734,7 +712,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[1]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
@@ -749,7 +726,6 @@ and Robert J. Shaw,  May 1985
                             0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -761,7 +737,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[1]/PB">
             <description>Engine 0 SS Burner pressure ratio</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -785,7 +760,6 @@ and Robert J. Shaw,  May 1985
                             100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
         <fcs_function name="propulsion/engine[1]/augmentation-stage">
@@ -888,16 +862,15 @@ and Robert J. Shaw,  May 1985
         </actuator>
         <fcs_function name="propulsion/engine[1]/augmentation-alight-v">
             <function>
-                <sum>
+                <integer>
                     <property>propulsion/engine[1]/augmentation-alight</property>
-                </sum>
+                </integer>
             </function>
         </fcs_function>
         <!-- EGT equations -->
         <fcs_function name="propulsion/engine[1]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[1]/augmentation-stage</independentVar>
                         <tableData>
@@ -906,7 +879,6 @@ and Robert J. Shaw,  May 1985
                             5.00	171
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -984,7 +956,6 @@ and Robert J. Shaw,  May 1985
         <fcs_function name="propulsion/engine[1]/alt/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
@@ -993,7 +964,6 @@ and Robert J. Shaw,  May 1985
                             1.0000	0.15248
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
@@ -1044,7 +1014,6 @@ and Robert J. Shaw,  May 1985
 </function>
 <function name="propulsion/engine[1]/EGT-R">
     <description>Engine 1 EGT Rankine</description>
-    <sum>
         <property>atmosphere/T-R</property>
         <table>
             <independentVar>propulsion/engine[1]/n1</independentVar>
@@ -1060,5 +1029,4 @@ and Robert J. Shaw,  May 1985
                 104	1684.7
             </tableData>
         </table>
-    </sum>
 </function>-->
