@@ -162,43 +162,26 @@
             <default value="0.0"/>
 
             <test value="0">
-                <or>
+                <test logic="OR">
                     fcs/flap-cmd-norm gt 0.3714285714285714
                     aero/alpha-deg lt systems/cadc/manuv-flapslat-retraction-aoa
                     velocities/mach gt systems/cadc/manuv-flap-partially-extended-max-mn
                     gear/gear-cmd-norm ne 0
-                </or>
+                </test>
                 systems/cadc/manuv-active ne 0
             </test>
 
 
-            <test value="1">
-                <or>
-                    <and>
-                        fcs/flap-cmd-norm le 0.3714285714285714
-                        aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
-                        velocities/mach le systems/cadc/manuv-flap-fully-extended-max-mn
-                        gear/gear-cmd-norm eq 0
-                        fcs/wing-sweep-cmd le 0.7352941176470588
-                    </and>
-                    systems/cadc/manuv-active ne 0
-                </or>
+          <test value="1" logic="OR">
+            <test logic="AND">
+              fcs/flap-cmd-norm le 0.3714285714285714
+              aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
+              velocities/mach le systems/cadc/manuv-flap-fully-extended-max-mn
+              gear/gear-cmd-norm eq 0
+              fcs/wing-sweep-cmd le 0.7352941176470588
             </test>
-
-            <!--
-            <test value="0.6">
-                <or>
-                    <and>
-                    aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
-                    velocities/mach le systems/cadc/manuv-flap-partially-extended-max-mn
-                    </and>
-                    systems/cadc/manuv-active ne 0
-                </or>
-                aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
-                systems/cadc/manuv-active ne 0
-            </test>
--->
-
+            systems/cadc/manuv-active ne 0
+          </test>
         </switch>
 
         <switch name="systems/cadc/manuv-flap-extension-cmd">
@@ -234,11 +217,9 @@
         <switch name="systems/afcs/altitude-hold-trigger">
             <default value="0.0"/>
             <test value="1.0">
-                <and>
                     propulsion/engine[0]/set-running == 0
                     propulsion/engine[1]/set-running == 0
                     systems/afcs/altitude-hold-active ne 0
-                </and>
             </test>
         </switch>
 
