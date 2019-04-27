@@ -322,7 +322,7 @@ if (pnode == nil) return;
 
              w2 = sprintf("%-4d", awg_9.active_u.get_closure_rate());
              w3_22 = sprintf("%3d-%1.1f %.5s %.4s",awg_9.active_u.get_bearing(), awg_9.active_u.get_range(), callsign, model);
-             var aspect = awg_9.active_u.get_reciprocal_bearing()/10;
+             var aspect = awg_9.active_u.get_aspect()/10;
              w1 = sprintf("%4d %2d%s %2d %d", awg_9.active_u.get_TAS(), aspect, aspect < 180 ? "r" : "l", awg_9.active_u.get_heading(), awg_9.active_u.get_altitude());
          }
          notification.w1 = w1;
@@ -336,7 +336,23 @@ if (pnode == nil) return;
      #
      # the rest we can update every frame as they use the property manager.
      foreach (var update_item; me.update_items) {
-         update_item.update(notification);
+                call(func {update_item.update(notification);},nil,nil,nil,var err = []);
+                
+                if (size(err)){
+                    var v = "";
+                    var idx = 0;
+                    foreach(var line; err) {
+                        if (idx)
+                          print(v);
+                        else
+                          v = v ~ " " ~ line;
+                        idx = 1 - idx;
+                    }
+                    print("[ERROR] VSD: Update item ",v);
+                    update_item.dump();
+                    debug.dump(notifications);
+                }
+
      }
  }  
 };

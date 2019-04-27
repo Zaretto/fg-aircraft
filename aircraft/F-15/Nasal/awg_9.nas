@@ -1098,6 +1098,15 @@ wcs_mode_sel = func(mode) {
 	}
 }
 
+radar_mode_cycle = func() {
+    setprop("/sim/multiplay/visibility-range-nm",200);
+    var v = getprop("instrumentation/radar/radar-mode") or 0;
+#print("v",v);
+    if (v == 2) v = 0;
+        else v = 2;
+    setprop("instrumentation/radar/radar-mode",v);
+}
+
 wcs_mode_toggle = func() {
 	# Temporarely toggles between the first 2 available modes.
 	#foreach (var n; props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode").getChildren()) {
@@ -1347,6 +1356,14 @@ var Target = {
 	get_reciprocal_bearing : func {
 		return geo.normdeg(me.get_bearing() + 180);
 	},
+    get_aspect: func {
+        # aspect defined as looking at targets engine is aspect 0.
+        me.rbearing = me.get_reciprocal_bearing();
+        me.engine_heading = me.get_heading()+180;
+print("Aspect ",me.rbearing, " engine_head=",me.engine_heading);
+
+        return geo.normdeg180(me.engine_heading-me.rbearing);
+    },
 	get_deviation : func(true_heading_ref) {
 		me.deviation =  - deviation_normdeg(true_heading_ref, me.get_bearing());
 		return me.deviation;
