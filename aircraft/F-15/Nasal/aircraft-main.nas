@@ -10,6 +10,18 @@
 var true = 1;
 var false = 0;
 var frameRateNode = props.getNode("/sim/frame-rate");
+var CurrentIASnode = props.globals.getNode("velocities/airspeed-kt");
+var CurrentMachnode = props.globals.getNode("velocities/mach");
+var CurrentAltnode = props.globals.getNode("position/altitude-ft");
+var wowLnode = props.globals.getNode("gear/gear[1]/wow");
+var wowRnode = props.globals.getNode("gear/gear[2]/wow");
+var Alphanode = props.globals.getNode("orientation/alpha-indicated-deg");
+var Throttlenode = props.globals.getNode("controls/engines/engine/throttle");
+var e_trimnode = props.globals.getNode("controls/flight/elevator-trim");
+var deltaTnode = props.globals.getNode ("sim/time/delta-sec");
+var currentGnode = props.globals.getNode ("accelerations/pilot-gdamped");
+var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
+var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
 #
 # 2018.3 has improved stores handling - but this is turned 
 gui.external_stores_2018_1_compat = 0;
@@ -221,8 +233,6 @@ var carrier_ara_63_heading = nil;
 var wow = 1;
 setprop("fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("controls/flight/SAS-roll",0);
-UPDATE_PERIOD = 0.0333; # update nasal at 30hz
-var registerFCS = func {settimer (updateFCS, UPDATE_PERIOD);}
 
 #
 #
@@ -451,61 +461,8 @@ var rate4modules = func {
     r4_count += 1;
 
 }
-#
-#
-# rate 2 modules; nominally at half rate.
-var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
-var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
-var rate2modules = func {
-    acFrost.setValue(sysFrost.getValue());
-      aircraft.updateHUD();
-    if (r2_count == 0)
-;
-    elsif (r2_count == 1)
-      aircraft.updateTEWS();
-    elsif (r2_count == 2){
-        awg_9.rdr_loop();
-        aircraft.updateMPCD();
-    } else {
-        r2_count = 0;
-        return;
-    }
-    r2_count += 1;
-}
-#
-# launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
-#settimer (rate4modules, 1); 
-#settimer (rate2modules, 1);
-
-#
-# Standard update loop.
-
-var updateFCS = func {
-	 aircraft.rain.update();
-
-	#Fetch most commonly used values
-	CurrentIAS = getprop("velocities/airspeed-kt");
-	CurrentMach = getprop("velocities/mach");
-	CurrentAlt = getprop("position/altitude-ft");
-	wow = getprop("gear/gear[1]/wow") or getprop("gear/gear[2]/wow");
-
-	Alpha = getprop("orientation/alpha-indicated-deg");
-	Throttle = getprop("controls/engines/engine/throttle");
-	e_trim = getprop("controls/flight/elevator-trim");
-	deltaT = getprop ("sim/time/delta-sec");
-
-    currentG = getprop ("accelerations/pilot-gdamped");
-
-	#update functions
-	aircraft.computeEngines ();
-rate2modules();
-rate4modules();
-	aircraft.registerFCS (); # loop, once per frame.
-}
-
 
 var startProcess = func {
-	settimer (updateFCS, 1.0);
 	position_flash_init();
 	#slat_output.setDoubleValue(0);
 	var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/F-15/Systems/autopilot-dlg.xml");
@@ -759,3 +716,55 @@ setlistener("/controls/flight/elevator-trim", func {
 		setprop("/controls/flight/elevator-trim", 0.51724);
 	}
 });
+
+var F15_Recipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Receive = func(notification){
+            if (notification.NotificationType == "FrameNotification") {
+                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
+#                var frame_count1 = math.mod(notifications.frameNotification.FrameCount,2);
+
+                #Fetch most commonly used values
+                CurrentIAS = 	CurrentIASnode.getValue();
+                CurrentMach = CurrentMachnode.getValue();
+                CurrentAlt = CurrentAltnode.getValue();
+                wow = wowLnode.getBoolValue() or wowRnode.getBoolValue();
+                Alpha = Alphanode.getValue();
+                Throttle = Throttlenode.getValue();
+                e_trim = e_trimnode.getValue();
+                deltaT = deltaTnode.getValue();
+                currentG =    currentGnode.getValue();
+
+                if (frame_count == 0){
+                    aircraft.electricsFrame();
+                    aircraft.rain.update();
+                    aircraft.computeEngines ();
+                    acFrost.setValue(sysFrost.getValue());
+                } elsif (frame_count == 1)
+                  aircraft.computeNWS ();
+                elsif (frame_count == 2)
+                  aircraft.update_weapons_over_mp();
+                elsif (frame_count == 3)
+                  updateVolume();
+                elsif (frame_count == 4)
+                  radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+                elsif (frame_count == 5)
+                  aircraft.routeManagerUpdate();
+                elsif (frame_count == 6) {
+                    if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
+                        setprop("fdm/jsbsim/propulsion/refuel",0);
+                        setprop("fdm/jsbsim/propulsion/ground-refuel",0);
+                    }
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(F15_Recipient.new("F15-MAIN"));
