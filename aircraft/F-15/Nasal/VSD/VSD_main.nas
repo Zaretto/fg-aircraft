@@ -238,6 +238,10 @@ if (pnode == nil) return;
 
          var designated = 0;
          var active_found = 0;
+         var searchCallsign = nil;
+         if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil)
+           searchCallsign =  awg_9.active_u.Callsign.getValue();
+
          foreach ( u; awg_9.tgts_list ) {
              if (u.get_display() == 1) {
                  var callsign = "XX";
@@ -252,7 +256,7 @@ if (pnode == nil) return;
                          #                    if (u.airbone and !designated)
                          #                    if (target_idx == 0)
                          #                    if (awg_9.nearest_u != nil and awg_9.nearest_u.Callsign != nil and u.Callsign.getValue() == awg_9.nearest_u.Callsign.getValue())
-                         if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
+                         if (searchCallsign != nil and u.Callsign.getValue() == searchCallsign)
                            #if (u == awg_9.active_u)
                            {
                                designated = 1;
@@ -287,6 +291,10 @@ if (pnode == nil) return;
                    target_idx = target_idx+1;
                  designated = 0;
              }
+             if (target_idx >= me.max_symbols and (searchCallsign == nil or active_found)){ 
+print("VSD: break before end of list");
+               break;
+           }
          }
          if (active_found == 0) {
              me.tgt_symbols[0].setVisible(0);
@@ -322,8 +330,14 @@ if (pnode == nil) return;
 
              w2 = sprintf("%-4d", awg_9.active_u.get_closure_rate());
              w3_22 = sprintf("%3d-%1.1f %.5s %.4s",awg_9.active_u.get_bearing(), awg_9.active_u.get_range(), callsign, model);
-             var aspect = awg_9.active_u.get_aspect()/10;
-             w1 = sprintf("%4d %2d%s %2d %d", awg_9.active_u.get_TAS(), aspect, aspect < 180 ? "r" : "l", awg_9.active_u.get_heading(), awg_9.active_u.get_altitude());
+             var aspect = math.round(awg_9.active_u.get_aspect()/10.0);
+             if (math.abs(aspect) > 17)
+               notification.aspect_t = "H  ";
+             else if (math.abs(aspect) < 1)
+               notification.aspect_t = "T  ";
+             else 
+               notification.aspect_t = sprintf("%2d%s", math.abs(aspect), aspect > 0 ? "R" : "L");
+             w1 = sprintf("%4d %3s %2d %d", awg_9.active_u.get_TAS(), notification.aspect_t, awg_9.active_u.get_heading(), awg_9.active_u.get_altitude());
          }
          notification.w1 = w1;
          notification.w2 = w2;
@@ -420,4 +434,4 @@ var ModelEventsRecipient =
     },
 };
 
-emesary.GlobalTransmitter.Register(ModelEventsRecipient.new("F15D-backseat"));
+emesary.GlobalTransmitter.Register(ModelEventsRecipient.new("F15D-VSD"));

@@ -253,7 +253,7 @@ var MPCD_Device =
                     {
                         if (v != nil)
                           {
-                              MPCD.mpcd_mode = v.getValue();
+                              obj.mpcd_mode = v.getValue();
                               #    if (!mpcd_mode)
                               #        MPCDcanvas.setVisible(0);
                               #    else
@@ -1139,13 +1139,14 @@ var MPCD_Device =
         me.pjitds_1.addMenuItem(9, "M", me.p1_1);
     },
 
-    update : func
+    update : func(notification)
     {
     # see if spin recovery page needs to be displayed.
     # it is displayed automatically and will remain for 5 seconds.
     # this page provides (sort of) guidance on how to recover from a spin
     # which is identified by the yar rate.
-        if (!wow and math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
+        if (!(notification.wowN or notification.wowL or notification.wowR)  # not when any wow
+            and math.abs(getprop("fdm/jsbsim/velocities/r-rad_sec")) > 0.52631578947368421052631578947368)
         {
             if (me.PFD.current_page != me.p_spin_recovery)
             {
@@ -1173,17 +1174,32 @@ var MPCD_Device =
 };
 
 #
-# Create the MPCD device 
-var MPCD =  nil;
-
-var updateMPCD = func ()
-{  
-    if (MPCD == nil)
-      MPCD = MPCD_Device.new("F15-MPCD", "MPCDImage",0);
-    MPCD.update();
-}
-
-
-#
 # Connect the radar range to the nav display range. 
 setprop("instrumentation/mpcd-sit/inputs/range-nm", getprop("instrumentation/radar/radar2-range"));
+emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowN","gear/gear[0]/wow"));
+emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowL","gear/gear[1]/wow"));
+emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowR","gear/gear[2]/wow"));
+var MPCDRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.MPCD = nil;
+        new_class.Receive = func(notification)
+        {
+            if (notification.NotificationType == "FrameNotification")
+            {
+                if (new_class.MPCD == nil)
+                  new_class.MPCD = MPCD_Device.new("F15-MPCD", "MPCDImage",0);
+                if (!math.mod(notifications.frameNotification.FrameCount,4)){
+                    new_class.MPCD.update(notification);
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(MPCDRecipient.new("F15-MPCD"));
