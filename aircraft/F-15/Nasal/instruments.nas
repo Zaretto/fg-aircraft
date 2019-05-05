@@ -446,7 +446,7 @@ var INSTRUMENTS_Recipient =
     },
 };
 
-emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-instruments"));
+emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-inst"));
   input = {
           Alpha                 : "orientation/alpha-indicated-deg",
           frame_rate                : "/sim/frame-rate",
@@ -468,12 +468,11 @@ emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-instruments"))
           HsdCdiDeflection : "sim/model/f15/instrumentation/hsd/needle-deflection", 
           TcXYSwitch       : "sim/model/f15/instrumentation/tacan/xy-switch",
           TcModeSwitch     : "sim/model/f15/instrumentation/tacan/mode",
-          TrueHdg          : "orientation/heading-deg",
           MagHdg           : "orientation/heading-magnetic-deg",
           MagDev           : "orientation/local-mag-dev",
           ArmSysRunning : "sim/model/f15/systems/armament/system-running",
           };
 
 foreach (var name; keys(input)) {
-    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-instruments", name, input[name]));
+    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-inst", name, input[name]));
 }

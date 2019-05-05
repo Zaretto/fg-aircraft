@@ -767,4 +767,4 @@ var F15_Recipient =
     },
 };
 
-emesary.GlobalTransmitter.Register(F15_Recipient.new("F15-MAIN"));
+emesary.GlobalTransmitter.Register(F15_Recipient.new("F15-main"));
