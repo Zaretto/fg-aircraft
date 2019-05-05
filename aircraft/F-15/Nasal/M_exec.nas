@@ -80,7 +80,6 @@ var rtExec_loop = func
 
 # setup the properties to monitor for this system
   input = {
-           FrameRate                 : "/sim/frame-rate",
            frame_rate                : "/sim/frame-rate",
            frame_rate_worst          : "/sim/frame-rate-worst",
            elapsed_seconds           : "/sim/time/elapsed-sec",
@@ -105,4 +104,4 @@ print("M_exec: starting");
 execTimer.start()
 });
 #execTimer.start();
-emesary.GlobalTransmitter.OverrunDetection(4);
+emesary.GlobalTransmitter.OverrunDetection(9);
