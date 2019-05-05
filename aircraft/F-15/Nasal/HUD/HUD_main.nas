@@ -231,12 +231,12 @@ obj.dlzY = 70;
                                         else
                                           obj.ladder.setCenter (110,900+obj.pitch_deg*-(1772/90));
                                     }),
-                            props.UpdateManager.FromHashList(["OrientationAlphaIndicatedDeg", "OrientationSideSlipDeg"], 0.001, func(val)
+                            props.UpdateManager.FromHashList(["Alpha", "OrientationSideSlipDeg"], 0.001, func(val)
                                                                      {
-                                                                         if (val.OrientationSideSlipDeg == nil or val.OrientationAlphaIndicatedDeg == nil)
+                                                                         if (val.OrientationSideSlipDeg == nil or val.Alpha == nil)
                                                                            return;
                                                                          obj.VV_x = (val.OrientationSideSlipDeg or 0)*10; # adjust for view
-                                                                         obj.VV_y = (val.OrientationAlphaIndicatedDeg or 0)*10; # adjust for view
+                                                                         obj.VV_y = (val.Alpha or 0)*10; # adjust for view
                                                                          obj.VV.setTranslation (obj.VV_x, obj.VV_y);
                                                                      }),
                             props.UpdateManager.FromHashList(["InstrumentedG", "CadcOwsMaximumG"], 0.1, func(val)
@@ -245,12 +245,12 @@ obj.dlzY = 70;
                                                                                                      math.round(val.InstrumentedG*10.0), 
                                                                                                      math.round(val.CadcOwsMaximumG*10.0)));
                                                                      }),
-                            props.UpdateManager.FromHashList(["OrientationAlphaIndicatedDeg", 
+                            props.UpdateManager.FromHashList(["Alpha", 
                                                                       "ControlsGearBrakeParking", 
                                                                       "AirspeedIndicatorIndicatedMach",
                                                                       "ControlsGearGearDown"], 0.01, func(val)
                                                                      {
-                                                                         obj.alpha = val.OrientationAlphaIndicatedDeg or 0;
+                                                                         obj.alpha = val.Alpha or 0;
                                                                          obj.mach = val.AirspeedIndicatorIndicatedMach or 0;
                                                                          if(val.ControlsGearBrakeParking)
                                                                            obj.window7.setText("BRAKES");
@@ -296,7 +296,7 @@ obj.dlzY = 70;
                                                                       "RadarActiveTargetRange",
                                                                       "RadarActiveTargetClosure",
                                                                       "HudNavRangeDisplay",
-                                                                      "HudNavRangeEta"], nil, func(val)
+                                                                      "HudNavRangeETA"], nil, func(val)
                                                                      {
                                                                          if (val.ControlsArmamentMasterArmSwitch) {
                                                                              var w_s = val.ControlsArmamentWeaponSelector;
@@ -336,7 +336,7 @@ obj.dlzY = 70;
                                                                              else
                                                                                obj.window3.setText("");
                                                                              obj.window4.setText(val.HudNavRangeDisplay);
-                                                                             obj.window5.setText(val.HudNavRangeEta);
+                                                                             obj.window5.setText(val.HudNavRangeETA);
                                                                              obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
                                                                          }
                                                                      }
@@ -570,6 +570,7 @@ var HUDRecipient =
 emesary.GlobalTransmitter.Register(HUDRecipient.new("F15-HUD"));
 input = {
         AirspeedIndicatorIndicatedMach          : "instrumentation/airspeed-indicator/indicated-mach",
+        Alpha                                   : "orientation/alpha-indicated-deg",
         AltimeterIndicatedAltitudeFt            : "instrumentation/altimeter/indicated-altitude-ft",
         ArmamentAgmCount                        : "sim/model/f15/systems/armament/agm/count",
         ArmamentAim120Count                     : "sim/model/f15/systems/armament/aim120/count",
@@ -588,8 +589,7 @@ input = {
         ControlsHudSymRej                       : "sim/model/f15/controls/HUD/sym-rej",
         ElectricsAcLeftMainBus                  : "fdm/jsbsim/systems/electrics/ac-left-main-bus",
         HudNavRangeDisplay                      : "sim/model/f15/instrumentation/hud/nav-range-display",
-        HudNavRangeEta                          : "sim/model/f15/instrumentation/hud/nav-range-eta",
-        OrientationAlphaIndicatedDeg            : "orientation/alpha-indicated-deg",
+        HudNavRangeETA                          : "sim/model/f15/instrumentation/hud/nav-range-eta",
         OrientationHeadingDeg                   : "orientation/heading-deg",
         OrientationPitchDeg                     : "orientation/pitch-deg",
         OrientationRollDeg                      : "orientation/roll-deg",
