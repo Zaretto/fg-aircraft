@@ -185,6 +185,10 @@ return;
                     }
             }
         }
+        if (target_idx >= me.max_symbols){ 
+#            print("TEWS: break before end of list");
+            break;
+        }
     }
     if (!is_active)
       me.locked_symbol.setVisible(0);
