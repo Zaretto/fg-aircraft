@@ -68,9 +68,9 @@
 #                                     #  data is the entire data array.
 #                                 });
 
-
 var PartitionProcessor = 
 {
+ debug_output : 0,
  new : func(_name, _size, _timestamp){
      var obj = {parents : [PartitionProcessor] };
      obj.data_index = 0;
@@ -132,7 +132,8 @@ var PartitionProcessor =
          }
 
          if (me.end_time > 0 and me.timestamp.elapsedUSec() > me.end_time){
-             printf("PartitionProcessor: [%s] out of time %dus (processed# %d)",me.name, me.timestamp.elapsedUSec() - me.start_time, me.ppos);
+             if (PartitionProcessor.debug_output)
+               printf("PartitionProcessor: [%s] out of time %dus (processed# %d)",me.name, me.timestamp.elapsedUSec() - me.start_time, me.ppos);
              return;
          }
      }
