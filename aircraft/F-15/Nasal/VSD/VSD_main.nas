@@ -350,24 +350,8 @@ if (pnode == nil) return;
                                                                   obj._w3_22);
                                 }
                                 ,
-                                func(pp, notification, update_item){
-                                    call(func {update_item.update(obj.notification);},nil,nil,nil,var err = []);
-                                    
-                                  if (size(err)) {
-                                      var v = "";
-                                      var idx = 0;
-                                      foreach (var line; err) {
-                                          if (idx)
-                                            print(v);
-                                          else
-                                            v = v ~ " " ~ line;
-                                          idx = 1 - idx;
-                                      }
-                                      print("[ERROR] VSD: Update item ",v);
-                                      update_item.dump();
-                                      debug.dump(notifications);
-                                  }
-
+                                func(pp, obj, update_item){
+                                    update_item.update(obj.notification);
                                     return 1;
                                 }
                                 ,
