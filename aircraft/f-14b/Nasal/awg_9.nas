@@ -559,13 +559,13 @@ if(awg9_trace)
         
             if (rcs.isInRadarRange(u, myRadarRange_rcs, myRadarStrength_rcs) == 0) {
                 if(awg9_trace)
-                  print(scan_tgt_idx,";",u.get_Callsign()," not visible by rcs");
+                  print(scan_tgt_idx,";",u.get_Callsign(),"------------------------------------------ not visible by rcs");
                 u.set_display(0);
                 u.set_visible(0);
             }
             else{
-                if(awg9_trace)
-                  print(scan_tgt_idx,";",u.get_Callsign()," visible by rcs+++++++++++++++++++");
+#                if(awg9_trace)
+#                  print(scan_tgt_idx,";",u.get_Callsign()," visible by rcs+++++++++++++++++++");
                 u.set_visible(!u.get_behind_terrain());
             }
 #
@@ -579,12 +579,12 @@ if(awg9_trace)
 #0;MP1 within  azimuth 164.2283073827575 field=-60->60
             if (radar_mode < 2 and math.abs(u.deviationA) < az_fld/2 and math.abs(u.deviationE) < HoField.getValue()/2) {#richard, I had to fix 2 bugs here.
                 u.set_display(u.get_visible() and !RadarStandby.getValue() and u.get_type() != ORDNANCE);
-#                if(awg9_trace)
-#                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ",u.deviationA," field=",l_az_fld,"->",r_az_fld);
+                if(awg9_trace)
+                  print(scan_tgt_idx,";",u.get_Callsign()," within  azimuth ", u.deviationA, " elev=", u.deviationE);
             }
             else {
-#                if(awg9_trace)
-#                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviationA," field=",l_az_fld,"->",r_az_fld);
+                if(awg9_trace)
+                  print(scan_tgt_idx,";",u.get_Callsign()," out of azimuth ",u.deviationA," field=",az_fld/2,". elev=",u.deviationE," -> ", HoField.getValue()/2);
                 u.set_display(0);
             }
         } else {
@@ -725,122 +725,9 @@ var containsV = func (vector, content) {
 }
 
 var selectCheck = func {
-    #
-    #
-    # next / previous target selection. 
-    if (LimitedSelect.getValue()) {selectCheckLimited(); return;}# I could not get your selectcheck to behave like I liked. So I made a more restrictive check. And made a property that decide which check to use.
     var tgt_cmd = SelectTargetCommand.getValue();
     SelectTargetCommand.setIntValue(0);
 
-    if (tgt_cmd != nil)
-    {
-        if (tgt_cmd > 0)
-            sel_next_target=1;
-        else if (tgt_cmd < 0)
-            sel_prev_target=1;
-    }
-
-    if (sel_prev_target)
-    {
-        var dist  = 0;
-        if (active_u != nil)
-            dist = active_u.get_range();
-
-        var prv=nil;
-
-        foreach (var u; tgts_list) 
-        {
-            if(u.Callsign.getValue() == active_u_callsign)
-                break;
-
-            if(u.get_display() == 1)
-            {
-                prv = u;
-            }
-        }
-
-        if (prv == nil)
-        {
-            var passed = 0;
-            foreach (var u; tgts_list) 
-            {
-                if(passed == 1 and u.get_display() == 1)
-                    prv = u;
-                if(u.Callsign.getValue() == active_u_callsign)
-                    passed = 1;
-            }
-        }
-
-        if (prv != nil)
-        {
-            active_u = nearest_u = tmp_nearest_u = prv; armament.contact = active_u;
-
-            if (tmp_nearest_u.Callsign != nil)
-                active_u_callsign = tmp_nearest_u.Callsign.getValue();
-            else
-                active_u_callsign = nil;
-                
-        }
-        sel_prev_target =0;
-    }
-    else if (sel_next_target)
-    {
-        var dist  = 0;
-
-        if (active_u != nil)
-        {
-            dist = active_u.get_range();
-        }
-
-        var nxt=nil;
-        var passed = 0;
-        foreach (var u; tgts_list) 
-        {
-            if(u.Callsign.getValue() == active_u_callsign)
-            {
-                passed = 1;
-                continue;
-            }
-
-            if((passed == 1 or dist == 0) and u.get_display() == 1)
-            {
-                nxt = u;
-                break;
-            }
-        }
-        if (nxt == nil)
-        {
-            foreach (var u; tgts_list) 
-            {
-                if(u.Callsign.getValue() == active_u_callsign)
-                {
-                    continue;
-                }
-
-                if(u.get_display() == 1)
-                {
-                    nxt = u;
-                    break;
-                }
-            }
-
-        }
-
-        if (nxt != nil)
-        {
-            active_u = nearest_u = tmp_nearest_u = nxt; armament.contact = active_u;
-            if (tmp_nearest_u.Callsign != nil)
-                active_u_callsign = tmp_nearest_u.Callsign.getValue();
-            else
-                active_u_callsign = nil;
-        }
-        sel_next_target =0;
-    }
-    }
-
-var selectCheck = func {
-    var tgt_cmd = SelectTargetCommand.getValue();
-    SelectTargetCommand.setIntValue(0);
     if (tgt_cmd != nil)
     {
         if (tgt_cmd > 0)
@@ -856,19 +743,19 @@ var selectCheck = func {
         {
             dist = awg_9.active_u.get_range();
         }
-#        print("Sel prev target:");
+        print("Sel prev target:");
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});#richard is this needed, or is the list guarenteed to be sorted by distance already?
         var prv=nil;
         foreach (var u; sorted_dist) 
         {
-#            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(u.Callsign.getValue() == active_u_callsign and prv != nil)
             {
-#                if (prv != nil)
-#                    print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
-#                else
-#                    print("first in list");
+                if (prv != nil)
+                    print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
+                else
+                    print("first in list");
                 break;
             }
             if(u.get_display() == 0) {
@@ -882,9 +769,9 @@ var selectCheck = func {
             if (idx > 0)
             {
                 prv = sorted_dist[idx];
-#                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
-    }
-}
+                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+            }
+        }
 
         if (prv != nil)
         {
@@ -894,37 +781,37 @@ var selectCheck = func {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
             else
                 active_u_callsign = nil;
-
-#            printf("prv: %s %3.1f", prv.Callsign.getValue(), prv.get_range());
-    }
-        awg_9.sel_prev_target =0;
+                
+            printf("prv: %s %3.1f", prv.Callsign.getValue(), prv.get_range());
         }
+        awg_9.sel_prev_target =0;
+    }
     else if (awg_9.sel_next_target)
     {
         var dist  = 0;
         if (awg_9.active_u != nil)
         {
             dist = awg_9.active_u.get_range();
-    }
-#        print("Sel next target: dist=",dist);
+        }
+        print("Sel next target: dist=",dist);
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
         foreach (var u; sorted_dist) 
         {
-#            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(nxt == nil and u.get_display()) {
                 nxt = u;
             }
             if(u.Callsign.getValue() == active_u_callsign)
             {
-#                print("Skipping active target ",active_u_callsign);
+                print("Skipping active target ",active_u_callsign);
                 continue;
 }
             if(u.get_range() > dist and u.get_display())
             {
                 nxt = u;
-#                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
+                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
                 break;
             }
         }
@@ -932,7 +819,7 @@ var selectCheck = func {
         {
             if(size(sorted_dist)>0)
                 nxt = sorted_dist[0];
-    }
+        }
 
         if (nxt != nil)
         {
@@ -942,7 +829,7 @@ var selectCheck = func {
             else
                 active_u_callsign = nil;
                 
-#            printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
+            printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
         }
         awg_9.sel_next_target =0;
     }
@@ -1016,8 +903,8 @@ var hud_nearest_tgt = func() {
 		#var u_elev_deg = (90 - active_u.get_total_elevation(our_pitch));
 		var u_dev_rad = (90 - active_u.get_deviation(our_true_heading)) * D2R;
 		var u_elev_rad = (90 - active_u.get_total_elevation(our_pitch)) * D2R;
-#if(awg9_trace)
-#print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
+if(awg9_trace)
+print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
 		if (wcs_current_mode == wcs_mode_tws_auto
 			and active_u.get_display()
 			and active_u.deviationA > l_az_fld
@@ -1349,9 +1236,10 @@ else
             obj.lat = nil;
             obj.lon = nil;
         }
-            if (c.getNode("position/global-x") != nil)
+            var global_x = c.getNode("position/global-x");
+            if (global_x != nil and global_x.getValue() != nil and global_x.getValue() != "")
             {
-            obj.x = c.getNode("position/global-x");
+            obj.x = global_x;
             obj.y = c.getNode("position/global-y");
             obj.z = c.getNode("position/global-z");
             } else {
