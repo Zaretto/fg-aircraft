@@ -50,7 +50,7 @@ var r_n1_prop = props.globals.getNode("engines/engine[1]/n1",1);
 var l_starter_prop = props.globals.getNode("controls/engines/engine[0]/starter");
 var r_starter_prop = props.globals.getNode("controls/engines/engine[1]/starter");
 
-var engine_crank_switch_pos_prop = props.globals.getNode("sim/model/f-14b/controls/engine/engine-crank");
+var engine_crank_switch_pos_prop = props.globals.getNode("sim/model/f-14b/controls/engine/engine-crank",1);
 engine_crank_switch_pos_prop.setValue(0);
 var engine_start_initiated = 0;
 
