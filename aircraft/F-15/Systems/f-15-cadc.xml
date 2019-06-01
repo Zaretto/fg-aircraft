@@ -474,18 +474,14 @@
         <fcs_function name="propulsion/inlet/ramp4-position-demand-deg">
             <description>Inlet Ramp 4 angle demand estimated</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <tableData>
-                                0.00    0
-                                1.00     0
-                                2.0     12
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <tableData>
+                        0.00    0
+                        1.00     0
+                        2.0     12
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> 0 </min>
