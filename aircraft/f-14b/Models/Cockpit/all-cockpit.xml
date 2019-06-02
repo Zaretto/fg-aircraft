@@ -2278,24 +2278,8 @@
         <object-name>ra_needle</object-name>
         <condition>
             <less-than>
-                <property>orientation/roll-deg</property>
-                <value>45</value>
-            </less-than>
-            <greater-than>
-                <property>orientation/roll-deg</property>
-                <value>-45</value>
-            </greater-than>
-            <less-than>
-                <property>orientation/pitch-deg</property>
-                <value>45</value>
-            </less-than>
-            <greater-than>
-                <property>orientation/pitch-deg</property>
-                <value>-45</value>
-            </greater-than>
-            <less-than>
-                <property>position/altitude-agl-ft</property>
-                <value>5000</value>
+                <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                <value>5100</value>
             </less-than>
         </condition>
     </animation>
@@ -2309,7 +2293,7 @@
             </greater-than>
         </condition>
         <object-name>ra_needle</object-name>
-        <property>position/altitude-agl-ft</property>
+        <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
         <min>0</min>
         <max>6000</max>
         <offset>-5</offset>
@@ -2392,24 +2376,8 @@
                     <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>1</value>
                 </less-than>
-                <less-than>
-                    <property>orientation/roll-deg</property>
-                    <value>-45</value>
-                </less-than>
                 <greater-than>
-                    <property>orientation/roll-deg</property>
-                    <value>45</value>
-                </greater-than>
-                <less-than>
-                    <property>orientation/pitch-deg</property>
-                    <value>-45</value>
-                </less-than>
-                <greater-than>
-                    <property>orientation/pitch-deg</property>
-                    <value>45</value>
-                </greater-than>
-                <greater-than>
-                    <property>position/altitude-agl-ft</property>
+                    <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
                     <value>5000</value>
                 </greater-than>
             </or>
@@ -2419,28 +2387,10 @@
         <type>select</type>
         <object-name>stowed-needle</object-name>
         <condition>
-            <or>
-                <less-than>
-                    <property>orientation/roll-deg</property>
-                    <value>-45</value>
-                </less-than>
-                <greater-than>
-                    <property>orientation/roll-deg</property>
-                    <value>45</value>
-                </greater-than>
-                <less-than>
-                    <property>orientation/pitch-deg</property>
-                    <value>-45</value>
-                </less-than>
-                <greater-than>
-                    <property>orientation/pitch-deg</property>
-                    <value>45</value>
-                </greater-than>
-                <greater-than>
-                    <property>position/altitude-agl-ft</property>
-                    <value>5000</value>
-                </greater-than>
-            </or>
+            <greater-than>
+                <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                <value>5000</value>
+            </greater-than>
         </condition>
     </animation>
     <!-- low-altitude limit bug -->
@@ -2521,6 +2471,7 @@
             <z>0.258819045102521</z>
         </axis>
     </animation>
+    
     <!-- low-altitude warning-light -->
     <animation>
         <type>select</type>
@@ -2531,23 +2482,7 @@
                 <value>0</value>
             </greater-than>
             <less-than>
-                <property>orientation/roll-deg</property>
-                <value>45</value>
-            </less-than>
-            <greater-than>
-                <property>orientation/roll-deg</property>
-                <value>-45</value>
-            </greater-than>
-            <less-than>
-                <property>orientation/pitch-deg</property>
-                <value>45</value>
-            </less-than>
-            <greater-than>
-                <property>orientation/pitch-deg</property>
-                <value>-45</value>
-            </greater-than>
-            <less-than>
-                <property>position/altitude-agl-ft</property>
+                <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
                 <property>sim/model/f-14b/instrumentation/radar-altimeter/limit-bug</property>
             </less-than>
         </condition>
@@ -24852,17 +24787,7 @@
         <type>knob</type>
         <object-name>radar-brightness-knob</object-name>
         <property>sim/model/f-14b/controls/radar-awg-9/brightness</property>
-        <factor>230</factor>
-        <center>
-            <x-m>-4.13519</x-m>
-            <y-m>0.06017</y-m>
-            <z-m>0.26153</z-m>
-        </center>
-        <axis>
-            <x>-0.976672278334168</x>
-            <y>0</y>
-            <z>-0.214735327167063</z>
-        </axis>
+        <factor>180</factor>
         <action>
             <binding>
                 <command>property-adjust</command>
@@ -29596,17 +29521,7 @@
         <type>knob</type>
         <object-name>TID-brightness-knob</object-name>
         <property>sim/model/f-14b/controls/TID/brightness</property>
-        <factor>230</factor>
-        <center>
-            <x-m>-4.14078</x-m>
-            <y-m>0.07908</y-m>
-            <z-m>0.05697</z-m>
-        </center>
-        <axis>
-            <x>-0.978147600733806</x>
-            <y>0</y>
-            <z>-0.207911690817759</z>
-        </axis>
+        <factor>180</factor>
         <action>
             <binding>
                 <command>property-adjust</command>

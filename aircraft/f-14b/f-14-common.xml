@@ -1276,7 +1276,9 @@
             <name>right wing pylon</name>
             <weight-lb type="float">0</weight-lb>
         </weight>
-
+        <instrumentation>
+            <path>Aircraft/f-14b/Systems/instrumentation.xml</path>
+        </instrumentation>
     </sim>
     <environment>
         <aircraft-effects>
@@ -2044,31 +2046,47 @@
             <switch-position type="int">1</switch-position>
         </tacan>
         <radar>
-<az-field type="int">120</az-field>
-<cycle-range type="bool">false</cycle-range>
-<debug-mode type="bool">true</debug-mode>
-<display-rdr type="bool">true</display-rdr>!
-<enabled type="bool">true</enabled>!
-<ho-field type="int">120</ho-field><!-- bars -->!
-<limited-select type="bool">true</limited-select>
-<radar-mode type="int">1</radar-mode>!
-<radar-standby type="bool">false</radar-standby>
-<radar2-range type="double">50</radar2-range><!-- default range -->
-<range type="double">160</range>
-<range-selected type="double">50</range-selected>
-<ranges n="0"><entry type="int">5</entry></ranges>
-<ranges n="1"><entry type="int">10</entry></ranges>
-<ranges n="2"><entry type="int">20</entry></ranges>
-<ranges n="3"><entry type="int">50</entry></ranges>
-<ranges n="4"><entry type="int">100</entry></ranges>
-<ranges n="5"><entry type="int">200</entry></ranges>
-<ref-range type="double">70</ref-range>
-<ref-strength type="double">3.8</ref-strength>
-<scan_partition_size type="double">10</scan_partition_size>!
-<scan_visibility_check_interval type="double">3</scan_visibility_check_interval>!
-<serviceable type="bool">true</serviceable>!
-<symbols-enabled type="bool">true</symbols-enabled>!
+            <az-field type="int">120</az-field>
+            <cycle-range type="bool">false</cycle-range>
+            <debug-mode type="bool">true</debug-mode>
+            <display-rdr type="bool">true</display-rdr>!
+            <enabled type="bool">true</enabled>!
+            <ho-field type="int">120</ho-field><!-- bars -->!
+            <limited-select type="bool">true</limited-select>
+            <radar-mode type="int">1</radar-mode>!
+            <radar-standby type="bool">false</radar-standby>
+            <radar2-range type="double">50</radar2-range><!-- default range -->
+            <range type="double">160</range>
+            <range-selected type="double">50</range-selected>
+            <ranges n="0"><entry type="int">5</entry></ranges>
+            <ranges n="1"><entry type="int">10</entry></ranges>
+            <ranges n="2"><entry type="int">20</entry></ranges>
+            <ranges n="3"><entry type="int">50</entry></ranges>
+            <ranges n="4"><entry type="int">100</entry></ranges>
+            <ranges n="5"><entry type="int">200</entry></ranges>
+            <ref-range type="double">70</ref-range>
+            <ref-strength type="double">3.8</ref-strength>
+            <scan_partition_size type="double">10</scan_partition_size>!
+            <scan_visibility_check_interval type="double">3</scan_visibility_check_interval>!
+            <serviceable type="bool">true</serviceable>!
+            <symbols-enabled type="bool">true</symbols-enabled>!
         </radar>
+
+        <radar-altimeter>
+            <serviceable alias="/fdm/jsbsim/systems/electrics/ac-left-main-bus"/>
+            <antenna>
+                <x-offset-m type="double">-7.311</x-offset-m>
+                <y-offset-m type="double">0</y-offset-m>
+                <z-offset-m type="double">-1.399</z-offset-m>
+            </antenna>
+            <set-height-ft type="double">5100</set-height-ft>
+            <elev-limit>15</elev-limit>
+            <elev-step-deg>15</elev-step-deg>
+            <az-limit-deg>15</az-limit-deg>
+            <az-step-deg>15</az-step-deg>
+            <max-range-m>1554.48</max-range-m>
+            <min-range-m>0.001</min-range-m>
+        </radar-altimeter>
         <ecm>
             <enabled type="bool">true</enabled>
             <on-off type="bool">true</on-off>
