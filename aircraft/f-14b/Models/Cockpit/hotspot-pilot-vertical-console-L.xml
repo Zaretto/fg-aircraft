@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE PropertyList SYSTEM "panel.dtd">
+
+<PropertyList>
+	<name>hotspot-pilot-vertical-console-L</name>
+	<background>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</background>
+	<w>1024</w>
+	<h>768</h>
+	<y-offset>0</y-offset>
+
+	<instruments>
+		<instrument>
+			<name>hotspot-pilot-vertical-console-L</name>
+			<w>1024</w>
+			<h>768</h>
+			<w-base>1024</w-base>
+			<h-base>1024</h-base>
+			<x>512</x>
+			<y>384</y>
+			<layers>
+				<layer>
+					<name>background</name>
+					<texture>
+						<path>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</path>
+						<!--<path>Aircraft/f-14b/Models/Cockpit/hotspotgrid.rgb</path>-->
+						<x1>0.0</x1>
+						<y1>0.0</y1>
+						<x2>1.0</x2>
+						<y2>1.0</y2>
+					</texture>
+				</layer>
+			</layers>
+			<actions>
+
+			<!-- Brake Lever -->
+			<action>
+				<name>brake-lever-toggle</name>
+				<button>0</button>
+				<x>-170</x>
+				<y>0</y>
+				<w>250</w>
+				<h>180</h>
+				<binding>
+					<command>property-toggle</command>
+					<property>controls/gear/brake-parking</property>
+				</binding>
+			</action>
+
+			<!-- Emerg Stores Jettison -->
+			<action>
+				<name>emerg-stores-jettison</name>
+				<button>0</button>
+				<x>30</x>
+				<y>260</y>
+				<w>125</w>
+				<h>90</h>
+				<binding>
+					<command>nasal</command>
+					<script>f14.emerg_jettison()</script>
+				</binding>
+			</action>
+
+
+			<!-- Ldg Gear Handle -->
+			<action>
+				<name>hsd-onoff-toggle</name>
+				<button>0</button>
+				<x>265</x>
+				<y>25</y>
+				<w>110</w>
+				<h>200</h>
+				<binding>
+					<command>nasal</command>
+					<script>controls.gearToggle()</script>
+				</binding>
+			</action>
+
+			<!-- Refuel Probe Switch -->
+			<action>
+				<name>refuel-probe-switch-up</name>
+				<button>0</button>
+				<x>200</x>
+				<y>-240</y>
+				<w>110</w>
+				<h>50</h>
+				<binding>
+					<command>nasal</command>
+					<script>f14.refuel_probe_switch_up()</script>
+				</binding>
+			</action>
+			<action>
+				<name>refuel-probe-switch-down</name>
+				<button>0</button>
+				<x>200</x>
+				<y>-300</y>
+				<w>110</w>
+				<h>50</h>
+				<binding>
+					<command>nasal</command>
+					<script>f14.refuel_probe_switch_down()</script>
+				</binding>
+			</action>
+
+
+
+
+			</actions>
+		</instrument>
+	</instruments>
+</PropertyList>

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE PropertyList SYSTEM "panel.dtd">
+
+<PropertyList>
+	<name>hotspot-pilot-main-panel-down-R</name>
+	<background>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</background>
+	<w>1024</w>
+	<h>768</h>
+	<y-offset>0</y-offset>
+
+	<instruments>
+		<instrument>
+			<name>hotspot-pilot-main-panel-down-R</name>
+			<w>1024</w>
+			<h>768</h>
+			<w-base>1024</w-base>
+			<h-base>1024</h-base>
+			<x>512</x>
+			<y>384</y>
+			<layers>
+				<layer>
+					<name>background</name>
+					<texture>
+						<path>Aircraft/f-14b/Models/Cockpit/transparent-bg.rgb</path>
+						<!--<path>Aircraft/f-14b/Models/Cockpit/hotspotgrid.rgb</path>-->
+						<x1>0.0</x1>
+						<y1>0.0</y1>
+						<x2>1.0</x2>
+						<y2>1.0</y2>
+					</texture>
+				</layer>
+			</layers>
+			<actions>
+
+				<!-- Bingo Knob -->
+				<action>
+					<name>bingo-knob-left</name>
+					<button>0</button>
+					<x>-210</x>
+					<y>245</y>
+					<w>70</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/fuel/bingo</property>
+						<step>-500</step>
+						<min>0</min>
+						<wrap>false</wrap>
+					</binding>
+				</action>
+				<action>
+					<name>bingo-knob-right</name>
+					<button>0</button>
+					<x>-125</x>
+					<y>245</y>
+					<w>70</w>
+					<h>120</h>
+					<binding>
+						<command>property-adjust</command>
+						<property>sim/model/f-14b/controls/fuel/bingo</property>
+						<step>500</step>
+						<max>90000</max>
+						<wrap>false</wrap>
+					</binding>
+				</action>
+
+			</actions>
+		</instrument>
+	</instruments>
+</PropertyList>
