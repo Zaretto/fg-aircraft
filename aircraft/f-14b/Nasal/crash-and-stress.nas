@@ -37,6 +37,7 @@ var CrashAndStress = {
 			m.wingLoadLimitUpper = nil;
 			m.wingLoadLimitLower = nil;
 			m._looptimer = maketimer(0, m, m._loop);
+			m._looptimer.simulatedTime = 1;
 
 			m.repairTimer = maketimer(10.0, m, CrashAndStress._finishRepair);
 			m.repairTimer.singleShot = 1;

@@ -29,7 +29,6 @@
             <function>
                 <description>Manoeuver slat/flap ful extension max alt/mn</description>
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93  -->
-                <sum>
                     <table>
                         <independentVar lookup="row">position/h-sl-ft</independentVar>
                         <tableData>
@@ -44,7 +43,6 @@
                             40000	0.8643
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -52,7 +50,6 @@
             <function>
                 <description>Manoeuver flap partial extension max alt/mn</description>
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93  -->
-                <sum>
                     <table>
                         <independentVar lookup="row">position/h-sl-ft</independentVar>
                         <tableData>
@@ -67,14 +64,12 @@
                             40000	0.8765
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
         <fcs_function name="systems/cadc/manuv-flapslat-extension-aoa">
             <function>
                 <description>Manoeuver flapslat extension schedule, NAVAIR 01-F14AAD-1 Figures 2-51,2-52: p. 2-93 </description>
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <tableData>
@@ -92,7 +87,6 @@
                             0.8558	5.49
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -100,7 +94,6 @@
             <function>
                 <description>Manoeuver flapslat retraction schedule</description>
                 <!-- NAVAIR 01-F14AAD-1 Figures 2-52: p. 2-93  -->
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <tableData>
@@ -118,7 +111,6 @@
                             0.8672	2.73
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -126,7 +118,6 @@
         <fcs_function name="systems/cadc/manuv-flap-extension-calc">
             <function>
                 <description>NAVAIR 01-F14AAD-1 S 2.21.2.4 p. 2-92 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -143,14 +134,12 @@
                             55	0.28571	0.28571	0.18571	0.18571	0.18571	0.00000	0.00000
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
         <fcs_function name="systems/cadc/manuv-slat-extension-calc">
             <function>
                 <description>NAVAIR 01-F14AAD-1 S 2.21.2.4 p. 2-92 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">aero/alpha-deg</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -164,7 +153,6 @@
                             55	0.429412	0.429412    0.429412	0.429412	0.000000	0.000000
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
@@ -174,43 +162,26 @@
             <default value="0.0"/>
 
             <test value="0">
-                <or>
+                <test logic="OR">
                     fcs/flap-cmd-norm gt 0.3714285714285714
                     aero/alpha-deg lt systems/cadc/manuv-flapslat-retraction-aoa
                     velocities/mach gt systems/cadc/manuv-flap-partially-extended-max-mn
                     gear/gear-cmd-norm ne 0
-                </or>
+                </test>
                 systems/cadc/manuv-active ne 0
             </test>
 
 
-            <test value="1">
-                <or>
-                    <and>
-                        fcs/flap-cmd-norm le 0.3714285714285714
-                        aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
-                        velocities/mach le systems/cadc/manuv-flap-fully-extended-max-mn
-                        gear/gear-cmd-norm eq 0
-                        fcs/wing-sweep-cmd le 0.7352941176470588
-                    </and>
-                    systems/cadc/manuv-active ne 0
-                </or>
+          <test value="1" logic="OR">
+            <test logic="AND">
+              fcs/flap-cmd-norm le 0.3714285714285714
+              aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
+              velocities/mach le systems/cadc/manuv-flap-fully-extended-max-mn
+              gear/gear-cmd-norm eq 0
+              fcs/wing-sweep-cmd le 0.7352941176470588
             </test>
-
-            <!--
-            <test value="0.6">
-                <or>
-                    <and>
-                    aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
-                    velocities/mach le systems/cadc/manuv-flap-partially-extended-max-mn
-                    </and>
-                    systems/cadc/manuv-active ne 0
-                </or>
-                aero/alpha-deg gt systems/cadc/manuv-flapslat-extension-aoa
-                systems/cadc/manuv-active ne 0
-            </test>
--->
-
+            systems/cadc/manuv-active ne 0
+          </test>
         </switch>
 
         <switch name="systems/cadc/manuv-flap-extension-cmd">
@@ -246,11 +217,9 @@
         <switch name="systems/afcs/altitude-hold-trigger">
             <default value="0.0"/>
             <test value="1.0">
-                <and>
                     propulsion/engine[0]/set-running == 0
                     propulsion/engine[1]/set-running == 0
                     systems/afcs/altitude-hold-active ne 0
-                </and>
             </test>
         </switch>
 
@@ -341,16 +310,358 @@
         </pure_gain>
 
     </channel>
-  <channel name="auxiliary">
-    <switch name="Aircraft on ground">
-      <description>Aircraft on ground</description>
-      <default value="0"/>
-      <test value="1" logic="OR">
-        gear/unit[0]/WOW ne 0
-        gear/unit[1]/WOW ne 0
-        gear/unit[2]/WOW ne 0
-      </test>
-      <output>position/aircraft-on-ground</output>
-    </switch>
-  </channel>
+
+    <channel name="auxiliary">
+        <switch name="Aircraft on ground">
+            <description>Aircraft on ground</description>
+            <default value="0"/>
+            <test value="1" logic="OR">
+                gear/unit[0]/WOW ne 0
+                gear/unit[1]/WOW ne 0
+                gear/unit[2]/WOW ne 0
+            </test>
+            <output>position/aircraft-on-ground</output>
+        </switch>
+    </channel>
+
+    <property value="0">systems/flyt/stress-run</property>
+    <property value="0">systems/flyt/wing-damage-enabled</property>
+    <property value="850">systems/flyt/flutter-onset-ias</property>
+    <property value="950">systems/flyt/flutter-full-ias</property>
+    <property value="0.3">systems/flyt/flutter-max-bend-amplitude</property>
+    <property value="18.84">systems/flyt/flutter-pulsation</property>
+    <!--(2 * 3.14 * 3.0);-->
+
+    <channel name="flutter">
+
+        <fcs_function name="systems/flyt/flutter-current-amplitude">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>velocities/vc-kts</p>
+                        <p>systems/flyt/flutter-onset-ias</p>
+                    </gt>
+                    <sin>
+                        <product>
+                            <p>systems/flyt/flutter-pulsation</p>
+                            <p>systems/flyt/flutter-time</p>
+                        </product>
+                    </sin>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/flutter-pitch">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>velocities/vc-kts</p>
+                        <p>systems/flyt/flutter-onset-ias</p>
+                    </gt>
+                    <sin>
+                        <product>
+                            <v>0.0008</v>
+                            <!--(0.08 / 100) # FlutterPitchFactor-->
+                            <difference>
+                                <p>velocities/vc-kts</p>
+                                <p>systems/flyt/flutter-onset-ias</p>
+                            </difference>
+                            <p>systems/flyt/flutter-current-amplitude</p>
+                        </product>
+                    </sin>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/flutter-bend">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>velocities/vc-kts</p>
+                        <p>systems/flyt/flutter-onset-ias</p>
+                    </gt>
+                    <ifthen>
+                        <lt>
+                            <p>velocities/vc-kts</p>
+                            <p>systems/flyt/flutter-full-ias</p>
+                        </lt>
+                        <product>
+                            <quotient>
+                                <p>systems/flyt/flutter-max-bend-amplitude</p>
+                                <difference>
+                                    <p>systems/flyt/flutter-full-ias</p>
+                                    <p>systems/flyt/flutter-onset-ias</p>
+                                </difference>
+                            </quotient>
+                            <difference>
+                                <p>velocities/vc-kts</p>
+                                <p>systems/flyt/flutter-onset-ias</p>
+                            </difference>
+                            <p>systems/flyt/flutter-current-amplitude</p>
+                        </product>
+                        <product>
+                            <p>systems/flyt/flutter-max-bend-amplitude</p>
+                            <p>systems/flyt/flutter-current-amplitude</p>
+                        </product>
+                    </ifthen>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/flutter-time">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>velocities/vc-kts</p>
+                        <p>systems/flyt/flutter-onset-ias</p>
+                    </gt>
+                    <sum>
+                        <p>systems/flyt/flutter-time</p>
+                        <p>simulation/channel-dt</p>
+                    </sum>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+    </channel>
+
+    <property value="7.5">systems/flyt/max-g</property>
+    <property value="-3.0">systems/flyt/min-g</property>
+    <property value="15.0">systems/flyt/ultimate-max-g</property>
+    <property value="-6.0">systems/flyt/ultimate-min-g</property>
+    <property value="0.02">systems/flyt/permanent-bend-factor</property>
+    <!--MaxBend / max-g * 2-->
+    <property value="0.0213">systems/flyt/distortion-factor-per-g</property>
+    <!-- 0.16 / MaxG -->
+    <property value="0">systems/flyt/damage-reset</property>
+
+    <channel name="airframe-stress">
+        <fcs_function name="systems/flyt/current-g-loading">
+            <function>
+                <sum>
+                    <property>accelerations/Nz</property>
+                    <v>-1</v>
+                </sum>
+                <!--<product>
+                    <quotient>
+                        <property>aero/force/LIFT</property>
+                        <property>inertia/weight-lbs</property>
+                    </quotient>
+                    <v>-1</v>
+                </product>-->
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/max-g-reached">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>systems/flyt/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <gt>
+                                <property>sim-time-sec</property>
+                                <v>5</v>
+                            </gt>
+                            <ge>
+                                <property>systems/flyt/current-g-loading</property>
+                                <property>systems/flyt/max-g-reached</property>
+                            </ge>
+                        </and>
+                        <property>systems/flyt/current-g-loading</property>
+                        <property>systems/flyt/max-g-reached</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/min-g-reached">
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <property>sim-time-sec</property>
+                            <v>5</v>
+                        </gt>
+                        <lt>
+                            <property>systems/flyt/current-g-loading</property>
+                            <property>systems/flyt/min-g-reached</property>
+                        </lt>
+                    </and>
+                    <property>systems/flyt/current-g-loading</property>
+                    <property>systems/flyt/min-g-reached</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/permanent-bend-up">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>systems/flyt/max-g-reached</p>
+                        <p>systems/flyt/max-g</p>
+                    </gt>
+                    <product>
+                        <p>systems/flyt/permanent-bend-factor</p>
+                        <difference>
+                            <p>systems/flyt/max-g-reached</p>
+                            <p>systems/flyt/max-g</p>
+                        </difference>
+                    </product>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/permanent-bend-down">
+            <function>
+                <ifthen>
+                    <lt>
+                        <p>systems/flyt/min-g-reached</p>
+                        <p>systems/flyt/min-g</p>
+                    </lt>
+                    <product>
+                        <p>systems/flyt/permanent-bend-factor</p>
+                        <difference>
+                            <p>systems/flyt/min-g-reached</p>
+                            <p>systems/flyt/min-g</p>
+                        </difference>
+                    </product>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/permanent-bend">
+            <function>
+                <sum>
+                    <property>systems/flyt/permanent-bend-up</property>
+                    <property>systems/flyt/permanent-bend-down</property>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/wing-distortion">
+            <function>
+                <sum>
+                    <p>systems/flyt/permanent-bend</p>
+                    <product>
+                        <p>systems/flyt/current-g-loading</p>
+                        <p>systems/flyt/distortion-factor-per-g</p>
+                    </product>
+                    <p>systems/flyt/flutter-bend</p>
+                </sum>
+            </function>
+            <output>fcs/wing-fold-pos-norm</output>
+        </fcs_function>
+    </channel>
+
+    <channel name="airframe-damage">
+        <fcs_function name="systems/flyt/wing-asymmetry">
+            <function>
+                <ifthen>
+                    <and>
+                        <gt>
+                            <property>sim-time-sec</property>
+                            <v>5</v>
+                        </gt>
+                        <nq>
+                            <p>systems/flyt/wing-damage-enabled</p>
+                            <v>0</v>
+                        </nq>
+                        <nq>
+                            <!-- a value of 99 in this property will reset the damage-->
+                            <p>systems/flyt/wing-asymmetry-action</p>
+                            <v>99</v>
+                        </nq>
+                        <nq>
+                            <property>systems/flyt/damage-reset</property>
+                            <v>1</v>
+                        </nq>
+                        <or>
+                            <gt>
+                                <property>systems/flyt/current-g-loading</property>
+                                <property>systems/flyt/ultimate-max-g</property>
+                            </gt>
+                            <lt>
+                                <property>systems/flyt/current-g-loading</property>
+                                <property>systems/flyt/ultimate-min-g</property>
+                            </lt>
+                        </or>
+                    </and>
+                    <ifthen>
+                        <eq>
+                            <p>systems/flyt/wing-asymmetry-action</p>
+                            <v>0</v>
+                        </eq>
+                        <ifthen>
+                            <lt>
+                                <random/>
+                                <v>0</v>
+                            </lt>
+                            <v>-1</v>
+                            <v>1</v>
+                        </ifthen>
+                        <p>systems/flyt/wing-asymmetry-action</p>
+                    </ifthen>
+                    <ifthen>
+                        <or>
+                            <eq>
+                                <p>systems/flyt/wing-asymmetry-action</p>
+                                <v>99</v>
+                            </eq>
+                            <eq>
+                                <property>systems/flyt/damage-reset</property>
+                                <v>1</v>
+                            </eq>
+                        </or>
+                        <v>0</v>
+                        <p>systems/flyt/wing-asymmetry-action</p>
+                    </ifthen>
+                </ifthen>
+            </function>
+            <output>systems/flyt/wing-asymmetry-action</output>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/wing-torn-left">
+            <function>
+                <ifthen>
+                    <lt>
+                        <p>systems/flyt/wing-asymmetry</p>
+                        <v>0</v>
+                    </lt>
+                    <v>1</v>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/wing-torn-right">
+            <function>
+                <ifthen>
+                    <gt>
+                        <p>systems/flyt/wing-asymmetry</p>
+                        <v>0</v>
+                    </gt>
+                    <v>1</v>
+                    <v>0</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+    </channel>
+
+    <channel name="reset-damage" execute="systems/flyt/damage-reset">
+        <fcs_function name="systems/flyt/tied/damage-reset">
+            <function>
+                <v>0</v>
+            </function>
+            <output>systems/flyt/damage-reset</output>
+        </fcs_function>
+    </channel>
 </system>

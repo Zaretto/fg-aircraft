@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+  <name type="string">Logitech Extreme 3D Pro</name>
+  <axis>
+      <dead-band type="double">0.1</dead-band>
+      <desc type="string">Aileron</desc>
+      <binding>
+          <command type="string">property-scale</command>
+          <property type="string">/controls/flight/aileron</property>
+          <factor type="double">1</factor>
+          <offset type="double">0</offset>
+      </binding>
+  </axis>
+  <axis n="1">
+      <dead-band type="double">0.1</dead-band>
+      <desc type="string">Elevator</desc>
+      <binding>
+          <command type="string">property-scale</command>
+          <property type="string">/controls/flight/elevator</property>
+          <factor type="double">-1</factor>
+          <offset type="double">0</offset>
+      </binding>
+  </axis>
+  <axis n="2">
+    <desc type="string">Throttle</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.throttleAxis();</script>
+    </binding>
+  </axis>
+    <axis n="3">
+        <dead-band type="double">0.1</dead-band>
+        <desc type="string">Rudder</desc>
+        <binding>
+            <command type="string">property-scale</command>
+            <property type="string">/controls/flight/rudder</property>
+            <factor type="double">1</factor>
+            <offset type="double">0</offset>
+        </binding>
+    </axis>
+    <axis n="4">
+    <desc type="string">View Direction</desc>
+    <number>
+      <unix type="string">4</unix>
+      <windows type="string">6</windows>
+      <mac type="string">4</mac>
+    </number>
+    <low>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-heading-offset-deg</property>
+        <step type="double">5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-heading-offset-deg</property>
+        <step type="double">-5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </high>
+    <binding n="0" type="string">
+    </binding>
+    <binding n="0">
+      <setting type="double">0</setting>
+    </binding>
+  </axis>
+  <axis n="5">
+    <desc type="string">View Elevation</desc>
+    <number>
+      <unix type="string">5</unix>
+      <windows type="string">7</windows>
+      <mac type="string">5</mac>
+    </number>
+    <low>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-pitch-offset-deg</property>
+        <step type="double">5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </low>
+    <high>
+      <repeatable type="string">true</repeatable>
+      <binding>
+        <command type="string">property-adjust</command>
+        <property type="string">/sim/current-view/goal-pitch-offset-deg</property>
+        <step type="double">-5</step>
+        <offset type="double">1</offset>
+      </binding>
+    </high>
+    <binding n="0" type="string">
+    </binding>
+    <binding n="0">
+      <setting type="double">0</setting>
+    </binding>
+  </axis>
+  <button>
+    <desc type="string">Trigger</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.trigger(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.trigger(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="1">
+    <desc type="string">Custom</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">property-adjust</command>
+      <property type="string">sim/model/f15/controls/armament/weapon-selector</property>
+      <step type="string">1</step>
+      <min type="string">0</min>
+      <max type="string">3</max>
+      <repeat type="string">false</repeat>
+      <wrap type="string">true</wrap>
+      <offset type="double">1</offset>
+    </binding>
+  </button>
+  <button n="2">
+    <desc type="string">Elevator Trim Down</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="3">
+    <desc type="string">View Decrease</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">view.decrease(0.75);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="4">
+    <desc type="string">Elevator Trim Up</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.elevatorTrim(-1);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="5">
+    <desc type="string">View Increase</desc>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">view.increase(0.75);</script>
+    </binding>
+    <repeatable type="double">1</repeatable>
+  </button>
+  <button n="6">
+    <desc type="string">Flaps Down</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="7">
+    <desc type="string">Flaps Up</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.flapsDown(-1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.flapsDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="8">
+    <desc type="string">Gear Down</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.gearDown(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.gearDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="9">
+    <desc type="string">Gear Up</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.gearDown(-1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.gearDown(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+  <button n="10">
+    <desc type="string">FGCom PTT</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+        <command>property-toggle</command>
+        <property>/controls/gear/brake-parking</property>
+    </binding>
+  </button>
+  <button n="11">
+    <desc type="string">Brakes</desc>
+    <repeatable type="string">false</repeatable>
+    <binding>
+      <command type="string">nasal</command>
+      <script type="string">controls.applyBrakes(1);</script>
+    </binding>
+    <mod-up>
+      <binding>
+        <command type="string">nasal</command>
+        <script type="string">controls.applyBrakes(0);</script>
+      </binding>
+    </mod-up>
+  </button>
+</PropertyList>

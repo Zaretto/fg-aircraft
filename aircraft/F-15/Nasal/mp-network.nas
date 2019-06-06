@@ -84,17 +84,6 @@ var update_ext_load = func(sender, state)
 
 	var c = 31;
 	var o = "";
-	var str = chr(wpstr[29]) ~ chr(wpstr[30]) ~ chr(wpstr[31]);
-	if ( str == "000" ) { o = "Clean" }
-	elsif ( str == "001") { o = "Standard Combat" }
-	elsif ( str == "010") { o = "Offensive Counter Air" }
-	elsif ( str == "011") { o = "No Fly Zone" }
-	elsif ( str == "100") { o = "Ferry Flight" }
-	elsif ( str == "101") { o = "Air Superiority" }
-#print("Arm set ",o);
-
-	Wnode.getNode("external-load-set", 1).setValue(o);
-	c -= 3;
 	var s = 10;
 
 	while (s >= 0) 

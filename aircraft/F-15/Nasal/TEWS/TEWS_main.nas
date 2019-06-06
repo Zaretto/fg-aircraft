@@ -15,6 +15,7 @@ var TEWSSymbol = {
         var label_name = base~"_label_"~svg_idx;
         obj.name = base~"_"~svg_idx;
         obj.valid = 0;
+        obj.labelSize = 0;
         var sym = svg.getElementById(name);
 
         if (sym != nil)
@@ -24,7 +25,7 @@ var TEWSSymbol = {
             if (sym != nil)
             {
                 obj.label = sym;
-                obj.label.setFont("condensed.txf").setFontSize(12, 1.4);
+                obj.label.setFont("condensed.txf").setFontSize(10, 1.0);
                 obj.valid = 1;
                 obj.setVisible(0);
             }
@@ -61,8 +62,8 @@ var TEWSSymbol = {
             me.label.setCenter(xc,yc);
     },
     setCallsign : func(t){
-        if (size (t) > 2)
-            me.setText(substr(t,0,2));
+        if (size (t) > 3)
+            me.setText(substr(t,0,2)~substr(t,size(t)-2,2));
         else
             me.setText(t);
     },
@@ -73,8 +74,10 @@ var TEWSSymbol = {
             me.label.setGeoPosition(lat, lon);
     },
     setText : func(t){
-        if(me.label != nil)
+        if(me.label != nil){
             me.label.setText(t);
+            me.labelSize = size(t);
+        }
     },
 };
 
@@ -113,6 +116,7 @@ var TEWSDisplay = {
         obj.max_symbols = 10;
         obj.tews_alignment_offset = -90;
         obj.symbol_list = [];
+        obj.locked_symbol = TEWSSymbol.new(0, obj.TEWSsvg, "hat_locked");
         for (var i = 0; i < obj.max_symbols; i += 1)
           {
               var ts = append(obj.symbol_list, TEWSSymbol.new(i, obj.TEWSsvg, "hat"));
@@ -129,6 +133,7 @@ return;
     var radar_range = getprop("instrumentation/radar/radar2-range");
 
     var scale = 220/2; # horizontal / vertical scale (half resolution)
+    var is_active = 0;
 
     foreach( u; awg_9.tgts_list ) 
     {
@@ -145,11 +150,20 @@ return;
 
             if (target_idx < me.max_symbols)
             {
-                var tgt = me.symbol_list[target_idx];
+                var tgt = nil;
+
+                if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue()){
+                    tgt = me.locked_symbol;
+                    is_active = 1;
+                }
+                else{
+                    tgt = me.symbol_list[target_idx];
+                    target_idx = target_idx+1;
+                }
+
                 if (tgt != nil)
                 {
-                    
-
+        
     # We have a valid target - so display it. Not quite sure why we need to adjust this but we do.
     #                    var bearing = u.get_deviation(heading);
                         var bearing = geo.normdeg(u.get_deviation(heading) + me.tews_alignment_offset);
@@ -169,11 +183,15 @@ return;
                         tgt.setTranslation (xc, yc);
                         tgt.setRotation(geo.normdeg(u.get_heading()-heading)/57.29577950560105);
                     }
-                
             }
-            target_idx = target_idx+1;
+        }
+        if (target_idx >= me.max_symbols){ 
+#            print("TEWS: break before end of list");
+            break;
         }
     }
+    if (!is_active)
+      me.locked_symbol.setVisible(0);
 
     for(var nv = target_idx; nv < me.max_symbols;nv += 1)
     {
@@ -186,10 +204,27 @@ return;
 }
 };
 
-var tews = nil;
-updateTEWS = func 
-  {
-      if (tews == nil)
-        tews = TEWSDisplay.new("Nasal/TEWS/TEWS.svg","TEWSImage", 326,256, 0,0);
-      tews.update();
-}
+var TEWSRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Tews = nil;
+        new_class.Receive = func(notification)
+        {
+            if (notification.NotificationType == "FrameNotification")
+            {
+                if (new_class.Tews == nil)
+                  new_class.Tews = TEWSDisplay.new("Nasal/TEWS/TEWS.svg","TEWSImage", 326,256, 0,0);
+                if (!math.mod(notifications.frameNotification.FrameCount,4)){
+                    new_class.Tews.update();
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(TEWSRecipient.new("F15-TEWS"));
