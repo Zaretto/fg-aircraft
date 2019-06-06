@@ -1,16 +1,18 @@
 <system  name="FCS F15">
 <!-- F-15 Flight controls 
    |  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
+	 |  Joshua Davidson:  2018-11-30 : rewrite -->
    Longitudinal travel: -10 to 15cm
--->
-	<property value="1">gear/serviceable</property>
+   -->
+   <property value="1">gear/serviceable</property>
 	<property value="0">systems/hydraulics/emerg-gear-bleed</property>
 	<property value="0">gear/damage-reset</property>
 	<property value="2">position/aircraft-on-ground-last-value</property>
 	<property value="0">systems/cadc/pitch-ratio-emergency</property>
 	<property value="0">systems/cadc/roll-ratio-emergency</property>
-	
-	<!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
+  <!--<property value="1.0">fcs/pitch-ratio-calc</property>-->
+  <!--<property value="0">fcs/pitch-trim-compensation</property>-->
+  <!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
 		Kevin R. Scalera
 		Table 2.1: Control surface limits
 		Control Effector Deflection (deg) Rate Limit (deg/s)
@@ -20,7 +22,6 @@
 			FLAPS(L/R) 0.0 / 35.0 ±18
 	-->
 	
-	<!-- Begin Flight Control System by Joshua Davidson (it0uchpods) -->
 	
 	<channel name="Common">
 		
@@ -30,8 +31,22 @@
 				autoflight/input/pitch-switch ne 1
 			</test>
 		</switch>
-		
-		<switch name="fcs/css-pitch">
+    <!-- I use this for tuning the PRC - limit to 50% stick and tune to 5G
+         on the aircraft full deflection should be 8g - but until we do something about that
+         tuning to 5G is about right.
+    <fcs_function name="fcs/stick-pitch">
+      <function>
+        <sum>
+          <p>fcs/elevator-cmd-norm</p>
+        </sum>
+      </function>
+      <clipto>
+        <min>-0.5</min>
+        <max>0.5</max>
+      </clipto>
+    </fcs_function>-->
+
+    <switch name="fcs/css-pitch">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/ss/elevator-norm">
 				autoflight/input/pitch-switch eq 1
@@ -53,28 +68,52 @@
 				autoflight/ss/aileron-norm ne 0
 			</test>
 		</switch>
+		
+		<fcs_function name="fcs/aileron-droop">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<tableData>
+						62  20
+						77   0
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 	
 	</channel>
 	
 	<channel name="Elevons">
 		
 		<fcs_function name="fcs/pitch-trim-compensation">
+      <!--RJH: Rebuilt this table 2014-04-28 based on flight test data-->
 			<function>
 				<table>
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
 					<tableData>
-						     0         35
-						  0 -0.288600 -0.122750
-						200 -0.188860 -0.102750
-						310 -0.061875  0.022125
-						415 -0.037920  0.076125
-						520  0.020500  0.076125
-						620  0.001877  0.076125
-						740  0.134250  0.076125
-						820  0.174000  0.076125
-						900  0.216250  0.076125
-					</tableData>
+          	                0	       35
+                  0  0.000000    0.000000
+                160  0.000000    0.000000
+                170	-0.248276	-0.248276
+                200	-0.239924	-0.151900
+                220	-0.188621	-0.108500
+                250	-0.140241	-0.032352
+                300	-0.089241	 0.013303
+                350	-0.060369	-0.03
+                400	-0.040269	-0.03
+                450	-0.027059	-0.03
+                500	-0.017683	-0.03
+                550	-0.006476	-0.03
+                575	 0.001893	-0.03
+                600	 0.006824	-0.03
+                625	 0.009586	-0.03
+                650	 0.010607	-0.03
+                700	 0.011903	-0.03
+                750	 0.012745	-0.03
+                800	 0.013397	-0.03
+                833	 0.013752	-0.03
+          </tableData>
 				</table>
 			</function>
 		</fcs_function>
@@ -92,27 +131,127 @@
 			</clipto>
 		</summer>
 		
-		<fcs_function name="fcs/pitch-ratio-calc"> <!-- Guesses, I found no data -->
+		<fcs_function name="fcs/pitch-ratio-calc">
+      <!-- RJH: 
+            Pitch Ratio: 
+            - - - - - - - - - - -  - - - - - - - 
+            This device adjusts the amount of collective (pitch)
+            stabilator deflection available for a given longitudinal stick
+            motion.  The ratio is scheduled to produce essentially the same
+            stick travel per "g" throughout the flight envelope.  Since the
+            longitudinal feel system is just a simple spring cartridge, this
+            then relates to a constant stick force per "g" (Fs/g) (about 4.25
+            lb/g).  It is scheduled by Mach number and altitude and does a
+            rather good job; however, it won't quite cover the full range of
+            aircraft and stabilator power and there is some scatter of the
+            Fs/g, i.e., some mild increase in sensitivity during low
+            altitude/high speed flight, and some decrease in sensitivity at
+            low speeds.
+
+
+      This is based on a description of how the pitch ratio works, together with  Tuned based on aircraft performance; mostly standard day. 
+      
+      ref: NASA TM 72861 : Precision controllability of the F-15 airplane
+      
+      ref: F-15 Flight Control System Part IV - Longitudinal Control, 
+               By B. P. "PERRY" HOFFMAN/Senior Engineer, 
+               Flight Control Section, Avionics Engineering Laboratories, 
+               https://www.f15sim.com/operation/f15_longitudinal_control.html
+               
+                  PRCA 
+                  - - - - - - - - - - -  - - - - - - - 
+                  To begin with, let's break the PRCA pitch channel into its
+                  components (Figure 2) and see how each affects the longitudinal
+                  controls. The input rod offers two linkage paths with the main path
+                  tying directly into the ratio changer linkage, and a second input
+                  being supplied to the Load Factor Sensor portion of the Pitch Trim
+                  Controller.
+
+                  Pitch Ratio Changer
+                  - - - - - - - - - - -  - - - - - - - 
+                  The pitch ratio changer utilizes dual redundant
+                  parallelogram linkage identical in operation to the roll ratio changer
+                  described in our last DIGEST article on lateral controls. The only
+                  operational difference is that the pitch ratio changer gearing
+                  utilizes a 6:1 ratio, where the roll ratio changer utilizes a 4:1
+                  ratio.
+
+
+                  Pitot (Pt) and static (Ps) information is supplied from the left-hand
+                  probe to the ratio controller bellows assembly, repositioning a
+                  cam-operated valve supplying hydraulic pressure to the ratio changer
+                  actuator. The ratio changer actuator then drives the changer linkage,
+                  varying the stick-to-stabilator gearing as required.
+
+                  If hydraulics are lost to the PRCA, or if the pilot selects the EMERC
+                  position of the pitch ratio changer by actuation of the Pitch Ratio
+                  switch, the pitch ratio changer will drive to its failed position. In
+                  the failed mode, the gearing ratio is one-half of its maximum value
+                  and all other functions (PTC and Boost) are inoperative.
+
+                  Two additional functions are associated with the ratio changer (one is
+                  no longer used, but a note of explanation is in order in case you see
+                  it on a schematic diagram). Early in the program there was a gear down
+                  valve which drove the pitch ratio changer to maximum (for landing
+                  control) when the nose gear proximity switch actuated. The
+                  disadvantages seemed to outweigh the advantages, so the valve has been
+                  deactivated on current Eagles and the valve will not be in future
+                  PRCA's. For the maintenance man, this is a great help since he can
+                  simply place the Pitch Ratio switch to emergency and check the fail
+                  mode without having to simulate a gear up condition.
+
+                  The second function is a safety feature controlled by the pitch ratio
+                  changer actuator. If a hardover failure of the pitch trim controller
+                  occurs at low pitch ratios, the pitch CAS is inoperative, longitudinal
+                  control could be lost. To guard against this possibility, a valve
+                  within the ratio changer actuator is opened when the actuator
+                  approaches the minimum ratio position. This valve supplies hydraulic
+                  pressure to an interlock piston within the pitch trim compensator,
+                  keeping it at a position where adequate control is always available.
+
+                  The output of the pitch ratio changer is fed to the pitch boost
+                  actuator servo valve. The boost actuator output is mechanically linked
+                  back to the servo valve input, closing the loop. The boost actuator
+                  output also feeds the downstream linkage, which deflects the
+                  stabilators and drives the linkage scheduling the roll ratio
+                  controller and the ARI. As you will recall from our previous articles,
+                  the pitch output is used in roll to schedule the roll ratio as a
+                  function of angle of attack. Yaw is affected by this also, since yaw
+                  gain increases as roll gain decreases. No more rudder rolls, guys; all
+                  you need for high angle of attack
+
+           
+      -->
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/mach</independentVar>
-					<independentVar lookup="column">atmosphere/density-altitude</independentVar>
-					<tableData> <!-- Low and ultra high mach excluded, as the manual shows, they differ from the standard -->
-							  0      15000  30000  45000  65000
-						0.50  1.000  1.000  1.000  1.000  1.000
-						0.70  0.450  0.590  1.000  1.000  1.000
-						0.80  0.340  0.425  1.000  1.000  1.000
-						0.90  0.230  0.260  0.340  1.000  1.000
-						1.00  0.182  0.214  0.285  0.875  1.000
-						1.10  0.135  0.168  0.230  0.360  1.000
-						1.20  0.125  0.155  0.217  0.342  1.000
-						1.30  0.115  0.141  0.204  0.324  0.804
-						1.50  0.104  0.122  0.178  0.275  0.513
-						1.75  0.097  0.112  0.166  0.260  0.490
-						2.00  0.092  0.102  0.152  0.250  0.423
-						2.25  0.085  0.094  0.138  0.225  0.400
-						2.50  0.084  0.089  0.130  0.200  0.381
-					</tableData>
+          <independentVar lookup="row">atmosphere/density-altitude</independentVar>
+          <independentVar lookup="column">velocities/mach</independentVar>
+          <tableData>
+                   0.50   0.60   0.70   0.80   0.90   1.00   1.10   1.20   1.30   1.40   1.50   1.60   1.70   1.80   1.90   2.00   2.10   2.20   2.30   2.40   2.50   2.60
+             0   1.00   1.00   0.63   0.39   0.17   0.09   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
+          3000   1.00   1.00   0.77   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.05   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
+          5999   1.00   1.00   0.77   0.63   0.39   0.11   0.09   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
+          9000   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
+         11999   1.00   1.00   1.00   0.77   0.63   0.39   0.11   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
+         14999   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08
+         17999   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08
+         21000   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08
+         23999   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08
+         26999   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.05   0.07   0.07   0.08   0.08
+         30000   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.06   0.05   0.07   0.08
+         32999   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.09   0.09   0.06   0.06   0.06   0.06   0.06   0.05   0.07
+         35999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.06
+         38999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.06   0.06   0.06   0.06   0.06
+         39371   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.06   0.06   0.06   0.06   0.06
+         41999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.09   0.06   0.06   0.06
+         42294   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.09   0.09   0.06   0.06
+         44999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11   0.09
+         45205   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11   0.09
+         47999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11
+         48635   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11   0.09
+         50999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.39   0.17   0.17   0.11
+         51438   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11
+          </tableData>
 				</table>
 			</function>
 			<clipto>
@@ -258,7 +397,7 @@
 			</function>
 		</fcs_function>
 		
-		<summer name="fcs/elevon-left-cmd">
+		<summer name="fcs/elevon-left-input">
 			<input>fcs/pitch-input-deg</input>
 			<input>fcs/roll-elevon-input-deg</input>
 			<clipto>
@@ -267,9 +406,16 @@
 			</clipto>
 		</summer>
 		
+		<switch name="fcs/elevon-left-cmd">
+			<default value="0"/> <!-- They don't really droop since they are mounted in the center -->
+			<test value="fcs/elevon-left-input">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/elevon-left">
 			<input>fcs/elevon-left-cmd</input>
-			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
+			<rate_limit>46</rate_limit>
 			<lag>26.7</lag>
 		</actuator>
 		
@@ -286,7 +432,7 @@
 			<output>/sim/multiplay/generic/float[4]</output>
 		</aerosurface_scale>
 		
-		<summer name="fcs/elevon-right-cmd">
+		<summer name="fcs/elevon-right-input">
 			<input>fcs/pitch-input-deg</input>
 			<input>-fcs/roll-elevon-input-deg</input>
 			<clipto>
@@ -295,9 +441,16 @@
 			</clipto>
 		</summer>
 		
+		<switch name="fcs/elevon-right-cmd">
+			<default value="0"/> <!-- They don't really droop since they are mounted in the center -->
+			<test value="fcs/elevon-right-input">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/elevon-right">
 			<input>fcs/elevon-right-cmd</input>
-			<rate_limit>1334</rate_limit> <!-- 46 * 29 degrees -->
+			<rate_limit>46</rate_limit>
 			<lag>26.7</lag>
 		</actuator>
 		
@@ -326,20 +479,46 @@
 			</function>
 		</fcs_function>
 		
+		<!-- Begin FCS hack by Joshua Davidson (it0uchpods) -->
+		
+		<!-- 46 per second is just too slow to make the A/P feedback to work properly. So we pass it faster, only when the A/P is actively controlling pitch, including when stick is moved. -->
+		<!-- To the pilot's animations, it looks correct. This is only for A/P feedback and is passed directly to the Aerodynamics. Differential Elevons are OK since ailerons are there too. -->
+		<!-- Yes, it's hackish, but the elevons are just SO SLOW that the A/P won't work well. Whatever tricks McDD did, I don't know them. -->
+		<switch name="fcs/elevon-f-r">
+			<default value="46"/>
+			<test value="250">
+				autoflight/output/pitch-master eq 1
+			</test>
+		</switch>
+		
+		<actuator name="fcs/elevon-left-f">
+			<input>fcs/elevon-left-cmd</input>
+			<rate_limit>fcs/elevon-f-r</rate_limit>
+			<lag>26.7</lag>
+		</actuator>
+		
+		<actuator name="fcs/elevon-right-f">
+			<input>fcs/elevon-right-cmd</input>
+			<rate_limit>fcs/elevon-f-r</rate_limit>
+			<lag>26.7</lag>
+		</actuator>
+		
 		<fcs_function name="fcs/elevon-aero-deg">
 			<function>
 				<sum>
 					<product>
-						<property>fcs/elevon-left</property>
+						<property>fcs/elevon-left-f</property>
 						<value>0.5</value>
 					</product>
 					<product>
-						<property>fcs/elevon-right</property>
+						<property>fcs/elevon-right-f</property>
 						<value>0.5</value>
 					</product>
 				</sum>
 			</function>
 		</fcs_function>
+		
+		<!-- End FCS hack by Joshua Davidson (it0uchpods) -->
 	
 	</channel>
 	
@@ -366,9 +545,16 @@
 			<gain>20.0</gain>
 		</pure_gain>
 		
+		<switch name="fcs/aileron-left-cmd">
+			<default value="fcs/aileron-droop"/>
+			<test value="fcs/aileron-input-deg">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/aileron-left">
-			<input>fcs/aileron-input-deg</input>
-			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
+			<input>fcs/aileron-left-cmd</input>
+			<rate_limit>100</rate_limit>
 			<lag>26.7</lag>
 		</actuator>
 		
@@ -385,9 +571,16 @@
 			<output>/sim/multiplay/generic/float[2]</output>
 		</aerosurface_scale>
 		
+		<switch name="fcs/aileron-right-cmd">
+			<default value="fcs/aileron-droop"/>
+			<test value="-fcs/aileron-input-deg">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/aileron-right">
-			<input>-fcs/aileron-input-deg</input>
-			<rate_limit>2000</rate_limit> <!-- 100 * 20 degrees -->
+			<input>fcs/aileron-right-cmd</input>
+			<rate_limit>100</rate_limit>
 			<lag>26.7</lag>
 			<output>/sim/multiplay/generic/float[3]</output>
 		</actuator>
@@ -437,12 +630,14 @@
 		<switch name="fcs/ari-lateral-enabled">
 			<default value="0"/>
 			<test logic="AND" value="1">
-				position/aircraft-on-ground eq 0
-				autoflight/output/roll-master ne 1
-				systems/hydraulics/flight-system-pressure eq 1
-				fcs/ari-mach-switch eq 1
-				cas/yaw-cas-active ne 1
-			</test>
+        position/aircraft-on-ground eq 0
+        autoflight/output/roll-master ne 1
+        systems/hydraulics/flight-system-pressure eq 1
+        fcs/ari-mach-switch eq 1
+        cas/yaw-cas-active ne 1
+        aero/alpha-deg lt 30
+        aero/alpha-deg gt -30
+      </test>
 		</switch>
 		
 		<pure_gain name="fcs/ari-aileron-input">
@@ -519,11 +714,17 @@
 			</clipto>
 		</pure_gain>
 		
+		<switch name="fcs/rudder-input-deg-cmd">
+			<default value="0"/>
+			<test value="fcs/rudder-input-deg">
+				systems/hydraulics/flight-system-pressure eq 1
+			</test>
+		</switch>
+		
 		<actuator name="fcs/rudder-aero-deg">
-			<input>fcs/rudder-input-deg</input>
-			<rate_limit>3150</rate_limit> <!-- 105 * 30 degrees -->
+			<input>fcs/rudder-input-deg-cmd</input>
+			<rate_limit>105</rate_limit>
 			<lag>22.7</lag>
-			<output>/sim/multiplay/generic/float[1]</output>
 		</actuator>
 		
 		<aerosurface_scale name="fcs/rudder-aero-norm">

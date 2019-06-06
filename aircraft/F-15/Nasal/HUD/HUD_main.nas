@@ -82,7 +82,7 @@ var F15HUD = {
         obj.canvas.addPlacement({"node": "HUDImage1"});
         obj.canvas.addPlacement({"node": "HUDImage2"});
         obj.canvas.setColorBackground(0.36, 1, 0.3, 0.00);
-        obj.FocusAtInfinity = false;
+        obj.FocusAtInfinity = 0;
 # Create a group for the parsed elements
         obj.svg = obj.canvas.createGroup();
  
@@ -124,23 +124,11 @@ var F15HUD = {
 
         obj.window1.setVisible(0);
 
-        obj.radarActiveTargetAvailable = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-available",1);
-        obj.radarActiveTargetDisplay = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-display",1);
-        obj.radarActiveTargetCallsign = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-callsign",1);
-        obj.radarActiveTargetType = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-type",1);
-        obj.radarActiveTargetRange = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-range",1);
-        obj.radarActiveTargetClosure = props.globals.getNode("sim/model/f15/instrumentation/radar-awg-9/active-target-closure",1);
-        obj.navRangeDisplay = props.globals.getNode("sim/model/f15/instrumentation/hud/nav-range-display",1);
-        obj.navRangeETA = props.globals.getNode("sim/model/f15/instrumentation/hud/nav-range-eta",1);
-
-        obj.radarActiveTargetAvailable.setValue(0);
-        obj.radarActiveTargetCallsign.setValue("");
-        obj.radarActiveTargetType.setValue("");
-        obj.radarActiveTargetRange.setValue(0);
-        obj.radarActiveTargetClosure.setValue(0);
-        obj.navRangeDisplay.setValue("");
-        obj.navRangeETA.setValue("");
-
+        obj.HudNavRangeDisplay = "";
+        obj.HudNavRangeETA = "";
+        obj.currentViewX = props.globals.getNode("/sim/current-view/x-offset-m");
+        obj.currentViewY = props.globals.getNode("/sim/current-view/y-offset-m");
+        
         obj.symbol_reject = 0;
         obj.heading_deg=0;
         obj.roll_deg=0;
@@ -193,29 +181,29 @@ obj.dlzY = 70;
         # using the new property manager to update items on the HUD.
         # this is more efficient as the update methods are only called whenever the property (or properties) change by more than a specified amount
         obj.update_items = [
-            props.UpdateManager.FromPropertyHashList(["fdm/jsbsim/systems/electrics/ac-left-main-bus","sim/model/f15/controls/HUD/brightness"] , 0.01, func(val)
+            props.UpdateManager.FromHashList(["ElectricsAcLeftMainBus","ControlsHudBrightness"] , 0.01, func(val)
                                       {
-                                          if (val.property["fdm/jsbsim/systems/electrics/ac-left-main-bus"].getValue() <= 0 
-                                              or val.property["sim/model/f15/controls/HUD/brightness"].getValue() <= 0) {
+                                          if (val.ElectricsAcLeftMainBus <= 0 
+                                              or val.ControlsHudBrightness <= 0) {
                                               obj.svg.setVisible(0);
                                           } else {
                                               obj.svg.setVisible(1);
                                           }
                                       }),
-            props.UpdateManager.FromProperty("instrumentation/altimeter/indicated-altitude-ft", 1, func(val)
+            props.UpdateManager.FromHashValue("AltimeterIndicatedAltitudeFt", 1, func(val)
                                              {
                                                  obj.alt_range.setTranslation(0, val * alt_range_factor);
                                              }),
 
-            props.UpdateManager.FromProperty("velocities/airspeed-kt", 0.1, func(val)
+            props.UpdateManager.FromHashValue("VelocitiesAirspeedKt", 0.1, func(val)
                                       {
                                           obj.ias_range.setTranslation(0, val * ias_range_factor);
                                       }),
-            props.UpdateManager.FromProperty("sim/model/f15/controls/HUD/sym-rej", 0.1, func(val)
+            props.UpdateManager.FromHashValue("ControlsHudSymRej", 0.1, func(val)
                                              {
                                                  obj.symbol_reject = val;
                                              }),
-            props.UpdateManager.FromProperty("orientation/heading-deg", 0.025, func(val)
+            props.UpdateManager.FromHashValue("OrientationHeadingDeg", 0.025, func(val)
                                       {
                                           obj.heading_deg = val;
                                           #heading tape
@@ -226,13 +214,13 @@ obj.dlzY = 70;
                                           
                                           obj.heading_tape.setTranslation (obj.heading_tape_position,0);
                                       }),
-            props.UpdateManager.FromPropertyHashList(["orientation/roll-deg","orientation/pitch-deg"], 0.025, func(val)
+            props.UpdateManager.FromHashList(["OrientationRollDeg","OrientationPitchDeg"], 0.025, func(val)
                                     {
-                                        obj.roll_deg = val.property["orientation/roll-deg"].getValue();
+                                        obj.roll_deg = val.OrientationRollDeg;
                                         obj.roll_rad = -obj.roll_deg*3.14159/180.0;
                                         obj.roll_pointer.setRotation (obj.roll_rad);
                                         var ptx = 0;
-                                        obj.pitch_deg = val.property["orientation/pitch-deg"].getValue();
+                                        obj.pitch_deg = val.OrientationPitchDeg;
                                         var pty = 392+ obj.pitch_deg * pitch_factor;
 
                                         obj.ladder.setRotation(obj.roll_rad);
@@ -243,97 +231,97 @@ obj.dlzY = 70;
                                         else
                                           obj.ladder.setCenter (110,900+obj.pitch_deg*-(1772/90));
                                     }),
-                            props.UpdateManager.FromPropertyHashList(["orientation/alpha-indicated-deg", "orientation/side-slip-deg"], 0.001, func(val)
+                            props.UpdateManager.FromHashList(["Alpha", "OrientationSideSlipDeg"], 0.001, func(val)
                                                                      {
-                                                                         obj.VV_x = val.property["orientation/side-slip-deg"].getValue()*10; # adjust for view
-                                                                         obj.VV_y = val.property["orientation/alpha-indicated-deg"].getValue()*10; # adjust for view
+                                                                         if (val.OrientationSideSlipDeg == nil or val.Alpha == nil)
+                                                                           return;
+                                                                         obj.VV_x = (val.OrientationSideSlipDeg or 0)*10; # adjust for view
+                                                                         obj.VV_y = (val.Alpha or 0)*10; # adjust for view
                                                                          obj.VV.setTranslation (obj.VV_x, obj.VV_y);
                                                                      }),
-                            props.UpdateManager.FromPropertyHashList(["sim/model/f15/instrumentation/g-meter/g-max-mooving-average", "fdm/jsbsim/systems/cadc/ows-maximum-g"], 0.1, func(val)
+                            props.UpdateManager.FromHashList(["InstrumentedG", "CadcOwsMaximumG"], 0.1, func(val)
                                                                      {
                                                                          obj.window8.setText(sprintf("%02d %02d", 
-                                                                                                     math.round(val.property["sim/model/f15/instrumentation/g-meter/g-max-mooving-average"].getValue()*10.0), 
-                                                                                                     math.round(val.property["fdm/jsbsim/systems/cadc/ows-maximum-g"].getValue()*10.0)));
+                                                                                                     math.round(val.InstrumentedG*10.0), 
+                                                                                                     math.round(val.CadcOwsMaximumG*10.0)));
                                                                      }),
-                            props.UpdateManager.FromPropertyHashList(["orientation/alpha-indicated-deg", 
-                                                                      "controls/gear/brake-parking", 
-                                                                      "instrumentation/airspeed-indicator/indicated-mach",
-                                                                      "controls/gear/gear-down"], 0.01, func(val)
+                            props.UpdateManager.FromHashList(["Alpha", 
+                                                                      "ControlsGearBrakeParking", 
+                                                                      "AirspeedIndicatorIndicatedMach",
+                                                                      "ControlsGearGearDown"], 0.01, func(val)
                                                                      {
-                                                                         obj.alpha = val.property["orientation/alpha-indicated-deg"].getValue() or 0;
-                                                                         obj.mach = val.property["instrumentation/airspeed-indicator/indicated-mach"].getValue() or 0;
-                                                                         if(val.property["controls/gear/brake-parking"].getValue())
+                                                                         obj.alpha = val.Alpha or 0;
+                                                                         obj.mach = val.AirspeedIndicatorIndicatedMach or 0;
+                                                                         if(val.ControlsGearBrakeParking)
                                                                            obj.window7.setText("BRAKES");
-                                                                         else if(val.property["controls/gear/gear-down"].getValue() or obj.alpha > 20)
+                                                                         else if(val.ControlsGearGearDown or obj.alpha > 20)
                                                                            obj.window7.setText(sprintf("AOA %d",obj.alpha));
                                                                          else
                                                                            obj.window7.setText(sprintf(" %1.3f",obj.mach));
                                                                      }),
-                            props.UpdateManager.FromPropertyHashList(["autopilot/route-manager/active",
-                                                                      "autopilot/route-manager/wp/dist",
-                                                                      "autopilot/route-manager/wp/eta-seconds",
-                                                                      "controls/gear/gear-down"], 0.1, func(val)
+                            props.UpdateManager.FromHashList(["AutopilotRouteManagerActive",
+                                                                      "AutopilotRouteManagerWpDist",
+                                                                      "AutopilotRouteManagerWpEtaSeconds",
+                                                                      "ControlsGearGearDown"], 0.1, func(val)
                                                                      {
-                                                                         if (val.property["autopilot/route-manager/active"].getValue()) {
-                                                                             obj.rng = val.property["autopilot/route-manager/wp/dist"].getValue();
-                                                                             obj.eta_s = val.property["autopilot/route-manager/wp/eta-seconds"].getValue();
+                                                                         if (val.AutopilotRouteManagerActive) {
+                                                                             obj.rng = val.AutopilotRouteManagerWpDist;
+                                                                             obj.eta_s = val.AutopilotRouteManagerWpEtaSeconds;
                                                                              if (obj.rng != nil) {
-                                                                                 obj.navRangeETA.setValue(sprintf("%2d MIN",obj.rng));
-                                                                                 obj.navRangeDisplay.setValue(sprintf("N %4.1f", obj.rng));
+                                                                                 obj.HudNavRangeDisplay =sprintf("N %4.1f", obj.rng);
                                                                              } else {
-                                                                                 obj.navRangeETA.setValue("XXX");
-                                                                                 obj.navRangeDisplay.setValue("N XXX");
+                                                                                 obj.HudNavRangeDisplay = "N XXX";
                                                                              }
 
                                                                              if (obj.eta_s != nil)
-                                                                               obj.navRangeETA.setValue(sprintf("%2d MIN",obj.eta_s/60));
+                                                                               obj.HudNavRangeETA = sprintf("%2d MIN",obj.eta_s/60);
                                                                              else
-                                                                               obj.navRangeETA.setValue("XX MIN");
+                                                                               obj.HudNavRangeETA = "XX MIN";
                                                                          } else {
-                                                                             obj.navRangeDisplay.setValue("");
-                                                                             obj.navRangeETA.setValue("");
+                                                                             obj.HudNavRangeDisplay = "";
+                                                                             obj.HudNavRangeETA = "";
                                                                          }
                                                                      }),
-                            props.UpdateManager.FromPropertyHashList(["sim/model/f15/controls/armament/master-arm-switch",
-                                                                      "sim/model/f15/controls/armament/weapon-selector",
-                                                                      "sim/model/f15/systems/gun/rounds",
-                                                                      "sim/model/f15/systems/armament/aim9/count",
-                                                                      "sim/model/f15/systems/armament/aim120/count",
-                                                                      "sim/model/f15/systems/armament/aim7/count",
-                                                                      "sim/model/f15/systems/armament/agm/count",
-                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-available",
-                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-display",
-                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-callsign",
-                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-type",
-                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-range",
-                                                                      "sim/model/f15/instrumentation/radar-awg-9/active-target-closure",
-                                                                      "sim/model/f15/instrumentation/hud/nav-range-display",
-                                                                      "sim/model/f15/instrumentation/hud/nav-range-eta"], 0.1, func(val)
+                            props.UpdateManager.FromHashList(["ControlsArmamentMasterArmSwitch",
+                                                                      "ControlsArmamentWeaponSelector",
+                                                                      "ArmamentRounds",
+                                                                      "ArmamentAim9Count",
+                                                                      "ArmamentAim120Count",
+                                                                      "ArmamentAim7Count",
+                                                                      "ArmamentAgmCount",
+                                                                      "RadarActiveTargetAvailable",
+                                                                      "RadarActiveTargetDisplay",
+                                                                      "RadarActiveTargetCallsign",
+                                                                      "RadarActiveTargetType",
+                                                                      "RadarActiveTargetRange",
+                                                                      "RadarActiveTargetClosure",
+                                                                      "HudNavRangeDisplay",
+                                                                      "HudNavRangeETA"], nil, func(val)
                                                                      {
-                                                                         if (val.property["sim/model/f15/controls/armament/master-arm-switch"].getValue()) {
-                                                                             var w_s = val.property["sim/model/f15/controls/armament/weapon-selector"].getValue();
+                                                                         if (val.ControlsArmamentMasterArmSwitch) {
+                                                                             var w_s = val.ControlsArmamentWeaponSelector;
                                                                              obj.window2.setVisible(1);
                                                                              if (w_s == 0) {
-                                                                                 obj.window2.setText(sprintf("%3d",val.property["sim/model/f15/systems/gun/rounds"].getValue()));
+                                                                                 obj.window2.setText(sprintf("%3d",val.ArmamentRounds));
                                                                              } else if (w_s == 1) {
-                                                                                 obj.window2.setText(sprintf("S%2dL", val.property["sim/model/f15/systems/armament/aim9/count"].getValue()));
+                                                                                 obj.window2.setText(sprintf("S%2dL", val.ArmamentAim9Count));
                                                                              } else if (w_s == 2){
-                                                                                 obj.window2.setText(sprintf("M%2dF", val.property["sim/model/f15/systems/armament/aim120/count"].getValue()
-                                                                                                             + val.property["sim/model/f15/systems/armament/aim7/count"].getValue()));
+                                                                                 obj.window2.setText(sprintf("M%2dF", val.ArmamentAim120Count
+                                                                                                             + val.ArmamentAim7Count));
                                                                              } else if (w_s == 5){
-                                                                                 obj.window2.setText(sprintf("G%2d", val.property["sim/model/f15/systems/armament/agm/count"].getValue()));
+                                                                                 obj.window2.setText(sprintf("G%2d", val.ArmamentAgmCount));
                                                                              }
-                                                                             if (val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-available"].getValue() or 0) {
-                                                                                 obj.window3.setText(val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-callsign"].getValue());
+                                                                             if (val.RadarActiveTargetAvailable or 0) {
+                                                                                 obj.window3.setText(val.RadarActiveTargetCallsign);
                                                                                  var model = "XX";
-                                                                                 if (val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-type"].getValue() != "")
-                                                                                   model = val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-type"].getValue();
+                                                                                 if (val.RadarActiveTargetType != "")
+                                                                                   model = val.RadarActiveTargetType;
 
                                                                                  #these labels aren't correct - but we don't have a full simulation of the targetting and missiles so 
                                                                                  #have no real idea on the details of how this works.
-                                                                                 if (val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-display"].getValue()){
-                                                                                     obj.window4.setText(sprintf("RNG %3.1f", val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-range"].getValue()));
-                                                                                     obj.window5.setText(sprintf("CLO %-3d", val.property["sim/model/f15/instrumentation/radar-awg-9/active-target-closure"].getValue()));
+                                                                                 if (val.RadarActiveTargetDisplay){
+                                                                                     obj.window4.setText(sprintf("RNG %3.1f", val.RadarActiveTargetRange));
+                                                                                     obj.window5.setText(sprintf("CLO %-3d", val.RadarActiveTargetClosure));
                                                                                  } else{
                                                                                      obj.window4.setText("");
                                                                                      obj.window5.setText("");
@@ -343,12 +331,12 @@ obj.dlzY = 70;
                                                                              }
                                                                          } else {
                                                                              obj.window2.setVisible(0);
-                                                                             if (val.property["sim/model/f15/instrumentation/hud/nav-range-display"].getValue() != "")
+                                                                             if (val.HudNavRangeDisplay != "")
                                                                                obj.window3.setText("NAV");
                                                                              else
                                                                                obj.window3.setText("");
-                                                                             obj.window4.setText(val.property["sim/model/f15/instrumentation/hud/nav-range-display"].getValue());
-                                                                             obj.window5.setText(val.property["sim/model/f15/instrumentation/hud/nav-range-eta"].getValue());
+                                                                             obj.window4.setText(val.HudNavRangeDisplay);
+                                                                             obj.window5.setText(val.HudNavRangeETA);
                                                                              obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
                                                                          }
                                                                      }
@@ -400,7 +388,7 @@ return obj;
 #
 #
 #
-    update : func() {
+    update : func(notification) {
         
         me.dlzArray = aircraft.getDLZ();
 #me.dlzArray =[10,8,6,2,9];#test
@@ -431,8 +419,8 @@ return obj;
         if(me.FocusAtInfinity)
           {
               # parallax correction
-              var current_x = getprop("/sim/current-view/x-offset-m");
-              var current_y = getprop("/sim/current-view/y-offset-m");
+              var current_x = me.currentViewX.getValue();
+              var current_y = me.currentViewY.getValue();
               #        var current_z = getprop("/sim/current-view/z-offset-m");
         
               var dx = me.view[0] - current_x;
@@ -442,28 +430,30 @@ return obj;
           }
 
         if (awg_9.active_u == nil) {
-            me.radarActiveTargetAvailable.setValue(0);
-            me.radarActiveTargetCallsign.setValue("");
-            me.radarActiveTargetType.setValue("");
-            me.radarActiveTargetRange.setValue(0);
-            me.radarActiveTargetClosure.setValue(0);
+            notification.RadarActiveTargetAvailable = 0;
+            notification.RadarActiveTargetCallsign = "";
+            notification.RadarActiveTargetType = "";
+            notification.RadarActiveTargetRange = 0;
+            notification.RadarActiveTargetClosure = 0;
         } else {
-            me.radarActiveTargetAvailable.setValue(1);
+            notification.RadarActiveTargetAvailable = 1;
 #print("active callsign ",awg_9.active_u.Callsign,":");
             if (awg_9.active_u.Callsign != nil)
-              me.radarActiveTargetCallsign.setValue(awg_9.active_u.Callsign.getValue());
+              notification.RadarActiveTargetCallsign = awg_9.active_u.Callsign.getValue();
             else
-              me.radarActiveTargetCallsign.setValue("XXX");
+              notification.RadarActiveTargetCallsign = "XXX";
 
-            me.radarActiveTargetType.setValue(awg_9.active_u.ModelType);
-            me.radarActiveTargetDisplay.setValue(awg_9.active_u.get_display());
-            me.radarActiveTargetRange.setValue(awg_9.active_u.get_range());
-            me.radarActiveTargetClosure.setValue(awg_9.active_u.get_closure_rate());
+            notification.RadarActiveTargetType = awg_9.active_u.ModelType;
+            notification.RadarActiveTargetDisplay = awg_9.active_u.get_display();
+            notification.RadarActiveTargetRange = awg_9.active_u.get_range();
+            notification.RadarActiveTargetClosure = awg_9.active_u.get_closure_rate();
         }
+        notification.HudNavRangeDisplay = me.HudNavRangeDisplay;
+        notification.HudNavRangeETA = me.HudNavRangeETA;
 
         foreach(var update_item; me.update_items)
         {
-            update_item.update(me);
+            update_item.update(notification);
         }
 
         if (me.svg.getVisible() == 0)
@@ -553,11 +543,66 @@ return obj;
 # 2016-01-06: The HUD appears slightly trapezoidal (better than previous version
 #             however still could be improved possibly with a transformation matrix.
 
-var MainHUD = nil;
 
-var updateHUD = func ()
-{  
-    if (MainHUD == nil)
-      MainHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1");
-    MainHUD.update();
+var HUDRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.MainHUD = nil;
+        new_class.Receive = func(notification)
+        {
+            if (notification.NotificationType == "FrameNotification")
+            {
+                if (new_class.MainHUD == nil)
+                  new_class.MainHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1");
+                if (!math.mod(notifications.frameNotification.FrameCount,2)){
+                    new_class.MainHUD.update(notification);
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(HUDRecipient.new("F15-HUD"));
+input = {
+        AirspeedIndicatorIndicatedMach          : "instrumentation/airspeed-indicator/indicated-mach",
+        Alpha                                   : "orientation/alpha-indicated-deg",
+        AltimeterIndicatedAltitudeFt            : "instrumentation/altimeter/indicated-altitude-ft",
+        ArmamentAgmCount                        : "sim/model/f15/systems/armament/agm/count",
+        ArmamentAim120Count                     : "sim/model/f15/systems/armament/aim120/count",
+        ArmamentAim7Count                       : "sim/model/f15/systems/armament/aim7/count",
+        ArmamentAim9Count                       : "sim/model/f15/systems/armament/aim9/count",
+        ArmamentRounds                          : "sim/model/f15/systems/gun/rounds",
+        AutopilotRouteManagerActive             : "autopilot/route-manager/active",
+        AutopilotRouteManagerWpDist             : "autopilot/route-manager/wp/dist",
+        AutopilotRouteManagerWpEtaSeconds       : "autopilot/route-manager/wp/eta-seconds",
+        CadcOwsMaximumG                         : "fdm/jsbsim/systems/cadc/ows-maximum-g",
+        ControlsArmamentMasterArmSwitch         : "sim/model/f15/controls/armament/master-arm-switch",
+        ControlsArmamentWeaponSelector          : "sim/model/f15/controls/armament/weapon-selector",
+        ControlsGearBrakeParking                : "controls/gear/brake-parking",
+        ControlsGearGearDown                    : "controls/gear/gear-down",
+        ControlsHudBrightness                   : "sim/model/f15/controls/HUD/brightness",
+        ControlsHudSymRej                       : "sim/model/f15/controls/HUD/sym-rej",
+        ElectricsAcLeftMainBus                  : "fdm/jsbsim/systems/electrics/ac-left-main-bus",
+        HudNavRangeDisplay                      : "sim/model/f15/instrumentation/hud/nav-range-display",
+        HudNavRangeETA                          : "sim/model/f15/instrumentation/hud/nav-range-eta",
+        OrientationHeadingDeg                   : "orientation/heading-deg",
+        OrientationPitchDeg                     : "orientation/pitch-deg",
+        OrientationRollDeg                      : "orientation/roll-deg",
+        OrientationSideSlipDeg                  : "orientation/side-slip-deg",
+        RadarActiveTargetAvailable              : "sim/model/f15/instrumentation/radar-awg-9/active-target-available",
+        RadarActiveTargetCallsign               : "sim/model/f15/instrumentation/radar-awg-9/active-target-callsign",
+        RadarActiveTargetClosure                : "sim/model/f15/instrumentation/radar-awg-9/active-target-closure",
+        RadarActiveTargetDisplay                : "sim/model/f15/instrumentation/radar-awg-9/active-target-display",
+        RadarActiveTargetRange                  : "sim/model/f15/instrumentation/radar-awg-9/active-target-range",
+        RadarActiveTargetType                   : "sim/model/f15/instrumentation/radar-awg-9/active-target-type",
+        InstrumentedG                           : "instrumentation/g-meter/instrumented-g",
+        VelocitiesAirspeedKt                    : "velocities/airspeed-kt",
+};
+foreach (var name; keys(input)) {
+    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-HUD", name, input[name]));
 }

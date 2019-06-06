@@ -17,13 +17,31 @@
 <system name="ENGINES">
     <property value="0">propulsion/engine[0]/P0-stall</property>
     <property value="0">propulsion/engine[1]/P0-stall</property>
+
+    <property value="0">fcs/throttle-apc</property>
+
     <channel name="engine-control">
+        <switch name="fcs/throttle-switched[0]">
+            <default value="fcs/throttle-cmd-norm[0]"/>
+            <test logic="AND" value="fcs/throttle-apc">
+                systems/apc/active eq 1
+                position/aircraft-on-ground eq 0
+            </test>
+        </switch>
+
+        <switch name="fcs/throttle-switched[1]">
+            <default value="fcs/throttle-cmd-norm[1]"/>
+            <test logic="AND" value="fcs/throttle-apc">
+                systems/apc/active eq 1
+                position/aircraft-on-ground eq 0
+            </test>
+        </switch>
 
         <!-- Throttles uses the APC value - which will either be the demanded for APC or the input value from throttle-cmd -->
         <scheduled_gain name="ThrottleL">
-            <input>systems/apc/throttle-cmd[0]</input>
+            <input>fcs/throttle-switched[0]</input>
             <table>
-                <independentVar>systems/apc/throttle-cmd[0]</independentVar>
+                <independentVar>fcs/throttle-switched[0]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
                     0.00    0.0
@@ -39,9 +57,9 @@
         </scheduled_gain>
 
         <scheduled_gain name="ThrottleR">
-            <input>systems/apc/throttle-cmd[1]</input>
+            <input>fcs/throttle-switched[1]</input>
             <table>
-                <independentVar>systems/apc/throttle-cmd[1]</independentVar>
+                <independentVar>fcs/throttle-switched[1]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
                     0.00    0.0
@@ -61,8 +79,6 @@
         <fcs_function name="propulsion/engine[0]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                             <tableData>
@@ -74,15 +90,11 @@
                                 100	4.4
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
         <fcs_function name="propulsion/engine[0]/c-egt-lag">
             <description>EGT LAG N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                             <tableData>
@@ -94,8 +106,6 @@
                                 100	0.21
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
 
@@ -108,6 +118,7 @@
                 </quotient>
             </function>
             <clipto>
+                <min>0</min>
                 <max>1.43</max>
             </clipto>
         </fcs_function>
@@ -115,7 +126,6 @@
         <fcs_function name="propulsion/engine[0]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
@@ -130,7 +140,6 @@
                             0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -142,7 +151,6 @@
         <fcs_function name="propulsion/engine[0]/PB">
             <description>Engine 0 SS Burner pressure ratio</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -166,7 +174,6 @@
                             100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
         <fcs_function name="propulsion/engine[0]/augmentation-stage">
@@ -269,16 +276,15 @@
         </actuator>
         <fcs_function name="propulsion/engine[0]/augmentation-alight-v">
             <function>
-                <sum>
+                <integer>
                     <property>propulsion/engine[0]/augmentation-alight</property>
-                </sum>
+                </integer>
             </function>
         </fcs_function>
         <!-- EGT equations -->
         <fcs_function name="propulsion/engine[0]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
                         <tableData>
@@ -287,7 +293,6 @@
                             5.00	171
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -365,7 +370,6 @@
         <fcs_function name="propulsion/engine[0]/alt/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
@@ -374,7 +378,6 @@
                             1.0000	0.15248
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
@@ -405,8 +408,6 @@
         <fcs_function name="propulsion/engine[1]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                             <tableData>
@@ -418,15 +419,11 @@
                                 100	4.4
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
         <fcs_function name="propulsion/engine[1]/c-egt-lag">
             <description>EGT LAG N1 %</description>
             <function>
-                <sum>
-                    <product>
                         <table>
                             <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                             <tableData>
@@ -438,8 +435,6 @@
                                 100	0.21
                             </tableData>
                         </table>
-                    </product>
-                </sum>
             </function>
         </fcs_function >
 
@@ -452,6 +447,7 @@
                 </quotient>
             </function>
             <clipto>
+                <min>0</min>
                 <max>1.43</max>
             </clipto>
         </fcs_function>
@@ -459,7 +455,6 @@
         <fcs_function name="propulsion/engine[1]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
@@ -474,7 +469,6 @@
                             0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -486,7 +480,6 @@
         <fcs_function name="propulsion/engine[1]/PB">
             <description>Engine 0 SS Burner pressure ratio</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
@@ -510,7 +503,6 @@
                             100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
         <fcs_function name="propulsion/engine[1]/augmentation-stage">
@@ -613,16 +605,15 @@
         </actuator>
         <fcs_function name="propulsion/engine[1]/augmentation-alight-v">
             <function>
-                <sum>
+                <integer>
                     <property>propulsion/engine[1]/augmentation-alight</property>
-                </sum>
+                </integer>
             </function>
         </fcs_function>
         <!-- EGT equations -->
         <fcs_function name="propulsion/engine[1]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
             <function>
-                <sum>
                     <table>
                         <independentVar lookup="row">propulsion/engine[1]/augmentation-stage</independentVar>
                         <tableData>
@@ -631,7 +622,6 @@
                             5.00	171
                         </tableData>
                     </table>
-                </sum>
             </function>
         </fcs_function>
 
@@ -709,7 +699,6 @@
         <fcs_function name="propulsion/engine[1]/alt/nozzle-dmd-norm">
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <product>
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
@@ -718,7 +707,6 @@
                             1.0000	0.15248
                         </tableData>
                     </table>
-                </product>
             </function>
         </fcs_function>
 
@@ -769,7 +757,6 @@
 </function>
 <function name="propulsion/engine[1]/EGT-R">
     <description>Engine 1 EGT Rankine</description>
-    <sum>
         <property>atmosphere/T-R</property>
         <table>
             <independentVar>propulsion/engine[1]/n1</independentVar>
@@ -785,5 +772,4 @@
                 104	1684.7
             </tableData>
         </table>
-    </sum>
 </function>-->

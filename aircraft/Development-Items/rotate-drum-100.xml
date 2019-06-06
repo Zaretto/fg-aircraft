@@ -1,0 +1,56 @@
+    <animation>
+        <type>rotate</type>
+        <object-name>drum-100</object-name>
+        <axis>
+            <object-name>drum-100axis</object-name>
+        </axis>
+            <expression>
+                <product>
+                    <value>360</value><!--total angle of rotation-->
+
+                    <!--part 1 - major -->
+                    <sum>
+                        <div>
+                            <mod>
+                                <floor>
+                                    <div>
+                                        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                                        <value>100.00</value> <!-- step -->
+                                    </div>
+                                </floor>
+                                <value>10</value>
+                            </mod>
+                            <value>10</value>
+                        </div>
+
+                        <!--part 2 - this the scroll animation as the drum goes to the next position-->
+                        <div>
+                            <max>
+                                <value>0</value>
+                                <dif>
+                                    <value>10.0</value> <!--scroll-->
+                                    <dif>
+                                        <product>
+                                            <floor>
+                                                <div>
+                                                    <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                                                    <value>100.00</value> <!-- step -->
+                                                </div>
+                                            </floor>
+                                            <value>100.00</value> <!-- step -->
+                                        </product>
+                                        <floor>
+                                            <dif>
+                                                <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                                                <value>100.00</value> <!-- step -->
+                                            </dif>
+                                        </floor>
+                                    </dif>
+                                </dif>
+                            </max>
+                            <value>100.00</value> <!-- step -->
+                        </div>
+                    </sum>
+                </product>
+            </expression>
+    </animation>

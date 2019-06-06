@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- McDonnell Douglas F-15 Autoflight System -->
-<!-- (c) 2018 Joshua Davidson (it0uchpods) -->
+<!-- (c) 2019 Joshua Davidson (it0uchpods) -->
 
 <system name="autoflight">
 	
@@ -60,6 +60,11 @@
 		
 		<lag_filter name="autoflight/ss/pitch-input">
 			<input>/controls/flight/elevator</input>
+			<c1>8.6</c1>
+		</lag_filter>
+		
+		<lag_filter name="autoflight/ss/yaw-input">
+			<input>/controls/flight/rudder</input>
 			<c1>8.6</c1>
 		</lag_filter>
 		
@@ -127,6 +132,38 @@
 			</function>
 		</fcs_function>
 		
+		<fcs_function name="autoflight/ss/rudder-norm">
+			<function>
+				<product>
+					<quotient>
+						<property>/controls/flight/rudder</property>
+						<pow>
+							<value>1</value>
+							<property>/controls/flight/rudder</property>
+						</pow>
+					</quotient>
+					<product>
+						<max>
+							<value>0</value>
+							<difference>
+								<abs>
+									<property>/controls/flight/rudder</property>
+								</abs>
+								<property>/autopilot/settings/rudder-deadzone</property>
+							</difference>
+						</max>
+						<quotient>
+							<value>1.0</value>
+							<difference>
+								<value>1.0</value>
+								<property>/autopilot/settings/rudder-deadzone</property>
+							</difference>
+						</quotient>
+					</product>
+				</product>
+			</function>
+		</fcs_function>
+		
 		<pure_gain name="/autopilot/settings/aileron-deadzone-neg">
 			<input>/autopilot/settings/aileron-deadzone</input>
 			<gain>-1.0</gain>
@@ -137,57 +174,39 @@
 			<gain>-1.0</gain>
 		</pure_gain>
 		
-		<switch name="autoflight/ss/roll-force">
+		<pure_gain name="/autopilot/settings/rudder-deadzone-neg">
+			<input>/autopilot/settings/rudder-deadzone</input>
+			<gain>-1.0</gain>
+		</pure_gain>
+		
+		<switch name="autoflight/ss/force">
 			<default value="0"/>
 			<test logic="OR" value="1">
-				autoflight/ss/roll-input gt /autopilot/settings/aileron-deadzone
 				autoflight/ss/roll-input lt /autopilot/settings/aileron-deadzone-neg
-			</test>
-		</switch>
-		
-		<switch name="autoflight/ss/roll-reset-time">
-			<default value="/sim/time/elapsed-sec"/>
-			<test value="autoflight/ss/roll-reset-time">
-				autoflight/ss/roll-force eq 0
-			</test>
-		</switch>
-		
-		<summer name="autoflight/ss/roll-reset-time-delay">
-			<input>autoflight/ss/roll-reset-time</input>
-			<input>autoflight/ss/delay</input>
-		</summer>
-		
-		<switch name="autoflight/ss/roll-active">
-			<default value="0"/>
-			<test value="1">
-				/sim/time/elapsed-sec lt autoflight/ss/roll-reset-time-delay
-			</test>
-		</switch>
-		
-		<switch name="autoflight/ss/pitch-force">
-			<default value="0"/>
-			<test logic="OR" value="1">
-				autoflight/ss/pitch-input gt /autopilot/settings/elevator-deadzone
+				autoflight/ss/roll-input gt /autopilot/settings/aileron-deadzone
 				autoflight/ss/pitch-input lt /autopilot/settings/elevator-deadzone-neg
+				autoflight/ss/pitch-input gt /autopilot/settings/elevator-deadzone
+				autoflight/ss/yaw-input lt /autopilot/settings/rudder-deadzone-neg
+				autoflight/ss/yaw-input gt /autopilot/settings/rudder-deadzone
 			</test>
 		</switch>
 		
-		<switch name="autoflight/ss/pitch-reset-time">
+		<switch name="autoflight/ss/reset-time">
 			<default value="/sim/time/elapsed-sec"/>
-			<test value="autoflight/ss/pitch-reset-time">
-				autoflight/ss/pitch-force eq 0
+			<test value="autoflight/ss/reset-time">
+				autoflight/ss/force eq 0
 			</test>
 		</switch>
 		
-		<summer name="autoflight/ss/pitch-reset-time-delay">
-			<input>autoflight/ss/pitch-reset-time</input>
+		<summer name="autoflight/ss/reset-time-delay">
+			<input>autoflight/ss/reset-time</input>
 			<input>autoflight/ss/delay</input>
 		</summer>
 		
-		<switch name="autoflight/ss/pitch-active">
+		<switch name="autoflight/ss/active">
 			<default value="0"/>
 			<test value="1">
-				/sim/time/elapsed-sec lt autoflight/ss/pitch-reset-time-delay
+				/sim/time/elapsed-sec lt autoflight/ss/reset-time-delay
 			</test>
 		</switch>
 		
@@ -196,7 +215,7 @@
 			<test logic="AND" value="1">
 				autoflight/input/roll-switch eq 1
 				autoflight/can-engage eq 1
-				autoflight/ss/roll-force eq 0
+				autoflight/ss/force eq 0
 			</test>
 		</switch>
 		
@@ -205,7 +224,7 @@
 			<test logic="AND" value="1">
 				autoflight/input/pitch-switch eq 1
 				autoflight/can-engage eq 1
-				autoflight/ss/pitch-force eq 0
+				autoflight/ss/force eq 0
 			</test>
 		</switch>
 	
@@ -214,7 +233,6 @@
 	<channel name="Autoflight: Drivers">
 		
 		<!-- HDG SEL -->
-		
 		<switch name="autoflight/roll/gain-switch">
 			<default value="1"/>
 			<test logic="AND" value="0">
@@ -277,7 +295,7 @@
 			<function>
 				<sum>
 					<property>autoflight/roll/heading/bank-max</property>
-					<value>-0.1</value>
+					<value>-0.01</value>
 				</sum>
 			</function>
 		</fcs_function>
@@ -286,7 +304,7 @@
 			<function>
 				<sum>
 					<property>autoflight/roll/heading/bank-min</property>
-					<value>0.1</value>
+					<value>0.01</value>
 				</sum>
 			</function>
 		</fcs_function>
@@ -316,7 +334,6 @@
 		</pid>
 		
 		<!-- ALT HOLD -->
-		
 		<fcs_function name="autoflight/pitch/alt/error">
 			<function>
 				<difference>
@@ -326,19 +343,19 @@
 				</difference>
 			</function>
 		</fcs_function>
-
-        <fcs_function name="autoflight/pitch/alt/gain">
-            <function>
-                <table>
-                    <independentVar lookup="row">velocities/vc-kts</independentVar>
-                    <tableData>
-                        200 -7
-                        600 -5
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
-
+		
+		<fcs_function name="autoflight/pitch/alt/gain">
+			<function>
+				<table>
+					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<tableData>
+						200 -7
+						600 -5
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
 		<fcs_function name="autoflight/pitch/alt/max-rate-fpm">
 			<function>
 				<table>
@@ -352,17 +369,13 @@
 				</table>
 			</function>
 		</fcs_function>
-
+		
         <pure_gain name="autoflight/pitch/alt/vs-target">
 			<input>autoflight/pitch/alt/error</input>
 			<gain>autoflight/pitch/alt/gain</gain>
 			<clipto>
-				<min>
-					<property>-autoflight/pitch/alt/max-rate-fpm</property>
-                </min>
-				<max>
-					<property>autoflight/pitch/alt/max-rate-fpm</property>
-                </max>
+				<min>-autoflight/pitch/alt/max-rate-fpm</min>
+				<max>autoflight/pitch/alt/max-rate-fpm </max>
 			</clipto>
 		</pure_gain>
 		
@@ -385,24 +398,40 @@
 	
 	<channel name="Autoflight: Roll Channel">
 		
-		<fcs_function name="autoflight/roll/roll-hld-target">
+		<switch name="autoflight/roll/att-hold-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				autoflight/output/roll-master eq 1
+				autoflight/input/hdg-active ne 1
+			</test>
+		</switch>
+		
+		<switch name="autoflight/roll/att-hold-switch">
+			<default value="autoflight/roll/att-hold-switch"/>
+			<test logic="OR" value="0">
+				autoflight/roll/att-hold-active ne 1
+				autoflight/ss/active eq 1
+			</test>
+			<test logic="AND" value="1">
+				velocities/p-rad_sec gt -0.0174533
+				velocities/p-rad_sec lt 0.0174533
+			</test>
+		</switch>
+		
+		<fcs_function name="autoflight/roll/roll-hold-target">
 			<function>
 				<ifthen>
 					<and>
 						<eq>
-							<property>autoflight/output/roll-master</property>
+							<property>autoflight/roll/att-hold-active</property>
 							<value>1</value>
 						</eq>
-						<nq>
-							<property>autoflight/input/hdg-active</property>
-							<value>1</value>
-						</nq>
 						<eq>
-							<property>autoflight/ss/roll-active</property>
-							<value>0</value>
+							<property>autoflight/roll/att-hold-switch</property>
+							<value>1</value>
 						</eq>
 					</and>
-					<property>autoflight/roll/roll-hld-target</property>
+					<property>autoflight/roll/roll-hold-target</property>
 					<property>attitude/roll-rad</property>
 				</ifthen>
 			</function>
@@ -443,7 +472,7 @@
 		
 		<switch name="autoflight/roll/roll-rad-input">
 			<default value="attitude/roll-rad"/>
-			<test logic="AND" value="autoflight/roll/roll-hld-target">
+			<test logic="AND" value="autoflight/roll/roll-hold-target">
 				autoflight/output/roll-master eq 1
 				autoflight/input/hdg-active ne 1
 			</test>
@@ -453,14 +482,10 @@
 			</test>
 		</switch>
 		
-		<fcs_function name="autoflight/roll/roll-rad-error">
-			<function>
-				<difference>
-					<property>attitude/roll-rad</property>
-					<property>autoflight/roll/roll-rad-input</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/roll/roll-rad-error">
+			<input>attitude/roll-rad</input>
+			<input>-autoflight/roll/roll-rad-input</input>
+		</summer>
 		
 		<pure_gain name="autoflight/roll/roll-rate-p"> <!-- Calculate optimum roll rate -->
 			<input>autoflight/roll/roll-rad-error</input>
@@ -479,14 +504,14 @@
 			</function>
 		</fcs_function>
 		
-		<fcs_function name="autoflight/roll/roll-rate-error">
-			<function>
-				<difference>
-					<property>autoflight/roll/p-rad_sec</property>
-					<property>autoflight/roll/roll-rate-p</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/roll/roll-rate-error">
+			<input>autoflight/roll/p-rad_sec</input>
+			<input>-autoflight/roll/roll-rate-p</input>
+			<clipto>
+				<min>-0.349066</min>
+				<max>0.349066</max>
+			</clipto>
+		</summer>
 		
 		<fcs_function name="autoflight/roll/p-gain">
 			<function>
@@ -494,7 +519,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0    1  
+						     0    1
 						200  0.0 -1.8
 						320  0.0 -1.4
 						600  0.0 -0.9
@@ -510,7 +535,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0    1  
+						     0    1
 						200  0.0 -0.8
 						320  0.0 -0.7
 						600  0.0 -0.4
@@ -526,7 +551,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/roll-master</independentVar>
 					<tableData>
-						     0      1  
+						     0      1
 						200  0.000 -0.100
 						320  0.000 -0.050
 						600  0.000 -0.010
@@ -610,7 +635,7 @@
             </function>
         </fcs_function>
 		
-		<fcs_function name="autoflight/pitch/pitch-hld-min">
+		<fcs_function name="autoflight/pitch/pitch-hold-min">
 			<function>
 				<sum>
 					<property>autoflight/pitch/fpa</property>
@@ -619,12 +644,12 @@
 			</function>
 		</fcs_function>
 		
-		<pure_gain name="autoflight/pitch/pitch-hld-min-rad">
-			<input>autoflight/pitch/pitch-hld-min</input>
+		<pure_gain name="autoflight/pitch/pitch-hold-min-rad">
+			<input>autoflight/pitch/pitch-hold-min</input>
 			<gain>0.0174533</gain> <!-- DEG to RAD -->
 		</pure_gain>
 		
-		<fcs_function name="autoflight/pitch/pitch-hld-max">
+		<fcs_function name="autoflight/pitch/pitch-hold-max">
 			<function>
 				<sum>
 					<property>autoflight/pitch/fpa</property>
@@ -633,35 +658,51 @@
 			</function>
 		</fcs_function>
 		
-		<pure_gain name="autoflight/pitch/pitch-hld-max-rad">
-			<input>autoflight/pitch/pitch-hld-max</input>
+		<pure_gain name="autoflight/pitch/pitch-hold-max-rad">
+			<input>autoflight/pitch/pitch-hold-max</input>
 			<gain>0.0174533</gain> <!-- DEG to RAD -->
 		</pure_gain>
 		
-		<fcs_function name="autoflight/pitch/pitch-hld-target">
+		<switch name="autoflight/pitch/att-hold-active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				autoflight/output/pitch-master eq 1
+				autoflight/input/vs-active ne 1
+			</test>
+		</switch>
+		
+		<switch name="autoflight/pitch/att-hold-switch">
+			<default value="autoflight/pitch/att-hold-switch"/>
+			<test logic="OR" value="0">
+				autoflight/pitch/att-hold-active ne 1
+				autoflight/ss/active eq 1
+			</test>
+			<test logic="AND" value="1">
+				velocities/q-rad_sec gt -0.0174533
+				velocities/q-rad_sec lt 0.0174533
+			</test>
+		</switch>
+		
+		<fcs_function name="autoflight/pitch/pitch-hold-target">
 			<function>
 				<ifthen>
 					<and>
 						<eq>
-							<property>autoflight/output/pitch-master</property>
+							<property>autoflight/pitch/att-hold-active</property>
 							<value>1</value>
 						</eq>
-						<nq>
-							<property>autoflight/input/vs-active</property>
-							<value>1</value>
-						</nq>
 						<eq>
-							<property>autoflight/ss/pitch-active</property>
-							<value>0</value>
+							<property>autoflight/pitch/att-hold-switch</property>
+							<value>1</value>
 						</eq>
 					</and>
-					<property>autoflight/pitch/pitch-hld-target</property>
+					<property>autoflight/pitch/pitch-hold-target</property>
 					<property>attitude/pitch-rad</property>
 				</ifthen>
 			</function>
 			<clipto> <!-- Limit AoA -->
-				<min>autoflight/pitch/pitch-hld-min-rad</min>
-				<max>autoflight/pitch/pitch-hld-max-rad</max>
+				<min>autoflight/pitch/pitch-hold-min-rad</min>
+				<max>autoflight/pitch/pitch-hold-max-rad</max>
 			</clipto>
 		</fcs_function>
 		
@@ -696,7 +737,7 @@
 		
 		<switch name="autoflight/pitch/pitch-rad-input">
 			<default value="attitude/pitch-rad"/>
-			<test logic="AND" value="autoflight/pitch/pitch-hld-target">
+			<test logic="AND" value="autoflight/pitch/pitch-hold-target">
 				autoflight/output/pitch-master eq 1
 				autoflight/input/vs-active ne 1
 			</test>
@@ -706,14 +747,10 @@
 			</test>
 		</switch>
 		
-		<fcs_function name="autoflight/pitch/pitch-rad-error">
-			<function>
-				<difference>
-					<property>attitude/pitch-rad</property>
-					<property>autoflight/pitch/pitch-rad-input</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/pitch/pitch-rad-error">
+			<input>attitude/pitch-rad</input>
+			<input>-autoflight/pitch/pitch-rad-input</input>
+		</summer>
 		
 		<pure_gain name="autoflight/pitch/pitch-rate-p"> <!-- Calculate optimum pitch rate -->
 			<input>autoflight/pitch/pitch-rad-error</input>
@@ -732,14 +769,14 @@
 			</function>
 		</fcs_function>
 		
-		<fcs_function name="autoflight/pitch/pitch-rate-error">
-			<function>
-				<difference>
-					<property>autoflight/pitch/thetadot-rad_sec</property>
-					<property>autoflight/pitch/pitch-rate-p</property>
-				</difference>
-			</function>
-		</fcs_function>
+		<summer name="autoflight/pitch/pitch-rate-error">
+			<input>autoflight/pitch/thetadot-rad_sec</input>
+			<input>-autoflight/pitch/pitch-rate-p</input>
+			<clipto>
+				<min>-0.174533</min>
+				<max>0.174533</max>
+			</clipto>
+		</summer>
 		
 		<fcs_function name="autoflight/pitch/p-gain">
 			<function>
@@ -747,7 +784,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0  1  
+						     0  1
 						200  0  14
 						320  0  9
 						600  0  5
@@ -763,7 +800,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0  1  
+						     0  1
 						200  0  13
 						320  0  8
 						600  0  4
@@ -779,7 +816,7 @@
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">autoflight/output/pitch-master</independentVar>
 					<tableData>
-						     0     1  
+						     0     1
 						200  0.00  0.30
 						320  0.00  0.20
 						600  0.00  0.18
@@ -796,7 +833,7 @@
 			</test>
 			<test logic="OR" value="1">
 				autoflight/pitch/master-pid le -0.999
-				autoflight/pitch/master-pid ge 0.999
+				autoflight/pitch/master-pid ge 0.519
 			</test>
 		</switch>
 		
@@ -807,8 +844,8 @@
 			<kd>autoflight/pitch/d-gain</kd>
 			<trigger>autoflight/pitch/trigger</trigger>
 			<clipto>
-				<min>-1.0</min>
-				<max>1.0</max>
+				<min>-0.999</min>
+				<max>0.519</max>
 			</clipto>
 			<output>autoflight/pitch/master-pid</output>
 		</pid>
@@ -828,7 +865,7 @@
 		
 		<switch name="autoflight/pitch/pitch-rate-demand">
 			<default value="0"/>
-			<test logic="AND" value="autoflight/pitch/master-pid-switched">
+			<test value="autoflight/pitch/master-pid-switched">
 				autoflight/output/pitch-master eq 1
 			</test>
 		</switch>

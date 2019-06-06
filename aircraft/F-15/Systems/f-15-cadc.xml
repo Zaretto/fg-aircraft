@@ -311,13 +311,27 @@
     </channel>
 
     <channel name="Auxiliary" execrate="4">
-        <pure_gain name="Pilot G">
+        <pure_gain name="accelerations/pilot-g">
             <input>accelerations/n-pilot-z-norm</input>
             <gain>-1</gain>
-            <output>/accelerations/pilot-gdamped</output>
+            <output>accelerations/pilot-g</output>
         </pure_gain>
 
-        <switch name="position/aircraft-on-ground">
+        <lag_filter name="systems/adc/instrumented-g">
+          <input>accelerations/pilot-g</input>
+          <output>/instrumentation/g-meter/instrumented-g</output>
+          <c1>0.99</c1>
+        </lag_filter >
+        <pure_gain name="propulsion/engine[0]/fuel-flow-rate-kgmin">
+          <input>propulsion/engine[0]/fuel-flow-rate-pps</input>
+          <gain>27.2155</gain>
+        </pure_gain>
+        <pure_gain name="propulsion/engine[1]/fuel-flow-rate-kgmin">
+          <input>propulsion/engine[1]/fuel-flow-rate-pps</input>
+          <gain>27.2155</gain>
+        </pure_gain>
+
+      <switch name="position/aircraft-on-ground">
             <description>Aircraft on ground</description>
             <default value="0"/>
             <test value="1" logic="OR">
@@ -460,18 +474,14 @@
         <fcs_function name="propulsion/inlet/ramp4-position-demand-deg">
             <description>Inlet Ramp 4 angle demand estimated</description>
             <function>
-                <product>
-                    <sum>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <tableData>
-                                0.00    0
-                                1.00     0
-                                2.0     12
-                            </tableData>
-                        </table>
-                    </sum>
-                </product>
+                <table>
+                    <independentVar lookup="row">velocities/mach</independentVar>
+                    <tableData>
+                        0.00    0
+                        1.00     0
+                        2.0     12
+                    </tableData>
+                </table>
             </function>
             <clipto>
                 <min> 0 </min>

@@ -1,17 +1,11 @@
 # F-15 General Instrumentation related methods
 # ---------------------------
-# This module is responsible for instrumentation updates; managing the init process (i.e. reposition) has special logic
-# for carrier takeoff (the F-15 can't do this in real life; but carriers are still fun so I'm leaving carrier support in the F-15)
-# ---------------------------
 # Richard Harrison (rjh@zaretto.com) Feb  2015 - based on F-14B version by Alexis Bory
 # ---------------------------
 
 var UPDATE_PERIOD = 0.05;
 var main_loop_launched = 0; # Used to avoid to start the main loop twice.
 var first_time_run = 0;
-
-# TACAN: nav[1]
-var nav1_as_selected = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );; # the selected frequency if overriden from the tacan
 
 var Tc               = props.globals.getNode("instrumentation/tacan");
 var Vtc              = props.globals.getNode("instrumentation/nav[1]");
@@ -32,45 +26,12 @@ var HsdToFlag        = Hsd.getNode("to-flag", 1);
 var HsdCdiDeflection = Hsd.getNode("needle-deflection", 1);
 var TcXYSwitch       = props.globals.getNode("sim/model/f15/instrumentation/tacan/xy-switch", 1);
 var TcModeSwitch     = props.globals.getNode("sim/model/f15/instrumentation/tacan/mode", 1);
-var TrueHdg          = props.globals.getNode("orientation/heading-deg");
-var MagHdg           = props.globals.getNode("orientation/heading-magnetic-deg");
-var MagDev           = props.globals.getNode("orientation/local-mag-dev", 1);
 var ownship_pos = geo.Coord.new();
-
-var mag_dev = 0;
-var tc_mode = 0;
-var carrier_pos_first_time = 1;
-var carrier_x_offset = 0;
-var carrier_y_offset = 0;
-var carrier_z_offset = 0;
+var aoa_max = props.globals.getNode("sim/model/f15/instrumentation/aoa/alpha-max-indicated-deg",1);
 
 aircraft.data.add(VtcRadialDeg, TcModeSwitch);
 
 
-# Compute local magnetic deviation.
-var local_mag_deviation = func {
-	var true = TrueHdg.getValue();
-	var mag = MagHdg.getValue();
-	mag_dev = geo.normdeg( mag - true );
-	if ( mag_dev > 180 ) mag_dev -= 360;
-	MagDev.setValue(mag_dev); 
-}
-
-
-# Set nav[1] so we can use radials from a TACAN station.
-
-var nav1_freq_update = func {
-	if ( tc_mode != 0 and tc_mode != 4 ) {
-		var tacan_freq = getprop( "instrumentation/tacan/frequencies/selected-mhz" );
-        nav1_as_selected = getprop( "instrumentation/nav[1]/frequencies/selected-mhz" );
-		setprop("instrumentation/nav[1]/frequencies/selected-mhz", tacan_freq);
-	} else {
-		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_as_selected);
-	}
-}
-
-#
-# AN/SPN 46 transmits - this receives.
 var EmesaryRecipient =
 {
     new: func(_ident)
@@ -79,17 +40,13 @@ var EmesaryRecipient =
         new_class.ansn46_expiry = 0;
         new_class.Receive = func(notification)
         {
-            if (notification.NotificationType == "GeoEventNotification")
-            {
+            if (notification.NotificationType == "GeoEventNotification") {
                 print("received GeoNotification from ",notification.Callsign);
                 print ("  pos=",notification.Position.lat(),notification.Position.lon(),notification.Position.alt());
                 print ("  kind=",notification.Kind, " skind=",notification.SecondaryKind);
-                if(notification.FromIncomingBridge)
-                {
-                    if(notification.Kind == 1)# created
-                    {
-                        if(notification.SecondaryKind >=80 and notification.SecondaryKind <= 95)
-                        {
+                if (notification.FromIncomingBridge) {
+                    if (notification.Kind == 1) { # created
+                        if (notification.SecondaryKind >=80 and notification.SecondaryKind <= 95) {
                             var missile = armament.AIM.new(0, "AIM-120");
                             missile.Tgt = awg_9.Target.new(props.globals.getNode("/"));
                             var tnode = props.globals.getNode("/");
@@ -110,92 +67,8 @@ var EmesaryRecipient =
                     }
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            else if (notification.NotificationType == "AARQueryNotification")
-            {
+            } else if (notification.NotificationType == "AARQueryNotification") {
                 notification.ProcessAircraft(geo.aircraft_position(), getprop("sim/model/f15/controls/fuel/refuel-probe-switch"));
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            else if (notification.NotificationType == "ANSPN46ActiveNotification")
-            {
-#               print(" :: Recvd lat=",notification.Position.lat(), " lon=",notification.Position.lon(), " alt=",notification.Position.alt(), " chan=",notification.Channel);
-                var response_msg = me.Response.Respond(notification);
-#
-# We cannot decide if in range as it is the AN/SPN system to decide if we are within range
-# However we will tell the AN/SPN system if we are tuned (and powered on)
-                if(notification.Channel == getprop("sim/model/f15/controls/electrics/ara-63-channel") and getprop("sim/model/f15/controls/electrics/ara-63-power-off") == 0)
-                    response_msg.Tuned = 1;
-                else
-                    response_msg.Tuned = 0;
-
-# normalised value based on RCS beam power etc.
-# we could do this using a factor.
-                response_msg.RadarReturnStrength = 1; # possibly response_msg.RadarReturnStrength*RCS_FACTOR
-
-                emesary.GlobalTransmitter.NotifyAll(response_msg);
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-#---------------------
-# we will only receive one of these messages when within range of the carrier (and when the ARA-63 is powered up and has the correct channel set)
-#
-            else if (notification.NotificationType == "ANSPN46CommunicationNotification")
-            {
-                me.ansn46_expiry = getprop("/sim/time/elapsed-sec") + 10;
-# Use the standard civilian ILS if it is closer.
-#        print("rcvd ANSPN46CommunicationNotification =",notification.InRange, " dev=",notification.LateralDeviation, ",", notification.VerticalDeviation, " dist=",notification.Distance);
-                if(getprop("instrumentation/nav/gs-in-range") and getprop("instrumentation/nav/gs-distance") < notification.Distance)
-                {
-                    me.ansn46_expiry=0;
-                    return emesary.Transmitter.ReceiptStatus_OK;
-                }
-                else if (notification.InRange)
-                {
-                    setprop("sim/model/f15/instrumentation/nav/gs-in-range", 1);
-                    setprop("sim/model/f15/instrumentation/nav/gs-needle-deflection-norm",notification.VerticalAdjustmentCommanded);
-                    setprop("sim/model/f15/instrumentation/nav/heading-needle-deflection-norm",notification.HorizontalAdjustmentCommanded);
-                    setprop("sim/model/f15/instrumentation/nav/signal-quality-norm",notification.SignalQualityNorm);
-                    setprop("sim/model/f15/instrumentation/nav/gs-distance", notification.Distance);
-                    setprop("sim/model/f15/lights/light-10-seconds",notification.TenSeconds);
-                    setprop("sim/model/f15/lights/light-wave-off",notification.WaveOff);
-
-# Set these lights on when in range and within altitude.
-# the lights come on but it is unspecified when they go off.
-# Ref: F-14AAD-1 Figure 17-4, p17-11 (pdf p685)
-                    if (notification.Distance < 11000) 
-                    {
-                        if (notification.ReturnPosition.alt() > 300 and notification.ReturnPosition.alt() < 425 and abs(notification.LateralDeviation) < 1 )
-                        {
-                            setprop("sim/model/f15/lights/acl-ready-light", 1);
-                            setprop("sim/model/f15/lights/ap-cplr-light",1);
-                        }
-                        if (notification.Distance > 8000)  # extinguish at roughly 4.5nm from fix.
-                        {
-                            setprop("sim/model/f15/lights/landing-chk-light", 1);
-                        }
-                        else
-                        {
-                            setprop("sim/model/f15/lights/landing-chk-light", 0);
-                        }
-                    }
-                }
-                else
-                {
-                    #
-                    # Not in range so turn it all off. 
-                    # NOTE: Currently this will never be called as the AN/SPN-46 system will not notify us when we are not in range
-                    #       It is implemented here for completeness and to do the correct thing if the implemntation changes
-                    setprop("sim/model/f15/instrumentation/nav/gs-in-range", 0);
-                    setprop("sim/model/f15/instrumentation/nav/gs-needle-deflection-norm",1);
-                    setprop("sim/model/f15/instrumentation/nav/heading-needle-deflection-norm",1);
-                    setprop("sim/model/f15/instrumentation/nav/signal-quality-norm",0);
-                    setprop("sim/model/f15/instrumentation/nav/gs-distance", -1000000);
-                    setprop("sim/model/f15/lights/landing-chk-light", 0);
-                    setprop("sim/model/f15/lights/light-10-seconds",0);
-                    setprop("sim/model/f15/lights/light-wave-off",0);
-                    setprop("sim/model/f15/lights/acl-ready-light", 0);
-                    setprop("sim/model/f15/lights/ap-cplr-light",0);
-                }
-
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
@@ -205,95 +78,6 @@ var EmesaryRecipient =
     },
 };
 
-#
-# Instantiate ARA 63 receiver. This will work when approaching any
-# carrier that has an active AN/SPN-46 transmitting.
-# The ARA-63 is a Precision Approach Landing system that is fitted to all US
-# carriers.
-var recipient = EmesaryRecipient.new("ARA-63");
-emesary.GlobalTransmitter.Register(recipient);
-
-#
-# Update the ARA-63; this doess two things - firstly to extinguish the
-# lights if the validity period expires, and secondly to use the civilian ILS
-# if present
-var ara_63_update = func
-{
-#
-# do not do anything whilst the AN/SPN 46 is within expiry time. 
-    if(getprop("/sim/time/elapsed-sec") < recipient.ansn46_expiry)
-        return;
-    if (!getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"))
-      return;
-#
-# Use the standard civilian ILS
-    setprop("sim/model/f15/lights/landing-chk-light", 0);
-    setprop("sim/model/f15/lights/light-10-seconds",0);
-    setprop("sim/model/f15/lights/light-wave-off",0);
-    setprop("sim/model/f15/lights/acl-ready-light", 0);
-    setprop("sim/model/f15/lights/ap-cplr-light",0);
-
-    if (getprop("instrumentation/nav/gs-in-range") != nil)
-    {
-        setprop("sim/model/f15/instrumentation/nav/gs-in-range", getprop("instrumentation/nav/gs-in-range"));
-        setprop("sim/model/f15/instrumentation/nav/gs-needle-deflection-norm",getprop("instrumentation/nav/gs-needle-deflection-norm"));
-        setprop("sim/model/f15/instrumentation/nav/gs-distance", getprop("instrumentation/nav/gs-distance"));
-        setprop("sim/model/f15/instrumentation/nav/heading-needle-deflection-norm",getprop("instrumentation/nav/heading-needle-deflection-norm"));
-        setprop("sim/model/f15/instrumentation/nav/signal-quality-norm",getprop("instrumentation/nav/signal-quality-norm"));
-    }
-}
-
-#
-# TACAN 
-var tacan_update = func {
-	var tc_mode = TcModeSwitch.getValue();
-	if ( tc_mode != 0 and tc_mode != 4 ) {
-
-		# Get magnetic tacan bearing.
-		var true_bearing = TcTrueHdg.getValue();
-		var mag_bearing = geo.normdeg( true_bearing + mag_dev );
-		if ( true_bearing != 0 ) {
-			TcMagHdg.setDoubleValue( mag_bearing );
-		} else {
-			TcMagHdg.setDoubleValue(0);
-		}
-
-		# Get TACAN radials on HSD's Course Deviation Indicator.
-		# CDI works with ils OR tacan OR vortac (which freq is tuned from the tacan panel).
-		var tcnid = TcIdent.getValue();
-		var vtcid = VtcIdent.getValue();
-		if ( tcnid == vtcid ) {
-			# We have a VORTAC.
-			HsdFromFlag.setBoolValue(VtcFromFlag.getBoolValue());
-			HsdToFlag.setBoolValue(VtcToFlag.getBoolValue());
-			HsdCdiDeflection.setValue(VtcHdgDeflection.getValue());
-		} else {
-			# We have a legacy TACAN.
-			var tcn_toflag = 1;
-			var tcn_fromflag = 0;
-			var tcn_bearing = TcMagHdg.getValue();
-			var radial = VtcRadialDeg.getValue();
-			var d = tcn_bearing - radial;
-			if ( d > 180 ) { d -= 360 } elsif ( d < -180 ) { d += 360 }
-			if ( d > 90 ) {
-				d -= 180;
-				tcn_toflag = 0;
-				tcn_fromflag = 1;
-			} elsif ( d < - 90 ) {
-				d += 180;
-				tcn_toflag = 0;
-				tcn_fromflag = 1;
-			}
-			if ( d > 10 ) d = 10 ;
-			if ( d < -10 ) d = -10 ;
-			HsdFromFlag.setBoolValue(tcn_fromflag);
-			HsdToFlag.setBoolValue(tcn_toflag);
-			HsdCdiDeflection.setValue(d);
-		}
-	} else {
-		TcMagHdg.setDoubleValue(0);
-	}
-}
 
 
 # TACAN mode switch
@@ -325,20 +109,6 @@ var tacan_XYtoggle = func {
 	} else {
 		TcXY.setValue( "X" );
 		TcXYSwitch.setValue( 0 );
-	}
-}
-
-# One key bindings for RIO's ecm display mode or Pilot's hsd depending on the current view name
-var mode_ecm_nav = props.globals.getNode("sim/model/f15/controls/rio-ecm-display/mode-ecm-nav");
-var hsd_mode_nav = props.globals.getNode("sim/model/f15/controls/pilots-displays/hsd-mode-nav");
-var select_key_ecm_nav = func {
-	var v = getprop("sim/current-view/name");
-	if (v == "RIO View") {
-		mode_ecm_nav.setBoolValue( ! mode_ecm_nav.getBoolValue());
-	} elsif (v == "Cockpit View") {
-		var h = hsd_mode_nav.getValue() + 1;
-		if ( h == 2 ) { h = -1 }
-		hsd_mode_nav.setValue( h )
 	}
 }
 
@@ -391,38 +161,8 @@ aircraft.data.add(
     "sim/multiplay/generic/int[17]", # Radar status
     "sim/model/hide-pilot",
     "sim/model/hide-backseater",
-    "sim/model/hide-pilots-auto"
-#    ,"sim/model/f15/instrumentation/aoa/alpha-max-indicated-deg"
-    );
-
-var aoa_max = props.globals.getNode("sim/model/f15/instrumentation/aoa/alpha-max-indicated-deg",1);
-var g_max   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-max", 1);
-var g_min   = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-min", 1);
-aircraft.data.add( g_min, g_max );
-var GMaxMav = props.globals.getNode("sim/model/f15/instrumentation/g-meter/g-max-mooving-average", 1);
-GMaxMav.initNode(nil, 0);
-var g_mva_vec     = [0,0,0,0,0];
-
-var g_min_max = func {
-	# Records g min, g max and 0.5 sec averaged max values. g_min_max(). Has to be
-	# fired every 0.1 sec.
-	var curr = currentG;
-	var max = g_max.getValue();
-	var min = g_min.getValue();
-	if ( curr >= max ) {
-		g_max.setDoubleValue(curr);
-	} elsif ( curr <= min ) {
-		g_min.setDoubleValue(curr);
-	}
-	var g_max_mav = (g_mva_vec[0]+g_mva_vec[1]+g_mva_vec[2]+g_mva_vec[3]+g_mva_vec[4])/5;
-	pop(g_mva_vec);
-	g_mva_vec = [curr] ~ g_mva_vec;
-	GMaxMav.setValue(g_max_mav);
-}
-
-# VSD #####################
-var ticker = props.globals.getNode("sim/model/f15/instrumentation/ticker", 1);
-aircraft.data.add("sim/model/f15/controls/VSD/brightness",
+    "sim/model/hide-pilots-auto",
+"sim/model/f15/controls/VSD/brightness",
 	"sim/model/f15/controls/VSD/contrast",
                   "sim/model/f15/controls/VSD/on-off",
                   "controls/lighting/anti-collision-switch",
@@ -480,8 +220,6 @@ aircraft.data.add("sim/model/f15/controls/VSD/brightness",
                   "controls/pilots-displays/hsd-mode-nav",
                   "engines/engine[0]/running",
                   "engines/engine[1]/running",
-# Radar Altimeter #########
-                  "sim/model/f15/instrumentation/radar-altimeter/limit-bug",
 # Air Speed Indicator #####
                   "sim/model/f15/instrumentation/airspeed-indicator/safe-speed-limit-bug",
 # Lighting ################
@@ -506,17 +244,10 @@ setlistener("/autopilot/settings/aileron-deadzone", func(v){
 }, 0, 0);
 
 
-# HSD #####################
-var hsd_mode_node = props.globals.getNode("sim/model/f15/controls/pilots-displays/hsd-mode-nav");
-
-
 # Afterburners FX counter #
 var burner = 0;
 var BurnerN = props.globals.getNode("sim/model/f15/fx/burner", 1);
 BurnerN.setValue(burner);
-
-
-# AFCS ####################
 
 # Commons vars:
 var Mach = props.globals.getNode("velocities/mach");
@@ -538,210 +269,16 @@ var afcs_filters = func {
 	VsPidPGain.setValue(p_gain/10);
 }
 
-
-# Drag Computation
-var Drag       = props.globals.getNode("sim/model/f15/systems/fdm/drag", 1);
-var GearPos    = props.globals.getNode("gear/gear[1]/position-norm", 1);
-var SpeedBrake = props.globals.getNode("controls/flight/speedbrake", 1);
-var AB         = props.globals.getNode("engines/engine/afterburner", 1);
-
-var sb_i = 0.2;
-var alt_drag_factor = 25000;
-var alt_drag_factor2 = 20000;
-
 controls.stepSpoilers = func(s) {
-
-
         var curval = getprop("controls/flight/speedbrake");
 
         if (s < 0 and curval > 0)
             setprop("controls/flight/speedbrake", curval+s/5);
         else if (s > 0 and curval < 1)
             setprop("controls/flight/speedbrake", curval+s/5);
-
         return; 
 }
 
-
-# Main loop ###############
-var cnt = 0;
-var ArmSysRunning = props.globals.getNode("sim/model/f15/systems/armament/system-running", 1);
-
-var main_loop = func {
-	cnt += 1;
-	# done each 0.05 sec.
-	mach = Mach.getValue();
-	var a = cnt / 2;
-
-    ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
-
-	awg_9.rdr_loop();
-
-	burner +=1;
-	if ( burner == 3 ) { burner = 0 }
-	BurnerN.setValue(burner);
-
-	if ( getprop("sim/replay/time") > 0 ) 
-        setprop("orientation/alpha-indicated-deg", (getprop("orientation/alpha-deg") - 0.797) / 0.8122);
-    else
-    	setprop("orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
-
-	if ( ( a ) == int( a )) {
-		# done each 0.1 sec, cnt even.
-		tacan_update();
-        ara_63_update();
-		g_min_max();
-if (Alpha > aoa_max.getValue() or 0)
-{
-aoa_max.setDoubleValue(Alpha);
-}
-
-		f15_chronograph.update_chrono();
-
-		if (( cnt == 6 ) or ( cnt == 12 )) {
-			# done each 0.3 sec.
-			fuel_update();
-			if ( cnt == 12 ) {
-				# done each 0.6 sec.
-				local_mag_deviation();
-				nav1_freq_update();
-				cnt = 0;
-			}
-		}
-	} else {
-		# done each 0.1 sec, cnt odd.
-		awg_9.hud_nearest_tgt();
-
-		if ( ArmSysRunning.getBoolValue() ) {
-			armament_update();
-		}
-		if (( cnt == 5 ) or ( cnt == 11 )) {
-			# done each 0.3 sec.
-			afcs_filters();
-		}
-	}
-	settimer(main_loop, UPDATE_PERIOD);
-}
-
-var common_carrier_init = func {
-
-    if (carrier_ara_63_position != nil and geo.aircraft_position() != nil)
-    {
-        if (geo.aircraft_position().distance_to(carrier_ara_63_position) < 6000 and geo.aircraft_position().distance_to(carrier_ara_63_position) > 400)
-        {
-            print("Starting with hook down as near carrier");
-            setprop("controls/gear/tailhook",1);
-            setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
-        }
-
-    }
-
-    if (!getprop("sim/model/f15/overrides/special-carrier-handling"))
-        return ;
-
-    var lat = getprop("position/latitude-deg");
-    var lon = getprop("position/longitude-deg");
-    var info = geodinfo(lat, lon);
-
-    var carrier = getprop("/sim/presets/carrier");
-    var on_carrier = 0;
-
-    if (carrier != nil or carrier != "")
-        on_carrier = 1;
-
-    if (info == nil or info[1] == nil)
-    {
-# seems to be that we could be on a carrier
-        on_carrier = 1;
-    }
-
-    if(on_carrier)
-    {
-        var ground_elevation = getprop("position/ground-elev-ft");
-        if (ground_elevation == nil)
-            ground_elevation = 65.2;
-
-        if (carrier != nil and carrier != "" ) # and substr(getprop("sim/presets/parkpos"),0,4) == "cat-")
-        {
-            if (carrier_ara_63_position == nil or geo.aircraft_position().distance_to(carrier_ara_63_position) < 200)
-            {
-                print("Special init for Carrier cat launch");
-                setprop("fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
-                setprop("gear/launchbar/position-norm",1);
-            }
-
-            var current_pos = geo.Coord.new().set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
-
-#
-# Locate the carrier in case it has moved from the stated initial position.
-
-            var raw_list = props.globals.getNode("ai/models").getChildren();
-            var carrier_located = 0;
-
-            foreach( var c; raw_list )
-            {
-                if (c.getNode("valid") == nil or !c.getNode("valid").getValue()) {
-                    continue;
-                }
-                if(c.getName() == "carrier")
-                {
-                    var name=c.getNode("name").getValue();
-                    if (name == carrier)
-                    {
-                        print("Found our carrier ", c.getNode("position/latitude-deg").getValue()," ", c.getNode("position/longitude-deg").getValue());
-                        var carrier_pos = geo.Coord.new().set_latlon( c.getNode("position/latitude-deg").getValue(), c.getNode("position/longitude-deg").getValue());
-
-
-                        if (carrier_pos_first_time)
-                        {
-                            # record the offset between the carrier and the preset position; as when
-                            # the carrier moves this will be need to place the aircraft correctly.
-                            carrier_pos_first_time = 0;
-                            carrier_x_offset = carrier_pos.x() - current_pos.x();
-                            carrier_y_offset = carrier_pos.y() - current_pos.y();
-                            carrier_z_offset = carrier_pos.z() - current_pos.z();
-                            print("Offset to launch ",carrier_x_offset," ",carrier_y_offset," ",carrier_y_offset);                        }
-                        else
-                        {
-                            carrier_pos.set_x(carrier_pos.x()-carrier_x_offset);
-                            carrier_pos.set_y(carrier_pos.y()-carrier_y_offset);
-                            carrier_pos.set_z(carrier_pos.z()-carrier_z_offset);
-                        }
-
-                        # now figure out the correct height based on the terrain elevation (which will be the carrier)
-                        # initially; however once the carrier has moved we may need to adjust this.
-                        # in any case is this is less than 6 meters we'd be in the bilges so this probably means
-                        # that the elevation data isn't valid so use hardcoded value of 65.2
-                        current_pos = carrier_pos;
-                        var info = geodinfo(lat, lon);
-                        if (info != nil) 
-                        {
-                            print("the carrier deckj is is at elevation ", info[0], " m");
-                            ground_elevation = info[0]*3.28084; # convert to feet
-                            if (ground_elevation < 1) ground_elevation = 65.2;
-                        }
-                        if (ground_elevation < 6) ground_elevation = 65.2;
-                    }
-                }
-            }
-                   
-            setprop("controls/gear/gear-down", 1);
-
-            if (current_pos != nil)
-            {
-                print("Adjusting launch position by 7meters");
-                current_pos.apply_course_distance(getprop("sim/presets/heading-deg"),7);
-            }
-            setprop("position/latitude-deg", current_pos.lat());
-            setprop("position/longitude-deg", current_pos.lon());
-
-            print("Moving the aircraft into the launch position properly... for ",carrier, " alt ",ground_elevation," lat ", current_pos.lat(), " lon ",current_pos.lon());
-
-            setprop("position/altitude-ft", ground_elevation+getprop("sim/model/f15/overrides/aircraft-agl-height"));
-        }
-    }
-
-}
 var common_init = func
 {
     print("Setting replay medium res to 50hz");
@@ -788,7 +325,6 @@ var common_init = func
             setprop("controls/gear/brake-parking",0);
         }
     }
-    common_carrier_init();
     configure_cft();
 }
 
@@ -804,8 +340,6 @@ var init = func {
 	aircraft.data.load();
 	f15_net.mp_network_init(1);
 	weapons_init();
-	ticker.setDoubleValue(0);
-	local_mag_deviation();
 	tacan_switch_init();
 	radardist.init();
 	awg_9.init();
@@ -814,16 +348,9 @@ var init = func {
     aircraft.setup_als_lights(getprop("fdm/jsbsim/systems/electrics/dc-essential-bus1-powered"));
 
 	setprop("controls/switches/radar_init", 0);
-	# properties to be stored
-	foreach (var f_tc; TcFreqs.getChildren()) {
-		aircraft.data.add(f_tc);
-	}
 
     common_init();
-    if ( ! main_loop_launched ) {
-        settimer(main_loop, 0.5);
-        main_loop_launched = 1;
-    }
+     main_loop_launched = 1;
     var prop = "/instrumentation/radar";
     var actuator_radar = compat_failure_modes.set_unserviceable(prop);
     FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
@@ -863,37 +390,89 @@ setlistener("sim/signals/reinit", func (reinit) {
 aircraft.light.new("sim/model/f15/lighting/warn-medium-lights-switch", [0.3, 0.2]);
 setprop("sim/model/f15/lighting/warn-medium-lights-switch/enabled", 1);
 
-
-# Old Fashioned Radio Button Selectors
-# -----------------------------------
-# Where group is the parent node that contains the radio state nodes as children.
-
-sel_displays_main_mode = func(group, which) {
-#setprop("sim/model/f15/instrumentation/hud/mode-aa",0);
-#setprop("sim/model/f15/instrumentation/hud/mode-ag",0);
-#setprop("sim/model/f15/instrumentation/hud/mode-to",0);
-#setprop("sim/model/f15/instrumentation/hud/mode-ldg",0);
-#setprop("sim/model/f15/instrumentation/hud/mode-crs",0);
-print("set mode ",group," ",which);
-#setprop(group~"-"~which,1);
-	foreach (var n; props.globals.getNode(group).getChildren()) {
-		n.setBoolValue(n.getName() == which);
-	}
-}
-
-sel_displays_sub_mode = func(group, which) {
-	foreach (var n; props.globals.getNode(group).getChildren()) {
-		n.setBoolValue(n.getName() == which);
-	}
-	var steer_mode_code = 0;
-	if ( SteerModeDest.getBoolValue() ) { steer_mode_code = 1 }
-	elsif ( SteerModeMan.getBoolValue() ) { steer_mode_code = 2 }
-	elsif ( SteerModeTcn.getBoolValue() ) { steer_mode_code = 3 }
-	elsif ( SteerModeVec.getBoolValue() ) { steer_mode_code = 4 }
-	SteerModeCode.setValue(steer_mode_code);
-}
-
-
 #var routedNotifications = [notifications.GeoEventNotification.new(nil)];
 #var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
 #var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-15mp",routedNotifications);
+
+var INSTRUMENTS_Recipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Receive = func(notification){
+            if (notification.NotificationType == "FrameNotification") {
+                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
+                if (main_loop_launched){
+                    mach = Mach.getValue();
+                    var cnt = notification.FrameCount;
+                    
+                    ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
+                    
+                    burner +=1;
+                    if ( burner == 3 ) { burner = 0 }
+                    BurnerN.setValue(burner);
+                    
+                    if ( getprop("sim/replay/time") > 0 ) 
+                        setprop("orientation/alpha-indicated-deg", (getprop("orientation/alpha-deg") - 0.797) / 0.8122);
+                    else
+                        setprop("orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
+                    
+                    if (frame_count == 0) {
+                        if ((notification.Alpha or 0) > aoa_max.getValue() or 0) {
+                            aoa_max.setDoubleValue(notification.Alpha);
+                        }
+                        f15_chronograph.update_chrono();
+                    }
+                    if (frame_count == 6) {
+                        fuel_update();
+                        cnt = 0;
+                    }
+                    if (frame_count == 2) {
+                        awg_9.hud_nearest_tgt();
+                        
+                        if ( notification.ArmSysRunning ) {
+                            armament_update();
+                        }
+                    }
+                    if (frame_count == 3) {
+                        afcs_filters();
+                    }
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-inst"));
+  input = {
+          Alpha                 : "orientation/alpha-indicated-deg",
+          frame_rate                : "/sim/frame-rate",
+          frame_rate_worst          : "/sim/frame-rate-worst",
+          elapsed_seconds           : "/sim/time/elapsed-sec",
+          TcFreqs          : "instrumentation/tacan/frequencies",
+          TcTrueHdg        : "instrumentation/tacan/indicated-bearing-true-deg",
+          TcMagHdg         : "instrumentation/tacan/indicated-mag-bearing-deg",
+          TcIdent          : "instrumentation/tacan/ident",
+          TcServ           : "instrumentation/tacan/serviceable",
+          TcXY             : "instrumentation/tacan/frequencies/selected-channel[4]",
+          VtcIdent         : "instrumentation/nav[1]/nav-id",
+          VtcFromFlag      : "instrumentation/nav[1]/from-flag",
+          VtcToFlag        : "instrumentation/nav[1]/to-flag",
+          VtcHdgDeflection : "instrumentation/nav[1]/heading-needle-deflection",
+          VtcRadialDeg     : "instrumentation/nav[1]/radials/selected-deg",
+          HsdFromFlag      : "sim/model/f15/instrumentation/hsd/from-flag",
+          HsdToFlag        : "sim/model/f15/instrumentation/hsd/to-flag",
+          HsdCdiDeflection : "sim/model/f15/instrumentation/hsd/needle-deflection", 
+          TcXYSwitch       : "sim/model/f15/instrumentation/tacan/xy-switch",
+          TcModeSwitch     : "sim/model/f15/instrumentation/tacan/mode",
+          MagHdg           : "orientation/heading-magnetic-deg",
+          MagDev           : "orientation/local-mag-dev",
+          ArmSysRunning : "sim/model/f15/systems/armament/system-running",
+          };
+
+foreach (var name; keys(input)) {
+    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-inst", name, input[name]));
+}

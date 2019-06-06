@@ -15,6 +15,7 @@
             <fcs>
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
+                <rudder-deadzone alias="/autopilot/settings/rudder-deadzone"/>
                 
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
@@ -1332,6 +1333,7 @@
         <settings>
             <aileron-deadzone>0.1</aileron-deadzone>
             <elevator-deadzone>0.1</elevator-deadzone>
+            <rudder-deadzone>0.1</rudder-deadzone>
         </settings>
 	</autopilot>
 
@@ -1901,6 +1903,15 @@
                 </binding>
             </key>
 
+            <key n="4">
+                <name>CTRL-d</name>
+                <desc>Radar mode.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.radar_mode_cycle()</script>
+                </binding>
+            </key>
+
             <key n="8">
                 <name>CTRL-h</name>
                 <desc>Toggle autopilot heading mode.</desc>
@@ -2296,9 +2307,6 @@
     </accelerations>
 
     <nasal>
-        <props>
-            <file>Nasal/PropertyUpdateManager.nas</file>
-        </props>
         <notifications>
             <file>Nasal/M_frame_notification.nas</file>
         </notifications>
@@ -2341,6 +2349,7 @@
         </rcs>
         <aircraft>
             <file>Aircraft/F-15/Nasal/M_exec.nas</file>
+            <file>Aircraft/F-15/Nasal/M_partition_processor.nas</file>
             <file>Nasal/canvas/MFD_Generic.nas</file>
             <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/Generic/an_spn_46.nas</file>

@@ -22,8 +22,8 @@
 # to add properties to the FrameNotification simply send a FrameNotificationAddProperty
 # to the global transmitter. This will be received by the frameNotifcation object and
 # included in the update.
-#emesary.GlobalTransmitter.NotifyAll(new FrameNotificationAddProperty("MODULE", "wow","gear/gear[0]/wow"));
-#emesary.GlobalTransmitter.NotifyAll(new FrameNotificationAddProperty("MODULE", "engine_n2", "engines/engine[0]/n2"));
+#emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MODULE", "wow","gear/gear[0]/wow"));
+#emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MODULE", "engine_n2", "engines/engine[0]/n2"));
 #    
 
 
@@ -80,7 +80,6 @@ var rtExec_loop = func
 
 # setup the properties to monitor for this system
   input = {
-           FrameRate                 : "/sim/frame-rate",
            frame_rate                : "/sim/frame-rate",
            frame_rate_worst          : "/sim/frame-rate-worst",
            elapsed_seconds           : "/sim/time/elapsed-sec",
@@ -100,4 +99,9 @@ notifications.frameNotification.curT = 0;
 
 var execTimer = maketimer(cur_frame_inc, rtExec_loop);
 execTimer.simulatedTime = 1;
-execTimer.start();
+setlistener("/sim/signals/fdm-initialized", func {
+print("M_exec: starting");
+execTimer.start()
+});
+#execTimer.start();
+emesary.GlobalTransmitter.OverrunDetection(9);

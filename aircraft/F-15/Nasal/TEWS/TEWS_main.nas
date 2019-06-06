@@ -185,6 +185,10 @@ return;
                     }
             }
         }
+        if (target_idx >= me.max_symbols){ 
+#            print("TEWS: break before end of list");
+            break;
+        }
     }
     if (!is_active)
       me.locked_symbol.setVisible(0);
@@ -200,10 +204,27 @@ return;
 }
 };
 
-var tews = nil;
-updateTEWS = func 
-  {
-      if (tews == nil)
-        tews = TEWSDisplay.new("Nasal/TEWS/TEWS.svg","TEWSImage", 326,256, 0,0);
-      tews.update();
-}
+var TEWSRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Tews = nil;
+        new_class.Receive = func(notification)
+        {
+            if (notification.NotificationType == "FrameNotification")
+            {
+                if (new_class.Tews == nil)
+                  new_class.Tews = TEWSDisplay.new("Nasal/TEWS/TEWS.svg","TEWSImage", 326,256, 0,0);
+                if (!math.mod(notifications.frameNotification.FrameCount,4)){
+                    new_class.Tews.update();
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(TEWSRecipient.new("F15-TEWS"));
