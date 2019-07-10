@@ -229,26 +229,59 @@
             <z-m>-2.784</z-m>
         </offsets>
     </model>
-    <effect>
-        <inherits-from>Aircraft/f-14b/Models/Fx/exterior-glass</inherits-from>
+    <!--<effect>
+        <inherits-from>Effects/model-combined-transparent</inherits-from>
+        <parameters>
+            <normalmap-enabled type="int">0</normalmap-enabled>
+            <lightmap-enabled type="int">0</lightmap-enabled>
+            <reflection-enabled type="int">0</reflection-enabled>
+            <reflection-correction type="float">0.5</reflection-correction>
+            <reflect-map-enabled type="int">0</reflect-map-enabled>
+            <reflection-fresnel type="float">0.5</reflection-fresnel>
+            <reflection-rainbow type="float">0.6</reflection-rainbow>
+            <reflection-noise type="float">0.0</reflection-noise>
+            <reflection-dynamic type="int">0</reflection-dynamic>
+            <texture n= "5" >
+                <type>cubemap</type>
+                <images>
+                    <positive-x>Aircraft/Generic/Effects/fgfs-sky2/1.png</positive-x>
+                    <negative-x>Aircraft/Generic/Effects/fgfs-sky2/4.png</negative-x>
+                    <positive-y>Aircraft/Generic/Effects/fgfs-sky2/2.png</positive-y>
+                    <negative-y>Aircraft/Generic/Effects/fgfs-sky2/3.png</negative-y>
+                    <positive-z>Aircraft/Generic/Effects/fgfs-sky2/6.png</positive-z>
+                    <negative-z>Aircraft/Generic/Effects/fgfs-sky2/5.png</negative-z>
+                </images>
+            </texture>
+            <ambient-correction type="float">0.2</ambient-correction>
+            <rendering-hint>transparent</rendering-hint>
+            <transparent>true</transparent>
+            <render-bin>
+                <bin-number>10</bin-number>
+                <bin-name>DepthSortedBin</bin-name>
+            </render-bin>
+        </parameters>
         <object-name>Canopy_0</object-name>
         <object-name>Windshield_0</object-name>
         <object-name>TCS_0</object-name>
-    </effect>
-    <!--<animation>
+    </effect>-->
+    <animation>
         <type>shader</type>
         <shader>chrome</shader>
         <texture>canopyglass_shader.png</texture>
         <object-name>Canopy_0</object-name>
         <object-name>Windshield_0</object-name>
         <object-name>TCS_0</object-name>
-    </animation>-->
+    </animation>
     <effect>
         <name>f14glass</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14glass</inherits-from>
         <object-name>Canopy_0Inside</object-name>
         <object-name>Windshield_0Inside</object-name>
     </effect>
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/Afterburners.xml</path>
+    </model>
+
     <!--Merged from Aircraft/f-14b/Models/f14-fx.xml-->
     <!--<path>Aircraft/f-14b/Models/f14-fx.ac</path>-->
     <nopreview />
@@ -257,58 +290,11 @@
         <object-name>ShockWave</object-name>
         <object-name>ManeuverVortexR</object-name>
         <object-name>ManeuverVortexL</object-name>
-        <object-name>HeatBlurR</object-name>
-        <object-name>HeatBlurL</object-name>
         <object-name>InnerFlameR</object-name>
         <object-name>InnerFlameL</object-name>
         <object-name>outerFlame</object-name>
         <object-name>outerFlame.001</object-name>
     </effect>
-    <!-- disable heat blur on demand for ATI cards -->
-    <animation>
-        <type>select</type>
-        <object-name>HeatBlurR</object-name>
-        <object-name>HeatBlurL</object-name>
-        <condition>
-            <property>sim/model/f-14b/fx/heat-blur-on</property>
-        </condition>
-    </animation>
-    <!--Merged from Fx/Afterburners.xml-->
-    <!--Merged from Afterburners/AfterBurner.xml-->
-    <!--end of Afterburners/AfterBurner-->
-    <!--Merged from Afterburners/AfterBurnerR.xml-->
-    <!--end of Afterburners/AfterBurnerR-->
-    <!-- Heat Blur -->
-    <animation>
-        <type>select</type>
-        <object-name>HeatBlurL</object-name>
-        <condition>
-            <less-than>
-                <property>engines/engine[0]/afterburner</property>
-                <value>0.05</value>
-            </less-than>
-            <property>engines/engine[0]/running</property>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>HeatBlurR</object-name>
-        <condition>
-            <less-than>
-                <property>engines/engine[1]/afterburner</property>
-                <value>0.05</value>
-            </less-than>
-            <property>engines/engine[1]/running</property>
-        </condition>
-    </animation>
-    <animation>
-        <type>shader</type>
-        <shader>heat-haze</shader>
-        <object-name>HeatBlurR</object-name>
-        <object-name>HeatBlurL</object-name>
-        <factor>0.12</factor>
-        <speed>120</speed>
-    </animation>
     <!-- ******************************************************************* -->
     <!-- Condensation                                                        -->
     <!-- ******************************************************************* -->
@@ -319,11 +305,11 @@
         <condition>
             <and>
                 <greater-than>
-                    <property>/velocities/mach</property>
+                    <property>velocities/mach</property>
                     <value>0.8</value>
                 </greater-than>
                 <less-than>
-                    <property>/position/altitude-ft</property>
+                    <property>position/altitude-ft</property>
                     <value>5000.0</value>
                 </less-than>
             </and>
@@ -347,15 +333,15 @@
         <object-name>ManeuverVortexL</object-name>
         <condition>
             <greater-than>
-                <property>/velocities/airspeed-kt</property>
+                <property>velocities/airspeed-kt</property>
                 <value>100</value>
             </greater-than>
             <greater-than>
-                <property>/orientation/alpha-deg</property>
+                <property>orientation/alpha-deg</property>
                 <value>8.0</value>
             </greater-than>
             <less-than>
-                <property>/position/altitude-ft</property>
+                <property>position/altitude-ft</property>
                 <value>5000.0</value>
             </less-than>
             <not>
@@ -429,15 +415,15 @@
         <object-name>ManeuverVortexR</object-name>
         <condition>
             <greater-than>
-                <property>/velocities/airspeed-kt</property>
+                <property>velocities/airspeed-kt</property>
                 <value>100</value>
             </greater-than>
             <greater-than>
-                <property>/orientation/alpha-deg</property>
+                <property>orientation/alpha-deg</property>
                 <value>8.0</value>
             </greater-than>
             <less-than>
-                <property>/position/altitude-ft</property>
+                <property>position/altitude-ft</property>
                 <value>5000.0</value>
             </less-than>
             <not>
@@ -928,101 +914,17 @@
     </animation>
     <!--Merged from Aircraft/f-14b/Models/Fx/fuel-dump.xml-->
     <!-- OSG Particles -->
-    <particlesystem>
-        <name>fuel-dump</name>
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/fuel-dump.xml</path>
         <offsets>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-            <z-m>0</z-m>
+            <x-m>9.70</x-m>
+            <y-m>0.12</y-m>
+            <z-m>-1.0363</z-m>
             <roll-deg>0</roll-deg>
             <pitch-deg>0</pitch-deg>
             <heading-deg>0</heading-deg>
         </offsets>
-        <texture>smoke.png</texture>
-        <condition>
-            <equals>
-                <property>sim/multiplay/generic/int[0]</property>
-                <value>1</value>
-            </equals>
-        </condition>
-        <emissive>false</emissive>
-        <lighting>false</lighting>
-        <align>billboard</align>
-        <!-- billboard / fixed -->
-        <attach>world</attach>
-        <!-- world / local-->
-        <placer>
-            <type>point</type>
-            <!-- sector / segments / point -->
-        </placer>
-        <shooter>
-            <theta-min-deg>84</theta-min-deg>
-            <theta-max-deg>86</theta-max-deg>
-            <phi-min-deg>-1.5</phi-min-deg>
-            <phi-max-deg>1.5</phi-max-deg>
-            <speed-mps>
-                <value>10</value>
-                <spread>2.5</spread>
-            </speed-mps>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>12</value>
-                <spread>2.5</spread>
-            </particles-per-sec>
-        </counter>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <value>0.7</value>
-                    </red>
-                    <green>
-                        <value>0.7</value>
-                    </green>
-                    <blue>
-                        <value>0.7</value>
-                    </blue>
-                    <alpha>
-                        <value>0.3</value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>0.2</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <value>0.9</value>
-                    </red>
-                    <green>
-                        <value>0.9</value>
-                    </green>
-                    <blue>
-                        <value>0.9</value>
-                    </blue>
-                    <alpha>
-                        <value>0</value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>40.0</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>25</value>
-            </life-sec>
-            <mass-kg>0.1</mass-kg>
-            <radius-m>1.0</radius-m>
-        </particle>
-        <program>
-            <fluid>air</fluid>
-            <!-- air / water -->
-            <gravity>false</gravity>
-            <wind>true</wind>
-        </program>
-    </particlesystem>
+    </model>
     <!--<animation>
 		<type>shader</type>
 		<shader>chrome</shader>
@@ -1030,588 +932,45 @@
 		<object-name>Windshield_0</object-name>
 		<object-name>Canopy_0</object-name>
 	</animation>-->
-    <!--Merged from Aircraft/f-14b/Models/Fx/contrail1.xml-->
-    <particlesystem>
-        <name>smoke</name>
-        <texture>smoke.png</texture>
-        <emissive type="bool">false</emissive>
-        <lighting type="bool">false</lighting>
-        <condition>
-            <and>
-                <not>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                </not>
-                <greater-than>
-                    <property>engines/engine[0]/n2</property>
-                    <value>50</value>
-                </greater-than>
-                <greater-than>
-                    <property>position/altitude-ft</property>
-                    <value>19000</value>
-                </greater-than>
-                <less-than>
-                    <property>/environment/temperature-degc</property>
-                    <value>-40</value>
-                </less-than>
-            </and>
-        </condition>
-        <attach>world</attach>
-        <placer>
-            <type>point</type>
-        </placer>
-        <shooter>
-            <theta-min-deg>-1.5</theta-min-deg>
-            <theta-max-deg>1.5</theta-max-deg>
-            <phi-min-deg>-1.5</phi-min-deg>
-            <phi-max-deg>1.5</phi-max-deg>
-            <speed-mps>
-                <value>0</value>
-                <spread>0</spread>
-            </speed-mps>
-            <rotation-speed>
-                <x-min-deg-sec>0</x-min-deg-sec>
-                <y-min-deg-sec>0</y-min-deg-sec>
-                <z-min-deg-sec>0</z-min-deg-sec>
-                <x-max-deg-sec>0</x-max-deg-sec>
-                <y-max-deg-sec>0</y-max-deg-sec>
-                <z-max-deg-sec>0</z-max-deg-sec>
-            </rotation-speed>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>55</value>
-                <spread>0</spread>
-            </particles-per-sec>
-        </counter>
-        <align>billboard</align>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.2 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>2.45</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.6 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>4</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>10</value>
-            </life-sec>
-            <mass-kg>  0.5 </mass-kg>
-            <radius-m> 0.5 </radius-m>
-        </particle>
-        <program>
-            <fluid>               air  </fluid>
-            <gravity type="bool"> true </gravity>
-            <wind typ="bool">     true </wind>
-        </program>
-    </particlesystem>
-    <!--Merged from Aircraft/f-14b/Models/Fx/contrail2.xml-->
-    <particlesystem>
-        <name>smoke</name>
-        <texture>smoke.png</texture>
-        <emissive type="bool">false</emissive>
-        <lighting type="bool">false</lighting>
-        <condition>
-            <and>
-                <not>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                </not>
-                <greater-than>
-                    <property>engines/engine[1]/n2</property>
-                    <value>50</value>
-                </greater-than>
-                <greater-than>
-                    <property>position/altitude-ft</property>
-                    <value>19000</value>
-                </greater-than>
-                <less-than>
-                    <property>/environment/temperature-degc</property>
-                    <value>-40</value>
-                </less-than>
-            </and>
-        </condition>
-        <attach>world</attach>
-        <placer>
-            <type>point</type>
-        </placer>
-        <shooter>
-            <theta-min-deg>-1.5</theta-min-deg>
-            <theta-max-deg>1.5</theta-max-deg>
-            <phi-min-deg>-1.5</phi-min-deg>
-            <phi-max-deg>1.5</phi-max-deg>
-            <speed-mps>
-                <value>0</value>
-                <spread>0</spread>
-            </speed-mps>
-            <rotation-speed>
-                <x-min-deg-sec>0</x-min-deg-sec>
-                <y-min-deg-sec>0</y-min-deg-sec>
-                <z-min-deg-sec>0</z-min-deg-sec>
-                <x-max-deg-sec>0</x-max-deg-sec>
-                <y-max-deg-sec>0</y-max-deg-sec>
-                <z-max-deg-sec>0</z-max-deg-sec>
-            </rotation-speed>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>55</value>
-                <spread>0</spread>
-            </particles-per-sec>
-        </counter>
-        <align>billboard</align>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.2 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>2.45</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.6 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>4</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>10</value>
-            </life-sec>
-            <mass-kg>  0.5 </mass-kg>
-            <radius-m> 0.5 </radius-m>
-        </particle>
-        <program>
-            <fluid>               air  </fluid>
-            <gravity type="bool"> true </gravity>
-            <wind typ="bool">     true </wind>
-        </program>
-    </particlesystem>
-    <!--Merged from Aircraft/f-14b/Models/Fx/vapour.xml-->
-    <particlesystem>
-        <name>wingtip-condensation-trail</name>
-        <texture>vapour.png</texture>
-        <emissive type="bool">false</emissive>
-        <lighting type="bool">false</lighting>
-        <condition>
-            <and>
-                <less-than>
-                    <property>surface-positions/wing-pos-norm</property>
-                    <value>0.4</value>
-                </less-than>
-                <greater-than>
-                    <property>velocities/airspeed-kt</property>
-                    <value>60</value>
-                </greater-than>
-                <greater-than>
-                    <property>/environment/relative-humidity</property>
-                    <value>50</value>
-                </greater-than>
-                <!-- 2015-09-20: RJH I've removed this as I'm not sure it is a valid condition. -->
-                <!--<or> 
-         <less-than>
-           <property>position/altitude-ft</property>
-           <value>33800</value>
-         </less-than>
-       </or>-->
-                <less-than>
-                    <property>/environment/temperature-degc</property>
-                    <value>20</value>
-                </less-than>
-                <greater-than>
-                    <property>orientation/alpha-indicated-deg</property>
-                    <value>15</value>
-                </greater-than>
-                <!-- no vapour trails if a wing is torn -->
-                <equals>
-                    <property>sim/model/f-14b/wings/left-wing-torn</property>
-                    <value>0</value>
-                </equals>
-                <equals>
-                    <property>sim/model/f-14b/wings/right-wing-torn</property>
-                    <value>0</value>
-                </equals>
-            </and>
-        </condition>
-        <attach>world</attach>
-        <placer>
-            <type>point</type>
-        </placer>
-        <shooter>
-            <theta-min-deg>-1.5</theta-min-deg>
-            <theta-max-deg>1.5</theta-max-deg>
-            <phi-min-deg>-1.5</phi-min-deg>
-            <phi-max-deg>1.5</phi-max-deg>
-            <speed-mps>
-                <value>0</value>
-                <spread>0</spread>
-            </speed-mps>
-            <rotation-speed>
-                <x-min-deg-sec>0</x-min-deg-sec>
-                <y-min-deg-sec>0</y-min-deg-sec>
-                <z-min-deg-sec>0</z-min-deg-sec>
-                <x-max-deg-sec>0</x-max-deg-sec>
-                <y-max-deg-sec>0</y-max-deg-sec>
-                <z-max-deg-sec>0</z-max-deg-sec>
-            </rotation-speed>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>4200</value>
-                <spread>0.001</spread>
-            </particles-per-sec>
-        </counter>
-        <align>billboard</align>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.05 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>0.1</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.01 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>1</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>1.9</value>
-            </life-sec>
-            <mass-kg>  0.5 </mass-kg>
-            <radius-m> 0.2 </radius-m>
-        </particle>
-        <program>
-            <fluid>               air  </fluid>
-            <gravity type="bool"> true </gravity>
-            <wind typ="bool">     true </wind>
-        </program>
-    </particlesystem>
-    <!--Merged from Aircraft/f-14b/Models/Fx/vapour.xml-->
-    <particlesystem>
-        <name>wingtip-condensation-trail</name>
-        <texture>vapour.png</texture>
-        <emissive type="bool">false</emissive>
-        <lighting type="bool">false</lighting>
-        <condition>
-            <and>
-                <less-than>
-                    <property>surface-positions/wing-pos-norm</property>
-                    <value>0.4</value>
-                </less-than>
-                <greater-than>
-                    <property>velocities/airspeed-kt</property>
-                    <value>60</value>
-                </greater-than>
-                <greater-than>
-                    <property>/environment/relative-humidity</property>
-                    <value>50</value>
-                </greater-than>
-                <!-- 2015-09-20: RJH I've removed this as I'm not sure it is a valid condition. -->
-                <!--<or> 
-         <less-than>
-           <property>position/altitude-ft</property>
-           <value>33800</value>
-         </less-than>
-       </or>-->
-                <less-than>
-                    <property>/environment/temperature-degc</property>
-                    <value>20</value>
-                </less-than>
-                <greater-than>
-                    <property>orientation/alpha-indicated-deg</property>
-                    <value>15</value>
-                </greater-than>
-                <!-- no vapour trails if a wing is torn -->
-                <equals>
-                    <property>sim/model/f-14b/wings/left-wing-torn</property>
-                    <value>0</value>
-                </equals>
-                <equals>
-                    <property>sim/model/f-14b/wings/right-wing-torn</property>
-                    <value>0</value>
-                </equals>
-            </and>
-        </condition>
-        <attach>world</attach>
-        <placer>
-            <type>point</type>
-        </placer>
-        <shooter>
-            <theta-min-deg>-1.5</theta-min-deg>
-            <theta-max-deg>1.5</theta-max-deg>
-            <phi-min-deg>-1.5</phi-min-deg>
-            <phi-max-deg>1.5</phi-max-deg>
-            <speed-mps>
-                <value>0</value>
-                <spread>0</spread>
-            </speed-mps>
-            <rotation-speed>
-                <x-min-deg-sec>0</x-min-deg-sec>
-                <y-min-deg-sec>0</y-min-deg-sec>
-                <z-min-deg-sec>0</z-min-deg-sec>
-                <x-max-deg-sec>0</x-max-deg-sec>
-                <y-max-deg-sec>0</y-max-deg-sec>
-                <z-max-deg-sec>0</z-max-deg-sec>
-            </rotation-speed>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>4200</value>
-                <spread>0.001</spread>
-            </particles-per-sec>
-        </counter>
-        <align>billboard</align>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.05 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>0.1</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.01 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>1</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>1.9</value>
-            </life-sec>
-            <mass-kg>  0.5 </mass-kg>
-            <radius-m> 0.2 </radius-m>
-        </particle>
-        <program>
-            <fluid>               air  </fluid>
-            <gravity type="bool"> true </gravity>
-            <wind typ="bool">     true </wind>
-        </program>
-    </particlesystem>
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/contrail1.xml</path>
+        <offsets>
+            <x-m>50.0</x-m>
+            <y-m>-2.5</y-m>
+            <z-m>-1.5</z-m>
+        </offsets>
+    </model>
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/contrail2.xml</path>
+        <offsets>
+            <x-m>50.0</x-m>
+            <y-m>2.5</y-m>
+            <z-m>-1.5</z-m>
+        </offsets>
+    </model>
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/vapour.xml</path>
+        <offsets>
+            <x-m>4.53</x-m>
+            <y-m>-9.6</y-m>
+            <z-m>-0.65</z-m>
+            <heading-deg>0</heading-deg>
+            <roll-deg>    0 </roll-deg>
+            <pitch-deg>   0 </pitch-deg>
+        </offsets>
+    </model>
+
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/vapour.xml</path>
+        <offsets>
+            <x-m>4.53</x-m>
+            <y-m> 9.6</y-m>
+            <z-m>-0.65</z-m>
+            <heading-deg>0</heading-deg>
+            <roll-deg>    0 </roll-deg>
+            <pitch-deg>   0 </pitch-deg>
+        </offsets>
+    </model>
     <!--
  <model>
   <path>Aircraft/f-14b/Models/Fx/smoke-generator.xml</path>
@@ -1637,250 +996,30 @@
   </offsets>
  </model>
 -->
-    <!--Merged from Aircraft/f-14b/Models/Fx/smoke-trail.xml-->
-    <particlesystem>
-        <name>Smoke Generator</name>
-        <texture>vapour.png</texture>
-        <emissive type="bool">false</emissive>
-        <lighting type="bool">false</lighting>
-        <condition>
-            <greater-than>
-                <property>sim/multiplay/generic/float[1]</property>
-                <value>0.0</value>
-            </greater-than>
-        </condition>
-        <attach>world</attach>
-        <placer>
-            <type>point</type>
-        </placer>
-        <shooter>
-            <theta-min-deg>89</theta-min-deg>
-            <theta-max-deg>91</theta-max-deg>
-            <phi-min-deg>6</phi-min-deg>
-            <phi-max-deg>-6</phi-max-deg>
-            <speed-mps>
-                <value>27</value>
-                <spread>12</spread>
-            </speed-mps>
-            <rotation-speed>
-                <x-min-deg-sec>0</x-min-deg-sec>
-                <y-min-deg-sec>0</y-min-deg-sec>
-                <z-min-deg-sec>-180</z-min-deg-sec>
-                <x-max-deg-sec>0</x-max-deg-sec>
-                <y-max-deg-sec>0</y-max-deg-sec>
-                <z-max-deg-sec>180</z-max-deg-sec>
-            </rotation-speed>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>190</value>
-                <spread>91</spread>
-            </particles-per-sec>
-        </counter>
-        <align>billboard</align>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.6 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>2.5</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.00000001</value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>2.75</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>20</value>
-            </life-sec>
-            <mass-kg>71.9</mass-kg>
-            <radius-m>1</radius-m>
-        </particle>
-        <program>
-            <fluid>               air  </fluid>
-            <gravity type="bool"> false </gravity>
-            <wind typ="bool">     true </wind>
-        </program>
-    </particlesystem>
-    <!--Merged from Aircraft/f-14b/Models/Fx/smoke-trail.xml-->
-    <particlesystem>
-        <name>Smoke Generator</name>
-        <texture>vapour.png</texture>
-        <emissive type="bool">false</emissive>
-        <lighting type="bool">false</lighting>
-        <condition>
-            <greater-than>
-                <property>sim/multiplay/generic/float[1]</property>
-                <value>0.0</value>
-            </greater-than>
-        </condition>
-        <attach>world</attach>
-        <placer>
-            <type>point</type>
-        </placer>
-        <shooter>
-            <theta-min-deg>89</theta-min-deg>
-            <theta-max-deg>91</theta-max-deg>
-            <phi-min-deg>6</phi-min-deg>
-            <phi-max-deg>-6</phi-max-deg>
-            <speed-mps>
-                <value>27</value>
-                <spread>12</spread>
-            </speed-mps>
-            <rotation-speed>
-                <x-min-deg-sec>0</x-min-deg-sec>
-                <y-min-deg-sec>0</y-min-deg-sec>
-                <z-min-deg-sec>-180</z-min-deg-sec>
-                <x-max-deg-sec>0</x-max-deg-sec>
-                <y-max-deg-sec>0</y-max-deg-sec>
-                <z-max-deg-sec>180</z-max-deg-sec>
-            </rotation-speed>
-        </shooter>
-        <counter>
-            <particles-per-sec>
-                <value>190</value>
-                <spread>91</spread>
-            </particles-per-sec>
-        </counter>
-        <align>billboard</align>
-        <particle>
-            <start>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.6 </value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>2.5</value>
-                </size>
-            </start>
-            <end>
-                <color>
-                    <red>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </red>
-                    <green>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </green>
-                    <blue>
-                        <expression>
-                            <product>
-                                <value>1.0</value>
-                                <property>/rendering/scene/diffuse/red</property>
-                            </product>
-                        </expression>
-                    </blue>
-                    <alpha>
-                        <value> 0.00000001</value>
-                    </alpha>
-                </color>
-                <size>
-                    <value>2.75</value>
-                </size>
-            </end>
-            <life-sec>
-                <value>20</value>
-            </life-sec>
-            <mass-kg>71.9</mass-kg>
-            <radius-m>1</radius-m>
-        </particle>
-        <program>
-            <fluid>               air  </fluid>
-            <gravity type="bool"> false </gravity>
-            <wind typ="bool">     true </wind>
-        </program>
-    </particlesystem>
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/smoke-trail.xml</path>
+        <offsets>
+            <x-m>8.1</x-m>
+            <y-m>-3.6</y-m>
+            <z-m>-1.05</z-m>
+            <heading-deg>0</heading-deg>
+            <roll-deg>    0 </roll-deg>
+            <pitch-deg>   0 </pitch-deg>
+        </offsets>
+    </model>
+
+    <model>
+        <path>Aircraft/f-14b/Models/Fx/smoke-trail.xml</path>
+        <offsets>
+            <x-m>8.1</x-m>
+            <y-m> 3.6</y-m>
+            <z-m>-1.05</z-m>
+            <heading-deg>0</heading-deg>
+            <roll-deg>    0 </roll-deg>
+            <pitch-deg>   0 </pitch-deg>
+        </offsets>
+    </model>
+
     <!-- ******************************************************************* -->
     <!-- Cockpit                                                             -->
     <!-- ******************************************************************* -->
