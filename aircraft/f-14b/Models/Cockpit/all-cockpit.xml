@@ -7242,7 +7242,7 @@
         <center>
             <x-m>-5.851</x-m>
             <y-m>0</y-m>
-            <z-m>-0.032</z-m>
+      <z-m>-0.03478</z-m>
         </center>
         <axis>
             <x>0.887010833178222</x>
@@ -7257,7 +7257,7 @@
         <interpolation>
             <entry>
                 <ind>90</ind>
-                <dep>0.25</dep>
+        <dep>0.2435</dep>
             </entry>
             <entry>
                 <ind>0</ind>
@@ -7265,13 +7265,9 @@
             </entry>
             <entry>
                 <ind>-90</ind>
-                <dep>-0.25</dep>
+        <dep>-0.2565</dep>
             </entry>
         </interpolation>
-        <center>
-            <x-m>0</x-m>
-            <y-m>0</y-m>
-        </center>
         <axis>
             <x>0</x>
             <y>1</y>
@@ -7285,7 +7281,7 @@
         <center>
             <x-m>-5.851</x-m>
             <y-m>0</y-m>
-            <z-m>-0.032</z-m>
+      <z-m>-0.03478</z-m>
         </center>
         <axis>
             <x>-0.887010833178222</x>
@@ -7297,7 +7293,7 @@
         <type>translate</type>
         <object-name>rudder-index</object-name>
         <property>controls/flight/rudder</property>
-        <factor>0.07B5</factor>
+    <factor>0.075</factor>
         <center>
             <x-m>0</x-m>
             <y-m>0</y-m>
@@ -7605,7 +7601,10 @@
         <type>select</type>
         <object-name>apc</object-name>
         <condition>
+      <equals>
             <property>fdm/jsbsim/systems/apc/active</property>
+        <value>1</value>
+      </equals>
         </condition>
     </animation>
     <animation>

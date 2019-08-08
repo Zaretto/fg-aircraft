@@ -72,6 +72,9 @@ var F15HUD = {
 	new : func (svgname){
 		var obj = {parents : [F15HUD] };
 
+        obj.process_targets = PartitionProcessor.new("HUD-radar", 20, nil);
+        obj.process_targets.set_max_time_usec(500);
+
         obj.canvas= canvas.new({
                 "name": "F-15 HUD",
                     "size": [1024,1024], 
@@ -469,69 +472,80 @@ return obj;
 #            me.window1.setVisible(0);
   
 
-        var target_idx = 0;
-        var designated = 0;
-        me.target_locked.setVisible(0);
-        foreach( u; awg_9.tgts_list ) 
-        {
-            var callsign = "XX";
-            if(u.get_display())
-            {
-                if (u.Callsign != nil)
-                    callsign = u.Callsign.getValue();
-                var model = "XX";
+     if (notification["Timestamp"] != nil)
+         me.process_targets.set_timestamp(notification.Timestamp);
 
-                if (u.ModelType != "")
-                    model = u.ModelType;
+     me.process_targets.process(me, awg_9.tgts_list, 
+                                func(pp, obj, data){
+                                    obj.target_idx=1;
+                                    obj.designated = 0;
+                                    obj.target_locked.setVisible(0);
+                                }
+                                ,
+                                func(pp, obj, u){
+                                    var callsign = "XX";
+                                    if(u.get_display() == 1){
+                                        if (u.Callsign != nil)
+                                          callsign = u.Callsign.getValue();
+                                        var model = "XX";
+                                        
+                                        if (u.ModelType != "")
+                                          model = u.ModelType;
+                                        
+                                        if (obj.target_idx < obj.max_symbols)
+                                          {
+                                              tgt = obj.tgt_symbols[obj.target_idx];
+                                              if (tgt != nil)
+                                                {
+                                                    tgt.setVisible(u.get_display());
+                                                    var u_dev_rad = (90-u.get_deviation(obj.heading_deg))  * D2R;
+                                                    var u_elev_rad = (90-u.get_total_elevation( obj.pitch_deg))  * D2R;
+                                                    var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
+                                                    var combined_dev_deg = devs[0];
+                                                    var combined_dev_length =  devs[1];
+                                                    var clamped = devs[2];
+                                                    var yc  = ht_yco + (ht_ycf * combined_dev_length * math.cos(combined_dev_deg*D2R));
+                                                    var xc = ht_xco + (ht_xcf * combined_dev_length * math.sin(combined_dev_deg*D2R));
+                                                    if(devs[2])
+                                                      tgt.setVisible(getprop("sim/model/f15/lighting/hud-diamond-switch/state"));
+                                                    else
+                                                      tgt.setVisible(u.get_display());
+                                                    
+                                                    if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
+                                                      {
+                                                          obj.target_locked.setVisible(u.get_display());
+                                                          obj.target_locked.setTranslation (xc, yc);
+                                                      }
+                                                    else
+                                                      {
+                                                          #
+                                                          # if in symbol reject mode then only show the active target.
+                                                          if(obj.symbol_reject)
+                                                            tgt.setVisible(0);
+                                                      }
+                                                    tgt.setTranslation (xc, yc);
+                                                    
+                                                    if (ht_debug)
+                                                      printf("%-10s %f,%f [%f,%f,%f] :: %f,%f",callsign,xc,yc, devs[0], devs[1], devs[2], u_dev_rad*D2R, u_elev_rad*D2R); 
+                                                }
+                                          }
+                                        obj.target_idx = obj.target_idx+1;
+                                    }
+                                    return 1;
+                                },
+                                func(pp, obj, data)
+                                {
+                                    for(var nv = obj.target_idx; nv < obj.max_symbols;nv += 1)
+                                      {
+                                          tgt = obj.tgt_symbols[nv];
+                                          if (tgt != nil)
+                                            {
+                                                tgt.setVisible(0);
+                                            }
+                                      }
+                                });
 
-                if (target_idx < me.max_symbols)
-                {
-                    tgt = me.tgt_symbols[target_idx];
-                    if (tgt != nil)
-                    {
-                        tgt.setVisible(u.get_display());
-                        var u_dev_rad = (90-u.get_deviation(me.heading_deg))  * D2R;
-                        var u_elev_rad = (90-u.get_total_elevation( me.pitch_deg))  * D2R;
-                        var devs = aircraft.develev_to_devroll(u_dev_rad, u_elev_rad);
-                        var combined_dev_deg = devs[0];
-                        var combined_dev_length =  devs[1];
-                        var clamped = devs[2];
-                        var yc  = ht_yco + (ht_ycf * combined_dev_length * math.cos(combined_dev_deg*D2R));
-                        var xc = ht_xco + (ht_xcf * combined_dev_length * math.sin(combined_dev_deg*D2R));
-                        if(devs[2])
-                            tgt.setVisible(getprop("sim/model/f15/lighting/hud-diamond-switch/state"));
-                        else
-                            tgt.setVisible(u.get_display());
 
-                        if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue())
-                        {
-                            me.target_locked.setVisible(u.get_display());
-                            me.target_locked.setTranslation (xc, yc);
-                        }
-                        else
-                        {
-                            #
-                            # if in symbol reject mode then only show the active target.
-                            if(me.symbol_reject)
-                                tgt.setVisible(0);
-                        }
-                        tgt.setTranslation (xc, yc);
-
-                        if (ht_debug)
-                            printf("%-10s %f,%f [%f,%f,%f] :: %f,%f",callsign,xc,yc, devs[0], devs[1], devs[2], u_dev_rad*D2R, u_elev_rad*D2R); 
-                    }
-                }
-                target_idx = target_idx+1;
-            }
-        }
-        for(var nv = target_idx; nv < me.max_symbols;nv += 1)
-        {
-            tgt = me.tgt_symbols[nv];
-            if (tgt != nil)
-            {
-                tgt.setVisible(0);
-            }
-        }
     },
     list: [],
 };
