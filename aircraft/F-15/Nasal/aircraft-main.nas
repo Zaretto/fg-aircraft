@@ -10,6 +10,18 @@
 var true = 1;
 var false = 0;
 var frameRateNode = props.getNode("/sim/frame-rate");
+var CurrentIASnode = props.globals.getNode("velocities/airspeed-kt");
+var CurrentMachnode = props.globals.getNode("velocities/mach");
+var CurrentAltnode = props.globals.getNode("position/altitude-ft");
+var wowLnode = props.globals.getNode("gear/gear[1]/wow");
+var wowRnode = props.globals.getNode("gear/gear[2]/wow");
+var Alphanode = props.globals.getNode("orientation/alpha-indicated-deg");
+var Throttlenode = props.globals.getNode("controls/engines/engine/throttle");
+var e_trimnode = props.globals.getNode("controls/flight/elevator-trim");
+var deltaTnode = props.globals.getNode ("sim/time/delta-sec");
+var currentGnode = props.globals.getNode ("accelerations/pilot-gdamped");
+var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
+var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
 #
 # 2018.3 has improved stores handling - but this is turned 
 gui.external_stores_2018_1_compat = 0;
@@ -221,8 +233,6 @@ var carrier_ara_63_heading = nil;
 var wow = 1;
 setprop("fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("controls/flight/SAS-roll",0);
-UPDATE_PERIOD = 0.0333; # update nasal at 30hz
-var registerFCS = func {settimer (updateFCS, UPDATE_PERIOD);}
 
 #
 #
@@ -427,98 +437,32 @@ var r4_count = 0;
 var r2_count = 0;
 
 var rate4modules = func {
-    r4_count = r4_count - 1;
-    if (r4_count > 0)
+    if (r4_count == 0)
+      aircraft.electricsFrame();
+    elsif (r4_count == 1)
+      aircraft.computeNWS ();
+    elsif (r4_count == 2)
+      aircraft.update_weapons_over_mp();
+    elsif (r4_count == 3)
+      updateVolume();
+    elsif (r4_count == 4)
+      radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+    elsif (r4_count == 5)
+      aircraft.routeManagerUpdate();
+    elsif (r4_count == 6) {
+        if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
+            setprop("fdm/jsbsim/propulsion/refuel",0);
+            setprop("fdm/jsbsim/propulsion/ground-refuel",0);
+        }
+    } else {
+        r4_count = 0;
         return;
-
-    var frame_rate = frameRateNode.getValue();
-
-    if (frame_rate <= 15 or frame_rate > 100)
-        r4_count = 4;
-    else
-        r4_count = (int)(frame_rate * 0.26667);
-
-    aircraft.electricsFrame();
-	aircraft.computeNWS ();
-    aircraft.update_weapons_over_mp();
-    updateVolume();
-    radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
-    
-    aircraft.routeManagerUpdate();
-
-#	settimer (rate4modules, 0.20);
-
-#
-# ensure that we're not ground refuelling in air...
-if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1))
-{
-setprop("fdm/jsbsim/propulsion/refuel",0);
-setprop("fdm/jsbsim/propulsion/ground-refuel",0);
-}
+    }
+    r4_count += 1;
 
 }
-#
-#
-# rate 2 modules; nominally at half rate.
-var rate2modules = func {
-    r2_count = r2_count - 1;
-    if (r2_count > 0)
-        return;
-
-#    var frame_rate = getprop("/sim/frame-rate");
-#    if (frame_rate <= 15 or frame_rate > 100)
-        r2_count = 2;
-#    else
-#        r2_count = (int)(frame_rate * 0.1333);
-
-    aircraft.updateHUD();
-    aircraft.updateTEWS();
-    aircraft.updateMPCD();
-#	settimer (rate2modules, 0.1);
-
-    setprop("/environment/aircraft-effects/frost-level", getprop("fdm/jsbsim/systems/ecs/windscreen-frost-amount"));
-}
-#
-# launch the timers; the time here isn't important as it will be rescheduled within the rate module exec
-#settimer (rate4modules, 1); 
-#settimer (rate2modules, 1);
-
-#
-# Standard update loop.
-
-var updateFCS = func {
-	 aircraft.rain.update();
-
-	#Fetch most commonly used values
-	CurrentIAS = getprop("velocities/airspeed-kt");
-	CurrentMach = getprop("velocities/mach");
-	CurrentAlt = getprop("position/altitude-ft");
-	wow = getprop("gear/gear[1]/wow") or getprop("gear/gear[2]/wow");
-
-	Alpha = getprop("orientation/alpha-indicated-deg");
-	Throttle = getprop("controls/engines/engine/throttle");
-	e_trim = getprop("controls/flight/elevator-trim");
-	deltaT = getprop ("sim/time/delta-sec");
-
-    # the FDM has a combined aileron deflection so split this for animation purposes.
-    var current_aileron = aileron.getValue();
-    var elevator_deflection_due_to_aileron_deflection =  current_aileron / 3.33; # 20 aileron - 6 elevator. should come from the DTD
-    left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
-    right_elev_generic.setDoubleValue(elev_output.getValue() - elevator_deflection_due_to_aileron_deflection);
-    aileron_generic.setDoubleValue(-current_aileron);
-
-    currentG = getprop ("accelerations/pilot-gdamped");
-
-	#update functions
-	aircraft.computeEngines ();
-rate2modules();
-rate4modules();
-	aircraft.registerFCS (); # loop, once per frame.
-}
-
 
 var startProcess = func {
-	settimer (updateFCS, 1.0);
 	position_flash_init();
 	#slat_output.setDoubleValue(0);
 	var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/F-15/Systems/autopilot-dlg.xml");
@@ -767,3 +711,60 @@ setlistener("/controls/armament/target-selected", func(v){
 #  PropertyAdjustButton.new("Elevation down", "/controls/radar/elevation-deg", "-5"),
 #  PropertyAdjustButton.new("Missile Reject", "/controls/armament/missile-reject", "1"),
 
+setlistener("/controls/flight/elevator-trim", func {
+	if (getprop("/controls/flight/elevator-trim") > 0.51724) {
+		setprop("/controls/flight/elevator-trim", 0.51724);
+	}
+});
+
+var F15_Recipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Receive = func(notification){
+            if (notification.NotificationType == "FrameNotification") {
+                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
+#                var frame_count1 = math.mod(notifications.frameNotification.FrameCount,2);
+
+                #Fetch most commonly used values
+                CurrentIAS = 	CurrentIASnode.getValue();
+                CurrentMach = CurrentMachnode.getValue();
+                CurrentAlt = CurrentAltnode.getValue();
+                wow = wowLnode.getBoolValue() or wowRnode.getBoolValue();
+                Alpha = Alphanode.getValue();
+                Throttle = Throttlenode.getValue();
+                e_trim = e_trimnode.getValue();
+                deltaT = deltaTnode.getValue();
+                currentG =    currentGnode.getValue();
+
+                if (frame_count == 0){
+                    aircraft.electricsFrame();
+                    aircraft.rain.update();
+                    aircraft.computeEngines ();
+                    acFrost.setValue(sysFrost.getValue());
+                } elsif (frame_count == 1)
+                  aircraft.computeNWS ();
+                elsif (frame_count == 2)
+                  aircraft.update_weapons_over_mp();
+                elsif (frame_count == 3)
+                  updateVolume();
+                elsif (frame_count == 4)
+                  radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+                elsif (frame_count == 5)
+                  aircraft.routeManagerUpdate();
+                elsif (frame_count == 6) {
+                    if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
+                        setprop("fdm/jsbsim/propulsion/refuel",0);
+                        setprop("fdm/jsbsim/propulsion/ground-refuel",0);
+                    }
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(F15_Recipient.new("F15-main"));

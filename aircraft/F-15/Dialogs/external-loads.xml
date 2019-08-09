@@ -134,7 +134,7 @@
           <legend>Full</legend>
           <binding>
             <command>nasal</command>
-            <script>aircraft.set_fuel(32000)</script> <!-- more than can be held will just be ignored by the set_fuel logic -->
+            <script>aircraft.set_fuel(36000)</script> <!-- more than can be held will just be ignored by the set_fuel logic -->
           </binding>
         </button>
         <button>
@@ -244,25 +244,25 @@
 						<label>Level</label>
 					</text>
 					<slider>
-						<name>LFeed</name>
+						<name>LCFT</name>
 						<property>/consumables/fuel/tank[0]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>182</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LFeed</object-name>
+							<object-name>LCFT</object-name>
 						</binding>
 					</slider>
 					<slider>
-						<name>RFeed</name>
+						<name>RCFT</name>
 						<property>/consumables/fuel/tank[1]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
 						<max>228</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>RFeed</object-name>
+							<object-name>RCFT</object-name>
 						</binding>
 					</slider>
 					<slider>
@@ -341,7 +341,7 @@
 						</binding>
 					</slider>
 					<slider>
-						<name>LFeedLine</name>
+						<name>LCFTvalue</name>
 						<property>/consumables/fuel/tank[8]/level-gal_us</property>
                         <enable>
 			        		<property>/consumables/fuel/tank[8]/selected</property>
@@ -351,11 +351,11 @@
 						<max>44.643</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LFeedLine</object-name>
+							<object-name>LCFTvalue</object-name>
 						</binding>
 					</slider>
                     <slider>
-                        <name>RFeedLine</name>
+                        <name>RCFTvalue</name>
                         <property>/consumables/fuel/tank[9]/level-gal_us</property>
                         <enable>
 			        		<property>/consumables/fuel/tank[9]/selected</property>
@@ -365,7 +365,7 @@
                         <max>44.643</max>
                         <binding>
                             <command>dialog-apply</command>
-                            <object-name>RFeedLine</object-name>
+                            <object-name>RCFTvalue</object-name>
                         </binding>
                     </slider>
                 </group>
@@ -608,6 +608,7 @@
                     <value>Offensive Counter Air</value>
                     <value>Air Superiority</value>
                     <value>No Fly Zone</value>
+                    <value>Ground Attack</value>
                     <value>Ferry Flight</value>
                     <binding>
                         <command>dialog-apply</command>
@@ -957,6 +958,4 @@
 		<pref-height>8</pref-height>
 	</empty>
 
-
-
-</PropertyList>
+    </PropertyList>

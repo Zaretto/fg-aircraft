@@ -95,7 +95,7 @@
 		<height>70</height>
 		<option>vertical</option>
 		<input>
-			<property>/position/altitude-agl-ft</property>
+			<property>instrumentation/radar-altimeter/radar-altitude-ft</property>
 			<factor>0.001</factor>
 			<max>1.5</max>
 			<min>0.0</min>
@@ -600,34 +600,14 @@
                     <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
                     <property>sim/model/f-14b/controls/pilots-displays/mode/ag-bt</property>
                 </or>
-                <not>
-                    <or>
-                        <less-than>
-                            <property>orientation/roll-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/roll-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <less-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <greater-than>
-                            <property>position/altitude-agl-ft</property>
-                            <value>5000</value>
-                        </greater-than>
-                    </or>
-                </not>
+                <less-than>
+                    <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                    <value>5100</value>
+                </less-than>
             </and>
         </condition>
         <input>
-            <property>/position/altitude-agl-ft</property>
+            <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
             <factor>0.1</factor>
         </input>
         <x>50</x>
@@ -651,30 +631,10 @@
                     <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
                     <property>sim/model/f-14b/controls/pilots-displays/mode/ag-bt</property>
                 </or>
-                <not>
-                    <or>
-                        <less-than>
-                            <property>orientation/roll-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/roll-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <less-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <greater-than>
-                            <property>position/altitude-agl-ft</property>
-                            <value>5000</value>
-                        </greater-than>
-                    </or>
-                </not>
+                <less-than>
+                    <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                    <value>5100</value>
+                </less-than>
             </and>
         </condition>
         <x>42</x>
@@ -697,34 +657,14 @@
                     <property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
                     <property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
                 </or>
-                <not>
-                    <or>
-                        <less-than>
-                            <property>orientation/roll-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/roll-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <less-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <greater-than>
-                            <property>position/altitude-agl-ft</property>
-                            <value>5000</value>
-                        </greater-than>
-                    </or>
-                </not>
+                <less-than>
+                    <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                    <value>5100</value>
+                </less-than>
             </and>
         </condition>
         <input>
-            <property>/position/altitude-agl-ft</property>
+            <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
             <factor>0.001</factor>
             <max>5</max>
             <min>0.0</min>
@@ -769,34 +709,14 @@
                     <property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
                     <property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
                 </or>
-                <not>
-                    <or>
-                        <less-than>
-                            <property>orientation/roll-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/roll-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <less-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>-45</value>
-                        </less-than>
-                        <greater-than>
-                            <property>orientation/pitch-deg</property>
-                            <value>45</value>
-                        </greater-than>
-                        <greater-than>
-                            <property>position/altitude-agl-ft</property>
-                            <value>5000</value>
-                        </greater-than>
-                    </or>
-                </not>
+                <less-than>
+                    <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                    <value>5100</value>
+                </less-than>
             </and>
         </condition>
         <input>
-            <property>/position/altitude-agl-ft</property>
+            <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
             <factor>0.1</factor>
         </input>
         <x>50</x>
@@ -821,30 +741,10 @@
                 <property>sim/model/f-14b/controls/pilots-displays/mode/to-bt</property>
                 <property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
             </or>
-            <not>
-                <or>
-                    <less-than>
-                        <property>orientation/roll-deg</property>
-                        <value>-45</value>
-                    </less-than>
-                    <greater-than>
-                        <property>orientation/roll-deg</property>
-                        <value>45</value>
-                    </greater-than>
-                    <less-than>
-                        <property>orientation/pitch-deg</property>
-                        <value>-45</value>
-                    </less-than>
-                    <greater-than>
-                        <property>orientation/pitch-deg</property>
-                        <value>45</value>
-                    </greater-than>
-                    <greater-than>
-                        <property>position/altitude-agl-ft</property>
-                        <value>5000</value>
-                    </greater-than>
-                </or>
-            </not>
+            <less-than>
+                <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
+                <value>5100</value>
+            </less-than>
         </condition>
         <x>32</x>
         <y>-45</y>

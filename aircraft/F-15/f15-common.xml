@@ -15,6 +15,7 @@
             <fcs>
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
+                <rudder-deadzone alias="/autopilot/settings/rudder-deadzone"/>
                 
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
@@ -69,7 +70,7 @@
     <sim>
         <minimum-fg-version>2017.2</minimum-fg-version>
         <description>F-15</description>
-        <author>Richard Harrison, Enrique Laso (3d), Nikolai V. Chr.</author>
+        <author>Richard Harrison, Enrique Laso (3d), Nikolai V. Chr., Joshua Davidson (FCS/Autopilot)</author>
         <status>production</status>
         <config>
             <hud-filter type="int">1</hud-filter>
@@ -1021,8 +1022,11 @@
 
         <multiplay>
             <generic>
-                <float n="4">0</float> <!-- left elevator  -->
-                <float n="5">0</float> <!-- right elevator -->
+                <float n="1">0</float> <!-- rudders  -->
+                <float n="2">0</float> <!-- left aileron  -->
+                <float n="3">0</float> <!-- right aileron  -->
+                <float n="4">0</float> <!-- left elevon  -->
+                <float n="5">0</float> <!-- right elevon -->
                 <float n="6">0</float> <!-- refuel probe/door -->
                 <float n="8" alias="/engines/engine[0]/augmentation-burner" />
                 <float n="9" alias="/engines/engine[1]/augmentation-burner" />
@@ -1200,9 +1204,10 @@
             <type>lookfrom</type>
             <internal archive="y">true</internal>
             <config>
+                <!-- -0.001565762004 -->
                 <x-offset-m archive="y">0.0</x-offset-m>
                 <!--<y-offset-m archive="y">1.4874214034</y-offset-m>-->
-                <y-offset-m archive="y">1.4000519827</y-offset-m>
+                <y-offset-m archive="y">1.401951318</y-offset-m>
                 <z-offset-m archive="y">-5</z-offset-m>
                 <pitch-offset-deg>-8</pitch-offset-deg>
                 <default-field-of-view-deg>85</default-field-of-view-deg>
@@ -1328,6 +1333,7 @@
         <settings>
             <aileron-deadzone>0.1</aileron-deadzone>
             <elevator-deadzone>0.1</elevator-deadzone>
+            <rudder-deadzone>0.1</rudder-deadzone>
         </settings>
 	</autopilot>
 
@@ -1897,6 +1903,15 @@
                 </binding>
             </key>
 
+            <key n="4">
+                <name>CTRL-d</name>
+                <desc>Radar mode.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.radar_mode_cycle()</script>
+                </binding>
+            </key>
+
             <key n="8">
                 <name>CTRL-h</name>
                 <desc>Toggle autopilot heading mode.</desc>
@@ -2287,10 +2302,11 @@
         </main>
     </rotors>
 
+    <accelerations>
+        <pilot-g>1</pilot-g>
+    </accelerations>
+
     <nasal>
-        <props>
-            <file>Nasal/PropertyUpdateManager.nas</file>
-        </props>
         <notifications>
             <file>Nasal/M_frame_notification.nas</file>
         </notifications>
@@ -2333,6 +2349,7 @@
         </rcs>
         <aircraft>
             <file>Aircraft/F-15/Nasal/M_exec.nas</file>
+            <file>Aircraft/F-15/Nasal/M_partition_processor.nas</file>
             <file>Nasal/canvas/MFD_Generic.nas</file>
             <file>Aircraft/Generic/an_spn_46.nas</file>
             <file>Aircraft/Generic/an_spn_46.nas</file>

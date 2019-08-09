@@ -336,7 +336,8 @@ var az_scan = func() {
 
         if (scan_update_tgt_list)
         {
-            scan_update_tgt_list=0;
+#print("awg_9: update tgt_list+");
+			scan_update_tgt_list=0;
             tgts_list = [];
 
             var raw_list = Mp.getChildren();
@@ -367,7 +368,6 @@ var az_scan = func() {
             ScanTgtUpdateCount.setIntValue(ScanTgtUpdateCount.getValue()+1);
             ScanTgtCount.setIntValue(size(tgts_list));
             awg_9.tgts_list = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
-
         }
     }
     var idx = 0;
@@ -764,15 +764,16 @@ var isNotBehindTerrain = func(node) {
         print("isNotBehindTerrain, node is nil");
         return 3;
     }
-
+	var nodename="";
     call(func {
+		nodename = node.getPath();
         x = node.getNode("position/global-x").getValue();
         y = node.getNode("position/global-y").getValue();
         z = node.getNode("position/global-z").getValue(); },
         nil, var err = []);
 
     if(x == nil or y == nil or z == nil) {
-        print("Failed to get position from node");#: ",node.string, " x=",x," y=",y," z=",z);
+        print("Failed to get position from node ",nodename);#: ",node.string, " x=",x," y=",y," z=",z);
         return 2;
     }
     var SelectCoord = geo.Coord.new().set_xyz(x, y, z);
@@ -1097,6 +1098,15 @@ wcs_mode_sel = func(mode) {
 	}
 }
 
+radar_mode_cycle = func() {
+    setprop("/sim/multiplay/visibility-range-nm",200);
+    var v = getprop("instrumentation/radar/radar-mode") or 0;
+#print("v",v);
+    if (v == 2) v = 0;
+        else v = 2;
+    setprop("instrumentation/radar/radar-mode",v);
+}
+
 wcs_mode_toggle = func() {
 	# Temporarely toggles between the first 2 available modes.
 	#foreach (var n; props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode").getChildren()) {
@@ -1300,7 +1310,7 @@ var Target = {
 
     set_type_from_name : func(type, mdl){
 
-        print ("set tgt Ttype ",type, " mdl=",mdl);
+#        print ("set tgt Ttype ",type, " mdl=",mdl);
     
         if (type == "tanker" or type == "aircraft") {
             me.target_classification = AIR;
@@ -1346,6 +1356,34 @@ var Target = {
 	get_reciprocal_bearing : func {
 		return geo.normdeg(me.get_bearing() + 180);
 	},
+# Azimuth field quadrants.
+# 120 means +/-60, as seen in the diagram below.
+#  _______________________________________
+# |                   H                  |
+# |               _.--+---.              |
+# |    13 L   ,-''    |    `--.          |
+# |         ,'        |        `.        |
+# |        /          |          \       |
+# |       /           |           \      |
+# |      /            |            \     |
+# |     90 L          |           90 R   |
+#.+-------------------+------------------+
+# |     :             |             ;    |
+# |      \            |            /     |
+# |  7 L  \           |           /      |
+# |        \          |          /       |
+# |         `.        |        ,'  4 R   |
+# |           '--.    |    _.-'          |
+# |               `---+--''              |
+# |                   T                  |
+#  `''''''''''''''''''|'''''''''''''''''''
+    get_aspect: func {
+        me.result = math.mod(me.get_reciprocal_bearing() + math.mod(180-awg_9.our_true_heading,360),360);
+        if (me.result > 180)
+            return -math.mod(me.result ,180);
+        else
+            return -(me.result-180);
+    },
 	get_deviation : func(true_heading_ref) {
 		me.deviation =  - deviation_normdeg(true_heading_ref, me.get_bearing());
 		return me.deviation;
@@ -1616,7 +1654,7 @@ setlistener("/instrumentation/tacan/display/channel", func {
 # been replaced by the Emesary based notification model. However the ground services dialog uses this
 # for reposition - so replace the continual scanning (as part of the radar) with a one off method that can be
 # called as needed.
-find_carrier_by_tacan = func {
+find_carrier_by_tacan = func(output) {
     var raw_list = awg_9.Mp.getChildren();
     var carrier_located = 0;
     
@@ -1636,32 +1674,53 @@ find_carrier_by_tacan = func {
                     var y = c.getNode("position/global-y").getValue() + 18.74631309;
                     var z = c.getNode("position/global-z").getValue() + 115.6574875;
 
-                    f14.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
+                    output.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
 
                     var carrier_heading = c.getNode("orientation/true-heading-deg");
                     if (carrier_heading != nil) {
                         # relative offset of the course to the tdz
                         # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
                         # (i.e. this value is from tuning rather than calculation)
-                        f14.carrier_heading = carrier_heading.getValue();
-                        f14.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
+                        output.carrier_heading = carrier_heading.getValue();
+                        output.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
                     }
                     else
                     {
-                        f14.carrier_ara_63_heading = 0;
+                        output.carrier_ara_63_heading = 0;
                         print("Carrier heading invalid");
                     }
                     carrier_located = 1;
-                    f14.tuned_carrier_name = c.getNode("name").getValue();
-                    setprop("sim/model/f-14b/tuned-carrier",f14.tuned_carrier_name);
+                    output.tuned_carrier_name = c.getNode("name").getValue();
+                    setprop("sim/model/"~this_model~"/tuned-carrier",output.tuned_carrier_name);
                     return;
                 }
                 else
                 {
                     # tuned tacan is not carrier.
-                    f14.carrier_ara_63_heading = 0;
+                    output.carrier_ara_63_heading = 0;
                 }
             }
         }
     }
 }
+var RADARRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+        new_class.Receive = func(notification)
+        {
+            if (notification.NotificationType == "FrameNotification")
+            {
+                if (!math.mod(notifications.frameNotification.FrameCount,3)){
+                    awg_9.rdr_loop();
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
+        };
+        return new_class;
+    },
+};
+
+emesary.GlobalTransmitter.Register(RADARRecipient.new("RADAR-AWG9"));

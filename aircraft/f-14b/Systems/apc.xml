@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+
+<!-- Grumman F-14 APC -->
+<!-- Copyright (c) 2019 Joshua Davidson (it0uchpods) -->
+<!-- Don't move to JSB, it's here for a reason -->
+
+<PropertyList>
+	
+	<logic>
+		<name>MilThrust</name>
+		<input>
+			<or>
+				<greater-than-equals>
+					<property>/fdm/jsbsim/fcs/throttle-cmd-norm[0]</property>
+					<value>0.9</value>
+				</greater-than-equals>
+				<greater-than-equals>
+					<property>/fdm/jsbsim/fcs/throttle-cmd-norm[1]</property>
+					<value>0.9</value>
+				</greater-than-equals>
+			</or>
+		</input>
+		<output>/fdm/jsbsim/systems/apc/milthrust</output>
+	</logic>
+	
+	<predict-simple>
+		<name>Alpha Predict</name>
+		<debug>false</debug>
+		<input>/fdm/jsbsim/aero/alpha-indicated-deg</input>
+		<output>/fdm/jsbsim/aero/alpha-indicated-deg-ahead</output>
+		<seconds>1.0</seconds>
+		<filter-gain>0.0</filter-gain>
+	</predict-simple>
+	
+	<filter>
+		<name>APC Feedback When Disabled</name>
+		<enable>
+			<condition>
+				<not>
+					<equals>
+						<property>/fdm/jsbsim/systems/apc/active</property>
+						<value>1</value>
+					</equals>
+					<equals>
+						<property>/fdm/jsbsim/position/aircraft-on-ground</property>
+						<value>0</value>
+					</equals>
+				</not>
+			</condition>
+		</enable>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<feedback-if-disabled>true</feedback-if-disabled>
+		<initialize-to>output</initialize-to>
+		<input>
+			<expression>
+				<max>
+					<property>/fdm/jsbsim/fcs/throttle-switched[0]</property>
+					<property>/fdm/jsbsim/fcs/throttle-switched[1]</property>
+				</max>
+			</expression>
+		</input>
+		<output>/fdm/jsbsim/fcs/throttle-apc</output>
+		<min>0.0</min>
+		<max>0.8999</max>
+	</filter>
+	
+	<pid-controller>
+		<name>APC Alpha Hold</name>
+		<debug>false</debug>
+		<enable>
+			<condition>
+				<and>
+					<equals>
+						<property>/fdm/jsbsim/systems/apc/active</property>
+						<value>1</value>
+					</equals>
+					<equals>
+						<property>/fdm/jsbsim/position/aircraft-on-ground</property>
+						<value>0</value>
+					</equals>
+				</and>
+			</condition>
+		</enable>
+		<input>/fdm/jsbsim/aero/alpha-indicated-deg-ahead</input>
+		<reference>14.7</reference>
+		<output>/fdm/jsbsim/fcs/throttle-apc</output>
+		<config>
+			<Kp>-0.15</Kp>
+			<Ti>2.5</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.0</u_min>
+			<u_max>0.8999</u_max>
+		</config>
+	</pid-controller>
+
+</PropertyList>

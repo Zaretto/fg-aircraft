@@ -56,10 +56,8 @@ engines at 11 percent rpm.
                 </tableData>
             </table>
             <clipto>
-                <min> 0 </min>
-                <max>
-                    <property>systems/hydraulics/normal-pressure</property>
-                </max>
+                <min>0</min>
+                <max>systems/hydraulics/normal-pressure</max>
             </clipto>
         </scheduled_gain>
 
@@ -119,9 +117,7 @@ engines at 11 percent rpm.
             <input>-systems/hydraulics/flight-system-pump-psi</input>
             <clipto>
                 <min> 0 </min>
-                <max>
-                    <property>systems/hydraulics/bidi-normal-pressure</property>
-                </max>
+                <max>systems/hydraulics/bidi-normal-pressure</max>
             </clipto>
         </summer>
 
@@ -131,9 +127,7 @@ engines at 11 percent rpm.
             <input>-systems/hydraulics/flight-system-pump-psi</input>
             <clipto>
                 <min> 0 </min>
-                <max>
-                    <property>systems/hydraulics/bidi-normal-pressure</property>
-                </max>
+                <max>systems/hydraulics/bidi-normal-pressure</max>
             </clipto>
         </summer>
 
@@ -164,9 +158,7 @@ engines at 11 percent rpm.
             </table>
             <clipto>
                 <min> 0 </min>
-                <max>
-                    <property>systems/hydraulics/normal-pressure</property>
-                </max>
+                <max>systems/hydraulics/normal-pressure</max>
             </clipto>
         </scheduled_gain>
 
@@ -192,9 +184,7 @@ engines at 11 percent rpm.
             <input>-systems/hydraulics/combined-system-pump-psi</input>
             <clipto>
                 <min> 0 </min>
-                <max>
-                    <property>systems/hydraulics/bidi-normal-pressure</property>
-                </max>
+                <max>systems/hydraulics/bidi-normal-pressure</max>
             </clipto>
         </summer>
 
@@ -204,9 +194,7 @@ engines at 11 percent rpm.
             <input>-systems/hydraulics/combined-system-pump-psi</input>
             <clipto>
                 <min> 0 </min>
-                <max>
-                    <property>systems/hydraulics/bidi-normal-pressure</property>
-                </max>
+                <max>systems/hydraulics/bidi-normal-pressure</max>
             </clipto>
         </summer>
 
@@ -219,6 +207,15 @@ engines at 11 percent rpm.
     </channel>
 
     <channel name="bleed" execrate="4">
+        <fcs_function name="fcs/elevator-normalization">
+            <function>
+                <quotient>
+                    <property>fcs/elevon-aero-deg</property>
+                    <value>29.0</value>
+                </quotient>
+            </function>
+        </fcs_function>
+
         <summer name="systems/hydraulics/elevator-bleed">
             <input>-fcs/elevator-cmd-norm</input>
             <input>-fcs/elevator-normalization</input>

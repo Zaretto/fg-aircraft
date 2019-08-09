@@ -461,6 +461,11 @@ var wow = 1;
 setprop("/fdm/jsbsim/fcs/roll-trim-actuator",0) ;
 setprop("/controls/flight/SAS-roll",0);
 
+var ownship_pos = geo.Coord.new();
+var ownshipLat = props.globals.getNode("position/latitude-deg");
+var ownshipLon = props.globals.getNode("position/longitude-deg");
+var ownshipAlt = props.globals.getNode("position/altitude-ft");
+
 var F14_exec = {
 	new : func (_ident){
         print("F14_exec: init");
@@ -479,11 +484,25 @@ var F14_exec = {
         obj.recipient = emesary.Recipient.new(_ident~".Subsystem");
         obj.recipient.F14_exec = obj;
 
+        input = {
+                 FrameRate                 : "/sim/frame-rate",
+                 frame_rate                : "/sim/frame-rate",
+                 frame_rate_worst          : "/sim/frame-rate-worst",
+                 ElapsedSeconds            : "/sim/time/elapsed-sec",
+                };
+
+        foreach (var name; keys(input)) {
+            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident,name, input[name]));
+        }
+
         obj.recipient.Receive = func(notification)
         {
             if (notification.NotificationType == "FrameNotification")
             {
+                # this needs to be executed before the radar.
                 me.F14_exec.update(notification);
+                ownship_pos.set_latlon(ownshipLat.getValue(), ownshipLon.getValue());
+                notification.ownship_pos = ownship_pos;
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;

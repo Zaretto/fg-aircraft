@@ -408,26 +408,24 @@
     </switch>
 
   <!-- amount of frosting based on window temperature ; between 0 and -10 it is proportionate; after this is it simply fully frosted-->
-    <fcs_function name="systems/ecs/windscreen-frost-amount-dmd">
-      <description>Windscreen frosting amount</description>
-      <function>
-        <product>
-          <property>systems/ecs/windscreen-frost-dmd</property>
-          <sum>
-            <sum>
-              <property>systems/ecs/windscreen-temperature-k</property>
-              <value>-273</value>
-            </sum>
-          </sum>
-          <value>-0.1</value>
-        </product>
-      </function>
-      <clipto>
-        <min> 0 </min>
-        <max> 1.0  </max>
-      </clipto>
-      <output>systems/ecs/windscreen-frost-amount</output>
-    </fcs_function>
+      <fcs_function name="systems/ecs/windscreen-frost-amount-dmd">
+          <description>Windscreen frosting amount</description>
+          <function>
+              <product>
+                  <property>systems/ecs/windscreen-frost-dmd</property>
+                  <sum>
+                      <property>systems/ecs/windscreen-temperature-k</property>
+                      <value>-273</value>
+                  </sum>
+                  <value>-0.1</value>
+              </product>
+          </function>
+          <clipto>
+              <min> 0 </min>
+              <max> 1.0  </max>
+          </clipto>
+          <output>systems/ecs/windscreen-frost-amount</output>
+      </fcs_function>
     <!-- use an actuator to gradually feed in and out frosting-->
     <actuator name="systems/ecs/windscreen-frost-amount">
       <input>systems/ecs/windscreen-frost-amount-dmd</input>
