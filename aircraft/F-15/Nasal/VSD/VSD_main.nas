@@ -129,7 +129,7 @@ var VSD_Device =
         }
 
         obj.vsd_on = 1;
-        obj.process_targets = PartitionProcessor.new("VSD-targets", 20, nil);
+        obj.process_targets = PartitionProcessor.new("VSD-radar", 20, nil);
         obj.process_targets.set_max_time_usec(500);
 
         obj.process_display = PartitionProcessor.new("VSD-display", 100, nil);
@@ -233,7 +233,8 @@ if (pnode == nil) return;
      
      #        var roll_rad = -notification.OrientationRollDeg*3.14159/180.0;
 
-     me.process_targets.set_timestamp(notification.Timestamp);
+     if (notification["Timestamp"] != nil)
+         me.process_targets.set_timestamp(notification.Timestamp);
 
      me.process_targets.process(me, awg_9.tgts_list, 
                                 func(pp, obj, data){
@@ -309,7 +310,8 @@ if (pnode == nil) return;
 
      # update text at the slowest rate (when frame count is 0)
      me.notification = notification;
-     me.process_display.set_timestamp(notification.Timestamp);
+     if (notification["Timestamp"] != nil)
+       me.process_display.set_timestamp(notification.Timestamp);
      me.process_display.process(me, me.update_items, 
                                 func(pp, obj, data){
          #

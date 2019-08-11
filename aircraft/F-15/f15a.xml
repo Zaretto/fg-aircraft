@@ -167,7 +167,7 @@
 
         <pointmass name="Station6">
             <location unit="M" name="Pointmass Station6">
-                <x>9.35</x>
+                <x>13.27</x>
                 <y>1.611</y>
                 <z>0.567</z>
             </location>
@@ -176,7 +176,7 @@
 
         <pointmass name="Station7">
             <location unit="M" name="Pointmass Station7">
-                <x>13.27</x>
+                <x>9.35</x>
                 <y>1.611</y>
                 <z>0.567</z>
             </location>
@@ -186,7 +186,7 @@
         <pointmass name="Station8">
             <location unit="M" name="Pointmass Station8-1 (2-3)">
                 <x>10.95</x>
-                <y>-2.891</y>
+                <y>2.891</y>
                 <z>0.461</z>
             </location>
             <weight unit="LBS">0</weight>
@@ -514,38 +514,47 @@
             </thruster>
         </engine>
         <!-- numerically lower priority are used first.-->
-        <tank type="FUEL" name="0 Left Engine Feed">
+        <tank type="FUEL" name="0 Left Engine Feed (Tank3)">
             <!--0: Left Engine Feed-->
             <location unit="IN">
                 <x>453.87</x>
-                <y>7.83</y>
+                <y>0</y>
                 <z>0.79</z>
             </location>
-            <capacity unit="LBS">1200</capacity>
-            <contents unit="LBS">1200</contents>
+<!--F-15A            <capacity unit="LBS">1200</capacity>
+            <contents unit="LBS">1200</contents>-->
+            <type>JP-6</type>
+            <capacity unit="LBS">1455</capacity> 
+            <contents unit="LBS">1455</contents>
             <priority>12</priority>
         </tank>
-        <tank type="FUEL" name="1 Right Engine Feed">
+        <tank type="FUEL" name="1 Right Engine Feed (Tank1)">
             <!--1: Right Engine Feed-->
             <location unit="IN">
                 <x>396.79</x>
-                <y>7.95</y>
+                <y>0</y>
                 <z>-5.51</z>
             </location>
-            <capacity unit="LBS">1500</capacity>
-            <contents unit="LBS">1500</contents>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">1500</capacity>
+            <contents unit="LBS">1500</contents>-->
+            <capacity unit="LBS">1610</capacity>
+            <contents unit="LBS">1610</contents>
             <priority>11</priority>
         </tank>
         <tank type="FUEL" name="2 Tank 1">
             <!--2: Tank 1-->
             <location unit="IN">
                 <x>307.42</x>
-                <y>7.48</y>
+                <y>0</y>
                 <z>14.57</z>
             </location>
-            <capacity unit="LBS">3300</capacity>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">3300</capacity>
+            <contents unit="LBS">3300</contents>-->
+            <capacity unit="LBS">4420</capacity>
+            <contents unit="LBS">4420</contents>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">3300</contents>
             <priority>10</priority>
         </tank>
         <tank type="FUEL" name="3 Left Wing Tank">
@@ -555,9 +564,12 @@
                 <y>-2.595</y>
                 <z>0.771</z>
             </location>
-            <capacity unit="LBS">2750</capacity>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">2750</capacity>
+            <contents unit="LBS">2750</contents>-->
+            <capacity unit="LBS">3470</capacity>
+            <contents unit="LBS">3470</contents>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">2750</contents>
             <priority>7</priority>
         </tank>
         <tank type="FUEL" name="4 Right Wing Tank">
@@ -567,9 +579,11 @@
               <y>2.595</y>
               <z>0.771</z>
             </location>
-            <capacity unit="LBS">2750</capacity>
+            <!--<capacity unit="LBS">2750</capacity>
+            <contents unit="LBS">2750</contents>-->
+            <capacity unit="LBS">3470</capacity>
+            <contents unit="LBS">3470</contents>
             <standpipe unit="LBS">100</standpipe>
-            <contents unit="LBS">2750</contents>
             <priority>7</priority>
         </tank>
         <tank type="FUEL" name="5 Left External Wing Tank">
@@ -579,9 +593,11 @@
               <y>-3.3034</y>
               <z>-0.091</z>
             </location>
-            <capacity unit="LBS">3950</capacity>
-            <standpipe unit="LBS">100</standpipe>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">3950</capacity>-->
+            <capacity unit="LBS">4250</capacity>
             <contents unit="LBS">0</contents>
+            <standpipe unit="LBS">100</standpipe>
             <priority>4</priority>
         </tank>
         <tank type="FUEL" name="6 Right External Wing Tank">
@@ -591,7 +607,9 @@
               <y>3.3034</y>
               <z>-0.091</z>
             </location>
-            <capacity unit="LBS">3950</capacity>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">3950</capacity>-->
+            <capacity unit="LBS">4250</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">0</contents>
             <priority>4</priority>
@@ -603,7 +621,9 @@
                 <y>0</y>
                 <z>-1.231</z>
             </location>
-            <capacity unit="LBS">3950</capacity>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">3950</capacity>-->
+            <capacity unit="LBS">4250</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">0</contents>
             <priority>3</priority>
@@ -615,20 +635,23 @@
                 <y>-1.76</y>
                 <z>0.021</z>
             </location>
-            <capacity unit="LBS">4720</capacity>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">4720</capacity>-->
+            <capacity unit="LBS">5200</capacity>
             <standpipe unit="LBS">100</standpipe>
             <contents unit="LBS">0</contents>
             <priority>6</priority>
         </tank>
         <tank type="FUEL" name="9 Right conformal Tank">
             <!--9: Right conformal Tank-->
-            <location unit="IN">
+            <location unit="M">
               <x>11.396</x>
               <y>1.76</y>
               <z>0.021</z>
             </location>
-            <capacity unit="LBS">4720</capacity>
-            <standpipe unit="LBS">100</standpipe>
+            <type>JP-6</type>
+            <!--<capacity unit="LBS">4720</capacity>-->
+            <capacity unit="LBS">5200</capacity>
             <contents unit="LBS">0</contents>
             <priority>6</priority>
         </tank>
@@ -640,6 +663,7 @@
                 <y>-38</y>
                 <z>-47</z>
             </location>
+            <type>JP-6</type>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
             <priority>1</priority>
@@ -651,6 +675,7 @@
                 <y>38</y>
                 <z>-47</z>
             </location>
+            <type>JP-6</type>
             <capacity unit="LBS">10</capacity>
             <contents unit="LBS">10</contents>
             <priority>1</priority>
