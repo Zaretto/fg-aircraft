@@ -22,34 +22,13 @@
 	
 	<channel name="Common">
 		
-		<switch name="fcs/stick-pitch-0">
+		<switch name="fcs/stick-pitch">
 			<default value="0"/>
 			<test value="fcs/elevator-cmd-norm">
 				autoflight/input/pitch-switch ne 1
 			</test>
 		</switch>
-
-        <fcs_function name="fcs/stick-pitch">
-            <description>
-                Longitudinal position adjusted for position instead of force
-                (fig 17 - NASA TM 72861)
-            </description>
-            <function>
-                <table>
-                    <independentVar lookup="row">fcs/stick-pitch-0</independentVar>
-                    <tableData>
-                        -1.000	-1.00000
-                        -0.188	 -0.06729
-                        -0.001	 0.00000
-                        0.003	 0.00000
-                        0.351	 0.19635
-                        1.000	 1.00000
-                    </tableData>
-                </table>
-
-            </function>
-        </fcs_function>
-
+		
         <!--pure_gain name="fcs/stick-pitch">
 			<desription>
 				I use this for tuning the PRC - limit to 50% stick and tune to 5G
@@ -60,6 +39,26 @@
 			<gain>0.5</gain>
 		</pure_gain-->
 		
+		<fcs_function name="fcs/stick-pitch-scheduled">
+			<description>
+				Longitudinal position adjusted for position instead of force
+				(fig 17 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/stick-pitch</independentVar>
+					<tableData>
+						-1.000 -1.00000
+						-0.188 -0.06729
+						-0.001  0.00000
+						 0.003  0.00000
+						 0.351  0.19635
+						 1.000  1.00000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
 		<switch name="fcs/css-pitch">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/ss/elevator-norm">
@@ -67,6 +66,26 @@
 				autoflight/ss/elevator-norm ne 0
 			</test>
 		</switch>
+		
+		<fcs_function name="fcs/css-pitch-scheduled">
+			<description>
+				Longitudinal position adjusted for position instead of force
+				(fig 17 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/css-pitch</independentVar>
+					<tableData>
+						-1.000 -1.00000
+						-0.188 -0.06729
+						-0.001  0.00000
+						 0.003  0.00000
+						 0.351  0.19635
+						 1.000  1.00000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 		
 		<switch name="fcs/stick-roll">
 			<default value="0"/>
@@ -130,8 +149,8 @@
 		</fcs_function>
 		
 		<summer name="fcs/pitch-input-sum">
-			<input>fcs/stick-pitch</input> <!-- Stick Input with A/P off -->
-			<input>fcs/css-pitch</input> <!-- Stick Input in CSS A/P mode -->
+			<input>fcs/stick-pitch-scheduled</input> <!-- Stick Input with A/P off -->
+			<input>fcs/css-pitch-scheduled</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
 			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
 			<input>fcs/pitch-trim-compensation</input> <!-- Pitch Trim Compensation -->
