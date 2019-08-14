@@ -15,6 +15,7 @@ var hud_intens_control = props.globals.getNode("sim/model/f15/controls/hud/inten
 var hud_alpha          = props.globals.getNode("sim[0]/hud/color/alpha", 1);
 var view               = props.globals.getNode("sim/current-view/name");
 var OurRoll            = props.globals.getNode("orientation/roll-deg");
+var view_z_offset_m    = props.globals.getNode("sim/current-view/z-offset-m",1);
 
 # distance eye <-> to mean point of HUD screen.
 var eye_hud_m          = 0.5123;
@@ -30,7 +31,7 @@ hud_alpha.setDoubleValue(0);
 var develev_to_devroll = func(dev_rad, elev_rad) {
 	var clamped = 0;
 
-    eye_hud_m = hud_position + getprop("sim/current-view/z-offset-m"); # optimised for signs so we get a positive distance.
+    eye_hud_m = hud_position + view_z_offset_m.getValue(); # optimised for signs so we get a positive distance.
 	# Deviation length on the HUD (at level flight),
 	var h_dev = eye_hud_m / ( math.sin(dev_rad) / math.cos(dev_rad) );
 	var v_dev = eye_hud_m / ( math.sin(elev_rad) / math.cos(elev_rad) );
