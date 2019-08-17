@@ -58,7 +58,30 @@
 				</table>
 			</function>
 		</fcs_function>
-		
+        
+        <fcs_function name="fcs/stick-commanded-g">
+            <description>
+                Longitudinal CAS feel characteristics. Stick Force / command normal load factor G
+                Adjusted from force to position based on applied force (as we have no way of measuring
+                applied force)
+                
+                (fig 18 - NASA TM 72861)
+            </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/stick-pitch-scheduled</independentVar>
+                    <tableData>
+                        -1.000	 8
+                        -0.188	 4
+                        -0.001	 1
+                        -0.000	 1
+                         0.003	 1
+                         0.351	-2
+                         1.000	-4
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
 		<switch name="fcs/css-pitch">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/ss/elevator-norm">
@@ -125,24 +148,8 @@
 					<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
 					<tableData>
 						     0         35
-						170	-0.248276 -0.248276
-						200	-0.239924 -0.151900
-						220	-0.188621 -0.108500
-						250	-0.140241 -0.032352
-						300	-0.089241  0.013303
-						350	-0.060369 -0.030000
-						400	-0.040269 -0.030000
-						450	-0.027059 -0.030000
-						500	-0.017683 -0.030000
-						550	-0.006476 -0.030000
-						575	 0.001893 -0.030000
-						600	 0.006824 -0.030000
-						625	 0.009586 -0.030000
-						650	 0.010607 -0.030000
-						700	 0.011903 -0.030000
-						750	 0.012745 -0.030000
-						800	 0.013397 -0.030000
-						833	 0.013752 -0.030000
+						170	0 0 
+						833	 0 0 
 					</tableData>
 				</table>
 			</function>
