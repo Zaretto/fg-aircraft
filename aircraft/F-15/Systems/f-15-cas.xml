@@ -150,20 +150,54 @@
 			</clipto>
 		</scheduled_gain>
 		
-		<fcs_function name="cas/pitch/g-demand"> <!-- TM-72861 - Figure 18 -->
+		<fcs_function name="cas/pitch/g-demand">
+			<description>
+				G Table from TM-72861 - Figure 18
+				You may notice that there are 3 possible modes of operation: Manual Mode, CSS Mode, and A/P Pitch On Mode.
+				In Manual Mode, we use the elevator with no deadzone. We only have the CSS breakout deadzone.
+				In CSS Mode, we use the Stick Steering (SS) elevator from the autopilot, and the breakout from the CSS.
+				This is because the autopilot has an adjustable deadzone, which when out of, engages the CSS A/P function.
+				Lastly in A/P Pitch On Mode, we just keep it at 1G.
+				This prevents the Lead-Lag Compensator from doing bad behavior in all three modes.
+			</description>
 			<function>
-				<table>
-					<independentVar lookup="row">/controls/flight/elevator</independentVar>
-					<tableData>
-						-1.00  8.0
-						-0.54  3.6
-						-0.01  1.0
-						 0.00  1.0
-						 0.01  1.0
-						 0.70 -1.6
-						 1.00 -4.0
-					</tableData>
-				</table>
+				<ifthen>
+					<nq>
+						<property>autoflight/output/pitch-master</property>
+						<value>1</value>
+					</nq>
+					<ifthen>
+						<nq>
+							<property>autoflight/input/pitch-switch</property>
+							<value>1</value>
+						</nq>
+						<table> <!-- Manual Mode -->
+							<independentVar lookup="row">/controls/flight/elevator</independentVar>
+							<tableData>
+								-1.00  8.0
+								-0.54  3.6
+								-0.01  1.0
+								 0.00  1.0
+								 0.01  1.0
+								 0.70 -1.6
+								 1.00 -4.0
+							</tableData>
+						</table>
+						<table> <!-- CSS Mode -->
+							<independentVar lookup="row">autoflight/ss/elevator-norm</independentVar>
+							<tableData>
+								-1.00  8.0
+								-0.54  3.6
+								-0.01  1.0
+								 0.00  1.0
+								 0.01  1.0
+								 0.70 -1.6
+								 1.00 -4.0
+							</tableData>
+						</table>
+					</ifthen>
+					<value>1.0</value> <!-- A/P Pitch On Mode -->
+				</ifthen>
 			</function>
 		</fcs_function>
 		
