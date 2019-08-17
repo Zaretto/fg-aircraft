@@ -1,7 +1,7 @@
 <system  name="FCS F15">
 <!-- F-15 Flight controls 
 	|  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
-	|  Joshua Davidson:  2018-11-30 : rewrite -->
+	|  Joshua Davidson (Octal450):  2019-08-17 : rewrite -->
 	<property value="1">gear/serviceable</property>
 	<property value="0">systems/hydraulics/emerg-gear-bleed</property>
 	<property value="0">gear/damage-reset</property>
@@ -177,7 +177,7 @@
 			<input>fcs/stick-pitch-scheduled</input> <!-- Stick Input with A/P off -->
 			<input>fcs/css-pitch-scheduled</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
-			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
+			<input>autoflight/pitch/pitch-command</input> <!-- A/P Pitch Command -->
 			<input>fcs/pitch-trim-compensation</input> <!-- Pitch Trim Compensation -->
 			<input>cas/pitch-output</input> <!-- CAS Pitch Command -->
 			<clipto>
@@ -332,7 +332,7 @@
 			<input>fcs/stick-roll</input> <!-- Stick Input with A/P off -->
 			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
-			<input>autoflight/roll/roll-rate-demand</input> <!-- A/P Roll Demand -->
+			<input>autoflight/roll/roll-command</input> <!-- A/P Roll Command -->
 			<input>cas/roll-output</input> <!-- CAS Roll Command -->
 			<clipto>
 				<min>-1.0</min>
@@ -680,7 +680,7 @@
 				autoflight/output/roll-master ne 1
 				systems/hydraulics/flight-system-pressure eq 1
 				fcs/ari-mach-switch eq 1
-				cas/yaw-cas-active ne 1
+				cas/yaw/cas-active ne 1
 				aero/alpha-deg lt 30
 				aero/alpha-deg gt -30
 			</test>
@@ -712,7 +712,7 @@
 					</table>
 				</product>
 			</function>
-			<output>cas/ari-input</output>
+			<output>cas/yaw/ari-input</output>
 			<clipto>
 				<min>-1.0</min>
 				<max>1.0</max>

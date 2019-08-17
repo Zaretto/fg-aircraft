@@ -585,7 +585,7 @@
 			<output>autoflight/roll/master-pid</output>
 		</pid>
 		
-		<switch name="autoflight/roll/roll-rate-demand">
+		<switch name="autoflight/roll/roll-command">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/roll/master-pid">
 				autoflight/output/roll-master eq 1
@@ -863,12 +863,64 @@
 			</test>
 		</switch>
 		
-		<switch name="autoflight/pitch/pitch-rate-demand">
+		<switch name="autoflight/pitch/pitch-command">
 			<default value="0"/>
 			<test value="autoflight/pitch/master-pid-switched">
 				autoflight/output/pitch-master eq 1
 			</test>
 		</switch>
+		
+		<switch name="autoflight/pitch/autotrim-switch">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				autoflight/output/pitch-master eq 1
+				autoflight/pitch/pitch-command ge 0.001
+				/controls/flight/elevator-trim le 1.0
+			</test>
+			<test logic="AND" value="2">
+				autoflight/output/pitch-master eq 1
+				autoflight/pitch/pitch-command le -0.001
+				/controls/flight/elevator-trim ge -1.0
+			</test>
+		</switch>
+		
+		<!-- Overridable Auto Pitch Trim -->
+		<fcs_function name="autoflight/pitch/autotrim-offset">
+			<function>
+				<sum>
+					<ifthen>
+						<eq>
+							<property>autoflight/pitch/autotrim-switch</property>
+							<value>1</value>
+						</eq>
+						<value>0.00005</value>
+						<value>0.0</value>
+					</ifthen>
+					<ifthen>
+						<eq>
+							<property>autoflight/pitch/autotrim-switch</property>
+							<value>2</value>
+						</eq>
+						<value>-0.00005</value>
+						<value>0.0</value>
+					</ifthen>
+				</sum>
+			</function>
+		</fcs_function>
+		
+		<fcs_function name="autoflight/pitch/elevator-trim">
+			<function>
+				<sum>
+					<property>/controls/flight/elevator-trim</property>
+					<property>autoflight/pitch/autotrim-offset</property>
+				</sum>
+			</function>
+			<clipto>
+				<min>-1.0</min>
+				<max>1.0</max>
+			</clipto>
+			<output>/controls/flight/elevator-trim</output>
+		</fcs_function>
 	
 	</channel>
 
