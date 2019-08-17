@@ -8,6 +8,7 @@
 	<property value="2">position/aircraft-on-ground-last-value</property>
 	<property value="0">systems/cadc/pitch-ratio-emergency</property>
 	<property value="0">systems/cadc/roll-ratio-emergency</property>
+	<property value="1">gain</property>
 	<!--<property value="1.0">fcs/pitch-ratio-calc</property>-->
 	<!--<property value="0">fcs/pitch-trim-compensation</property>-->
 	<!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
@@ -59,29 +60,30 @@
 			</function>
 		</fcs_function>
         
-        <fcs_function name="fcs/stick-commanded-g">
-            <description>
-                Longitudinal CAS feel characteristics. Stick Force / command normal load factor G
-                Adjusted from force to position based on applied force (as we have no way of measuring
-                applied force)
-                
-                (fig 18 - NASA TM 72861)
-            </description>
-            <function>
-                <table>
-                    <independentVar lookup="row">fcs/stick-pitch-scheduled</independentVar>
-                    <tableData>
-                        -1.000	 8
-                        -0.188	 4
-                        -0.001	 1
-                        -0.000	 1
-                         0.003	 1
-                         0.351	-2
-                         1.000	-4
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
+		<fcs_function name="fcs/stick-commanded-g">
+			<description>
+				Longitudinal CAS feel characteristics. Stick Force / command normal load factor G
+				Adjusted from force to position based on applied force (as we have no way of measuring
+				applied force)
+				
+				(fig 18 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/stick-pitch-scheduled</independentVar>
+					<tableData>
+						-1.000	 8
+						-0.188	 4
+						-0.001	 1
+						-0.000	 1
+						 0.003	 1
+						 0.351	-2
+						 1.000	-4
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
 		<switch name="fcs/css-pitch">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/ss/elevator-norm">
@@ -141,15 +143,31 @@
 	
 	<channel name="Elevons">
 		
-		<fcs_function name="fcs/pitch-trim-compensation"> <!--RJH: Rebuilt this table 2014-04-28 based on flight test data-->
+		<fcs_function name="fcs/pitch-trim-compensation"> <!-- RJH: Rebuilt this table 2014-04-28 based on flight test data -->
 			<function>
 				<table>
 					<independentVar lookup="row">velocities/vc-kts</independentVar>
 					<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
 					<tableData>
 						     0         35
-						170	0 0 
-						833	 0 0 
+						170	-0.248276 -0.248276
+						200	-0.239924 -0.151900
+						220	-0.188621 -0.108500
+						250	-0.140241 -0.032352
+						300	-0.089241  0.013303
+						350	-0.060369 -0.030000
+						400	-0.040269 -0.030000
+						450	-0.027059 -0.030000
+						500	-0.017683 -0.030000
+						550	-0.006476 -0.030000
+						575	 0.001893 -0.030000
+						600	 0.006824 -0.030000
+						625	 0.009586 -0.030000
+						650	 0.010607 -0.030000
+						700	 0.011903 -0.030000
+						750	 0.012745 -0.030000
+						800	 0.013397 -0.030000
+						833	 0.013752 -0.030000
 					</tableData>
 				</table>
 			</function>
@@ -168,7 +186,7 @@
 			</clipto>
 		</summer>
 		
-		<fcs_function name="fcs/pitch-ratio-calc-0">
+		<fcs_function name="fcs/pitch-ratio-calc">
 			<description>
 				RJH: 
 					Pitch Ratio: 
@@ -255,54 +273,40 @@
 					function of angle of attack. Yaw is affected by this also, since yaw
 					gain increases as roll gain decreases. No more rudder rolls, guys; all
 					you need for high angle of attack
-                    
-                    2019-08-17 : retuned with new PTC; it's now around 8g at all airspeeds (where there
-                                 is sufficient energy to sustain this)
 			</description>
-			<function>
-				<table>
-					<independentVar lookup="row">velocities/vc-kts</independentVar>
-					<tableData>
-                         323	1.00000
-                         344	0.78900
-                         417	0.27975
-                         592	0.18033
-                         677	0.15750
-                         765	0.11100
-                         816	0.08880
-                         900	0.06120
-                        1000	0.05012
-                        1100	0.03972
-                    </tableData>
-				</table>
+			<function> <!-- JD: WHEN TUNING: ENSURE /fdm/jsbsim/fcs/pitch-damper-enable SET TO 0 NOT 1!!! -->
+				<product>
+					<table>
+						<independentVar lookup="row">velocities/vc-kts</independentVar>
+						<tableData>
+							 300  1.000
+							 350  0.950
+							 400  0.635
+							 500  0.330
+							 600  0.140
+							 700  0.100
+							 800  0.083
+							 900  0.070
+							1000  0.060
+							1100  0.050
+						</tableData>
+					</table>
+					<table>
+						<independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
+						<tableData>
+							0.1500 0.8
+							0.4868 1.0
+						</tableData>
+					</table>
+				</product>
 			</function>
 			<clipto>
 				<min>0.01</min>
 				<max>1.0</max>
 			</clipto>
 		</fcs_function>
-        <fcs_function name="fcs/pitch-ratio-calc-1">
-            <function>
-                <table>
-                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
-                    <tableData>
-                        0.15 0.65
-                        0.4868 1.0
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
-
-        <fcs_function name="fcs/pitch-ratio-calc">
-            <function>
-                <product>
-                    <p>fcs/pitch-ratio-calc-0</p>
-                    <p>fcs/pitch-ratio-calc-1</p>
-                </product>
-            </function>
-        </fcs_function>
-
-        <switch name="fcs/pitch-ratio">
+		
+		<switch name="fcs/pitch-ratio">
 			<default value="fcs/pitch-ratio-calc"/>
 			<test logic="OR" value="0.5">
 				systems/hydraulics/flight-system-pressure ne 1

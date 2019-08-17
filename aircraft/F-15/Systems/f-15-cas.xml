@@ -3,19 +3,14 @@
 <!-- McDonnell Douglas F-15 Control Augmentation System -->
 <!-- (c) 2019 Joshua Davidson (Octal450) -->
 
-<system name="cas">
+<system name="F-15: CAS">
 	
 	<property value="0">cas/ari-input</property>
 	<property value="0">cas/beta-pd</property>
 	<property value="0">cas/beta-p-gain</property>
-    <property value="0">cas/beta-d-gain</property>
-    
-    <property value="0.05">cas/ptc-p-gain</property>
-    <property value="0.3">cas/ptc-i-gain</property>
-    <property value="0.0008">cas/ptc-d-gain</property>
-    <property value="0.6">cas/ptc-error-lag-c1</property>
-
-    <channel name="Libraries">
+	<property value="0">cas/beta-d-gain</property>
+	
+	<channel name="Libraries">
 		
 		<switch name="cas/roll-cas-active">
 			<default value="0"/>
@@ -154,73 +149,50 @@
 				<max>0.2857142857142857</max>
 			</clipto>
 		</scheduled_gain>
-        
-        <!--Pitch Trim Compensator (PTC) - RJH 2018-08-17
-        This is used to adjust the elevator to maintain the scheduled G based on 
-        stick loading (adjusted position in our model-->
-        
-        <summer name="cas/ptc-deviation-g">
+		
+		<fcs_function name="cas/pitch-g-demand"> <!-- TM-72861 - Figure 18 -->
+			<function>
+				<table>
+					<independentVar lookup="row">/controls/flight/elevator</independentVar>
+					<tableData>
+						-1.00  8.05
+						-0.54  3.58
+						-0.01  1.00
+						 0.00  1.00
+						 0.01  1.00
+						 0.70 -1.62
+						 1.00 -3.99
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+		
+		<summer name="cas/pitch-g-error">
 			<input>accelerations/Nz</input>
-			<input>-fcs/stick-commanded-g</input>
+			<input>-cas/pitch-g-demand</input>
 		</summer>
-
-        
-        <lag_filter name="cas/ptc-error-lag">
-            <description>Used to determine if PTC is saturating controls</description>
-            <input>cas/ptc-deviation-g</input>
-            <c1>cas/ptc-error-lag-c1</c1>
-            <clipto>
-                <min>-0.6</min>
-                <max>0.6</max>
-            </clipto>
-        </lag_filter>
-
-        <fcs_function name="cas/ptc-saturated">
-            <description>
-                PTC integrator anti-windup
-            </description>
-            <function>
-                <ifthen>
-                    <and>
-                        <lt>
-                            <p>cas/ptc-error-lag</p>
-                            <v>0.5</v>
-                        </lt>
-                        <gt>
-                            <p>cas/ptc-error-lag</p>
-                            <v>-0.5</v>
-                        </gt>
-                        <eq>
-                            <p>position/aircraft-on-ground</p>
-                            <v>0</v>
-                        </eq>
-                    </and>
-                    <v>0</v>
-                    <v>-1</v>
-                </ifthen>
-            </function>
-        </fcs_function>
-
-        <!--Output of PTC; limited - although limits need to be adjusted to match aircraft-->
-        <pid name="cas/ptc-feedback-g">
-            <input>cas/ptc-deviation-g</input>
-            <kp>cas/ptc-p-gain</kp>
-            <ki>cas/ptc-i-gain</ki>
-            <kd>cas/ptc-d-gain</kd>
-            <trigger>cas/ptc-saturated</trigger>
-            <output>cas/ptc-feedback-g-v</output>
-            <clipto>
-                <min>-0.48</min>
-                <max>0.51</max>
-            </clipto>
-        </pid>
-
-        <summer name="cas/pitch-output-sum">
+		
+		<scheduled_gain name="cas/pitch-g-feedback">
+			<input>cas/pitch-g-error</input>
+			<table>
+				<independentVar>velocities/vc-kts</independentVar>
+				<tableData>
+					150  0.05
+					950  0.02
+				</tableData>
+			</table>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
+			</clipto>
+		</scheduled_gain>
+		
+		<summer name="cas/pitch-output-sum">
 			<input>cas/pitch-q-feedback</input>
-            <input>cas/ptc-feedback-g</input>
-            <clipto>
-				<min>-0.4857142857142857</min>
-				<max>0.5157142857142857</max>
+			<input>cas/pitch-g-feedback</input>
+			<clipto>
+				<min>-0.2857142857142857</min>
+				<max>0.2857142857142857</max>
 			</clipto>
 		</summer>
 		
