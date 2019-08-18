@@ -201,6 +201,42 @@
             </function>
         </fcs_function>
 
+        <fcs_function name="cas/ptc-p-gain">
+            <function>
+                <table>
+                    <!--P=0.1 I=0.14 heavy
+                    P=0.05 I=0.3-->
+                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
+                    <tableData>
+                        0.12  0.1
+                        0.25  0.05
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min>0.05</min>
+                <max>0.1</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="cas/ptc-i-gain">
+            <function>
+                <table>
+                    <!--P=0.1 I=0.14 heavy
+                    P=0.05 I=0.3-->
+                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
+                    <tableData>
+                        0.12  0.14
+                        0.25  0.3
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min>0.14</min>
+                <max>0.3</max>
+            </clipto>
+        </fcs_function>
+
         <!--Output of PTC; limited - although limits need to be adjusted to match aircraft which is +/-10 deg-->
         <pid name="cas/ptc-feedback-g">
             <input>cas/ptc-deviation-g</input>
