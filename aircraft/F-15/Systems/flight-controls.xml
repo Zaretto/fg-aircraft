@@ -258,27 +258,23 @@
                     
                     2019-08-17 : retuned with new PTC; it's now around 8g at all airspeeds (where there
                                  is sufficient energy to sustain this)
+                    2019-08-18 : based on a better understanding of the above the PRCA is now a simple
+                                 1:1 at low qbar going to 1:6 at high qbar.
+                                 Values of low and high qbar are somewhat estimated based on 800kts
+                                 "pitch ratio changer gearing utilizes a 6:1 ratio" 
+                                    ref: https://www.f15sim.com/operation/f15_longitudinal_control.html
 			</description>
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<independentVar lookup="row">aero/qbar-psf</independentVar>
 					<tableData>
-                        323	1.000000
-                        344	0.946800
-                        417	0.335698
-                        592	0.216394
-                        677	0.189000
-                        765	0.133200
-                        816	0.106560
-                        900	0.073440
-                        1000	0.060145
-                        1100	0.047659
-
+                        300  1.00000
+                        1300 0.16667
                     </tableData>
 				</table>
 			</function>
 			<clipto>
-				<min>0.01</min>
+				<min>0.166667</min>
 				<max>1.0</max>
 			</clipto>
 		</fcs_function>
