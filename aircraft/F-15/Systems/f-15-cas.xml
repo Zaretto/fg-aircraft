@@ -155,19 +155,24 @@
 					950  0.5
 				</tableData>
 			</table>
-			<clipto>
-				<min>-0.2857142857142857</min>
-				<max>0.2857142857142857</max>
+			<clipto> <!-- +-10 degrees -->
+				<min>-0.3448275862068966</min>
+				<max>0.3448275862068966</max>
 			</clipto>
 		</scheduled_gain>
 		
-		<washout_filter name="cas/pitch/accel-washout">
-			<input>/accelerations/pilot-gdamped</input> <!-- Same prop as G Meter in Cockpit -->
-			<c1>3.5</c1>
-		</washout_filter>
+		<fcs_function name="cas/pitch/accel-fixed">
+			<description>Allows use of G as an error</description>
+			<function>
+				<difference>
+					<property>/accelerations/pilot-gdamped</property> <!-- Same prop as G Meter in Cockpit -->
+					<value>1</value>
+				</difference>
+			</function>
+		</fcs_function>
 		
-		<scheduled_gain name="cas/pitch/accel-damper">
-			<input>cas/pitch/accel-washout</input>
+		<scheduled_gain name="cas/pitch/accel-feedback">
+			<input>cas/pitch/accel-fixed</input>
 			<table>
 				<independentVar lookup="row">velocities/vc-kts</independentVar>
 				<tableData>
@@ -175,9 +180,9 @@
 					950  0.01
 				</tableData>
 			</table>
-			<clipto>
-				<min>-0.2857142857142857</min>
-				<max>0.2857142857142857</max>
+			<clipto> <!-- +-10 degrees -->
+				<min>-0.3448275862068966</min>
+				<max>0.3448275862068966</max>
 			</clipto>
 		</scheduled_gain>
 		
@@ -245,7 +250,7 @@
 		
 		<summer name="cas/pitch/output-sum">
 			<input>cas/pitch/rate-damper</input>
-			<input>cas/pitch/accel-damper</input>
+			<input>cas/pitch/accel-feedback</input>
 			<input>cas/pitch/accel-feel</input>
 			<clipto> <!-- +-10 degrees -->
 				<min>-0.3448275862068966</min>
