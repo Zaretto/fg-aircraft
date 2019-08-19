@@ -25,7 +25,7 @@
 		<switch name="fcs/stick-pitch">
 			<default value="0"/>
 			<test value="fcs/elevator-cmd-norm">
-				autoflight/input/pitch-switch ne 1
+				autoflight/output/pitch-master ne 1
 			</test>
 		</switch>
 		
@@ -49,49 +49,13 @@
 			</function>
 		</fcs_function>
         
-		<switch name="fcs/css-pitch">
-			<default value="0"/>
-			<test logic="AND" value="autoflight/ss/elevator-norm">
-				autoflight/input/pitch-switch eq 1
-				autoflight/ss/elevator-norm ne 0
-			</test>
-		</switch>
-		
-		<fcs_function name="fcs/css-pitch-scheduled">
-			<description>
-				Longitudinal position adjusted for position instead of force
-				(fig 17 - NASA TM 72861)
-			</description>
-			<function>
-				<table>
-					<independentVar lookup="row">fcs/css-pitch</independentVar>
-					<tableData>
-						-1.000 -1.00000
-						-0.188 -0.06729
-						-0.001  0.00000
-						 0.003  0.00000
-						 0.351  0.19635
-						 1.000  1.00000
-					</tableData>
-				</table>
-			</function>
-		</fcs_function>
-		
 		<switch name="fcs/stick-roll">
 			<default value="0"/>
 			<test value="fcs/aileron-cmd-norm">
-				autoflight/input/roll-switch ne 1
+				autoflight/output/roll-master ne 1
 			</test>
 		</switch>
 
-		<switch name="fcs/css-roll">
-			<default value="0"/>
-			<test logic="AND" value="autoflight/ss/aileron-norm">
-				autoflight/input/roll-switch eq 1
-				autoflight/ss/aileron-norm ne 0
-			</test>
-		</switch>
-		
 		<fcs_function name="fcs/aileron-droop">
 			<function>
 				<table>
@@ -154,7 +118,6 @@
 		
 		<summer name="fcs/pitch-input-sum">
 			<input>fcs/stick-pitch-scheduled</input> <!-- Stick Input with A/P off -->
-			<input>fcs/css-pitch-scheduled</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
 			<input>autoflight/pitch/pitch-command</input> <!-- A/P Pitch Command -->
 			<input>fcs/pitch-trim-bias</input> <!-- Takeoff and CAS Trim Bias -->
@@ -294,7 +257,6 @@
 		
 		<summer name="fcs/roll-elevon-input-sum">
 			<input>fcs/stick-roll</input> <!-- Stick Input with A/P off -->
-			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
 			<input>autoflight/roll/roll-command</input> <!-- A/P Roll Command -->
 			<input>cas/roll-output</input> <!-- CAS Roll Command -->
@@ -532,7 +494,6 @@
 		
 		<summer name="fcs/roll-aileron-input-sum">
 			<input>fcs/stick-roll</input> <!-- Stick Input with A/P off -->
-			<input>fcs/css-roll</input> <!-- Stick Input in CSS A/P mode -->
 			<input>fcs/roll-trim-cmd-norm</input> <!-- Roll Trim -->
 			<input>autoflight/roll/roll-command</input> <!-- A/P Roll Demand -->
 			<clipto>
