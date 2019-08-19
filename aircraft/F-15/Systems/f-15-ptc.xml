@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<!-- McDonnell Douglas F-15 Pitch Trim Controller -->
+<!-- (c) 2019 Joshua Davidson (Octal450) -->
+
+<system name="F-15: PTC">
+	
+	<property value="1">gain</property>
+	
+	<channel name="Libraries">
+		
+		<switch name="ptc/active">
+			<default value="0"/>
+			<test logic="AND" value="1">
+				systems/cadc/pitch-ratio-emergency ne 1
+				position/aircraft-on-ground eq 0
+				systems/hydraulics/flight-system-pressure eq 1
+				autoflight/output/pitch-master ne 1
+			</test>
+		</switch>
+	
+	</channel>
+	
+	<channel name="PTC">
+		
+
+	
+	</channel>
+
+</system>

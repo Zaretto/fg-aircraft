@@ -130,13 +130,13 @@
 	
 	<channel name="Pitch Axis">
 		
-		<washout_filter name="cas/pitch/q-washout">
+		<washout_filter name="cas/pitch/rate-washout">
 			<input>velocities/q-rad_sec</input>
 			<c1>1.0</c1>
 		</washout_filter>
 		
-		<scheduled_gain name="cas/pitch/q-damper">
-			<input>cas/pitch/q-washout</input>
+		<scheduled_gain name="cas/pitch/rate-damper">
+			<input>cas/pitch/rate-washout</input>
 			<table>
 				<independentVar lookup="row">velocities/vc-kts</independentVar>
 				<tableData>
@@ -150,13 +150,13 @@
 			</clipto>
 		</scheduled_gain>
 		
-		<washout_filter name="cas/pitch/g-washout">
+		<washout_filter name="cas/pitch/accel-washout">
 			<input>/accelerations/pilot-gdamped</input> <!-- Same prop as G Meter in Cockpit -->
 			<c1>3.5</c1>
 		</washout_filter>
 		
-		<scheduled_gain name="cas/pitch/g-damper">
-			<input>cas/pitch/g-washout</input>
+		<scheduled_gain name="cas/pitch/accel-damper">
+			<input>cas/pitch/accel-washout</input>
 			<table>
 				<independentVar lookup="row">velocities/vc-kts</independentVar>
 				<tableData>
@@ -170,7 +170,7 @@
 			</clipto>
 		</scheduled_gain>
 		
-		<fcs_function name="cas/pitch/g-demand">
+		<fcs_function name="cas/pitch/accel-demand">
 			<description>
 				G Table from TM-72861 - Figure 18
 				You may notice that there are 3 possible modes of operation: Manual Mode, CSS Mode, and A/P Pitch On Mode.
@@ -223,27 +223,27 @@
 			</function>
 		</fcs_function>
 		
-		<lead_lag_filter name="cas/pitch/g-leadlag">
+		<lead_lag_filter name="cas/pitch/accel-leadlag">
 			<description>
 				This changes the profile of the G demand going into the system in order to improve behavior of the aircraft.
 				It will smoothly acheive the demanded G assuming the trim is correct. (there is no integrator)
 				The numbers are carefully designed for a specific behavior, so please do not change them.
 				It also is designed to work with the q damper and PRC.
 			</description>
-			<input>cas/pitch/g-demand</input>
+			<input>cas/pitch/accel-demand</input>
 			<c1>-1.2</c1> <!-- Yes, this should be negative -->
 			<c2>1.0</c2>
 			<c3>0.5</c3>
 			<c4>1.0</c4>
 		</lead_lag_filter>
 		
-		<summer name="cas/pitch/g-error">
+		<summer name="cas/pitch/accel-error">
 			<input>/accelerations/pilot-gdamped</input> <!-- Same prop as G Meter in Cockpit -->
-			<input>-cas/pitch/g-leadlag</input>
+			<input>-cas/pitch/accel-leadlag</input>
 		</summer>
 		
-		<scheduled_gain name="cas/pitch/g-feel">
-			<input>cas/pitch/g-error</input>
+		<scheduled_gain name="cas/pitch/accel-feel">
+			<input>cas/pitch/accel-error</input>
 			<table>
 				<independentVar lookup="row">velocities/vc-kts</independentVar>
 				<tableData>
@@ -258,9 +258,9 @@
 		</scheduled_gain>
 		
 		<summer name="cas/pitch/output-sum">
-			<input>cas/pitch/q-damper</input>
-			<input>cas/pitch/g-damper</input>
-			<input>cas/pitch/g-feel</input>
+			<input>cas/pitch/rate-damper</input>
+			<input>cas/pitch/accel-damper</input>
+			<input>cas/pitch/accel-feel</input>
 			<clipto> <!-- +-10 degrees -->
 				<min>-0.3448275862068966</min>
 				<max>0.3448275862068966</max>

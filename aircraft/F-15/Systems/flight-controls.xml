@@ -108,27 +108,47 @@
 	
 	<channel name="Elevons">
 		
-		<fcs_function name="fcs/pitch-trim-bias"> <!-- Takeoff Trim and also to fix some magic that I can't figure out McDD did, from flight test data -->
+		<fcs_function name="fcs/pitch-trim-bias">
+			<description>
+				Takeoff Trim and also to help PTC cause it is some magic that I can't figure out exactly what McDD did.
+				From flight test data.
+			</description>
 			<function>
-				<table>
-					<independentVar lookup="row">velocities/vc-kts</independentVar>
-					<tableData>
-						170 -0.276985
-						200 -0.239924
-						220 -0.188621
-						250 -0.140241
-						300 -0.089241
-						350 -0.060369
-						400 -0.040269
-						450 -0.027059
-						500 -0.017683
-						550 -0.001476
-						600  0.022625
-						650  0.064500
-						700  0.080250
-						900  0.090540
-					</tableData>
-				</table>
+				<ifthen>
+					<nq>
+						<property>systems/cadc/pitch-ratio-emergency</property>
+						<value>1</value>
+					</nq>
+					<sum>
+						<table>
+							<independentVar lookup="row">velocities/vc-kts</independentVar>
+							<tableData>
+								170 -0.276985
+								200 -0.239924
+								220 -0.188621
+								250 -0.140241
+								300 -0.089241
+								350 -0.060369
+								400 -0.040269
+								450 -0.027059
+								500 -0.017683
+								550 -0.001476
+								600  0.022625
+								650  0.064500
+								700  0.080250
+								900  0.090540
+							</tableData>
+						</table>
+						<table>
+							<independentVar lookup="row">fcs/flap-pos-deg</independentVar>
+							<tableData>
+								 0  0.00
+								35  0.08
+							</tableData>
+						</table>
+					</sum>
+					<value>0</value>
+				</ifthen>
 			</function>
 		</fcs_function>
 		
