@@ -10,10 +10,11 @@
 	<property value="0">cas/beta-p-gain</property>
     <property value="0">cas/beta-d-gain</property>
     
-    <property value="0.05">cas/ptc-p-gain</property>
-    <property value="0.3">cas/ptc-i-gain</property>
-    <property value="0.0008">cas/ptc-d-gain</property>
-    <property value="0.9">cas/ptc-error-lag-c1</property>
+    <property value="0.23">cas/ptc-i-gain</property>
+    <property value="1.12">cas/ptc-error-lag-c1</property>
+    
+    <property value="1">cas/ptc-nz-accelerometer-limit</property>
+    <property value="102">cas/ptc-nz-accelerometer-c1</property>
 
     <channel name="Libraries">
 		
@@ -155,25 +156,27 @@
 			</clipto>
 		</scheduled_gain>
         
-        <!--Pitch Trim Compensator (PTC) - RJH 2018-08-17
-        This is used to adjust the elevator to maintain the scheduled G based on 
-        stick loading (adjusted position in our model-->
+        <!--Pitch Trim Compensator (PTC) (CAS) - RJH 2018-08-17
+            This is used to adjust the elevator to maintain the scheduled G based on 
+            stick loading (adjusted position in our model
+            accelerations/Nz
+			<input>/instrumentation/g-meter/instrumented-g</input>
+        -->
+        <lag_filter name="cas/ptc-nz-accelerometer">
+            <description>Our own lagged version of Nz;</description>
+            <input>accelerations/Nz</input>
+            <c1>cas/ptc-nz-accelerometer-c1</c1>
+        </lag_filter>
         
         <summer name="cas/ptc-deviation-g">
-			<input>accelerations/Nz</input>
+            <description>Deviation from required</description>
+			<input>cas/ptc-nz-accelerometer</input>
 			<input>-fcs/stick-commanded-g</input>
-		</summer>
-
-        
-        <lag_filter name="cas/ptc-error-lag">
-            <description>Used to determine if PTC is saturating controls</description>
-            <input>cas/ptc-deviation-g</input>
-            <c1>cas/ptc-error-lag-c1</c1>
             <clipto>
-                <min>-0.52</min>
-                <max>0.52</max>
+                <min>-cas/ptc-nz-accelerometer-limit</min>
+                <max>cas/ptc-nz-accelerometer-limit</max>
             </clipto>
-        </lag_filter>
+        </summer>
 
         <fcs_function name="cas/ptc-saturated">
             <description>
@@ -183,15 +186,15 @@
                 <ifthen>
                     <and>
                         <le>
-                            <p>cas/ptc-feedback-g-v</p>
+                            <p>cas/ptc-feedback-g</p>
                             <v>0.45</v>
                         </le>
                         <ge>
-                            <p>cas/ptc-feedback-g-v</p>
+                            <p>cas/ptc-feedback-g</p>
                             <v>-0.45</v>
                         </ge>
                         <eq>
-                            <p>position/aircraft-on-ground</p>
+                            <p>gear/gear-dmd-norm</p>
                             <v>0</v>
                         </eq>
                     </and>
@@ -204,52 +207,44 @@
         <fcs_function name="cas/ptc-p-gain">
             <function>
                 <table>
-                    <!--P=0.1 I=0.14 heavy
-                    P=0.05 I=0.3-->
-                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
+                    <independentVar lookup="row">velocities/vc-kts</independentVar>
                     <tableData>
-                        0.12  0.1
-                        0.25  0.05
+                        480   0.13
+                        650   0.045
                     </tableData>
                 </table>
             </function>
             <clipto>
                 <min>0.05</min>
-                <max>0.1</max>
+                <max>0.2</max>
             </clipto>
         </fcs_function>
 
-        <fcs_function name="cas/ptc-i-gain">
+
+        <fcs_function name="cas/ptc-computed-pitch">
             <function>
-                <table>
-                    <!--P=0.1 I=0.14 heavy
-                    P=0.05 I=0.3-->
-                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
-                    <tableData>
-                        0.12  0.14
-                        0.25  0.3
-                    </tableData>
-                </table>
+                <product>
+                    <p>cas/ptc-deviation-g</p>
+                    <p>cas/ptc-p-gain</p>
+                </product>
             </function>
-            <clipto>
-                <min>0.14</min>
-                <max>0.3</max>
-            </clipto>
         </fcs_function>
 
-        <!--Output of PTC; limited - although limits need to be adjusted to match aircraft which is +/-10 deg-->
-        <pid name="cas/ptc-feedback-g">
+        <integrator name="cas/ptc-pitch-integrator">
             <input>cas/ptc-deviation-g</input>
-            <kp>cas/ptc-p-gain</kp>
-            <ki>cas/ptc-i-gain</ki>
-            <kd>cas/ptc-d-gain</kd>
+            <c1>cas/ptc-i-gain</c1>
             <trigger>cas/ptc-saturated</trigger>
-            <output>cas/ptc-feedback-g-v</output>
+            <output>cas/ptc-pitch-integrator-v</output>
             <clipto>
                 <min>-0.48</min>
                 <max>0.51</max>
             </clipto>
-        </pid>
+        </integrator>
+
+        <summer name="cas/ptc-feedback-g">
+            <input>cas/ptc-pitch-integrator</input>
+            <input>cas/ptc-computed-pitch</input>
+        </summer>
 
         <summer name="cas/pitch-output-sum">
 			<input>cas/pitch-q-feedback</input>
