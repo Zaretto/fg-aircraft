@@ -48,10 +48,32 @@
 				</table>
 			</function>
 		</fcs_function>
+
+        <fcs_function name="fcs/aileron-cmd-norm-adjusted-mechanical">
+            <description>
+                This is the mechanical lateral authority adjusted by airspeed. Eagle Talk Vol2, Figure 4, p120
+            </description>
+            <function>
+                <product>
+                    <property>fcs/aileron-cmd-norm</property>
+                    <table>
+                        <independentVar lookup="row">velocities/vc-kts</independentVar>
+                        <tableData>
+                            635	1.000
+                            688	0.750
+                            741	0.500
+                            795	0.250
+                            821	0.125
+                            822	0.125
+                        </tableData>
+                    </table>
+                </product>
+            </function>
+        </fcs_function>
         
 		<switch name="fcs/stick-roll">
 			<default value="0"/>
-			<test value="fcs/aileron-cmd-norm">
+			<test value="fcs/aileron-cmd-norm-adjusted-mechanical">
 				autoflight/output/roll-master ne 1
 			</test>
 		</switch>
@@ -595,7 +617,7 @@
 		</switch>
 		
 		<pure_gain name="fcs/ari-aileron-input">
-			<input>fcs/aileron-cmd-norm</input>
+			<input>fcs/aileron-cmd-norm-adjusted-mechanical</input>
 			<gain>fcs/roll-ratio</gain>
 		</pure_gain>
 		
