@@ -50,7 +50,8 @@ var g_fuel_WL      = props.globals.getNode("sim/model/f15/instrumentation/fuel-g
 var g_fuel_WR      = props.globals.getNode("sim/model/f15/instrumentation/fuel-gauges/right-wing-display", 1);
 var g_fus_feed_L   = props.globals.getNode("sim/model/f15/instrumentation/fuel-gauges/left-fus-feed-display", 1);
 var g_fus_feed_R   = props.globals.getNode("sim/model/f15/instrumentation/fuel-gauges/right-fus-feed-display", 1);
-var Qty_Sel_Switch = props.globals.getNode("sim/model/f15/controls/fuel/qty-sel-switch");
+var Qty_Sel_Switch = props.globals.getNode("sim/model/f15/controls/fuel/qty-sel-switch",1);
+var cft            = props.globals.getNode("fdm/jsbsim/propulsion/cft", 1);
 var fwd = nil;
 var aft = nil;
 var Lg  = nil;
@@ -91,13 +92,13 @@ var RprobeSw = props.globals.getNode("sim/model/f15/controls/fuel/refuel-probe-s
 var TotalFuelLbs  = props.globals.getNode("consumables/fuel/total-fuel-lbs", 1);
 var TotalFuelGals = props.globals.getNode("consumables/fuel/total-fuel-gals", 1);
 
-configure_cft = func() {
-#    print("CFT changed");
+configure_cft = func(v) {
+    print("CFT changed ",cft.getValue(), " ", v.getValue());
     if (Conformal_R == nil or Conformal_L == nil){
 #        print("No tanks defined ***************************************************************************\n\n");
       return;
     }
-    if (getprop("fdm/jsbsim/propulsion/cft")){
+    if (cft.getValue()){
         Conformal_R.set_capacity(728);
         Conformal_L.set_capacity(728);
         Conformal_R.set_selected(1);
@@ -116,9 +117,9 @@ configure_cft = func() {
     }
     payload_dialog_reload("CFT change");
 }
-setlistener("fdm/jsbsim/propulsion/cft", func()
+setlistener("fdm/jsbsim/propulsion/cft", func(v)
 {
-    configure_cft();
+    configure_cft(v);
 });
 
 do_tank_selected = func(is_sel, tank_num, capacity_usgal){
@@ -161,7 +162,7 @@ var init_fuel_system = func {
 		build_new_tanks();
 		build_new_proportioners();
 		fuel_system_initialized = 1;
-        configure_cft();
+        configure_cft(cft);
 	}
 
 	#valves ("name",property, intitial status)

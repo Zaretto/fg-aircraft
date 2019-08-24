@@ -325,7 +325,6 @@ var common_init = func
             setprop("controls/gear/brake-parking",0);
         }
     }
-    configure_cft();
 }
 
 # Init ####################
