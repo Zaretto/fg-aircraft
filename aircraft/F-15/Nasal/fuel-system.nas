@@ -51,7 +51,7 @@ var g_fuel_WR      = props.globals.getNode("sim/model/f15/instrumentation/fuel-g
 var g_fus_feed_L   = props.globals.getNode("sim/model/f15/instrumentation/fuel-gauges/left-fus-feed-display", 1);
 var g_fus_feed_R   = props.globals.getNode("sim/model/f15/instrumentation/fuel-gauges/right-fus-feed-display", 1);
 var Qty_Sel_Switch = props.globals.getNode("sim/model/f15/controls/fuel/qty-sel-switch",1);
-var cft            = props.globals.getNode("fdm/jsbsim/propulsion/cft", 1);
+var cft            = props.globals.getNode("sim/model/f15/cft", 1);
 var fwd = nil;
 var aft = nil;
 var Lg  = nil;
@@ -113,11 +113,11 @@ configure_cft = func(v) {
         Conformal_R.set_selected(0);
         Conformal_L.set_selected(0);
 		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[11]",0);
-		setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",0);
+        setprop("fdm/jsbsim/inertia/pointmass-weight-lbs[12]",0);
     }
     payload_dialog_reload("CFT change");
 }
-setlistener("fdm/jsbsim/propulsion/cft", func(v)
+setlistener("sim/model/f15/cft", func(v)
 {
     configure_cft(v);
 });
