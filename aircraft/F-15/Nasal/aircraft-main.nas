@@ -46,6 +46,8 @@ var fixAirframe = func {
     left_wing_torn.setValue(0);
     right_wing_torn.setValue(0);
 	setprop ("fdm/jsbsim/gear/damage-reset", 1);
+	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
+	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
 	repairMe();
 	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
 }
