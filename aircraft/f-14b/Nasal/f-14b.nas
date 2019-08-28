@@ -698,3 +698,4 @@ print("Damage enabled ",v.getValue());
   },0,0);
 
 setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",getprop("sim/model/f-14b/wings/damage-enabled"));
+setprop("sim/multiplay/visibility-range-nm", 200);
