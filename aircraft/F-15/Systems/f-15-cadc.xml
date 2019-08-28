@@ -28,33 +28,64 @@
 
     <channel name="extra-aero">
        <!-- figure out the factor for the fuel tank aero -->
+        <fcs_function name="metrics/stores-tank-factor-l">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[1]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>-0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+        
+        <fcs_function name="metrics/stores-tank-factor-c">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[5]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="metrics/stores-tank-factor-r">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[9]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="metrics/stores-tank-factor-c">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[5]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
         <fcs_function name="metrics/stores-tank-factor">
             <function>
                 <sum>
-                    <ifthen>
-                        <eq>
-                            <property>inertia/pointmass-weight-lbs[1]</property>
-                            <value>271</value>
-                        </eq>
-                        <value>0.3</value>
-                        <value>0</value>
-                    </ifthen>
-                    <ifthen>
-                        <eq>
-                            <property>inertia/pointmass-weight-lbs[5]</property>
-                            <value>271</value>
-                        </eq>
-                        <value>0.4</value>
-                        <value>0</value>
-                    </ifthen>
-                    <ifthen>
-                        <eq>
-                            <property>inertia/pointmass-weight-lbs[9]</property>
-                            <value>271</value>
-                        </eq>
-                        <value>0.3</value>
-                        <value>0</value>
-                    </ifthen>
+                    <p>-metrics/stores-tank-factor-l</p>
+                    <p>metrics/stores-tank-factor-c</p>
+                    <p>metrics/stores-tank-factor-r</p>
                 </sum>
             </function>
         </fcs_function>

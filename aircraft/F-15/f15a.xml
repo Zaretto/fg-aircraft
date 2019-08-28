@@ -101,7 +101,7 @@
 
     <mass_balance>
         <location unit="IN" name="CG">
-            <x>440</x>
+            <x>438</x>
             <y>0</y>
             <z>0</z>
         </location>
@@ -109,7 +109,14 @@
         <iyy unit="SLUG*FT2">165100</iyy>
         <izz unit="SLUG*FT2">187900</izz>
         <ixz unit="SLUG*FT2">-520</ixz>
-        <emptywt unit="LBS">28000</emptywt>
+        <!-- F-15A 27,700lbs
+             F-15B 28,100lbs
+             F-15C 28,600lbs
+             F-15D 29,100lbs
+             F-15C (MSIP) 29,500lbs
+             F-15D (MSIP) 30,000
+        -->
+        <emptywt unit="LBS">29500</emptywt>
 
         <pointmass name="Station2-1">
             <location unit="M" name="Pointmass Station2-1">
@@ -794,10 +801,13 @@
     <system file="flight-controls"/>
     <aerodynamics>
 
-        <function name="aero/coefficients/CFXAIML">
-            <description>DRAG INCREMENT DUE TO AIML</description>
+        <function name="aero/coefficients/CFXAIM">
+            <description>DRAG INCREMENT DUE TO AIM</description>
             <product>
-                <property>metrics/stores-aiml-factor</property>
+                <sum>
+                    <property>metrics/stores-aiml-factor</property>
+                    <property>metrics/stores-aimr-factor</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -817,33 +827,13 @@
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CFXAIMR">
-            <description>DRAG INCREMENT DUE TO AIMR</description>
+        <function name="aero/coefficients/CFYAIM">
+            <description>SIDE FORCE INCREMENT DUE TO AIM</description>
             <product>
-                <property>metrics/stores-aimr-factor</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                        -20	        -10	         -5	          0	          5	         10	         20
-                        -10	 0.00071389	 0.00041917	 0.00036861	 0.00027389	 0.00029806	 0.00029833	 0.00029306
-                        -5	 0.00033389	 0.00028778	 0.00028694	 0.00028083	 0.00027833	 0.00030694	 0.00031750
-                        0	 0.00027111	 0.00029250	 0.00029278	 0.00029306	 0.00029278	 0.00029194	 0.00026833
-                        5	 0.00026528	 0.00026694	 0.00027972	 0.00025972	 0.00028972	 0.00028944	 0.00028417
-                        10	 0.00029167	 0.00029083	 0.00029750	 0.00031528	 0.00029778	 0.00029778	 0.00029000
-                        15	 0.00031611	 0.00030278	 0.00030250	 0.00029722	 0.00030000	 0.00029694	 0.00028722
-                        20	 0.00031083	 0.00032111	 0.00031444	 0.00033083	 0.00030222	 0.00029083	 0.00027750
-                        25	 0.00031722	 0.00030194	 0.00033111	 0.00034972	 0.00033417	 0.00032306	 0.00026222
-                        30	 0.00031889	 0.00030639	 0.00031000	 0.00034583	 0.00029833	 0.00030306	 0.00029167
-                        40	 0.00029083	 0.00028500	 0.00028250	 0.00038639	 0.00027417	 0.00026750	 0.00025861
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CFYAIML">
-            <description>SIDE FORCE INCREMENT DUE TO AIML</description>
-            <product>
-                <property>metrics/stores-aiml-factor</property>
+                <sum>
+                    <property>-metrics/stores-aiml-factor</property>
+                    <property>metrics/stores-aimr-factor</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -863,33 +853,14 @@
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CFYAIMR">
-            <description>SIDE FORCE INCREMENT DUE TO AIMR</description>
+
+        <function name="aero/coefficients/CFZAIM">
+            <description>LIFT INCREMENT DUE TO AIM </description>
             <product>
-                <property>metrics/stores-aimr-factor</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                        -20	        -10	         -5	          0	          5	         10	         20
-                        -10	 0.00143972	 0.00065556	 0.00032139	 0.00000000	 0.00000000	 0.00000000	 0.00000028
-                        -5	 0.00020361	 0.00000000	 0.00000000	 0.00000000	 0.00004056	 0.00000000	 0.00000000
-                        0	 0.00000000	 0.00000722	 0.00000250	 0.00000000	 0.00000083	 0.00000444	 0.00006694
-                        5	 0.00000000	 0.00000500	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        10	 0.00000000	 0.00006944	 0.00000000	 0.00000000	 0.00000472	 0.00000000	 0.00001417
-                        15	 0.00002778	 0.00005028	 0.00000861	 0.00004667	 0.00003667	 0.00001417	 0.00003306
-                        20	 0.00009556	 0.00000000	 0.00003694	 0.00000528	 0.00003750	 0.00003500	 0.00002278
-                        25	 0.00012639	 0.00000000	 0.00001778	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        30	 0.00009222	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CFZAIML">
-            <description>LIFT INCREMENT DUE TO AIML</description>
-            <product>
-                <property>metrics/stores-aiml-factor</property>
+                <sum>
+                    <property>metrics/stores-aiml-factor</property>
+                    <property>metrics/stores-aimr-factor</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -909,33 +880,13 @@
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CFZAIMR">
-            <description>LIFT INCREMENT DUE TO AIMR</description>
+        <function name="aero/coefficients/CMLAIM">
+            <description>ROLLING MOMENT INCREMENT DUE TO AIM</description>
             <product>
-                <property>metrics/stores-aimr-factor</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                        -20	        -10	         -5	          0	          5	         10	         20
-                        -10	 0.00091417	 0.00105806	 0.00071278	 0.00105972	 0.00000139	 0.00000000	 0.00000000
-                        -5	 0.00000000	 0.00006417	 0.00009111	 0.00031889	 0.00020611	 0.00000000	 0.00000000
-                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000139	 0.00000278	 0.00000000
-                        5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        10	 0.00000000	 0.00003167	 0.00004694	 0.00056000	 0.00000000	 0.00000000	 0.00000000
-                        15	 0.00000417	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        20	 0.00000000	 0.00000000	 0.00003167	 0.00009056	 0.00000000	 0.00000000	 0.00000000
-                        25	 0.00000000	 0.00000611	 0.00006556	 0.00014083	 0.00025750	 0.00016750	 0.00000000
-                        30	 0.00000000	 0.00000000	 0.00000000	 0.00005833	 0.00000000	 0.00007472	 0.00008500
-                        40	 0.00000000	 0.00000000	 0.00000000	 0.00001472	 0.00000000	 0.00000000	 0.00000000
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CMLAIML">
-            <description>ROLLING MOMENT INCREMENT DUE TO AIML</description>
-            <product>
-                <property>metrics/stores-aiml-factor</property>
+                <sum>
+                    <property>-metrics/stores-aiml-factor</property>
+                    <property>metrics/stores-aimr-factor</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -955,33 +906,14 @@
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CMLAIMR">
-            <description>ROLLING MOMENT INCREMENT DUE TO AIMR</description>
+
+        <function name="aero/coefficients/CMMAIM">
+            <description>PITCHING MOMENT INCREMENT DUE TO AIM</description>
             <product>
-                <property>metrics/stores-aimr-factor</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                        -20	        -10	         -5	          0	          5	         10	         20
-                        -10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00001306
-                        0	 0.00001583	 0.00000028	 0.00000083	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        5	 0.00002167	 0.00002500	 0.00000528	 0.00000806	 0.00001611	 0.00002667	 0.00006250
-                        10	 0.00000000	 0.00000167	 0.00000333	 0.00001722	 0.00003278	 0.00005056	 0.00008056
-                        15	 0.00000000	 0.00000472	 0.00001111	 0.00002972	 0.00004389	 0.00005528	 0.00006472
-                        20	 0.00000000	 0.00001222	 0.00000444	 0.00001083	 0.00003639	 0.00005028	 0.00004917
-                        25	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00002500
-                        30	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        40	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CMMAIML">
-            <description>PITCHING MOMENT INCREMENT DUE TO AIML</description>
-            <product>
-                <property>metrics/stores-aiml-factor</property>
+                <sum>
+                    <property>metrics/stores-aiml-factor</property>
+                    <property>metrics/stores-aimr-factor</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1001,56 +933,14 @@
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CMMAIMR">
-            <description>PITCHING MOMENT INCREMENT DUE TO AIMR</description>
+
+        <function name="aero/coefficients/CMNAIM">
+            <description>YAWING MOMENT INCREMENT DUE TO AIM</description>
             <product>
-                <property>metrics/stores-aimr-factor</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                        -20	        -10	         -5	          0	          5	         10	         20
-                        -10	 0.00072722	 0.00025028	 0.00058528	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00014000	 0.00000000
-                        0	 0.00002444	 0.00000000	 0.00000000	 0.00000722	 0.00001333	 0.00002222	 0.00005722
-                        5	 0.00017778	 0.00025333	 0.00022333	 0.00052500	 0.00015611	 0.00016028	 0.00017194
-                        10	 0.00018806	 0.00016750	 0.00016306	 0.00013250	 0.00021694	 0.00025250	 0.00029167
-                        15	 0.00018583	 0.00016972	 0.00018417	 0.00026222	 0.00025333	 0.00030278	 0.00035639
-                        20	 0.00025500	 0.00020417	 0.00021694	 0.00018917	 0.00029667	 0.00035333	 0.00042417
-                        25	 0.00027750	 0.00032639	 0.00035667	 0.00021389	 0.00037389	 0.00036333	 0.00046250
-                        30	 0.00034472	 0.00038806	 0.00043194	 0.00026861	 0.00046722	 0.00045528	 0.00044278
-                        40	 0.00048778	 0.00054278	 0.00056806	 0.00027694	 0.00058472	 0.00058083	 0.00056833
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CMNAIML">
-            <description>YAWING MOMENT INCREMENT DUE TO AIML</description>
-            <product>
-                <property>metrics/stores-aiml-factor</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                        -20	        -10	         -5	          0	          5	         10	         20
-                        -10	 0.00077972	 0.00034667	 0.00012111	 0.00000000	 0.00000000	 0.00000833	 0.00006528
-                        -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00003583	 0.00002194	 0.00001278
-                        0	 0.00000000	 0.00000000	 0.00000000	 0.00000056	 0.00002972	 0.00005917	 0.00016444
-                        5	 0.00000000	 0.00000000	 0.00000000	 0.00002139	 0.00005472	 0.00008306	 0.00014611
-                        10	 0.00000000	 0.00000000	 0.00001472	 0.00004306	 0.00006944	 0.00009889	 0.00016306
-                        15	 0.00000000	 0.00002167	 0.00004250	 0.00006500	 0.00009500	 0.00011694	 0.00017333
-                        20	 0.00001361	 0.00006333	 0.00006083	 0.00008778	 0.00011472	 0.00013917	 0.00018361
-                        25	 0.00003500	 0.00006889	 0.00007583	 0.00009194	 0.00010194	 0.00011139	 0.00018000
-                        30	 0.00005556	 0.00006833	 0.00008917	 0.00010361	 0.00011778	 0.00012361	 0.00013056
-                        40	 0.00003389	 0.00008167	 0.00010083	 0.00011972	 0.00014167	 0.00015417	 0.00017222
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CMNAIMR">
-            <description>YAWING MOMENT INCREMENT DUE TO AIMR</description>
-            <product>
-                <property>metrics/stores-aimr-factor</property>
+                <sum>
+                    <property>-metrics/stores-aiml-factor</property>
+                    <property>metrics/stores-aimr-factor</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1105,7 +995,10 @@
         <function name="aero/coefficients/CFYTNK">
             <description>SIDE FORCE INCREMENT DUE TO TANK CFYTNK(ALPHA,BETA)</description>
             <product>
-                <property>metrics/stores-tank-factor</property>
+                <sum>
+                    <property>metrics/stores-tank-factor-l</property>
+                    <property>metrics/stores-tank-factor-r</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1167,7 +1060,10 @@
         <function name="aero/coefficients/CMLTNK">
             <description>ROLLING MOMENT INCREMENT DUE TO TANK CMLTNK(ALPHA,BETA)</description>
             <product>
-                <property>metrics/stores-tank-factor</property>
+                <sum>
+                    <property>metrics/stores-tank-factor-l</property>
+                    <property>metrics/stores-tank-factor-r</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1229,7 +1125,10 @@
         <function name="aero/coefficients/CMNTNK">
             <description>YAWING MOMENT INCREMENT DUE TO TANK CMNTNK(ALPHA,BETA)</description>
             <product>
-                <property>metrics/stores-tank-factor</property>
+                <sum>
+                    <property>metrics/stores-tank-factor-l</property>
+                    <property>metrics/stores-tank-factor-r</property>
+                </sum>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2006,37 +1905,6 @@
                         5		-0.01000000
                         10		-0.00250000
                         20		 0.00000000
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/DCMAIM">
-            <description>Pitch moment increment due to aim missiles</description>
-            <product>
-                <property>fcs/aim-fitted</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">velocities/mach</independentVar>
-                    <tableData>
-                        0.8	       0.85	        0.9
-                        -6	-0.01500000	-0.03300000	-0.03200000
-                        -5	-0.01500000	-0.03100000	-0.03100000
-                        -4	-0.01500000	-0.03000000	-0.03000000
-                        -3	-0.01000000	-0.02200000	-0.02800000
-                        -2	-0.00500000	-0.01000000	-0.02000000
-                        -1	-0.00300000	-0.00400000	-0.00600000
-                        0	-0.00200000	-0.00300000	-0.00200000
-                        1	-0.00100000	-0.00200000	 0.00000000
-                        2	 0.00000000	 0.00000000	 0.00200000
-                        3	 0.00200000	 0.00300000	 0.00400000
-                        4	 0.00300000	 0.00600000	 0.00700000
-                        5	 0.00500000	 0.00700000	 0.00700000
-                        6	 0.01000000	 0.00800000	 0.00600000
-                        7	 0.01000000	 0.01000000	 0.01600000
-                        8	 0.00500000	 0.01000000	 0.01200000
-                        9	 0.00300000	 0.00600000	 0.01200000
-                        10	 0.00000000	 0.00400000	 0.01200000
-                        20	 0.00000000	 0.00400000	 0.01200000
                     </tableData>
                 </table>
             </product>
@@ -5032,8 +4900,7 @@
             <sum>
                 <property>aero/coefficients/CFZB</property>
                 <property>aero/coefficients/CFZTNK</property>
-                <property>aero/coefficients/CFZAIML</property>
-                <property>aero/coefficients/CFZAIMR</property>
+                <property>aero/coefficients/CFZAIM</property>
                 <property>aero/coefficients/ClDFM</property>
                 <property>aero/coefficients/ClUC</property>
                 <property>aero/coefficients/DClRamp</property>
@@ -5055,8 +4922,7 @@
                 <sum>
                     <property>aero/coefficients/CFXB</property>
                     <property>aero/coefficients/CFXTNK</property>
-                    <property>aero/coefficients/CFXAIML</property>
-                    <property>aero/coefficients/CFXAIMR</property>
+                    <property>aero/coefficients/CFXAIM</property>
                     <property>aero/coefficients/CdUC</property>
                     <property>aero/coefficients/CdDBRK</property>
                     <property>aero/coefficients/CdDFM</property>
@@ -5086,8 +4952,7 @@
                 <property>aero/coefficients/CYDTD</property>
                 <property>aero/coefficients/CYRB</property>
                 <property>aero/coefficients/CFYTNK</property>
-                <property>aero/coefficients/CFYAIML</property>
-                <property>aero/coefficients/CFYAIMR</property>
+                <property>aero/coefficients/CFYAIM</property>
             </sum>
         </function>
         <axis name="SIDE">
@@ -5110,8 +4975,7 @@
                 <property>aero/coefficients/CMLDTD</property>
                 <property>aero/coefficients/CMLDCLB</property>
                 <property>aero/coefficients/CMLTNK</property>
-                <property>aero/coefficients/CMLAIML</property>
-                <property>aero/coefficients/CMLAIMR</property>
+                <property>aero/coefficients/CMLAIM</property>
             </sum>
         </function>
         <axis name="ROLL">
@@ -5129,14 +4993,12 @@
             <sum>
                 <property>aero/coefficients/CMM1</property>
                 <property>aero/coefficients/CMMQ</property>
-                <property>aero/coefficients/DCMAIM</property>
                 <property>aero/coefficients/CMUC</property>
                 <property>aero/coefficients/CMDFM</property>
                 <property>aero/coefficients/DCMRamp</property>
                 <property>aero/coefficients/CMMTNK</property>
                 <property>aero/coefficients/DCMGE</property>
-                <property>aero/coefficients/CMMAIML</property>
-                <property>aero/coefficients/CMMAIMR</property>
+                <property>aero/coefficients/CMMAIM</property>
             </sum>
         </function>
         <axis name="PITCH">
@@ -5160,8 +5022,7 @@
                 <property>aero/coefficients/CMNDAD</property>
                 <property>aero/coefficients/CMNRB</property>
                 <property>aero/coefficients/CMNTNK</property>
-                <property>aero/coefficients/CMNAIML</property>
-                <property>aero/coefficients/CMNAIMR</property>
+                <property>aero/coefficients/CMNAIM</property>
             </sum>
         </function>
         <axis name="YAW">
@@ -5176,26 +5037,7 @@
             </function>
         </axis>
     </aerodynamics>
-    <output name="c:/temp/F-15-JSBOut.csv" type="CSV" rate="10">
-        <property caption="accel-error">cas/pitch/accel-error</property>
-        <property caption="pilot-gdamped">/accelerations/pilot-gdamped</property>
-        <property caption="accel-leadlag">cas/pitch/accel-leadlag</property>
-        <property caption="accel-leadlag-v">cas/pitch/accel-leadlag-v</property>
-        <property caption="accel-feel">cas/pitch/accel-feel</property>
-        <property caption="accel-demand">cas/pitch/accel-demand</property>
-        <property caption="accel-fixed">cas/pitch/accel-fixed</property>
-        <property caption="elapsed-sec">/sim/time/elapsed-sec</property>
-        <property caption="vc-kts">velocities/vc-kts</property>
-        <property caption="elevon-aero-deg">fcs/elevon-aero-deg</property>
-        <property caption="weight-lbs">inertia/weight-lbs</property>
-        <property caption="mach">velocities/mach</property>
-        <property caption="h-sl-ft">position/h-sl-ft</property>
-        <property caption="augmentation-alight">propulsion/engine/augmentation-alight</property>
-        <property caption="thrust-lbs">propulsion/engine/thrust-lbs</property>
-        <property caption="n2">propulsion/engine/n2</property>
-       
-    </output>
-    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+     <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <property>position/aircraft-on-ground</property>
         <property>velocities/h-dot-fps</property>
         <property>velocities/u-aero-fps</property>
