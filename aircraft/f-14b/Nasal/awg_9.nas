@@ -347,6 +347,7 @@ var az_scan = func(notification) {
 # be ok; the values (distance etc) will be read from the target list so these will be accurate
 # which isn't quite how radar works but it will be good enough for us.
 
+    setprop("sim/multiplay/visibility-range-nm", 200);
     range_radar2 = RangeRadar2.getValue();
     
     if (1==1 or swp_dir != swp_dir_last)
