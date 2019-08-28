@@ -789,7 +789,8 @@ var common_init = func {
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
-        print("Setting replay medium res to 50hz");
+        setprop("sim/multiplay/visibility-range-nm", 200);
+	print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
         setprop("/controls/flight/SAS-roll",0);
         setprop("sim/model/f-14b/controls/AFCS/altitude",0);
