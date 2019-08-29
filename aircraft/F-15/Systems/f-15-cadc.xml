@@ -301,6 +301,16 @@
             </function>
             <output>inertia/cg-x-mac-percent</output>
         </fcs_function>
+        <fcs_function name="inertia/backseat-mass">
+            <function>
+                <product>
+                    <p>metrics/two-place-canopy</p> <!-- identifies this is a -D variant -->
+                    <v>500</v>
+                </product>
+            </function>
+            <output>inertia/pointmass-weight-lbs[15]</output>
+
+        </fcs_function>
 
         <fcs_function name="pb">
             <description>PB Denormalization</description>
