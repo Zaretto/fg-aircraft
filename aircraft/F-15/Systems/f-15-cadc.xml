@@ -41,6 +41,11 @@
             </function>
         </fcs_function>
         
+        <pure_gain name="metrics/stores-tank-factor-l-negated">
+            <input>metrics/stores-tank-factor-l</input>
+            <gain>-1</gain>
+        </pure_gain>
+        
         <fcs_function name="metrics/stores-tank-factor-c">
             <function>
                 <ifthen>
@@ -83,7 +88,7 @@
         <fcs_function name="metrics/stores-tank-factor">
             <function>
                 <sum>
-                    <p>-metrics/stores-tank-factor-l</p>
+                    <p>metrics/stores-tank-factor-l-negated</p>
                     <p>metrics/stores-tank-factor-c</p>
                     <p>metrics/stores-tank-factor-r</p>
                 </sum>
@@ -224,6 +229,12 @@
                 </sum>
             </function>
         </fcs_function>
+
+        <pure_gain name="metrics/stores-aiml-factor-negated">
+            <input>metrics/stores-aiml-factor</input>
+            <gain>-1</gain>
+        </pure_gain>
+        
         <fcs_function name="metrics/stores-aimr-factor">
             <function>
                 <sum>
