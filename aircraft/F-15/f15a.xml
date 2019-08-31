@@ -788,10 +788,11 @@
                     <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
                     <independentVar lookup="column">systems/NWS/engaged</independentVar>
                     <tableData>
-                        0   1    2
-                        0   0   35   15
-                        40   0   35   15
-                        300 0   0    0
+                               0   1    2
+                          0   0   35   15
+                         40   0   35   7.5
+                        100   0   35   2.5
+                        300   0    0    0
                     </tableData>
                 </table>
                 <output>fcs/steer-pos-deg</output>
@@ -5066,6 +5067,7 @@
         <property caption="CgXMACPercent">inertia/cg-x-mac-percent</property>
         <property caption="Flap">fcs/flap-pos-norm</property>
         <property caption="Gear">gear/gear-dmd-norm</property>
+        <property caption="PtcFeedbackG">cas/ptc-feedback-g</property>
     </output>
     <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <property>position/aircraft-on-ground</property>
