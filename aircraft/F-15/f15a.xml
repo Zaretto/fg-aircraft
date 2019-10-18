@@ -5047,7 +5047,8 @@
             </function>
         </axis>
     </aerodynamics>
-    <output name="c:/temp/F-15-JSBOut.csv" type="CSV" rate="10">
+     <!--
+        <output name="c:/temp/F-15-JSBOut.csv" type="CSV" rate="10">
         <property caption="AccelError">cas/pitch/accel-error</property>
         <property caption="PilotGdamped">/accelerations/pilot-gdamped</property>
         <property caption="AccelLeadlag">cas/pitch/accel-leadlag</property>
@@ -5068,8 +5069,15 @@
         <property caption="Flap">fcs/flap-pos-norm</property>
         <property caption="Gear">gear/gear-dmd-norm</property>
         <property caption="PtcFeedbackG">cas/ptc-feedback-g</property>
+        <property caption="Pb">aero/pb</property>
+        <property caption="Qb">aero/qb</property>
+        <property caption="Rb">aero/rb</property>
+        <property caption="Ax">accelerations/a-pilot-x-ft_sec2</property>
+        <property caption="Ay">accelerations/a-pilot-y-ft_sec2</property>
+        <property caption="Az">accelerations/a-pilot-z-ft_sec2</property>
     </output>
-    <!--<output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+
+     <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <property>position/aircraft-on-ground</property>
         <property>velocities/h-dot-fps</property>
         <property>velocities/u-aero-fps</property>
