@@ -242,7 +242,7 @@ obj.dlzY = 70;
                                                                          obj.VV_y = (val.Alpha or 0)*10; # adjust for view
                                                                          obj.VV.setTranslation (obj.VV_x, obj.VV_y);
                                                                      }),
-                            props.UpdateManager.FromHashList(["InstrumentedG", "CadcOwsMaximumG"], 0.1, func(val)
+                            props.UpdateManager.FromHashList(["InstrumentedG", "CadcOwsMaximumG"], 0.05, func(val)
                                                                      {
                                                                          obj.window8.setText(sprintf("%02d %02d", 
                                                                                                      math.round(val.InstrumentedG*10.0), 
