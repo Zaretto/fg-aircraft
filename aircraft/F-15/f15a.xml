@@ -4917,9 +4917,10 @@
                 <property>aero/coefficients/DClGE</property>
             </sum>
         </function>
-        <axis name="LIFT">
+        <axis name="Z">
             <function name="aero/force/LIFT">
                 <product>
+<v>-1</v>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CLIFT</property>
@@ -4943,9 +4944,10 @@
                 <property>aero/coefficients/CdMach</property>
             </product>
         </function>
-        <axis name="DRAG">
+        <axis name="X">
             <function name="aero/force/DRAG">
                 <product>
+<v>-1</v>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CDRAG</property>
@@ -4965,7 +4967,7 @@
                 <property>aero/coefficients/CFYAIM</property>
             </sum>
         </function>
-        <axis name="SIDE">
+        <axis name="Y">
             <function name="aero/force/SIDE">
                 <product>
                     <property>aero/qbar-psf</property>
