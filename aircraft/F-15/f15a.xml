@@ -4917,10 +4917,9 @@
                 <property>aero/coefficients/DClGE</property>
             </sum>
         </function>
-        <axis name="Z">
+        <axis name="LIFT">
             <function name="aero/force/LIFT">
                 <product>
-<v>-1</v>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CLIFT</property>
@@ -4929,7 +4928,6 @@
             </function>
         </axis>
         <function name="aero/coefficients/CDRAG">
-            <product>
                 <sum>
                     <property>aero/coefficients/CFXB</property>
                     <property>aero/coefficients/CFXTNK</property>
@@ -4937,20 +4935,18 @@
                     <property>aero/coefficients/CdUC</property>
                     <property>aero/coefficients/CdDBRK</property>
                     <property>aero/coefficients/CdDFM</property>
-                    <!--<property>aero/coefficients/DCdRamp</property>-->
+                <property>aero/coefficients/DCdRamp</property>
                     <property>aero/coefficients/DCdGE</property>
                     <property>aero/coefficients/DCdCFT</property>
                 </sum>
-                <property>aero/coefficients/CdMach</property>
-            </product>
         </function>
-        <axis name="X">
+        <axis name="DRAG">
             <function name="aero/force/DRAG">
                 <product>
-<v>-1</v>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CDRAG</property>
+                    <property>aero/coefficients/CdMach</property>
                 </product>
             </function>
         </axis>
@@ -4967,7 +4963,7 @@
                 <property>aero/coefficients/CFYAIM</property>
             </sum>
         </function>
-        <axis name="Y">
+        <axis name="SIDE">
             <function name="aero/force/SIDE">
                 <product>
                     <property>aero/qbar-psf</property>
