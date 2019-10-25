@@ -235,36 +235,36 @@
             <c1>cas/ptc-i-gain</c1>
             <trigger>cas/ptc-saturated</trigger>
             <output>cas/ptc-pitch-integrator-v</output>
-            <clipto>
-                <min>-0.48</min>
-                <max>0.51</max>
-            </clipto>
         </integrator>
 
-        <summer name="cas/ptc-feedback-g">
-            <input>cas/ptc-pitch-integrator</input>
-            <input>cas/ptc-computed-pitch</input>
-        </summer>
+    <summer name="cas/ptc-feedback-g">
+      <input>cas/ptc-pitch-integrator</input>
+      <input>cas/ptc-computed-pitch</input>
+      <clipto>
+        <min>-0.057142857142857</min>
+        <max>0.02235157142857142857</max>
+      </clipto>
+    </summer>
 
-        <summer name="cas/pitch-output-sum">
-			<input>cas/pitch-q-feedback</input>
-            <input>cas/ptc-feedback-g</input>
-            <clipto>
-				<min>-0.4857142857142857</min>
-				<max>0.5157142857142857</max>
-			</clipto>
-		</summer>
-		
-		<switch name="cas/pitch-output">
-			<default value="0"/>
-			<test value="cas/pitch-output-sum">
-				cas/pitch-cas-active eq 1
-			</test>
-		</switch>
-	
-	</channel>
-	
-	<channel name="Yaw Axis">
+    <summer name="cas/pitch-output-sum">
+      <input>cas/pitch-q-feedback</input>
+      <input>cas/ptc-feedback-g</input>
+      <clipto>
+        <min>-0.057142857142857</min>
+        <max>0.02235157142857142857</max>
+      </clipto>
+    </summer>
+
+    <switch name="cas/pitch-output">
+      <default value="0"/>
+      <test value="cas/pitch-output-sum">
+        cas/pitch-cas-active eq 1
+      </test>
+    </switch>
+
+  </channel>
+
+  <channel name="Yaw Axis">
 		
 		<washout_filter name="cas/r-washout">
 			<input>velocities/r-rad_sec</input>
