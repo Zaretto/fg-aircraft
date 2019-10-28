@@ -21,13 +21,25 @@
 	-->
 	
 	<channel name="Common">
-		
-		<switch name="fcs/stick-pitch">
-			<default value="0"/>
-			<test value="fcs/elevator-cmd-norm">
-				autoflight/input/pitch-switch ne 1
-			</test>
-		</switch>
+    <!-- Pitch Trim -->
+
+    <fcs_function name="fcs/elevator-cmd-norm-trim">
+      <description>
+      </description>
+      <function>
+        <sum>
+          <p>fcs/pitch-trim-cmd-norm</p>
+          <p>fcs/elevator-cmd-norm</p>
+        </sum>
+      </function>
+    </fcs_function>
+
+    <switch name="fcs/stick-pitch">
+      <default value="0"/>
+      <test value="fcs/elevator-cmd-norm-trim">
+        autoflight/input/pitch-switch ne 1
+      </test>
+    </switch>
 		
         <!--pure_gain name="fcs/stick-pitch">
 			<desription>
@@ -188,7 +200,6 @@
         <summer name="fcs/pitch-input-sum">
 			<input>fcs/stick-pitch-scheduled</input> <!-- Stick Input with A/P off -->
 			<input>fcs/css-pitch-scheduled</input> <!-- Stick Input in CSS A/P mode -->
-			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
 			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
 			<input>fcs/pitch-trim-compensation</input> <!-- Pitch Trim Compensation -->
 			<input>cas/pitch-output</input> <!-- CAS Pitch Command -->
