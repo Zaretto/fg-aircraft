@@ -20,9 +20,13 @@
                     <value>1.1</value>
                 </greater-than>
                 <greater-than>
-                    <property>/position/altitude-ft</property>
-                    <value>19000</value>
+                    <property>environment/relative-humidity</property>
+                    <value>60</value>
                 </greater-than>
+                <less-than>
+                    <property>/environment/temperature-degc</property>
+                    <value>-36.5</value>
+                </less-than>
                 <not>
                     <property>fdm/jsbsim/gear/wow</property>
                 </not>
