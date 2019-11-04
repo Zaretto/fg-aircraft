@@ -1339,6 +1339,8 @@ print("Lookup missile ",type," ID=",m.ID);
             msg.IsDistinct = 1;
             msg.UniqueIndex = me.unique_id;
             f14.geoBridgedTransmitter.NotifyAll(msg);
+print("fox2.nas: transmit in flight");
+f14.debugRecipient(msg);
         }
 		me.last_dt = me.dt;
 		settimer(func me.flight(), update_loop_time, SIM_TIME);		
@@ -2211,6 +2213,8 @@ print("Lookup missile ",type," ID=",m.ID);
                         msg.Distance = min_distance;
                         msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
                         f14.geoBridgedTransmitter.NotifyAll(msg);
+print("fox2.nas: transmit ",reason);
+f14.debugRecipient(msg);
                     }
                 }
                 else
@@ -2263,6 +2267,8 @@ print("Lookup missile ",type," ID=",m.ID);
                     msg.Bearing = explosion_coord.course_to(me.t_coord);
                     msg.Distance = direct_dist_m;
                     msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+print("fox2.nas: transmit ",reason);
+f14.debugRecipient(msg);
                     f14.geoBridgedTransmitter.NotifyAll(msg);
                 }
             }

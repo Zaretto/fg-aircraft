@@ -406,12 +406,12 @@ debugRecipient.Receive = func(notification)
 {
     if (notification.NotificationType == "GeoEventNotification")
     {
-        print("recv: ",notification.NotificationType, " ", notification.Ident);
+        print("recv(1): ",notification.NotificationType, " ", notification.Ident);
 		debug.dump(notification);
     }
-    if (notification.NotificationType == "ArmamentNotification") {
+    else if (notification.NotificationType == "ArmamentNotification") {
         if (notification.FromIncomingBridge) {
-            print("recv: ",notification.NotificationType, " ", notification.Ident,
+            print("recv(2): ",notification.NotificationType, " ", notification.Ident,
                   " Kind=",notification.Kind,
                   " SecondaryKind=",notification.SecondaryKind,
                   " RelativeAltitude=",notification.RelativeAltitude,
@@ -421,18 +421,19 @@ debugRecipient.Receive = func(notification)
             debug.dump(notification);
         }
     }
-	slat_generic.setDoubleValue(slat_output.getValue());
+#--	slat_generic.setDoubleValue(slat_output.getValue());
     #wing_sweep_generic.setDoubleValue(currentSweep);
-	lighting_collision_generic.setIntValue(lighting_collision.getValue());
-	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
-	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
-	right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
-	lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
+#--	lighting_collision_generic.setIntValue(lighting_collision.getValue());
+#--	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
+#--	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
+#--	right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
+#--	lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
 
-setprop("/sim/multiplay/generic/float[8]", getprop("/engines/engine[0]/augmentation-burner" ));
-setprop("/sim/multiplay/generic/float[9]", getprop("/engines/engine[1]/augmentation-burner" ));
-setprop("/sim/multiplay/generic/float[10]", getprop("/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" ));
-setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" ));
+#--setprop("/sim/multiplay/generic/float[8]", getprop("/engines/engine[0]/augmentation-burner" ));
+#--setprop("/sim/multiplay/generic/float[9]", getprop("/engines/engine[1]/augmentation-burner" ));
+#--setprop("/sim/multiplay/generic/float[10]", getprop("/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" ));
+#--setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" ));
+
 #setprop("/sim/multiplay/generic/int[8]", getprop("/engines/engine[0]/afterburner" ));
 #setprop("/sim/multiplay/generic/int[9]", getprop("/engines/engine[1]/afterburner" ));
 

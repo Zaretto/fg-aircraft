@@ -338,7 +338,7 @@ var DamageRecipient =
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
             if (notification.NotificationType == "GeoEventNotification") {
-                print("recv: ",notification.NotificationType, " ", notification.Ident, 
+                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
                       " Kind=",notification.Kind,
                       " Name=",notification.Name,
                       " SecondaryKind=",notification.SecondaryKind,
@@ -405,7 +405,7 @@ var DamageRecipient =
             }
             if (notification.NotificationType == "ArmamentNotification") {
                 if (notification.FromIncomingBridge) {
-                    print("recv: ",notification.NotificationType, " ", notification.Ident,
+                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
                           " Kind=",notification.Kind,
                           " SecondaryKind=",notification.SecondaryKind,
                           " RelativeAltitude=",notification.RelativeAltitude,
