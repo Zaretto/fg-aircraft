@@ -21,15 +21,27 @@
 	-->
 	
 	<channel name="Common">
+    <!-- Pitch Trim -->
+
+    <fcs_function name="fcs/elevator-cmd-norm-trim">
+      <description>
+      </description>
+      <function>
+        <sum>
+          <p>fcs/pitch-trim-cmd-norm</p>
+          <p>fcs/elevator-cmd-norm</p>
+        </sum>
+      </function>
+    </fcs_function>
+
+    <switch name="fcs/stick-pitch">
+      <default value="0"/>
+      <test value="fcs/elevator-cmd-norm-trim">
+        autoflight/input/pitch-switch ne 1
+      </test>
+    </switch>
 		
-		<switch name="fcs/stick-pitch">
-			<default value="0"/>
-			<test value="fcs/elevator-cmd-norm">
-				autoflight/input/pitch-switch ne 1
-			</test>
-		</switch>
-		
-		<!--pure_gain name="fcs/stick-pitch">
+        <!--pure_gain name="fcs/stick-pitch">
 			<desription>
 				I use this for tuning the PRC - limit to 50% stick and tune to 5G
 				on the aircraft full deflection should be 8g - but until we do something about that
@@ -39,6 +51,49 @@
 			<gain>0.5</gain>
 		</pure_gain-->
 		
+		<fcs_function name="fcs/stick-pitch-scheduled">
+			<description>
+				Longitudinal position adjusted for position instead of force
+				(fig 17 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/stick-pitch</independentVar>
+					<tableData>
+						-1.000 -1.00000
+						-0.188 -0.06729
+						-0.001  0.00000
+						 0.003  0.00000
+						 0.351  0.19635
+						 1.000  1.00000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+        
+        <fcs_function name="fcs/stick-commanded-g">
+            <description>
+                Longitudinal CAS feel characteristics. Stick Force / command normal load factor G
+                Adjusted from force to position based on applied force (as we have no way of measuring
+                applied force)
+                
+                (fig 18 - NASA TM 72861)
+            </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/stick-pitch-scheduled</independentVar>
+                    <tableData>
+                        -1.000	 8
+                        -0.188	 4
+                        -0.001	 1
+                        -0.000	 1
+                         0.003	 1
+                         0.351	-2
+                         1.000	-4
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
 		<switch name="fcs/css-pitch">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/ss/elevator-norm">
@@ -46,6 +101,26 @@
 				autoflight/ss/elevator-norm ne 0
 			</test>
 		</switch>
+		
+		<fcs_function name="fcs/css-pitch-scheduled">
+			<description>
+				Longitudinal position adjusted for position instead of force
+				(fig 17 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/css-pitch</independentVar>
+					<tableData>
+						-1.000 -1.00000
+						-0.188 -0.06729
+						-0.001  0.00000
+						 0.003  0.00000
+						 0.351  0.19635
+						 1.000  1.00000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 		
 		<switch name="fcs/stick-roll">
 			<default value="0"/>
@@ -77,41 +152,54 @@
 	</channel>
 	
 	<channel name="Elevons">
-		
-		<fcs_function name="fcs/pitch-trim-compensation"> <!--RJH: Rebuilt this table 2014-04-28 based on flight test data-->
-			<function>
-				<table>
-					<independentVar lookup="row">velocities/vc-kts</independentVar>
-					<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-					<tableData>
-						     0         35
-						170	-0.248276 -0.248276
-						200	-0.239924 -0.151900
-						220	-0.188621 -0.108500
-						250	-0.140241 -0.032352
-						300	-0.089241  0.013303
-						350	-0.060369 -0.030000
-						400	-0.040269 -0.030000
-						450	-0.027059 -0.030000
-						500	-0.017683 -0.030000
-						550	-0.006476 -0.030000
-						575	 0.001893 -0.030000
-						600	 0.006824 -0.030000
-						625	 0.009586 -0.030000
-						650	 0.010607 -0.030000
-						700	 0.011903 -0.030000
-						750	 0.012745 -0.030000
-						800	 0.013397 -0.030000
-						833	 0.013752 -0.030000
-					</tableData>
-				</table>
-			</function>
-		</fcs_function>
-		
-		<summer name="fcs/pitch-input-sum">
-			<input>fcs/stick-pitch</input> <!-- Stick Input with A/P off -->
-			<input>fcs/css-pitch</input> <!-- Stick Input in CSS A/P mode -->
-			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
+        <fcs_function name="fcs/pitch-trim-compensation">
+            <!-- this is a 3 part function
+                   base values
+                   - deltas for gear
+                   - deltas for flaps
+            -->
+            <function>
+                <product>
+                    <v>1</v>
+                    <description>PTC PRESET ELEVATOR TRIM(DEGREES) DUE TO AIRSPEED AND MAC% F(VC, MAC%)</description>
+                    <sum>
+                        <!-- PTC PRESET ELEVATOR TRIM(DEGREES) DUE TO AIRSPEED AND MAC% F(VC, MAC%) -->
+                        <table>
+                            <independentVar lookup="row">velocities/vc-kts</independentVar>
+                            <independentVar lookup="column">inertia/cg-x-mac-percent</independentVar>
+                            <tableData>
+                                             20         20.5           21         21.5           22         22.5           23         23.5           24
+                                190    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000
+                                200   -0.222270   -0.222450   -0.228983   -0.244722   -0.273146   -0.174354   -0.161585   -0.141665   -0.141665
+                                250   -0.130184   -0.130167   -0.131723   -0.143852   -0.157158   -0.097033   -0.091520   -0.088460   -0.088460
+                                300   -0.081073   -0.081589   -0.083858   -0.089115   -0.090965   -0.060288   -0.055246   -0.051484   -0.051484
+                                350   -0.041472   -0.039374   -0.041562   -0.045228   -0.030029   -0.030701   -0.024068   -0.007630   -0.007630
+                                400   -0.005571   -0.005793   -0.006567   -0.009482   -0.008097    0.000238    0.000490   -0.091142   -0.091142
+                                450   -0.089492   -0.009026   -0.037256    0.009159   -0.010570   -0.014307    0.041271    0.077493    0.077493
+                                500   -0.001433   -0.017378    0.003975    0.017936    0.001710    0.019385   -0.048416   -0.003933   -0.003933
+                                550    0.005941    0.005865    0.004781    0.003436    0.002097    0.008851    0.009415    0.009179    0.009179
+                                600    0.007333    0.007319    0.006506    0.004324    0.002039    0.010335    0.010754    0.011601    0.011601
+                                650    0.008539    0.008577    0.007756    0.006156    0.001042    0.011200    0.011478    0.012558    0.014850
+                                700    0.009650    0.009592    0.008659    0.008208   -0.000520    0.012253    0.012234    0.013363    0.015417
+                                750    0.010604    0.010639    0.009652    0.008640   -0.000261    0.013003    0.013216    0.013684    0.015810
+                                800    0.011343    0.011484    0.010651    0.009110    0.000741    0.013402    0.013718    0.014097    0.018045
+                                850    0.012020    0.011978    0.011257    0.010100    0.002525    0.013404    0.014234    0.005660    0.018137
+                                900    0.012484    0.012571    0.011734    0.010210    0.002257    0.014227    0.014565    0.011387    0.011881
+                                950    0.016950    0.016950    0.016950    0.016950    0.004375    0.023752    0.022349    0.020946    0.019544
+                                1000    0.017255    0.017255    0.017255    0.017074    0.017542    0.018216    0.018889    0.019563    0.020236
+                                1050    0.017623    0.017623    0.017565    0.017419    0.017982    0.018546    0.019109    0.019673    0.020236
+                                1100    0.017846    0.017842    0.018017    0.018201    0.018440    0.019031    0.019625    0.020220    0.020814
+                                1150    0.018443    0.018443    0.018443    0.018443    0.018443    0.018609    0.018764    0.018839    0.019496
+                            </tableData>
+                        </table>
+                      </sum>
+                </product>
+            </function>
+        </fcs_function>
+        
+        <summer name="fcs/pitch-input-sum">
+			<input>fcs/stick-pitch-scheduled</input> <!-- Stick Input with A/P off -->
+			<input>fcs/css-pitch-scheduled</input> <!-- Stick Input in CSS A/P mode -->
 			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
 			<input>fcs/pitch-trim-compensation</input> <!-- Pitch Trim Compensation -->
 			<input>cas/pitch-output</input> <!-- CAS Pitch Command -->
@@ -121,7 +209,7 @@
 			</clipto>
 		</summer>
 		
-		<fcs_function name="fcs/pitch-ratio-calc">
+		<fcs_function name="fcs/pitch-ratio-calc-0">
 			<description>
 				RJH: 
 					Pitch Ratio: 
@@ -208,46 +296,55 @@
 					function of angle of attack. Yaw is affected by this also, since yaw
 					gain increases as roll gain decreases. No more rudder rolls, guys; all
 					you need for high angle of attack
+                    
+                    2019-08-17 : retuned with new PTC; it's now around 8g at all airspeeds (where there
+                                 is sufficient energy to sustain this)
+                    2019-08-18 : based on a better understanding of the above the PRCA is now a simple
+                                 1:1 at low qbar going to 1:6 at high qbar.
+                                 Values of low and high qbar are somewhat estimated based on 800kts
+                                 "pitch ratio changer gearing utilizes a 6:1 ratio" 
+                                    ref: https://www.f15sim.com/operation/f15_longitudinal_control.html
 			</description>
 			<function>
 				<table>
-					<independentVar lookup="row">atmosphere/density-altitude</independentVar>
-					<independentVar lookup="column">velocities/mach</independentVar>
+					<independentVar lookup="row">aero/qbar-psf</independentVar>
 					<tableData>
-						       0.5   0.6   0.7   0.8   0.9   1.0   1.1   1.2   1.3   1.4   1.5   1.6   1.7   1.8   1.9   2.0   2.1   2.2   2.3   2.4   2.5   2.6
-						    0  1.00  1.00  0.63  0.39  0.17  0.09  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08
-						 3000  1.00  1.00  0.77  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.05  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08
-						 5999  1.00  1.00  0.77  0.63  0.39  0.11  0.09  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08
-						 9000  1.00  1.00  0.77  0.63  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08
-						11999  1.00  1.00  1.00  0.77  0.63  0.39  0.11  0.09  0.06  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08  0.08  0.08  0.08
-						14999  1.00  1.00  1.00  0.77  0.63  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08  0.08  0.08
-						17999  1.00  1.00  1.00  1.00  0.77  0.63  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08  0.08
-						21000  1.00  1.00  1.00  1.00  0.77  0.63  0.39  0.17  0.11  0.09  0.09  0.06  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08  0.08
-						23999  1.00  1.00  1.00  1.00  1.00  0.77  0.63  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.06  0.06  0.05  0.07  0.08  0.08  0.08  0.08
-						26999  1.00  1.00  1.00  1.00  1.00  0.77  0.63  0.63  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.06  0.06  0.05  0.07  0.07  0.08  0.08
-						30000  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.63  0.39  0.39  0.17  0.11  0.09  0.06  0.06  0.06  0.06  0.06  0.06  0.05  0.07  0.08
-						32999  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.39  0.39  0.17  0.11  0.09  0.09  0.06  0.06  0.06  0.06  0.06  0.05  0.07
-						35999  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.39  0.39  0.17  0.11  0.11  0.09  0.06  0.06  0.06  0.06  0.06  0.06
-						38999  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.39  0.39  0.17  0.11  0.11  0.09  0.06  0.06  0.06  0.06  0.06
-						39371  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.39  0.39  0.17  0.11  0.11  0.09  0.06  0.06  0.06  0.06  0.06
-						41999  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.63  0.63  0.39  0.39  0.17  0.11  0.11  0.09  0.09  0.06  0.06  0.06
-						42294  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.63  0.63  0.39  0.39  0.17  0.17  0.11  0.09  0.09  0.06  0.06
-						44999  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.63  0.39  0.39  0.17  0.17  0.11  0.11  0.09
-						45205  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.63  0.39  0.39  0.17  0.17  0.11  0.11  0.09
-						47999  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.63  0.39  0.39  0.17  0.17  0.11  0.11
-						48635  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.63  0.39  0.39  0.17  0.17  0.11  0.11  0.09
-						50999  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.63  0.63  0.39  0.39  0.39  0.17  0.17  0.11
-						51438  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.77  0.77  0.77  0.63  0.63  0.39  0.39  0.17  0.17  0.11
-					</tableData>
+                        300  1.00000
+                        1300 0.16667
+                    </tableData>
 				</table>
 			</function>
 			<clipto>
-				<min>0.01</min>
+				<min>0.166667</min>
 				<max>1.0</max>
 			</clipto>
 		</fcs_function>
-		
-		<switch name="fcs/pitch-ratio">
+        <fcs_function name="fcs/pitch-ratio-calc-1">
+            <function>
+                <table>
+                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
+                    <tableData>
+                        0.15 0.90
+                        0.25 1.0
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min>0.65</min>
+                <max>1.0</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="fcs/pitch-ratio-calc">
+            <function>
+                <product>
+                    <p>fcs/pitch-ratio-calc-0</p>
+                    <p>fcs/pitch-ratio-calc-1</p>
+                </product>
+            </function>
+        </fcs_function>
+
+        <switch name="fcs/pitch-ratio">
 			<default value="fcs/pitch-ratio-calc"/>
 			<test logic="OR" value="0.5">
 				systems/hydraulics/flight-system-pressure ne 1

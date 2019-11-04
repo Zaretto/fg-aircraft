@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <!-- F-15 All Variants
-   |  Richard Harrison: 2015-06-29 : rjh@zaretto.com - parts taken from F-14 by xii. 
-   | Authors:
+   | Richard Harrison: released 2015-06-29 : rjh@zaretto.com
+   |   
+   | Authors/Contributions:
    | Richard Harrison; flight and systems models. Cockpit model and operation. Revisions to external 3d model (engines, ramps, animations, speedbrake). Sound. Canvas HUD, MPCD, VSD, TEWS. Revisions to xii files for weapons, radar, etc.
-   | Enrique Laso: Original external 3d model.
-   | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work is largely unchanged.
+   |                   sole developer of original version (2014->2015)
+   |                   overall project lead since 2016
+   | Enrique Laso: Original external 3d model (2015).
+   | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work was a good basis. (pre 2015)
+   | Nikolai V. Chr.: Improvements to Weapons, Radar, new SIT on MPCD, HUD (2015->current)
+   | Joshua Davidson: Flight Controls and autopilot (2018-2019)
+   | ________________________________________________________________
+   | Various authors have contributed liveries as per commit history.
 -->
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <gear>
@@ -47,7 +54,7 @@
                 <engine n="1">
                     <augmentation-alight type="bool">false</augmentation-alight>
                 </engine>
-                <cft type="float">0</cft>
+                <cft alias="/sim/model/f15/cft"/>
             </propulsion>
             <systems>
                 <hydraulics>
@@ -70,7 +77,7 @@
     <sim>
         <minimum-fg-version>2017.2</minimum-fg-version>
         <description>F-15</description>
-        <author>Richard Harrison, Enrique Laso (3d), Nikolai V. Chr., Joshua Davidson (FCS/Autopilot)</author>
+        <author>Richard Harrison, Enrique Laso, Nikolai V. Chr., Joshua Davidson</author>
         <status>production</status>
         <config>
             <hud-filter type="int">1</hud-filter>
@@ -553,7 +560,7 @@
                 </default_exit>
             </map>
             <f15>
-                <cft alias="/fdm/jsbsim/propulsion/cft"/>
+                <cft type="float">0</cft>
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>

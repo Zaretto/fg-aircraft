@@ -790,7 +790,8 @@ var common_init = func {
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
-        print("Setting replay medium res to 50hz");
+        setprop("sim/multiplay/visibility-range-nm", 200);
+	print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
         setprop("/controls/flight/SAS-roll",0);
         setprop("sim/model/f-14b/controls/AFCS/altitude",0);
@@ -855,6 +856,12 @@ var init = func {
 	}
 
     common_init();
+#    f14.external_load_loopTimer.start();
+    
+    # make failure mode for radar, so that when aircraft is hit missiles cannot still be fired off.
+    var prop = "/instrumentation/radar";
+    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
 #    f14.external_load_loopTimer.start();
 }
 
