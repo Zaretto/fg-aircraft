@@ -898,17 +898,17 @@ emerg operation.
 -->
         <!--<pure_gain name="gear/unit[0]/pos-norm">
             <description>Landing gear unit 0 position</description>
-            <input>gear/gear-pos-norm</input>
+            <input>gear/gear-command-position-norm</input>
             <gain> 1</gain>
         </pure_gain>
         <pure_gain name="gear/unit[1]/pos-norm">
             <description>Landing gear unit 0 position</description>
-            <input>gear/gear-pos-norm</input>
+            <input>gear/gear-command-position-norm</input>
             <gain> 1</gain>
         </pure_gain>
         <pure_gain name="gear/unit[2]/pos-norm">
             <description>Landing gear unit 0 position</description>
-            <input>gear/gear-pos-norm</input>
+            <input>gear/gear-command-position-norm</input>
             <gain> 1</gain>
         </pure_gain>-->
 
@@ -942,14 +942,14 @@ emerg operation.
             </test>
             <test value="0">
                 <!-- unlocked. -->
-               gear/gear-pos-norm gt 0
-               gear/gear-pos-norm lt 1
+              gear/unit[0]/pos-norm gt 0
+              gear/unit[0]/pos-norm lt 1
             </test>
             <test value="1">
-               gear/gear-pos-norm le 0
+              gear/unit[0]/pos-norm le 0
             </test>
             <test value="-1">
-               gear/gear-pos-norm ge 1
+              gear/unit[0]/pos-norm ge 1
             </test>
         </switch>
         <switch name="gear/unit[1]/locked">
@@ -962,14 +962,14 @@ emerg operation.
             </test>
             <test value="0">
                 <!-- unlocked. -->
-               gear/gear-pos-norm gt 0
-               gear/gear-pos-norm lt 1
+                gear/unit[1]/pos-norm gt 0
+                gear/unit[1]/pos-norm lt 1
             </test>
             <test value="1">
-               gear/gear-pos-norm le 0
+                gear/unit[1]/pos-norm le 0
             </test>
             <test value="-1">
-               gear/gear-pos-norm ge 1
+                gear/unit[1]/pos-norm ge 1
             </test>
         </switch>
         <switch name="gear/unit[2]/locked">
@@ -981,15 +981,15 @@ emerg operation.
                 gear/emerg-pos lt 1
             </test>
             <test value="0">
-                <!-- unlocked. -->
-               gear/gear-pos-norm gt 0
-               gear/gear-pos-norm lt 1
+              <!-- unlocked. -->
+                gear/unit[2]/pos-norm gt 0
+                gear/unit[2]/pos-norm lt 1
             </test>
             <test value="1">
-               gear/gear-pos-norm le 0
+                gear/unit[2]/pos-norm le 0
             </test>
             <test value="-1">
-               gear/gear-pos-norm ge 1
+                gear/unit[2]/pos-norm ge 1
             </test>
         </switch>
         <switch name="gear/emerg-pos">
@@ -1135,61 +1135,43 @@ emerg operation.
         <fcs_function name="tied/fcs-gear-0-pos-norm">
             <function>
                 <ifthen>
-                    <and>
-                        <gt>
-                            <p>gear/unit[0]/damaged</p>
-                            <v>0</v>
-                        </gt>
-                        <gt>
-                            <p>gear/gear-pos-norm</p>
-                            <v>0.6</v>
-                        </gt>
-                    </and>
+                    <gt>
+                        <p>gear/unit[0]/damaged</p>
+                        <v>0</v>
+                    </gt>
                     <v>0.5</v>
-                    <p>gear/gear-pos-norm</p>
+                    <p>gear/gear-command-position-norm</p>
                 </ifthen>
             </function>
-            <output>gear/unit[0]/pos-norm</output>
+          <output>gear/unit[0]/pos-norm</output>
         </fcs_function>
 
         <fcs_function name="tied/fcs-gear-1-pos-norm">
             <function>
                 <ifthen>
-                    <and>
-                        <gt>
-                            <p>gear/unit[1]/damaged</p>
-                            <v>0</v>
-                        </gt>
-                        <gt>
-                            <p>gear/gear-pos-norm</p>
-                            <v>0.6</v>
-                        </gt>
-                    </and>
+                    <gt>
+                        <p>gear/unit[1]/damaged</p>
+                        <v>0</v>
+                    </gt>
                     <v>0.5</v>
-                    <p>gear/gear-pos-norm</p>
+                    <p>gear/gear-command-position-norm</p>
                 </ifthen>
             </function>
-            <output>gear/unit[1]/pos-norm</output>
+          <output>gear/unit[1]/pos-norm</output>
         </fcs_function>
         
         <fcs_function name="tied/fcs-gear-2-pos-norm">
             <function>
                 <ifthen>
-                    <and>
-                        <gt>
-                            <p>gear/unit[2]/damaged</p>
-                            <v>0</v>
-                        </gt>
-                        <gt>
-                            <p>gear/gear-pos-norm</p>
-                            <v>0.6</v>
-                        </gt>
-                    </and>
+                    <gt>
+                        <p>gear/unit[2]/damaged</p>
+                        <v>0</v>
+                    </gt>
                     <v>0.5</v>
-                    <p>gear/gear-pos-norm</p>
+                    <p>gear/gear-command-position-norm</p>
                 </ifthen>
             </function>
-            <output>gear/unit[2]/pos-norm</output>
+          <output>gear/unit[2]/pos-norm</output>
         </fcs_function>
         <!--End of gear damage handling-->
 
@@ -1202,7 +1184,7 @@ emerg operation.
             <test value="gear/emerg-pos">
               gear/emergency-handle ne 0
             </test>
-            <test value="gear/gear-pos-norm">
+            <test value="gear/gear-command-position-norm">
                 gear/serviceable ne 1
                 gear/emergency-handle lt 1
             </test>
@@ -1231,7 +1213,7 @@ emerg operation.
                     <time>     1.8 </time>
                 </setting>
             </traverse>
-            <output>gear/gear-pos-norm</output>
+            <output>gear/gear-command-position-norm</output>
         </kinematic>
 
         <!--<kinematic name="fcs/steer-pos-deg">
