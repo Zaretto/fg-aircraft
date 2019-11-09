@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PropertyList>
+    <name>flightgear-version-warning</name>
+    <layout>vbox</layout>
+
+    <color>
+        <red>0.2</red>
+        <green>0</green>
+        <blue>0</blue>
+        <alpha>0.9</alpha>
+    </color>
+
+    <group>
+        <layout>hbox</layout>
+        <text>
+            <color>
+                <red>0.9</red>
+                <green>0.9</green>
+                <blue>0.9</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <halign>left</halign>
+            <label>Unsupported FlightGear version</label>
+        </text>
+    </group>
+
+    <hrule/>
+
+    <group>
+        <layout>vbox</layout>
+
+        <text>
+            <color>
+                <red>0.9</red>
+                <green>0.9</green>
+                <blue>0.9</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <halign>left</halign>
+            <label>This version of flightgear is too old for the F-15.</label>
+        </text>
+
+        <text>
+            <color>
+                <red>0.9</red>
+                <green>0.9</green>
+                <blue>0.9</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <halign>left</halign>
+            <label></label>
+            <format>The F-15 requires FlightGear version %s</format>
+            <live>true</live>
+            <property>/sim/version/flightgear/min-model-version</property>
+        </text>
+
+        <text>
+            <color>
+                <red>0.9</red>
+                <green>0.9</green>
+                <blue>0.9</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <halign>left</halign>
+            <label>Certain things may not work - and you should upgrade FlightGear.</label>
+        </text>
+
+        <text>
+            <color>
+                <red>0.9</red>
+                <green>0.9</green>
+                <blue>0.9</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <halign>left</halign>
+            <label>- however you can Continue and see what happens</label>
+        </text>
+    </group>
+
+    <hrule/>
+
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <color>
+                <red>0.7</red>
+                <green>0</green>
+                <blue>0</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <legend>Continue</legend>
+            <binding>
+                <command>dialog-close</command>
+            </binding>
+        </button>
+
+        <button>
+            <color>
+                <red>1</red>
+                <green>0.6</green>
+                <blue>0</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <legend>Visit FlightGear downloads</legend>
+            <binding>
+                <command>open-browser</command>
+                <path>https://www.flightgear.org/download/</path>
+
+            </binding>
+        </button>
+
+        <button>
+            <color>
+                <red>0.0</red>
+                <green>0.4</green>
+                <blue>0</blue>
+                <alpha>0.9</alpha>
+            </color>
+            <legend>Exit FlightGear</legend>
+            <default>true</default>
+            <key>Esc</key>
+            <binding>
+                <command>exit</command>
+            </binding>
+        </button>
+
+    </group>
+
+</PropertyList>
