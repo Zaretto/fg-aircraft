@@ -20,7 +20,7 @@ var ext_loads_set = func(s) {
 	# Load set defines which weapons are mounted.
 	# It also defines which pylons are mounted, a pylon may
 	# support several weapons.
-	#WeaponsSet.setValue(s);
+	WeaponsSet.setValue(s);
 	if ( s == "Clean" ) {
 		pylons.clean(); return;
 	} elsif ( s == "FAD" ) {

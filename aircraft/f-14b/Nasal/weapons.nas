@@ -10,8 +10,10 @@ var GunRunning       = AcModel.getNode("systems/gun/running");
 var GunCountAi       = props.globals.getNode("ai/submodels/submodel[3]/count");
 var GunCount         = AcModel.getNode("systems/gun/rounds");
 var GunReady         = AcModel.getNode("systems/gun/ready");
-var GunStop          = AcModel.getNode("systems/gun/stop", 1);
+#var GunStop          = AcModel.getNode("systems/gun/stop", 1);
 var GunRateHighLight = AcModel.getNode("controls/armament/acm-panel-lights/gun-rate-high-light");
+var WeaponsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/weapons-weight", 1);
+var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/pylons-weight", 1);
 
 
 # AIM-9 stuff:
@@ -93,14 +95,23 @@ var armament_update = func {
 # Main loop 2
 var armament_update2 = func {
 	# Trigered each 0.1 sec by instruments.nas main_loop()
-
+	var wWeight = 0;
+	var pWeight = 0;
 	for (var i = 0;i<10;i+=1) {
 		setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/type", getprop("payload/weight["~i~"]/selected"));
 		if (ArmSwitch.getValue() != 2) {
 			setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",0);
 		}
+		if (i != 2 and i != 7) {#TODO: run less often
+			var mass = pylons.pylons[i+1].getMass();
+			wWeight += mass[0];
+			pWeight += mass[1];
+		}
 	}
 	setprop("controls/armament/master-arm",ArmSwitch.getValue()==2);
+	
+	WeaponsWeight.setDoubleValue(wWeight);
+    PylonsWeight.setDoubleValue(pWeight);
 }
 
 var getDLZ = func {

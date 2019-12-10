@@ -3,7 +3,6 @@
 # aim-9 lock sometimes unsteady
 # way to select mk-83 and show it in cockpit if A/G selected on right lower side
 # proper smokewinders and an airshow button in payload dialog.
-# seems I broke weight for pylons/weapons in dialog
 # anti-cheat key 'a' binding do not get activated.
 # investigate how to differentiate between firing aim-54 and aim-7. I suspect they were never loaded at same time since they share knob position.
 #   Or maybe RIO would do it by selecting pylons. (Ask Richard)
@@ -38,17 +37,23 @@ var pylonSets = {
 	empty: {name: "Empty", content: [], fireOrder: [], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 1},
 	mm20:  {name: "20mm Cannon", content: [cannon], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 
-    m83:  {name: "MK-83", content: ["MK-83"], fireOrder: [0], launcherDragArea: 0.005, launcherMass: 10, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 2},
+    m83:  {name: "MK-83", content: ["MK-83"], fireOrder: [0], launcherDragArea: 0.005, launcherMass: 300, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 2},
     
-	smokeWL: {name: "Smokewinder White", content: [smokewinderWhite1], fireOrder: [0], launcherDragArea: -0.05, launcherMass: 203, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
-	smokeWR: {name: "Smokewinder White", content: [smokewinderWhite10], fireOrder: [0], launcherDragArea: -0.05, launcherMass: 203, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+    # 340 = outer pylon
+	smokeWL: {name: "Smokewinder White", content: [smokewinderWhite1], fireOrder: [0], launcherDragArea: -0.05, launcherMass: 53+340, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+	smokeWR: {name: "Smokewinder White", content: [smokewinderWhite10], fireOrder: [0], launcherDragArea: -0.05, launcherMass: 53+340, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 
 	fuel26L: {name: "267 Gal Fuel tank", content: [fuelTank267Left], fireOrder: [0], launcherDragArea: 0.35, launcherMass: 531, launcherJettisonable: 1, showLongTypeInsteadOfCount: 1, category: 2},
 	fuel26R: {name: "267 Gal Fuel tank", content: [fuelTank267Right], fireOrder: [0], launcherDragArea: 0.35, launcherMass: 531, launcherJettisonable: 1, showLongTypeInsteadOfCount: 1, category: 2},
 
-	aim9:    {name: "AIM-9",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 10, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
-	aim7:    {name: "AIM-7",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 10, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
-	aim54:    {name: "AIM-54",   content: ["AIM-54"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 10, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+	aim9:    {name: "AIM-9",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 53, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+	aim7:    {name: "AIM-7",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+	aim54:    {name: "AIM-54",   content: ["AIM-54"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 300, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+    
+    # 170 = half the outer pylon of 340
+    aim9w:    {name: "AIM-9",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 53+170, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+    aim7w:    {name: "AIM-7",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 0+170, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+    aim54w:    {name: "AIM-54",   content: ["AIM-54"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 90+170, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 };
 
 # sets. The first in the list is the default. Earlier in the list means higher up in dropdown menu.
@@ -118,14 +123,14 @@ var cannon_load = func {
 # FAD (AIM-9, AIM-54)
 var fad = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
-        pylon1.loadSet(pylonSets.aim9);
-        pylon2.loadSet(pylonSets.aim7);
+        pylon1.loadSet(pylonSets.aim9w);
+        pylon2.loadSet(pylonSets.aim7w);
         pylon4.loadSet(pylonSets.aim54);
         pylon5.loadSet(pylonSets.aim54);
         pylon6.loadSet(pylonSets.aim54);
         pylon7.loadSet(pylonSets.aim54);
-        pylon9.loadSet(pylonSets.aim7);
-        pylon10.loadSet(pylonSets.aim9);
+        pylon9.loadSet(pylonSets.aim7w);
+        pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
     } else {
       screen.log.write(msgB);
@@ -135,14 +140,14 @@ var fad = func {
 # FAD light (AIM-9, AIM-54)
 var fad_l = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
-        pylon1.loadSet(pylonSets.aim9);
-        pylon2.loadSet(pylonSets.aim9);
+        pylon1.loadSet(pylonSets.aim9w);
+        pylon2.loadSet(pylonSets.aim9w);
         pylon4.loadSet(pylonSets.aim7);
         pylon5.loadSet(pylonSets.aim7);
         pylon6.loadSet(pylonSets.aim7);
         pylon7.loadSet(pylonSets.aim7);
-        pylon9.loadSet(pylonSets.aim9);
-        pylon10.loadSet(pylonSets.aim9);
+        pylon9.loadSet(pylonSets.aim9w);
+        pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
     } else {
       screen.log.write(msgB);
@@ -152,14 +157,14 @@ var fad_l = func {
 # FAD heavy (AIM-9, AIM-54)
 var fad_h = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
-        pylon1.loadSet(pylonSets.aim9);
-        pylon2.loadSet(pylonSets.aim54);
+        pylon1.loadSet(pylonSets.aim9w);
+        pylon2.loadSet(pylonSets.aim54w);
         pylon4.loadSet(pylonSets.aim54);
         pylon5.loadSet(pylonSets.aim54);
         pylon6.loadSet(pylonSets.aim54);
         pylon7.loadSet(pylonSets.aim54);
-        pylon9.loadSet(pylonSets.aim54);
-        pylon10.loadSet(pylonSets.aim9);
+        pylon9.loadSet(pylonSets.aim54w);
+        pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
     } else {
       screen.log.write(msgB);
@@ -169,14 +174,14 @@ var fad_h = func {
 # bombcat (AIM-9, AIM-54)
 var bomb = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
-        pylon1.loadSet(pylonSets.aim9);
-        pylon2.loadSet(pylonSets.aim7);
+        pylon1.loadSet(pylonSets.aim9w);
+        pylon2.loadSet(pylonSets.aim7w);
         pylon4.loadSet(pylonSets.m83);
         pylon5.loadSet(pylonSets.m83);
         pylon6.loadSet(pylonSets.m83);
         pylon7.loadSet(pylonSets.m83);
-        pylon9.loadSet(pylonSets.aim7);
-        pylon10.loadSet(pylonSets.aim9);
+        pylon9.loadSet(pylonSets.aim7w);
+        pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
     } else {
       screen.log.write(msgB);
