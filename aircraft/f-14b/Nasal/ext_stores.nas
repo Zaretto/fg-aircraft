@@ -55,9 +55,15 @@ var toggle_ext_tank_selected = func() {
 # -------------------
 
 var emerg_jettison = func {
+	var weap = pylons.pylon3.getWeapons();
+	if (weap != nil and size(weap)) {
+		setprop("controls/armament/station[2]/jettison-all", 1);
+	}
+	weap = pylons.pylon8.getWeapons();
+	if (weap != nil and size(weap)) {
+		setprop("controls/armament/station[7]/jettison-all", 1);
+	}
 	pylons.fcs.jettisonFuelAndAG();
-	setprop("controls/armament/station[2]/jettison-all", 1);
-	setprop("controls/armament/station[7]/jettison-all", 1);
 	ExtTanks.setBoolValue(0);
 }
 
