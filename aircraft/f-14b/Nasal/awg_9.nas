@@ -43,6 +43,7 @@ var ORDNANCE = 3;
 var knownShips = {
     "missile_frigate":       nil,
     "frigate":       nil,
+    "fleet":       nil,
     "USS-LakeChamplain":     nil,
     "USS-NORMANDY":     nil,
     "USS-OliverPerry":     nil,
@@ -51,6 +52,8 @@ var knownShips = {
 
 var knownSurface = {
     "buk-m2":       nil,
+    "s-300":       nil,
+    "gci":       nil,
     "depot":       nil,
     "truck":     nil,
     "tower":     nil,
@@ -1656,7 +1659,7 @@ else
     },
     isRadiating: func (coord) {
         me.rn = me.get_range();
-        if (me.get_model() != "buk-m2" and me.get_model() != "missile_frigate" and me.get_type()!=MARINE) {
+        if (me.get_model() != "buk-m2" and me.get_model() != "s-300" and me.get_model() != "missile_frigate" and me.get_model() != "fleet" and me.get_type()!=MARINE) {
             me.bearingR = coord.course_to(me.get_Coord());
             me.headingR = me.get_heading();
             me.inv_bearingR =  me.bearingR+180;

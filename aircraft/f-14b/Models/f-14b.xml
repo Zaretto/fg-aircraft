@@ -17,87 +17,7 @@
         <load>
             <![CDATA[ 
 			var self = cmdarg();
-			var skip = 0;
-			
-	        var skip = 0;
-	        var lat = self.getNode("rotors/main/blade[0]/flap-deg");
-	        var lon = self.getNode("rotors/main/blade[1]/flap-deg");
-	        var alt = self.getNode("rotors/main/blade[2]/flap-deg");
-	        if (alt == nil or alt.getValue() == nil) {
-	          skip = 1;
-	        }
-
-	        var objs = {};
-
-	        var loop = func () {          
-
-	          if(alt.getValue() != 0) {
-	            var objModel = objs["first"];
-	            if (objModel == nil) {
-	              # create model
-	              #print("creating missile");
-	              var n = props.globals.getNode("models", 1);
-	              var i = 0;
-	              for (i = 0; 1==1; i += 1) {
-	                if (n.getChild("model", i, 0) == nil) {
-	                  break;
-	                }
-	              }
-	              objModel = n.getChild("model", i, 1);
-
-	              objModel.getNode("elevation",1).setDoubleValue(0);
-	              objModel.getNode("latitude",1).setDoubleValue(0);
-	              objModel.getNode("longitude",1).setDoubleValue(0);
-	              objModel.getNode("elevation-ft-prop",1).setValue(objModel.getPath()~"/elevation");
-	              objModel.getNode("latitude-deg-prop",1).setValue(objModel.getPath()~"/latitude");
-	              objModel.getNode("longitude-deg-prop",1).setValue(objModel.getPath()~"/longitude");
-	              objModel.getNode("heading-deg",1).setDoubleValue(0);
-	              objModel.getNode("pitch-deg",1).setDoubleValue(0);
-	              objModel.getNode("roll-deg",1).setDoubleValue(0);
-	                objModel.getNode("path",1).setValue("Aircraft/f-14b/Models/Stores/MP_missile/mp_missile.xml");
-
-	              var loadNode = objModel.getNode("load", 1);
-	              loadNode.setBoolValue(1);
-
-	              objs["first"] = objModel;
-	              loadNode.remove();
-	            }
-	          }
-	          var exist = 0;
-	          if(alt.getValue() != 0) {
-	            exist = 1;
-
-	            var objModel = objs["first"];
-	            if (objModel == nil) {
-	              print("error: did not find mp missile.");
-	              return;
-	            }# else {
-	            #  print("found a missile!");
-	            #}
-	            objModel.getNode("latitude").setDoubleValue(lat.getValue());
-	            objModel.getNode("longitude").setDoubleValue(lon.getValue());
-	            objModel.getNode("elevation").setDoubleValue(alt.getValue()*M2FT);
-
-	          }
-	          if (exist == 0) {
-	            # remove model
-	            var objModel = objs["first"];
-	            if (objModel != nil) {
-	              objModel.remove();
-	              delete(objs, "first");
-	            }
-	          }
-
-	          if (self.getNode("valid") == 0 or self.getNode("valid") == nil) {
-	            return;
-	          }
-	          settimer(loop, 0.05);
-	        }
-
-	        if (skip == 0) {
-	            loop();
-	        }			
-			
+						
 			print("LOAD f-14b ", self.getPath());
 
 			self.getNode("sim/model/ac-type", 1).setValue("f-14b"); # Dual-control
@@ -108,27 +28,63 @@
 			# Load the needed modules if it hasn't been done yet.
 			# f14_net handles broadcast of:
 			#   - external load set.
-			if (!contains(globals, "f14_net")) {
-            var fn_net = resolvepath("Systems") ~ "/mp-network.nas";
+			#if (!contains(globals, "f14_net")) {
+            #var fn_net = resolvepath("Systems") ~ "/mp-network.nas";
             
-            if (io.stat(fn_net) == nil)
-                fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
-            if (io.stat(fn_net) == nil)
-                fn_net = resolvepath("Aircraft/f-14b/Systems") ~ "/mp-network.nas";
+            #if (io.stat(fn_net) == nil)
+            #    fn_net = resolvepath("Nasal") ~ "/mp-network.nas";
+            #if (io.stat(fn_net) == nil)
+            #    fn_net = resolvepath("Aircraft/f-14b/Systems") ~ "/mp-network.nas";
 
-            if (io.stat(fn_net) == nil)
-                fn_net = getprop("/sim/fg-root") ~ "/Aircraft/f-14b/Systems/mp-network.nas";
+            #if (io.stat(fn_net) == nil)
+            #    fn_net = getprop("/sim/fg-root") ~ "/Aircraft/f-14b/Systems/mp-network.nas";
 
-            print("Loading F-14 mp network from ",fn_net);
-            io.load_nasal(fn_net, "f14_net");
-				f14_net.mp_network_init(0);
-			}
-        ]]>
+            #print("Loading F-14 mp network from ",fn_net);
+            #io.load_nasal(fn_net, "f14_net");
+			#	f14_net.mp_network_init(0);
+			#}
+            
+            # Stores visible over MP:
+            var looping = 1;
+            var str5 = "";
+            var split1 = nil;
+            var split2 = nil;
+            var split3 = nil;
+            var pylon = nil;
+            var type = nil;
+            var count = nil;
+            var set = nil;
+            
+            var loop = func {
+              #print("loop");
+              str5 = self.getNode("sim/multiplay/generic/string[5]");
+              if (str5 != nil and str5.getValue() != nil and size(str5.getValue()) > 10) {#print("pass1 "~str5.getValue());
+                split1 = split("++", str5.getValue());
+                if (size(split1) > 1) {#print("pass2");
+                  split2 = split("--", split1[0]);
+                  split3 = split("--", split1[1]);
+                  if (split2 != nil and size(split2)> 1 and split3 != nil and size(split3)> 1) {#print("pass3");
+                    pylon = num(split2[0]);
+                    type = split2[1];
+                    count = num(split3[0]);
+                    set = split3[1];
+                    self.getNode("payload/armament/station/id-"~pylon~"-type",1).setValue(type);
+                    self.getNode("payload/armament/station/id-"~pylon~"-count",1).setIntValue(count);
+                    self.getNode("payload/armament/station/id-"~pylon~"-set",1).setValue(set);
+                  }
+                }
+              }
+              if (looping) settimer(loop, 0.10);
+            }
+            
+            loop();
+          ]]>
         </load>
         <unload>
             <![CDATA[ 
 			print("UNLOAD f-14b ", self.getPath());
 			cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
+            looping = 0;
 			livery_update.stop();
         ]]>
         </unload>
@@ -1192,321 +1148,476 @@
     <!-- External loads                                                      -->
     <!-- ******************************************************************* -->
     <!--Merged from Aircraft/f-14b/Models/Stores/stores-model.xml-->
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>exttank-left</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[2]/type</property>
-                <value>external tank</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>exttank-right</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[7]/type</property>
-                <value>external tank</value>
-            </equals>
-        </condition>
-    </animation>
+  <animation>
+    <type>select</type>
+    <nopreview />
+    <object-name>exttank-left</object-name>
+    <condition>
+      <equals>
+        <property>payload/armament/station/id-2-set</property>
+        <value>267 Gal Fuel tank</value>
+      </equals>
+      <equals>
+        <property>payload/armament/station/id-2-count</property>
+        <value>1</value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <nopreview />
+    <object-name>exttank-right</object-name>
+    <condition>
+      <equals>
+        <property>payload/armament/station/id-7-set</property>
+        <value>267 Gal Fuel tank</value>
+      </equals>
+      <equals>
+        <property>payload/armament/station/id-7-count</property>
+        <value>1</value>
+      </equals>
+    </condition>
+  </animation>
     <!-- Pylons -->
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>wings-pylons</object-name>
         <condition>
             <not>
-                <equals>
-                    <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                    <value>Clean</value>
-                </equals>
+                <and>
+                    <equals>
+                        <property>payload/armament/station/id-0-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-1-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-8-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-9-set</property>
+                        <value>Empty</value>
+                    </equals>
+                </and>
             </not>
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>central-pylons</object-name>
+        <condition>
+            <not>
+                <and>
+                    <equals>
+                        <property>payload/armament/station/id-3-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-4-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-5-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-6-set</property>
+                        <value>Empty</value>
+                    </equals>
+                </and>
+            </not>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-9-1-launcher</object-name>
+        <object-name>aim-9-8-launcher</object-name>
+        <condition>  
+            <not>
+                <and>
+                    <equals>
+                        <property>payload/armament/station/id-1-set</property>
+                        <value>Empty</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-8-set</property>
+                        <value>Empty</value>
+                    </equals>
+                </and>
+            </not>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-54-1-launcher</object-name>
+        <object-name>aim-54-8-launcher</object-name>
+        <condition>
+                <or>
+                    <equals>
+                        <property>payload/armament/station/id-1-set</property>
+                        <value>AIM-54</value>
+                    </equals>
+                    <equals>
+                        <property>payload/armament/station/id-8-set</property>
+                        <value>AIM-54</value>
+                    </equals>
+                </or>
+        </condition>
+    </animation>
+
+    <!-- AIM-7 -->
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-1</object-name>
+        <condition>     
+            <equals>
+                <property>payload/armament/station/id-1-set</property>
+                <value>AIM-7</value>
+            </equals>
+            <equals>
+                <property>payload/armament/station/id-1-count</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-3</object-name>
+        <condition>     
+            <equals>
+                <property>payload/armament/station/id-3-set</property>
+                <value>AIM-7</value>
+            </equals>
+            <equals>
+                <property>payload/armament/station/id-3-count</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-4</object-name>
+        <condition>     
+            <equals>
+                <property>payload/armament/station/id-4-set</property>
+                <value>AIM-7</value>
+            </equals>
+            <equals>
+                <property>payload/armament/station/id-4-count</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-5</object-name>
+        <condition>     
+            <equals>
+                <property>payload/armament/station/id-5-set</property>
+                <value>AIM-7</value>
+            </equals>
+            <equals>
+                <property>payload/armament/station/id-5-count</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-6</object-name>
+        <condition>     
+            <equals>
+                <property>payload/armament/station/id-6-set</property>
+                <value>AIM-7</value>
+            </equals>
+            <equals>
+                <property>payload/armament/station/id-6-count</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+
+    <animation>
+        <type>select</type>
+        <nopreview/>
+        <object-name>aim-7-8</object-name>
+        <condition>   
+            <equals>
+                <property>payload/armament/station/id-8-set</property>
+                <value>AIM-7</value>
+            </equals>
+            <equals>
+                <property>payload/armament/station/id-8-count</property>
+                <value>1</value>
+            </equals>  
+        </condition>
+    </animation>
+
+
+    <!-- AIM-54 -->
+    <animation>
+        <type>select</type><!-- why is this select done twice? -->
+        <nopreview/>
+        <object-name>aim-54-1-launcher</object-name>
+        <object-name>aim-54-8-launcher</object-name>
         <condition>
             <or>
                 <equals>
-                    <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                    <value>FAD</value>
+                    <property>payload/armament/station/id-1-set</property>
+                    <value>AIM-54</value>
                 </equals>
                 <equals>
-                    <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                    <value>FAD heavy</value>
-                </equals>
-                <equals>
-                    <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                    <value>Bombcat</value>
+                    <property>payload/armament/station/id-8-set</property>
+                    <value>AIM-54</value>
                 </equals>
             </or>
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
-        <object-name>aim-9-1-launcher</object-name>
-        <object-name>aim-9-8-launcher</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                <value>FAD light</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-54-1-launcher</object-name>
-        <object-name>aim-54-8-launcher</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                <value>FAD heavy</value>
-            </equals>
-        </condition>
-    </animation>
-    <!-- AIM-7 -->
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-7-1</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[1]/type</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-7-3</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[3]/type</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-7-4</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[4]/type</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-7-5</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[5]/type</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-7-6</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[6]/type</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-7-8</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[8]/type</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <!-- AIM-54 -->
-    <animation>
-        <type>select</type>
-        <nopreview />
-        <object-name>aim-54-1-launcher</object-name>
-        <object-name>aim-54-8-launcher</object-name>
-        <condition>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-                <value>FAD heavy</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-54-1</object-name>
-        <condition>
+        <condition>   
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[1]/type</property>
+                <property>payload/armament/station/id-1-set</property>
                 <value>AIM-54</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-1-count</property>
+                <value>1</value>
+            </equals>  
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-54-3</object-name>
-        <condition>
+        <condition>   
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[3]/type</property>
+                <property>payload/armament/station/id-3-set</property>
                 <value>AIM-54</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-3-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-54-4</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[4]/type</property>
+                <property>payload/armament/station/id-4-set</property>
                 <value>AIM-54</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-4-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-54-5</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[5]/type</property>
+                <property>payload/armament/station/id-5-set</property>
                 <value>AIM-54</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-5-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-54-6</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[6]/type</property>
+                <property>payload/armament/station/id-6-set</property>
                 <value>AIM-54</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-6-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-54-8</object-name>
-        <condition>
+        <condition>   
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[8]/type</property>
+                <property>payload/armament/station/id-8-set</property>
                 <value>AIM-54</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-8-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
+
     <!-- AIM-9 -->
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-9-0</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[0]/type</property>
+                <property>payload/armament/station/id-0-set</property>
                 <value>AIM-9</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-0-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-9-1</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[1]/type</property>
+                <property>payload/armament/station/id-1-set</property>
                 <value>AIM-9</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-1-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-9-8</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[8]/type</property>
+                <property>payload/armament/station/id-8-set</property>
                 <value>AIM-9</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-8-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>aim-9-9</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[9]/type</property>
+                <property>payload/armament/station/id-9-set</property>
                 <value>AIM-9</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-9-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <!-- MK-83 -->
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>mk-83-3</object-name>
-        <condition>
+        <condition>   
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[3]/type</property>
+                <property>payload/armament/station/id-3-set</property>
                 <value>MK-83</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-3-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>mk-83-4</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[4]/type</property>
+                <property>payload/armament/station/id-4-set</property>
                 <value>MK-83</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-4-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>mk-83-5</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[5]/type</property>
+                <property>payload/armament/station/id-5-set</property>
                 <value>MK-83</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-5-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
-        <nopreview />
+        <nopreview/>
         <object-name>mk-83-6</object-name>
-        <condition>
+        <condition>  
             <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[6]/type</property>
+                <property>payload/armament/station/id-6-set</property>
                 <value>MK-83</value>
             </equals>
+            <equals>
+                <property>payload/armament/station/id-6-count</property>
+                <value>1</value>
+            </equals> 
         </condition>
     </animation>
     <!-- ******************************************************************* -->

@@ -634,6 +634,7 @@ var instruments_exec = {
             if ( ArmSysRunning.getBoolValue() ) {
                 f14.armament_update();
             }
+            f14.armament_update2();
             if (notifications.frameNotification.FrameCount == 5 or notifications.frameNotification.FrameCount == 11 ) {
                 # done each 0.3 sec.
                 afcs_filters();
@@ -855,12 +856,16 @@ var init = func {
 	}
 
     common_init();
-    f14.external_load_loopTimer.start();
+    mps.loop();
     
     # make failure mode for radar, so that when aircraft is hit missiles cannot still be fired off.
     var prop = "/instrumentation/radar";
     var actuator_radar = compat_failure_modes.set_unserviceable(prop);
     FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
+    
+    prop = "/payload/armament/fire-control";
+    var actuator_fire_control = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Fire-control", actuator_fire_control);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
