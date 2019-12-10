@@ -1,11 +1,9 @@
 #
 # TODO:
-# aim-9 lock sometimes unsteady
 # way to select mk-83 and show it in cockpit if A/G selected on right lower side
 # proper smokewinders and an airshow button in payload dialog.
 # anti-cheat key 'a' binding do not get activated.
-# investigate how to differentiate between firing aim-54 and aim-7. I suspect they were never loaded at same time since they share knob position.
-#   Or maybe RIO would do it by selecting pylons. (Ask Richard)
+# investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
 
 var fcs = nil;
 var pylonI = nil;

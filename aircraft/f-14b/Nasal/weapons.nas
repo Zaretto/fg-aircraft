@@ -20,7 +20,7 @@ var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
-var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
+#var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
 
 var aim9_count = 0;
 
@@ -159,7 +159,7 @@ var system_start = func {
 var system_stop = func {
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
-	SwSoundVol.setValue(0);
+	#SwSoundVol.setValue(0);
 	settimer (func { SwCoolOffLight.setBoolValue(0);SWCoolOn.setBoolValue(0); }, 0.6);
 	settimer (func { MslPrepOffLight.setBoolValue(0); }, 1.2);
 }
