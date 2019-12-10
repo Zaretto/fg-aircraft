@@ -459,11 +459,16 @@
         <type>select</type>
         <object-name>sw-digit</object-name>
         <condition>
-            <greater-than>
-                <property>sim/model/f-14b/controls/armament/stick-selector</property>
-                <value>1</value>
-            </greater-than>
-            <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
+            <or>
+                <and>
+                    <greater-than>
+                        <property>sim/model/f-14b/controls/armament/stick-selector</property>
+                        <value>1</value>
+                    </greater-than>
+                    <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
+                </and>
+                <property>sim/model/f-14b/controls/pilots-displays/mode/ag-bt</property>
+            </or>
         </condition>
     </animation>
     <animation>

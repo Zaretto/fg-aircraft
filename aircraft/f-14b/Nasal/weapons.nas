@@ -52,6 +52,7 @@ var armament_update = func {
 	# Check AIM-9 selected with armament panel switches 1 and 8.
 	# Note in FAD light config, S1 and S8 also have AIM-9.
 	var stick_s = StickSelector.getValue();
+	var ag = getprop("sim/model/f-14b/controls/pilots-displays/mode/ag-bt");
 	aim9_count = 0;
 	for (var i = 0;i<10;i+=1) {
 		setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/type", getprop("payload/weight["~i~"]/selected"));
@@ -64,7 +65,7 @@ var armament_update = func {
 			} elsif (size(weaps) and weaps[0] != nil and (weaps[0].type == "AIM-7" or weaps[0].type == "AIM-54") and stick_s == 3) {
 				setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",1);
 				aim9_count += 1;
-			} elsif (size(weaps) and weaps[0] != nil and weaps[0].type == "MK-83" and stick_s == 4) {
+			} elsif (size(weaps) and weaps[0] != nil and weaps[0].type == "MK-83" and ag) {
 				setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",1);
 				aim9_count += 1;
 			} else {
@@ -227,26 +228,34 @@ var master_arm_cycle = func() {
 var arm_selector = func() {
 	# Checks to do when rotating the wheel on the stick.
 	update_gun_ready();
-	var stick_s = StickSelector.getValue();
-	if ( stick_s == 0 ) {
-		pylons.fcs.selectNothing();
-	} elsif ( stick_s == 1 ) {
-		pylons.fcs.selectWeapon("20mm Cannon");
-	} elsif ( stick_s == 2 ) {
-		pylons.fcs.selectWeapon("AIM-9");
-	} elsif ( stick_s == 3 ) {
-		var p = pylons.fcs.selectWeapon("AIM-54");
-		if (p == nil) {
-			pylons.fcs.selectWeapon("AIM-7");
+	var aa = getprop("sim/model/f-14b/controls/pilots-displays/mode/aa-bt");
+	var ag = getprop("sim/model/f-14b/controls/pilots-displays/mode/ag-bt");
+	if (aa) {
+		var stick_s = StickSelector.getValue();
+		if ( stick_s == 0 ) {
+			pylons.fcs.selectNothing();
+		} elsif ( stick_s == 1 ) {
+			pylons.fcs.selectWeapon("20mm Cannon");
+		} elsif ( stick_s == 2 ) {
+			pylons.fcs.selectWeapon("AIM-9");
+		} elsif ( stick_s == 3 ) {
+			var p = pylons.fcs.selectWeapon("AIM-54");
+			if (p == nil) {
+				pylons.fcs.selectWeapon("AIM-7");
+			}
 		}
-	} elsif ( stick_s == 4 ) {
+	} elsif (ag) {
 		pylons.fcs.selectWeapon("MK-83");
+	} else {
+		pylons.fcs.selectNothing();
 	}
 	#armament_update();
 	setCockpitLights();
 }
 
 setlistener(StickSelector, arm_selector, nil, 0);
+setlistener("sim/model/f-14b/controls/pilots-displays/mode/aa-bt", arm_selector, nil, 0);
+setlistener("sim/model/f-14b/controls/pilots-displays/mode/ag-bt", arm_selector, nil, 0);
 
 var station_selector = func(n, v) {
 	# n = station number, v = up (-1) or down (1) or toggle (0) as there is two kinds of switches.

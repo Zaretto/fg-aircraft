@@ -1,6 +1,7 @@
+# if A/G selected on right lower side then MK-83 is selected
 #
 # TODO:
-# way to select mk-83 and show it in cockpit if A/G selected on right lower side
+# 
 # proper smokewinders and an airshow button in payload dialog.
 # anti-cheat key 'a' binding do not get activated.
 # investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
