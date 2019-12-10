@@ -588,16 +588,22 @@
 				<layout>hbox</layout>
 
 				<text>
-					<label>AIM-9 MP messaging:</label>
+					<label>Missile MP messaging:</label>
 				</text>
 
 				<checkbox>
 					<property>payload/armament/msg</property>
 					<live>true</live>
 					<binding>
-						<command>property-toggle</command>
-						<property>payload/armament/msg</property>
-					</binding>
+	                    <command>nasal</command>
+						<script>
+				            if(getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+				              setprop("payload/armament/msg", !getprop("payload/armament/msg"));
+				            } else {
+				              screen.log.write("Missile MP messaging toggle only available on ground");
+				            }
+				        </script>
+			        </binding>
 				</checkbox>
 
 			</group>

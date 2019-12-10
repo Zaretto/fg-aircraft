@@ -968,6 +968,9 @@
             <transmit-only-generics type="int">0</transmit-only-generics>
             <transmit-only-generics-available type="int">1</transmit-only-generics-available>
             <generic>
+                <bool n="50" type="bool" alias="/instrumentation/gci/picture"/>
+                <bool n="51" type="bool" alias="/instrumentation/gci/bogeydope"/>
+                <bool n="52" type="bool" alias="/instrumentation/gci/cutoff"/>
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
@@ -1016,8 +1019,8 @@
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
+                <string n="5" type="string">00--++00--Empty</string><!-- mp stores -->
                 <string n="13" type="string"></string>
-                <string n="15" type="string"></string>
                 <!-- instruments -->
                 <!-- <string n="2" type="string">50</string>      free -->
             </generic>
@@ -1053,7 +1056,7 @@
                         <label>Repair Airframe</label>
                         <binding>
                             <command>nasal</command>
-                            <script>f14.fixAirframe();armament.ct("rp");</script>
+                            <script>f14.fixAirframe();</script>
                         </binding>
                     </item>
                     <item n="1">
@@ -1617,6 +1620,24 @@
                     <value type="bool">true</value>
                 </binding>
             </key>
+            
+            <key n="18">
+              <name>Ctrl-R</name>
+              <desc>Activate the instant replay system</desc>
+              <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("Please do not use replay while in combat over MP!");
+                        } else {
+                            call(func{fgcommand('replay', props.Node.new({}))},nil,var err2 = []);
+                            call(func{fgcommand('dialog-show', props.Node.new({"dialog-name": "replay"}))},nil,var err2 = []);
+                        }
+                    </script>
+                </binding>
+                <mod-up>
+                </mod-up>
+             </key>
 
 		   <key n="19">
                 <name>CTRL-S</name>
@@ -1998,46 +2019,104 @@
               <name>Ctrl-U</name>
               <desc>[Cheat] Add 1000ft of emergency altitude</desc>
               <binding>
-               <command>property-adjust</command>
-               <property>/position/altitude-ft</property>
-               <step type="double">1000.0</step>
-              </binding>
-              <binding>
-               <command>property-assign</command>
-               <property>/sim/startup/onground</property>
-               <value type="bool">false</value>
-              </binding>
-              <binding>
-               <command>nasal</command>
-               <script>armament.ct("c-u")</script>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("CTRL-U disabled at the moment.");
+                        } else {
+                            setprop("position/altitude-ft", getprop("position/altitude-ft")+1000);
+                            setprop("sim/startup/onground", 0);
+                        }
+                    </script>
               </binding>
              </key>
 
              <key n="97">
               <name>a</name>
               <desc>Increase speed-up</desc>
-                <binding>
+                <binding n="3">
                     <command>nasal</command>
-                    <script>controls.speedup(1);</script>
+                    <condition>
+                            <and>
+                                <not-equals>
+                                    <property>sim/current-view/name</property>
+                                    <value>Walk View</value>
+                                </not-equals>
+                                <not-equals>
+                                    <property>sim/current-view/name</property>
+                                    <value>Walker Orbit View</value>
+                                </not-equals>
+                            </and>
+                     </condition>
+                    <script>
+                        if (getprop("payload/armament/msg")) {
+                            screen.log.write("Speed-up disabled at the moment.");
+                        } else {
+                            controls.speedup(1);
+                        }
+                    </script>
                 </binding>
-                <binding>
-               <command>nasal</command>
-               <script>armament.ct("a")</script>
-              </binding>
              </key>
-
-             <key n="65">
+              <key n="65">
               <name>A</name>
               <desc>Decrease speed-up</desc>
-              <binding>
-                <command>nasal</command>
-                <script>controls.speedup(-1);</script>
-              </binding>
-              <binding>
-               <command>nasal</command>
-               <script>armament.ct("a")</script>
-              </binding>
+                <binding n="3">
+                    <command>nasal</command>
+                    <condition>
+                        <and>
+                        <not-equals>
+                            <property>sim/current-view/name</property>
+                            <value>Walk View</value>
+                        </not-equals>
+                        <not-equals>
+                            <property>sim/current-view/name</property>
+                            <value>Walker Orbit View</value>
+                        </not-equals>
+                        </and>
+                 </condition>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("Speed-down disabled at the moment.");
+                        } else {
+                            controls.speedup(-1);
+                        }
+                    </script>
+                </binding>
              </key>
+             
+             <key n="49">
+                <name>CTRL-1</name>
+                <mod-ctrl>
+                    <desc>GCI pict</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/picture</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="50">
+                <name>CTRL-2</name>
+                <mod-ctrl>
+                    <desc>GCI dope</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/bogeydope</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="51">
+                <name>CTRL-3</name>
+                <mod-ctrl>
+                    <desc>GCI cutoff</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/cutoff</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
         </keyboard>
     </input>
 
@@ -2091,6 +2170,11 @@
             <enabled type="bool">true</enabled>
             <on-off type="bool">true</on-off>
         </ecm>
+        <gci>
+            <picture type="bool">false</picture>
+            <bogeydope type="bool">false</bogeydope>
+            <cutoff type="bool">false</cutoff>
+        </gci>
         <nav>
             <frequencies>
                 <selected-freq type="double">115.8</selected-freq>
@@ -2399,6 +2483,9 @@
         <pylons>
             <file>Aircraft/f-14b/Nasal/pylons.nas</file>
         </pylons>
+        <gci>
+            <file>Aircraft/f-14b/Nasal/gci-listener.nas</file>
+        </gci>
     </nasal>
 
 </PropertyList>

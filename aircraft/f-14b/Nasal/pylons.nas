@@ -3,8 +3,10 @@
 # aim-9 lock sometimes unsteady
 # way to select mk-83 and show it in cockpit if A/G selected on right lower side
 # proper smokewinders and an airshow button in payload dialog.
+# seems I broke weight for pylons/weapons in dialog
+# anti-cheat key 'a' binding do not get activated.
 # investigate how to differentiate between firing aim-54 and aim-7. I suspect they were never loaded at same time since they share knob position.
-#   Or maybe RIO would do it by selecting pylons.
+#   Or maybe RIO would do it by selecting pylons. (Ask Richard)
 
 var fcs = nil;
 var pylonI = nil;
@@ -99,7 +101,8 @@ var getDLZ = func {
 }
 
 var reloadCannon = func {
-    setprop("ai/submodels/submodel[0]/count", 100);#flares
+    setprop("ai/submodels/submodel[4]/count", 100);
+    setprop("ai/submodels/submodel[5]/count", 100);#flares
     cannon.reloadAmmo();
 }
 

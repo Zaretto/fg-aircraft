@@ -685,8 +685,12 @@ dynamic_view.register(func {
    });
 
 var fixAirframe = func {
-    setprop ("fdm/jsbsim/systems/flyt/damage-reset", 1);
-    repairMe();
+    if (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+        setprop ("fdm/jsbsim/systems/flyt/damage-reset", 1);
+        repairMe();
+    } else {
+        screen.log.write("Please land or relocate to an airport before repair");
+    }
 }
 
 setlistener("sim/model/f-14b/wings/damage-enabled", func(v){
