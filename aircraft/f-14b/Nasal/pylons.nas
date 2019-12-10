@@ -25,7 +25,7 @@ var msgA = "If you need to repair now, then use Menu-Location-SelectAirport inst
 var msgB = "Please land before changing payload.";
 var msgC = "Please land before refueling.";
 
-var cannon = stations.SubModelWeapon.new("20mm Cannon", 0.254, 680, [3], [2], props.globals.getNode("sim/model/f-14b/systems/gun/running",1), 0, func{return getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>=20 and getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1")>=70 and getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure") and getprop("payload/armament/fire-control/serviceable");},0);
+var cannon = stations.SubModelWeapon.new("20mm Cannon", 0.254, 135, [3], [2], props.globals.getNode("sim/model/f-14b/systems/gun/running",1), 0, func{return getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>=20 and getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1")>=70 and getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure") and getprop("payload/armament/fire-control/serviceable");},0);
 cannon.typeShort = "GUN";
 cannon.brevity = "Guns guns";
 var fuelTank267Left = stations.FuelTank.new("L External", "TK267", 8, 370, "sim/model/f-14b/wingtankL");
@@ -110,6 +110,7 @@ var reloadCannon = func {
     setprop("ai/submodels/submodel[4]/count", 100);
     setprop("ai/submodels/submodel[5]/count", 100);#flares
     cannon.reloadAmmo();
+    setprop("/sim/model/f-14b/systems/gun/rounds",675);
 }
 
 # reload cannon only

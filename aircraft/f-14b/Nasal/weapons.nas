@@ -164,7 +164,7 @@ var update_gun_ready = func() {
 	}
 	GunReady.setBoolValue(ready);
 	var real_gcount = GunCountAi.getValue();
-	GunCount.setValue(real_gcount);
+	GunCount.setValue(real_gcount*5);
 }
 
 # System start and stop.
