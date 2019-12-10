@@ -76,7 +76,7 @@ var armament_update = func {
 		}
 	}
 	# Turn sidewinder cooling lights On/Off.
-	if (stick_s == 2) {
+	if (stick_s == 2 and !ag) {
 		if (aim9_count > 0) {
 			SWCoolOn.setBoolValue(1);
 			SWCoolOff.setBoolValue(0);
@@ -91,6 +91,7 @@ var armament_update = func {
 	SwCount.setValue(aim9_count);
 	update_gun_ready();
 	setCockpitLights();
+	#ccrp();
 }
 
 # Main loop 2
@@ -113,6 +114,25 @@ var armament_update2 = func {
 	
 	WeaponsWeight.setDoubleValue(wWeight);
     PylonsWeight.setDoubleValue(pWeight);
+}
+
+var ccrp = func {
+	var weap = pylons.fcs.getSelectedWeapon();
+	if (weap != nil and weap.parents[0] == armament.AIM and weap.type == "MK-83") {
+		var ccrp_meters = weap.getCCRP(20,0.25);#meters left to release point
+		if (ccrp_meters != nil) {
+			# this should make the ccrp bomb steering line and the bomb release cue.
+			# 
+			# the vertical steering line should have same heading deviation as the target and span entirety of HUD
+			# the small horizontal cue should have same heading deviation but its vertical position should be middle of HUD when ccrp_meter is 0 and top of HUD when ccrp_meters is 1000 or larger.
+			# another fixed small horizontal lines should be in middle of HUD vertical. Horizontal it should follow steering line.
+			setprop("sim/model/f-14b/systems/armament/aim9/ccrp",1);#if ccrp should be displayed in HUD.
+			setprop("sim/model/f-14b/systems/armament/aim9/ccrp-hud-vert", ccrp_meters);# haven't linked this to anything yet.
+			return;
+		}
+	}
+	setprop("sim/model/f-14b/systems/armament/aim9/ccrp",0);
+	setprop("sim/model/f-14b/systems/armament/aim9/ccrp-hud-vert", 0);
 }
 
 var getDLZ = func {
