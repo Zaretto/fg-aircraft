@@ -2,8 +2,8 @@
 #
 # TODO:
 # 
-# gun reload button need fixing
 # voodoo cannot see any SW in hud after firing PH
+# failure modes are being done at reinit
 # proper smokewinders and an airshow button in payload dialog.
 # anti-cheat key 'a' binding do not get activated.
 # investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
