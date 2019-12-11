@@ -417,6 +417,18 @@
                 <name>S</name>
                 <desc>Toggle smoke</desc>
             </key>
+            <key>
+                <name>Ctrl-1</name>
+                <desc>GCI: Picture request</desc>
+            </key>
+            <key>
+                <name>Ctrl-2</name>
+                <desc>GCI: Bogey Dope request</desc>
+            </key>
+            <key>
+                <name>Ctrl-3</name>
+                <desc>GCI: Cutoff request</desc>
+            </key>
             <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
             <line>__________________________________________________</line>
             <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
@@ -968,9 +980,9 @@
             <transmit-only-generics type="int">0</transmit-only-generics>
             <transmit-only-generics-available type="int">1</transmit-only-generics-available>
             <generic>
-                <bool n="50" type="bool" alias="/instrumentation/gci/picture"/>
-                <bool n="51" type="bool" alias="/instrumentation/gci/bogeydope"/>
-                <bool n="52" type="bool" alias="/instrumentation/gci/cutoff"/>
+                <bool n="0" type="bool" alias="/instrumentation/gci/picture"/><!-- Use ctrl 1 to 3 to communicate with Ground Control Intercept if one is spawned near -->
+                <bool n="1" type="bool" alias="/instrumentation/gci/bogeydope"/><!-- if change these to other bools, the l0k1 assets on github needs to be updated also -->
+                <bool n="2" type="bool" alias="/instrumentation/gci/cutoff"/>
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
