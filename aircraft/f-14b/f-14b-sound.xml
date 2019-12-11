@@ -2010,198 +2010,31 @@
                 <value>1</value>
             </volume>
         </gun>
+
         <incoming>
             <name>incoming</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming.wav</path>
+            <mode>looped</mode><!-- manual just says low hz to high hz. Set to 300 to 800 hz triangle waveform -->
+            <path>Aircraft/f-14b/Sounds/f14-missile-launch-warn.wav</path>
             <type>avionics</type>
             <condition>
-                <property>sound/incoming</property>
+                <or>
+                    <property>sound/incoming1</property>
+                    <property>sound/incoming2</property>
+                    <property>sound/incoming3</property>
+                    <property>sound/incoming4</property>
+                    <property>sound/incoming5</property>
+                    <property>sound/incoming6</property>
+                    <property>sound/incoming7</property>
+                    <property>sound/incoming8</property>
+                    <property>sound/incoming9</property>
+                    <property>sound/incoming10</property>
+                    <property>sound/incoming11</property>
+                    <property>sound/incoming12</property>
+                </or>
                 <property>sim/current-view/internal</property>
-
             </condition>
             <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming1</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-01.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming1</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming2</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-02.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming2</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming3</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-03.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming3</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming4</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-04.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming4</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming5</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-05.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming5</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming6</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-06.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming6</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming12</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-12.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming12</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming7</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-07.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming7</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming8</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-08.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming8</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming9</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-09.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming9</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming10</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-10.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming10</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
-            </volume>
-        </incoming>
-
-        <incoming>
-            <name>incoming11</name>
-            <mode>single</mode>
-            <path>Aircraft/f-14b/Sounds/incoming-11.wav</path>
-            <type>avionics</type>
-            <condition>
-                <property>sound/incoming11</property>
-                <property>sim/current-view/internal</property>
-                
-            </condition>
-            <volume>
-                <factor>4</factor>
+                <factor>1</factor>
             </volume>
         </incoming>
 
