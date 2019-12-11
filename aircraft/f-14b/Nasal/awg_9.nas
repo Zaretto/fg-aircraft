@@ -1115,7 +1115,7 @@ var range_control = func(n) {#richard there was 2 of this method, I kinda delete
 wcs_mode_sel = func(mode) {
 #	if ( pilot_lock and ! we_are_bs ) { return }
 setprop("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode", mode);
-wcs_current_mode == mode;
+wcs_current_mode = mode;
 	if ( mode == wcs_mode_pulse_srch ) {
 		AzField.setValue(120);
 		ddd_screen_width = 0.0844;
