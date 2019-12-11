@@ -11,7 +11,6 @@ var ext_loads_dlg = gui.Dialog.new("dialog","Aircraft/f-14b/Dialogs/external-loa
 var ext_loads_init = func() {
 	gui.menuBind("fuel-and-payload", "f14.ext_loads_dlg.open()");
     gui.menuEnable("fuel-and-payload", 1);
-    return;
 }
 
 
@@ -22,17 +21,17 @@ var ext_loads_set = func(s) {
 	# support several weapons.
 	WeaponsSet.setValue(s);
 	if ( s == "Clean" ) {
-		pylons.clean(); return;
+		pylons.clean();
 	} elsif ( s == "FAD" ) {
-		pylons.fad(); return; 
+		pylons.fad();
 	} elsif ( s == "FAD light" ) {
-		pylons.fad_l(); return;
+		pylons.fad_l();
 	} elsif ( s == "FAD heavy" ) {
-		pylons.fad_h(); return;
+		pylons.fad_h();
 	} elsif ( s == "Bombcat" ) {
-		pylons.bomb(); return; 
+		pylons.bomb();
 	} elsif ( s == "Airshow" ) {
-		pylons.airshow(); return; 
+		pylons.airshow();
 	}
 }
 
@@ -57,6 +56,7 @@ var toggle_ext_tank_selected = func() {
 # -------------------
 
 var emerg_jettison = func {
+	# will jettison all A/G weapons plus fuel tanks.
 	var weap = pylons.pylon3.getWeapons();
 	if (weap != nil and size(weap)) {
 		setprop("controls/armament/station[2]/jettison-all", 1);

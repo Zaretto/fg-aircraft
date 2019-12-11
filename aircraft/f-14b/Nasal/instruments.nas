@@ -856,19 +856,28 @@ var init = func {
 	}
 
     common_init();
-    mps.loop();
-    
-    # make failure mode for radar, so that when aircraft is hit missiles cannot still be fired off.
-    var prop = "/instrumentation/radar";
-    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
-    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
-    
-    prop = "/payload/armament/fire-control";
-    var actuator_fire_control = compat_failure_modes.set_unserviceable(prop);
-    FailureMgr.add_failure_mode(prop, "Fire-control", actuator_fire_control);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
+
+var initOnce = func {
+	if (getprop("sim/signals/fdm-initialized")) {
+		# this method will be run once when the FDM is ready, and will never be run again. (unless the FG Reset option is used)
+		removelistener(initOnceListen);
+		
+		mps.loop();#TODO: there probably is a central place this could be run from and convert it to maketimer.
+	    
+	    # make failure mode for radar and fire-control, so that when aircraft is hit missiles cannot still be fired off:
+	    var prop = "/instrumentation/radar";
+	    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
+	    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
+	    
+	    prop = "/payload/armament/fire-control";
+	    var actuator_fire_control = compat_failure_modes.set_unserviceable(prop);
+	    FailureMgr.add_failure_mode(prop, "Fire-control", actuator_fire_control);
+	}
+}
+var initOnceListen = setlistener("sim/signals/fdm-initialized", initOnce);# this listener will be removed after it has ran once.
 
 
 setlistener("sim/position-finalized", func (is_done) {

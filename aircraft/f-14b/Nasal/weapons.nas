@@ -14,12 +14,14 @@ var GunReady         = AcModel.getNode("systems/gun/ready");
 var GunRateHighLight = AcModel.getNode("controls/armament/acm-panel-lights/gun-rate-high-light");
 var WeaponsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/weapons-weight", 1);
 var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/pylons-weight", 1);
-var Smoke = props.globals.getNode("sim/model/f-14b/fx/smoke", 1);
+
+# smoke stuff:
+var Smoke = props.globals.getNode("sim/model/f-14b/fx/smoke", 1);#double
 var SmokeCmd = props.globals.initNode("sim/model/f-14b/fx/smoke-cmd", 0,"BOOL");
 var SmokeMountedL = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-left", 0,"BOOL");
 var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right", 0,"BOOL");
 
-# AIM-9 stuff:
+# AIM stuff:
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
@@ -58,9 +60,10 @@ var armament_update = func {
 	var ag = getprop("sim/model/f-14b/controls/pilots-displays/mode/ag-bt");
 	aim9_count = 0;
 	for (var i = 0;i<10;i+=1) {
+		#populate the payload dialog:
 		setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/type", getprop("payload/weight["~i~"]/selected"));
+		# Pylon lights and count of ready weapons:
 		if (getprop("sim/model/f-14b/systems/external-loads/station["~i~"]/selected")) {
-			# Check if at least one AIM present on the pylons.
 			var weaps = pylons.pylons[i+1].getWeapons();
 			if (size(weaps) and weaps[0] != nil and weaps[0].type == "AIM-9" and stick_s == 2) {
 				setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",1);
@@ -100,6 +103,8 @@ var armament_update = func {
 # Main loop 2
 var armament_update2 = func {
 	# Trigered each 0.1 sec by instruments.nas main_loop()
+	
+	# calculate pylon and weapon total mass:
 	var wWeight = 0;
 	var pWeight = 0;
 	for (var i = 0;i<10;i+=1) {
@@ -113,10 +118,13 @@ var armament_update2 = func {
 			pWeight += mass[1];
 		}
 	}
-	setprop("controls/armament/master-arm",ArmSwitch.getValue()==2);
-	
 	WeaponsWeight.setDoubleValue(wWeight);
     PylonsWeight.setDoubleValue(pWeight);
+    
+	# set internal master-arm.
+	setprop("controls/armament/master-arm",ArmSwitch.getValue()==2);
+	
+	# manage smoke
     if (SmokeCmd.getValue() and (SmokeMountedR.getValue() or SmokeMountedL.getValue())) {
     	Smoke.setDoubleValue(1);
 	} else {
@@ -281,6 +289,7 @@ var arm_selector = func() {
 	setCockpitLights();
 }
 
+# listeners that call the arm_selector
 setlistener(StickSelector, arm_selector, nil, 0);
 setlistener("sim/model/f-14b/controls/pilots-displays/mode/aa-bt", arm_selector, nil, 0);
 setlistener("sim/model/f-14b/controls/pilots-displays/mode/ag-bt", arm_selector, nil, 0);

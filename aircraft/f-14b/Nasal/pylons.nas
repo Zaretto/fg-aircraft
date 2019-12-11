@@ -45,10 +45,12 @@ var pylonSets = {
 	fuel26L: {name: "267 Gal Fuel tank", content: [fuelTank267Left], fireOrder: [0], launcherDragArea: 0.35, launcherMass: 531, launcherJettisonable: 1, showLongTypeInsteadOfCount: 1, category: 2},
 	fuel26R: {name: "267 Gal Fuel tank", content: [fuelTank267Right], fireOrder: [0], launcherDragArea: 0.35, launcherMass: 531, launcherJettisonable: 1, showLongTypeInsteadOfCount: 1, category: 2},
 
+    # A/A weapons on non-wing pylons:
 	aim9:    {name: "AIM-9",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 53, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 	aim7:    {name: "AIM-7",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 	aim54:    {name: "AIM-54",   content: ["AIM-54"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 300, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
     
+    # A/A weapons on wing pylons:
     # 170 = half the outer pylon of 340
     aim9w:    {name: "AIM-9",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 53+170, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
     aim7w:    {name: "AIM-7",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: -0.025, launcherMass: 0+170, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
@@ -56,6 +58,7 @@ var pylonSets = {
 };
 
 # sets. The first in the list is the default. Earlier in the list means higher up in dropdown menu.
+# These are not strictly needed in F-14 beside from the Empty, since it uses a custom payload dialog, but there for good measure.
 var pylon1set = [pylonSets.empty, pylonSets.aim9, pylonSets.smokeWL];
 var pylon2set = [pylonSets.empty, pylonSets.aim9, pylonSets.aim7, pylonSets.aim54];
 var pylon3set = [pylonSets.empty, pylonSets.fuel26L];
@@ -86,7 +89,7 @@ pylon10= stations.Pylon.new("8A Pylon",      9, [0.4795,3.6717,-1.0600],  pylon1
 
 var pylons = [pylonI,pylon1,pylon2,pylon3,pylon4,pylon5,pylon6,pylon7,pylon8,pylon9,pylon10];
 
-# The order of first vector in this line is the default order weapons is released in.
+# The order of first vector in this line is the default pylon order weapons is released in.
 # The order of second vector in this line is the order cycle key would cycle through the weapons (but since the f-14 dont have that the order is not important):
 fcs = fc.FireControl.new(pylons, [0,1,10,2,9,4,7,5,6], ["20mm Cannon","AIM-9","AIM-7","AIM-54","MK-83"]);
 
@@ -128,7 +131,7 @@ var cannon_load = func {
     }
 }
 
-# FAD (AIM-9, AIM-54)
+# FAD (AIM-9, AIM-7, AIM-54)
 var fad = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
         pylon1.loadSet(pylonSets.aim9w);
@@ -145,7 +148,7 @@ var fad = func {
     }
 }
 
-# FAD light (AIM-9, AIM-54)
+# FAD light (AIM-9, AIM-7)
 var fad_l = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
         pylon1.loadSet(pylonSets.aim9w);
@@ -179,7 +182,7 @@ var fad_h = func {
     }
 }
 
-# bombcat (AIM-9, AIM-54)
+# bombcat (AIM-9, AIM-7, MK-83)
 var bomb = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
         pylon1.loadSet(pylonSets.aim9w);
