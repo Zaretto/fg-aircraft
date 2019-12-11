@@ -14,7 +14,10 @@ var GunReady         = AcModel.getNode("systems/gun/ready");
 var GunRateHighLight = AcModel.getNode("controls/armament/acm-panel-lights/gun-rate-high-light");
 var WeaponsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/weapons-weight", 1);
 var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/pylons-weight", 1);
-
+var Smoke = props.globals.getNode("sim/model/f-14b/fx/smoke", 1);
+var SmokeCmd = props.globals.initNode("sim/model/f-14b/fx/smoke-cmd", 0,"BOOL");
+var SmokeMountedL = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-left", 0,"BOOL");
+var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right", 0,"BOOL");
 
 # AIM-9 stuff:
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
@@ -114,6 +117,11 @@ var armament_update2 = func {
 	
 	WeaponsWeight.setDoubleValue(wWeight);
     PylonsWeight.setDoubleValue(pWeight);
+    if (SmokeCmd.getValue() and (SmokeMountedR.getValue() or SmokeMountedL.getValue())) {
+    	Smoke.setDoubleValue(1);
+	} else {
+		Smoke.setDoubleValue(0);
+	}
 }
 
 var ccrp = func {

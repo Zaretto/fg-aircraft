@@ -2,10 +2,8 @@
 #
 # TODO:
 # 
-# voodoo cannot see any SW in hud after firing PH.
 # failure modes are being redone at reinit which breaks them.
-# proper smokewinders and an airshow button in payload dialog.
-# anti-cheat key 'a' binding do not get activated.
+# anti-cheat key 'a' binding do not get activated. Don't know why.
 # investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
 
 var fcs = nil;
@@ -31,8 +29,8 @@ cannon.brevity = "Guns guns";
 var fuelTank267Left = stations.FuelTank.new("L External", "TK267", 8, 370, "sim/model/f-14b/wingtankL");
 var fuelTank267Right = stations.FuelTank.new("R External", "TK267", 9, 370, "sim/model/f-14b/wingtankR");
 
-var smokewinderWhite1 = stations.Smoker.new("Smokewinder White", "SmokeW", "sim/model/f-14b/smokewinderW1");
-var smokewinderWhite10 = stations.Smoker.new("Smokewinder White", "SmokeW", "sim/model/f-14b/smokewinderW10");
+var smokewinderWhite1 = stations.Smoker.new("Smokewinder White", "SmokeW", "sim/model/f-14b/fx/smoke-mnt-left");
+var smokewinderWhite10 = stations.Smoker.new("Smokewinder White", "SmokeW", "sim/model/f-14b/fx/smoke-mnt-right");
 
 var pylonSets = {
 	empty: {name: "Empty", content: [], fireOrder: [], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 1},
@@ -58,7 +56,7 @@ var pylonSets = {
 };
 
 # sets. The first in the list is the default. Earlier in the list means higher up in dropdown menu.
-var pylon1set = [pylonSets.empty, pylonSets.aim9];
+var pylon1set = [pylonSets.empty, pylonSets.aim9, pylonSets.smokeWL];
 var pylon2set = [pylonSets.empty, pylonSets.aim9, pylonSets.aim7, pylonSets.aim54];
 var pylon3set = [pylonSets.empty, pylonSets.fuel26L];
 var pylon4set = [pylonSets.empty, pylonSets.m83, pylonSets.aim7, pylonSets.aim54];
@@ -67,7 +65,7 @@ var pylon6set = [pylonSets.empty, pylonSets.m83, pylonSets.aim7, pylonSets.aim54
 var pylon7set = [pylonSets.empty, pylonSets.m83, pylonSets.aim7, pylonSets.aim54];
 var pylon8set = [pylonSets.empty, pylonSets.fuel26R];
 var pylon9set = [pylonSets.empty, pylonSets.aim9, pylonSets.aim7, pylonSets.aim54];
-var pylon10set= [pylonSets.empty, pylonSets.aim9];
+var pylon10set= [pylonSets.empty, pylonSets.aim9, pylonSets.smokeWR];
 
 # pylons
 pylonI = stations.InternalStation.new("Internal gun mount", 10, [pylonSets.mm20], props.globals.getNode("fdm/jsbsim/inertia/pointmass-weight-lbs[10]",1));

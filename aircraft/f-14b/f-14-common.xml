@@ -1860,15 +1860,6 @@
                 </binding>
             </key>
 
-            <key n="83">
-                <name>S</name>
-                <desc>smoke</desc>
-                <binding>
-                    <command>property-toggle</command>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                </binding>
-            </key>
-
             <key n="99">
                 <name>c</name>
                 <desc>Open canopy and access ladder</desc>
@@ -1960,16 +1951,9 @@
             <key n="83">
                 <name>S</name>
                 <desc>smoke</desc>
-                <!--<binding>
-                    <command>property-toggle</command>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                </binding>-->
                 <binding>
-                    <command>property-cycle</command>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                    <value type="double">0.0</value>
-                    <value type="double">1.0</value>
-                    <wrap>true</wrap>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke-cmd</property>
                 </binding>
             </key>
 

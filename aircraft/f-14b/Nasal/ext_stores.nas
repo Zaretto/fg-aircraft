@@ -31,6 +31,8 @@ var ext_loads_set = func(s) {
 		pylons.fad_h(); return;
 	} elsif ( s == "Bombcat" ) {
 		pylons.bomb(); return; 
+	} elsif ( s == "Airshow" ) {
+		pylons.airshow(); return; 
 	}
 }
 

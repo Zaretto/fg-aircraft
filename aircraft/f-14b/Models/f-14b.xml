@@ -1496,11 +1496,17 @@
         <type>select</type>
         <nopreview/>
         <object-name>aim-9-0</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-0-set</property>
-                <value>AIM-9</value>
-            </equals>
+        <condition>
+            <or>
+                <equals>
+                    <property>payload/armament/station/id-0-set</property>
+                    <value>AIM-9</value>
+                </equals>
+                <equals>
+                    <property>payload/armament/station/id-0-set</property>
+                    <value>Smokewinder White</value>
+                </equals>
+            </or>
             <equals>
                 <property>payload/armament/station/id-0-count</property>
                 <value>1</value>
@@ -1545,10 +1551,16 @@
         <nopreview/>
         <object-name>aim-9-9</object-name>
         <condition>  
-            <equals>
-                <property>payload/armament/station/id-9-set</property>
-                <value>AIM-9</value>
-            </equals>
+            <or>
+                <equals>
+                    <property>payload/armament/station/id-9-set</property>
+                    <value>AIM-9</value>
+                </equals>
+                <equals>
+                    <property>payload/armament/station/id-9-set</property>
+                    <value>Smokewinder White</value>
+                </equals>
+            </or>
             <equals>
                 <property>payload/armament/station/id-9-count</property>
                 <value>1</value>
