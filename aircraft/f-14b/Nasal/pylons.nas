@@ -86,8 +86,16 @@ pylon10= stations.Pylon.new("8A Pylon",      9, [0.4795,3.6717,-1.0600],  pylon1
 
 var pylons = [pylonI,pylon1,pylon2,pylon3,pylon4,pylon5,pylon6,pylon7,pylon8,pylon9,pylon10];
 
-# The order of first vector in this line is the default order weapons is released in. The order of second vector in this line is the order key 'm' will cycle through the weapons:
+# The order of first vector in this line is the default order weapons is released in.
+# The order of second vector in this line is the order cycle key would cycle through the weapons (but since the f-14 dont have that the order is not important):
 fcs = fc.FireControl.new(pylons, [0,1,10,2,9,4,7,5,6], ["20mm Cannon","AIM-9","AIM-7","AIM-54","MK-83"]);
+
+if (getprop("sim/model/f-14b/systems/external-loads/external-tanks")) {
+    # since this property is data saved, we might need to init with tanks
+    pylon3.loadSet(pylonSets.fuel26L);
+    pylon8.loadSet(pylonSets.fuel26R);
+}
+
 
 #print("** Pylon & fire control system started. **");
 var getDLZ = func {
