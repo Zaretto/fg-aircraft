@@ -19,20 +19,21 @@ var ext_loads_set = func(s) {
 	# Load set defines which weapons are mounted.
 	# It also defines which pylons are mounted, a pylon may
 	# support several weapons.
-	WeaponsSet.setValue(s);
+	var success = 0;
 	if ( s == "Clean" ) {
-		pylons.clean();
+		success = pylons.clean();
 	} elsif ( s == "FAD" ) {
-		pylons.fad();
+		success = pylons.fad();
 	} elsif ( s == "FAD light" ) {
-		pylons.fad_l();
+		success = pylons.fad_l();
 	} elsif ( s == "FAD heavy" ) {
-		pylons.fad_h();
+		success = pylons.fad_h();
 	} elsif ( s == "Bombcat" ) {
-		pylons.bomb();
+		success = pylons.bomb();
 	} elsif ( s == "Airshow" ) {
-		pylons.airshow();
+		success = pylons.airshow();
 	}
+	if (success) WeaponsSet.setValue(s);
 }
 
 # Empties (or loads) corresponding Yasim tanks when de-selecting (or selecting)

@@ -126,8 +126,10 @@ var reloadCannon = func {
 var cannon_load = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
@@ -143,8 +145,10 @@ var fad = func {
         pylon9.loadSet(pylonSets.aim7w);
         pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
@@ -160,8 +164,10 @@ var fad_l = func {
         pylon9.loadSet(pylonSets.aim9w);
         pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
@@ -177,8 +183,10 @@ var fad_h = func {
         pylon9.loadSet(pylonSets.aim54w);
         pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
@@ -194,8 +202,10 @@ var bomb = func {
         pylon9.loadSet(pylonSets.aim7w);
         pylon10.loadSet(pylonSets.aim9w);
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
@@ -211,8 +221,10 @@ var clean = func {
         pylon9.loadSet(pylonSets.empty);
         pylon10.loadSet(pylonSets.empty);
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
@@ -228,8 +240,10 @@ var airshow = func {
         pylon9.loadSet(pylonSets.empty);
         pylon10.loadSet(pylonSets.smokeWR);
         reloadCannon();
+        return 1;
     } else {
       screen.log.write(msgB);
+      return 0;
     }
 }
 
