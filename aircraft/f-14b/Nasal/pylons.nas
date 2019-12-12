@@ -2,7 +2,6 @@
 #
 # TODO:
 # 
-# failure modes are being redone at reinit which breaks them.
 # anti-cheat key 'a' binding do not get activated. Don't know why.
 # investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
 
