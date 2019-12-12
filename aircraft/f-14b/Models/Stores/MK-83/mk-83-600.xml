@@ -8,41 +8,11 @@
 
 	<animation>
 		<type>select</type>
-		<object-name>MK-83_Shell</object-name>
-      	<object-name>MK-83_TailFins</object-name>
-      	<object-name>MK-83_Detonator</object-name>>
-      	<object-name>MK-83_Mounts</object-name>
+      	<object-name>mk83</object-name>
 		<condition>
 			<property>payload/armament/mk-83/flags/msl-id-600</property>
 		</condition>
 	</animation>
-
-	<animation>
-		<type>select</type>
-      	<object-name>MK-83_Wiring</object-name>
-		<condition>
-		<not>
-			<property>payload/armament/mk-83/flags/msl-id-600</property>
-		</not>
-		</condition>
-	</animation>
-
-	<animation>
-  		<type>rotate</type>
-  		<object-name>MK-83_Detonator</object-name>
-  		<factor>900</factor>
-  		<property>sim/time/elapsed-sec</property>
-  		<center>
-  		 <x-m>0</x-m>
-   		 <y-m>0</y-m>
-   		 <z-m>0</z-m>
-  		</center>
-  		<axis>
-   		 <x>1</x>
-   		 <y>0</y>
-   		 <z>0</z>
-  		</axis>
- 	</animation>
 
 	 <particlesystem>
 		   <name>explosion</name>
