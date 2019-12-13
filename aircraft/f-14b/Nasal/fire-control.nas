@@ -534,6 +534,40 @@ var FireControl = {
 			pyl.jettisonAll();
 		}
 	},
+	
+	jettisonSpecificPylons: func (list, also_heat) {
+		# jettison commanded pylons
+		foreach (pyl;me.pylons) {
+			if (list !=nil and me.vectorIndex(list, pyl.id) != -1) {
+				if (!also_heat) {
+					me.myWeaps = pyl.getWeapons();
+					if (me.myWeaps != nil and size(me.myWeaps)>0) {
+						if (me.myWeaps[0] != nil and me.myWeaps[0].parents[0] == armament.AIM and me.myWeaps[0].guidance == "heat") {
+							continue;
+						}
+					}
+				}
+				pyl.jettisonAll();
+			}			
+		}
+	},
+	
+	jettisonAllButHeat: func (exclude = nil) {
+		# jettison all but heat seekers.
+		foreach (pyl;me.pylons) {
+			me.myWeaps = pyl.getWeapons();
+			if (me.myWeaps != nil and size(me.myWeaps)>0) {
+				if (me.myWeaps[0] != nil and me.myWeaps[0].parents[0] == armament.AIM and me.myWeaps[0].guidance == "heat") {
+					continue;
+				}
+			}
+			if (exclude!=nil and me.vectorIndex(exclude, pyl.id) != -1) {
+				# excluded
+				continue;
+			}
+			pyl.jettisonAll();
+		}
+	},
 
 	jettisonFuel: func {
 		# jettison all fuel stations

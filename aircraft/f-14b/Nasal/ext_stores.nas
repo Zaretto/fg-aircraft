@@ -60,7 +60,8 @@ var toggle_ext_tank_selected = func() {
 # -------------------
 
 var emerg_jettison = func {
-	# will jettison all A/G weapons plus fuel tanks.
+	# will jettison all A/G weapons plus fuel tanks, AIM-7 and AIM-54.
+	# TODO: require no WOW.
 	var weap = pylons.pylon3.getWeapons();
 	if (weap != nil and size(weap)) {
 		setprop("controls/armament/station[2]/jettison-all", 1);
@@ -69,8 +70,24 @@ var emerg_jettison = func {
 	if (weap != nil and size(weap)) {
 		setprop("controls/armament/station[7]/jettison-all", 1);
 	}
-	pylons.fcs.jettisonFuelAndAG();
+	pylons.fcs.jettisonAllButHeat();
 	ExtTanks.setBoolValue(0);
+}
+
+# Air combat maneuver jettison:
+# -----------------------------
+
+var acm_jettison = func {
+	# will jettison all selected weapon pylons but never sidewinders.
+	# TODO: require landing gear lever up.
+	# TODO: Figure out how the TANK JETT switches in RIO seat work.
+	var list = [];
+	for (var i = 0;i<10;i+=1) {
+		if (i != 2 and i != 7 and getprop("sim/model/f-14b/systems/external-loads/station["~i~"]/selected")) {
+			append(list, i);
+		}
+	}
+	pylons.fcs.jettisonSpecificPylons(list, 0);
 }
 
 # Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
