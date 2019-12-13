@@ -2,8 +2,9 @@
 #
 # TODO:
 # 
-# AIM-7 on the 4 center pylons in main model AC3D is in wrong position
+# AIM-7 on the 4 center pylons in main model AC3D is in between the pylons..is that where they are fired from?
 # AIM-54 on the 4 center pylons in main model AC3D is named wrongly. So when ACM JETT 3 & 4 it looks like 3 & 5 gets jettisoned. (MK-83 is correct)
+# For some strange reason all pylon positions for firing/jettison had to be shifted 0.5 meter to the left. Not sure why, since the model is Y centered.
 # anti-cheat key 'a' binding do not get activated. Don't know why.
 # investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
 
