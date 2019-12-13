@@ -33,7 +33,10 @@ var ext_loads_set = func(s) {
 	} elsif ( s == "Airshow" ) {
 		success = pylons.airshow();
 	}
-	if (success) WeaponsSet.setValue(s);
+	if (success) {
+		WeaponsSet.setValue(s);
+		f14.arm_selector();# in case masterarm is already on, select and start relevant weapon.
+	}
 }
 
 # Empties (or loads) corresponding Yasim tanks when de-selecting (or selecting)
