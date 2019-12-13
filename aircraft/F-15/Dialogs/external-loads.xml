@@ -244,25 +244,25 @@
 						<label>Level</label>
 					</text>
 					<slider>
-						<name>LCFT</name>
+						<name>LFEED</name>
 						<property>/consumables/fuel/tank[0]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
-						<max>182</max>
+						<max>222.1</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>LCFT</object-name>
+							<object-name>LFEED</object-name>
 						</binding>
 					</slider>
 					<slider>
-						<name>RCFT</name>
+						<name>RFEED</name>
 						<property>/consumables/fuel/tank[1]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
-						<max>228</max>
+						<max>245.8</max>
 						<binding>
 							<command>dialog-apply</command>
-							<object-name>RCFT</object-name>
+							<object-name>RFEED</object-name>
 						</binding>
 					</slider>
 					<slider>
@@ -270,7 +270,7 @@
 						<property>/consumables/fuel/tank[2]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
-						<max>297</max>
+						<max>701.8</max>
 						<binding>
 							<command>dialog-apply</command>
 							<object-name>Tank1</object-name>
@@ -281,7 +281,7 @@
 						<property>/consumables/fuel/tank[3]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
-						<max>417</max>
+						<max>529.8</max>
 						<binding>
 							<command>dialog-apply</command>
 							<object-name>LWing</object-name>
@@ -292,7 +292,7 @@
 						<property>/consumables/fuel/tank[4]/level-gal_us</property>
 						<live>1</live>
 						<min>0</min>
-						<max>417</max>
+						<max>529.8</max>
 						<binding>
 							<command>dialog-apply</command>
 							<object-name>RWing</object-name>
@@ -348,7 +348,7 @@
                         </enable>
 						<live>1</live>
 						<min>0</min>
-						<max>44.643</max>
+						<max>728</max>
 						<binding>
 							<command>dialog-apply</command>
 							<object-name>LCFTvalue</object-name>
@@ -362,7 +362,7 @@
                         </enable>
                         <live>1</live>
                         <min>0</min>
-                        <max>44.643</max>
+                        <max>728</max>
                         <binding>
                             <command>dialog-apply</command>
                             <object-name>RCFTvalue</object-name>
@@ -606,6 +606,7 @@
                     <value>Clean</value>
                     <value>Standard Combat</value>
                     <value>Offensive Counter Air</value>
+		    <value>Combat Air Patrol</value>
                     <value>Air Superiority</value>
                     <value>No Fly Zone</value>
                     <value>Ground Attack</value>
@@ -908,7 +909,7 @@
 				<text>
 					<label>xxxxxxxxxxxxxxxxxx</label>
 					<live>true</live>
-					<format>%.4f</format>
+					<format>%3.1f</format>
 					<property>fdm/jsbsim/inertia/cg-x-mac-percent</property>
 				</text>
 			</group>

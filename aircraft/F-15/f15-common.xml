@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <!-- F-15 All Variants
-   |  Richard Harrison: 2015-06-29 : rjh@zaretto.com - parts taken from F-14 by xii. 
-   | Authors:
+   | Richard Harrison: released 2015-06-29 : rjh@zaretto.com
+   |   
+   | Authors/Contributions:
    | Richard Harrison; flight and systems models. Cockpit model and operation. Revisions to external 3d model (engines, ramps, animations, speedbrake). Sound. Canvas HUD, MPCD, VSD, TEWS. Revisions to xii files for weapons, radar, etc.
-   | Enrique Laso: Original external 3d model.
-   | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work is largely unchanged.
+   |                   sole developer of original version (2014->2015)
+   |                   overall project lead since 2016
+   | Enrique Laso: Original external 3d model (2015).
+   | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work was a good basis. (pre 2015)
+   | Nikolai V. Chr.: Improvements to Weapons, Radar, new SIT on MPCD, HUD (2015->current)
+   | Joshua Davidson: Flight Controls and autopilot (2018-2019)
+   | ________________________________________________________________
+   | Various authors have contributed liveries as per commit history.
 -->
 <PropertyList include="Aircraft/Generic/Human/Include/walker-include.xml">
     <gear>
@@ -28,11 +35,15 @@
                 <emergency-handle type="double">0</emergency-handle>
                 <emerg-pos type="double">0</emerg-pos>
                 <emerg-pos-dmd type="double">0</emerg-pos-dmd>
+                <gear-pos-norm type="double">1</gear-pos-norm>
+                <unit n="0">
+                  <locked type="double">0</locked>
+                </unit>
                 <unit n="1">
-                    <locked type="bool">false</locked>
+                  <locked type="double">0</locked>
                 </unit>
                 <unit n="2">
-                    <locked type="bool">false</locked>
+                   <locked type="double">0</locked>
                 </unit>
             </gear>
 
@@ -49,6 +60,9 @@
                 </engine>
                 <cft alias="/sim/model/f15/cft"/>
             </propulsion>
+            <simulation>
+                <channel-dt type="double">0.00833333333</channel-dt>
+            </simulation>
             <systems>
                 <hydraulics>
                     <combined-system-psi type="int">2200</combined-system-psi>
@@ -70,7 +84,7 @@
     <sim>
         <minimum-fg-version>2017.2</minimum-fg-version>
         <description>F-15</description>
-        <author>Richard Harrison, Enrique Laso (3d), Nikolai V. Chr., Joshua Davidson (FCS/Autopilot)</author>
+        <author>Richard Harrison, Enrique Laso, Nikolai V. Chr., Joshua Davidson</author>
         <status>production</status>
         <config>
             <hud-filter type="int">1</hud-filter>
@@ -521,7 +535,7 @@
               </signal>
               <signal>
                 <type>float</type>
-                <property type="string">fdm/jsbsim/gear/gear-pos-norm</property>
+                <property type="string">fdm/jsbsim/gear/gear-command-position-norm</property>
               </signal>
             </config>
         </flight-recorder>
@@ -1209,8 +1223,8 @@
                 <!--<y-offset-m archive="y">1.4874214034</y-offset-m>-->
                 <y-offset-m archive="y">1.401951318</y-offset-m>
                 <z-offset-m archive="y">-5</z-offset-m>
-                <pitch-offset-deg>-8</pitch-offset-deg>
-                <default-field-of-view-deg>85</default-field-of-view-deg>
+                <pitch-offset-deg>-12.95</pitch-offset-deg>
+                <default-field-of-view-deg>90</default-field-of-view-deg>
                 <limits>
                     <enabled type="bool">true</enabled>
                     <left>

@@ -471,17 +471,6 @@
     <!-- To tidy things up (as there are bits of the gear that show) hide it all when it is stowed.-->
     <animation>
         <type>select</type>
-        <object-name>Left Main Upper oleo</object-name>
-        <object-name>Left Main lower oleo</object-name>
-        <object-name>Left Main retraction linkage</object-name>
-        <object-name>Left Main retraction linkage</object-name>
-        <object-name>Left Main retract strut</object-name>
-        <object-name>Left Main wheel</object-name>
-        <object-name>Right Main Upper oleo</object-name>
-        <object-name>Right Main lower oleo</object-name>
-        <object-name>Right Main retraction linkage</object-name>
-        <object-name>Right Main retract strut</object-name>
-        <object-name>Right Main wheel</object-name>
         <object-name>nosegear retraction linkage</object-name>
         <object-name>Upper FWD oleo</object-name>
         <object-name>Lower FWD oleo</object-name>
@@ -493,12 +482,41 @@
         <object-name>Nose wheel</object-name>
         <condition>
             <greater-than>
-                <property>gear/gear[2]/position-norm</property>
+                <property>gear/gear[0]/position-norm</property>
                 <value>0</value>
             </greater-than>
         </condition>
     </animation>
-    <!-- Landing Gear -->
+  <animation>
+    <type>select</type>
+    <object-name>Left Main Upper oleo</object-name>
+    <object-name>Left Main lower oleo</object-name>
+    <object-name>Left Main retraction linkage</object-name>
+    <object-name>Left Main retraction linkage</object-name>
+    <object-name>Left Main retract strut</object-name>
+    <object-name>Left Main wheel</object-name>
+    <condition>
+      <greater-than>
+        <property>gear/gear[1]/position-norm</property>
+        <value>0</value>
+      </greater-than>
+    </condition>
+  </animation>
+  <animation>
+    <type>select</type>
+    <object-name>Right Main Upper oleo</object-name>
+    <object-name>Right Main lower oleo</object-name>
+    <object-name>Right Main retraction linkage</object-name>
+    <object-name>Right Main retract strut</object-name>
+    <object-name>Right Main wheel</object-name>
+    <condition>
+      <greater-than>
+        <property>gear/gear[2]/position-norm</property>
+        <value>0</value>
+      </greater-than>
+    </condition>
+  </animation>
+  <!-- Landing Gear -->
     <!-- Nose Wheel Steering -->
 
     <animation>

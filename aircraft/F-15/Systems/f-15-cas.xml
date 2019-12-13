@@ -10,8 +10,8 @@
 	<property value="0">cas/beta-p-gain</property>
     <property value="0">cas/beta-d-gain</property>
     
-    <property value="0.23">cas/ptc-i-gain</property>
-    <property value="1.12">cas/ptc-error-lag-c1</property>
+    <property value="0.4">cas/ptc-p-gain</property>
+    <property value="0.14">cas/ptc-i-gain</property>
     
     <property value="1">cas/ptc-nz-accelerometer-limit</property>
     <property value="102">cas/ptc-nz-accelerometer-c1</property>
@@ -197,6 +197,14 @@
                             <p>gear/gear-dmd-norm</p>
                             <v>0</v>
                         </eq>
+                      <le>
+                        <p>aero/alpha-deg</p>
+                        <v>13</v>
+                      </le>
+                      <ge>
+                        <p>aero/alpha-deg</p>
+                        <v>-5</v>
+                      </ge>
                     </and>
                     <v>0</v>
                     <v>1</v>
@@ -204,21 +212,29 @@
             </function>
         </fcs_function>
 
-        <fcs_function name="cas/ptc-p-gain">
-            <function>
-                <table>
-                    <independentVar lookup="row">velocities/vc-kts</independentVar>
-                    <tableData>
-                        480   0.13
-                        650   0.045
-                    </tableData>
-                </table>
-            </function>
-            <clipto>
-                <min>0.05</min>
-                <max>0.2</max>
-            </clipto>
-        </fcs_function>
+    <fcs_function name="cas/ptc-p-gain">
+      <description>
+        Proportional gain for the PTC.
+        At lower speeds this needs to be less effective otherwise PTC will over control
+        it means that the stick position == G drifts at lower G values; but also results in more
+        predicatble and controllable handling during takeoff/landing phases.
+      </description>
+      <function>
+        <table>
+          <independentVar lookup="row">velocities/vc-kts</independentVar>
+          <tableData>
+            180   0.04
+            220   0.13
+            480   0.13
+            650   0.045
+          </tableData>
+        </table>
+      </function>
+      <clipto>
+        <min>0.04</min>
+        <max>0.2</max>
+      </clipto>
+    </fcs_function>
 
 
         <fcs_function name="cas/ptc-computed-pitch">

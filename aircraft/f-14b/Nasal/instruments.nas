@@ -856,6 +856,11 @@ var init = func {
 
     common_init();
     f14.external_load_loopTimer.start();
+    
+    # make failure mode for radar, so that when aircraft is hit missiles cannot still be fired off.
+    var prop = "/instrumentation/radar";
+    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
