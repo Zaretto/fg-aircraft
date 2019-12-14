@@ -2,6 +2,7 @@
 #
 # TODO:
 # 
+# Could not figure out how to disable pilots when f14/done is true.
 # AIM-7 on the 4 center pylons in main model AC3D is in between the pylons..is that where they are fired from?
 # AIM-54 on the 4 center pylons in main model AC3D is named wrongly. So when ACM JETT 3 & 4 it looks like 3 & 5 gets jettisoned. (MK-83 is correct)
 # For some strange reason all pylon positions for firing/jettison had to be shifted 0.5 meter to the left. Not sure why, since the model is Y centered.

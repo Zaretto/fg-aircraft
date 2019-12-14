@@ -854,7 +854,7 @@ var init = func {
 	foreach (var f_tc; TcFreqs.getChildren()) {
 		aircraft.data.add(f_tc);
 	}
-
+	setprop("f14/done",0);#reset ejection seat
     common_init();
 }
 

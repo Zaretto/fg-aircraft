@@ -429,6 +429,10 @@
                 <name>Ctrl-3</name>
                 <desc>GCI: Cutoff request</desc>
             </key>
+            <key>
+                <name>F6</name>
+                <desc>Eject</desc>
+            </key>
             <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
             <line>__________________________________________________</line>
             <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
@@ -1258,6 +1262,32 @@
                 <!-- fore(+)/aft(-) -->
             </config>
         </view>
+        <view n="115">
+            <name>Ejection View</name>
+            <type>lookat</type>
+            <enabled type="bool">false</enabled>
+            <internal>false</internal>
+            <config>
+                <from-model type="bool">false</from-model>
+                <!--<eye-lat-deg-path>/ai/models/es/position/latitude-deg</eye-lat-deg-path>
+                <eye-lon-deg-path>/ai/models/es/position/longitude-deg</eye-lon-deg-path>
+                <eye-alt-ft-path>/ai/models/es/position/altitude-ft</eye-alt-ft-path>-->
+                <at-model type="bool">false</at-model>
+                <!--<target-x-offset-m type="double">0</target-x-offset-m>
+                <target-y-offset-m type="double">0</target-y-offset-m>
+                <target-z-offset-m type="double">0</target-z-offset-m>-->
+                <default-field-of-view-deg type="double">55.0</default-field-of-view-deg>
+                <pitch-offset-deg type="double">0</pitch-offset-deg>
+                <heading-offset-deg type="double">0</heading-offset-deg>
+                <roll-offset-deg type="double">0</roll-offset-deg>
+                <x-offset-m type="double">0</x-offset-m>
+                <!-- left(+)/right(-) -->
+                <y-offset-m type="double">0</y-offset-m>
+                <!-- up(+)/down(-) -->
+                <z-offset-m type="double">-25</z-offset-m>
+                <!-- fore(+)/aft(-) -->
+            </config>
+        </view>
 
         <weight n="0">
             <name>left wing pylon</name>
@@ -1525,6 +1555,20 @@
                     <x-m type="double">0.4795</x-m>
                     <y-m type="double">3.6717</y-m>
                     <z-m type="double">-1.0600</z-m>
+                </offsets>
+            </station>
+            <station n="12">
+                <offsets>
+                    <x-m type="double">-5</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">0.5</z-m>
+                </offsets>
+            </station>
+            <station n="13">
+                <offsets>
+                    <x-m type="double">-3.5</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-0.5</z-m>
                 </offsets>
             </station>
             <dual type="int">1</dual><!-- how many bombs to be released each time trigger is pressed -->
@@ -2114,6 +2158,17 @@
                     </binding>
                 </mod-ctrl>
             </key>
+            <key n="262">
+              <name>F6</name>
+              <desc>Eject</desc>
+              <repeatable type="bool">false</repeatable>
+              <binding>
+               <command>nasal</command>
+               <script>
+                f14.eject();
+               </script>
+              </binding>
+             </key>
         </keyboard>
     </input>
 
@@ -2358,6 +2413,50 @@
                 <hit-everything-nearby type="bool">true</hit-everything-nearby>
                 <ejector-speed-fps type="double">10</ejector-speed-fps>
             </mk-83>
+            <es>                    <!-- Ejection seat -->
+                <vol-search type="double">0.075</vol-search>
+                <vol-track type="double">0.25</vol-track>
+                <vol-track-weak type="double">0.175</vol-track-weak>
+                <guidance type="string">unguided</guidance>
+                <navigation type="string">direct</navigation>
+                <all-aspect type="bool">false</all-aspect> 
+                <max-fire-range-nm type="double">6.9</max-fire-range-nm>
+                <FCS-field-deg type="int">50</FCS-field-deg>            
+                <seeker-field-deg type="int">54</seeker-field-deg>      
+                <max-g type="int">10</max-g>                            
+                <max-launch-g type="int">9</max-launch-g>      
+                <thrust-lbf-stage-1 type="double">1500</thrust-lbf-stage-1>
+                <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>  
+                <stage-1-duration-sec type="double">1</stage-1-duration-sec>
+                <stage-2-duration-sec type="double">0.0</stage-2-duration-sec>
+                <weight-launch-lbs type="double">300</weight-launch-lbs>
+                <weight-warhead-lbs type="double">0.0</weight-warhead-lbs>  
+                <weight-fuel-lbm type="double">5.0</weight-fuel-lbm>        
+                <drag-coeff type="double">1.35</drag-coeff>                 
+                <delta-drag-coeff-deploy type="double">75.00</delta-drag-coeff-deploy>
+                <cross-section-sqft type="double">2</cross-section-sqft>
+                <arming-time-sec type="double">0</arming-time-sec>    
+                <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                <self-destruct-time-sec type="double">5000</self-destruct-time-sec>       
+                <seeker-angular-speed-dps type="double">10.0</seeker-angular-speed-dps>
+                <lock-on-sun-deg type="double">20</lock-on-sun-deg>       
+                <loft-altitude type="int">0</loft-altitude>
+                <min-fire-range-nm type="double">0.0</min-fire-range-nm>
+                <rail type="bool">true</rail>
+                <rail-length-m type="double">1.5</rail-length-m>
+                <rail-point-forward type="bool">false</rail-point-forward>
+                <rail-pitch-deg type="double">90</rail-pitch-deg>
+                <drop-time type="double">0</drop-time>
+                <deploy-time type="double">3.5</deploy-time>                            
+                <inert type="bool">true</inert>                            
+                <lateral-dps type="int">2</lateral-dps>                            
+                <max-report-distance type="double">65</max-report-distance>
+                <class type="string">A</class>
+                <fire-msg type="string">weeeeee</fire-msg>
+                <long-name type="string">Project Gamma</long-name>
+                <short-name type="string">gamma</short-name>
+                <pitch-animation-disabled type="bool">true</pitch-animation-disabled>
+            </es>
         </armament>
     </payload>
 
@@ -2379,7 +2478,13 @@
             </blade>
         </main>
     </rotors>
-
+    
+    <f14>
+        <!-- ejection seat -->
+        <done type="bool">false</done>
+        <force type="double">0</force>
+    </f14>
+    
     <nasal>
         <notifications>
             <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
