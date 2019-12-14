@@ -399,32 +399,6 @@ var logTime = func{
 
 #sendMisTimer.start(); ; use emesary for this
 
-var ct = func (type) {
-  if (type == "c-u") {
-    setprop("sim/ct/c-u", 1);
-  }
-  if (type == "rl" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/rl", 1);
-  }
-  if (type == "rp" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/rp", 1);
-  }
-  if (type == "a") {
-    setprop("sim/ct/a", 1);
-  }
-  if (type == "lst") {
-    setprop("sim/ct/list", 1);
-  }
-  if (type == "ifa" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/ifa", 1);
-  }
-  if (type == "sf" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/sf", 1);
-  }
-}
-
-var lf = -1;
-var ll = 0;
 
 var code_ct = func () {
   #ANTIC
@@ -464,7 +438,7 @@ var re_init = func {
   foreach(var failure_mode_id; mode_list) {
     FailureMgr.set_failure_level(failure_mode_id, 0);
   }
-  setprop("ai/submodels/submodel[4]/count", 100);
+  setprop("ai/submodels/submodel[4]/count", 100);#replenish chaff and flares
   setprop("ai/submodels/submodel[5]/count", 100);
 }
 
