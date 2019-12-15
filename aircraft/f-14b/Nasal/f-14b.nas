@@ -709,7 +709,7 @@ print("Damage enabled ",v.getValue());
 
 setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",getprop("sim/model/f-14b/wings/damage-enabled"));
 
-var es = nil;
+
 var esRIO = nil;
 
 var eject = func{
@@ -717,16 +717,16 @@ var eject = func{
       return;
   }
   setprop("f14/done",1);
-  es = armament.AIM.new(11, "es","Pilot", nil ,nil);
+  var es = armament.AIM.new(11, "es","Pilot", nil ,nil);
   esRIO = armament.AIM.new(12, "es","Rio", nil ,nil);
   #setprop("fdm/jsbsim/fcs/canopy/hinges/serviceable",0);
   es.releaseAtNothing();
-      var n = props.globals.getNode("ai/models", 1);
-    for (i = 0; 1==1; i += 1) {
-        if (n.getChild("es", i, 0) == nil) {
-            break;
-        }
+  var n = props.globals.getNode("ai/models", 1);
+  for (i = 0; 1==1; i += 1) {
+    if (n.getChild("es", i, 0) == nil) {
+      break;
     }
+  }
     
   # set the view to follow pilot:
   setprop("sim/view[115]/config/eye-lat-deg-path","/ai/models/es["~(i-2)~"]/position/latitude-deg");
