@@ -536,8 +536,7 @@
                         <binding>
                             <command>nasal</command>
                             <script>
-                                setprop("/ai/submodels/submodel[3]/count",135);
-                                setprop("/sim/model/f-14b/systems/gun/rounds",675);
+                                pylons.cannon_load();
                             </script>
                         </binding>
                     </button>
@@ -581,6 +580,14 @@
                             <script>f14.ext_loads_set("Bombcat")</script>
                         </binding>
                     </button>
+                    <button>
+                        <legend>Airshow</legend>
+                        <equal>true</equal>
+                        <binding>
+                            <command>nasal</command>
+                            <script>f14.ext_loads_set("Airshow")</script>
+                        </binding>
+                    </button>
                 </group>
             </group>
 
@@ -588,16 +595,22 @@
 				<layout>hbox</layout>
 
 				<text>
-					<label>AIM-9 MP messaging:</label>
+					<label>Missile MP messaging:</label>
 				</text>
 
 				<checkbox>
 					<property>payload/armament/msg</property>
 					<live>true</live>
 					<binding>
-						<command>property-toggle</command>
-						<property>payload/armament/msg</property>
-					</binding>
+	                    <command>nasal</command>
+						<script>
+				            if(getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+				              setprop("payload/armament/msg", !getprop("payload/armament/msg"));
+				            } else {
+				              screen.log.write("Missile MP messaging toggle only available on ground");
+				            }
+				        </script>
+			        </binding>
 				</checkbox>
 
 			</group>

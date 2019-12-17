@@ -15,59 +15,101 @@ var cannon_types = {
     " GSh-23 hit":            0.065,# 23mm
     " 7.62 hit":              0.005,# 7.62mm
     " 50 BMG hit":            0.015,# 12.7mm
+    " S-5 rocket hit":        0.20, #55mm
+    " Hydra-70 hit":          0.25, #
 };
     
     
     
 var warhead_lbs = {
+    "AGM-65":              126.00,
+    "AGM-84":              488.00,
+    "AGM-88":              146.00,
+    "AGM65":               200.00,
+    "AGM-119":             264.50,
+    "AGM-154A":            493.00,
+    "AGM-158":            1000.00,
     "aim-120":              44.00,
-    "AIM120":               44.00,
     "AIM-120":              44.00,
-    "RB-99":                44.00,
+    "AIM-54":              135.00,
     "aim-7":                88.00,
     "AIM-7":                88.00,
-    "RB-71":                88.00,
     "aim-9":                20.80,
-    "AIM9":                 20.80,
     "AIM-9":                20.80,
-    "RB-24":                20.80,
-    "RB-24J":               20.80,
-    "RB-74":                20.80,
-    "R74":                  16.00,
-    "MATRA-R530":           55.00,
-    "Meteor":               55.00,
-    "AIM-54":              135.00,
-    "Matra R550 Magic 2":   27.00,
-    "MatraR550Magic2":      27.00,
-    "Matra MICA":           30.00,
-    "MatraMica":            30.00,
-    "MatraMicaIR":          30.00,
-    "RB-15F":              440.92,
-    "SCALP":               992.00,
-    "KN-06":               315.00,
+    "AIM120":               44.00,
+    "AIM132":               22.05,
+    "AIM9":                 20.80,
+    "ALARM":               450.00,
+    "AM39-Exocet":         364.00, 
+    "AS-37-Martel":        330.00, 
+    "AS30L":               529.00,
+    "CBU-87":              128.00,
+    "Exocet":              364.00,
+    "FAB-100":              92.59,
+    "FAB-250":             202.85,
+    "FAB-500":             564.38,
+    "GBU-12":              190.00,
+    "GBU-24":              945.00,
+    "GBU-31":              945.00,
+    "GBU-54":              192.00,
     "GBU12":               190.00,
     "GBU16":               450.00,
-    "Sea Eagle":           505.00,
-    "SeaEagle":            505.00,
-    "AGM65":               200.00,
-    "RB-04E":              661.00,
-    "RB-05A":              353.00,
-    "RB-75":               126.00,
-    "M90":                 500.00,
-    "M71":                 200.00,
-    "M71R":                200.00,
-    "MK-82":               192.00,
+    "HVAR":                  7.50,#P51
+    "KAB-500":             564.38,
+    "KH-25MP":             197.53,
+    "Kh-66":               244.71,
+    "KN-06":               315.00,
     "LAU-68":               10.00,
     "M317":                145.00,
-    "GBU-31":              945.00,
-    "AIM132":               22.05,
-    "ALARM":               450.00,
-    "STORMSHADOW":         850.00,
-    "R-60":                  6.60,
+    "M71":                 200.00,
+    "M71R":                200.00,
+    "M90":                 500.00,
+    "Magic-2":              27.00, 
+    "Matra MICA":           30.00,
+    "Matra R550 Magic 2":   27.00,
+    "MATRA-R530":           55.00,
+    "MatraMica":            30.00,
+    "MatraMicaIR":          30.00,
+    "MatraR550Magic2":      27.00,
+    "Meteor":               55.00,
+    "MICA-EM":              30.00, 
+    "MICA-IR":              30.00, 
+    "MK-82":               192.00,
+    "MK-83":               445.00,
+    "MK-84":               945.00,
+    "OFAB-100":             92.59,
+    "R-13M":                16.31,
     "R-27R1":               85.98,
     "R-27T1":               85.98,
-    "FAB-500":             564.00,
-    "Exocet":              364.00,
+    "R-3R":                 16.31,
+    "R-3S":                 16.31,
+    "R-55":                 20.06,
+    "R-60":                  6.60,
+    "R-60M":                 7.70,
+    "R-73E":                16.31,
+    "R-77":                 49.60,
+    "R74":                  16.00,
+    "RB-04E":              661.00,
+    "RB-05A":              353.00,
+    "RB-15F":              440.92,
+    "RB-24":                20.80,
+    "RB-24J":               20.80,
+    "RB-71":                88.00,
+    "RB-74":                20.80,
+    "RB-75":               126.00,
+    "RB-99":                44.00,
+    "RN-14T":              800.00, #fictional, thermobaeric replacement for the RN-24 nuclear bomb
+    "RN-18T":             1200.00, #fictional, thermobaeric replacement for the RN-28 nuclear bomb
+    "RS-2US":               28.66,
+    "S-21":                245.00,
+    "S-24":                271.00,
+    "S530D":                66.00, 
+    "SCALP":               992.00,
+    "Sea Eagle":           505.00,
+    "SeaEagle":            505.00,
+    "STORMSHADOW":         850.00,
+    "ZB-250":              236.99,
+    "ZB-500":              473.99,
 };
 
 var fireMsgs = {
@@ -357,233 +399,35 @@ var logTime = func{
 
 #sendMisTimer.start(); ; use emesary for this
 
-var ct = func (type) {
-  if (type == "c-u") {
-    setprop("sim/ct/c-u", 1);
-  }
-  if (type == "rl" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/rl", 1);
-  }
-  if (type == "rp" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/rp", 1);
-  }
-  if (type == "a") {
-    setprop("sim/ct/a", 1);
-  }
-  if (type == "lst") {
-    setprop("sim/ct/list", 1);
-  }
-  if (type == "ifa" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/ifa", 1);
-  }
-  if (type == "sf" and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/sf", 1);
-  }
-}
-
-var lf = -1;
-var ll = 0;
 
 var code_ct = func () {
-  var cu = getprop("sim/ct/c-u");
-  if (cu == nil or cu != 1) {
-    cu = 0;
-  }
-  var a = getprop("sim/ct/a");
-  if (a == nil or a != 1) {
-    a = 0;
-  }
-  var ff = getprop("sim/freeze/fuel");
-  if (ff == nil) {
-    ff = 0;
-  } elsif (ff == 1) {
-    setprop("sim/ct/ff", 1);
-  }
-  ff = getprop("sim/ct/ff");
-  if (ff == nil or ff != 1) {
-    ff = 0;
-  }
-  var cl =  getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[0]")+getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[1]")
-           +getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[2]")+getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[3]")
-           +getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[4]")+getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[5]")
-           +getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[6]")+getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[7]")
-           +getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[8]")+getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[9]");
-  if (cl > (ll*1.05) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    setprop("sim/ct/rl", 1);
-  }
-  ll = cl;
-  var rl = getprop("sim/ct/rl");
-  if (rl == nil or rl != 1) {
-    rl = 0;
-  }
-  var rp = getprop("sim/ct/rp");
-  if (rp == nil or rp != 1) {
-    rp = 0;
-  }
-  var cf =   getprop("/consumables/fuel/tank[0]/level-gal_us")
-            +getprop("/consumables/fuel/tank[1]/level-gal_us")
-            +getprop("/consumables/fuel/tank[2]/level-gal_us")
-            +getprop("/consumables/fuel/tank[3]/level-gal_us")
-            +getprop("/consumables/fuel/tank[4]/level-gal_us")
-            +getprop("/consumables/fuel/tank[5]/level-gal_us")
-            +getprop("/consumables/fuel/tank[6]/level-gal_us")
-            +getprop("/consumables/fuel/tank[7]/level-gal_us")
-            +getprop("/consumables/fuel/tank[8]/level-gal_us")
-            +getprop("/consumables/fuel/tank[9]/level-gal_us")
-            +getprop("/consumables/fuel/tank[10]/level-gal_us")
-            +getprop("/consumables/fuel/tank[11]/level-gal_us");
-  if (cf != nil and lf != -1 and cf > (lf*1.1) and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE and getprop("/systems/refuel/contact") == FALSE) {
-    setprop("sim/ct/rf", 1);
-  }
-  var rf = getprop("sim/ct/rf");
-  if (rf == nil or rf != 1) {
-    rf = 0;
-  }
-  lf = cf == nil?0:cf;
-  var dm = !getprop("payload/armament/msg");
-  if (dm == nil or dm != 1) {
-    dm = 0;
-  }
-  var tm = 0;#getprop("sim/ja37/radar/look-through-terrain");
-  if (tm == nil or tm != 1) {
-    tm = 0;
-  }
-  var rd = 0;#!getprop("sim/ja37/radar/doppler-enabled");
-  if (rd == nil or rd != 1) {
-    rd = 0;
+  #ANTIC
+  if (getprop("payload/armament/msg")) {
+      setprop("sim/rendering/redout/enabled", TRUE);
+      #call(func{fgcommand('dialog-close', multiplayer.dialog.dialog.prop())},nil,var err= []);# props.Node.new({"dialog-name": "location-in-air"}));
+      call(func{multiplayer.dialog.del();},nil,var err= []);
+      if (!getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+        call(func{fgcommand('dialog-close', props.Node.new({"dialog-name": "WeightAndFuel"}))},nil,var err2 = []);
+        call(func{fgcommand('dialog-close', props.Node.new({"dialog-name": "system-failures"}))},nil,var err2 = []);
+        call(func{fgcommand('dialog-close', props.Node.new({"dialog-name": "instrument-failures"}))},nil,var err2 = []);
+      }      
+      setprop("sim/freeze/fuel",0);
+      setprop("/sim/speed-up", 1);
+      setprop("/gui/map/draw-traffic", 0);
+      setprop("/sim/gui/dialogs/map-canvas/draw-TFC", 0);
+      #setprop("/sim/rendering/als-filters/use-filtering", 1);
+      call(func{var interfaceController = fg1000.GenericInterfaceController.getOrCreateInstance();
+      interfaceController.stop();},nil,var err2=[]);
   }  
-  var ml = getprop("sim/ct/list");
-  if (ml == nil or ml != 1) {
-    ml = 0;
-  }
-  var sf = getprop("sim/ct/sf");
-  if (sf == nil or sf != 1) {
-    sf = 0;
-  }
-  var ifa = getprop("sim/ct/ifa");
-  if (ifa == nil or ifa != 1) {
-    ifa = 0;
-  }
-  var final = "ct"~cu~ff~rl~rf~rp~a~dm~tm~rd~ml~sf~ifa;
-  setprop("sim/multiplay/generic/string[15]", final);
 }
-code_ctTimer = maketimer(2, code_ct);
+code_ctTimer = maketimer(1, code_ct);
 code_ctTimer.simulatedTime = 1;
-
-var not = func {
-  if (getprop("payload/armament/msg") == TRUE and getprop("fdm/jsbsim/gear/unit[0]/WOW") != TRUE) {
-    var ct = getprop("sim/multiplay/generic/string[15]") ;
-    var msg = "I might be chea"~"ting..";
-    if (ct != nil) {
-      msg = "I might be chea"~"ting.."~ct;
-      var spl = split("ct", ct);
-      if (size(spl) > 1) {
-        var bits = spl[1];
-        msg = "I ";
-        if (bits == "000000000000") {
-          return;
-        }
-        if (substr(bits,0,1) == "1") {
-          msg = msg~"Used CT"~"RL-U..";
-        }
-        if (substr(bits,1,1) == "1") {
-          msg = msg~"Use fuelf"~"reeze..";
-        }
-        if (substr(bits,2,1) == "1") {
-          msg = msg~"Relo"~"aded in air..";
-        }
-        if (substr(bits,3,1) == "1") {
-          msg = msg~"Refue"~"led in air..";
-        }
-        if (substr(bits,4,1) == "1") {
-          msg = msg~"Repa"~"ired not on ground..";
-        }
-        if (substr(bits,5,1) == "1") {
-          msg = msg~"Used time"~"warp..";
-        }
-        if (getprop("payload/armament/msg") == FALSE and substr(bits,6,1) == "1") {
-          msg = msg~"Have dam"~"age off..";
-        }
-        if (substr(bits,7,1) == "1") {
-          msg = msg~"Have Ter"~"rain mask. off..";
-        }
-        if (substr(bits,8,1) == "1") {
-          msg = msg~"Have Dop"~"pler off..";
-        }
-        if (substr(bits,9,1) == "1") {
-          msg = msg~"Had mp-l"~"ist on..";
-        }
-        if (substr(bits,10,1) == "1") {
-          msg = msg~"Had s-fai"~"lures open..";
-        }
-        if (substr(bits,11,1) == "1") {
-          msg = msg~"Had i-fa"~"ilures open..";
-        }
-      }
-    }
-    setprop("/sim/multiplay/chat", msg);
-  }
-}
-notTimer = maketimer(60, not);
-notTimer.simulatedTime = 1;
-
-var changeGuiLoad = func()
-{#return;
-    var searchname1 = "mp-list";
-    var searchname2 = "instrument-failures";
-    var searchname3 = "system-failures";
-    var state = 0;
-    
-    foreach(var menu ; props.globals.getNode("/sim/menubar/default").getChildren("menu")) {
-        foreach(var item ; menu.getChildren("item")) {
-            foreach(var name ; item.getChildren("name")) {
-                if(name.getValue() == searchname1) {
-                    #var e = item.getNode("enabled").getValue();
-                    #var path = item.getPath();
-                    #item.remove();
-                    #item = props.globals.getNode(path,1);
-                    #item.getNode("enabled",1).setBoolValue(FALSE);
-                    #item.getNode("binding").remove();
-                    #item.getNode("name",1).setValue(searchname1);
-                    item.getNode("binding/command").setValue("nasal");
-                    item.getNode("binding/script").setValue("armament.loadMPList()");
-                    #item.getNode("enabled",1).setBoolValue(TRUE);
-                }
-                if(name.getValue() == searchname2) {
-                    item.getNode("binding/command").setValue("nasal");
-                    item.getNode("binding/dialog-name").remove();
-                    item.getNode("binding/script",1).setValue("armament.loadIFail()");
-                }
-                if(name.getValue() == searchname3) {
-                    item.getNode("binding/command").setValue("nasal");
-                    item.getNode("binding/dialog-name").remove();
-                    item.getNode("binding/script",1).setValue("armament.loadSysFail()");
-                }
-            }
-        }
-    }
-    fgcommand("reinit", props.Node.new({"subsystem":"gui"}));
-}
-
-var loadMPList = func () {
-  ct("lst");multiplayer.dialog.show();
-}
-
-var loadSysFail = func () {
-  ct("sf");fgcommand("dialog-show", props.Node.new({"dialog-name":"system-failures"}));
-}
-
-var loadIFail = func () {
-  ct("ifa");fgcommand("dialog-show", props.Node.new({"dialog-name":"instrument-failures"}));
-}
 
 setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
 
 setprop("/sim/failure-manager/display-on-screen", FALSE);
 
-changeGuiLoad();
 code_ctTimer.start();
-notTimer.start();
 
 var re_init = func {
   # repair the aircraft
@@ -594,7 +438,7 @@ var re_init = func {
   foreach(var failure_mode_id; mode_list) {
     FailureMgr.set_failure_level(failure_mode_id, 0);
   }
-  setprop("ai/submodels/submodel[4]/count", 100);
+  setprop("ai/submodels/submodel[4]/count", 100);#replenish chaff and flares
   setprop("ai/submodels/submodel[5]/count", 100);
 }
 

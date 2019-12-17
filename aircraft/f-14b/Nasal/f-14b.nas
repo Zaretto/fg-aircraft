@@ -346,6 +346,12 @@ setprop("/sim/multiplay/generic/float[11]", getprop("/fdm/jsbsim/propulsion/engi
 #setprop("/sim/multiplay/generic/int[8]", getprop("/engines/engine[0]/afterburner" ));
 #setprop("/sim/multiplay/generic/int[9]", getprop("/engines/engine[1]/afterburner" ));
 
+    # ejection seat
+    if (getprop("payload/armament/es/flags/deploy-id-11") != nil) {
+        setprop("f14/force", 7-5*getprop("payload/armament/es/flags/deploy-id-11"));
+    } else {
+        setprop("f14/force", 7);
+    }
 }
 
 
@@ -685,8 +691,12 @@ dynamic_view.register(func {
    });
 
 var fixAirframe = func {
-    setprop ("fdm/jsbsim/systems/flyt/damage-reset", 1);
-    repairMe();
+    if (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+        setprop ("fdm/jsbsim/systems/flyt/damage-reset", 1);
+        repairMe();
+    } else {
+        screen.log.write("Please land or relocate to an airport before repair");
+    }
 }
 
 setlistener("sim/model/f-14b/wings/damage-enabled", func(v){
@@ -698,3 +708,41 @@ print("Damage enabled ",v.getValue());
   },0,0);
 
 setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",getprop("sim/model/f-14b/wings/damage-enabled"));
+
+
+var esRIO = nil;
+
+var eject = func{
+  if (getprop("f14/done")==1) {# or !getprop("controls/seat/ejection-safety-lever")
+      return;
+  }
+  setprop("f14/done",1);
+  var es = armament.AIM.new(11, "es","Pilot", nil ,nil);
+  esRIO = armament.AIM.new(12, "es","Rio", nil ,nil);
+  #setprop("fdm/jsbsim/fcs/canopy/hinges/serviceable",0);
+  es.releaseAtNothing();
+  var n = props.globals.getNode("ai/models", 1);
+  for (i = 0; 1==1; i += 1) {
+    if (n.getChild("es", i, 0) == nil) {
+      break;
+    }
+  }
+    
+  # set the view to follow pilot:
+  setprop("sim/view[115]/config/eye-lat-deg-path","/ai/models/es["~(i-2)~"]/position/latitude-deg");
+  setprop("sim/view[115]/config/eye-lon-deg-path","/ai/models/es["~(i-2)~"]/position/longitude-deg");
+  setprop("sim/view[115]/config/eye-alt-ft-path","/ai/models/es["~(i-2)~"]/position/altitude-ft");
+  setprop("sim/view[115]/config/target-lat-deg-path","/ai/models/es["~(i-2)~"]/position/latitude-deg");
+  setprop("sim/view[115]/config/target-lon-deg-path","/ai/models/es["~(i-2)~"]/position/longitude-deg");
+  setprop("sim/view[115]/config/target-alt-ft-path","/ai/models/es["~(i-2)~"]/position/altitude-ft");
+  setprop("sim/current-view/view-number", 12);# add 2 since walker uses 2
+
+  settimer(eject2, 0.20)
+}
+
+var eject2 = func {
+  esRIO.releaseAtNothing();
+  
+  #setprop("sim/view[0]/enabled",0); #disabled since it might get saved so user gets no pilotview in next aircraft he flies in.
+  settimer(func {f14.exp();},3.5);
+}

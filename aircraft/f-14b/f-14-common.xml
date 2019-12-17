@@ -417,6 +417,22 @@
                 <name>S</name>
                 <desc>Toggle smoke</desc>
             </key>
+            <key>
+                <name>Ctrl-1</name>
+                <desc>GCI: Picture request</desc>
+            </key>
+            <key>
+                <name>Ctrl-2</name>
+                <desc>GCI: Bogey Dope request</desc>
+            </key>
+            <key>
+                <name>Ctrl-3</name>
+                <desc>GCI: Cutoff request</desc>
+            </key>
+            <key>
+                <name>F6</name>
+                <desc>Eject</desc>
+            </key>
             <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
             <line>__________________________________________________</line>
             <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
@@ -968,6 +984,9 @@
             <transmit-only-generics type="int">0</transmit-only-generics>
             <transmit-only-generics-available type="int">1</transmit-only-generics-available>
             <generic>
+                <bool n="0" type="bool" alias="/instrumentation/gci/picture"/><!-- Use ctrl 1 to 3 to communicate with Ground Control Intercept if one is spawned near -->
+                <bool n="1" type="bool" alias="/instrumentation/gci/bogeydope"/><!-- if change these to other bools, the l0k1 assets on github needs to be updated also -->
+                <bool n="2" type="bool" alias="/instrumentation/gci/cutoff"/>
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
@@ -1016,8 +1035,8 @@
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
+                <string n="5" type="string">00--++00--Empty</string><!-- mp stores -->
                 <string n="13" type="string"></string>
-                <string n="15" type="string"></string>
                 <!-- instruments -->
                 <!-- <string n="2" type="string">50</string>      free -->
             </generic>
@@ -1053,7 +1072,7 @@
                         <label>Repair Airframe</label>
                         <binding>
                             <command>nasal</command>
-                            <script>f14.fixAirframe();armament.ct("rp");</script>
+                            <script>f14.fixAirframe();</script>
                         </binding>
                     </item>
                     <item n="1">
@@ -1240,6 +1259,32 @@
                 <y-offset-m type="double">0</y-offset-m>
                 <!-- up(+)/down(-) -->
                 <z-offset-m type="double">-13</z-offset-m>
+                <!-- fore(+)/aft(-) -->
+            </config>
+        </view>
+        <view n="115">
+            <name>Ejection View</name>
+            <type>lookat</type>
+            <enabled type="bool">false</enabled>
+            <internal>false</internal>
+            <config>
+                <from-model type="bool">false</from-model>
+                <!--<eye-lat-deg-path>/ai/models/es/position/latitude-deg</eye-lat-deg-path>
+                <eye-lon-deg-path>/ai/models/es/position/longitude-deg</eye-lon-deg-path>
+                <eye-alt-ft-path>/ai/models/es/position/altitude-ft</eye-alt-ft-path>-->
+                <at-model type="bool">false</at-model>
+                <!--<target-x-offset-m type="double">0</target-x-offset-m>
+                <target-y-offset-m type="double">0</target-y-offset-m>
+                <target-z-offset-m type="double">0</target-z-offset-m>-->
+                <default-field-of-view-deg type="double">55.0</default-field-of-view-deg>
+                <pitch-offset-deg type="double">0</pitch-offset-deg>
+                <heading-offset-deg type="double">0</heading-offset-deg>
+                <roll-offset-deg type="double">0</roll-offset-deg>
+                <x-offset-m type="double">0</x-offset-m>
+                <!-- left(+)/right(-) -->
+                <y-offset-m type="double">0</y-offset-m>
+                <!-- up(+)/down(-) -->
+                <z-offset-m type="double">-25</z-offset-m>
                 <!-- fore(+)/aft(-) -->
             </config>
         </view>
@@ -1512,6 +1557,21 @@
                     <z-m type="double">-1.0600</z-m>
                 </offsets>
             </station>
+            <station n="12">
+                <offsets>
+                    <x-m type="double">-5</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">0.5</z-m>
+                </offsets>
+            </station>
+            <station n="13">
+                <offsets>
+                    <x-m type="double">-3.5</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-0.5</z-m>
+                </offsets>
+            </station>
+            <dual type="int">1</dual><!-- how many bombs to be released each time trigger is pressed -->
         </armament>
         <lighting>
             <instruments-norm type="double">0</instruments-norm>
@@ -1617,6 +1677,24 @@
                     <value type="bool">true</value>
                 </binding>
             </key>
+            
+            <key n="18">
+              <name>Ctrl-R</name>
+              <desc>Activate the instant replay system</desc>
+              <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("Please do not use replay while in combat over MP!");
+                        } else {
+                            call(func{fgcommand('replay', props.Node.new({}))},nil,var err2 = []);
+                            call(func{fgcommand('dialog-show', props.Node.new({"dialog-name": "replay"}))},nil,var err2 = []);
+                        }
+                    </script>
+                </binding>
+                <mod-up>
+                </mod-up>
+             </key>
 
 		   <key n="19">
                 <name>CTRL-S</name>
@@ -1826,15 +1904,6 @@
                 </binding>
             </key>
 
-            <key n="83">
-                <name>S</name>
-                <desc>smoke</desc>
-                <binding>
-                    <command>property-toggle</command>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                </binding>
-            </key>
-
             <key n="99">
                 <name>c</name>
                 <desc>Open canopy and access ladder</desc>
@@ -1926,16 +1995,9 @@
             <key n="83">
                 <name>S</name>
                 <desc>smoke</desc>
-                <!--<binding>
-                    <command>property-toggle</command>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                </binding>-->
                 <binding>
-                    <command>property-cycle</command>
-                    <property>sim/model/f-14b/fx/smoke</property>
-                    <value type="double">0.0</value>
-                    <value type="double">1.0</value>
-                    <wrap>true</wrap>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke-cmd</property>
                 </binding>
             </key>
 
@@ -1998,44 +2060,113 @@
               <name>Ctrl-U</name>
               <desc>[Cheat] Add 1000ft of emergency altitude</desc>
               <binding>
-               <command>property-adjust</command>
-               <property>/position/altitude-ft</property>
-               <step type="double">1000.0</step>
-              </binding>
-              <binding>
-               <command>property-assign</command>
-               <property>/sim/startup/onground</property>
-               <value type="bool">false</value>
-              </binding>
-              <binding>
-               <command>nasal</command>
-               <script>armament.ct("c-u")</script>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("CTRL-U disabled at the moment.");
+                        } else {
+                            setprop("position/altitude-ft", getprop("position/altitude-ft")+1000);
+                            setprop("sim/startup/onground", 0);
+                        }
+                    </script>
               </binding>
              </key>
 
              <key n="97">
               <name>a</name>
               <desc>Increase speed-up</desc>
-                <binding>
+                <binding n="3">
                     <command>nasal</command>
-                    <script>controls.speedup(1);</script>
+                    <condition>
+                            <and>
+                                <not-equals>
+                                    <property>sim/current-view/name</property>
+                                    <value>Walk View</value>
+                                </not-equals>
+                                <not-equals>
+                                    <property>sim/current-view/name</property>
+                                    <value>Walker Orbit View</value>
+                                </not-equals>
+                            </and>
+                     </condition>
+                    <script>
+                        if (getprop("payload/armament/msg")) {
+                            screen.log.write("Speed-up disabled at the moment.");
+                        } else {
+                            controls.speedup(1);
+                        }
+                    </script>
                 </binding>
-                <binding>
-               <command>nasal</command>
-               <script>armament.ct("a")</script>
-              </binding>
              </key>
-
-             <key n="65">
+              <key n="65">
               <name>A</name>
               <desc>Decrease speed-up</desc>
-              <binding>
-                <command>nasal</command>
-                <script>controls.speedup(-1);</script>
-              </binding>
+                <binding n="3">
+                    <command>nasal</command>
+                    <condition>
+                        <and>
+                        <not-equals>
+                            <property>sim/current-view/name</property>
+                            <value>Walk View</value>
+                        </not-equals>
+                        <not-equals>
+                            <property>sim/current-view/name</property>
+                            <value>Walker Orbit View</value>
+                        </not-equals>
+                        </and>
+                 </condition>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("Speed-down disabled at the moment.");
+                        } else {
+                            controls.speedup(-1);
+                        }
+                    </script>
+                </binding>
+             </key>
+             
+             <key n="49">
+                <name>CTRL-1</name>
+                <mod-ctrl>
+                    <desc>GCI pict</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/picture</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="50">
+                <name>CTRL-2</name>
+                <mod-ctrl>
+                    <desc>GCI dope</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/bogeydope</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="51">
+                <name>CTRL-3</name>
+                <mod-ctrl>
+                    <desc>GCI cutoff</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/cutoff</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="262">
+              <name>F6</name>
+              <desc>Eject</desc>
+              <repeatable type="bool">false</repeatable>
               <binding>
                <command>nasal</command>
-               <script>armament.ct("a")</script>
+               <script>
+                f14.eject();
+               </script>
               </binding>
              </key>
         </keyboard>
@@ -2091,6 +2222,11 @@
             <enabled type="bool">true</enabled>
             <on-off type="bool">true</on-off>
         </ecm>
+        <gci>
+            <picture type="bool">false</picture>
+            <bogeydope type="bool">false</bogeydope>
+            <cutoff type="bool">false</cutoff>
+        </gci>
         <nav>
             <frequencies>
                 <selected-freq type="double">115.8</selected-freq>
@@ -2114,16 +2250,18 @@
             <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
-            <aim-9>             <!-- aim-9L sidewinder -->
+            <aim-9>
+                <short-name type="string">A-9L</short-name>
+                <long-name type="string">AIM-9L Sidewinder</long-name>
                 <vol-search type="double">0.075</vol-search>
                 <vol-track type="double">0.25</vol-track>
-                <vol-track-weak type="double">0.175</vol-track-weak>
-                <guidance type="string">heat</guidance>                       <!-- heat/radar/semi-radar/laser/gps/vision/unguided -->
+                <guidance type="string">heat</guidance>                       <!-- heat, radar or semi-radar -->
+                <navigation type="string">PN</navigation>
                 <all-aspect type="bool">true</all-aspect>                     <!-- all or rear-only -->
                 <max-fire-range-nm type="double">9.7</max-fire-range-nm> <!-- source -->
                 <FCS-field-deg type="int">55</FCS-field-deg>                              <!-- source -->
                 <seeker-field-deg type="int">82</seeker-field-deg>                 <!-- source: 40 deg gyro + 1 deg searcher-beam-width -->
-                <max-g type="int">32</max-g>                                  <!-- source -->
+                <max-g type="int">32</max-g>                                  <!-- source, another say 35 -->
                 <thrust-lbf-stage-1 type="double">2660</thrust-lbf-stage-1><!-- authentic -->
                 <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>    <!-- authentic -->
                 <stage-1-duration-sec type="double">5.23</stage-1-duration-sec><!-- authentic -->
@@ -2131,67 +2269,83 @@
                 <weight-launch-lbs type="double">186.2</weight-launch-lbs>      <!-- authentic -->
                 <weight-warhead-lbs type="double">20.8</weight-warhead-lbs>   <!-- authentic -->
                 <weight-fuel-lbm type="double">60.4</weight-fuel-lbm>           <!-- guess -->
-                <drag-coeff type="double">0.55</drag-coeff>                   <!-- guesstimate -->
+                <drag-coeff type="double">0.55</drag-coeff>                   <!-- guesstimate. The python program estimates 1.15 to 1.30. But since RB24 and RB24J have to be adjust also I'll wait till I got their numbers. -->
                 <cross-section-sqft type="double">0.143</cross-section-sqft>                    <!-- sq ft -->
-                <searcher-beam-width type="double">2.0</searcher-beam-width>  <!-- guess -->
                 <arming-time-sec type="double">1.4</arming-time-sec>          <!-- guess -->
                 <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach><!-- guess -->
                 <self-destruct-time-sec type="double">43</self-destruct-time-sec>         <!-- guess -->
                 <seeker-angular-speed-dps type="double">30</seeker-angular-speed-dps><!-- deg/sec guess-->
-                <lock-on-sun-deg type="double">5</lock-on-sun-deg> <!-- source -->
+                <lock-on-sun-deg type="double">5</lock-on-sun-deg>
                 <loft-altitude type="int">0</loft-altitude>
-                <terrain-follow type="bool">false</terrain-follow>
                 <min-fire-range-nm type="double">0.2</min-fire-range-nm>
                 <rail type="bool">true</rail>
                 <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
                 <rail-point-forward type="bool">true</rail-point-forward>
                 <max-report-distance type="double">65</max-report-distance>
-                <navigation type="string">APN</navigation>
                 <class type="string">A</class>
-                <fire-msg type="string">FOX2</fire-msg>
+                <fire-msg type="string">Fox 2</fire-msg>
                 <DLZ type="bool">true</DLZ>
                 <DLZ-optimal-alt-feet type="double">25000</DLZ-optimal-alt-feet>
                 <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
+                <seeker-beam-width-deg type="double">4</seeker-beam-width-deg>
+                <reaquire type="bool">true</reaquire>
+                <lock-on-after-launch type="bool">true</lock-on-after-launch>
+                <auto-switch-target-allowed type="bool">true</auto-switch-target-allowed>
+                <prowl-flight type="string">gyro-pitch</prowl-flight>
+                <switch-time-sec type="double">5</switch-time-sec>
+                <coolable type="bool">false</coolable>
+                <cool-time type="double">5</cool-time>
+                <cool-duration type="int">3600</cool-duration>
+                <warm-detect-range-nm type="double">6.5</warm-detect-range-nm>
+                <detect-range-nm type="double">9.7</detect-range-nm>
+                <ready-time type="double">0.5</ready-time>
             </aim-9>
-            <aim-7>          <!-- aim-7f Sparrow -->
+            <aim-7>
+                <short-name type="string">A-7F</short-name>
+                <long-name type="string">AIM-7F Sparrow</long-name>
+                <guidance type="string">semi-radar</guidance>
                 <vol-search type="double">0.00</vol-search>
                 <vol-track type="double">0.20</vol-track>
-                <vol-track-weak type="double">0.10</vol-track-weak>
-                <guidance type="string">semi-radar</guidance>           <!-- heat, radar or semi-radar -->
-                <all-aspect type="bool">true</all-aspect>                     <!-- all or rear-only -->
-                <max-fire-range-nm type="double">22</max-fire-range-nm><!-- authentic 21.5 for 2m2 RCS -->
-                <FCS-field-deg type="int">25</FCS-field-deg>                              
-                <seeker-field-deg type="int">110</seeker-field-deg>                 
-                <max-g type="int">20</max-g>                                      <!-- guess -->
+                <max-fire-range-nm type="int">22</max-fire-range-nm><!-- authentic 21.5 for 2m2 RCS -->
+                <min-fire-range-nm type="double">0.16</min-fire-range-nm>
+                <FCS-field-deg type="int">25</FCS-field-deg>
+                <seeker-field-deg type="int">110</seeker-field-deg>
+                <max-g type="int">20</max-g>
                 <thrust-lbf-stage-1 type="double">5750</thrust-lbf-stage-1><!-- authentic -->
-                <thrust-lbf-stage-2 type="double">1018</thrust-lbf-stage-2><!-- authentic -->
-                <stage-1-duration-sec type="double">4.5</stage-1-duration-sec> <!-- authentic -->
-                <stage-2-duration-sec type="double">11</stage-2-duration-sec>  <!-- authentic -->
-                <weight-launch-lbs type="double">510</weight-launch-lbs>      
+                <thrust-lbf-stage-2 type="double">1018</thrust-lbf-stage-2>    <!-- authentic -->
+                <stage-1-duration-sec type="double">4.5</stage-1-duration-sec><!-- authentic -->
+                <stage-2-duration-sec type="double">11</stage-2-duration-sec><!-- authentic -->
+                <self-destruct-time-sec type="double">75</self-destruct-time-sec><!-- authentic -->
+                <weight-launch-lbs type="double">510</weight-launch-lbs>                       <!-- authentic -->
                 <weight-warhead-lbs type="double">88</weight-warhead-lbs>
                 <weight-fuel-lbm type="double">135</weight-fuel-lbm>
-                <drag-coeff type="double">0.25</drag-coeff>
-                <cross-section-sqft type="double">0.3382</cross-section-sqft><!-- sq ft (0.3281 ft radius) authentic -->
-                <arming-time-sec type="double">2.5</arming-time-sec>                       <!-- guess -->
-                <min-speed-for-guiding-mach type="double">0.7</min-speed-for-guiding-mach> <!-- guess -->
-                <self-destruct-time-sec type="double">75</self-destruct-time-sec>         <!-- guess -->
-                <loft-altitude>30000</loft-altitude><!-- in stage 1 it want to climb to this altitude -->
-                <min-fire-range-nm type="double">0.16</min-fire-range-nm>
+                <drag-coeff type="double">0.375</drag-coeff>
+                <cross-section-sqft type="double">0.3382</cross-section-sqft>
+                <loft-altitude type="int">0</loft-altitude><!-- in stage 1 it will attempt to climb to this altitude -->
+                <min-speed-for-guiding-mach type="double">0.7</min-speed-for-guiding-mach>
+                <arming-time-sec type="double">2.5</arming-time-sec>             <!-- authentic -->
                 <max-report-distance type="double">65</max-report-distance>
-                <navigation type="string">APN</navigation>
+                <navigation type="string">PN</navigation>
+                <guide-before-ignition type="bool">true</guide-before-ignition>
                 <rail type="bool">false</rail>
                 <class type="string">A</class>
-                <fire-msg>FOX1</fire-msg>
+                <fire-msg>Fox 1</fire-msg>
+                <telemetry type="bool">false</telemetry>
                 <DLZ type="bool">true</DLZ>
                 <DLZ-optimal-alt-feet type="double">30000</DLZ-optimal-alt-feet>
                 <DLZ-optimal-closing-mach type="double">2.0</DLZ-optimal-closing-mach>
+                <reaquire type="bool">true</reaquire>
+                <lock-on-after-launch type="bool">false</lock-on-after-launch>
+                <auto-switch-target-allowed type="bool">false</auto-switch-target-allowed>
+                <ready-time type="double">1.5</ready-time>
+                <ejector-speed-fps type="double">20</ejector-speed-fps>
+                <drop-time type="double">0.5</drop-time>
             </aim-7>
-            <aim-54><!-- aim-54c Phoenix -->
-                <sound-on-off type="bool">false</sound-on-off>
-                <sound-volume type="double">0.0</sound-volume>
+            <aim-54>
+                <short-name type="string">A-54</short-name>
+                <long-name type="string">AIM-54A Phoenix</long-name><!-- Or was it B? Should really be upgraded to C -->
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
-                <vol-track-weak type="double">0.10</vol-track-weak>
                 <guidance source="authentic" type="string">radar</guidance>
                 <all-aspect source="authentic" type="bool">true</all-aspect>
                 <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm> 
@@ -2220,7 +2374,93 @@
                 <DLZ type="bool">true</DLZ>
                 <DLZ-optimal-alt-feet type="double">35000</DLZ-optimal-alt-feet>
                 <DLZ-optimal-closing-mach type="double">2.5</DLZ-optimal-closing-mach>
+                <ejector-speed-fps type="double">20</ejector-speed-fps>
+                <drop-time type="double">0.5</drop-time>
             </aim-54>
+            <mk-83> 
+                <short-name type="string">B83</short-name>
+                <long-name type="string">MK-83 General Purpose Bomb</long-name>
+                <fire-msg type="string">Bombs away</fire-msg>
+                <class type="string">GMP</class>
+                <max-fire-range-nm type="double"> 8 </max-fire-range-nm>
+                <min-fire-range-nm type="double"> 0 </min-fire-range-nm>
+                <guidance type="string">unguided</guidance>
+                <navigation type="string">direct</navigation>
+                <loft-altitude type="int"> 0 </loft-altitude>
+                <terrain-follow type="bool">false</terrain-follow>
+                <FCS-field-deg type="int"> 240 </FCS-field-deg>
+                <seeker-field-deg type="int"> 360 </seeker-field-deg>
+                <max-g type="double"> 1.5 </max-g>
+                <thrust-lbf-stage-1 type="double"> 0 </thrust-lbf-stage-1>
+                <thrust-lbf-stage-2 type="double"> 0 </thrust-lbf-stage-2>
+                <stage-1-duration-sec type="double"> 0 </stage-1-duration-sec>
+                <stage-2-duration-sec type="double"> 0 </stage-2-duration-sec>
+                <weight-launch-lbs type="double"> 1014 </weight-launch-lbs>
+                <weight-warhead-lbs type="double"> 445 </weight-warhead-lbs>
+                <weight-fuel-lbm type="double"> 0 </weight-fuel-lbm>
+                <drag-coeff type="double"> 0.125 </drag-coeff>
+                <cross-section-sqft type="double"> 1.07744817 </cross-section-sqft><!-- the MK83 is 357 mm diam -->
+                <arming-time-sec type="double"> 5 </arming-time-sec>
+                <min-speed-for-guiding-mach type="double"> 0 </min-speed-for-guiding-mach>
+                <self-destruct-time-sec type="double"> 10000 </self-destruct-time-sec>
+                <all-aspect type="bool">true</all-aspect>
+                <lock-on-sun-deg type="double"> 0 </lock-on-sun-deg>
+                <seeker-angular-speed-dps type="double"> 0 </seeker-angular-speed-dps>
+                <rail type="bool">false</rail>
+                <max-report-distance type="double"> 175 </max-report-distance>
+                <vol-search type="double"> 0.075 </vol-search>
+                <vol-track type="double"> 0.25 </vol-track>
+                <drop-time type="double">1</drop-time>
+                <deploy-time type="double">1</deploy-time>
+                <lateral-dps type="double"> -10 </lateral-dps>
+                <max-pitch-deg type="double">-90</max-pitch-deg>
+                <hit-everything-nearby type="bool">true</hit-everything-nearby>
+                <ejector-speed-fps type="double">10</ejector-speed-fps>
+            </mk-83>
+            <es>                    <!-- Ejection seat -->
+                <vol-search type="double">0.075</vol-search>
+                <vol-track type="double">0.25</vol-track>
+                <vol-track-weak type="double">0.175</vol-track-weak>
+                <guidance type="string">unguided</guidance>
+                <navigation type="string">direct</navigation>
+                <all-aspect type="bool">false</all-aspect> 
+                <max-fire-range-nm type="double">6.9</max-fire-range-nm>
+                <FCS-field-deg type="int">50</FCS-field-deg>            
+                <seeker-field-deg type="int">54</seeker-field-deg>      
+                <max-g type="int">10</max-g>                            
+                <max-launch-g type="int">9</max-launch-g>      
+                <thrust-lbf-stage-1 type="double">1500</thrust-lbf-stage-1>
+                <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>  
+                <stage-1-duration-sec type="double">1</stage-1-duration-sec>
+                <stage-2-duration-sec type="double">0.0</stage-2-duration-sec>
+                <weight-launch-lbs type="double">300</weight-launch-lbs>
+                <weight-warhead-lbs type="double">0.0</weight-warhead-lbs>  
+                <weight-fuel-lbm type="double">5.0</weight-fuel-lbm>        
+                <drag-coeff type="double">1.35</drag-coeff>                 
+                <delta-drag-coeff-deploy type="double">75.00</delta-drag-coeff-deploy>
+                <cross-section-sqft type="double">2</cross-section-sqft>
+                <arming-time-sec type="double">0</arming-time-sec>    
+                <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                <self-destruct-time-sec type="double">5000</self-destruct-time-sec>       
+                <seeker-angular-speed-dps type="double">10.0</seeker-angular-speed-dps>
+                <lock-on-sun-deg type="double">20</lock-on-sun-deg>       
+                <loft-altitude type="int">0</loft-altitude>
+                <min-fire-range-nm type="double">0.0</min-fire-range-nm>
+                <rail type="bool">true</rail>
+                <rail-length-m type="double">1.5</rail-length-m>
+                <rail-point-forward type="bool">false</rail-point-forward>
+                <rail-pitch-deg type="double">90</rail-pitch-deg>
+                <drop-time type="double">0</drop-time>
+                <deploy-time type="double">3.5</deploy-time>                            
+                <inert type="bool">true</inert>                            
+                <lateral-dps type="int">2</lateral-dps>                            
+                <max-report-distance type="double">65</max-report-distance>
+                <class type="string">A</class>
+                <fire-msg type="string">weeeeee</fire-msg>
+                <long-name type="string">Project Gamma</long-name>
+                <short-name type="string">gamma</short-name>
+                <pitch-animation-disabled type="bool">true</pitch-animation-disabled>
+            </es>
         </armament>
     </payload>
 
@@ -2242,7 +2482,13 @@
             </blade>
         </main>
     </rotors>
-
+    
+    <f14>
+        <!-- ejection seat -->
+        <done type="bool">false</done>
+        <force type="double">0</force>
+    </f14>
+    
     <nasal>
         <notifications>
             <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
@@ -2327,6 +2573,21 @@
         <blackout>
             <file>Aircraft/f-14b/Nasal/blackout.nas</file>
         </blackout>
+        <stations>
+            <file>Aircraft/f-14b/Nasal/station-manager.nas</file><!-- must be before fire-control and pylons -->
+        </stations>
+        <fc>
+            <file>Aircraft/f-14b/Nasal/fire-control.nas</file><!-- must be before pylons -->
+        </fc>
+        <mps>
+            <file>Aircraft/f-14b/Nasal/mp-stores.nas</file>
+        </mps>
+        <pylons>
+            <file>Aircraft/f-14b/Nasal/pylons.nas</file>
+        </pylons>
+        <gci>
+            <file>Aircraft/f-14b/Nasal/gci-listener.nas</file>
+        </gci>
     </nasal>
 
 </PropertyList>

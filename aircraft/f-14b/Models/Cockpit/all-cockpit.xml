@@ -6,6 +6,18 @@
     <animation>
         <type>pick</type>
         <visible>true</visible>
+        <object-name>L-bottom-eject-handle</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>nasal</command>
+                <script>f14.eject()</script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
         <object-name>fire-handle-l</object-name>
         <action>
             <button>0</button>
@@ -459,11 +471,16 @@
         <type>select</type>
         <object-name>sw-digit</object-name>
         <condition>
-            <greater-than>
-                <property>sim/model/f-14b/controls/armament/stick-selector</property>
-                <value>1</value>
-            </greater-than>
-            <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
+            <or>
+                <and>
+                    <greater-than>
+                        <property>sim/model/f-14b/controls/armament/stick-selector</property>
+                        <value>1</value>
+                    </greater-than>
+                    <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
+                </and>
+                <property>sim/model/f-14b/controls/pilots-displays/mode/ag-bt</property>
+            </or>
         </condition>
     </animation>
     <animation>
@@ -6462,7 +6479,7 @@
             <interval-sec>0.1</interval-sec>
             <binding>
                 <command>nasal</command>
-                <script>f14.emerg_jettison()</script>
+                <script>f14.acm_jettison()</script>
             </binding>
         </action>
     </animation>
