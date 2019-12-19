@@ -350,6 +350,10 @@
                 <desc>Enable AFCS Altitude Mode</desc>
             </key>
             <key>
+                <name>Ctrl-e</name>
+                <desc>Ignore selected MP pilots</desc>
+            </key>
+            <key>
                 <name>*</name>
                 <desc>Engage AFCS Altitude Mode</desc>
             </key>
@@ -1638,6 +1642,16 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14_afcs.afcs_altitude_engage_toggle();</script>
+                </binding>
+            </key>
+            
+            <key n="5">
+                <name>CTRL-e</name>
+                <desc>Ignore trolls</desc>
+                <repeatable>false</repeatable>
+                <binding>
+                      <command>dialog-show</command>
+                      <dialog-name>ignore</dialog-name>
                 </binding>
             </key>
 
