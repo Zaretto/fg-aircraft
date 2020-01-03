@@ -365,6 +365,24 @@ var ext_loads_set = func(s)
         setprop("consumables/fuel/tank[6]/selected",false);
         setprop("consumables/fuel/tank[7]/selected",false);
     } 
+    elsif ( s == "Combat Air Patrol" ) 
+    {
+        b_set = 7;
+        setprop("payload/weight[0]/selected","AIM-9");
+        setprop("payload/weight[1]/selected","Droptank");
+        setprop("payload/weight[2]/selected","AIM-120");
+        setprop("payload/weight[3]/selected","AIM-120");
+        setprop("payload/weight[4]/selected","AIM-120");
+        setprop("payload/weight[5]/selected","none");
+        setprop("payload/weight[6]/selected","AIM-120");
+        setprop("payload/weight[7]/selected","AIM-120");
+        setprop("payload/weight[8]/selected","AIM-120");
+        setprop("payload/weight[9]/selected","Droptank");
+        setprop("payload/weight[10]/selected","AIM-9");
+        setprop("consumables/fuel/tank[5]/selected",true);
+        setprop("consumables/fuel/tank[6]/selected",true);
+        setprop("consumables/fuel/tank[7]/selected",false);
+    } 
     update_dialog_checkboxes();
 	update_wpstring();
     arm_selector();

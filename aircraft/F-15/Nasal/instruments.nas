@@ -306,10 +306,7 @@ var common_init = func
         if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) {
             print("Starting with gear down as below 500 ft");
             setprop("controls/gear/gear-down", 1);
-            setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",1);
             setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
-            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
-            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",1);
 
             if (getprop("fdm/jsbsim/position/h-agl-ft") < 50) {
                 setprop("controls/gear/brake-parking",1);
@@ -318,14 +315,10 @@ var common_init = func
         } else {
             print("Starting with gear up as above 500 ft");
             setprop("controls/gear/gear-down", 0);
-            setprop("fdm/jsbsim/fcs/gear/gear-cmd-norm",0);
             setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
-            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
-            setprop("fdm/jsbsim/fcs/gear/gear-pos-norm",0);
             setprop("controls/gear/brake-parking",0);
         }
     }
-    configure_cft();
 }
 
 # Init ####################

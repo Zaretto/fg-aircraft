@@ -27,40 +27,70 @@
     <property>fcs/flap-cmd-sum</property>
 
     <channel name="extra-aero">
-        <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
-        <summer name="cg-x-offset-chord-in">
-            <input> inertia/cg-x-in</input>
-            <input> -metrics/aero-rp-x-in</input>
-            <output>inertia/cg-x-offset-chord-in</output>
-        </summer>
        <!-- figure out the factor for the fuel tank aero -->
+        <fcs_function name="metrics/stores-tank-factor-l">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[1]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>-0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+        
+        <pure_gain name="metrics/stores-tank-factor-l-negated">
+            <input>metrics/stores-tank-factor-l</input>
+            <gain>-1</gain>
+        </pure_gain>
+        
+        <fcs_function name="metrics/stores-tank-factor-c">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[5]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="metrics/stores-tank-factor-r">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[9]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="metrics/stores-tank-factor-c">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>inertia/pointmass-weight-lbs[5]</property>
+                        <value>271</value>
+                    </eq>
+                    <value>0.3</value>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
         <fcs_function name="metrics/stores-tank-factor">
             <function>
                 <sum>
-                    <ifthen>
-                        <eq>
-                            <property>inertia/pointmass-weight-lbs[1]</property>
-                            <value>271</value>
-                        </eq>
-                        <value>0.3</value>
-                        <value>0</value>
-                    </ifthen>
-                    <ifthen>
-                        <eq>
-                            <property>inertia/pointmass-weight-lbs[5]</property>
-                            <value>271</value>
-                        </eq>
-                        <value>0.4</value>
-                        <value>0</value>
-                    </ifthen>
-                    <ifthen>
-                        <eq>
-                            <property>inertia/pointmass-weight-lbs[9]</property>
-                            <value>271</value>
-                        </eq>
-                        <value>0.3</value>
-                        <value>0</value>
-                    </ifthen>
+                    <p>metrics/stores-tank-factor-l-negated</p>
+                    <p>metrics/stores-tank-factor-c</p>
+                    <p>metrics/stores-tank-factor-r</p>
                 </sum>
             </function>
         </fcs_function>
@@ -199,6 +229,12 @@
                 </sum>
             </function>
         </fcs_function>
+
+        <pure_gain name="metrics/stores-aiml-factor-negated">
+            <input>metrics/stores-aiml-factor</input>
+            <gain>-1</gain>
+        </pure_gain>
+        
         <fcs_function name="metrics/stores-aimr-factor">
             <function>
                 <sum>
@@ -246,16 +282,35 @@
             </function>
         </fcs_function>
 
-        <pure_gain name="cg-x-chord-percent">
+        <fcs_function name="cg-x-chord-percent">
             <description>Percent offset of the CoP from the CG</description>
-            <input>inertia/cg-x-offset-chord-in</input>
-            <gain> -0.01</gain>
-            <clipto>
-                <min> -1 </min>
-                <max> 1 </max>
-            </clipto>
-            <output> inertia/cg-x-mac-percent </output>
-        </pure_gain>
+            <function>
+                <product>
+                    <v>100</v>
+                    <quotient>
+                        <difference>
+                            <property> inertia/cg-x-in</property>
+                            <v>391.2</v>
+                        </difference>
+                        <product>
+                            <property>metrics/cbarw-ft</property>
+                            <v>12</v> <!--Convert to inches-->
+                        </product>
+                    </quotient>
+                </product>
+            </function>
+            <output>inertia/cg-x-mac-percent</output>
+        </fcs_function>
+        <fcs_function name="inertia/backseat-mass">
+            <function>
+                <product>
+                    <p>metrics/two-place-canopy</p> <!-- identifies this is a -D variant -->
+                    <v>500</v>
+                </product>
+            </function>
+            <output>inertia/pointmass-weight-lbs[15]</output>
+
+        </fcs_function>
 
         <fcs_function name="pb">
             <description>PB Denormalization</description>
@@ -362,8 +417,8 @@
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <tableData>
-                        0.00    419
-                        2.4     445
+                        0.00    434.717
+                        2.4     450.2
                     </tableData>
                 </table>
             </function>
