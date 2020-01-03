@@ -1,17 +1,22 @@
 <?xml version="1.0"?>
 
 <!-- McDonnell Douglas F-15 Control Augmentation System -->
-<!-- (c) 2019 Joshua Davidson (it0uchpods) -->
+<!-- (c) 2019 Joshua Davidson (Octal450) -->
 
 <system name="cas">
 	
 	<property value="0">cas/ari-input</property>
 	<property value="0">cas/beta-pd</property>
 	<property value="0">cas/beta-p-gain</property>
-	<property value="0">cas/beta-d-gain</property>
-	<property value="0">gain</property>
-	
-	<channel name="Libraries">
+    <property value="0">cas/beta-d-gain</property>
+    
+    <property value="0.4">cas/ptc-p-gain</property>
+    <property value="0.14">cas/ptc-i-gain</property>
+    
+    <property value="1">cas/ptc-nz-accelerometer-limit</property>
+    <property value="102">cas/ptc-nz-accelerometer-c1</property>
+
+    <channel name="Libraries">
 		
 		<switch name="cas/roll-cas-active">
 			<default value="0"/>
@@ -150,50 +155,119 @@
 				<max>0.2857142857142857</max>
 			</clipto>
 		</scheduled_gain>
-		
-		<fcs_function name="cas/pitch-g-demand"> <!-- TM-72861 - Figure 18 -->
-			<function>
-				<table>
-					<independentVar lookup="row">/controls/flight/elevator</independentVar>
-					<tableData>
-						-1.00  8.05
-						-0.54  3.58
-						-0.01  1.00
-						 0.00  1.00
-						 0.01  1.00
-						 0.70 -1.62
-						 1.00 -3.99
-					</tableData>
-				</table>
-			</function>
-		</fcs_function>
-		
-		<summer name="cas/pitch-g-error">
-			<input>accelerations/Nz</input>
-			<input>-cas/pitch-g-demand</input>
-		</summer>
-		
-		<scheduled_gain name="cas/pitch-g-feedback">
-			<input>cas/pitch-g-error</input>
-			<table>
-				<independentVar>velocities/vc-kts</independentVar>
-				<tableData>
-					150  0.05
-					950  0.02
-				</tableData>
-			</table>
-			<clipto>
-				<min>-0.2857142857142857</min>
-				<max>0.2857142857142857</max>
-			</clipto>
-		</scheduled_gain>
-		
-		<summer name="cas/pitch-output-sum">
+        
+        <!--Pitch Trim Compensator (PTC) (CAS) - RJH 2018-08-17
+            This is used to adjust the elevator to maintain the scheduled G based on 
+            stick loading (adjusted position in our model
+            accelerations/Nz
+			<input>/instrumentation/g-meter/instrumented-g</input>
+        -->
+        <lag_filter name="cas/ptc-nz-accelerometer">
+            <description>Our own lagged version of Nz;</description>
+            <input>accelerations/Nz</input>
+            <c1>cas/ptc-nz-accelerometer-c1</c1>
+        </lag_filter>
+        
+        <summer name="cas/ptc-deviation-g">
+            <description>Deviation from required</description>
+			<input>cas/ptc-nz-accelerometer</input>
+			<input>-fcs/stick-commanded-g</input>
+            <clipto>
+                <min>-cas/ptc-nz-accelerometer-limit</min>
+                <max>cas/ptc-nz-accelerometer-limit</max>
+            </clipto>
+        </summer>
+
+        <fcs_function name="cas/ptc-saturated">
+            <description>
+                PTC integrator anti-windup; if demanding more than 45% deflection.
+            </description>
+            <function>
+                <ifthen>
+                    <and>
+                        <le>
+                            <p>cas/ptc-feedback-g</p>
+                            <v>0.45</v>
+                        </le>
+                        <ge>
+                            <p>cas/ptc-feedback-g</p>
+                            <v>-0.45</v>
+                        </ge>
+                        <eq>
+                            <p>gear/gear-dmd-norm</p>
+                            <v>0</v>
+                        </eq>
+                      <le>
+                        <p>aero/alpha-deg</p>
+                        <v>13</v>
+                      </le>
+                      <ge>
+                        <p>aero/alpha-deg</p>
+                        <v>-5</v>
+                      </ge>
+                    </and>
+                    <v>0</v>
+                    <v>1</v>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+    <fcs_function name="cas/ptc-p-gain">
+      <description>
+        Proportional gain for the PTC.
+        At lower speeds this needs to be less effective otherwise PTC will over control
+        it means that the stick position == G drifts at lower G values; but also results in more
+        predicatble and controllable handling during takeoff/landing phases.
+      </description>
+      <function>
+        <table>
+          <independentVar lookup="row">velocities/vc-kts</independentVar>
+          <tableData>
+            180   0.04
+            220   0.13
+            480   0.13
+            650   0.045
+          </tableData>
+        </table>
+      </function>
+      <clipto>
+        <min>0.04</min>
+        <max>0.2</max>
+      </clipto>
+    </fcs_function>
+
+
+        <fcs_function name="cas/ptc-computed-pitch">
+            <function>
+                <product>
+                    <p>cas/ptc-deviation-g</p>
+                    <p>cas/ptc-p-gain</p>
+                </product>
+            </function>
+        </fcs_function>
+
+        <integrator name="cas/ptc-pitch-integrator">
+            <input>cas/ptc-deviation-g</input>
+            <c1>cas/ptc-i-gain</c1>
+            <trigger>cas/ptc-saturated</trigger>
+            <output>cas/ptc-pitch-integrator-v</output>
+            <clipto>
+                <min>-0.48</min>
+                <max>0.51</max>
+            </clipto>
+        </integrator>
+
+        <summer name="cas/ptc-feedback-g">
+            <input>cas/ptc-pitch-integrator</input>
+            <input>cas/ptc-computed-pitch</input>
+        </summer>
+
+        <summer name="cas/pitch-output-sum">
 			<input>cas/pitch-q-feedback</input>
-			<input>cas/pitch-g-feedback</input>
-			<clipto>
-				<min>-0.2857142857142857</min>
-				<max>0.2857142857142857</max>
+            <input>cas/ptc-feedback-g</input>
+            <clipto>
+				<min>-0.4857142857142857</min>
+				<max>0.5157142857142857</max>
 			</clipto>
 		</summer>
 		

@@ -1,18 +1,16 @@
 <system  name="FCS F15">
 <!-- F-15 Flight controls 
-   |  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
-	 |  Joshua Davidson:  2018-11-30 : rewrite -->
-   Longitudinal travel: -10 to 15cm
-   -->
-   <property value="1">gear/serviceable</property>
+	|  Richard Harrison: 2014-11-23 : rjh@zaretto.com - based on F-14 
+	|  Joshua Davidson:  2018-11-30 : rewrite -->
+	<property value="1">gear/serviceable</property>
 	<property value="0">systems/hydraulics/emerg-gear-bleed</property>
 	<property value="0">gear/damage-reset</property>
 	<property value="2">position/aircraft-on-ground-last-value</property>
 	<property value="0">systems/cadc/pitch-ratio-emergency</property>
 	<property value="0">systems/cadc/roll-ratio-emergency</property>
-  <!--<property value="1.0">fcs/pitch-ratio-calc</property>-->
-  <!--<property value="0">fcs/pitch-trim-compensation</property>-->
-  <!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
+	<!--<property value="1.0">fcs/pitch-ratio-calc</property>-->
+	<!--<property value="0">fcs/pitch-trim-compensation</property>-->
+	<!--A Comparison of Control Allocation Methods for the F-15 ACTIVE Research Aircraft Utilizing Real-Time Piloted Simulations
 		Kevin R. Scalera
 		Table 2.1: Control surface limits
 		Control Effector Deflection (deg) Rate Limit (deg/s)
@@ -22,37 +20,107 @@
 			FLAPS(L/R) 0.0 / 35.0 ±18
 	-->
 	
-	
 	<channel name="Common">
-		
-		<switch name="fcs/stick-pitch">
-			<default value="0"/>
-			<test value="fcs/elevator-cmd-norm">
-				autoflight/input/pitch-switch ne 1
-			</test>
-		</switch>
-    <!-- I use this for tuning the PRC - limit to 50% stick and tune to 5G
-         on the aircraft full deflection should be 8g - but until we do something about that
-         tuning to 5G is about right.
-    <fcs_function name="fcs/stick-pitch">
+    <!-- Pitch Trim -->
+
+    <fcs_function name="fcs/elevator-cmd-norm-trim">
+      <description>
+      </description>
       <function>
         <sum>
+          <p>fcs/pitch-trim-cmd-norm</p>
           <p>fcs/elevator-cmd-norm</p>
         </sum>
       </function>
-      <clipto>
-        <min>-0.5</min>
-        <max>0.5</max>
-      </clipto>
-    </fcs_function>-->
+    </fcs_function>
 
-    <switch name="fcs/css-pitch">
+    <switch name="fcs/stick-pitch">
+      <default value="0"/>
+      <test value="fcs/elevator-cmd-norm-trim">
+        autoflight/input/pitch-switch ne 1
+      </test>
+    </switch>
+		
+        <!--pure_gain name="fcs/stick-pitch">
+			<desription>
+				I use this for tuning the PRC - limit to 50% stick and tune to 5G
+				on the aircraft full deflection should be 8g - but until we do something about that
+				tuning to 5G is about right.
+			</description>
+			<input>fcs/elevator-cmd-norm</input>
+			<gain>0.5</gain>
+		</pure_gain-->
+		
+		<fcs_function name="fcs/stick-pitch-scheduled">
+			<description>
+				Longitudinal position adjusted for position instead of force
+				(fig 17 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/stick-pitch</independentVar>
+					<tableData>
+						-1.000 -1.00000
+						-0.188 -0.06729
+						-0.001  0.00000
+						 0.003  0.00000
+						 0.351  0.19635
+						 1.000  1.00000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
+        
+        <fcs_function name="fcs/stick-commanded-g">
+            <description>
+                Longitudinal CAS feel characteristics. Stick Force / command normal load factor G
+                Adjusted from force to position based on applied force (as we have no way of measuring
+                applied force)
+                
+                (fig 18 - NASA TM 72861)
+            </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/stick-pitch-scheduled</independentVar>
+                    <tableData>
+                        -1.000	 8
+                        -0.188	 4
+                        -0.001	 1
+                        -0.000	 1
+                         0.003	 1
+                         0.351	-2
+                         1.000	-4
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+		<switch name="fcs/css-pitch">
 			<default value="0"/>
 			<test logic="AND" value="autoflight/ss/elevator-norm">
 				autoflight/input/pitch-switch eq 1
 				autoflight/ss/elevator-norm ne 0
 			</test>
 		</switch>
+		
+		<fcs_function name="fcs/css-pitch-scheduled">
+			<description>
+				Longitudinal position adjusted for position instead of force
+				(fig 17 - NASA TM 72861)
+			</description>
+			<function>
+				<table>
+					<independentVar lookup="row">fcs/css-pitch</independentVar>
+					<tableData>
+						-1.000 -1.00000
+						-0.188 -0.06729
+						-0.001  0.00000
+						 0.003  0.00000
+						 0.351  0.19635
+						 1.000  1.00000
+					</tableData>
+				</table>
+			</function>
+		</fcs_function>
 		
 		<switch name="fcs/stick-roll">
 			<default value="0"/>
@@ -72,10 +140,10 @@
 		<fcs_function name="fcs/aileron-droop">
 			<function>
 				<table>
-					<independentVar lookup="row">velocities/vc-kts</independentVar>
+					<independentVar lookup="row">aero/qbar-psf</independentVar>
 					<tableData>
-						62  20
-						77   0
+						13  20
+						20   0
 					</tableData>
 				</table>
 			</function>
@@ -84,44 +152,54 @@
 	</channel>
 	
 	<channel name="Elevons">
-		
-		<fcs_function name="fcs/pitch-trim-compensation">
-      <!--RJH: Rebuilt this table 2014-04-28 based on flight test data-->
-			<function>
-				<table>
-					<independentVar lookup="row">velocities/vc-kts</independentVar>
-					<independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-					<tableData>
-          	                0	       35
-                  0  0.000000    0.000000
-                160  0.000000    0.000000
-                170	-0.248276	-0.248276
-                200	-0.239924	-0.151900
-                220	-0.188621	-0.108500
-                250	-0.140241	-0.032352
-                300	-0.089241	 0.013303
-                350	-0.060369	-0.03
-                400	-0.040269	-0.03
-                450	-0.027059	-0.03
-                500	-0.017683	-0.03
-                550	-0.006476	-0.03
-                575	 0.001893	-0.03
-                600	 0.006824	-0.03
-                625	 0.009586	-0.03
-                650	 0.010607	-0.03
-                700	 0.011903	-0.03
-                750	 0.012745	-0.03
-                800	 0.013397	-0.03
-                833	 0.013752	-0.03
-          </tableData>
-				</table>
-			</function>
-		</fcs_function>
-		
-		<summer name="fcs/pitch-input-sum">
-			<input>fcs/stick-pitch</input> <!-- Stick Input with A/P off -->
-			<input>fcs/css-pitch</input> <!-- Stick Input in CSS A/P mode -->
-			<input>fcs/pitch-trim-cmd-norm</input> <!-- Pitch Trim -->
+        <fcs_function name="fcs/pitch-trim-compensation">
+            <!-- this is a 3 part function
+                   base values
+                   - deltas for gear
+                   - deltas for flaps
+            -->
+            <function>
+                <product>
+                    <v>1</v>
+                    <description>PTC PRESET ELEVATOR TRIM(DEGREES) DUE TO AIRSPEED AND MAC% F(VC, MAC%)</description>
+                    <sum>
+                        <!-- PTC PRESET ELEVATOR TRIM(DEGREES) DUE TO AIRSPEED AND MAC% F(VC, MAC%) -->
+                        <table>
+                            <independentVar lookup="row">velocities/vc-kts</independentVar>
+                            <independentVar lookup="column">inertia/cg-x-mac-percent</independentVar>
+                            <tableData>
+                                             20         20.5           21         21.5           22         22.5           23         23.5           24
+                                190    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000    0.000000
+                                200   -0.222270   -0.222450   -0.228983   -0.244722   -0.273146   -0.174354   -0.161585   -0.141665   -0.141665
+                                250   -0.130184   -0.130167   -0.131723   -0.143852   -0.157158   -0.097033   -0.091520   -0.088460   -0.088460
+                                300   -0.081073   -0.081589   -0.083858   -0.089115   -0.090965   -0.060288   -0.055246   -0.051484   -0.051484
+                                350   -0.041472   -0.039374   -0.041562   -0.045228   -0.030029   -0.030701   -0.024068   -0.007630   -0.007630
+                                400   -0.005571   -0.005793   -0.006567   -0.009482   -0.008097    0.000238    0.000490   -0.091142   -0.091142
+                                450   -0.089492   -0.009026   -0.037256    0.009159   -0.010570   -0.014307    0.041271    0.077493    0.077493
+                                500   -0.001433   -0.017378    0.003975    0.017936    0.001710    0.019385   -0.048416   -0.003933   -0.003933
+                                550    0.005941    0.005865    0.004781    0.003436    0.002097    0.008851    0.009415    0.009179    0.009179
+                                600    0.007333    0.007319    0.006506    0.004324    0.002039    0.010335    0.010754    0.011601    0.011601
+                                650    0.008539    0.008577    0.007756    0.006156    0.001042    0.011200    0.011478    0.012558    0.014850
+                                700    0.009650    0.009592    0.008659    0.008208   -0.000520    0.012253    0.012234    0.013363    0.015417
+                                750    0.010604    0.010639    0.009652    0.008640   -0.000261    0.013003    0.013216    0.013684    0.015810
+                                800    0.011343    0.011484    0.010651    0.009110    0.000741    0.013402    0.013718    0.014097    0.018045
+                                850    0.012020    0.011978    0.011257    0.010100    0.002525    0.013404    0.014234    0.005660    0.018137
+                                900    0.012484    0.012571    0.011734    0.010210    0.002257    0.014227    0.014565    0.011387    0.011881
+                                950    0.016950    0.016950    0.016950    0.016950    0.004375    0.023752    0.022349    0.020946    0.019544
+                                1000    0.017255    0.017255    0.017255    0.017074    0.017542    0.018216    0.018889    0.019563    0.020236
+                                1050    0.017623    0.017623    0.017565    0.017419    0.017982    0.018546    0.019109    0.019673    0.020236
+                                1100    0.017846    0.017842    0.018017    0.018201    0.018440    0.019031    0.019625    0.020220    0.020814
+                                1150    0.018443    0.018443    0.018443    0.018443    0.018443    0.018609    0.018764    0.018839    0.019496
+                            </tableData>
+                        </table>
+                      </sum>
+                </product>
+            </function>
+        </fcs_function>
+        
+        <summer name="fcs/pitch-input-sum">
+			<input>fcs/stick-pitch-scheduled</input> <!-- Stick Input with A/P off -->
+			<input>fcs/css-pitch-scheduled</input> <!-- Stick Input in CSS A/P mode -->
 			<input>autoflight/pitch/pitch-rate-demand</input> <!-- A/P Pitch Demand -->
 			<input>fcs/pitch-trim-compensation</input> <!-- Pitch Trim Compensation -->
 			<input>cas/pitch-output</input> <!-- CAS Pitch Command -->
@@ -131,136 +209,142 @@
 			</clipto>
 		</summer>
 		
-		<fcs_function name="fcs/pitch-ratio-calc">
-      <!-- RJH: 
-            Pitch Ratio: 
-            - - - - - - - - - - -  - - - - - - - 
-            This device adjusts the amount of collective (pitch)
-            stabilator deflection available for a given longitudinal stick
-            motion.  The ratio is scheduled to produce essentially the same
-            stick travel per "g" throughout the flight envelope.  Since the
-            longitudinal feel system is just a simple spring cartridge, this
-            then relates to a constant stick force per "g" (Fs/g) (about 4.25
-            lb/g).  It is scheduled by Mach number and altitude and does a
-            rather good job; however, it won't quite cover the full range of
-            aircraft and stabilator power and there is some scatter of the
-            Fs/g, i.e., some mild increase in sensitivity during low
-            altitude/high speed flight, and some decrease in sensitivity at
-            low speeds.
-
-
-      This is based on a description of how the pitch ratio works, together with  Tuned based on aircraft performance; mostly standard day. 
-      
-      ref: NASA TM 72861 : Precision controllability of the F-15 airplane
-      
-      ref: F-15 Flight Control System Part IV - Longitudinal Control, 
-               By B. P. "PERRY" HOFFMAN/Senior Engineer, 
-               Flight Control Section, Avionics Engineering Laboratories, 
-               https://www.f15sim.com/operation/f15_longitudinal_control.html
-               
-                  PRCA 
-                  - - - - - - - - - - -  - - - - - - - 
-                  To begin with, let's break the PRCA pitch channel into its
-                  components (Figure 2) and see how each affects the longitudinal
-                  controls. The input rod offers two linkage paths with the main path
-                  tying directly into the ratio changer linkage, and a second input
-                  being supplied to the Load Factor Sensor portion of the Pitch Trim
-                  Controller.
-
-                  Pitch Ratio Changer
-                  - - - - - - - - - - -  - - - - - - - 
-                  The pitch ratio changer utilizes dual redundant
-                  parallelogram linkage identical in operation to the roll ratio changer
-                  described in our last DIGEST article on lateral controls. The only
-                  operational difference is that the pitch ratio changer gearing
-                  utilizes a 6:1 ratio, where the roll ratio changer utilizes a 4:1
-                  ratio.
-
-
-                  Pitot (Pt) and static (Ps) information is supplied from the left-hand
-                  probe to the ratio controller bellows assembly, repositioning a
-                  cam-operated valve supplying hydraulic pressure to the ratio changer
-                  actuator. The ratio changer actuator then drives the changer linkage,
-                  varying the stick-to-stabilator gearing as required.
-
-                  If hydraulics are lost to the PRCA, or if the pilot selects the EMERC
-                  position of the pitch ratio changer by actuation of the Pitch Ratio
-                  switch, the pitch ratio changer will drive to its failed position. In
-                  the failed mode, the gearing ratio is one-half of its maximum value
-                  and all other functions (PTC and Boost) are inoperative.
-
-                  Two additional functions are associated with the ratio changer (one is
-                  no longer used, but a note of explanation is in order in case you see
-                  it on a schematic diagram). Early in the program there was a gear down
-                  valve which drove the pitch ratio changer to maximum (for landing
-                  control) when the nose gear proximity switch actuated. The
-                  disadvantages seemed to outweigh the advantages, so the valve has been
-                  deactivated on current Eagles and the valve will not be in future
-                  PRCA's. For the maintenance man, this is a great help since he can
-                  simply place the Pitch Ratio switch to emergency and check the fail
-                  mode without having to simulate a gear up condition.
-
-                  The second function is a safety feature controlled by the pitch ratio
-                  changer actuator. If a hardover failure of the pitch trim controller
-                  occurs at low pitch ratios, the pitch CAS is inoperative, longitudinal
-                  control could be lost. To guard against this possibility, a valve
-                  within the ratio changer actuator is opened when the actuator
-                  approaches the minimum ratio position. This valve supplies hydraulic
-                  pressure to an interlock piston within the pitch trim compensator,
-                  keeping it at a position where adequate control is always available.
-
-                  The output of the pitch ratio changer is fed to the pitch boost
-                  actuator servo valve. The boost actuator output is mechanically linked
-                  back to the servo valve input, closing the loop. The boost actuator
-                  output also feeds the downstream linkage, which deflects the
-                  stabilators and drives the linkage scheduling the roll ratio
-                  controller and the ARI. As you will recall from our previous articles,
-                  the pitch output is used in roll to schedule the roll ratio as a
-                  function of angle of attack. Yaw is affected by this also, since yaw
-                  gain increases as roll gain decreases. No more rudder rolls, guys; all
-                  you need for high angle of attack
-
-           
-      -->
+		<fcs_function name="fcs/pitch-ratio-calc-0">
+			<description>
+				RJH: 
+					Pitch Ratio: 
+					- - - - - - - - - - -  - - - - - - - 
+					This device adjusts the amount of collective (pitch)
+					stabilator deflection available for a given longitudinal stick
+					motion.  The ratio is scheduled to produce essentially the same
+					stick travel per "g" throughout the flight envelope.  Since the
+					longitudinal feel system is just a simple spring cartridge, this
+					then relates to a constant stick force per "g" (Fs/g) (about 4.25
+					lb/g).  It is scheduled by Mach number and altitude and does a
+					rather good job; however, it won't quite cover the full range of
+					aircraft and stabilator power and there is some scatter of the
+					Fs/g, i.e., some mild increase in sensitivity during low
+					altitude/high speed flight, and some decrease in sensitivity at
+					low speeds.
+				
+				This is based on a description of how the pitch ratio works, together with  Tuned based on aircraft performance; mostly standard day. 
+				
+				ref: NASA TM 72861 : Precision controllability of the F-15 airplane
+				
+				ref: F-15 Flight Control System Part IV - Longitudinal Control, 
+					By B. P. "PERRY" HOFFMAN/Senior Engineer, 
+					Flight Control Section, Avionics Engineering Laboratories, 
+					https://www.f15sim.com/operation/f15_longitudinal_control.html
+					
+					PRCA 
+					- - - - - - - - - - -  - - - - - - - 
+					To begin with, let's break the PRCA pitch channel into its
+					components (Figure 2) and see how each affects the longitudinal
+					controls. The input rod offers two linkage paths with the main path
+					tying directly into the ratio changer linkage, and a second input
+					being supplied to the Load Factor Sensor portion of the Pitch Trim
+					Controller.
+					
+					Pitch Ratio Changer
+					- - - - - - - - - - -  - - - - - - - 
+					The pitch ratio changer utilizes dual redundant
+					parallelogram linkage identical in operation to the roll ratio changer
+					described in our last DIGEST article on lateral controls. The only
+					operational difference is that the pitch ratio changer gearing
+					utilizes a 6:1 ratio, where the roll ratio changer utilizes a 4:1
+					ratio.
+					
+					Pitot (Pt) and static (Ps) information is supplied from the left-hand
+					probe to the ratio controller bellows assembly, repositioning a
+					cam-operated valve supplying hydraulic pressure to the ratio changer
+					actuator. The ratio changer actuator then drives the changer linkage,
+					varying the stick-to-stabilator gearing as required.
+					
+					If hydraulics are lost to the PRCA, or if the pilot selects the EMERC
+					position of the pitch ratio changer by actuation of the Pitch Ratio
+					switch, the pitch ratio changer will drive to its failed position. In
+					the failed mode, the gearing ratio is one-half of its maximum value
+					and all other functions (PTC and Boost) are inoperative.
+					
+					Two additional functions are associated with the ratio changer (one is
+					no longer used, but a note of explanation is in order in case you see
+					it on a schematic diagram). Early in the program there was a gear down
+					valve which drove the pitch ratio changer to maximum (for landing
+					control) when the nose gear proximity switch actuated. The
+					disadvantages seemed to outweigh the advantages, so the valve has been
+					deactivated on current Eagles and the valve will not be in future
+					PRCA's. For the maintenance man, this is a great help since he can
+					simply place the Pitch Ratio switch to emergency and check the fail
+					mode without having to simulate a gear up condition.
+					
+					The second function is a safety feature controlled by the pitch ratio
+					changer actuator. If a hardover failure of the pitch trim controller
+					occurs at low pitch ratios, the pitch CAS is inoperative, longitudinal
+					control could be lost. To guard against this possibility, a valve
+					within the ratio changer actuator is opened when the actuator
+					approaches the minimum ratio position. This valve supplies hydraulic
+					pressure to an interlock piston within the pitch trim compensator,
+					keeping it at a position where adequate control is always available.
+					
+					The output of the pitch ratio changer is fed to the pitch boost
+					actuator servo valve. The boost actuator output is mechanically linked
+					back to the servo valve input, closing the loop. The boost actuator
+					output also feeds the downstream linkage, which deflects the
+					stabilators and drives the linkage scheduling the roll ratio
+					controller and the ARI. As you will recall from our previous articles,
+					the pitch output is used in roll to schedule the roll ratio as a
+					function of angle of attack. Yaw is affected by this also, since yaw
+					gain increases as roll gain decreases. No more rudder rolls, guys; all
+					you need for high angle of attack
+                    
+                    2019-08-17 : retuned with new PTC; it's now around 8g at all airspeeds (where there
+                                 is sufficient energy to sustain this)
+                    2019-08-18 : based on a better understanding of the above the PRCA is now a simple
+                                 1:1 at low qbar going to 1:6 at high qbar.
+                                 Values of low and high qbar are somewhat estimated based on 800kts
+                                 "pitch ratio changer gearing utilizes a 6:1 ratio" 
+                                    ref: https://www.f15sim.com/operation/f15_longitudinal_control.html
+			</description>
 			<function>
 				<table>
-          <independentVar lookup="row">atmosphere/density-altitude</independentVar>
-          <independentVar lookup="column">velocities/mach</independentVar>
-          <tableData>
-                   0.50   0.60   0.70   0.80   0.90   1.00   1.10   1.20   1.30   1.40   1.50   1.60   1.70   1.80   1.90   2.00   2.10   2.20   2.30   2.40   2.50   2.60
-             0   1.00   1.00   0.63   0.39   0.17   0.09   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
-          3000   1.00   1.00   0.77   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.05   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
-          5999   1.00   1.00   0.77   0.63   0.39   0.11   0.09   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
-          9000   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
-         11999   1.00   1.00   1.00   0.77   0.63   0.39   0.11   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08   0.08
-         14999   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08   0.08
-         17999   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08   0.08
-         21000   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.09   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08   0.08
-         23999   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.05   0.07   0.08   0.08   0.08   0.08
-         26999   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.63   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.05   0.07   0.07   0.08   0.08
-         30000   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.39   0.39   0.17   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.06   0.05   0.07   0.08
-         32999   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.09   0.09   0.06   0.06   0.06   0.06   0.06   0.05   0.07
-         35999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.06   0.06   0.06   0.06   0.06   0.06
-         38999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.06   0.06   0.06   0.06   0.06
-         39371   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.06   0.06   0.06   0.06   0.06
-         41999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.63   0.39   0.39   0.17   0.11   0.11   0.09   0.09   0.06   0.06   0.06
-         42294   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.09   0.09   0.06   0.06
-         44999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11   0.09
-         45205   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11   0.09
-         47999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11
-         48635   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11   0.11   0.09
-         50999   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.63   0.63   0.39   0.39   0.39   0.17   0.17   0.11
-         51438   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   1.00   0.77   0.77   0.77   0.63   0.63   0.39   0.39   0.17   0.17   0.11
-          </tableData>
+					<independentVar lookup="row">aero/qbar-psf</independentVar>
+					<tableData>
+                        300  1.00000
+                        1300 0.16667
+                    </tableData>
 				</table>
 			</function>
 			<clipto>
-				<min>0.01</min>
+				<min>0.166667</min>
 				<max>1.0</max>
 			</clipto>
 		</fcs_function>
-		
-		<switch name="fcs/pitch-ratio">
+        <fcs_function name="fcs/pitch-ratio-calc-1">
+            <function>
+                <table>
+                    <independentVar lookup="row">inertia/cg-x-mac-percent</independentVar>
+                    <tableData>
+                        0.15 0.90
+                        0.25 1.0
+                    </tableData>
+                </table>
+            </function>
+            <clipto>
+                <min>0.65</min>
+                <max>1.0</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="fcs/pitch-ratio-calc">
+            <function>
+                <product>
+                    <p>fcs/pitch-ratio-calc-0</p>
+                    <p>fcs/pitch-ratio-calc-1</p>
+                </product>
+            </function>
+        </fcs_function>
+
+        <switch name="fcs/pitch-ratio">
 			<default value="fcs/pitch-ratio-calc"/>
 			<test logic="OR" value="0.5">
 				systems/hydraulics/flight-system-pressure ne 1
@@ -479,7 +563,7 @@
 			</function>
 		</fcs_function>
 		
-		<!-- Begin FCS hack by Joshua Davidson (it0uchpods) -->
+		<!-- Begin FCS hack by Joshua Davidson (Octal450) -->
 		
 		<!-- 46 per second is just too slow to make the A/P feedback to work properly. So we pass it faster, only when the A/P is actively controlling pitch, including when stick is moved. -->
 		<!-- To the pilot's animations, it looks correct. This is only for A/P feedback and is passed directly to the Aerodynamics. Differential Elevons are OK since ailerons are there too. -->
@@ -518,7 +602,7 @@
 			</function>
 		</fcs_function>
 		
-		<!-- End FCS hack by Joshua Davidson (it0uchpods) -->
+		<!-- End FCS hack by Joshua Davidson (Octal450) -->
 	
 	</channel>
 	
@@ -630,14 +714,14 @@
 		<switch name="fcs/ari-lateral-enabled">
 			<default value="0"/>
 			<test logic="AND" value="1">
-        position/aircraft-on-ground eq 0
-        autoflight/output/roll-master ne 1
-        systems/hydraulics/flight-system-pressure eq 1
-        fcs/ari-mach-switch eq 1
-        cas/yaw-cas-active ne 1
-        aero/alpha-deg lt 30
-        aero/alpha-deg gt -30
-      </test>
+				position/aircraft-on-ground eq 0
+				autoflight/output/roll-master ne 1
+				systems/hydraulics/flight-system-pressure eq 1
+				fcs/ari-mach-switch eq 1
+				cas/yaw-cas-active ne 1
+				aero/alpha-deg lt 30
+				aero/alpha-deg gt -30
+			</test>
 		</switch>
 		
 		<pure_gain name="fcs/ari-aileron-input">
@@ -742,7 +826,7 @@
 	
 	</channel>
 	
-	<!-- End Flight Control System by Joshua Davidson (it0uchpods) -->
+	<!-- End Flight Control System by Joshua Davidson (Octal450) -->
 
     <channel name="Flaps">
         <switch name="fcs/flap-total-dmd">
@@ -814,17 +898,17 @@ emerg operation.
 -->
         <!--<pure_gain name="gear/unit[0]/pos-norm">
             <description>Landing gear unit 0 position</description>
-            <input>gear/gear-pos-norm</input>
+            <input>gear/gear-command-position-norm</input>
             <gain> 1</gain>
         </pure_gain>
         <pure_gain name="gear/unit[1]/pos-norm">
             <description>Landing gear unit 0 position</description>
-            <input>gear/gear-pos-norm</input>
+            <input>gear/gear-command-position-norm</input>
             <gain> 1</gain>
         </pure_gain>
         <pure_gain name="gear/unit[2]/pos-norm">
             <description>Landing gear unit 0 position</description>
-            <input>gear/gear-pos-norm</input>
+            <input>gear/gear-command-position-norm</input>
             <gain> 1</gain>
         </pure_gain>-->
 
@@ -858,14 +942,14 @@ emerg operation.
             </test>
             <test value="0">
                 <!-- unlocked. -->
-               gear/gear-pos-norm gt 0
-               gear/gear-pos-norm lt 1
+              gear/unit[0]/pos-norm gt 0
+              gear/unit[0]/pos-norm lt 1
             </test>
             <test value="1">
-               gear/gear-pos-norm le 0
+              gear/unit[0]/pos-norm le 0
             </test>
             <test value="-1">
-               gear/gear-pos-norm ge 1
+              gear/unit[0]/pos-norm ge 1
             </test>
         </switch>
         <switch name="gear/unit[1]/locked">
@@ -878,14 +962,14 @@ emerg operation.
             </test>
             <test value="0">
                 <!-- unlocked. -->
-               gear/gear-pos-norm gt 0
-               gear/gear-pos-norm lt 1
+                gear/unit[1]/pos-norm gt 0
+                gear/unit[1]/pos-norm lt 1
             </test>
             <test value="1">
-               gear/gear-pos-norm le 0
+                gear/unit[1]/pos-norm le 0
             </test>
             <test value="-1">
-               gear/gear-pos-norm ge 1
+                gear/unit[1]/pos-norm ge 1
             </test>
         </switch>
         <switch name="gear/unit[2]/locked">
@@ -897,15 +981,15 @@ emerg operation.
                 gear/emerg-pos lt 1
             </test>
             <test value="0">
-                <!-- unlocked. -->
-               gear/gear-pos-norm gt 0
-               gear/gear-pos-norm lt 1
+              <!-- unlocked. -->
+                gear/unit[2]/pos-norm gt 0
+                gear/unit[2]/pos-norm lt 1
             </test>
             <test value="1">
-               gear/gear-pos-norm le 0
+                gear/unit[2]/pos-norm le 0
             </test>
             <test value="-1">
-               gear/gear-pos-norm ge 1
+                gear/unit[2]/pos-norm ge 1
             </test>
         </switch>
         <switch name="gear/emerg-pos">
@@ -1051,61 +1135,43 @@ emerg operation.
         <fcs_function name="tied/fcs-gear-0-pos-norm">
             <function>
                 <ifthen>
-                    <and>
-                        <gt>
-                            <p>gear/unit[0]/damaged</p>
-                            <v>0</v>
-                        </gt>
-                        <gt>
-                            <p>gear/gear-pos-norm</p>
-                            <v>0.6</v>
-                        </gt>
-                    </and>
+                    <gt>
+                        <p>gear/unit[0]/damaged</p>
+                        <v>0</v>
+                    </gt>
                     <v>0.5</v>
-                    <p>gear/gear-pos-norm</p>
+                    <p>gear/gear-command-position-norm</p>
                 </ifthen>
             </function>
-            <output>gear/unit[0]/pos-norm</output>
+          <output>gear/unit[0]/pos-norm</output>
         </fcs_function>
 
         <fcs_function name="tied/fcs-gear-1-pos-norm">
             <function>
                 <ifthen>
-                    <and>
-                        <gt>
-                            <p>gear/unit[1]/damaged</p>
-                            <v>0</v>
-                        </gt>
-                        <gt>
-                            <p>gear/gear-pos-norm</p>
-                            <v>0.6</v>
-                        </gt>
-                    </and>
+                    <gt>
+                        <p>gear/unit[1]/damaged</p>
+                        <v>0</v>
+                    </gt>
                     <v>0.5</v>
-                    <p>gear/gear-pos-norm</p>
+                    <p>gear/gear-command-position-norm</p>
                 </ifthen>
             </function>
-            <output>gear/unit[1]/pos-norm</output>
+          <output>gear/unit[1]/pos-norm</output>
         </fcs_function>
         
         <fcs_function name="tied/fcs-gear-2-pos-norm">
             <function>
                 <ifthen>
-                    <and>
-                        <gt>
-                            <p>gear/unit[2]/damaged</p>
-                            <v>0</v>
-                        </gt>
-                        <gt>
-                            <p>gear/gear-pos-norm</p>
-                            <v>0.6</v>
-                        </gt>
-                    </and>
+                    <gt>
+                        <p>gear/unit[2]/damaged</p>
+                        <v>0</v>
+                    </gt>
                     <v>0.5</v>
-                    <p>gear/gear-pos-norm</p>
+                    <p>gear/gear-command-position-norm</p>
                 </ifthen>
             </function>
-            <output>gear/unit[2]/pos-norm</output>
+          <output>gear/unit[2]/pos-norm</output>
         </fcs_function>
         <!--End of gear damage handling-->
 
@@ -1118,7 +1184,7 @@ emerg operation.
             <test value="gear/emerg-pos">
               gear/emergency-handle ne 0
             </test>
-            <test value="gear/gear-pos-norm">
+            <test value="gear/gear-command-position-norm">
                 gear/serviceable ne 1
                 gear/emergency-handle lt 1
             </test>
@@ -1147,7 +1213,7 @@ emerg operation.
                     <time>     1.8 </time>
                 </setting>
             </traverse>
-            <output>gear/gear-pos-norm</output>
+            <output>gear/gear-command-position-norm</output>
         </kinematic>
 
         <!--<kinematic name="fcs/steer-pos-deg">

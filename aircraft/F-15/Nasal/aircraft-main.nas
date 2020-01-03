@@ -34,18 +34,20 @@ var payload_dialog_reload = func(from) {
 var deltaT = 1.0;
 
 var currentG = 1.0;
-
+var minVersion = props.globals.getNode("/sim/version/flightgear/min-model-version",1);
+minVersion.setValue(2018.3);
 # Version checking based on the work of Joshua Davidson
-if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201720) {
+if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < minVersion.getValue()*100) {
 var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialogs/error-mismatch.xml");
 error_mismatch.open();
 }
-
 var fixAirframe = func {
 # F-15 doesn't support wing detachment.
     left_wing_torn.setValue(0);
     right_wing_torn.setValue(0);
 	setprop ("fdm/jsbsim/gear/damage-reset", 1);
+	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
+	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
 	repairMe();
 	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
 }
