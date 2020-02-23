@@ -937,9 +937,9 @@ var AIM = {
 					#return [me.ccipPos,me.arming_time<me.ccip_t];
 					me.result = me.getTerrain(me.ccip_oldPos, me.ccipPos);
 					if (me.result != nil) {
-						return [me.result, me.arming_time<me.ccip_t];
+						return [me.result, me.arming_time<me.ccip_t, me.ccip_t];
 					}
-					return [me.ccipPos,me.arming_time<me.ccip_t];
+					return [me.ccipPos,me.arming_time<me.ccip_t, me.ccip_t];
 					#var inter = me.extrapolate(me.ccip_grnd,me.ccip_altC,me.ccip_oldPos.alt(),0,1);
 					#return [me.interpolate(me.ccipPos,me.ccip_oldPos,inter),me.arming_time<me.ccip_t];
 				}
@@ -4638,10 +4638,12 @@ var AIM = {
 		me.msl_prop.setBoolValue(FALSE);
 		me.smoke_prop.setBoolValue(FALSE);
 		var info = geodinfo(me.coord.lat(), me.coord.lon());
-
-		if (info[1] == nil) {
+		
+		if (info == nil) {
+			me.explode_water_prop.setValue(FALSE);
+		} elsif (info[1] == nil) {
 			print ("Building hit!");
-		} elsif (info[1] != nil and info[1].solid == 0) {
+		} elsif (info[1].solid == 0) {
 		 	me.explode_water_prop.setValue(TRUE);
 		} else {
 			me.explode_water_prop.setValue(FALSE);
@@ -4654,7 +4656,7 @@ var AIM = {
 		settimer( func me.explode_prop.setBoolValue(FALSE), 0.5 );
 		settimer( func me.explode_smoke_prop.setBoolValue(TRUE), 0.5 );
 		settimer( func me.explode_smoke_prop.setBoolValue(FALSE), 3 );
-		if (getprop("payload/armament/enable-craters") == nil or !getprop("payload/armament/enable-craters")) {return;};
+		if (info == nil or getprop("payload/armament/enable-craters") == nil or !getprop("payload/armament/enable-craters")) {return;};
 		settimer ( func {
 		 	if (info[1] == nil) {
 		       geo.put_model(getprop("payload/armament/models") ~ "bomb_hit_smoke.xml", me.coord.lat(), me.coord.lon());
