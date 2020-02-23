@@ -4609,6 +4609,12 @@ var AIM = {
 
 		var explode_smoke_path = path_base~"explode-smoke-id-" ~ me.ID;
 		me.explode_smoke_prop = props.globals.initNode( explode_smoke_path, FALSE, "BOOL", TRUE);
+		
+		var explode_water_path = path_base~"explode-water-id-" ~ me.ID;
+		me.explode_water_prop = props.globals.initNode( explode_water_path, FALSE, "BOOL", TRUE);
+		
+		var explode_angle_path = path_base~"explode-angle";
+		me.explode_angle_prop = props.globals.initNode( explode_angle_path, 0.0, "DOUBLE", TRUE);
 
 		var explode_sound_path = "payload/armament/flags/explode-sound-on-" ~ me.ID;;
 		me.explode_sound_prop = props.globals.initNode( explode_sound_path, FALSE, "BOOL", TRUE);
@@ -4631,10 +4637,41 @@ var AIM = {
 		me.rollN.setDoubleValue(0);# this will make explosions from cluster bombs (like M90) align to ground 'sorta'.
 		me.msl_prop.setBoolValue(FALSE);
 		me.smoke_prop.setBoolValue(FALSE);
+		var info = geodinfo(me.coord.lat(), me.coord.lon());
+
+		if (info[1] == nil) {
+			print ("Building hit!");
+		} elsif (info[1] != nil and info[1].solid == 0) {
+		 	me.explode_water_prop.setValue(TRUE);
+		} else {
+			me.explode_water_prop.setValue(FALSE);
+		}
+
+		#print (me.typeShort);
+		
 		me.explode_prop.setBoolValue(TRUE);
+		me.explode_angle_prop.setDoubleValue((rand() - 0.5) * 50);
 		settimer( func me.explode_prop.setBoolValue(FALSE), 0.5 );
 		settimer( func me.explode_smoke_prop.setBoolValue(TRUE), 0.5 );
 		settimer( func me.explode_smoke_prop.setBoolValue(FALSE), 3 );
+		if (getprop("payload/armament/enable-craters") == nil or !getprop("payload/armament/enable-craters")) {return;};
+		settimer ( func {
+		 	if (info[1] == nil) {
+		       geo.put_model(getprop("payload/armament/models") ~ "bomb_hit_smoke.xml", me.coord.lat(), me.coord.lon());
+		    } else if ((info[1] != nil) and (info[1].solid == 1)) {
+		        var crater_model = "";
+		       	
+		        if (me.weight_whead_lbm < 850 and (me.target_sea or me.target_gnd)) {
+		          crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+		        } elsif (me.target_sea or me.target_gnd) {
+		          crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+		        }
+		       
+		       	if (crater_model != "" and me.weight_whead_lbm > 150) {
+		            geo.put_model(crater_model, me.coord.lat(), me.coord.lon());
+		        }
+		    }
+        }, 0.5);
 	},
 
 	animate_dud: func {
@@ -4668,7 +4705,7 @@ var AIM = {
 		me.sndDistance = me.sndDistance + (me.sndSpeed * dt) * FT2M;
 		if(me.sndDistance > distance) {
 			var volume = math.pow(2.71828,(-.00025*(distance-1000)));
-			me.printStats("explosion heard "~distance~"m vol:"~volume);
+			me.printStats(me.type~": Explosion heard "~distance~"m vol:"~volume);
 			me.explode_sound_vol_prop.setDoubleValue(volume);
 			me.explode_sound_prop.setBoolValue(1);
 			settimer( func me.explode_sound_prop.setBoolValue(0), 3);

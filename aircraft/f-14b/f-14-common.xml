@@ -350,6 +350,10 @@
                 <desc>Enable AFCS Altitude Mode</desc>
             </key>
             <key>
+                <name>Ctrl-e</name>
+                <desc>Ignore selected MP pilots</desc>
+            </key>
+            <key>
                 <name>*</name>
                 <desc>Engage AFCS Altitude Mode</desc>
             </key>
@@ -1640,6 +1644,16 @@
                     <script>f14_afcs.afcs_altitude_engage_toggle();</script>
                 </binding>
             </key>
+            
+            <key n="5">
+                <name>CTRL-e</name>
+                <desc>Ignore trolls</desc>
+                <repeatable>false</repeatable>
+                <binding>
+                      <command>dialog-show</command>
+                      <dialog-name>ignore</dialog-name>
+                </binding>
+            </key>
 
             <key n="8">
                 <name>CTRL-h</name>
@@ -2245,6 +2259,7 @@
             <pylon-stations>controls/armament</pylon-stations>
             <station-name type="string">station</station-name>
             <hit-interpolation type="bool">true</hit-interpolation>
+            <enable-craters type="bool">true</enable-craters>
             <MP-lat type="string">rotors/main/blade[0]/flap-deg</MP-lat>
             <MP-lon type="string">rotors/main/blade[1]/flap-deg</MP-lon>
             <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
