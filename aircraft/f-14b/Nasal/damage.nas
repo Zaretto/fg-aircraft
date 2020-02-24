@@ -479,9 +479,12 @@ var setInvisible = func (m) {
   var currentlyInvisible = m.getValue("controls/invisible");
   if(!currentlyInvisible){
     var thisCallsign = m.getValue("callsign");
-    multiplayer.dialog.toggle_ignore(thisCallsign);
-    m.setValue("controls/invisible",1);
-    screen.log.write("Automatically ignoring " ~ thisCallsign ~ ".");
+
+    if (thisCallsign != "" and thisCallsign != nil){
+      multiplayer.dialog.toggle_ignore(thisCallsign);
+      m.setValue("controls/invisible",1);
+      screen.log.write("Automatically ignoring " ~ thisCallsign ~ ".");
+    }
   }
 }
 
