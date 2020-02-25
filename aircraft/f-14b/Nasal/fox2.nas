@@ -110,6 +110,8 @@ var HudReticleDev  = props.globals.getNode("payload/armament/hud/reticle-total-d
 var HudReticleDeg  = props.globals.getNode("payload/armament/hud/reticle-total-angle", 1);
 var update_loop_time = 0.000;
 
+var fox2_unique_id = 0; # each missile needs to have a unique numeric ID
+
 var SIM_TIME = 0;
 var REAL_TIME = 1;
 
@@ -257,6 +259,8 @@ var AIM = {
 		m.direct_dist_m     = nil;
 		m.speed_m           = -1;
 
+		fox2_unique_id = fox2_unique_id + 1;
+        m.unique_id = fox2_unique_id;
 		m.nodeString = "payload/armament/"~m.type_lc~"/";
 
 		###############
@@ -2327,6 +2331,20 @@ var AIM = {
 			me.ai.getNode("hit").setIntValue(me.hit);
 		}
 
+        if (me.status == MISSILE_FLYING) {
+            # notify in flight using Emesary.
+            var msg = notifications.GeoEventNotification.new("mfly", me.type, 2, 20+me.ID);
+            msg.Position.set_latlon(me.latN.getValue(), me.lonN.getValue(), me.altN.getValue());
+            if (me.guidance=="radar")
+              msg.Flags = 1;
+            else
+              msg.Flags = 0;
+            msg.IsDistinct = 1;
+            msg.UniqueIndex = me.unique_id;
+            f14.geoBridgedTransmitter.NotifyAll(msg);
+print("fox2.nas: transmit in flight");
+f14.debugRecipient.Receive(msg);
+        }
 		me.last_dt = me.dt;
 		me.prevTarget = me.Tgt;
 		me.prevGuidance = me.guidance;
@@ -3712,7 +3730,17 @@ var AIM = {
 			var phrase = sprintf( me.type~" "~event~": %.1f", min_distance) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
 			if (min_distance < me.reportDist) {
-				me.sendMessage(phrase);
+#				me.sendMessage(phrase);
+                    if(getprop("payload/armament/msg")){
+                        var msg = notifications.ArmamentNotification.new("mhit", 4, 20+me.ID);
+                        msg.RelativeAltitude = explosion_coord.alt() - t_coord.alt();
+                        msg.Bearing = explosion_coord.course_to(t_coord);
+                        msg.Distance = min_distance;
+                        msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+                        f14.geoBridgedTransmitter.NotifyAll(msg);
+print("fox2.nas: transmit ",reason);
+f14.debugRecipient.Receive(msg);
+                    }
 			} else {
 				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
 			}
@@ -3765,7 +3793,17 @@ var AIM = {
 		if (me.Tgt != nil and !me.Tgt.isVirtual() and !me.inert) {
 			var phrase = sprintf( me.type~" "~event~": %.1f", me.direct_dist_m) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-			me.sendMessage(phrase);
+#			me.sendMessage(phrase);
+                if(getprop("payload/armament/msg")){
+                    var msg = notifications.ArmamentNotification.new("mhit", 4, 20+me.ID);
+                    msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
+                    msg.Bearing = explosion_coord.course_to(me.t_coord);
+                    msg.Distance = direct_dist_m;
+                    msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+print("fox2.nas: transmit ",reason);
+f14.debugRecipient.Receive(msg);
+                    f14.geoBridgedTransmitter.NotifyAll(msg);
+                }
 		}
 		if (me.multiHit and !me.inert) {
 			if (!me.multiExplosion(me.t_coord, event) and me.Tgt != nil and me.Tgt.isVirtual()) {
@@ -3798,6 +3836,18 @@ var AIM = {
 				var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, me.testMe.get_Callsign());
 				me.printStats(phrase);
 				me.sendMessage(phrase);
+
+ 				if(getprop("payload/armament/msg")){
+					var msg = notifications.ArmamentNotification.new("mmhit", 4, 20+me.ID);
+					msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
+					msg.Bearing = explosion_coord.course_to(me.t_coord);
+					msg.Distance = direct_dist_m;
+					msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+					print("fox2.nas: transmit ",reason);
+					f14.geoBridgedTransmitter.NotifyAll(msg);
+f14.debugRecipient.Receive(msg);
+				}
+
 				me.sendout = 1;
 			}
 		}
@@ -3810,6 +3860,16 @@ var AIM = {
 			var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, cs);# if we mention ourself then we need to explicit add ourself as author.
 			me.printStats(phrase);
 			me.sendMessage(phrase);
+
+			var msg = notifications.ArmamentNotification.new("mhit", 4, 20+me.ID);
+			msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
+			msg.Bearing = explosion_coord.course_to(me.t_coord);
+			msg.Distance = direct_dist_m;
+			msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
+			print("fox2.nas:self hit via globalTransmitter ",reason);
+			emesary.GlobalTransmitter.NotifyAll(msg);
+f14.debugRecipient.Receive(msg);
+
 			me.sendout = 1;
 		}
 		return me.sendout;

@@ -137,37 +137,50 @@ var fireMsgs = {
     " aim120 at":     nil,
 };
 
-var incoming_listener = func {
-  var history = getprop("/sim/multiplay/chat-history");
-  var hist_vector = split("\n", history);
-  if (size(hist_vector) > 0) {
-    var last = hist_vector[size(hist_vector)-1];
-    var last_vector = split(":", last);
-    var author = last_vector[0];
-    var callsign = getprop("sim/multiplay/callsign");
-    callsign = size(callsign) < 8 ? callsign : left(callsign,7);
-    if (size(last_vector) > 1 and author != callsign) {
-      # not myself
-      #print("not me");
-      var m2000 = FALSE;
-      if (find(" at " ~ callsign ~ ". Release ", last_vector[1]) != -1) {
-        # a m2000 is firing at us
-        m2000 = TRUE;
-      }
-      if (contains(fireMsgs, last_vector[1]) or m2000 == TRUE) {
-        # air2air being fired
-        if (size(last_vector) > 2 or m2000 == TRUE) {
-          #print("Missile launch detected at"~last_vector[2]~" from "~author);
-          if (m2000 == TRUE or last_vector[2] == " "~callsign) {
-            # its being fired at me
-            #print("Incoming!");
-            var enemy = getCallsign(author);
-            if (enemy != nil) {
-              #print("enemy identified");
-              var bearingNode = enemy.getNode("radar/bearing-deg");
-              if (bearingNode != nil) {
-                #print("bearing to enemy found");
-                var bearing = bearingNode.getValue();
+#
+# Create emesary recipient for handling other craft's missile positioins.
+var DamageRecipient =
+{
+    new: func(_ident)
+    {
+        var new_class = emesary.Recipient.new(_ident);
+
+        new_class.Receive = func(notification)
+        {
+#
+#
+# This will be where movement and damage notifications are received. 
+# This can replace MP chat for damage notifications 
+# and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
+# to receive notifications from all other suitably equipped models.
+            if (notification.NotificationType == "GeoEventNotification") {
+                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
+                      " Kind=",notification.Kind,
+                      " Name=",notification.Name,
+                      " SecondaryKind=",notification.SecondaryKind,
+                      " lat=",notification.Position.lat(),
+                      " lon=",notification.Position.lon(),
+                      " alt=",notification.Position.alt(),
+                      " Heading=",notification.Heading,
+                      " u_fps=",notification.u_fps,
+                      " v_fps=",notification.v_fps,
+                      " w_fps=",notification.w_fps,
+                      " IsDistinct=",notification.IsDistinct,
+                      " Callsign=",notification.Callsign,
+                      " RemoteCallsign=",notification.RemoteCallsign,
+                      " Flags=",notification.Flags);
+                #
+                # todo:
+                #   detect launches if they are nearby
+                #   animate missiles
+                #
+                var callsign = getprop("sim/multiplay/callsign");
+                callsign = size(callsign) < 8 ? callsign : left(callsign,7);
+                if (notification.RemoteCallsign != callsign) return;
+                var radarOn = bits.test(notification.Flags, 1);
+                if (!radarOn) return;# this should be little more complex later
+                var ownPos = geo.aircraft_position();
+                var bearing = ownPos.course_to(notification.Position);
                 var heading = getprop("orientation/heading-deg");
                 var clock = bearing - heading;
                 while(clock < 0) {
@@ -205,98 +218,86 @@ var incoming_listener = func {
                   playIncomingSound("");
                 }
                 return;
-              }
             }
-          }
-        }
-      } elsif (getprop("payload/armament/msg") == 1) { # mirage: getprop("/controls/armament/mp-messaging")
-        # latest version of failure manager and taking damage enabled
-        #print("damage enabled");
-        var last1 = split(" ", last_vector[1]);
-        if(size(last1) > 2 and last1[size(last1)-1] == "exploded" ) {
-          #print("missile hitting someone");
-          if (size(last_vector) > 3 and last_vector[3] == " "~callsign) {
-            #print("that someone is me!");
-            var type = last1[1];
-            if (type == "Matra" or type == "Sea") {
-              for (var i = 2; i < size(last1)-1; i += 1) {
-                type = type~" "~last1[i];
-              }
-            }
-            var number = split(" ", last_vector[2]);
-            var distance = num(number[1]);
-            #print(type~"|");
-            if(distance != nil) {
-              var dist = distance;
+            if (notification.NotificationType == "ArmamentNotification") {
+                if (notification.FromIncomingBridge) {
+                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
+                          " Kind=",notification.Kind,
+                          " SecondaryKind=",notification.SecondaryKind,
+                          " RelativeAltitude=",notification.RelativeAltitude,
+                          " Distance=",notification.Distance,
+                          " Bearing=",notification.Bearing,
+                          " RemoteCallsign=",notification.RemoteCallsign);
+#                    debug.dump(notification);
+                    #
+                    # todo:
+                    #   lookup types (and hit counts for cannon)
+                    #
+                    var callsign = getprop("sim/multiplay/callsign");
+                    callsign = size(callsign) < 8 ? callsign : left(callsign,7);
+                    if (notification.RemoteCallsign == callsign and getprop("payload/armament/msg") == 1) {
+                        #damage enabled and were getting hit
+                        if (notification.SecondaryKind == 20) {
+                            # cannon hit
+                            var probability = cannon_types[" M61A1 shell hit"];#test code
+                            var hit_count = 2;#test code
+                            if (hit_count != nil) {
+                                var damaged_sys = 0;
+                                for (var i = 1; i <= hit_count; i = i + 1) {
+                                  var failed = fail_systems(probability);
+                                  damaged_sys = damaged_sys + failed;
+                                }
 
-              if (type == "M90") {
-                var prob = rand()*0.5;
-                var failed = fail_systems(prob);
-                var percent = 100 * prob;
-                printf("Took %.1f%% damage from %s clusterbombs at %0.1f meters. %s systems was hit", percent,type,dist,failed);
-                nearby_explosion();
-                return;
-              }
+                                printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
+                                nearby_explosion();
+                            }
+                        } elsif (notification.SecondaryKind > 20) {
+                            # its a warhead
+                            var dist     = notification.Distance;
+                            var type = "AIM-9";#test code
+                            if (type == "M90") {
+                              var prob = rand()*0.5;
+                              var failed = fail_systems(prob);
+                              var percent = 100 * prob;
+                              printf("Took %.1f%% damage from %s clusterbombs at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+                              nearby_explosion();
+                              return;
+                            }
 
-              distance = clamp(distance-3, 0, 1000000);
-              var maxDist = 0;
+                            var distance = clamp(dist-3, 0, 1000000);
+                            var maxDist = 0;
 
-              if (contains(warhead_lbs, type)) {
-                maxDist = maxDamageDistFromWarhead(warhead_lbs[type]);
-              } else {
-                return;
-              }
+                            if (contains(warhead_lbs, type)) {
+                              maxDist = maxDamageDistFromWarhead(warhead_lbs[type]);
+                            } else {
+                              return;
+                            }
 
-              var diff = maxDist-distance;
-              if (diff < 0) {
-                diff = 0;
-              }
-              
-              diff = diff * diff;
-              
-              var probability = diff / (maxDist*maxDist);
+                            var diff = maxDist-distance;
+                            if (diff < 0) {
+                              diff = 0;
+                            }
+                            
+                            diff = diff * diff;
+                            
+                            var probability = diff / (maxDist*maxDist);
 
-              var failed = fail_systems(probability);
-              var percent = 100 * probability;
-              printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
-              nearby_explosion();
-            }
-          } 
-        } elsif (cannon_types[last_vector[1]] != nil) {
-          if (size(last_vector) > 2 and last_vector[2] == " "~callsign) {
-            if (size(last_vector) < 4) {
-              # msg is either missing number of hits, or has no trailing dots from spam filter.
-              print('"'~last~'"   is not a legal hit message, tell the shooter to upgrade his OPRF plane :)');
-              return;
-            }
-            var last3 = split(" ", last_vector[3]);
-            if(size(last3) > 2 and size(last3[2]) > 2 and last3[2] == "hits" ) {
-              var probability = cannon_types[last_vector[1]];
-              var hit_count = num(last3[1]);
-              if (hit_count != nil) {
-                var damaged_sys = 0;
-                for (var i = 1; i <= hit_count; i = i + 1) {
-                  var failed = fail_systems(probability);
-                  damaged_sys = damaged_sys + failed;
+                            var failed = fail_systems(probability);
+                            var percent = 100 * probability;
+                            printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+                            nearby_explosion();
+                        } 
+                    }
                 }
-
-                printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
-                nearby_explosion();
-              }
-            } else {
-              var probability = cannon_types[last_vector[1]];
-              #print("probability: " ~ probability);
-              
-              var failed = fail_systems(probability * 3);# Old messages is assumed to be 3 hits
-              printf("Took %.1f%% x 3 damage from cannon! %s systems was hit.", probability*100, failed);
-              nearby_explosion();
             }
-          }
+            return emesary.Transmitter.ReceiptStatus_NotProcessed;
         }
-      }
+        return new_class;
     }
-  }
-}
+};
+
+damage_recipient = DamageRecipient.new("DamageRecipient");
+emesary.GlobalTransmitter.Register(damage_recipient);
 
 var maxDamageDistFromWarhead = func (lbs) {
   # very simple
@@ -362,30 +363,6 @@ processCallsignsTimer.simulatedTime = 1;
 processCallsignsTimer.start();
 
 
-#f14b
-var sendMis = func () {
-  var mkeys = keys(armament.AIM9.active);
-  var str = "";
-  foreach(var m; mkeys) {
-    var mid = m;
-    m = armament.AIM.active[m];
-    if (m.status == 2) {
-      var lat = m.latN.getValue();
-      var lon = m.lonN.getValue();
-      var alt = m.altN.getValue();
-      #print();
-      #print(mid);
-      #print(lat);
-      #print(lon);
-      #print(alt);
-      str = str~mid~";"~lat~";"~lon~";"~alt~":";
-    }
-  }
-  setprop("sim/multiplay/generic/string[13]", str);
-}
-sendMisTimer = maketimer(0.05, sendMis);
-sendMisTimer.simulatedTime = 1;
-
 var logTime = func{
   #log time and date for outputing ucsv files for converting into KML files for google earth.
   if (getprop("logging/log[0]/enabled") == TRUE and getprop("sim/time/utc/year") != nil) {
@@ -397,7 +374,7 @@ var logTime = func{
   }
 }
 
-#sendMisTimer.start(); ; use emesary for this
+
 
 
 var code_ct = func () {
@@ -423,7 +400,7 @@ var code_ct = func () {
 code_ctTimer = maketimer(1, code_ct);
 code_ctTimer.simulatedTime = 1;
 
-setlistener("/sim/multiplay/chat-history", incoming_listener, 0, 0);
+
 
 setprop("/sim/failure-manager/display-on-screen", FALSE);
 
