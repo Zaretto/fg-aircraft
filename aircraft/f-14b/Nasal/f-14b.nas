@@ -746,3 +746,74 @@ var eject2 = func {
   #setprop("sim/view[0]/enabled",0); #disabled since it might get saved so user gets no pilotview in next aircraft he flies in.
   settimer(func {f14.exp();},3.5);
 }
+
+## Following code adapted from script shared by Warty at https://forum.flightgear.org/viewtopic.php?f=10&t=28665
+## (C) pinto aka Justin Nicholson - 2016
+## GPL v2
+
+var updateRater = 2;
+
+var ignoreLoop = func () {
+  if (getprop("sim/multiplay/txhost") != "mpserver.opredflag.com") {
+    var trolls = [
+                  getprop("ignore-list/troll-1"),
+                  getprop("ignore-list/troll-2"),
+                  getprop("ignore-list/troll-3"),
+                  getprop("ignore-list/troll-4"),
+                  getprop("ignore-list/troll-5"),
+                  getprop("ignore-list/troll-6"),
+                  getprop("ignore-list/troll-7"),
+                  getprop("ignore-list/troll-8"),
+                  getprop("ignore-list/troll-9")];
+    var listMP = props.globals.getNode("ai/models/").getChildren("multiplayer");
+    foreach (m; listMP) {
+      var thisCallsign = m.getValue("callsign");
+      foreach(csToIgnore; trolls){
+        if(thisCallsign == csToIgnore){
+          setInvisible(m);
+        }
+      }
+    }
+  }
+  settimer( func { ignoreLoop(); }, updateRater);
+}
+
+var setInvisible = func (m) {
+  var currentlyInvisible = m.getValue("controls/invisible");
+  if(!currentlyInvisible){
+    var thisCallsign = m.getValue("callsign");
+    if (thisCallsign != "" and thisCallsign != nil) {
+      multiplayer.dialog.toggle_ignore(thisCallsign);
+      m.setValue("controls/invisible",1);
+      screen.log.write("Automatically ignoring " ~ thisCallsign ~ ".");
+    }
+  }
+}
+
+settimer( func { ignoreLoop(); }, 5);
+
+
+var code_ct = func () {
+  #ANTIC
+  if (getprop("payload/armament/msg")) {
+      setprop("sim/rendering/redout/enabled", TRUE);
+      #call(func{fgcommand('dialog-close', multiplayer.dialog.dialog.prop())},nil,var err= []);# props.Node.new({"dialog-name": "location-in-air"}));
+      call(func{multiplayer.dialog.del();},nil,var err= []);
+      if (!getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+        call(func{fgcommand('dialog-close', props.Node.new({"dialog-name": "WeightAndFuel"}))},nil,var err2 = []);
+        call(func{fgcommand('dialog-close', props.Node.new({"dialog-name": "system-failures"}))},nil,var err2 = []);
+        call(func{fgcommand('dialog-close', props.Node.new({"dialog-name": "instrument-failures"}))},nil,var err2 = []);
+      }      
+      setprop("sim/freeze/fuel",0);
+      setprop("/sim/speed-up", 1);
+      setprop("/gui/map/draw-traffic", 0);
+      setprop("/sim/gui/dialogs/map-canvas/draw-TFC", 0);
+      #setprop("/sim/rendering/als-filters/use-filtering", 1);
+      call(func{var interfaceController = fg1000.GenericInterfaceController.getOrCreateInstance();
+      interfaceController.stop();},nil,var err2=[]);
+  }  
+}
+code_ctTimer = maketimer(1, code_ct);
+code_ctTimer.simulatedTime = 1;
+
+code_ctTimer.start();

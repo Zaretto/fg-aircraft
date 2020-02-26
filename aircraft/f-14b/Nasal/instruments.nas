@@ -892,6 +892,8 @@ setlistener("sim/position-finalized", func (is_done) {
 setlistener("sim/signals/reinit", func (reinit) {
     if (reinit.getValue()) {
         f14.internal_save_fuel();
+        setprop("ai/submodels/submodel[4]/count", 100);#replenish chaff and flares
+    	setprop("ai/submodels/submodel[5]/count", 100);
     } else {
         settimer(func { f14.internal_restore_fuel() }, 0.6);
     }
