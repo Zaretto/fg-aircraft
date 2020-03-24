@@ -2333,17 +2333,7 @@ var AIM = {
 
         if (me.status == MISSILE_FLYING) {
             # notify in flight using Emesary.
-            var msg = notifications.GeoEventNotification.new("mfly", me.type, 2, 20+me.ID);
-            msg.Position.set_latlon(me.latN.getValue(), me.lonN.getValue(), me.altN.getValue());
-            if (me.guidance=="radar")
-              msg.Flags = 1;
-            else
-              msg.Flags = 0;
-            msg.IsDistinct = 1;
-            msg.UniqueIndex = me.unique_id;
-            f14.geoBridgedTransmitter.NotifyAll(msg);
-print("fox2.nas: transmit in flight");
-f14.debugRecipient.Receive(msg);
+            settimer(func {AIM.notifyInFlight(me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id);},0);
         }
 		me.last_dt = me.dt;
 		me.prevTarget = me.Tgt;
@@ -2356,6 +2346,8 @@ f14.debugRecipient.Receive(msg);
 		#thread.unlock(frameToggle);
 	  }
 	},
+	
+	
 
 	getGPS: func(x, y, z, pitch, head=nil, roll=nil) {
 		#
@@ -3685,6 +3677,41 @@ f14.debugRecipient.Receive(msg);
 		}
 		return FALSE;
 	},
+	
+	notifyInFlight: func (lat, lon, alt, radar, ID, type,unique_id) {
+		var msg = notifications.GeoEventNotification.new("mfly", type, 2, 20+ID);
+        msg.Position.set_latlon(lat, lon, alt);
+        msg.Flags = radar;
+        msg.IsDistinct = 1;
+        msg.UniqueIndex = unique_id;
+        f14.geoBridgedTransmitter.NotifyAll(msg);
+		print("fox2.nas: transmit in flight");
+		#f14.debugRecipient.Receive(msg);
+	},
+	
+	hitQueue: [],
+	
+	notifyHit: func () {
+		thread.lock(mutexHit);
+		var hit = pop(AIM.hitQueue);
+		thread.unlock(mutexHit);
+		if (hit == nil) return;
+		var RelativeAltitude = hit[0];
+		var Distance = hit[1];
+		var callsign = hit[2];
+		var Bearing = hit[3];
+		var reason = hit[4];
+		var ID = hit[5];
+				
+		var msg = notifications.ArmamentNotification.new("mhit", 4, 20+ID);
+        msg.RelativeAltitude = RelativeAltitude;
+        msg.Bearing = Bearing;
+        msg.Distance = Distance;
+        msg.RemoteCallsign = callsign; # RJHTODO: maybe handle flares / chaff 
+        f14.geoBridgedTransmitter.NotifyAll(msg);
+		print("fox2.nas: transmit to ",callsign,"  reason:",reason);
+		#f14.debugRecipient.Receive(msg);
+	},
 
 	explode: func (reason, event = "exploded") {
 
@@ -3731,15 +3758,11 @@ f14.debugRecipient.Receive(msg);
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
 			if (min_distance < me.reportDist) {
 #				me.sendMessage(phrase);
-                    if(getprop("payload/armament/msg")){
-                        var msg = notifications.ArmamentNotification.new("mhit", 4, 20+me.ID);
-                        msg.RelativeAltitude = explosion_coord.alt() - t_coord.alt();
-                        msg.Bearing = explosion_coord.course_to(t_coord);
-                        msg.Distance = min_distance;
-                        msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
-                        f14.geoBridgedTransmitter.NotifyAll(msg);
-print("fox2.nas: transmit ",reason);
-f14.debugRecipient.Receive(msg);
+                    if(getprop("payload/armament/msg") and wh_mass > 0){
+                    	thread.lock(mutexHit);
+						append(AIM.hitQueue, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.ID]);
+						thread.unlock(mutexHit);
+                    	settimer(func{AIM.notifyHit()},0);
                     }
 			} else {
 				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
@@ -3749,7 +3772,7 @@ f14.debugRecipient.Receive(msg);
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
 			me.sendMessage(phrase);
 		}
-		if (me.multiHit and !me.inert) {
+		if (me.multiHit and !me.inert and wh_mass > 0) {
 			if (!me.multiExplosion(me.coord, event) and me.Tgt != nil and me.Tgt.isVirtual()) {
 				var phrase = sprintf(me.type~" "~event);
 				me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
@@ -3838,14 +3861,12 @@ f14.debugRecipient.Receive(msg);
 				me.sendMessage(phrase);
 
  				if(getprop("payload/armament/msg")){
-					var msg = notifications.ArmamentNotification.new("mmhit", 4, 20+me.ID);
-					msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
-					msg.Bearing = explosion_coord.course_to(me.t_coord);
-					msg.Distance = direct_dist_m;
-					msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
-					print("fox2.nas: transmit ",reason);
-					f14.geoBridgedTransmitter.NotifyAll(msg);
-f14.debugRecipient.Receive(msg);
+ 					var cs = me.testMe.get_Callsign();
+ 					var cc = me.testMe.get_Coord();
+ 					thread.lock(mutexHit);
+					append(AIM.hitQueue, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.ID]);
+					thread.unlock(mutexHit);
+ 					settimer(func{AIM.notifyHit()},0);
 				}
 
 				me.sendout = 1;
@@ -3860,16 +3881,11 @@ f14.debugRecipient.Receive(msg);
 			var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, cs);# if we mention ourself then we need to explicit add ourself as author.
 			me.printStats(phrase);
 			me.sendMessage(phrase);
-
-			var msg = notifications.ArmamentNotification.new("mhit", 4, 20+me.ID);
-			msg.RelativeAltitude = explosion_coord.alt() - me.t_coord.alt();
-			msg.Bearing = explosion_coord.course_to(me.t_coord);
-			msg.Distance = direct_dist_m;
-			msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
-			print("fox2.nas:self hit via globalTransmitter ",reason);
-			emesary.GlobalTransmitter.NotifyAll(msg);
-f14.debugRecipient.Receive(msg);
-
+			thread.lock(mutexHit);
+			append(AIM.hitQueue, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.ID]);
+			thread.unlock(mutexHit);
+			settimer(func{AIM.notifyHit()},0);
+			
 			me.sendout = 1;
 		}
 		return me.sendout;
@@ -5012,6 +5028,7 @@ var deviation_normdeg = func(our_heading, target_bearing) {
 var spams = 0;
 var spamList = [];
 var mutexMsg = thread.newlock();
+var mutexHit = thread.newlock();
 
 var defeatSpamFilter = func (str) {
   thread.lock(mutexMsg);
