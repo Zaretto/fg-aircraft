@@ -3685,8 +3685,8 @@ var AIM = {
         msg.IsDistinct = 1;
         msg.UniqueIndex = unique_id;
         f14.geoBridgedTransmitter.NotifyAll(msg);
-		print("fox2.nas: transmit in flight");
-		#f14.debugRecipient.Receive(msg);
+#print("fox2.nas: transmit in flight");
+#f14.debugRecipient.Receive(msg);
 	},
 	
 	hitQueue: [],
@@ -3708,9 +3708,9 @@ var AIM = {
         msg.Bearing = Bearing;
         msg.Distance = Distance;
         msg.RemoteCallsign = callsign; # RJHTODO: maybe handle flares / chaff 
-        f14.geoBridgedTransmitter.NotifyAll(msg);
-		print("fox2.nas: transmit to ",callsign,"  reason:",reason);
-		#f14.debugRecipient.Receive(msg);
+        f14.hitBridgedTransmitter.NotifyAll(msg);
+print("fox2.nas: transmit to ",callsign,"  reason:",reason);
+#f14.debugRecipient.Receive(msg);
 	},
 
 	explode: func (reason, event = "exploded") {
@@ -3823,9 +3823,9 @@ var AIM = {
                     msg.Bearing = explosion_coord.course_to(me.t_coord);
                     msg.Distance = direct_dist_m;
                     msg.RemoteCallsign = me.callsign; # RJHTODO: maybe handle flares / chaff 
-print("fox2.nas: transmit ",reason);
-f14.debugRecipient.Receive(msg);
-                    f14.geoBridgedTransmitter.NotifyAll(msg);
+#print("fox2.nas: transmit ",reason);
+#f14.debugRecipient.Receive(msg);
+                    f14.hitBridgedTransmitter.NotifyAll(msg);
                 }
 		}
 		if (me.multiHit and !me.inert) {

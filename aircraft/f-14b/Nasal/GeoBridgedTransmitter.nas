@@ -19,38 +19,57 @@
 # Setup the bridge
 # armament notification 24 bytes
 # geoEventNotification - 34 bytes + the length of the RemoteCallsign and Name fields.
-var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil), notifications.ArmamentNotification.new(nil)];
+#NOTE: due to bug in Emesary MP Bridge (fixed in 2019.2 after 24/3/2020) we can only
+#      reliably send one message type per bridge - so for the maximum compatibility
+#      we will use two bridges.
+#      If at some point in the future we target 2019.2 as a min ver we can use a single
+#      bridge and setup the notification list to contain all of the armament hit/flying notifications
+#i.e. change to [notifications.GeoEventNotification.new(nil), notifications.ArmamentNotification.new(nil)];
+var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil)];
 var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
 var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
 
-# This should be tuned to be 2/3 of the current spare space in the MP packet to allow as many notifications
-# to be sent as possible.
-geooutgoingBridge.MPStringMaxLen = 230;
+# bridge should be tuned to be around 90% of the packet size full.
+
+geooutgoingBridge.MPStringMaxLen = 70;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
 
+
+#----- bridge hit (armament) notifications
+var hitRoutedNotifications = [notifications.ArmamentNotification.new(nil)];
+var hitBridgedTransmitter = emesary.Transmitter.new("armamentNotificationBridge");
+var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
+
+hitoutgoingBridge.MPStringMaxLen = 300;
+emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
+
 #
-# debug all messages.
+# debug all messages - this can be removed when testing isn't required.
 var debugRecipient = emesary.Recipient.new("Debug");
 debugRecipient.Receive = func(notification)
 {
-    if (notification.NotificationType == "GeoEventNotification")
-    {
-        print("recv(1): ",notification.NotificationType, " ", notification.Ident);
-		debug.dump(notification);
-    }
-    else if (notification.NotificationType == "ArmamentNotification") {
-        if (notification.FromIncomingBridge) {
-            print("recv(2): ",notification.NotificationType, " ", notification.Ident,
-                  " Kind=",notification.Kind,
-                  " SecondaryKind=",notification.SecondaryKind,
-                  " RelativeAltitude=",notification.RelativeAltitude,
-                  " Distance=",notification.Distance,
-                  " Bearing=",notification.Bearing,
-                  " RemoteCallsign=",notification.RemoteCallsign);
+    if (notification.NotificationType != "FrameNotification")  {
+        print ("recv(0): type=",notification.NotificationType, " fromIncoming=",notification.FromIncomingBridge);
+
+        if (notification.NotificationType == "GeoEventNotification") {
+            print("recv(1): ",notification.NotificationType, " ", notification.Ident);
             debug.dump(notification);
+
+        } else if (notification.NotificationType == "ArmamentNotification") {
+            if (notification.FromIncomingBridge) {
+                print("recv(2): ",notification.NotificationType, " ", notification.Ident,
+                      " Kind=",notification.Kind,
+                      " SecondaryKind=",notification.SecondaryKind,
+                      " RelativeAltitude=",notification.RelativeAltitude,
+                      " Distance=",notification.Distance,
+                      " Bearing=",notification.Bearing,
+                      " RemoteCallsign=",notification.RemoteCallsign);
+                debug.dump(notification);
+            }
         }
     }
     return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
 }
-emesary.GlobalTransmitter.Register(debugRecipient);
+# uncomment next line to activate debug recipient.
+#emesary.GlobalTransmitter.Register(debugRecipient);
 
