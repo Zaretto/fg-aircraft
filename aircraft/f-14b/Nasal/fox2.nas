@@ -2333,7 +2333,10 @@ var AIM = {
 
         if (me.status == MISSILE_FLYING) {
             # notify in flight using Emesary.
-            settimer(func {AIM.notifyInFlight(me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id);},0);
+            thread.lock(mutexFlight);
+			append(AIM.flightData, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id]);
+			thread.unlock(mutexFlight);
+        	settimer(func{AIM.notifyInFlight()},0);
         }
 		me.last_dt = me.dt;
 		me.prevTarget = me.Tgt;
@@ -3678,12 +3681,19 @@ var AIM = {
 		return FALSE;
 	},
 	
-	notifyInFlight: func (lat, lon, alt, radar, ID, type,unique_id) {
-		var msg = notifications.GeoEventNotification.new("mfly", type, 2, 20+ID);
-        msg.Position.set_latlon(lat, lon, alt);
-        msg.Flags = radar;
+	flightData: [],
+	
+	notifyInFlight: func (lat, lon, alt, radar, ID, type, unique_id) {
+		thread.lock(mutexFlight);
+		var flight = pop(AIM.flightData);
+		thread.unlock(mutexFlight);
+		if (flight == nil) return;
+				
+		var msg = notifications.GeoEventNotification.new("mfly", flight[5], 2, 20+flight[4]);
+        msg.Position.set_latlon(flight[0], flight[1], flight[2]);
+        msg.Flags = flight[3];
         msg.IsDistinct = 1;
-        msg.UniqueIndex = unique_id;
+        msg.UniqueIndex = flight[6];
         f14.geoBridgedTransmitter.NotifyAll(msg);
 #print("fox2.nas: transmit in flight");
 #f14.debugRecipient.Receive(msg);
@@ -5029,6 +5039,7 @@ var spams = 0;
 var spamList = [];
 var mutexMsg = thread.newlock();
 var mutexHit = thread.newlock();
+var mutexFlight = thread.newlock();
 
 var defeatSpamFilter = func (str) {
   thread.lock(mutexMsg);
