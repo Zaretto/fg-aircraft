@@ -3683,7 +3683,7 @@ var AIM = {
 	
 	flightData: [],
 	
-	notifyInFlight: func (lat, lon, alt, radar, ID, type, unique_id) {
+	notifyInFlight: func () {
 		thread.lock(mutexFlight);
 		var flight = pop(AIM.flightData);
 		thread.unlock(mutexFlight);
