@@ -422,7 +422,7 @@
             </binding>
         </button>
     </group>
-<!--
+
     <group>
         <layout>vbox</layout>
         <group>
@@ -432,8 +432,8 @@
                 <property>fdm/jsbsim/tuning/ClDFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-4</min>
+                <max>4</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>ClDFM</object-name>
@@ -457,8 +457,8 @@
                 <property>fdm/jsbsim/tuning/ClDAFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-4</min>
+                <max>4</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>ClDAFM</object-name>
@@ -478,12 +478,37 @@
         <group>
             <layout>hbox</layout>
             <slider>
+                <name>DClSLM</name>
+                <property>fdm/jsbsim/tuning/DClSLM</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-4</min>
+                <max>4</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>DClSLM</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>DClSLM 0.00</label>
+                <live>true</live>
+                <format>DClSLM %.2f</format>
+                <property>fdm/jsbsim/tuning/DClSLM</property>
+            </text>
+        </group>
+    </group>
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
                 <name>CdDFM</name>
                 <property>fdm/jsbsim/tuning/CdDFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-4</min>
+                <max>4</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CdDFM</object-name>
@@ -507,8 +532,8 @@
                 <property>fdm/jsbsim/tuning/CdDAFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-4</min>
+                <max>4</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CdDAFM</object-name>
@@ -533,8 +558,8 @@
                 <property>fdm/jsbsim/tuning/CMDFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-4</min>
+                <max>4</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CMDFM</object-name>
@@ -558,8 +583,8 @@
                 <property>fdm/jsbsim/tuning/CMADFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-10</min>
+                <max>10</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CMADFM</object-name>
@@ -574,6 +599,59 @@
             </text>
         </group>
     </group>
--->
+
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>CMBRK</name>
+                <property>fdm/jsbsim/tuning/CMBRK</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-10</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CMBRK</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CMBRK 0.00</label>
+                <live>true</live>
+                <format>CMBRK %.2f</format>
+                <property>fdm/jsbsim/tuning/CMBRK</property>
+            </text>
+        </group>
+    </group>
+
+
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>CMUC</name>
+                <property>fdm/jsbsim/tuning/CMUC</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-10</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CMUC</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CMUC 0.00</label>
+                <live>true</live>
+                <format>CMUC %.2f</format>
+                <property>fdm/jsbsim/tuning/CMUC</property>
+            </text>
+        </group>
+    </group>
+
    
 </PropertyList>
