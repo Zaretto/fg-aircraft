@@ -432,8 +432,8 @@
                 <property>fdm/jsbsim/tuning/ClDFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-4</min>
-                <max>4</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>ClDFM</object-name>
@@ -443,7 +443,7 @@
                 <halign>right</halign>
                 <label>ClDFM 0.00</label>
                 <live>true</live>
-                <format>ClDFM %.2f</format>
+                <format>ClDFM %.4f</format>
                 <property>fdm/jsbsim/tuning/ClDFM</property>
             </text>
         </group>
@@ -457,8 +457,8 @@
                 <property>fdm/jsbsim/tuning/ClDAFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-4</min>
-                <max>4</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>ClDAFM</object-name>
@@ -468,7 +468,7 @@
                 <halign>right</halign>
                 <label>ClDAFM 0.00</label>
                 <live>true</live>
-                <format>ClDAFM %.2f</format>
+                <format>ClDAFM %.4f</format>
                 <property>fdm/jsbsim/tuning/ClDAFM</property>
             </text>
         </group>
@@ -482,8 +482,8 @@
                 <property>fdm/jsbsim/tuning/DClSLM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-4</min>
-                <max>4</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>DClSLM</object-name>
@@ -493,7 +493,7 @@
                 <halign>right</halign>
                 <label>DClSLM 0.00</label>
                 <live>true</live>
-                <format>DClSLM %.2f</format>
+                <format>DClSLM %.4f</format>
                 <property>fdm/jsbsim/tuning/DClSLM</property>
             </text>
         </group>
@@ -507,8 +507,8 @@
                 <property>fdm/jsbsim/tuning/CdDFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-4</min>
-                <max>4</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CdDFM</object-name>
@@ -518,7 +518,7 @@
                 <halign>right</halign>
                 <label>CdDFM 0.00</label>
                 <live>true</live>
-                <format>CdDFM %.2f</format>
+                <format>CdDFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CdDFM</property>
             </text>
         </group>
@@ -532,8 +532,8 @@
                 <property>fdm/jsbsim/tuning/CdDAFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-4</min>
-                <max>4</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CdDAFM</object-name>
@@ -543,7 +543,7 @@
                 <halign>right</halign>
                 <label>CdDAFM 0.00</label>
                 <live>true</live>
-                <format>CdDAFM %.2f</format>
+                <format>CdDAFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CdDAFM</property>
             </text>
         </group>
@@ -558,8 +558,8 @@
                 <property>fdm/jsbsim/tuning/CMDFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-4</min>
-                <max>4</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CMDFM</object-name>
@@ -569,7 +569,7 @@
                 <halign>right</halign>
                 <label>CMDFM 0.00</label>
                 <live>true</live>
-                <format>CMDFM %.2f</format>
+                <format>CMDFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CMDFM</property>
             </text>
         </group>
@@ -594,7 +594,7 @@
                 <halign>right</halign>
                 <label>CMADFM 0.00</label>
                 <live>true</live>
-                <format>CMADFM %.2f</format>
+                <format>CMADFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CMADFM</property>
             </text>
         </group>
@@ -620,7 +620,7 @@
                 <halign>right</halign>
                 <label>CMBRK 0.00</label>
                 <live>true</live>
-                <format>CMBRK %.2f</format>
+                <format>CMBRK %.4f</format>
                 <property>fdm/jsbsim/tuning/CMBRK</property>
             </text>
         </group>
@@ -647,8 +647,32 @@
                 <halign>right</halign>
                 <label>CMUC 0.00</label>
                 <live>true</live>
-                <format>CMUC %.2f</format>
+                <format>CMUC %.4f</format>
                 <property>fdm/jsbsim/tuning/CMUC</property>
+            </text>
+        </group>
+    </group>
+
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>ALPHAMX</name>
+                <property>fdm/jsbsim/tuning/alpha-mx</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>1</min>
+                <max>2</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>ALPHAMX</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>ALPHAMX 0.00</label>
+                <live>true</live>
+                <format>ALPHAMX %.4f</format>
+                <property>fdm/jsbsim/tuning/alpha-mx</property>
             </text>
         </group>
     </group>
