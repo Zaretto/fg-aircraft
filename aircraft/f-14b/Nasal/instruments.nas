@@ -78,7 +78,6 @@ var nav1_freq_update = func {
 		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_as_selected);
 	}
 }
-var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
 
 #
 # AN/SPN 46 transmits - this receives.
@@ -945,6 +944,9 @@ get_approach_onspeed = func{
     return 0.4+(45.85+0.002055*total_mass_lbs+-0.00000000750*total_mass_lbs*total_mass_lbs);
 }
 
+# carrier approach 'glideslope' based on 3/4 mile @ 360feet
+# (i.e. 1207m at 109m)
+var FD_TAN5DEG = math.tan(5.16 / 57.29577950560105);
 #
 # Carrier reposition methods
 carrier_approach_reposition = func {
@@ -954,9 +956,8 @@ carrier_approach_reposition = func {
     var dist_m = 11000;
     if (getprop("sim/presets/carrier-approach-dist-m") != nil)
         dist_m  = getprop("sim/presets/carrier-approach-dist-m");
-    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
     np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
-    var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
+    var gs_height = ((dist_m*FD_TAN5DEG)+20)*3.281;
     lat = np.lat();
     lon = np.lon();
     onspeed = get_approach_onspeed();
@@ -1020,7 +1021,6 @@ return;
 }
 
 print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
-    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
 
     var np = geo.Coord.new()
     .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
