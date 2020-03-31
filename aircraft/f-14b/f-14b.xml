@@ -1124,7 +1124,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
 
 	<!-- SAS YAW Channels Lead/Lag values -->
-	<property value="3.32">sas/yaw-r-c1</property>
+	<property value="2.91332">sas/yaw-r-c1</property>
 	<property value="8.01">sas/yaw-r-c2</property>
 	<property value="16.3">sas/yaw-r-c3</property>
 	<property value="32.1">sas/yaw-r-c4</property>
@@ -1193,7 +1193,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 		<fcs_function name="sas/yaw-r-01">
 			<function>
 				<sum>
-					<property>sas/yaw-r-0</property>
+					<!-- <property>sas/yaw-r-0</property> -->
 					<property>velocities/r-rad_sec</property>
 				</sum>
 			</function>
@@ -1206,6 +1206,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 			<c3>sas/yaw-r-c3</c3>
 			<c4>sas/yaw-r-c4</c4>
 		</lead_lag_filter>
+
+<pid  name="sas/yaw-r-1-v">
+			<input>sas/yaw-r-01</input>
+<kp>sas/yaw-r-c1</kp>
+<ki>sas/yaw-r-c2</ki>
+<kd>sas/yaw-r-c2</kd>
+</pid>
 
 		<fcs_function name="sas/yaw-output">
 			<function>
@@ -3896,4 +3903,27 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
 
     </external_reactions>
+    <output name="c:/temp/JSBOut.csv" type="CSV" rate="10">
+        <property caption="alpha-deg">aero/alpha-deg</property>
+        <property caption="beta-deg">aero/beta-deg</property>
+        <property caption="pb">velocities/p-aero-rad_sec</property>
+        <property caption="qb">velocities/q-aero-rad_sec</property>
+        <property caption="rb">velocities/r-aero-rad_sec</property>
+        <property caption="sas-yaw">sas/yaw-output</property>
+        <property caption="yawr0">sas/yaw-r-0</property>
+        <property caption="yawr01">sas/yaw-r-01</property>
+        <property caption="yawr1">sas/yaw-r-1</property>
+        <property caption="qbar-psf">aero/qbar-psf</property>
+        <property caption="phi-deg">attitude/phi-deg</property>
+        <property caption="psi-deg">attitude/psi-deg</property>
+        <property caption="theta-deg">attitude/theta-deg</property>
+        <property caption="aileron-pos-deg">fcs/aileron-pos-deg</property>
+        <property caption="differential-elevator-pos-deg">fcs/differential-elevator-pos-deg</property>
+        <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>
+        <property caption="rudder-pos-deg">fcs/rudder-pos-deg</property>
+        <property caption="fbx-total-lbs">forces/fbx-total-lbs</property>
+        <property caption="fby-total-lbs">forces/fby-total-lbs</property>
+        <property caption="fbz-total-lbs">forces/fbz-total-lbs</property>
+        <property caption="vt-fps">velocities/vt-fps</property>
+    </output>
 </fdm_config>
