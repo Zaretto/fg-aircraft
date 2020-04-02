@@ -1840,7 +1840,9 @@ var AIM = {
 			if (!(me.canSwitch and me.reaquire)) {
 				me.printStats(me.type~": Target went away, deleting missile.");
 				me.sendMessage(me.type~" missed "~me.callsign~": Target logged off.");
-				settimer(func me.del(),0);
+				thread.lock(mutexTimer);
+				append(AIM.timerQueue, [me,me.del,[],0]);
+				thread.unlock(mutexTimer);
 				return;
 			} else {
 				me.Tgt = nil;
@@ -2223,7 +2225,9 @@ var AIM = {
 				if (me.explodeSound == TRUE) {
 					me.sndPropagate();
 				} else {
-					settimer( func me.del(), 10);
+					thread.lock(mutexTimer);
+					append(AIM.timerQueue, [me,me.del,[],10]);
+					thread.unlock(mutexTimer);
 				}
 				return;
 			}
@@ -2336,7 +2340,9 @@ var AIM = {
             thread.lock(mutexFlight);
 			append(AIM.flightData, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id]);
 			thread.unlock(mutexFlight);
-        	settimer(func{AIM.notifyInFlight()},0);
+        	thread.lock(mutexTimer);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [], 0]);
+			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
 		me.prevTarget = me.Tgt;
@@ -3761,7 +3767,10 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 		me.coord = explosion_coord;
 
 		var wh_mass = (event == "exploded" and !me.inert)?me.weight_whead_lbm:0;#will report 0 mass if did not have time to arm
-		settimer(func {impact_report(me.coord, wh_mass, "munition", me.type, me.new_speed_fps*FT2M);},0);# method sent back to main nasal thread.
+
+		thread.lock(mutexTimer);
+		append(AIM.timerQueue, [me,impact_report,[me.coord, wh_mass, "munition", me.type, me.new_speed_fps*FT2M],0]);
+		thread.unlock(mutexTimer);
 
 		if (me.Tgt != nil and !me.Tgt.isVirtual() and !me.inert) {
 			var phrase = sprintf( me.type~" "~event~": %.1f", min_distance) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
@@ -3772,7 +3781,9 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
                     	thread.lock(mutexHit);
 						append(AIM.hitQueue, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.ID]);
 						thread.unlock(mutexHit);
-                    	settimer(func{AIM.notifyHit()},0);
+						thread.lock(mutexTimer);
+						append(AIM.timerQueue, [AIM, AIM.notifyHit, [], 0]);
+						thread.unlock(mutexTimer);
                     }
 			} else {
 				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
@@ -3876,7 +3887,9 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
  					thread.lock(mutexHit);
 					append(AIM.hitQueue, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.ID]);
 					thread.unlock(mutexHit);
- 					settimer(func{AIM.notifyHit()},0);
+ 					thread.lock(mutexTimer);
+					append(AIM.timerQueue, [AIM, AIM.notifyHit, [], 0]);
+					thread.unlock(mutexTimer);
 				}
 
 				me.sendout = 1;
@@ -3894,7 +3907,9 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 			thread.lock(mutexHit);
 			append(AIM.hitQueue, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.ID]);
 			thread.unlock(mutexHit);
-			settimer(func{AIM.notifyHit()},0);
+			thread.lock(mutexTimer);
+			append(AIM.timerQueue, [AIM, AIM.notifyHit, [], 0]);
+			thread.unlock(mutexTimer);
 			
 			me.sendout = 1;
 		}
@@ -4943,6 +4958,19 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 			call(printf,arg);
 		}
 	},
+	
+	timerLoop: func {
+		thread.lock(mutexTimer);
+		var cmd = pop(AIM.timerQueue);
+		thread.unlock(mutexTimer);
+		if (cmd != nil) {
+			var tr = maketimer(cmd[3], cmd[0], func call(cmd[1], cmd[2], cmd[0], var err = []));
+			tr.singleShot = 1;
+			tr.start();#lets hope the timer tr dont get garbage collected..
+		}
+	},
+	
+	timerQueue: [],
 
 	active: {},
 	flying: {},
@@ -5040,6 +5068,7 @@ var spamList = [];
 var mutexMsg = thread.newlock();
 var mutexHit = thread.newlock();
 var mutexFlight = thread.newlock();
+var mutexTimer = thread.newlock();
 
 var defeatSpamFilter = func (str) {
   thread.lock(mutexMsg);
@@ -5074,3 +5103,4 @@ var spamLoop = func {
 }
 
 spamLoop();
+AIM.timerLoop();
