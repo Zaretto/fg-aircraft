@@ -4964,10 +4964,13 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 		var cmd = pop(AIM.timerQueue);
 		thread.unlock(mutexTimer);
 		if (cmd != nil) {
-			var tr = maketimer(cmd[3], cmd[0], func call(cmd[1], cmd[2], cmd[0], var err = []));
+			var err = [];
+			var tr = maketimer(cmd[3], cmd[0], func call(cmd[1], cmd[2], cmd[0], err = []));
 			tr.singleShot = 1;
 			tr.start();#lets hope the timer tr dont get garbage collected..
+			if (size(err)) {foreach(e;err) {print(e);}}
 		}
+		settimer(func AIM.timerLoop(),0);
 	},
 	
 	timerQueue: [],
