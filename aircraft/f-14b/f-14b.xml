@@ -691,15 +691,16 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property>fcs/flap-cmd-sum</property>
         <property>fcs/roll-trim-sas-cmd-norm</property>
 
+        <!-- wing sweep normalization is 0.01470588235294117647058823529412 per degree (1/range)== 1/68 -->
         <channel name="Wing Sweep">
-            <aerosurface_scale name="Sweep Control">
-                <input>fcs/wing-sweep-cmd</input>
-                <range>
+            <pure_gain name="fcs/wing-sweep-pos-deg">
+                <input>fcs/wing-sweep-norm</input>
+                <gain>68</gain>
+                <clipto>
                     <min> 20 </min>
-                    <max> 68 </max>
-                </range>
-                <output>fcs/wing-sweep-pos-deg</output>
-            </aerosurface_scale>
+                    <max> 82 </max>
+                </clipto>
+            </pure_gain>
 
             <kinematic name="Sweep Position">
                 <noscale/>
@@ -721,7 +722,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </traverse>
                 <!--<output>fcs/wing-sweep-cmd</output>-->
                 <output>/fdm/jsbsim/fcs/wing-sweep-norm</output>
-</kinematic>
+            </kinematic>
 
 
             <!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
