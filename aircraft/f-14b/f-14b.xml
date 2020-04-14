@@ -691,15 +691,16 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property>fcs/flap-cmd-sum</property>
         <property>fcs/roll-trim-sas-cmd-norm</property>
 
+        <!-- wing sweep normalization is 0.01470588235294117647058823529412 per degree (1/range)== 1/68 -->
         <channel name="Wing Sweep">
-            <aerosurface_scale name="Sweep Control">
-                <input>fcs/wing-sweep-cmd</input>
-                <range>
+            <pure_gain name="fcs/wing-sweep-pos-deg">
+                <input>fcs/wing-sweep-norm</input>
+                <gain>68</gain>
+                <clipto>
                     <min> 20 </min>
-                    <max> 68 </max>
-                </range>
-                <output>fcs/wing-sweep-pos-deg</output>
-            </aerosurface_scale>
+                    <max> 82 </max>
+                </clipto>
+            </pure_gain>
 
             <kinematic name="Sweep Position">
                 <noscale/>
@@ -720,7 +721,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     </setting>
                 </traverse>
                 <!--<output>fcs/wing-sweep-cmd</output>-->
-                <output>/fdm/jsbsim/fcs/wing-sweep-norm</output>
+                <output>fcs/wing-sweep-norm</output>
             </kinematic>
 
 
@@ -1051,16 +1052,26 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
         <channel name="Roll">
-            <summer name="Roll Trim Sum">
-                <input>fcs/aileron-cmd-norm</input>
-                <input>fcs/roll-trim-cmd-norm</input>
-                <input>fcs/roll-trim-sas-cmd-norm</input>
-                <input>fcs/roll-rate-limiter</input>
+            <fcs_function  name="Roll Trim Sum">
+                <function>
+                    <ifthen>
+                        <eq>
+                            <property>fcs/roll-sas-active</property>
+                            <value>0</value>
+                        </eq>
+                        <sum>
+                            <property>fcs/aileron-cmd-norm</property>
+                            <property>fcs/roll-trim-cmd-norm</property>
+                            <property>fcs/roll-trim-sas-cmd-norm</property>
+                        </sum>
+                        <property>sas/roll-sas-output</property>
+                    </ifthen>
+                </function>
                 <clipto>
                     <min> -1 </min>
                     <max>  1 </max>
                 </clipto>
-            </summer>
+            </fcs_function>
 
             <switch name="fcs/roll-trim-actuator">
                 <default value="fcs/roll-trim-sum"/>
@@ -1321,16 +1332,349 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <max>0.63</max>
             </clipto>
         </fcs_function>
+    </channel>
 
+    <channel name="Roll">
             <switch name="fcs/roll-sas-active">
-                <default value="0.0"/>
+                <default value="0.0" />
                 <test logic="AND" value="1">
-                    aero/alpha-rad ge -0.175438596491228
-                    aero/alpha-rad le  0.2631578947368421
                     fcs/roll-sas-enable ne 0.0
                 </test>
                 <output>fcs/roll-sas-active</output>
             </switch>
+
+
+            <fcs_function name="sas/roll-sas-1-stkr-limit">
+                <function>
+                    <product>
+                        <value>9</value>
+                        <sum>
+                            <property>fcs/aileron-cmd-norm</property>
+                            <property>fcs/roll-trim-cmd-norm</property>
+                        </sum>
+                    </product>
+                </function>
+                <clipto>
+                    <min>-8.89</min>
+                    <max>8.89</max>
+                </clipto>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-1">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-1-stkr-limit</property>
+                        <value>0.7874</value>
+                    </product>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-2-v1">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-1-stkr-limit</property>
+                        <value>-2</value>
+                    </product>
+                </function>
+                <clipto>
+                    <min>-7</min>
+                    <max>7</max>
+                </clipto>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-2-v2-alpha-mach">
+                <function>
+                    <interpolate1d>
+                        <property>velocities/mach</property>
+                        <value>0.55</value>
+                        <table name="sas/roll-sas-2-v2-alpha-mach-0.55">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                    9	0.0000
+                                    10	0.0000
+                                    11	0.0909
+                                    12	0.1818
+                                    13	0.2727
+                                    14	0.3636
+                                    15	0.4545
+                                    16	0.5455
+                                    17	0.6364
+                                    18	0.7273
+                                    19	0.8182
+                                    20	0.9091
+                                    21	1.0000
+                                    22	1.0000
+                                </tableData>
+                        </table>
+                        <value>1.0</value>
+                        <table name="sas/roll-sas-2-v2-alpha-mach-1.00">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                16	0.0000
+                                17	0.0000
+                                18	0.0385
+                                19	0.0769
+                                20	0.1154
+                                21	0.1538
+                                22	0.1923
+                                23	0.2308
+                                24	0.2692
+                                25	0.3077
+                                26	0.3462
+                                27	0.3846
+                                28	0.4231
+                                29	0.4615
+                                30	0.5000
+                                31	0.5385
+                                32	0.5769
+                                33	0.6154
+                                34	0.6538
+                                35	0.6923
+                                36	0.7308
+                                37	0.7692
+                                38	0.8077
+                                39	0.8462
+                                40	0.8846
+                                41	0.9231
+                                42	0.9615
+                                43	1.0000
+                                44	1.0000
+                            </tableData>
+                        </table>
+                    </interpolate1d>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-2-v2">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-2-v1</property>
+                        <property>sas/roll-sas-2-v2-alpha-mach</property>
+                    </product>
+                </function>
+            </fcs_function>
+
+
+            <lead_lag_filter name="sas/roll-sas-2-v3">
+                <input>sas/roll-sas-1-stkr-limit</input>
+                <c1>0</c1>
+                <c2>1.685</c2>
+                <c3>0.5</c3>
+                <c4>1</c4>
+                <clipto>
+                    <min>-10</min>
+                    <max>10</max>
+                </clipto>
+            </lead_lag_filter>
+
+            <fcs_function name="sas/roll-sas-2-v4-alpha-mach">
+                <function>
+                    <interpolate1d>
+                        <property>velocities/mach</property>
+                        <value>0.55</value>
+                        <table name="sas/roll-sas-2-v4-alpha-mach-0.55">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                16	1.0
+                                17	1.0
+                                43	0
+                                44	0
+                            </tableData>
+                        </table>
+                        <value>1.0</value>
+                        <table name="sas/roll-sas-2-v4-alpha-mach-1.00">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                9	1.0
+                                10	1.0
+                                21	0
+                                22	0
+                            </tableData>
+                        </table>
+                    </interpolate1d>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-2-v4">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-2-v3</property>
+                        <property>sas/roll-sas-2-v4-alpha-mach</property>
+                    </product>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-2">
+                <function>
+                    <sum>
+                        <property>-sas/roll-sas-2-v2</property>
+                        <property>sas/roll-sas-2-v4</property>
+                    </sum>
+                </function>
+            </fcs_function>
+
+            <!---        ROLL SAS 3          -->
+            <fcs_function name="sas/roll-sas-3-p-deg-sec">
+                <function>
+                    <product>
+                        <value>-57.32</value>
+                        <property>velocities/p-aero-rad_sec</property>
+                    </product>
+                </function>
+                <clipto>
+                    <min>-250</min>
+                    <max>250</max>
+                </clipto>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-3-v1">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-3-p-deg-sec</property>
+                        <ifthen>
+                            <le>
+                                <abs>
+                                    <property>sas/roll-sas-3-p-deg-sec</property>
+                                </abs>
+                                <value>135</value>
+                            </le>
+                            <value>0.04</value>
+                            <value>0.15</value>
+                        </ifthen>
+                    </product>
+                </function>
+            </fcs_function>
+            <fcs_function name="sas/roll-sas-3-v2">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-3-v1</property>
+                        <value>5</value>
+                        <table name="sas/roll-sas-3-v2-mach">
+                            <independentVar lookup="row">velocities/mach</independentVar>
+                            <tableData>
+                             0.0  1.0
+                             0.5  1.0
+                            0.65  0.0
+                        </tableData>
+                        </table>
+                    </product>
+                </function>
+            </fcs_function>
+
+
+            <fcs_function name="sas/roll-sas-3-v3">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-3-v2</property>
+                        <table name="sas/roll-sas-3-v3-ped">
+                            <independentVar lookup="row">fcs/rudder-cmd-norm</independentVar>
+                            <tableData>
+                                -0.11  0.0
+                                -0.109 1.0
+                                 0.0   1.0
+                                 0.109 1.0
+                                 0.11  0.0
+                        </tableData>
+                        </table>
+                    </product>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-3-v4">
+                <function>
+                    <product>
+                        <ifthen>
+                            <ge>
+                                <property>aero/alpha-indicated-deg</property>
+                                <value>0</value>
+                            </ge>
+                            <property>sas/roll-sas-3-v3</property>
+                            <property>sas/roll-sas-3-v1</property>
+                        </ifthen>
+                        <table name="sas/roll-sas-3-v4-ae">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                0	1.0
+                                36	1.0
+                                39	0.0
+                            </tableData>
+                        </table>
+                    </product>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-3-v5">
+                <function>
+                    <ifthen>
+                        <ge>
+                            <property>aero/alpha-indicated-deg</property>
+                            <value>44</value>
+                        </ge>
+                        <product>
+                            <value>57.32</value>
+                            <property>velocities/p-aero-rad_sec</property>
+                        </product>
+                        <value>0</value>
+                    </ifthen>
+                </function>
+                <clipto>
+                    <min>-20</min>
+                    <max>20</max>
+                </clipto>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-3">
+                <function>
+                    <sum>
+                        <property>sas/roll-sas-3-v4</property>
+                        <property>sas/roll-sas-3-v5</property>
+                    </sum>
+                </function>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-4">
+                <function>
+                    <sum>
+                        <property>sas/roll-sas-3</property>
+                        <property>sas/roll-sas-2</property>
+                    </sum>
+                </function>
+                <clipto>
+                    <min>-5</min>
+                    <max>5</max>
+                </clipto>
+            </fcs_function>
+
+            <fcs_function name="sas/roll-sas-5-v1">
+                <function>
+                    <sum>
+                        <property>sas/roll-sas-1</property>
+                        <property>sas/roll-sas-4</property>
+                    </sum>
+                </function>
+            </fcs_function>
+
+            <lead_lag_filter name="sas/roll-sas-5-v2">
+                <input>sas/roll-sas-5-v1</input>
+                <c1>0</c1>
+                <c2>1</c2>
+                <c3>0.5</c3>
+                <c4>1</c4>
+                <clipto>
+                    <min>-12</min>
+                    <max>12</max>
+                </clipto>
+            </lead_lag_filter>
+
+            <fcs_function name="sas/roll-sas-output">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-5-v2</property>
+                        <value>0.11</value>
+                    </product>
+                </function>
+            </fcs_function>
+
             <!-- rudder limits +/-30deg 40 deg/sec-->
             <!-- stabilizer limits +/7deg 30 deg/sec-->
 
@@ -1368,21 +1712,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <max>  0.2857142857142857 </max>
                 </clipto>
             </scheduled_gain>
-
-            <scheduled_gain name="fcs/roll-rate-limiter">
-                <input>fcs/aileron-cmd-norm</input>
-                <table>
-                    <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
-                    <tableData>
-                      -6.2    -1
-                      -1.4     0
-                       1.4     0
-                       6.2    -1
-                    </tableData>
-                </table>
-                <gain>fcs/roll-sas-active</gain>
-            </scheduled_gain>
-
 
             <summer name="Rudder Command Sum">
                 <input>fcs/rudder-cmd-norm</input>
