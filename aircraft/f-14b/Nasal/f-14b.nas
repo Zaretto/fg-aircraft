@@ -312,10 +312,13 @@ var timedMotions = func {
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var current_aileron = aileron.getValue();
-        if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
+        if (getprop("/autopilot/locks/heading") == "wing-leveler" and abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
         {
-#print("Outside dead zone ",current_aileron," roll ",getprop("autopilot/settings/target-roll-deg"));
             setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
+        }
+        if (getprop("/autopilot/locks/altitude") == "pitch-hold" and abs(getprop("fdm/jsbsim/fcs/elevator-cmd-norm")) > deadZ_pitch)
+        {
+            setprop("autopilot/settings/target-pitch-deg", getprop("orientation/pitch-deg"));
         }
         var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
     	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);

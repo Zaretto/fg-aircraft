@@ -775,7 +775,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <input>fcs/elevator-cmd-norm</input>
                 <input>fcs/pitch-trim-cmd-norm</input>
                 <input>fcs/pitch-damper-rate</input>
-                <input>systems/afcs/elevator-cmd-delta</input>
+                <input>-systems/afcs/elevator-cmd-delta</input>
                 <clipto>
                     <min> -1 </min>
                     <max>  1 </max>
@@ -1051,7 +1051,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
         <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
         <channel name="Roll">
-            <fcs_function  name="Roll Trim Sum">
+            <fcs_function  name="fcs/roll-trim-sum">
                 <function>
                     <ifthen>
                         <eq>
@@ -1495,10 +1495,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </clipto>
             </fcs_function>
 
-            <fcs_function name="sas/roll-sas-3-v1">
+            <fcs_function name="sas/roll-sas-3-v1-f">
                 <function>
-                    <product>
-                        <property>sas/roll-sas-3-p-deg-sec</property>
                         <ifthen>
                             <le>
                                 <abs>
@@ -1509,6 +1507,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                             <value>0.04</value>
                             <value>0.15</value>
                         </ifthen>
+                </function>
+            </fcs_function>
+            <fcs_function name="sas/roll-sas-3-v1">
+                <function>
+                    <product>
+                        <property>sas/roll-sas-3-p-deg-sec</property>
+                        <property>sas/roll-sas-3-v1-f</property>
                     </product>
                 </function>
             </fcs_function>
@@ -1604,7 +1609,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <function>
                     <sum>
                         <property>sas/roll-sas-3</property>
-                        <property>sas/roll-sas-2</property>
+                        <!-- <property>sas/roll-sas-2</property> -->
                     </sum>
                 </function>
                 <clipto>

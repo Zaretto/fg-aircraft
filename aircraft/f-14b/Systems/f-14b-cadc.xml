@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-        Description: F14 CADC (AFCS, MANEUVERING FLAPS/SLATS)  
+        Description: F14 CADC (MANEUVERING FLAPS/SLATS)  
         Author: Richard Harrison (rjh@zaretto.com)
         References: F14-AAD-1, NASA TT F15,406 Improvement of manuevrability at low speed, W. Staudacher, 1972
 -->
@@ -8,20 +8,9 @@
 
 <system name="CADC">
 
-    <property value="0.006"> systems/afcs/altitude-hold-pid-kp </property>
-    <property value="0.0000028"> systems/afcs/altitude-hold-pid-ki </property>
-    <property value="0.0025"> systems/afcs/altitude-hold-pid-kd </property>
-    <property value="1.2"> systems/afcs/altitude-hold-elevator-gain </property>
-
-    <property value="2"> systems/afcs/altitude-hold-lag-constant </property>
-    <property value="0">systems/afcs/target-altitude-ft</property>
-    <property value="0">systems/afcs/altitude-hold-active</property>
     <property value="0">systems/cadc/manuv-slat-extension-manual</property>
     <property value="0.9">systems/cadc/manuv-flap-extension-calc-lag</property>
     <property value="1.3">systems/cadc/manuv-flap-extension-washout-lag</property>
-
-    <property value="0">systems/afcs/heading-hold-active</property>
-    <property value="0">systems/afcs/SAS-roll-demand</property>
 
     <channel name="MANOUEVRE">
 
@@ -211,106 +200,7 @@
 
     </channel>
 
-    <channel name="AFCS">
-        <!-- ensure within operating envelope -->
-
-        <switch name="systems/afcs/altitude-hold-trigger">
-            <default value="0.0"/>
-            <test value="1.0">
-                    propulsion/engine[0]/set-running == 0
-                    propulsion/engine[1]/set-running == 0
-                    systems/afcs/altitude-hold-active ne 0
-            </test>
-        </switch>
-
-        <summer name="systems/afcs/altitude-hold-divergence">
-            <input> systems/afcs/target-altitude-ft </input>
-            <input> -position/h-sl-ft </input>
-        </summer>
-
-
-        <switch name="systems/afcs/altitude-hold-alt-diff-delta">
-            <default value="0.0"/>
-
-            <test value="0">
-                systems/afcs/altitude-hold-divergence lt 20
-                systems/afcs/altitude-hold-divergence gt -20
-            </test>
-
-            <test value="-systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence gt 10
-                systems/afcs/altitude-hold-divergence lt systems/afcs/altitude-hold-alt-diff-feet
-            </test>
-
-            <test value="systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence lt -10
-                systems/afcs/altitude-hold-divergence gt systems/afcs/altitude-hold-alt-diff-feet
-            </test>
-
-            <test value="-systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence lt -4
-                systems/afcs/altitude-hold-alt-diff-feet ge -2000
-            </test>
-
-            <test value="systems/afcs/altitude-hold-lag-constant">
-                systems/afcs/altitude-hold-divergence gt 4
-                systems/afcs/altitude-hold-alt-diff-feet le 2000
-            </test>
-
-
-        </switch>
-
-        <summer name="systems/afcs/altitude-hold-alt-diff-feet1">
-            <input>systems/afcs/altitude-hold-alt-diff-feet</input>
-            <input>systems/afcs/altitude-hold-alt-diff-delta</input>
-            <output>systems/afcs/altitude-hold-alt-diff-feet</output>
-        </summer>
-
-        <pure_gain name="systems/afcs/altitude-hold-vsi-dmd-fps">
-            <input> systems/afcs/altitude-hold-alt-diff-feet </input>
-            <gain>0.0166666666666667</gain>
-            <!-- from fpm to fps -->
-        </pure_gain>
-
-        <summer name="systems/afcs/altitude-hold-vsi">
-            <input> systems/afcs/altitude-hold-vsi-dmd-fps </input>
-            <input> -velocities/h-dot-fps  </input>
-        </summer>
-
-        <switch name="systems/afcs/altitude-hold-dmd-vsi">
-            <default value="0.0"/>
-            <test value="systems/afcs/altitude-hold-vsi">
-                systems/afcs/altitude-hold-active == 1
-            </test>
-        </switch>
-
-        <pid name="systems/afcs/altitude-hold-divergence-pid">
-            <input>systems/afcs/altitude-hold-dmd-vsi</input>
-            <kp> systems/afcs/altitude-hold-pid-kp </kp>
-            <ki> systems/afcs/altitude-hold-pid-ki </ki>
-            <kd> systems/afcs/altitude-hold-pid-kd </kd>
-            <trigger> systems/afcs/altitude-hold-trigger </trigger>
-        </pid>
-
-<!--
-        <pure_gain name="systems/afcs/altitude-hold-divergence-pid-contents">
-            <input> systems/afcs/altitude-hold-divergence-pid </input>
-            <gain> 1.0 </gain>
-            <output>systems/afcs/altitude-hold-divergence-pid-contents</output>
-        </pure_gain>
--->
-        <pure_gain name="systems/afcs/elevator-cmd-out">
-            <input> systems/afcs/altitude-hold-divergence-pid </input>
-            <gain> -systems/afcs/altitude-hold-elevator-gain </gain>
-            <clipto>
-                <min> -0.6</min>
-                <max> 0.6</max>
-            </clipto>
-            <output>systems/afcs/elevator-cmd-delta</output>
-        </pure_gain>
-
-    </channel>
-
+ 
     <channel name="auxiliary">
         <switch name="Aircraft on ground">
             <description>Aircraft on ground</description>
