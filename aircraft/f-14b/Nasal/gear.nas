@@ -111,7 +111,9 @@ var update_launchbar = func() {
 	launchbarpos = getprop("gear/launchbar/position-norm");
 	if ( getprop("gear/launchbar/position-norm") == 1) {
 		if ( ! getprop ("/gear/gear[0]/wow") ) {
-			removelistener( listen_launchbar );
+            if (listen_launchbar != nil)
+              removelistener( listen_launchbar );
+            listen_launchbar = nil;
 			setprop("controls/gear/launchbar", "true");
 			settimer(reset_launchbar_listener, 1);
 		} else {
