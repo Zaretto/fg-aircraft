@@ -2337,11 +2337,8 @@ var AIM = {
 
         if (me.status == MISSILE_FLYING) {
             # notify in flight using Emesary.
-            thread.lock(mutexFlight);
-			append(AIM.flightData, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id]);
-			thread.unlock(mutexFlight);
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
@@ -3687,38 +3684,19 @@ var AIM = {
 		return FALSE;
 	},
 	
-	flightData: [],
 	
-	notifyInFlight: func () {
-		thread.lock(mutexFlight);
-		var flight = pop(AIM.flightData);
-		thread.unlock(mutexFlight);
-		if (flight == nil) return;
-				
-		var msg = notifications.GeoEventNotification.new("mfly", flight[5], 2, 20+flight[4]);
-        msg.Position.set_latlon(flight[0], flight[1], flight[2]);
-        msg.Flags = flight[3];
+	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique) {				
+		var msg = notifications.GeoEventNotification.new("mfly", typ, 2, 20+ID);
+        msg.Position.set_latlon(lat,lon,alt);
+        msg.Flags = rdr;
         msg.IsDistinct = 1;
-        msg.UniqueIndex = flight[6];
+        msg.UniqueIndex = unique;
         f14.geoBridgedTransmitter.NotifyAll(msg);
 #print("fox2.nas: transmit in flight");
 #f14.debugRecipient.Receive(msg);
 	},
-	
-	hitQueue: [],
-	
-	notifyHit: func () {
-		thread.lock(mutexHit);
-		var hit = pop(AIM.hitQueue);
-		thread.unlock(mutexHit);
-		if (hit == nil) return;
-		var RelativeAltitude = hit[0];
-		var Distance = hit[1];
-		var callsign = hit[2];
-		var Bearing = hit[3];
-		var reason = hit[4];
-		var ID = hit[5];
-				
+		
+	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, ID) {
 		var msg = notifications.ArmamentNotification.new("mhit", 4, 20+ID);
         msg.RelativeAltitude = RelativeAltitude;
         msg.Bearing = Bearing;
@@ -3778,11 +3756,8 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 			if (min_distance < me.reportDist) {
 #				me.sendMessage(phrase);
                     if(getprop("payload/armament/msg") and wh_mass > 0){
-                    	thread.lock(mutexHit);
-						append(AIM.hitQueue, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.ID]);
-						thread.unlock(mutexHit);
 						thread.lock(mutexTimer);
-						append(AIM.timerQueue, [AIM, AIM.notifyHit, [], 0]);
+						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.ID], 0]);
 						thread.unlock(mutexTimer);
                     }
 			} else {
@@ -3879,16 +3854,13 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 			if (min_distance < me.reportDist and (me.Tgt == nil or me.testMe.getUnique() != me.Tgt.getUnique())) {
 				var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, me.testMe.get_Callsign());
 				me.printStats(phrase);
-				me.sendMessage(phrase);
+				#me.sendMessage(phrase);
 
  				if(getprop("payload/armament/msg")){
  					var cs = me.testMe.get_Callsign();
  					var cc = me.testMe.get_Coord();
- 					thread.lock(mutexHit);
-					append(AIM.hitQueue, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.ID]);
-					thread.unlock(mutexHit);
  					thread.lock(mutexTimer);
-					append(AIM.timerQueue, [AIM, AIM.notifyHit, [], 0]);
+					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.ID], 0]);
 					thread.unlock(mutexTimer);
 				}
 
@@ -3903,12 +3875,9 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 			cs = size(cs) < 8 ? cs : left(cs,7);
 			var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, cs);# if we mention ourself then we need to explicit add ourself as author.
 			me.printStats(phrase);
-			me.sendMessage(phrase);
-			thread.lock(mutexHit);
-			append(AIM.hitQueue, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.ID]);
-			thread.unlock(mutexHit);
+			#me.sendMessage(phrase);
 			thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyHit, [], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.ID], 0]);
 			thread.unlock(mutexTimer);
 			
 			me.sendout = 1;
@@ -5069,8 +5038,6 @@ var deviation_normdeg = func(our_heading, target_bearing) {
 var spams = 0;
 var spamList = [];
 var mutexMsg = thread.newlock();
-var mutexHit = thread.newlock();
-var mutexFlight = thread.newlock();
 var mutexTimer = thread.newlock();
 
 var defeatSpamFilter = func (str) {
