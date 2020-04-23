@@ -1154,6 +1154,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <channel name="Yaw">
 
             <!-- 
+                 * NOTES:
+                 *
                  * In the DMS model the static yawing moment coefficient was treated as
                  * a function of three variables: alpha, beta, and stab deflection. 
                  * The unusual influence of stabilator deflection on directional stability arises from
@@ -1162,6 +1164,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                  * Examination of the data indicated that this effect could be modeled as a yawing 
                  * moment increment which was a function of alpha and stab deflection with a lookup
                  * table using sin(8.2 beta). (See DCNDS)
+                 *
+                 * Pedal travel +/- 3 inches. deflection +/- 30deg (max)
                  *-->
             <fcs_function name="aero/cn-sin-82beta">
                 <function>
@@ -1193,8 +1197,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <fcs_function name="sas/yaw-sas-2-stkr">
             <function>
                 <product>
-                    <property>fcs/roll-trim-cmd-norm</property>
-                    <value>0.2</value>
+                    <property>-sas/roll-sas-1-input</property>
+                    <value>3.19</value>
                 </product>
             </function>
         </fcs_function>
@@ -1202,7 +1206,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <fcs_function name="sas/yaw-sas-2-p">
             <function>
                 <product>
-                    <property>velocities/r-aero-rad_sec</property>
+                    <property>velocities/p-aero-rad_sec</property>
                     <!-- <value>57.3</value> -->
                     <ifthen>
                         <and>
@@ -1215,10 +1219,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                                 <value>0.55</value>
                             </lt>
                         </and>
-                        <product>
-                            <property>fcs/roll-trim-cmd-norm</property>
-                            <value>0.2</value>
-                        </product>
+                        <value>0.2</value>
                         <value>0</value>
                     </ifthen>
                 </product>
@@ -1344,16 +1345,62 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </test>
                 <output>fcs/roll-sas-active</output>
             </switch>
+<!---        ROLL SAS 1      NASA TM-81833, Figure 21    -->
+            <fcs_function name="sas/roll-sas-1-input-0">
+                <description>Sum of all stick inputs (stick, trim)</description>
+                <function>
+                    <sum>
+                        <property>fcs/aileron-cmd-norm</property>
+                        <property>fcs/roll-trim-cmd-norm</property>
+                    </sum>
+                </function>
+            </fcs_function>
+            <fcs_function name="sas/roll-sas-1-input">
+                <description>Stick position force simulation</description>
+                <function>
+                    <ifthen>
+                        <lt>
+                            <property>sas/roll-sas-1-input-0</property>
+                            <value>0</value>
+                        </lt>
+                        <product>
+                            <value>-1</value>
+                            <sum>
+                                <product>
+                                    <property>-sas/roll-sas-1-input-0</property>
+                                    <value>0.4696</value>
+                                </product>
+                                <product>
+                                    <property>sas/roll-sas-1-input-0</property>
+                                    <property>sas/roll-sas-1-input-0</property>
+                                    <value>0.5457</value>
+                                </product>
+                            </sum>
+                        </product>
+                        <sum>
+                            <product>
+                                <property>sas/roll-sas-1-input-0</property>
+                                <value>0.4696</value>
+                            </product>
+                            <product>
+                                <property>sas/roll-sas-1-input-0</property>
+                                <property>sas/roll-sas-1-input-0</property>
+                                <value>0.5457</value>
+                            </product>
+                        </sum>
+                    </ifthen>
+                </function>
+                <clipto>
+                    <min>-1</min>
+                    <max>1</max>
+                </clipto>
+            </fcs_function>
 
-<!---        ROLL SAS 1          -->
             <fcs_function name="sas/roll-sas-1-stkr-limit">
                 <function>
                     <product>
                         <value>9</value>
-                        <sum>
-                            <property>fcs/aileron-cmd-norm</property>
-                            <property>fcs/roll-trim-cmd-norm</property>
-                        </sum>
+                        <property>sas/roll-sas-1-input</property>
                     </product>
                 </function>
                 <clipto>
@@ -1424,7 +1471,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
 
 
             <lead_lag_filter name="sas/roll-sas-2-v3">
-                <input>-sas/roll-sas-1-stkr-limit</input>
+                <input>sas/roll-sas-1-stkr-limit</input>
                 <c1>0</c1>
                 <c2>-1.685</c2>
                 <c3>0.5</c3>
@@ -1476,7 +1523,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <function>
                     <sum>
                         <property>-sas/roll-sas-2-v2</property>
-                        <property>sas/roll-sas-2-v4</property>
+                        <property>-sas/roll-sas-2-v4</property>
                     </sum>
                 </function>
             </fcs_function>
@@ -1609,7 +1656,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <function>
                     <sum>
                         <property>sas/roll-sas-3</property>
-                        <!-- <property>sas/roll-sas-2</property> -->
+                        <property>sas/roll-sas-2</property>
                     </sum>
                 </function>
                 <clipto>
