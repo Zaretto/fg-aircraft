@@ -30,7 +30,7 @@ var target_hdg   = props.globals.getNode("autopilot/settings/heading-bug-deg", 1
 # Locks
 var ap_alt_lock  = props.globals.getNode("autopilot/locks/altitude");
 var ap_hdg_lock  = props.globals.getNode("autopilot/locks/heading");
-var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/F-14/Systems/autopilot-dlg.xml");
+var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/f-14b/gui/dialogs/autopilot-dlg.xml");
 
 #if (f14.usingJSBSim)
 #{
