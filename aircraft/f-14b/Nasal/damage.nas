@@ -594,3 +594,12 @@ var re_init = func {
 }
 
 setlistener("/sim/signals/reinit", re_init, 0, 0);
+
+
+
+#testing:
+
+screen.property_display.add("payload/armament/MAW-bearing");
+screen.property_display.add("payload/armament/MAW-active");
+screen.property_display.add("payload/armament/MLW-bearing");
+screen.property_display.add("payload/armament/MLW-count");
