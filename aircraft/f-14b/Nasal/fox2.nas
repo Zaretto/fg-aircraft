@@ -3765,18 +3765,18 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 						thread.unlock(mutexTimer);
                     }
 			} else {
-				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
+#				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
 			}
 		} elsif(!me.inert and me.Tgt == nil) {
 			var phrase = sprintf(me.type~" "~event);
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-			me.sendMessage(phrase);
+#			me.sendMessage(phrase);
 		}
 		if (me.multiHit and !me.inert and wh_mass > 0) {
 			if (!me.multiExplosion(me.coord, event) and me.Tgt != nil and me.Tgt.isVirtual()) {
 				var phrase = sprintf(me.type~" "~event);
 				me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-				me.sendMessage(phrase);
+#				me.sendMessage(phrase);
 			}
 		}
 		

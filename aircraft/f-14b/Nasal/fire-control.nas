@@ -700,7 +700,7 @@ var FireControl = {
 			if (me.lockedfire and me.aim.guidance != "unguided") {
 				add = " at: "~me.aim.callsign;
 			}
-			me.aim.sendMessage(me.aim.brevity~add);
+			#me.aim.sendMessage(me.aim.brevity~add);
 		}
 		return me.aim;
 	},
