@@ -2012,25 +2012,26 @@
         </gun>
 
         <incoming>
+            <name>launch</name>
+            <mode>in-transit</mode><!-- manual just says low hz to high hz. Set to 300 to 800 hz triangle waveform -->
+            <path>Aircraft/f-14b/Sounds/f14-missile-launch-warn.wav</path>
+            <type>avionics</type>
+            <property>payload/armament/MLW-count</property>
+            <condition>
+                <property>sim/current-view/internal</property>
+            </condition>
+            <volume>
+                <factor>1</factor>
+            </volume>
+        </incoming>
+        
+        <incoming>
             <name>incoming</name>
             <mode>looped</mode><!-- manual just says low hz to high hz. Set to 300 to 800 hz triangle waveform -->
             <path>Aircraft/f-14b/Sounds/f14-missile-launch-warn.wav</path>
             <type>avionics</type>
             <condition>
-                <or><!-- TODO: Make these come from the direction the missile is at, in Pilots/RIO's headphones. -->
-                    <property>sound/incoming1</property>
-                    <property>sound/incoming2</property>
-                    <property>sound/incoming3</property>
-                    <property>sound/incoming4</property>
-                    <property>sound/incoming5</property>
-                    <property>sound/incoming6</property>
-                    <property>sound/incoming7</property>
-                    <property>sound/incoming8</property>
-                    <property>sound/incoming9</property>
-                    <property>sound/incoming10</property>
-                    <property>sound/incoming11</property>
-                    <property>sound/incoming12</property>
-                </or>
+                <property>payload/armament/MAW-active</property>
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
