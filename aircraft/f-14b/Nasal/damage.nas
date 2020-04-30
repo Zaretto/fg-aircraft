@@ -238,8 +238,9 @@ var DamageRecipient =
                 setprop("payload/armament/MAW-bearing", bearing);
                 setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
                 printf("Missile Approach Warning from %03d degrees.", bearing);
-                
-            } elsif (notification.NotificationType == "ArmamentNotification") {
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            if (notification.NotificationType == "ArmamentNotification") {
                 print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
                           " Kind=",notification.Kind,
                           " SecondaryKind=",notification.SecondaryKind,
@@ -358,6 +359,7 @@ var DamageRecipient =
                         } 
                     }
                 }
+                return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
         }
