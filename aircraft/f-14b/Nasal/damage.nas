@@ -198,7 +198,9 @@ var DamageRecipient =
                       " IsDistinct=",notification.IsDistinct,
                       " Callsign=",notification.Callsign,
                       " RemoteCallsign=",notification.RemoteCallsign,
-                      " Flags=",notification.Flags);
+                      " Flags=",notification.Flags,
+                      " Radar=",bits.test(notification.Flags, 0),
+                      " Thrust=",bits.test(notification.Flags, 1));
                 #
                 # todo:
                 #   animate missiles
@@ -212,10 +214,10 @@ var DamageRecipient =
                 
                 # Missile launch warning:
                 if (thrustOn) {
-                  var launch = launched[notification.Callsign];
-                  if (launch == nil or elapsed-launch[1]>300) {
-                    launch = [notification.SecondaryKind, elapsed];
-                    launched[notification.Callsign] = launch;
+                  var launch = launched[notification.Callsign~notification.UniqueIndex];
+                  if (launch == nil) {
+                    launch = elapsed;
+                    launched[notification.Callsign~notification.UniqueIndex] = launch;
                     if (notification.Position.direct_distance_to(ownPos)*M2NM < 7.5) {
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
@@ -226,7 +228,7 @@ var DamageRecipient =
                   }
                 }
                 
-                # Missile approach warning:                
+                # Missile approach warning:       
                 var callsign = getprop("sim/multiplay/callsign");
                 callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                 if (notification.RemoteCallsign != callsign) return;
@@ -238,14 +240,16 @@ var DamageRecipient =
                 printf("Missile Approach Warning from %03d degrees.", bearing);
                 
             } elsif (notification.NotificationType == "ArmamentNotification") {
-                if (notification.FromIncomingBridge) {
-                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
+                print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
                           " Kind=",notification.Kind,
                           " SecondaryKind=",notification.SecondaryKind,
                           " RelativeAltitude=",notification.RelativeAltitude,
                           " Distance=",notification.Distance,
                           " Bearing=",notification.Bearing,
+                          " Inc-bridge=",notification.FromIncomingBridge,
                           " RemoteCallsign=",notification.RemoteCallsign);
+                if (notification.FromIncomingBridge) {
+                    
 #                    debug.dump(notification);
                     #
                     # todo:
