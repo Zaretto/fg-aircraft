@@ -270,6 +270,7 @@ var AIM = {
 		# name
 		m.typeLong              = getprop(m.nodeString~"long-name");                  # Longer name of the weapon
 		m.typeShort             = getprop(m.nodeString~"short-name");                 # Shorter name of the weapon
+		m.typeID                = getprop(m.nodeString~"type-id");                    # ID that match damage type
 		# detection and firing
 		m.max_fire_range_nm     = getprop(m.nodeString~"max-fire-range-nm");          # max range that the FCS allows firing
 		m.min_fire_range_nm     = getprop(m.nodeString~"min-fire-range-nm");          # it wont get solid lock before the target has this range
@@ -2338,7 +2339,7 @@ var AIM = {
         if (me.status == MISSILE_FLYING) {
             # notify in flight using Emesary.
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
@@ -3685,10 +3686,13 @@ var AIM = {
 	},
 	
 	
-	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique) {				
-		var msg = notifications.GeoEventNotification.new("mfly", typ, 2, 20+ID);
+	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust) {
+		var msg = notifications.GeoEventNotification.new("mfly", typ, 2, 21+ID);
         msg.Position.set_latlon(lat,lon,alt);
-        msg.Flags = rdr;
+        msg.Flags = rdr;#bit #0
+        if (thrust) {
+        	msg.Flags = bits.set(msg.Flags, 1);#bit #1
+        }
         msg.IsDistinct = 1;
         msg.UniqueIndex = unique;
         f14.geoBridgedTransmitter.NotifyAll(msg);
@@ -3697,7 +3701,7 @@ var AIM = {
 	},
 		
 	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, ID) {
-		var msg = notifications.ArmamentNotification.new("mhit", 4, 20+ID);
+		var msg = notifications.ArmamentNotification.new("mhit", 4, 21+ID);
         msg.RelativeAltitude = RelativeAltitude;
         msg.Bearing = Bearing;
         msg.Distance = Distance;
@@ -3757,7 +3761,7 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 #				me.sendMessage(phrase);
                     if(getprop("payload/armament/msg") and wh_mass > 0){
 						thread.lock(mutexTimer);
-						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.ID], 0]);
+						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.typeID], 0]);
 						thread.unlock(mutexTimer);
                     }
 			} else {
@@ -3860,7 +3864,7 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
  					var cs = me.testMe.get_Callsign();
  					var cc = me.testMe.get_Coord();
  					thread.lock(mutexTimer);
-					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.ID], 0]);
+					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.typeID], 0]);
 					thread.unlock(mutexTimer);
 				}
 
@@ -3877,7 +3881,7 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 			me.printStats(phrase);
 			#me.sendMessage(phrase);
 			thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.ID], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.typeID], 0]);
 			thread.unlock(mutexTimer);
 			
 			me.sendout = 1;
