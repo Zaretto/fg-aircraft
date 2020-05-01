@@ -25,26 +25,26 @@ var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 var TRUE  = 1;
 var FALSE = 0;
 
-var cannon_types = {
+var shells = {
+    # [id,damage,(name)]
     #
     # 0.20 means a direct hit will disable 20% of the failure modes on average.
     # or, 0.20 also means a direct hit can do 20 hitpoints damage.
     #
-    " M70 rocket hit":        0.250, #135mm
-    " S-5 rocket hit":        0.200, # 55mm
-    " M55 cannon shell hit":  0.100, # 30mm
-    " KCA cannon shell hit":  0.100, # 30mm
-    " Gun Splash On ":        0.100, # 30mm
-    " GSh-30 hit":            0.100, # 30mm
-    " GAU-8/A hit":           0.100, # 30mm
-    " Mk3Z hit":              0.100, # 30mm Jaguar
-    " BK27 cannon hit":       0.070, # 27mm
-    " GSh-23 hit":            0.065, # 23mm
-    " M61A1 shell hit":       0.050, # 20mm
-    " 50 BMG hit":            0.015, # 12.7mm (non-explosive)    
-    " 7.62 hit":              0.005, # 7.62mm (non-explosive)
-    " Hydra-70 hit":          0.250, # F-16
-    " SNEB hit":              0.250, # Jaguar   
+    "M70 rocket":        [0,0.250], #135mm
+    "S-5 rocket":        [1,0.200], # 55mm
+    "M55 cannon shell":  [2,0.100], # 30mm
+    "KCA cannon shell":  [3,0.100], # 30mm
+    "GSh-30":            [4,0.100], # 30mm
+    "GAU-8/A":           [5,0.100], # 30mm
+    "Mk3Z":              [6,0.100], # 30mm Jaguar
+    "BK27 cannon":       [7,0.070], # 27mm
+    "GSh-23":            [8,0.065], # 23mm
+    "M61A1 shell":       [9,0.050], # 20mm
+    "50 BMG":            [10,0.015], # 12.7mm (non-explosive)    
+    "7.62":              [11,0.005], # 7.62mm (non-explosive)
+    "Hydra-70":          [12,0.250], # F-16
+    "SNEB":              [13,0.250], # Jaguar   
 };    
 
 # lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
@@ -148,7 +148,7 @@ var warheads = {
 };
 
 var id2warhead = [];
-var launched = {};# callsign: [secondaryID,elapsed-sec]
+var launched = {};# callsign: elapsed-sec
 
 var k = keys(warheads);
 
@@ -162,7 +162,26 @@ for(var myid = 0;myid<size(k);myid+=1) {
     }
   }
   if (size(id2warhead) != myid+1) {
-    printf("damage corrupt at %d", myid);
+    printf("warheads corrupt at %d", myid);
+    return;
+  }
+}
+
+var id2shell = [];
+
+var k = keys(shells);
+
+for(var myid = 0;myid<size(k);myid+=1) {
+  foreach(key ; k) {
+    var wh = shells[key];
+    if (wh[0] == myid) {
+      append(wh, key);
+      append(id2shell, wh);
+      break;
+    }
+  }
+  if (size(id2shell) != myid+1) {
+    printf("shells corrupt at %d", myid);
     return;
   }
 }
@@ -214,12 +233,13 @@ var DamageRecipient =
                 
                 # Missile launch warning:
                 if (thrustOn) {
-                  var launch = launched[notification.Callsign~notification.UniqueIndex];
+                  var launch = launched[notification.Callsign~notification.Name];
                   if (launch == nil) {
                     launch = elapsed;
-                    launched[notification.Callsign~notification.UniqueIndex] = launch;
+                    launched[notification.Callsign~notification.Name] = launch;
                     if (notification.Position.direct_distance_to(ownPos)*M2NM < 7.5) {
                       setprop("payload/armament/MLW-bearing", bearing);
+                      setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
                       printf("Missile Launch Warning from %03d degrees.", bearing);
                       var isSAM = 0;#TODO
@@ -241,7 +261,8 @@ var DamageRecipient =
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             if (notification.NotificationType == "ArmamentNotification") {
-                print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
+                if (notification.FromIncomingBridge) {
+                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
                           " Kind=",notification.Kind,
                           " SecondaryKind=",notification.SecondaryKind,
                           " RelativeAltitude=",notification.RelativeAltitude,
@@ -249,30 +270,25 @@ var DamageRecipient =
                           " Bearing=",notification.Bearing,
                           " Inc-bridge=",notification.FromIncomingBridge,
                           " RemoteCallsign=",notification.RemoteCallsign);
-                if (notification.FromIncomingBridge) {
-                    
 #                    debug.dump(notification);
                     #
-                    # todo:
-                    #   hit counts for cannon
-                    #   type of cannon shell
                     #
                     var callsign = getprop("sim/multiplay/callsign");
                     callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                     if (notification.RemoteCallsign == callsign and getprop("payload/armament/msg") == 1) {
                         #damage enabled and were getting hit
-                        if (notification.SecondaryKind == 20) {
+                        if (notification.SecondaryKind > 150 and hitable_by_cannon) {
                             # cannon hit
-                            var probability = cannon_types[" M61A1 shell hit"];#test code
-                            var hit_count = 2;#test code
+                            var probability = id2shell[notification.SecondaryKind - 151][1];
+                            var typ = id2shell[notification.SecondaryKind - 151][2];
+                            var hit_count = notification.Distance;
                             if (hit_count != nil) {
                                 var damaged_sys = 0;
                                 for (var i = 1; i <= hit_count; i = i + 1) {
                                   var failed = fail_systems(probability);
                                   damaged_sys = damaged_sys + failed;
                                 }
-
-                                printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
+                                printf("Took %.1f%% x %2d damage from %s! %s systems was hit.", probability*100, hit_count, typ, damaged_sys);
                                 nearby_explosion();
                             }
                         } elsif (notification.SecondaryKind > 20) {
@@ -603,9 +619,10 @@ setlistener("/sim/signals/reinit", re_init, 0, 0);
 
 
 
-#testing:
+#TODO testing:
 
 screen.property_display.add("payload/armament/MAW-bearing");
 screen.property_display.add("payload/armament/MAW-active");
 screen.property_display.add("payload/armament/MLW-bearing");
 screen.property_display.add("payload/armament/MLW-count");
+screen.property_display.add("payload/armament/MLW-launcher");
