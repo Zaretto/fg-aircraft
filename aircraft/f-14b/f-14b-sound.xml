@@ -2011,19 +2011,24 @@
             </volume>
         </gun>
 
-        <!--<incoming>
+        <incoming>
             <name>launch</name>
-            <mode>in-transit</mode>
+            <mode>single</mode>
             <path>Aircraft/f-14b/Sounds/f14-missile-launch-warn.wav</path>
             <type>avionics</type>
-            <property>payload/armament/MLW-count</property>
             <condition>
+                <not>
+                    <equals>
+                        <property>sound/rwr-launch</property>
+                        <value type="string"></value>
+                    </equals>
+                </not>
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
                 <factor>1</factor>
             </volume>
-        </incoming>-->
+        </incoming>
         
         <incoming>
             <name>incoming</name>

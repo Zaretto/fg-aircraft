@@ -242,13 +242,11 @@ var DamageRecipient =
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
                       printf("Missile Launch Warning from %03d degrees.", bearing);
-                      var isSAM = 0;#TODO
-                      setLaunch(notification.Callsign, isSAM);
                     }
                   }
                 }
                 
-                # Missile approach warning:       
+                # Missile approach warning:
                 var callsign = getprop("sim/multiplay/callsign");
                 callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                 if (notification.RemoteCallsign != callsign) return;
@@ -519,6 +517,10 @@ var fail_fleet_systems = func (probability, factor) {
   }
   return -1;
 };
+
+setlistener("payload/armament/MLW-count", func {
+  setLaunch(getprop("payload/armament/MLW-launcher"), 0);#TODO: figure out if that callsign is a SAM/ship.
+});
 
 var setLaunch = func (c,s) {
   setprop("sound/rwr-launch-sam", s);
