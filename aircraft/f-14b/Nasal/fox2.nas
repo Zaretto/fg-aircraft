@@ -2339,7 +2339,7 @@ var AIM = {
         if (me.status == MISSILE_FLYING) {
             # notify in flight using Emesary.
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0,me.free?"":me.callsign], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
