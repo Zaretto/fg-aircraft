@@ -770,17 +770,78 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </channel>
 
         <channel name="Pitch">
+<!-- 
+Figure 2-54.  Longitudinal System Authority
++===========================================================================================+===========================+===============================+
+|                            COCKPIT CONTROL                                                |     STABILIZER SURFACE    |        PARALLEL TRIM          |
++===========================================================================================+===========================+===============================+
+|ACTUATION                     |MODE                      |MOTION                           |AUTHORITY         |RATE    |AUTHORITY       |AVERAGE RATE  |
++==============================+==========================+=================================+==================+========+================+==============+
+|Control Stick                 |Manual                    |4 inches forward 5.5 inches aft  |10° TED, 33° TEU  |36°/sec |9° TED, 18° TEU |1/second      |
++==============================+==========================+=================================+==================+========+================+==============+
+| DFCS                         |Series (SAS)              |None                             |±3°               |20°/sec |     =          |      =       |
+|                              |Parallel                  |4 inches, forward 5.5 inches aft |10° TED 33° TEU   |36°/sec |9° TED 18° TEU  |0.1°/second   |
+|                              |Automatic Carrier Landing |                                 |                  |        |                |              |
+|                              |(ACL only)                |                                 |                  |        |                |              |
++==============================+==========================+=================================+==================+========+================+==============+
+| Maneuver Flap                |Series                    |±45° DLC Thumbwheel Mode         |8.4° TED Maximum  |36°/sec |                |              |
+| Integrated Trim System (ITS) |                          |                                 |                  |        |                |              |
+| and DLC Thumbwheel           |                          |                                 |                  |        |                |              |
++==============================+==========================+=================================+==================+========+================+==============+
+|                              |                          |±45° Maneuver Flap Mode          |±3°               |3°/sec  |                |              |
++==============================+==========================+=================================+==================+========+================+==============+
+ -->
+           
+            <fcs_function name="fcs/its-pitch-slats-norm">
+                <description>F-14-AAP-1 Figure 2-56 Integrated Trim Schedules - MANEUVER FLAPS - TEU</description>
+                <function>
+                    <table>
+                        <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                            0  0 
+                            15 -0.07878787878787878787878787878788
+                            35 -0.07878787878787878787878787878788
+                        </tableData>
+                    </table>
+                </function>
+                <clipto>
+                    <min>-0.1</min>
+                    <max>0</max>
+                </clipto>
+            </fcs_function>
+
+            <fcs_function name="fcs/its-pitch-flaps-norm">
+                <description>F-14-AAP-1 Figure 2-56 Integrated Trim Schedules - LANDING FLAPS - TEU</description>
+                <function>
+                    <table>
+                        <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                              0  0
+                            7.4  0
+                            27   -0.0909
+                        </tableData>
+                    </table>
+                </function>
+                <clipto>
+                    <min>-0.1</min>
+                    <max>0</max>
+                </clipto>
+            </fcs_function>
 
             <summer name="Pitch Trim Sum">
                 <input>fcs/elevator-cmd-norm</input>
                 <input>fcs/pitch-trim-cmd-norm</input>
                 <input>fcs/pitch-damper-rate</input>
                 <input>-systems/afcs/elevator-cmd-delta</input>
+                <input>fcs/its-pitch-flaps-norm</input>
+                <input>fcs/its-pitch-slats-norm</input>
+                <input>fcs/pitch-damper-rate</input>
                 <clipto>
                     <min> -1 </min>
                     <max>  1 </max>
                 </clipto>
             </summer>
+
 
             <switch name="position/aircraft-on-ground">
                 <description>Aircraft on ground</description>
@@ -1262,7 +1323,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                         </tableData>
                     </table>
                 </product>
-        </function>
+            </function>
         </fcs_function>
 
         <lead_lag_filter name="sas/yaw-sas-3-r">
@@ -1356,7 +1417,13 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </function>
             </fcs_function>
             <fcs_function name="sas/roll-sas-1-input">
-                <description>Stick position force simulation</description>
+                <description>
+                    Stick position force simulation - 
+                    ref: NAVAIR 01-F14AAP-1, 2.22.3.1 Lateral  Feel.
+                    An  artificial  feel  system provides the pilot with force cues and feedback. 
+                    The lateral feel mechanism is a spring roller cam assembly with a neutral
+                    stick position detent and a constant stick deflection force gradient.
+                </description>
                 <function>
                     <ifthen>
                         <lt>
