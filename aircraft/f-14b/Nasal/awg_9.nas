@@ -715,7 +715,17 @@ if(awg9_trace)
         active_u = nil; armament.contact = active_u;
     }
     if (active_u != nil and active_u.get_display() and getprop("controls/armament/master-arm") and active_u_callsign != nil and active_u_callsign != "") {
+        # transmit what we are locked onto
         setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+        
+        # the below code is needed so missile can lock/not-lock onto active_u depending on class.
+        if (active_u.get_type() == armament.AIR and active_u.get_Speed() < 60) {
+            # active_u have landed
+            active_u.setClass(armament.SURFACE);
+        } elsif (active_u.get_type() == armament.SURFACE and active_u.get_Speed() > 60) {
+            # active_u have taken-off
+            active_u.setClass(armament.AIR);
+        }
     } else {
         setprop("sim/multiplay/generic/string[6]", "");
     }
