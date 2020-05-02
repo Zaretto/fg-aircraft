@@ -672,7 +672,7 @@ var FireControl = {
 			} elsif (me.aim != nil and me.aim.parents[0] == stations.SubModelWeapon and (me.aim.operableFunction == nil or me.aim.operableFunction()) and me.aim.getAmmo()>0) {
 				if (getprop("sim/time/elapsed-sec")>me.gunTriggerTime+10 or me.aim.alternate) {
 					# only say guns guns every 10 seconds.
-					armament.AIM.sendMessage(me.aim.brevity);
+					#armament.AIM.sendMessage(me.aim.brevity);
 					me.gunTriggerTime = getprop("sim/time/elapsed-sec");
 				}
 				me.triggerTime = 0;
