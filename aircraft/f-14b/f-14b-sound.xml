@@ -2013,11 +2013,16 @@
 
         <incoming>
             <name>launch</name>
-            <mode>in-transit</mode><!-- manual just says low hz to high hz. Set to 300 to 800 hz triangle waveform -->
+            <mode>single</mode>
             <path>Aircraft/f-14b/Sounds/f14-missile-launch-warn.wav</path>
             <type>avionics</type>
-            <property>payload/armament/MLW-count</property>
             <condition>
+                <not>
+                    <equals>
+                        <property>sound/rwr-launch</property>
+                        <value type="string"></value>
+                    </equals>
+                </not>
                 <property>sim/current-view/internal</property>
             </condition>
             <volume>
@@ -2038,6 +2043,23 @@
                 <factor>1</factor>
             </volume>
         </incoming>
+        
+        <rwr>
+            <name>rwr-lock</name>
+            <path>Aircraft/f-14b/Sounds/rwr-lock-03.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.60</factor>
+            </volume>
+        </rwr>
 
         <nearby-explode>
             <name>nearby-explode</name>

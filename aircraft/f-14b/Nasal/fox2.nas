@@ -2339,7 +2339,7 @@ var AIM = {
         if (me.status == MISSILE_FLYING) {
             # notify in flight using Emesary.
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
@@ -3686,14 +3686,15 @@ var AIM = {
 	},
 	
 	
-	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust) {
-		var msg = notifications.GeoEventNotification.new("mfly", typ, 2, 21+ID);
+	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust,callsign) {
+		var msg = notifications.GeoEventNotification.new("mfly", typ~unique, 2, 21+ID);
         msg.Position.set_latlon(lat,lon,alt);
         msg.Flags = rdr;#bit #0
         if (thrust) {
         	msg.Flags = bits.set(msg.Flags, 1);#bit #1
         }
         msg.IsDistinct = 1;
+        msg.RemoteCallsign = callsign;
         msg.UniqueIndex = unique;
         f14.geoBridgedTransmitter.NotifyAll(msg);
 #print("fox2.nas: transmit in flight");
@@ -3707,7 +3708,7 @@ var AIM = {
         msg.Distance = Distance;
         msg.RemoteCallsign = callsign; # RJHTODO: maybe handle flares / chaff 
         f14.hitBridgedTransmitter.NotifyAll(msg);
-print("fox2.nas: transmit to ",callsign,"  reason:",reason);
+print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 #f14.debugRecipient.Receive(msg);
 	},
 
@@ -3765,18 +3766,18 @@ print("fox2.nas: transmit to ",callsign,"  reason:",reason);
 						thread.unlock(mutexTimer);
                     }
 			} else {
-				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
+#				me.sendMessage(me.type~" missed "~me.callsign~": "~reason);
 			}
 		} elsif(!me.inert and me.Tgt == nil) {
 			var phrase = sprintf(me.type~" "~event);
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-			me.sendMessage(phrase);
+#			me.sendMessage(phrase);
 		}
 		if (me.multiHit and !me.inert and wh_mass > 0) {
 			if (!me.multiExplosion(me.coord, event) and me.Tgt != nil and me.Tgt.isVirtual()) {
 				var phrase = sprintf(me.type~" "~event);
 				me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-				me.sendMessage(phrase);
+#				me.sendMessage(phrase);
 			}
 		}
 		

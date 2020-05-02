@@ -2251,8 +2251,8 @@
 
     <payload>                        
         <armament>
-          <use-fg-default-hud type="bool">true</use-fg-default-hud>
-          <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <use-fg-default-hud type="bool">true</use-fg-default-hud>
+            <models type="string">Aircraft/f-14b/Models/Stores/</models>
             <modelsUseCase type="bool">true</modelsUseCase>
             <modelsUpperCase type="bool">true</modelsUpperCase>
             <pylon-offset type="int">1</pylon-offset>
@@ -2265,6 +2265,12 @@
             <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
+            <MLW-bearing type="double">0</MLW-bearing>
+            <MLW-count type="int">0</MLW-count>
+            <MLW-launcher type="string"></MLW-launcher>
+            <MAW-bearing type="double">0</MAW-bearing>
+            <MAW-active type="bool">false</MAW-active>
+            <spike type="bool">false</spike>
             <aim-9>
                 <type-id type="int">57</type-id>
                 <short-name type="string">A-9L</short-name>
@@ -2298,7 +2304,7 @@
                 <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
                 <rail-point-forward type="bool">true</rail-point-forward>
                 <max-report-distance type="double">65</max-report-distance>
-                <class type="string">A</class>
+                <class type="string">GA</class>
                 <fire-msg type="string">Fox 2</fire-msg>
                 <DLZ type="bool">true</DLZ>
                 <DLZ-optimal-alt-feet type="double">25000</DLZ-optimal-alt-feet>
@@ -2345,7 +2351,7 @@
                 <navigation type="string">PN</navigation>
                 <guide-before-ignition type="bool">true</guide-before-ignition>
                 <rail type="bool">false</rail>
-                <class type="string">A</class>
+                <class type="string">GA</class>
                 <fire-msg>Fox 1</fire-msg>
                 <telemetry type="bool">false</telemetry>
                 <DLZ type="bool">true</DLZ>
@@ -2364,7 +2370,7 @@
                 <long-name type="string">AIM-54A Phoenix</long-name><!-- Or was it B? Should really be upgraded to C -->
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
-                <guidance source="authentic" type="string">radar</guidance>
+                <guidance source="authentic" type="string">semi-radar</guidance>
                 <all-aspect source="authentic" type="bool">true</all-aspect>
                 <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm> 
                 <FCS-field-deg type="int">25</FCS-field-deg>                              
@@ -2387,7 +2393,7 @@
                 <rail type="bool">false</rail>
                 <max-report-distance type="double">100</max-report-distance>
                 <navigation type="string">PN</navigation>
-                <class type="string">A</class>
+                <class type="string">GA</class>
                 <fire-msg>FOX3</fire-msg>
                 <DLZ type="bool">true</DLZ>
                 <DLZ-optimal-alt-feet type="double">35000</DLZ-optimal-alt-feet>

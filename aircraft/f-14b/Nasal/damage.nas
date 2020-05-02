@@ -25,26 +25,26 @@ var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 var TRUE  = 1;
 var FALSE = 0;
 
-var cannon_types = {
+var shells = {
+    # [id,damage,(name)]
     #
     # 0.20 means a direct hit will disable 20% of the failure modes on average.
     # or, 0.20 also means a direct hit can do 20 hitpoints damage.
     #
-    " M70 rocket hit":        0.250, #135mm
-    " S-5 rocket hit":        0.200, # 55mm
-    " M55 cannon shell hit":  0.100, # 30mm
-    " KCA cannon shell hit":  0.100, # 30mm
-    " Gun Splash On ":        0.100, # 30mm
-    " GSh-30 hit":            0.100, # 30mm
-    " GAU-8/A hit":           0.100, # 30mm
-    " Mk3Z hit":              0.100, # 30mm Jaguar
-    " BK27 cannon hit":       0.070, # 27mm
-    " GSh-23 hit":            0.065, # 23mm
-    " M61A1 shell hit":       0.050, # 20mm
-    " 50 BMG hit":            0.015, # 12.7mm (non-explosive)    
-    " 7.62 hit":              0.005, # 7.62mm (non-explosive)
-    " Hydra-70 hit":          0.250, # F-16
-    " SNEB hit":              0.250, # Jaguar   
+    "M70 rocket":        [0,0.250], #135mm
+    "S-5 rocket":        [1,0.200], # 55mm
+    "M55 cannon shell":  [2,0.100], # 30mm
+    "KCA cannon shell":  [3,0.100], # 30mm
+    "GSh-30":            [4,0.100], # 30mm
+    "GAU-8/A":           [5,0.100], # 30mm
+    "Mk3Z":              [6,0.100], # 30mm Jaguar
+    "BK27 cannon":       [7,0.070], # 27mm
+    "GSh-23":            [8,0.065], # 23mm
+    "M61A1 shell":       [9,0.050], # 20mm
+    "50 BMG":            [10,0.015], # 12.7mm (non-explosive)    
+    "7.62":              [11,0.005], # 7.62mm (non-explosive)
+    "Hydra-70":          [12,0.250], # F-16
+    "SNEB":              [13,0.250], # Jaguar   
 };    
 
 # lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
@@ -148,7 +148,8 @@ var warheads = {
 };
 
 var id2warhead = [];
-var launched = {};# callsign: [secondaryID,elapsed-sec]
+var launched = {};# callsign: elapsed-sec
+var approached = {};# callsign: uniqueID
 
 var k = keys(warheads);
 
@@ -162,7 +163,26 @@ for(var myid = 0;myid<size(k);myid+=1) {
     }
   }
   if (size(id2warhead) != myid+1) {
-    printf("damage corrupt at %d", myid);
+    printf("warheads corrupt at %d", myid);
+    return;
+  }
+}
+
+var id2shell = [];
+
+var k = keys(shells);
+
+for(var myid = 0;myid<size(k);myid+=1) {
+  foreach(key ; k) {
+    var wh = shells[key];
+    if (wh[0] == myid) {
+      append(wh, key);
+      append(id2shell, wh);
+      break;
+    }
+  }
+  if (size(id2shell) != myid+1) {
+    printf("shells corrupt at %d", myid);
     return;
   }
 }
@@ -198,7 +218,9 @@ var DamageRecipient =
                       " IsDistinct=",notification.IsDistinct,
                       " Callsign=",notification.Callsign,
                       " RemoteCallsign=",notification.RemoteCallsign,
-                      " Flags=",notification.Flags);
+                      " Flags=",notification.Flags,
+                      " Radar=",bits.test(notification.Flags, 0),
+                      " Thrust=",bits.test(notification.Flags, 1));
                 #
                 # todo:
                 #   animate missiles
@@ -212,32 +234,38 @@ var DamageRecipient =
                 
                 # Missile launch warning:
                 if (thrustOn) {
-                  var launch = launched[notification.Callsign];
-                  if (launch == nil or elapsed-launch[1]>300) {
-                    launch = [notification.SecondaryKind, elapsed];
-                    launched[notification.Callsign] = launch;
+                  var launch = launched[notification.Callsign~notification.Name];
+                  if (launch == nil) {
+                    launch = elapsed;
+                    launched[notification.Callsign~notification.Name] = launch;
                     if (notification.Position.direct_distance_to(ownPos)*M2NM < 7.5) {
                       setprop("payload/armament/MLW-bearing", bearing);
+                      setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
                       printf("Missile Launch Warning from %03d degrees.", bearing);
-                      var isSAM = 0;#TODO
-                      setLaunch(notification.Callsign, isSAM);
+                      damageLog.push(sprintf("Missile Launch Warning from %03d degrees from %s.", bearing, notification.Callsign));
                     }
                   }
                 }
                 
-                # Missile approach warning:                
+                # Missile approach warning:
                 var callsign = getprop("sim/multiplay/callsign");
                 callsign = size(callsign) < 8 ? callsign : left(callsign,7);
-                if (notification.RemoteCallsign != callsign) return;
-                if (!radarOn) return;# this should be little more complex later
+                if (notification.RemoteCallsign != callsign) return emesary.Transmitter.ReceiptStatus_OK;
+                if (!radarOn) return emesary.Transmitter.ReceiptStatus_OK;# this should be little more complex later
                 var heading = getprop("orientation/heading-deg");
                 var clock = geo.normdeg(bearing - heading);
                 setprop("payload/armament/MAW-bearing", bearing);
                 setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
                 printf("Missile Approach Warning from %03d degrees.", bearing);
-                
-            } elsif (notification.NotificationType == "ArmamentNotification") {
+                var appr = approached[notification.Callsign~notification.Name];
+                if (appr == nil or elapsed - appr > 600) {
+                  damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
+                  approached[notification.Callsign~notification.Name] = elapsed;
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
+            if (notification.NotificationType == "ArmamentNotification") {
                 if (notification.FromIncomingBridge) {
                     print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
                           " Kind=",notification.Kind,
@@ -245,29 +273,28 @@ var DamageRecipient =
                           " RelativeAltitude=",notification.RelativeAltitude,
                           " Distance=",notification.Distance,
                           " Bearing=",notification.Bearing,
+                          " Inc-bridge=",notification.FromIncomingBridge,
                           " RemoteCallsign=",notification.RemoteCallsign);
 #                    debug.dump(notification);
                     #
-                    # todo:
-                    #   hit counts for cannon
-                    #   type of cannon shell
                     #
                     var callsign = getprop("sim/multiplay/callsign");
                     callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                     if (notification.RemoteCallsign == callsign and getprop("payload/armament/msg") == 1) {
                         #damage enabled and were getting hit
-                        if (notification.SecondaryKind == 20) {
+                        if (notification.SecondaryKind > 150 and hitable_by_cannon) {
                             # cannon hit
-                            var probability = cannon_types[" M61A1 shell hit"];#test code
-                            var hit_count = 2;#test code
+                            var probability = id2shell[notification.SecondaryKind - 151][1];
+                            var typ = id2shell[notification.SecondaryKind - 151][2];
+                            var hit_count = notification.Distance;
                             if (hit_count != nil) {
                                 var damaged_sys = 0;
                                 for (var i = 1; i <= hit_count; i = i + 1) {
                                   var failed = fail_systems(probability);
                                   damaged_sys = damaged_sys + failed;
                                 }
-
-                                printf("Took %.1f%% x %2d damage from cannon! %s systems was hit.", probability*100, hit_count, damaged_sys);
+                                printf("Took %.1f%% x %2d damage from %s! %s systems was hit.", probability*100, hit_count, typ, damaged_sys);
+                                damageLog.push(sprintf("%d %s impact from %s.", hit_count, typ, notification.Callsign));
                                 nearby_explosion();
                             }
                         } elsif (notification.SecondaryKind > 20) {
@@ -275,6 +302,7 @@ var DamageRecipient =
                             var dist     = notification.Distance;
                             var wh = id2warhead[notification.SecondaryKind - 21];
                             var type = wh[4];#test code
+                            damageLog.push(sprintf("%s impact at %.1f meters from %s.", type, dist, notification.Callsign));
                             if (wh[3] == 1) {
                                 # cluster munition
                                 var lbs = wh[1];
@@ -354,6 +382,7 @@ var DamageRecipient =
                         } 
                     }
                 }
+                return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
         }
@@ -498,6 +527,10 @@ var fail_fleet_systems = func (probability, factor) {
   return -1;
 };
 
+setlistener("payload/armament/MLW-count", func {
+  setLaunch(getprop("payload/armament/MLW-launcher"), 0);#TODO: figure out if that callsign is a SAM/ship.
+});
+
 var setLaunch = func (c,s) {
   setprop("sound/rwr-launch-sam", s);
   setprop("sound/rwr-launch", c);
@@ -541,12 +574,20 @@ var getCallsign = func (callsign) {
 var processCallsigns = func () {
   callsign_struct = {};
   var players = props.globals.getNode("ai/models").getChildren();
+  var myCallsign = getprop("sim/multiplay/callsign");
+  myCallsign = size(myCallsign) < 8 ? myCallsign : left(myCallsign,7);
+  var painted = 0;
   foreach (var player; players) {
     if(player.getChild("valid") != nil and player.getChild("valid").getValue() == TRUE and player.getChild("callsign") != nil and player.getChild("callsign").getValue() != "" and player.getChild("callsign").getValue() != nil) {
       var callsign = player.getChild("callsign").getValue();
       callsign_struct[callsign] = player;
+      var str6 = player.getNode("sim/multiplay/generic/string[6]");
+      if (str6 != nil and str6.getValue() != nil and str6.getValue() != "" and size(""~str6.getValue())==4 and left(md5(myCallsign),4) == str6.getValue()) {
+        painted = 1;
+      }
     }
   }
+  setprop("payload/armament/spike", painted);
   setprop("payload/armament/MAW-active", 0);# resets every 1 seconds
 }
 processCallsignsTimer = maketimer(1.5, processCallsigns);
@@ -594,3 +635,28 @@ var re_init = func {
 }
 
 setlistener("/sim/signals/reinit", re_init, 0, 0);
+
+var damageLog = events.LogBuffer.new(echo: 0);
+
+setlistener("payload/armament/msg", func {damageLog.push("Damage is now "~(getprop("payload/armament/msg")?"ON.":"OFF."));});
+
+var printDamageLog = func {
+  if (getprop("payload/armament/msg")) {print("disable damage to use this function");return;}
+  var buffer = damageLog.get_buffer();
+  var str = "";
+  foreach(entry; buffer) {
+      str = str~"    "~entry.time~" "~entry.message~"\n";
+  }
+  print();
+  print(str);
+  print();
+}
+
+#TODO testing:
+
+screen.property_display.add("payload/armament/MAW-bearing");
+screen.property_display.add("payload/armament/MAW-active");
+screen.property_display.add("payload/armament/MLW-bearing");
+screen.property_display.add("payload/armament/MLW-count");
+screen.property_display.add("payload/armament/MLW-launcher");
+screen.property_display.add("payload/armament/spike");
