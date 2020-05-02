@@ -87,7 +87,7 @@ var Station = {
 						};
 					} elsif (me.weaponName == "AIM-54") {
 						mf = func (struct) {
-							if (struct.dist_m != -1 and struct.dist_m*M2NM < 8 and struct.guidance == "inertial") {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 8 and struct.guidance == "semi-radar") {
 								return {"guidance":"radar"};
 							}
 							return {};

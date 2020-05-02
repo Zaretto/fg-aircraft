@@ -2043,6 +2043,23 @@
                 <factor>1</factor>
             </volume>
         </incoming>
+        
+        <rwr>
+            <name>rwr-lock</name>
+            <path>Aircraft/f-14b/Sounds/rwr-lock-03.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.60</factor>
+            </volume>
+        </rwr>
 
         <nearby-explode>
             <name>nearby-explode</name>
