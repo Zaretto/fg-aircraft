@@ -623,22 +623,24 @@ setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 code_ctTimer.start();
 
-var re_init = func {
+var re_init = func (node) {
   # repair the aircraft
-
+  if (node.getValue() == 0) return;
+  
   var failure_modes = FailureMgr._failmgr.failure_modes;
   var mode_list = keys(failure_modes);
 
   foreach(var failure_mode_id; mode_list) {
     FailureMgr.set_failure_level(failure_mode_id, 0);
   }
+  damageLog.push("Aircraft was repaired due to re-init.");
 }
-
-setlistener("/sim/signals/reinit", re_init, 0, 0);
 
 var damageLog = events.LogBuffer.new(echo: 0);
 
-setlistener("payload/armament/msg", func {damageLog.push("Damage is now "~(getprop("payload/armament/msg")?"ON.":"OFF."));});
+setlistener("/sim/signals/reinit", re_init, 0, 0);
+
+setlistener("payload/armament/msg", func {damageLog.push("Damage is now "~(getprop("payload/armament/msg")?"ON.":"OFF."));}, 1, 1);
 
 var printDamageLog = func {
   if (getprop("payload/armament/msg")) {print("disable damage to use this function");return;}

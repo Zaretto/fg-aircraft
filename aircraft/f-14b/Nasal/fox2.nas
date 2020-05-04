@@ -3701,13 +3701,17 @@ var AIM = {
 #f14.debugRecipient.Receive(msg);
 	},
 		
-	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, ID) {
+	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, ID, type, self) {
 		var msg = notifications.ArmamentNotification.new("mhit", 4, 21+ID);
         msg.RelativeAltitude = RelativeAltitude;
         msg.Bearing = Bearing;
         msg.Distance = Distance;
         msg.RemoteCallsign = callsign; # RJHTODO: maybe handle flares / chaff 
+        if (self) {
+        	# RJHTODO: we need to send the message to ourselves here, how to do that?
+        }
         f14.hitBridgedTransmitter.NotifyAll(msg);
+        damageLog.push(sprintf("You hit %s with %s at %.1f meters.",callsign, type, Distance));
 print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 #f14.debugRecipient.Receive(msg);
 	},
@@ -3762,7 +3766,7 @@ print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 #				me.sendMessage(phrase);
                     if(getprop("payload/armament/msg") and wh_mass > 0){
 						thread.lock(mutexTimer);
-						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.typeID], 0]);
+						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.typeID, me.typeLong, 0], 0]);
 						thread.unlock(mutexTimer);
                     }
 			} else {
@@ -3865,7 +3869,7 @@ print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
  					var cs = me.testMe.get_Callsign();
  					var cc = me.testMe.get_Coord();
  					thread.lock(mutexTimer);
-					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.typeID], 0]);
+					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.typeID, me.typeLong,0], 0]);
 					thread.unlock(mutexTimer);
 				}
 
@@ -3882,7 +3886,7 @@ print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 			me.printStats(phrase);
 			#me.sendMessage(phrase);
 			thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.typeID], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.typeID, me.typeLong, 1], 0]);
 			thread.unlock(mutexTimer);
 			
 			me.sendout = 1;

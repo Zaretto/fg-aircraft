@@ -466,7 +466,8 @@ var hitmessage = func(typeOrd) {
 		        msg.Bearing = 0;
 		        msg.Distance = hits_count;
 		        msg.RemoteCallsign = hit_callsign; # RJHTODO: maybe handle flares / chaff 
-		        f14.hitBridgedTransmitter.NotifyAll(msg);	
+		        f14.hitBridgedTransmitter.NotifyAll(msg);
+	armament.damageLog.push("You hit "~hit_callsign~" with "~typeOrd~", "~hits_count~" times.");
   } else {
     setprop("/sim/messages/atc", phrase);
   }
