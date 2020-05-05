@@ -24,14 +24,14 @@
 #      we will use two bridges.
 #      If at some point in the future we target 2019.2 as a min ver we can use a single
 #      bridge and setup the notification list to contain all of the armament hit/flying notifications
-#i.e. change to [notifications.GeoEventNotification.new(nil), notifications.ArmamentNotification.new(nil)];
-var geoRoutedNotifications = [notifications.GeoEventNotification.new(nil)];
+#i.e. change to [notifications.ArmamentInFlightNotification.new(nil), notifications.ArmamentNotification.new(nil)];
+var geoRoutedNotifications = [notifications.ArmamentInFlightNotification.new(nil)];
 var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
 var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
 
 # bridge should be tuned to be around 90% of the packet size full.
 
-geooutgoingBridge.MPStringMaxLen = 70;
+geooutgoingBridge.MPStringMaxLen = 150;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
 
 
@@ -40,7 +40,7 @@ var hitRoutedNotifications = [notifications.ArmamentNotification.new(nil)];
 var hitBridgedTransmitter = emesary.Transmitter.new("armamentNotificationBridge");
 var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
 
-hitoutgoingBridge.MPStringMaxLen = 300;
+hitoutgoingBridge.MPStringMaxLen = 180;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
 
 #
@@ -51,7 +51,7 @@ debugRecipient.Receive = func(notification)
     if (notification.NotificationType != "FrameNotification")  {
         print ("recv(0): type=",notification.NotificationType, " fromIncoming=",notification.FromIncomingBridge);
 
-        if (notification.NotificationType == "GeoEventNotification") {
+        if (notification.NotificationType == "ArmamentInFlightNotification") {
             print("recv(1): ",notification.NotificationType, " ", notification.Ident);
             debug.dump(notification);
 

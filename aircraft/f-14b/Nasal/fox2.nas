@@ -3687,7 +3687,7 @@ var AIM = {
 	
 	
 	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust,callsign) {
-		var msg = notifications.GeoEventNotification.new("mfly", typ~unique, 2, 21+ID);
+		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+ID);
         msg.Position.set_latlon(lat,lon,alt);
         msg.Flags = rdr;#bit #0
         if (thrust) {

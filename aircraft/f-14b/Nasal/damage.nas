@@ -203,18 +203,17 @@ var DamageRecipient =
 # This can replace MP chat for damage notifications 
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
-            if (notification.NotificationType == "GeoEventNotification") {
+            if (notification.NotificationType == "ArmamentInFlightNotification") {
                 print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
+                      " UniqueIdentity=",notification.UniqueIdentity,
                       " Kind=",notification.Kind,
-                      " Name=",notification.Name,
                       " SecondaryKind=",notification.SecondaryKind,
                       " lat=",notification.Position.lat(),
                       " lon=",notification.Position.lon(),
                       " alt=",notification.Position.alt(),
-                      " Heading=",notification.Heading,
                       " u_fps=",notification.u_fps,
-                      " v_fps=",notification.v_fps,
-                      " w_fps=",notification.w_fps,
+                      " Heading=",notification.Heading,
+                      " Pitch=",notification.Pitch,
                       " IsDistinct=",notification.IsDistinct,
                       " Callsign=",notification.Callsign,
                       " RemoteCallsign=",notification.RemoteCallsign,
