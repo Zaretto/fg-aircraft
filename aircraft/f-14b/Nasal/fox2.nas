@@ -1840,9 +1840,10 @@ var AIM = {
 		if (me.Tgt != nil and me.Tgt.isValid() == FALSE) {#TODO: verify that the following threaded code can handle invalid contact. As its read from property-tree, not mutex protected.
 			if (!(me.canSwitch and me.reaquire)) {
 				me.printStats(me.type~": Target went away, deleting missile.");
-				me.sendMessage(me.type~" missed "~me.callsign~": Target logged off.");
+				#me.sendMessage(me.type~" missed "~me.callsign~": Target logged off.");
 				thread.lock(mutexTimer);
 				append(AIM.timerQueue, [me,me.del,[],0]);
+				append(AIM.timerQueue, [me,me.log,[me.callsign~" logged off. Deleting "~me.typeLong],0]);
 				thread.unlock(mutexTimer);
 				return;
 			} else {
@@ -3685,6 +3686,9 @@ var AIM = {
 		return FALSE;
 	},
 	
+	log: func (str) {
+		damageLog.push(str);
+	},
 	
 	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust,callsign) {
 		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+ID);
