@@ -1486,11 +1486,13 @@ Figure 2-54.  Longitudinal System Authority
             </fcs_function>
 
 <!---        ROLL SAS 2          -->
-            <fcs_function name="sas/roll-sas-2-v1">
+
+<!-- sas-2-ha-# High Alpha Roll Augment -->
+            <fcs_function name="sas/roll-sas-2-ha-v1">
                 <function>
                     <product>
                         <property>sas/roll-sas-1-stkr-limit</property>
-                        <value>2</value>
+                        <value>-2</value>
                     </product>
                 </function>
                 <clipto>
@@ -1499,12 +1501,12 @@ Figure 2-54.  Longitudinal System Authority
                 </clipto>
             </fcs_function>
 
-            <fcs_function name="sas/roll-sas-2-v2-alpha-mach">
+            <fcs_function name="sas/roll-sas-2-ha-v2-alpha-mach">
                 <function>
                     <interpolate1d>
                         <property>velocities/mach</property>
                         <value>0.5</value>
-                        <table name="sas/roll-sas-2-v2-alpha-mach-0.55">
+                        <table name="sas/roll-sas-2-ha-v2-alpha-mach-0.55">
                             <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
                             <tableData>
                                  9         0
@@ -1514,7 +1516,7 @@ Figure 2-54.  Longitudinal System Authority
                                 </tableData>
                         </table>
                         <value>1.0</value>
-                        <table name="sas/roll-sas-2-v2-alpha-mach-1.00">
+                        <table name="sas/roll-sas-2-ha-v2-alpha-mach-1.00">
                             <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
                             <tableData>
                                 16         0
@@ -1527,16 +1529,16 @@ Figure 2-54.  Longitudinal System Authority
                 </function>
             </fcs_function>
 
-            <fcs_function name="sas/roll-sas-2-v2">
+            <fcs_function name="sas/roll-sas-2-ha-v2">
                 <function>
                     <product>
-                        <property>sas/roll-sas-2-v1</property>
-                        <property>sas/roll-sas-2-v2-alpha-mach</property>
+                        <property>sas/roll-sas-2-ha-v1</property>
+                        <property>sas/roll-sas-2-ha-v2-alpha-mach</property>
                     </product>
                 </function>
             </fcs_function>
 
-
+<!-- sas-2-v3..4 Normal alpha roll augment  -->
             <lead_lag_filter name="sas/roll-sas-2-v3">
                 <input>sas/roll-sas-1-stkr-limit</input>
                 <c1>0</c1>
@@ -1586,10 +1588,11 @@ Figure 2-54.  Longitudinal System Authority
                 </function>
             </fcs_function>
 
+            <!-- schedulded static roll augmentation, static in that it just references stick position -->
             <fcs_function name="sas/roll-sas-2">
                 <function>
                     <sum>
-                        <property>-sas/roll-sas-2-v2</property>
+                        <property>-sas/roll-sas-2-ha-v2</property>
                         <property>-sas/roll-sas-2-v4</property>
                     </sum>
                 </function>
