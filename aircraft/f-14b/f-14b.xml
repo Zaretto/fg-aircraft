@@ -482,7 +482,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 652.75591 </x>
                 <y> -58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -499,7 +499,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <location unit="IN">
                 <x> 652.75591 </x>
                 <y> -58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -512,7 +512,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 652.75591 </x>
                 <y> 58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -530,7 +530,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <location unit="IN">
                 <x> 652.75591 </x>
                 <y> 58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -1247,6 +1247,7 @@ Figure 2-54.  Longitudinal System Authority
             <default value="0.0" />
             <test logic="AND" value="1">
                     fcs/yaw-damper-enable ne 0.0
+                    simulation/sim-time-sec gt 2.0
                     gear/wow eq 0
                     aero/alpha-deg gt -10
                     aero/alpha-deg lt  25
@@ -1403,6 +1404,7 @@ Figure 2-54.  Longitudinal System Authority
                 <default value="0.0" />
                 <test logic="AND" value="1">
                     fcs/roll-sas-enable ne 0.0
+                    simulation/sim-time-sec gt 2.0
                 </test>
                 <output>fcs/roll-sas-active</output>
             </switch>
@@ -1784,6 +1786,7 @@ Figure 2-54.  Longitudinal System Authority
                     fcs/elevator-cmd-norm ge -0.15
                     fcs/elevator-cmd-norm le 0.15
                     fcs/pitch-damper-enable ne 0.0
+                    simulation/sim-time-sec gt 2.0
                 </test>
                 <output>fcs/pitch-damper-active</output>
             </switch>
@@ -4394,7 +4397,7 @@ Figure 2-54.  Longitudinal System Authority
             <location unit="IN">
                 <x> 667 </x>
                 <y> -45 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <direction>
                 <x>  -0.9995 </x>
@@ -4406,7 +4409,7 @@ Figure 2-54.  Longitudinal System Authority
             <location unit="IN">
                 <x> 667 </x>
                 <y> 45 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <direction>
                 <x>  -0.9995 </x>
