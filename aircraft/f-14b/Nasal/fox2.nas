@@ -469,10 +469,10 @@ var AIM = {
         	m.vector_thrust = FALSE;
         }
         if (m.flareResistance == nil) {
-        	m.flareResistance = 0.95;
+        	m.flareResistance = 0.925;
         }
         if (m.chaffResistance == nil) {
-        	m.chaffResistance = 0.95;
+        	m.chaffResistance = 0.925;
         }
         if (m.guidanceLaw == nil) {
 			m.guidanceLaw = "APN";
