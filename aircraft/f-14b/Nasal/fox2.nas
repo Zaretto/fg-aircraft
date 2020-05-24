@@ -614,6 +614,7 @@ var AIM = {
 			print("Attempting to load "~id_model);
 		}
 		m.life_time = 0;
+		m.last_noti = -1;
 
 		# Create the AI position and orientation properties.
 		m.latN   = m.ai.getNode("position/latitude-deg", 1);
@@ -1840,9 +1841,10 @@ var AIM = {
 		if (me.Tgt != nil and me.Tgt.isValid() == FALSE) {#TODO: verify that the following threaded code can handle invalid contact. As its read from property-tree, not mutex protected.
 			if (!(me.canSwitch and me.reaquire)) {
 				me.printStats(me.type~": Target went away, deleting missile.");
-				me.sendMessage(me.type~" missed "~me.callsign~": Target logged off.");
+				#me.sendMessage(me.type~" missed "~me.callsign~": Target logged off.");
 				thread.lock(mutexTimer);
 				append(AIM.timerQueue, [me,me.del,[],0]);
+				append(AIM.timerQueue, [me,me.log,[me.callsign~" logged off. Deleting "~me.typeLong],0]);
 				thread.unlock(mutexTimer);
 				return;
 			} else {
@@ -2336,10 +2338,11 @@ var AIM = {
 			me.ai.getNode("hit").setIntValue(me.hit);
 		}
 
-        if (me.status == MISSILE_FLYING) {
+        if (me.status == MISSILE_FLYING and me.life_time - me.last_noti > 0.75) {
             # notify in flight using Emesary.
+            me.last_noti = me.life_time;
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign, me.hdg, me.pitch, me.new_speed_fps], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
@@ -3685,8 +3688,11 @@ var AIM = {
 		return FALSE;
 	},
 	
+	log: func (str) {
+		damageLog.push(str);
+	},
 	
-	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust,callsign) {
+	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust,callsign, heading, pitch, speed) {
 		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+ID);
         msg.Position.set_latlon(lat,lon,alt);
         msg.Flags = rdr;#bit #0
@@ -3696,6 +3702,9 @@ var AIM = {
         msg.IsDistinct = 1;
         msg.RemoteCallsign = callsign;
         msg.UniqueIndex = unique;
+        msg.Pitch = pitch;
+        msg.Heading = heading;
+        msg.u_fps = speed;
         f14.geoBridgedTransmitter.NotifyAll(msg);
 #print("fox2.nas: transmit in flight");
 #f14.debugRecipient.Receive(msg);
