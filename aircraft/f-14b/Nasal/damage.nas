@@ -608,9 +608,10 @@ var code_ct = func () {
       setprop("/sim/speed-up", 1);
       setprop("/gui/map/draw-traffic", 0);
       setprop("/sim/gui/dialogs/map-canvas/draw-TFC", 0);
+      fgcommand("timeofday", props.Node.new({"timeofday": "real"}));
       #setprop("/sim/rendering/als-filters/use-filtering", 1);
       call(func{var interfaceController = fg1000.GenericInterfaceController.getOrCreateInstance();
-      interfaceController.stop();},nil,var err2=[]);
+      interfaceController.stop();},nil,var err2=[]);      
   }  
 }
 code_ctTimer = maketimer(1, code_ct);
@@ -637,9 +638,15 @@ var re_init = func (node) {
 
 var damageLog = events.LogBuffer.new(echo: 0);
 
+damageLog.push("Flightgear "~getprop("sim/version/flightgear")~" was loaded up with "~getprop("sim/description"));
+
 setlistener("/sim/signals/reinit", re_init, 0, 0);
 
-setlistener("payload/armament/msg", func {damageLog.push("Damage is now "~(getprop("payload/armament/msg")?"ON.":"OFF."));}, 1, 1);
+setlistener("payload/armament/msg", func {damageLog.push("Damage is now "~(getprop("payload/armament/msg")?"ON.":"OFF."));}, 1, 0);
+
+setlistener("sim/multiplay/callsign", func {damageLog.push("Callsign is now "~getprop("sim/multiplay/callsign"));}, 1, 0);
+
+setlistener("sim/multiplay/online", func {damageLog.push(getprop("sim/multiplay/online")?("Connected to "~getprop("sim/multiplay/txhost")):"Disconnected from MP.");}, 1, 0);
 
 var printDamageLog = func {
   if (getprop("payload/armament/msg")) {print("disable damage to use this function");return;}
@@ -654,6 +661,27 @@ var printDamageLog = func {
 }
 
 #TODO testing:
+
+var printDamageLog = func {
+  var output_file = getprop("/sim/fg-home") ~ "/Export/emesary-war-combat-log.txt";
+  var buffer = damageLog.get_buffer();
+  var str = "\n";
+  foreach(entry; buffer) {
+      str = str~"    "~entry.time~" "~entry.message~"\n";
+  }
+  str = str ~ "\n";
+  var file = nil;
+  if (io.stat(output_file) == nil) {
+    file = io.open(output_file, "w");
+    io.close(file);
+  }
+  file = io.open(output_file, "a");
+  io.write(file, str);
+  io.close(file);
+  settimer(printDamageLog, 600);
+}
+
+settimer(printDamageLog, 600);
 
 screen.property_display.add("payload/armament/MAW-bearing");
 screen.property_display.add("payload/armament/MAW-active");
