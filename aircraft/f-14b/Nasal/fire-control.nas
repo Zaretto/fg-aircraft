@@ -408,7 +408,7 @@ var FireControl = {
 	updateAll: func {
 		# called from the stations when they change.
 		if (me.selectedType != nil) {
-			screen.log.write("Fire-control: deselecting "~me.selectedType, 0.5, 0.5, 1);
+			#screen.log.write("Fire-control: deselecting "~me.selectedType, 0.5, 0.5, 1); not needed in F-14
 		}
 		me.noWeapon();
 	},
