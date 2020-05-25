@@ -204,22 +204,22 @@ var DamageRecipient =
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
             if (notification.NotificationType == "ArmamentInFlightNotification") {
-                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
-                      " UniqueIdentity=",notification.UniqueIdentity,
-                      " Kind=",notification.Kind,
-                      " SecondaryKind=",notification.SecondaryKind,
-                      " lat=",notification.Position.lat(),
-                      " lon=",notification.Position.lon(),
-                      " alt=",notification.Position.alt(),
-                      " u_fps=",notification.u_fps,
-                      " Heading=",notification.Heading,
-                      " Pitch=",notification.Pitch,
-                      " IsDistinct=",notification.IsDistinct,
-                      " Callsign=",notification.Callsign,
-                      " RemoteCallsign=",notification.RemoteCallsign,
-                      " Flags=",notification.Flags,
-                      " Radar=",bits.test(notification.Flags, 0),
-                      " Thrust=",bits.test(notification.Flags, 1));
+#                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
+#                      " UniqueIdentity=",notification.UniqueIdentity,
+#                      " Kind=",notification.Kind,
+#                      " SecondaryKind=",notification.SecondaryKind,
+#                      " lat=",notification.Position.lat(),
+#                      " lon=",notification.Position.lon(),
+#                      " alt=",notification.Position.alt(),
+#                      " u_fps=",notification.u_fps,
+#                      " Heading=",notification.Heading,
+#                      " Pitch=",notification.Pitch,
+#                      " IsDistinct=",notification.IsDistinct,
+#                      " Callsign=",notification.Callsign,
+#                      " RemoteCallsign=",notification.RemoteCallsign,
+#                      " Flags=",notification.Flags,
+#                      " Radar=",bits.test(notification.Flags, 0),
+#                      " Thrust=",bits.test(notification.Flags, 1));
                 #
                 # todo:
                 #   animate missiles
@@ -271,14 +271,14 @@ var DamageRecipient =
             }
             if (notification.NotificationType == "ArmamentNotification") {
                 if (notification.FromIncomingBridge) {
-                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
-                          " Kind=",notification.Kind,
-                          " SecondaryKind=",notification.SecondaryKind,
-                          " RelativeAltitude=",notification.RelativeAltitude,
-                          " Distance=",notification.Distance,
-                          " Bearing=",notification.Bearing,
-                          " Inc-bridge=",notification.FromIncomingBridge,
-                          " RemoteCallsign=",notification.RemoteCallsign);
+#                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
+#                          " Kind=",notification.Kind,
+#                          " SecondaryKind=",notification.SecondaryKind,
+#                          " RelativeAltitude=",notification.RelativeAltitude,
+#                          " Distance=",notification.Distance,
+#                          " Bearing=",notification.Bearing,
+#                          " Inc-bridge=",notification.FromIncomingBridge,
+#                          " RemoteCallsign=",notification.RemoteCallsign);
 #                    debug.dump(notification);
                     #
                     #
