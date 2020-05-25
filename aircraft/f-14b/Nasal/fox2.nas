@@ -781,7 +781,7 @@ var AIM = {
 			delete(AIM.flying, me.flyID);
 			if(getprop("payload/armament/msg")) {
 				thread.lock(mutexTimer);
-				append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [nil, -1, -1,0,me.typeID,"",me.unique_id,0,"", 0, 0, 0,0], 0]);
+				append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [nil, -1, -1,0,me.typeID,"",me.unique_id,0,"", 0, 0, 0,1], 0]);
 				thread.unlock(mutexTimer);
 			}
 		} else {
@@ -3697,19 +3697,18 @@ var AIM = {
 		damageLog.push(str);
 	},
 	
-	notifyInFlight: func (lat,lon,alt,rdr,typeID,typ,unique,thrust,callsign, heading, pitch, speed, distinct=1) {
-		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+typeID);
+	notifyInFlight: func (lat,lon,alt,rdr,typeID,typ,unique,thrust,callsign, heading, pitch, speed, is_deleted=0) {
+		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, is_deleted?3:2, 21+typeID);
         msg.Flags = rdr;#bit #0
         if (thrust) {
         	msg.Flags = bits.set(msg.Flags, 1);#bit #1
         }
         if (lat != nil) {
-        	msg.Flags = bits.set(msg.Flags, 2);#bit #2 alive or not
         	msg.Position.set_latlon(lat,lon,alt);
         } else {
         	msg.Position.set_latlon(0,0,0);
         }
-        msg.IsDistinct = distinct;
+        msg.IsDistinct = !is_deleted;
         msg.RemoteCallsign = callsign;
         msg.UniqueIndex = unique;
         msg.Pitch = pitch;
