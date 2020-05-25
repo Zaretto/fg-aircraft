@@ -3227,7 +3227,7 @@ var AIM = {
 				me.rotate_token = TRUE;
 				me.printGuide("Is last turn, snap-up/PN takes it from here..")
 			}
-		} elsif (me.snapUp == TRUE and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 3
+		} elsif (me.snapUp == TRUE and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 5
 			 and me.t_elev_deg < me.loft_angle #and me.t_elev_deg > -7.5
 			 and me.dive_token == FALSE) {
 			# lofting: due to target is more than 10 miles out and we havent reached 
@@ -3246,7 +3246,7 @@ var AIM = {
 			}
 			me.cruise_or_loft = TRUE;
 		} elsif (me.snapUp == TRUE and me.coord.alt() > me.t_coord.alt() and me.last_cruise_or_loft == TRUE
-		         and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 3) {
+		         and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 4.5) {
 			# cruising: keeping altitude since target is below and more than -45 degs down
 
 			me.ratio = (g_fps * me.dt)/me.old_speed_fps;
