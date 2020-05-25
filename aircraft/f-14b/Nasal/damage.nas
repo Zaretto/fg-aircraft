@@ -683,9 +683,9 @@ var printDamageLog = func {
 
 settimer(printDamageLog, 600);
 
-screen.property_display.add("payload/armament/MAW-bearing");
-screen.property_display.add("payload/armament/MAW-active");
-screen.property_display.add("payload/armament/MLW-bearing");
-screen.property_display.add("payload/armament/MLW-count");
-screen.property_display.add("payload/armament/MLW-launcher");
-screen.property_display.add("payload/armament/spike");
+#screen.property_display.add("payload/armament/MAW-bearing");
+#screen.property_display.add("payload/armament/MAW-active");
+#screen.property_display.add("payload/armament/MLW-bearing");
+#screen.property_display.add("payload/armament/MLW-count");
+#screen.property_display.add("payload/armament/MLW-launcher");
+#screen.property_display.add("payload/armament/spike");
