@@ -3698,13 +3698,12 @@ var AIM = {
 	},
 	
 	notifyInFlight: func (lat,lon,alt,rdr,typeID,typ,unique,thrust,callsign, heading, pitch, speed, distinct=1) {
-		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+typeID);
+		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, distinct?2:3, 21+typeID);
         msg.Flags = rdr;#bit #0
         if (thrust) {
         	msg.Flags = bits.set(msg.Flags, 1);#bit #1
         }
         if (lat != nil) {
-        	msg.Flags = bits.set(msg.Flags, 2);#bit #2 alive or not
         	msg.Position.set_latlon(lat,lon,alt);
         } else {
         	msg.Position.set_latlon(0,0,0);
