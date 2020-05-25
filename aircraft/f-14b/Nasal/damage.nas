@@ -224,6 +224,9 @@ var DamageRecipient =
                 # todo:
                 #   animate missiles
                 #
+                if (notification.Kind == 3) {
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
                 
                 var elapsed = getprop("sim/time/elapsed-sec");
                 var ownPos = geo.aircraft_position();
@@ -231,12 +234,14 @@ var DamageRecipient =
                 var radarOn = bits.test(notification.Flags, 0);
                 var thrustOn = bits.test(notification.Flags, 1);
                 
+                
+                
                 # Missile launch warning:
                 if (thrustOn) {
-                  var launch = launched[notification.Callsign~notification.Name];
+                  var launch = launched[notification.Callsign~notification.UniqueIdentity];
                   if (launch == nil) {
                     launch = elapsed;
-                    launched[notification.Callsign~notification.Name] = launch;
+                    launched[notification.Callsign~notification.UniqueIdentity] = launch;
                     if (notification.Position.direct_distance_to(ownPos)*M2NM < 7.5) {
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
