@@ -469,10 +469,10 @@ var AIM = {
         	m.vector_thrust = FALSE;
         }
         if (m.flareResistance == nil) {
-        	m.flareResistance = 0.95;
+        	m.flareResistance = 0.925;
         }
         if (m.chaffResistance == nil) {
-        	m.chaffResistance = 0.95;
+        	m.chaffResistance = 0.925;
         }
         if (m.guidanceLaw == nil) {
 			m.guidanceLaw = "APN";
@@ -779,6 +779,11 @@ var AIM = {
 		me.ai.remove();
 		if (me.status == MISSILE_FLYING) {
 			delete(AIM.flying, me.flyID);
+			if(getprop("payload/armament/msg")) {
+				thread.lock(mutexTimer);
+				append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [nil, -1, -1,0,me.typeID,"",me.unique_id,0,"", 0, 0, 0,0], 0]);
+				thread.unlock(mutexTimer);
+			}
 		} else {
 			delete(AIM.active, me.ID);
 		}
@@ -2338,11 +2343,11 @@ var AIM = {
 			me.ai.getNode("hit").setIntValue(me.hit);
 		}
 
-        if (me.status == MISSILE_FLYING and me.life_time - me.last_noti > 0.75) {
+        if (me.life_time - me.last_noti > 0.75 and getprop("payload/armament/msg")) {
             # notify in flight using Emesary.
             me.last_noti = me.life_time;
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue(),me.guidance=="radar",me.ID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign, me.hdg, me.pitch, me.new_speed_fps], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue()*FT2M,me.guidance=="radar",me.typeID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign, me.hdg, me.pitch, me.new_speed_fps], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
@@ -3692,14 +3697,19 @@ var AIM = {
 		damageLog.push(str);
 	},
 	
-	notifyInFlight: func (lat,lon,alt,rdr,ID,typ,unique,thrust,callsign, heading, pitch, speed) {
-		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+ID);
-        msg.Position.set_latlon(lat,lon,alt);
+	notifyInFlight: func (lat,lon,alt,rdr,typeID,typ,unique,thrust,callsign, heading, pitch, speed, distinct=1) {
+		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, 2, 21+typeID);
         msg.Flags = rdr;#bit #0
         if (thrust) {
         	msg.Flags = bits.set(msg.Flags, 1);#bit #1
         }
-        msg.IsDistinct = 1;
+        if (lat != nil) {
+        	msg.Flags = bits.set(msg.Flags, 2);#bit #2 alive or not
+        	msg.Position.set_latlon(lat,lon,alt);
+        } else {
+        	msg.Position.set_latlon(0,0,0);
+        }
+        msg.IsDistinct = distinct;
         msg.RemoteCallsign = callsign;
         msg.UniqueIndex = unique;
         msg.Pitch = pitch;
@@ -3710,8 +3720,8 @@ var AIM = {
 #f14.debugRecipient.Receive(msg);
 	},
 		
-	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, ID, type, self) {
-		var msg = notifications.ArmamentNotification.new("mhit", 4, 21+ID);
+	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, typeID, type, self) {
+		var msg = notifications.ArmamentNotification.new("mhit", 4, 21+typeID);
         msg.RelativeAltitude = RelativeAltitude;
         msg.Bearing = Bearing;
         msg.Distance = Distance;
@@ -3721,7 +3731,7 @@ var AIM = {
         }
         f14.hitBridgedTransmitter.NotifyAll(msg);
         damageLog.push(sprintf("You hit %s with %s at %.1f meters.",callsign, type, Distance));
-print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
+#print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 #f14.debugRecipient.Receive(msg);
 	},
 
