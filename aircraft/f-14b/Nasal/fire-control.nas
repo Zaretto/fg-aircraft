@@ -675,6 +675,7 @@ var FireControl = {
 					#armament.AIM.sendMessage(me.aim.brevity);
 					me.gunTriggerTime = getprop("sim/time/elapsed-sec");
 				}
+				armament.damageLog.push("Cannon fired");
 				me.triggerTime = 0;
 			}
 		} elsif (getprop("controls/armament/trigger") < 1) {
@@ -701,6 +702,7 @@ var FireControl = {
 				add = " at: "~me.aim.callsign;
 			}
 			#me.aim.sendMessage(me.aim.brevity~add);
+			armament.damageLog.push(me.aim.brevity~add);
 		}
 		return me.aim;
 	},
