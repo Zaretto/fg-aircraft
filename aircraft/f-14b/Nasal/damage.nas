@@ -667,7 +667,7 @@ var printDamageLog = func {
 
 #TODO testing:
 
-var printDamageLog = func {
+var writeDamageLog = func {
   var output_file = getprop("/sim/fg-home") ~ "/Export/emesary-war-combat-log.txt";
   var buffer = damageLog.get_buffer();
   var str = "\n";
@@ -683,10 +683,10 @@ var printDamageLog = func {
   file = io.open(output_file, "a");
   io.write(file, str);
   io.close(file);
-  settimer(printDamageLog, 600);
+  settimer(writeDamageLog, 600);
 }
 
-settimer(printDamageLog, 600);
+settimer(writeDamageLog, 600);
 
 #screen.property_display.add("payload/armament/MAW-bearing");
 #screen.property_display.add("payload/armament/MAW-active");
