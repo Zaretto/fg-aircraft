@@ -2342,8 +2342,11 @@ var AIM = {
 			me.ai.getNode("ETA").setIntValue(me.eta);
 			me.ai.getNode("hit").setIntValue(me.hit);
 		}
-
-        if (me.life_time - me.last_noti > 0.75 and getprop("payload/armament/msg")) {
+		me.noti_time = 0.75;
+		if (me.dist_curr != nil and me.dist_curr != 0 and me.dist_curr*M2NM < 1) {
+			me.noti_time = 0.35;
+		}
+        if (me.life_time - me.last_noti > me.noti_time and getprop("payload/armament/msg")) {
             # notify in flight using Emesary.
             me.last_noti = me.life_time;
         	thread.lock(mutexTimer);
