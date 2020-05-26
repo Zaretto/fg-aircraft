@@ -722,7 +722,7 @@ if(awg9_trace)
         if (active_u.get_type() == armament.AIR and active_u.get_Speed() < 60) {
             # active_u have landed
             active_u.setClass(armament.SURFACE);
-        } elsif (active_u.get_type() == armament.SURFACE and active_u.get_Speed() > 60) {
+        } elsif ((active_u.get_type() == armament.SURFACE or active_u.get_type() == armament.MARINE) and active_u.get_Speed() > 60) {
             # active_u have taken-off
             active_u.setClass(armament.AIR);
         }
