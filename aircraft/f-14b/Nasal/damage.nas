@@ -643,7 +643,7 @@ var re_init = func (node) {
 
 var damageLog = events.LogBuffer.new(echo: 0);
 
-damageLog.push("Flightgear "~getprop("sim/version/flightgear")~" was loaded up with "~getprop("sim/description"));
+damageLog.push("Flightgear "~getprop("sim/version/flightgear")~" was loaded up with "~getprop("sim/description")~" - "~getprop("sim/time/gmt"));
 
 setlistener("/sim/signals/reinit", re_init, 0, 0);
 
