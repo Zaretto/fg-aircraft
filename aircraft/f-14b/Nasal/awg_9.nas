@@ -428,7 +428,7 @@ var az_scan = func(notification) {
                             u.setClass(SURFACE);
                         } elsif (contains(knownShips,mdl)) {
                             u.setClass(MARINE);
-                        } elsif (u.get_altitude() < 5) {
+                        } elsif (u.get_altitude() < 1.5 and u.get_altitude() > -1.5) {
                             u.setClass(MARINE);
                         } elsif (u.get_Speed() < 60) {
                             u.setClass(SURFACE);
