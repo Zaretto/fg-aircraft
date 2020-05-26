@@ -239,10 +239,10 @@ var DamageRecipient =
                 # Missile launch warning:
                 if (thrustOn) {
                   var launch = launched[notification.Callsign~notification.UniqueIdentity];
-                  if (launch == nil) {
+                  if (launch == nil or elapsed - launch > 300) {
                     launch = elapsed;
                     launched[notification.Callsign~notification.UniqueIdentity] = launch;
-                    if (notification.Position.direct_distance_to(ownPos)*M2NM < 7.5) {
+                    if (notification.Position.direct_distance_to(ownPos)*M2NM < 5) {
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
@@ -263,7 +263,7 @@ var DamageRecipient =
                 setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
                 printf("Missile Approach Warning from %03d degrees.", bearing);
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
-                if (appr == nil or elapsed - appr > 600) {
+                if (appr == nil or elapsed - appr > 450) {
                   damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
                   approached[notification.Callsign~notification.UniqueIdentity] = elapsed;
                 }
