@@ -3783,7 +3783,7 @@ var AIM = {
 		if (me.Tgt != nil and !me.Tgt.isVirtual() and !me.inert) {
 			var phrase = sprintf( me.type~" "~event~": %.1f", min_distance) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-			if (min_distance < me.reportDist) {
+			if (min_distance < me.reportDist and !me.flareLock and !me.chaffLock) {
 #				me.sendMessage(phrase);
                     if(getprop("payload/armament/msg") and wh_mass > 0){
 						thread.lock(mutexTimer);
@@ -4032,7 +4032,7 @@ var AIM = {
 					    and me.checkForView()) {
 			return TRUE;
 		}
-		#printf("Lock failed %d %d %d %d %d %d",me.tagt.get_Speed()>15,me.rng < me.max_fire_range_nm,me.rng > me.min_fire_range_nm,me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.fcs_fov),me.rng < me.detect_range_curr_nm,me.checkForView());
+		#printf("Lock failed %d %d %d %d %d %d",!(me.tagt.get_type() == AIR and me.tagt.get_Speed()<15),(me.guidance != "semi-radar" or me.is_painted(me.tagt) == TRUE),me.rng < me.max_fire_range_nm,me.rng > me.min_fire_range_nm,me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.fcs_fov, vector.Math),me.rng < me.detect_range_curr_nm,me.checkForView());
 		return FALSE;
 	},
 
@@ -4255,7 +4255,24 @@ var AIM = {
 						me.goToLock();
 						return;
 					}
+				} elsif (DEBUG_SEARCH) {
+					# air target has speed
+					# fox1 is painted
+					# in range (max)
+					# in range (min)
+					# FOV
+					# in range (detect)
+					# Line of sight
+					me.printSearch("Lock failed %d %d %d %d %d %d %d",!(me.tagt.get_type() == AIR and me.tagt.get_Speed()<15),(me.guidance != "semi-radar" or me.is_painted(me.tagt) == TRUE),me.rng < me.max_fire_range_nm,me.rng > me.min_fire_range_nm,me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.fcs_fov, vector.Math),me.rng < me.detect_range_curr_nm,me.checkForView());
 				}
+			} elsif (DEBUG_SEARCH and me.slaveContact != nil) {
+				var tpe = me.slaveContact.get_type();
+				if (tpe==AIR) tpe="A";
+				elsif (tpe==SURFACE) tpe="G";
+				elsif (tpe==MARINE) tpe="M";
+				elsif (tpe==POINT) tpe="P";
+				else tpe ="?";
+				me.printSearch("Class check failed: %s (weapon: %s)", tpe, me.class);
 			}
 		} elsif (me.mode_slave == FALSE) {
 			me.slaveContacts = nil;
