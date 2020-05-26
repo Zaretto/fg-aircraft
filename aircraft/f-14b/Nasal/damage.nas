@@ -261,6 +261,7 @@ var DamageRecipient =
                 var clock = geo.normdeg(bearing - heading);
                 setprop("payload/armament/MAW-bearing", bearing);
                 setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
+                MAW_elapsed = elapsed;
                 printf("Missile Approach Warning from %03d degrees.", bearing);
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
                 if (appr == nil or elapsed - appr > 450) {
@@ -575,6 +576,8 @@ var getCallsign = func (callsign) {
   return node;
 }
 
+var MAW_elapsed = 0;
+
 var processCallsigns = func () {
   callsign_struct = {};
   var players = props.globals.getNode("ai/models").getChildren();
@@ -592,7 +595,9 @@ var processCallsigns = func () {
     }
   }
   setprop("payload/armament/spike", painted);
-  setprop("payload/armament/MAW-active", 0);# resets every 1 seconds
+  if (getprop("sim/time/elapsed-sec")-MAW_elapsed > 1.1) {
+      setprop("payload/armament/MAW-active", 0);# resets every 1.1 seconds without warning
+  }
 }
 processCallsignsTimer = maketimer(1.5, processCallsigns);
 processCallsignsTimer.simulatedTime = 1;
