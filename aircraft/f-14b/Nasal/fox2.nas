@@ -2231,7 +2231,9 @@ var AIM = {
 				me.sndDistance = 0;
 				me.elapsed_last = systime();
 				if (me.explodeSound == TRUE) {
-					me.sndPropagate();
+					thread.lock(mutexTimer);
+					append(AIM.timerQueue, [me,me.sndPropagate,[],0]);
+					thread.unlock(mutexTimer);
 				} else {
 					thread.lock(mutexTimer);
 					append(AIM.timerQueue, [me,me.del,[],10]);
