@@ -3581,6 +3581,9 @@ var AIM = {
             	me.event = "exploded";
             	if(me.life_time < me.arming_time) {
                 	me.event = "landed disarmed";
+                	thread.lock(mutexTimer);
+					append(AIM.timerQueue, [me,me.log,[me.typeLong~" landed disarmed."],0]);
+					thread.unlock(mutexTimer);
             	}
             	if (me.Tgt != nil and me.direct_dist_m == nil) {
             		# maddog might go here
@@ -3596,6 +3599,9 @@ var AIM = {
         	me.event = "exploded";
         	if(me.life_time < me.arming_time) {
             	me.event = "landed disarmed";
+            	thread.lock(mutexTimer);
+				append(AIM.timerQueue, [me,me.log,[me.typeLong~" landed disarmed."],0]);
+				thread.unlock(mutexTimer);
         	}
         	if (me.Tgt != nil and me.direct_dist_m == nil) {
         		# maddog might go here
