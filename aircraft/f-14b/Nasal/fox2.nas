@@ -2231,7 +2231,9 @@ var AIM = {
 				me.sndDistance = 0;
 				me.elapsed_last = systime();
 				if (me.explodeSound == TRUE) {
-					me.sndPropagate();
+					thread.lock(mutexTimer);
+					append(AIM.timerQueue, [me,me.sndPropagate,[],0]);
+					thread.unlock(mutexTimer);
 				} else {
 					thread.lock(mutexTimer);
 					append(AIM.timerQueue, [me,me.del,[],10]);
@@ -2342,12 +2344,15 @@ var AIM = {
 			me.ai.getNode("ETA").setIntValue(me.eta);
 			me.ai.getNode("hit").setIntValue(me.hit);
 		}
-
-        if (me.life_time - me.last_noti > 0.75 and getprop("payload/armament/msg")) {
+		me.noti_time = 0.75;
+		if (me.dist_curr != nil and me.dist_curr != 0 and me.dist_curr*M2NM < 1) {
+			me.noti_time = 0.35;
+		}
+        if (me.life_time - me.last_noti > me.noti_time and getprop("payload/armament/msg")) {
             # notify in flight using Emesary.
             me.last_noti = me.life_time;
         	thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue()*FT2M,me.guidance=="radar",me.typeID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed?"":me.callsign, me.hdg, me.pitch, me.new_speed_fps], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.latN.getValue(), me.lonN.getValue(), me.altN.getValue()*FT2M,me.guidance=="radar",me.typeID,me.type,me.unique_id,me.thrust_lbf>0,me.free or me.lostLOS or me.tooLowSpeed or me.flareLock or me.chaffLock?"":me.callsign, me.hdg, me.pitch, me.new_speed_fps], 0]);
 			thread.unlock(mutexTimer);
         }
 		me.last_dt = me.dt;
@@ -3227,7 +3232,7 @@ var AIM = {
 				me.rotate_token = TRUE;
 				me.printGuide("Is last turn, snap-up/PN takes it from here..")
 			}
-		} elsif (me.snapUp == TRUE and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 3
+		} elsif (me.snapUp == TRUE and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 5
 			 and me.t_elev_deg < me.loft_angle #and me.t_elev_deg > -7.5
 			 and me.dive_token == FALSE) {
 			# lofting: due to target is more than 10 miles out and we havent reached 
@@ -3246,7 +3251,7 @@ var AIM = {
 			}
 			me.cruise_or_loft = TRUE;
 		} elsif (me.snapUp == TRUE and me.coord.alt() > me.t_coord.alt() and me.last_cruise_or_loft == TRUE
-		         and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 3) {
+		         and me.t_elev_deg > me.clamp(-80/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 4.5) {
 			# cruising: keeping altitude since target is below and more than -45 degs down
 
 			me.ratio = (g_fps * me.dt)/me.old_speed_fps;
@@ -3780,7 +3785,7 @@ var AIM = {
 		if (me.Tgt != nil and !me.Tgt.isVirtual() and !me.inert) {
 			var phrase = sprintf( me.type~" "~event~": %.1f", min_distance) ~ " meters from: " ~ (me.flareLock == FALSE?(me.chaffLock == FALSE?me.callsign:(me.callsign ~ "'s chaff")):me.callsign ~ "'s flare");
 			me.printStats("%s  Reason: %s time %.1f", phrase, reason, me.life_time);
-			if (min_distance < me.reportDist) {
+			if (min_distance < me.reportDist and !me.flareLock and !me.chaffLock) {
 #				me.sendMessage(phrase);
                     if(getprop("payload/armament/msg") and wh_mass > 0){
 						thread.lock(mutexTimer);
@@ -4029,7 +4034,7 @@ var AIM = {
 					    and me.checkForView()) {
 			return TRUE;
 		}
-		#printf("Lock failed %d %d %d %d %d %d",me.tagt.get_Speed()>15,me.rng < me.max_fire_range_nm,me.rng > me.min_fire_range_nm,me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.fcs_fov),me.rng < me.detect_range_curr_nm,me.checkForView());
+		#printf("Lock failed %d %d %d %d %d %d",!(me.tagt.get_type() == AIR and me.tagt.get_Speed()<15),(me.guidance != "semi-radar" or me.is_painted(me.tagt) == TRUE),me.rng < me.max_fire_range_nm,me.rng > me.min_fire_range_nm,me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.fcs_fov, vector.Math),me.rng < me.detect_range_curr_nm,me.checkForView());
 		return FALSE;
 	},
 
@@ -4252,7 +4257,24 @@ var AIM = {
 						me.goToLock();
 						return;
 					}
+				} elsif (DEBUG_SEARCH) {
+					# air target has speed
+					# fox1 is painted
+					# in range (max)
+					# in range (min)
+					# FOV
+					# in range (detect)
+					# Line of sight
+					me.printSearch("Lock failed %d %d %d %d %d %d %d",!(me.tagt.get_type() == AIR and me.tagt.get_Speed()<15),(me.guidance != "semi-radar" or me.is_painted(me.tagt) == TRUE),me.rng < me.max_fire_range_nm,me.rng > me.min_fire_range_nm,me.FOV_check(OurHdg.getValue(),OurPitch.getValue(),me.total_horiz, me.total_elev, me.fcs_fov, vector.Math),me.rng < me.detect_range_curr_nm,me.checkForView());
 				}
+			} elsif (DEBUG_SEARCH and me.slaveContact != nil) {
+				var tpe = me.slaveContact.get_type();
+				if (tpe==AIR) tpe="A";
+				elsif (tpe==SURFACE) tpe="G";
+				elsif (tpe==MARINE) tpe="M";
+				elsif (tpe==POINT) tpe="P";
+				else tpe ="?";
+				me.printSearch("Class check failed: %s (weapon: %s)", tpe, me.class);
 			}
 		} elsif (me.mode_slave == FALSE) {
 			me.slaveContacts = nil;

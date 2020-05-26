@@ -204,22 +204,22 @@ var DamageRecipient =
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
             if (notification.NotificationType == "ArmamentInFlightNotification") {
-                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
-                      " UniqueIdentity=",notification.UniqueIdentity,
-                      " Kind=",notification.Kind,
-                      " SecondaryKind=",notification.SecondaryKind,
-                      " lat=",notification.Position.lat(),
-                      " lon=",notification.Position.lon(),
-                      " alt=",notification.Position.alt(),
-                      " u_fps=",notification.u_fps,
-                      " Heading=",notification.Heading,
-                      " Pitch=",notification.Pitch,
-                      " IsDistinct=",notification.IsDistinct,
-                      " Callsign=",notification.Callsign,
-                      " RemoteCallsign=",notification.RemoteCallsign,
-                      " Flags=",notification.Flags,
-                      " Radar=",bits.test(notification.Flags, 0),
-                      " Thrust=",bits.test(notification.Flags, 1));
+#                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
+#                      " UniqueIdentity=",notification.UniqueIdentity,
+#                      " Kind=",notification.Kind,
+#                      " SecondaryKind=",notification.SecondaryKind,
+#                      " lat=",notification.Position.lat(),
+#                      " lon=",notification.Position.lon(),
+#                      " alt=",notification.Position.alt(),
+#                      " u_fps=",notification.u_fps,
+#                      " Heading=",notification.Heading,
+#                      " Pitch=",notification.Pitch,
+#                      " IsDistinct=",notification.IsDistinct,
+#                      " Callsign=",notification.Callsign,
+#                      " RemoteCallsign=",notification.RemoteCallsign,
+#                      " Flags=",notification.Flags,
+#                      " Radar=",bits.test(notification.Flags, 0),
+#                      " Thrust=",bits.test(notification.Flags, 1));
                 #
                 # todo:
                 #   animate missiles
@@ -271,14 +271,14 @@ var DamageRecipient =
             }
             if (notification.NotificationType == "ArmamentNotification") {
                 if (notification.FromIncomingBridge) {
-                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
-                          " Kind=",notification.Kind,
-                          " SecondaryKind=",notification.SecondaryKind,
-                          " RelativeAltitude=",notification.RelativeAltitude,
-                          " Distance=",notification.Distance,
-                          " Bearing=",notification.Bearing,
-                          " Inc-bridge=",notification.FromIncomingBridge,
-                          " RemoteCallsign=",notification.RemoteCallsign);
+#                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
+#                          " Kind=",notification.Kind,
+#                          " SecondaryKind=",notification.SecondaryKind,
+#                          " RelativeAltitude=",notification.RelativeAltitude,
+#                          " Distance=",notification.Distance,
+#                          " Bearing=",notification.Bearing,
+#                          " Inc-bridge=",notification.FromIncomingBridge,
+#                          " RemoteCallsign=",notification.RemoteCallsign);
 #                    debug.dump(notification);
                     #
                     #
@@ -643,7 +643,7 @@ var re_init = func (node) {
 
 var damageLog = events.LogBuffer.new(echo: 0);
 
-damageLog.push("Flightgear "~getprop("sim/version/flightgear")~" was loaded up with "~getprop("sim/description"));
+damageLog.push("Flightgear "~getprop("sim/version/flightgear")~" was loaded up with "~getprop("sim/description")~" - "~getprop("sim/time/gmt"));
 
 setlistener("/sim/signals/reinit", re_init, 0, 0);
 
@@ -667,7 +667,7 @@ var printDamageLog = func {
 
 #TODO testing:
 
-var printDamageLog = func {
+var writeDamageLog = func {
   var output_file = getprop("/sim/fg-home") ~ "/Export/emesary-war-combat-log.txt";
   var buffer = damageLog.get_buffer();
   var str = "\n";
@@ -683,10 +683,10 @@ var printDamageLog = func {
   file = io.open(output_file, "a");
   io.write(file, str);
   io.close(file);
-  settimer(printDamageLog, 600);
+  settimer(writeDamageLog, 600);
 }
 
-settimer(printDamageLog, 600);
+settimer(writeDamageLog, 600);
 
 #screen.property_display.add("payload/armament/MAW-bearing");
 #screen.property_display.add("payload/armament/MAW-active");

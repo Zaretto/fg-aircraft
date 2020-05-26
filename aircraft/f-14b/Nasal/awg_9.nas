@@ -428,7 +428,7 @@ var az_scan = func(notification) {
                             u.setClass(SURFACE);
                         } elsif (contains(knownShips,mdl)) {
                             u.setClass(MARINE);
-                        } elsif (u.get_altitude() < 5) {
+                        } elsif (u.get_altitude() < 1.5 and u.get_altitude() > -1.5) {
                             u.setClass(MARINE);
                         } elsif (u.get_Speed() < 60) {
                             u.setClass(SURFACE);
@@ -722,7 +722,7 @@ if(awg9_trace)
         if (active_u.get_type() == armament.AIR and active_u.get_Speed() < 60) {
             # active_u have landed
             active_u.setClass(armament.SURFACE);
-        } elsif (active_u.get_type() == armament.SURFACE and active_u.get_Speed() > 60) {
+        } elsif ((active_u.get_type() == armament.SURFACE or active_u.get_type() == armament.MARINE) and active_u.get_Speed() > 60) {
             # active_u have taken-off
             active_u.setClass(armament.AIR);
         }
