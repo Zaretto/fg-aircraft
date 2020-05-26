@@ -4799,7 +4799,7 @@ var AIM = {
 		       
 		       	if (crater_model != "" and me.weight_whead_lbm > 150) {
 		            geo.put_model(crater_model, me.coord.lat(), me.coord.lon());
-print("put crater");
+					#print("put crater");
 		        }
 		    }
         }, [], 0.5]);
