@@ -3581,6 +3581,9 @@ var AIM = {
             	me.event = "exploded";
             	if(me.life_time < me.arming_time) {
                 	me.event = "landed disarmed";
+                	thread.lock(mutexTimer);
+					append(AIM.timerQueue, [me,me.log,[me.typeLong~" landed disarmed."],0]);
+					thread.unlock(mutexTimer);
             	}
             	if (me.Tgt != nil and me.direct_dist_m == nil) {
             		# maddog might go here
@@ -3596,6 +3599,9 @@ var AIM = {
         	me.event = "exploded";
         	if(me.life_time < me.arming_time) {
             	me.event = "landed disarmed";
+            	thread.lock(mutexTimer);
+				append(AIM.timerQueue, [me,me.log,[me.typeLong~" landed disarmed."],0]);
+				thread.unlock(mutexTimer);
         	}
         	if (me.Tgt != nil and me.direct_dist_m == nil) {
         		# maddog might go here
@@ -4760,11 +4766,14 @@ var AIM = {
 		
 		if (info == nil) {
 			me.explode_water_prop.setValue(FALSE);
+			#print ("info = nil");
 		} elsif (info[1] == nil) {
-			print ("Building hit!");
+			#print ("Building hit!");
 		} elsif (info[1].solid == 0) {
+			#print ("water");
 		 	me.explode_water_prop.setValue(TRUE);
 		} else {
+			#print ("solid");
 			me.explode_water_prop.setValue(FALSE);
 		}
 
@@ -4772,27 +4781,35 @@ var AIM = {
 		
 		me.explode_prop.setBoolValue(TRUE);
 		me.explode_angle_prop.setDoubleValue((rand() - 0.5) * 50);
-		settimer( func me.explode_prop.setBoolValue(FALSE), 0.5 );
-		settimer( func me.explode_smoke_prop.setBoolValue(TRUE), 0.5 );
-		settimer( func me.explode_smoke_prop.setBoolValue(FALSE), 3 );
+		thread.lock(mutexTimer);
+		append(AIM.timerQueue, [me, func me.explode_prop.setBoolValue(FALSE), [], 0.5]);
+		append(AIM.timerQueue, [me, func me.explode_smoke_prop.setBoolValue(TRUE), [], 0.5]);
+		append(AIM.timerQueue, [me, func me.explode_smoke_prop.setBoolValue(FALSE), [], 3]);
+		thread.unlock(mutexTimer);
 		if (info == nil or getprop("payload/armament/enable-craters") == nil or !getprop("payload/armament/enable-craters")) {return;};
-		settimer ( func {
+		thread.lock(mutexTimer);
+		append(AIM.timerQueue, [me, func {
 		 	if (info[1] == nil) {
-		       geo.put_model(getprop("payload/armament/models") ~ "bomb_hit_smoke.xml", me.coord.lat(), me.coord.lon());
+				#print ("Building hit..smoking");
+		       	geo.put_model(getprop("payload/armament/models") ~ "bomb_hit_smoke.xml", me.coord.lat(), me.coord.lon());
 		    } else if ((info[1] != nil) and (info[1].solid == 1)) {
 		        var crater_model = "";
-		       	
+
 		        if (me.weight_whead_lbm < 850 and (me.target_sea or me.target_gnd)) {
-		          crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+		          	crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+					#print("small crater");
 		        } elsif (me.target_sea or me.target_gnd) {
-		          crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+					#print("big crater");
+		          	crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
 		        }
 		       
 		       	if (crater_model != "" and me.weight_whead_lbm > 150) {
 		            geo.put_model(crater_model, me.coord.lat(), me.coord.lon());
+					#print("put crater");
 		        }
 		    }
-        }, 0.5);
+        }, [], 0.5]);
+		thread.unlock(mutexTimer);
 	},
 
 	animate_dud: func {
