@@ -991,6 +991,7 @@
                 <bool n="0" type="bool" alias="/instrumentation/gci/picture"/><!-- Use ctrl 1 to 3 to communicate with Ground Control Intercept if one is spawned near -->
                 <bool n="1" type="bool" alias="/instrumentation/gci/bogeydope"/><!-- if change these to other bools, the l0k1 assets on github needs to be updated also -->
                 <bool n="2" type="bool" alias="/instrumentation/gci/cutoff"/>
+                <bool n="3" type="bool" alias="/damage/fire/serviceable"/>
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
@@ -2255,6 +2256,12 @@
             </frequencies>
         </nav>
     </instrumentation>
+    
+    <damage>
+        <fire>
+            <serviceable type="bool">true</serviceable>
+        </fire>
+    </damage>
 
     <payload>                        
         <armament>
