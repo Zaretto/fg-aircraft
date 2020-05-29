@@ -288,7 +288,7 @@ var IncomingMPBridge =
             print("  Incoming bridge notification type --> ",n.NotificationType);
             var new_n = {parents: [n]};
             new_n.IncomingMessageIndex = OutgoingMPBridge.StartMessageIndex;
-            me.NotificationsToBridge_Lookup[n.TypeId] = new_n;
+            new_class.NotificationsToBridge_Lookup[n.TypeId] = new_n;
         }
 
         new_class.MPout = "";
