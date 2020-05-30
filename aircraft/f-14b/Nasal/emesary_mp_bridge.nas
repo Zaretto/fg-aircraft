@@ -304,7 +304,7 @@ var IncomingMPBridge =
 
         new_class.Remove = func
         {
-            print("Emesary IncomingMPBridge Remove() ",me.Ident);
+            print("Emesary IncomingMPBridge Remove() ",me.Ident," Property: ",me.MpVariable);
             me.Transmitter.DeRegister(me);
             if (me["mp_listener"] != nil)
                 removelistener(me.mp_listener);
