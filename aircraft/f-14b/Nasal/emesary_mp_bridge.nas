@@ -1,19 +1,19 @@
  #---------------------------------------------------------------------------
  #
- #	Title                : EMESARY multiplayer bridge
+ #  Title                : EMESARY multiplayer bridge
  #
- #	File Type            : Implementation File
+ #  File Type            : Implementation File
  #
- #	Description          : Bridges selected emesary notifications over MP
- #	                     : To send a message use a Transmitter with an object. That's all there is to it.
+ #  Description          : Bridges selected emesary notifications over MP
+ #                       : To send a message use a Transmitter with an object. That's all there is to it.
  #  
  #  References           : http://chateau-logic.com/content/emesary-nasal-implementation-flightgear
  #
- #	Author               : Richard Harrison (richard@zaretto.com)
+ #  Author               : Richard Harrison (richard@zaretto.com)
  #
- #	Creation Date        : 04 April 2016
+ #  Creation Date        : 04 April 2016
  #
- #	Version              : 4.8
+ #  Version              : 4.8
  #
  #  Copyright © 2016 Richard Harrison           Released under GPL V2
  #
@@ -191,13 +191,15 @@ var OutgoingMPBridge =
         {
             var outgoing = "";
             var cur_time=systime();
+            var first_time = 1;
+            me.OutgoingListNew = [];
             for (var idx = 0; idx < size(me.OutgoingList); idx += 1) {
                 var sect = "";
                 var notification = me.OutgoingList[idx];
 
                 if (!notification.Expired and notification.MessageExpiryTime > cur_time) {
                     var encval="";
-                    var first_time = 1;
+                    
                     var eidx = 0;
                     notification.Expired = 0;
 
@@ -215,45 +217,21 @@ var OutgoingMPBridge =
                     if (size(outgoing) + size(sect) < me.MPStringMaxLen) {
                         outgoing = outgoing~sect;
                     } else {
-                        print("Emesary: ERROR [",me.Ident,"] out of space for ",notification.NotificationType, " transmitted count=",idx, " queue size ",size(me.OutgoingList));
-                        notification.MessageExpiryTime = systime()+me.MessageLifeTime;
-                        break;
+                        if (first_time) {
+                            print("Emesary: ERROR [",me.Ident,"] out of space for ",notification.NotificationType, " transmitted count=",idx, " queue size ",size(me.OutgoingList));
+                            first_time = 0;
+                        }
+                        #notification.MessageExpiryTime = systime()+me.MessageLifeTime;
+                        #break;
+                        append(me.OutgoingListNew, notification);
                     }
                 } else {
                     notification.Expired = 1;
                 }
             }
+            me.OutgoingList = me.OutgoingListNew;
             me.TransmitterActive = size(me.OutgoingList);
             setprop(me.MpVariable,outgoing);
-#            print("Set ",me.MpVariable," size(",size(outgoing));
-#loopback test:
-# incomingBridge.ProcessIncoming(outgoing);
-
-#
-# Now remove any expired messages from the outgoing queue.
-# The only real way of doing this is via the pop() function
-# so we have to delete the expired items from the list by rebuilding
-# the list from the start with non-expired items, and then 
-# all of the items past the end (of the rebuilt list) can be popped 
-# (pop removes the last element from a vector)
-            var outSize = size(me.OutgoingList)-1;
-            var out_idx = 0;
-            for (var idx = 0; idx <= outSize; idx += 1) {
-#print("Q1 [",idx,"] ",me.OutgoingList[idx].MessageExpiryTime-cur_time," Expired=",me.OutgoingList[idx].Expired);
-                if(!me.OutgoingList[idx].Expired) {
-#print("move  ",idx, " => ",out_idx);
-                    var mmove = me.OutgoingList[idx];
-                    me.OutgoingList[out_idx] = me.OutgoingList[idx];
-                    out_idx += 1;
-                }
-            }
-            var to_del = (outSize+1) - out_idx;       
-#print("--> out idx",out_idx, " to delete ",to_del);
-            while(to_del > 0) {
-#print("--> pop ");
-                pop(me.OutgoingList);
-                to_del = to_del - 1;
-            }
         };
         new_class.TransmitTimer.restart(new_class.TransmitFrequencySeconds);
         return new_class;
@@ -304,8 +282,7 @@ var IncomingMPBridge =
             me.MpVariable = _root~"sim/multiplay/"~new_class.MPpropertyBase~"["~new_class.MPidx~"]";
             me.CallsignPath = _root~"callsign";
             me.PropertyRoot = _root;
-
-            setlistener(me.MpVariable, func(v)
+            me.mp_listener = setlistener(me.MpVariable, func(v)
                         {
 #print("incoming ",getprop(me.CallsignPath)," -->",me.PropertyRoot," v=",v.getValue());
                             me.ProcessIncoming(v.getValue());
@@ -329,6 +306,9 @@ var IncomingMPBridge =
         {
             print("Emesary IncomingMPBridge Remove() ",me.Ident);
             me.Transmitter.DeRegister(me);
+            if (me["mp_listener"] != nil)
+                removelistener(me.mp_listener);
+            me.mp_listener = nil;
         };
 
         #-------------------------------------------
@@ -401,8 +381,9 @@ var IncomingMPBridge =
 
                             if (bridged_notification.Ident == "none")
                               bridged_notification.Ident = "mp-bridge";
-                            me.Transmitter.NotifyAll(bridged_notification);
+                              
                             bridged_notification.IncomingMessageIndex = msg_idx;
+                            me.Transmitter.NotifyAll(bridged_notification);
                         }
                     }
                 }
@@ -417,7 +398,11 @@ var IncomingMPBridge =
         var incomingBridge = emesary_mp_bridge.IncomingMPBridge.new(path, notification_list, mpidx, transmitter, _propertybase);
         
         incomingBridge.Connect(path~"/");
-        me.incomingBridgeList[path] = incomingBridge;
+        if (me.incomingBridgeList[path] == nil) {
+            me.incomingBridgeList[path] = [incomingBridge];
+        } else {
+            append(me.incomingBridgeList[path],incomingBridge);
+        }
         return incomingBridge;
     },
 
@@ -425,7 +410,7 @@ var IncomingMPBridge =
     # Each multiplayer object will have its own incoming bridge. This is necessary to allow message ID
     # tracking (as the bridge knows which messages have been already processed)
     # Whenever a client connects over MP a new bridge is instantiated
-    startMPBridge : func(notification_list, mpidx=19, transmitter=nil, _propertybase="emesary/bridge")
+    startMPBridge : func(notification_list, mpidx=19, transmitter=nil, _propertybase="emesary/bridge") 
     {
         me.incomingBridgeList = {};
 
@@ -453,11 +438,13 @@ var IncomingMPBridge =
         #
         setlistener("/ai/models/model-removed", func(v){
             var path = v.getValue();
-            var bridge = me.incomingBridgeList[path];
-            if (bridge != nil) {
-#                            print("Bridge removed for ",v.getValue());
-                bridge.Remove();
-                me.incomingBridgeList[path]=nil;
+            var bridges = me.incomingBridgeList[path];
+            if (bridges != nil) {
+                foreach(bridge;bridges) {
+                    bridge.Remove();
+#                   print("Bridge removed for ",v.getValue());
+                }
+                me.incomingBridgeList[path] = nil;
             }
         });
     },
