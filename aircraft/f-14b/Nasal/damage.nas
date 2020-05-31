@@ -227,6 +227,10 @@ var DamageRecipient =
                 if (notification.Kind == 3) {
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
+                if (notification.SecondaryKindKind-21 == 93) {
+                  # ejection seat
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
                 
                 var elapsed = getprop("sim/time/elapsed-sec");
                 var ownPos = geo.aircraft_position();
