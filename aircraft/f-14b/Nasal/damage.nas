@@ -224,6 +224,9 @@ var DamageRecipient =
                 # todo:
                 #   animate missiles
                 #
+                if(getprop("payload/armament/msg") == 0) {
+                  return emesary.Transmitter.ReceiptStatus_NotProcessed;
+                }
                 if (notification.Kind == 3) {
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
