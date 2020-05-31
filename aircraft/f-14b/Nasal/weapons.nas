@@ -47,6 +47,7 @@ var weapons_init = func() {
 	system_stop();
 	SysRunning.setBoolValue(0);
 	update_gun_ready();
+	arm_selector();
 }
 
 

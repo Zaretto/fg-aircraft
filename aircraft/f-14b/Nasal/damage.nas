@@ -224,9 +224,28 @@ var DamageRecipient =
                 # todo:
                 #   animate missiles
                 #
+                if(getprop("payload/armament/msg") == 0) {
+                  return emesary.Transmitter.ReceiptStatus_NotProcessed;
+                }
                 if (notification.Kind == 3) {
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
+                if (notification.SecondaryKind-21 == 93) {
+                  # ejection seat
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
+                if (notification.SecondaryKind == 200) {
+                  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
+                    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
+                    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                  }
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
+                
+                
                 
                 var elapsed = getprop("sim/time/elapsed-sec");
                 var ownPos = geo.aircraft_position();
@@ -246,7 +265,9 @@ var DamageRecipient =
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
-                      printf("Missile Launch Warning from %03d degrees.", bearing);
+                      var out = sprintf("Missile Launch Warning from %03d degrees.", bearing);
+                      screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
+                      print(out);
                       damageLog.push(sprintf("Missile Launch Warning from %03d degrees from %s.", bearing, notification.Callsign));
                     }
                   }
@@ -266,12 +287,13 @@ var DamageRecipient =
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
                 if (appr == nil or elapsed - appr > 450) {
                   damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
+                  screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
                   approached[notification.Callsign~notification.UniqueIdentity] = elapsed;
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             if (notification.NotificationType == "ArmamentNotification") {
-                if (notification.FromIncomingBridge) {
+#                if (notification.FromIncomingBridge) {
 #                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
 #                          " Kind=",notification.Kind,
 #                          " SecondaryKind=",notification.SecondaryKind,
@@ -386,11 +408,11 @@ var DamageRecipient =
                             # prob = 729/2700 = 27%
                         } 
                     }
-                }
+#                }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        }
+        };
         return new_class;
     }
 };
