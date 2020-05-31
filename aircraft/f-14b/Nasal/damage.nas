@@ -253,7 +253,9 @@ var DamageRecipient =
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
-                      printf("Missile Launch Warning from %03d degrees.", bearing);
+                      var out = sprintf("Missile Launch Warning from %03d degrees.", bearing);
+                      screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
+                      print(out);
                       damageLog.push(sprintf("Missile Launch Warning from %03d degrees from %s.", bearing, notification.Callsign));
                     }
                   }
@@ -273,6 +275,7 @@ var DamageRecipient =
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
                 if (appr == nil or elapsed - appr > 450) {
                   damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
+                  screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
                   approached[notification.Callsign~notification.UniqueIdentity] = elapsed;
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
