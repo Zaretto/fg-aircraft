@@ -3758,7 +3758,7 @@ var AIM = {
 	},
 	
 	notifyInFlight: func (lat,lon,alt,rdr,typeID,typ,unique,thrust,callsign, heading, pitch, speed, is_deleted=0) {
-		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, is_deleted?3:2, 21+typeID);
+		var msg = notifications.ArmamentInFlightNotification.new("mfly", unique, is_deleted==1?3:2, 21+typeID);
         msg.Flags = rdr;#bit #0
         if (thrust) {
         	msg.Flags = bits.set(msg.Flags, 1);#bit #1
@@ -3768,7 +3768,7 @@ var AIM = {
         } else {
         	msg.Position.set_latlon(0,0,0);
         }
-        msg.IsDistinct = !is_deleted;
+        msg.IsDistinct = !(is_deleted!=0);
         msg.RemoteCallsign = callsign;
         msg.UniqueIndex = unique;
         msg.Pitch = pitch;
@@ -3779,7 +3779,7 @@ var AIM = {
 #f14.debugRecipient.Receive(msg);
 	},
 		
-	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, reason, typeID, type, self) {
+	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, typeID, type, self) {
 		var msg = notifications.ArmamentNotification.new("mhit", 4, 21+typeID);
         msg.RelativeAltitude = RelativeAltitude;
         msg.Bearing = Bearing;
@@ -3846,7 +3846,7 @@ var AIM = {
 #				me.sendMessage(phrase);
                     if(getprop("payload/armament/msg") and wh_mass > 0){
 						thread.lock(mutexTimer);
-						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),reason,me.typeID, me.typeLong, 0], 0]);
+						append(AIM.timerQueue, [AIM, AIM.notifyHit, [me.coord.alt() - me.t_coord.alt(),min_distance,me.callsign,me.coord.course_to(me.t_coord),me.typeID, me.typeLong, 0], 0]);
 						thread.unlock(mutexTimer);
                     }
 			} else {
@@ -3949,7 +3949,7 @@ var AIM = {
  					var cs = me.testMe.get_Callsign();
  					var cc = me.testMe.get_Coord();
  					thread.lock(mutexTimer);
-					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.typeID, me.typeLong,0], 0]);
+					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),me.typeID, me.typeLong,0], 0]);
 					thread.unlock(mutexTimer);
 				}
 
@@ -3966,7 +3966,7 @@ var AIM = {
 			me.printStats(phrase);
 			#me.sendMessage(phrase);
 			thread.lock(mutexTimer);
-			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),"mhit2",me.typeID, me.typeLong, 1], 0]);
+			append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - geo.aircraft_position().alt(),min_distance,cs,explode_coord.course_to(geo.aircraft_position()),me.typeID, me.typeLong, 1], 0]);
 			thread.unlock(mutexTimer);
 			
 			me.sendout = 1;
@@ -4845,19 +4845,24 @@ var AIM = {
 		       	geo.put_model(getprop("payload/armament/models") ~ "bomb_hit_smoke.xml", me.coord.lat(), me.coord.lon());
 		    } else if ((info[1] != nil) and (info[1].solid == 1)) {
 		        var crater_model = "";
-
+		        var siz = 0;
 		        if (me.weight_whead_lbm < 850 and (me.target_sea or me.target_gnd)) {
 		          	crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+		          	siz = 1;
 					#print("small crater");
 		        } elsif (me.target_sea or me.target_gnd) {
 					#print("big crater");
 		          	crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+		          	siz=2;
 		        }
 		       
 		       	if (crater_model != "" and me.weight_whead_lbm > 150) {
 		            geo.put_model(crater_model, me.coord.lat(), me.coord.lon());
 					#print("put crater");
-		        }
+					if(getprop("payload/armament/msg") and info[0] != nil) {
+						append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.coord.lat(), me.coord.lon(),info[0],0,179,"",me.unique_id,0,""~siz, 0, 0, 0,-1], 0]);
+					}
+				}
 		    }
         }, [], 0.5]);
 		thread.unlock(mutexTimer);

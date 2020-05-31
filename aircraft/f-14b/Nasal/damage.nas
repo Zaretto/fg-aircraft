@@ -230,10 +230,22 @@ var DamageRecipient =
                 if (notification.Kind == 3) {
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
-                if (notification.SecondaryKindKind-21 == 93) {
+                if (notification.SecondaryKind-21 == 93) {
                   # ejection seat
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
+                if (notification.SecondaryKind == 200) {
+                  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
+                    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
+                    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                  }
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
+                
+                
                 
                 var elapsed = getprop("sim/time/elapsed-sec");
                 var ownPos = geo.aircraft_position();
