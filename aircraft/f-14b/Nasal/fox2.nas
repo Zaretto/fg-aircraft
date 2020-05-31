@@ -3746,6 +3746,7 @@ var AIM = {
 			}
 			me.direct_dist_m = me.cur_dir_dist_m;
 		} elsif (me.life_time > me.selfdestruct_time) {
+			me.Tgt = nil; # make sure we dont in inertial mode with target go in and start checking distances.
 			me.explode("Selfdestructed.");
 		    return TRUE;
 		}
@@ -3788,9 +3789,8 @@ var AIM = {
         	# RJHTODO: we need to send the message to ourselves here, how to do that?
         	msg.Callsign = callsign; # RJHTODO: maybe handle flares / chaff 
         	armament.damage_recipient.Receive(msg);
-        } else {
-        	f14.hitBridgedTransmitter.NotifyAll(msg);
         }
+        f14.hitBridgedTransmitter.NotifyAll(msg);
         damageLog.push(sprintf("You hit %s with %s at %.1f meters.",callsign, type, Distance));
 #print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 #f14.debugRecipient.Receive(msg);
