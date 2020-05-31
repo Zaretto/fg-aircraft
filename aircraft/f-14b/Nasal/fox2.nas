@@ -3786,8 +3786,11 @@ var AIM = {
         msg.RemoteCallsign = callsign; # RJHTODO: maybe handle flares / chaff 
         if (self) {
         	# RJHTODO: we need to send the message to ourselves here, how to do that?
+        	msg.Callsign = callsign; # RJHTODO: maybe handle flares / chaff 
+        	armament.damage_recipient.Receive(msg);
+        } else {
+        	f14.hitBridgedTransmitter.NotifyAll(msg);
         }
-        f14.hitBridgedTransmitter.NotifyAll(msg);
         damageLog.push(sprintf("You hit %s with %s at %.1f meters.",callsign, type, Distance));
 #print("fox2.nas: transmit hit to ",callsign,"  reason:",reason);
 #f14.debugRecipient.Receive(msg);

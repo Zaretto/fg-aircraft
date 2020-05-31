@@ -275,7 +275,7 @@ var DamageRecipient =
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             if (notification.NotificationType == "ArmamentNotification") {
-                if (notification.FromIncomingBridge) {
+#                if (notification.FromIncomingBridge) {
 #                    print("recv(d2): ",notification.NotificationType, " ", notification.Ident,
 #                          " Kind=",notification.Kind,
 #                          " SecondaryKind=",notification.SecondaryKind,
@@ -390,11 +390,11 @@ var DamageRecipient =
                             # prob = 729/2700 = 27%
                         } 
                     }
-                }
+#                }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        }
+        };
         return new_class;
     }
 };
