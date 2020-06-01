@@ -116,8 +116,8 @@ var ArmamentInFlightNotification =
             setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,0.65,pos);new_class.Heading=dv.value+180;return dv},
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Pitch-90, 1, 1.38);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1, 1.38, pos);new_class.Pitch=dv.value+90;return dv},
+            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Pitch, 1, 1.38);},
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1, 1.38, pos);new_class.Pitch=dv.value;return dv},
              },
              {
             getValue:func{return emesary.TransferString.encode(new_class.RemoteCallsign);},

@@ -198,22 +198,27 @@ var OutgoingMPBridge =
                 var notification = me.OutgoingList[idx];
 
                 if (!notification.Expired and notification.MessageExpiryTime > cur_time) {
-                    var encval="";
-                    
-                    var eidx = 0;
-                    notification.Expired = 0;
+                    if (notification["sect"] == nil) {
+                        # This is first time attempting to transmit this notification
+                        var encval="";
+                        
+                        var eidx = 0;
+                        notification.Expired = 0;
 
-                    foreach(var p ; notification.bridgeProperties()) {
-                        var nv = p.getValue();
-                        encval = encval ~ nv;
-                        eidx += 1;
+                        foreach(var p ; notification.bridgeProperties()) {
+                            var nv = p.getValue();
+                            encval = encval ~ nv;
+                            eidx += 1;
+                        }
+                        #               !idx!typ!encv~
+                        sect = sprintf("%s%s%s%s%s%s%s",
+                                       OutgoingMPBridge.SeperatorChar, emesary.BinaryAsciiTransfer.encodeInt(notification.BridgeMessageId,4), 
+                                       OutgoingMPBridge.SeperatorChar, emesary.BinaryAsciiTransfer.encodeInt(notification.BridgeMessageNotificationTypeId,1),
+                                       OutgoingMPBridge.SeperatorChar, encval, OutgoingMPBridge.MessageEndChar);
+                    } else {
+                        # This notification has already been coded, but was previously not sent due to too little space.
+                        sect = notification.sect;
                     }
-                    #               !idx!typ!encv~
-                    sect = sprintf("%s%s%s%s%s%s%s",
-                                   OutgoingMPBridge.SeperatorChar, emesary.BinaryAsciiTransfer.encodeInt(notification.BridgeMessageId,4), 
-                                   OutgoingMPBridge.SeperatorChar, emesary.BinaryAsciiTransfer.encodeInt(notification.BridgeMessageNotificationTypeId,1),
-                                   OutgoingMPBridge.SeperatorChar, encval, OutgoingMPBridge.MessageEndChar);
-
                     if (size(outgoing) + size(sect) < me.MPStringMaxLen) {
                         outgoing = outgoing~sect;
                     } else {
@@ -223,6 +228,7 @@ var OutgoingMPBridge =
                         }
                         #notification.MessageExpiryTime = systime()+me.MessageLifeTime;
                         #break;
+                        notification.sect = sect;
                         append(me.OutgoingListNew, notification);
                     }
                 } else {
