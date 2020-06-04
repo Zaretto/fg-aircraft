@@ -36,12 +36,20 @@ emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, eme
 
 
 #----- bridge hit (armament) notifications
-var hitRoutedNotifications = [notifications.ArmamentNotification.new(nil)];
+var hitRoutedNotifications = [notifications.ArmamentNotification.new(nil),notifications.StaticNotification.new(nil)];
 var hitBridgedTransmitter = emesary.Transmitter.new("armamentNotificationBridge");
 var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
 
 hitoutgoingBridge.MPStringMaxLen = 180;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
+
+#----- bridge static (crater) notifications
+#var statRoutedNotifications = [notifications.StaticNotification.new(nil)];
+#var statBridgedTransmitter = emesary.Transmitter.new("staticNotificationBridge");
+#var statoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.stat",statRoutedNotifications, 19, "", statBridgedTransmitter);
+
+#hitoutgoingBridge.MPStringMaxLen = 180;
+#emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
 
 #
 # debug all messages - this can be removed when testing isn't required.
@@ -66,6 +74,8 @@ debugRecipient.Receive = func(notification)
                       " RemoteCallsign=",notification.RemoteCallsign);
                 debug.dump(notification);
             }
+        } else if (notification.NotificationType == "StaticNotification") {
+            debug.dump(notification);
         }
     }
     return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking

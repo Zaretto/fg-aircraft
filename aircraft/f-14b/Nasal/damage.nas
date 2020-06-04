@@ -197,6 +197,9 @@ var DamageRecipient =
 
         new_class.Receive = func(notification)
         {
+            if (!notification.FromIncomingBridge) {
+              return emesary.Transmitter.ReceiptStatus_NotProcessed;
+            }
 #
 #
 # This will be where movement and damage notifications are received. 
@@ -234,16 +237,17 @@ var DamageRecipient =
                   # ejection seat
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
-                if (notification.SecondaryKind == 200) {
-                  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
-                    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
-                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
-                  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
-                    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
-                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
-                  }
-                  return emesary.Transmitter.ReceiptStatus_OK;
-                }
+                # craters now use their own notifiction
+                #if (notification.SecondaryKind == 200) {
+                #  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
+                #    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+                #    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                #  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
+                #    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+                #    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                #  }
+                #  return emesary.Transmitter.ReceiptStatus_OK;
+                #}
                 
                 
                 
@@ -411,11 +415,41 @@ var DamageRecipient =
 #                }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
+            if (notification.NotificationType == "StaticNotification") {
+                if(getprop("payload/armament/msg") == 0) {
+                  return emesary.Transmitter.ReceiptStatus_NotProcessed;
+                }
+                if (notification.Kind == CREATE and getprop("payload/armament/enable-craters") == 1 and statics["obj_"~notification.UniqueIdentity] == nil) {
+                    if (notification.SecondaryKind == 0) {# TODO: make a hash with all the models
+                        var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+                        var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
+                        if (static != nil) {
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                            #static is a PropertyNode inside /models
+                        }
+                    } elsif (notification.SecondaryKind == 1) {
+                        var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+                        var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
+                        if (static != nil) {
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                        }
+                    }
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
         };
         return new_class;
     }
 };
+
+# Static variables for notification.Kind:
+var CREATE = 1;
+var MOVE = 2;
+var DESTROY = 3;
+var IMPACT = 3;
+
+var statics = {};
 
 damage_recipient = DamageRecipient.new("DamageRecipient");
 emesary.GlobalTransmitter.Register(damage_recipient);
