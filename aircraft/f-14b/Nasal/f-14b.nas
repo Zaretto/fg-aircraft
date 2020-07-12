@@ -508,6 +508,9 @@ var toggle_cockpit_views = func() {
 
 
 var quickstart = func() {
+
+    fixAirframe();
+
 #    setprop("controls/electric/engine[0]/generator",1);
 #    setprop("controls/electric/engine[1]/generator",1);
 #    setprop("controls/electric/engine[0]/bus-tie",1);

@@ -520,6 +520,12 @@
         </hud>
 
         <model>
+            <!-- Offset from aircraft x,y,z position to the position that is used as a
+            reference for things like FLOLS, ILS etc. -->
+            <reference-offset-x type="double">0</reference-offset-x>
+            <reference-offset-y type="double">0</reference-offset-y>
+            <reference-offset-z type="double">3.59</reference-offset-z>
+
             <!--path>Aircraft/f-14b/Models/F-14-model.xml</path-->
             <fallback-model-index type="int">514</fallback-model-index>
             <path>Aircraft/f-14b/Models/f-14b.xml</path>
@@ -976,7 +982,7 @@
                 <overrides>
                     <deck-offset-m type="double">-4.5</deck-offset-m>
                     <!-- align with cat1 -->
-                    <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
+                    <special-carrier-handling type="bool">false</special-carrier-handling>
                     <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
                     <!--                    <init-delay type="int">0.1</init-delay> -->
                 </overrides>
