@@ -78,6 +78,9 @@ var nav1_freq_update = func {
 		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_as_selected);
 	}
 }
+# carrier approach 'glideslope' based on 3/4 mile @ 360feet
+# (i.e. 1207m at 109m)
+var FD_TANDEG = math.tan(3.5 / 57.29577950560105);
 
 #
 # AN/SPN 46 transmits - this receives.
@@ -836,8 +839,14 @@ f14_afcs.afcs_disengage();
 }
 
 # Init ####################
-var init = func {
-	print("Initializing F-14 Systems");
+var init = func(v) {
+if (v == nil or !v.getValue())
+  {
+	print("init: not ready ",v.getValue());
+return;
+  }
+
+	print("Initializing F-14 Systems ",v.getValue());
 	f14.ext_loads_init();
 	f14.init_fuel_system();
 	aircraft.data.load();
@@ -946,9 +955,6 @@ get_approach_onspeed = func{
     return 0.4+(45.85+0.002055*total_mass_lbs+-0.00000000750*total_mass_lbs*total_mass_lbs);
 }
 
-# carrier approach 'glideslope' based on 3/4 mile @ 360feet
-# (i.e. 1207m at 109m)
-var FD_TAN5DEG = math.tan(5.16 / 57.29577950560105);
 #
 # Carrier reposition methods
 carrier_approach_reposition = func {
@@ -959,7 +965,7 @@ carrier_approach_reposition = func {
     if (getprop("sim/presets/carrier-approach-dist-m") != nil)
         dist_m  = getprop("sim/presets/carrier-approach-dist-m");
     np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
-    var gs_height = ((dist_m*FD_TAN5DEG)+20)*3.281;
+    var gs_height = ((dist_m*FD_TANDEG)+20)*3.281;
     lat = np.lat();
     lon = np.lon();
     onspeed = get_approach_onspeed();
