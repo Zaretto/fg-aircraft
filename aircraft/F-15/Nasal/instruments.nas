@@ -324,10 +324,10 @@ var common_init = func
 # Init ####################
 var init = func {
 	print("Initializing f15 Systems");
-    var modelNotification = emesary.Notification.new("F15Model", nil);
+    var modelNotification = emesary.Notification.new("F15Model", nil, 0);
     modelNotification.root_node = props.globals;
     emesary.GlobalTransmitter.NotifyAll(modelNotification);
-    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Init", 1));
+    emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Init", 1, 0));
 	ext_loads_init();
 	init_fuel_system();
 	aircraft.data.load();
