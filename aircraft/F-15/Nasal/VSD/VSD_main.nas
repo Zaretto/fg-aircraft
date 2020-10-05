@@ -393,7 +393,7 @@ var ModelEventsRecipient =
             {
                 root_node = props.globals;
                 print("F15D receive model notification",notification.NotificationType," V=",notification.Ident);
-                if (notification.root_node != nil) {
+                if (notification.root_node != nil and notification.root_node != "") {
                     print("F-15VSD: Using path ",notification.root_node.getPath());
                     root_node = notification.root_node;
                 }

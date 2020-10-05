@@ -27,7 +27,7 @@ var FrameNotification =
  debug: 0,
     new: func(_rate)
     {
-        var new_class = emesary.Notification.new("FrameNotification", _rate);
+        var new_class = emesary.Notification.new("FrameNotification", _rate, 0);
         new_class.Rate = _rate;
         new_class.FrameRate = 60;
         new_class.FrameCount = 0;
@@ -84,7 +84,7 @@ var FrameNotificationAddProperty =
 {
     new: func(module, variable, property, root_node=nil)
     {
-        var new_class = emesary.Notification.new("FrameNotificationAddProperty", variable);
+        var new_class = emesary.Notification.new("FrameNotificationAddProperty", variable, 0);
         if (root_node == nil)
           root_node = props.globals;
         new_class.module = module ;
