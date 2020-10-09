@@ -40,8 +40,13 @@ var ht_debug = 0;
 
 var pitch_factor=11.18;
 
+# the coordinates (e.g. 9317) are the Y coordinates from the SVG for the
+# horizontal bar for each tapes.
 var alt_range_factor = (9317-191) / 100000; # alt tape size and max value.
-var ias_range_factor = (694-191) / 1100;
+
+#IAS tape starts at 0 and goes up; so these coordinates result in an overall size 
+#of -501; if the tape moved downards it would be 501.
+var ias_range_factor = (-310.034 - 191.841) / 1100; 
 
 #Pinto: if you know starting x (left/right) and z (up/down), then i just do
 #
