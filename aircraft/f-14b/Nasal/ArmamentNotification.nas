@@ -37,16 +37,16 @@ var ArmamentNotification =
             setValue:func(v,root,pos){var dv=emesary.TransferByte.decode(v,pos);new_class.SecondaryKind=dv.value;return dv}, 
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.RelativeAltitude,2,10);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,2,10,pos);new_class.RelativeAltitude=dv.value;return dv}, 
+            getValue:func{return emesary.TransferFixedDouble.encode(new_class.RelativeAltitude,2,1/10);},
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,2,1/10,pos);new_class.RelativeAltitude=dv.value;return dv}, 
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Distance,2,10);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,2,10,pos);new_class.Distance=dv.value;return dv}, 
+            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Distance,2,1/10);},
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,2,1/10,pos);new_class.Distance=dv.value;return dv}, 
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Bearing,2,10);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,2,10,pos);new_class.Bearing=dv.value;return dv}, 
+            getValue:func{return emesary.TransferFixedDouble.encode(geo.normdeg180(new_class.Bearing),1,1.54);},
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,1.54,pos);new_class.Bearing=geo.normdeg(dv.value);return dv}, 
              },
              {
             getValue:func{return emesary.TransferString.encode(new_class.RemoteCallsign);},
@@ -108,16 +108,16 @@ var ArmamentInFlightNotification =
              },
              {
               #0..6696 fps (3967kts), mach 6.1 (SL) - factor 0.03703
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.u_fps-3348,1,0.03703);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,0.03703,pos);new_class.u_fps=dv.value+3348;return dv},
+            getValue:func{return emesary.TransferFixedDouble.encode(new_class.u_fps-3348,1,1/0.03703);},
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,1/0.03703,pos);new_class.u_fps=dv.value+3348;return dv},
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Heading-180,1,0.65);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,0.65,pos);new_class.Heading=dv.value+180;return dv},
+            getValue:func{return emesary.TransferFixedDouble.encode(geo.normdeg180(new_class.Heading),1,1.54);},#1.0/0.65
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,1.54,pos);new_class.Heading=geo.normdeg(dv.value);return dv},
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Pitch, 1, 1.38);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1, 1.38, pos);new_class.Pitch=dv.value;return dv},
+            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Pitch, 1, 1/1.38);},
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1, 1/1.38, pos);new_class.Pitch=dv.value;return dv},
              },
              {
             getValue:func{return emesary.TransferString.encode(new_class.RemoteCallsign);},
@@ -137,6 +137,8 @@ var ArmamentInFlightNotification =
         return new_class;
     },
 };
+
+
 
 var StaticNotification_Id = 25;
 var StaticNotification =
@@ -183,8 +185,8 @@ var StaticNotification =
             setValue:func(v,root,pos){var dv=emesary.TransferByte.decode(v,pos);new_class.SecondaryKind=dv.value;return dv},
              },
              {
-            getValue:func{return emesary.TransferFixedDouble.encode(new_class.Heading-180,1,0.65);},
-            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,0.65,pos);new_class.Heading=dv.value+180;return dv},
+            getValue:func{return emesary.TransferFixedDouble.encode(geo.normdeg180(new_class.Heading),1,1.54);},#1.0/0.65
+            setValue:func(v,root,pos){var dv=emesary.TransferFixedDouble.decode(v,1,1.54,pos);new_class.Heading=geo.normdeg(dv.value);return dv},
              },
              {
             getValue:func{return emesary.TransferByte.encode(new_class.Flags1);},

@@ -462,7 +462,7 @@ var hitmessage = func(typeOrd) {
   if (getprop("payload/armament/msg") == TRUE) {
   	print(phrase);
   	#print("Second id: "~(151+armament.shells[typeOrd][0]));
-    var msg = notifications.ArmamentNotification.new("mhit", 4, 151+armament.shells[typeOrd][0]);
+    var msg = notifications.ArmamentNotification.new("mhit", 4, 111+armament.shells[typeOrd][0]);
 		        msg.RelativeAltitude = 0;
 		        msg.Bearing = 0;
 		        msg.Distance = hits_count;

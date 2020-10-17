@@ -25,7 +25,7 @@
 #      If at some point in the future we target 2019.2 as a min ver we can use a single
 #      bridge and setup the notification list to contain all of the armament hit/flying notifications
 #i.e. change to [notifications.ArmamentInFlightNotification.new(nil), notifications.ArmamentNotification.new(nil)];
-var geoRoutedNotifications = [notifications.ArmamentInFlightNotification.new(nil)];
+var geoRoutedNotifications = [notifications.ArmamentInFlightNotification.new()];
 var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
 var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
 
@@ -36,7 +36,7 @@ emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, eme
 
 
 #----- bridge hit (armament) notifications
-var hitRoutedNotifications = [notifications.ArmamentNotification.new(nil),notifications.StaticNotification.new(nil)];
+var hitRoutedNotifications = [notifications.ArmamentNotification.new(),notifications.StaticNotification.new()];
 var hitBridgedTransmitter = emesary.Transmitter.new("armamentNotificationBridge");
 var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
 
