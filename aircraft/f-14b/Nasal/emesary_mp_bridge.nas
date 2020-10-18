@@ -121,7 +121,9 @@ var OutgoingMPBridge =
                     {
                         if(new_class.TransmitterActive)
                             new_class.Transmit();
-
+                        else
+                            new_class.TransmitEnd();
+                            
                         new_class.TransmitTimer.restart(new_class.TransmitFrequencySeconds);
                     });
 
@@ -238,6 +240,12 @@ var OutgoingMPBridge =
             me.OutgoingList = me.OutgoingListNew;
             me.TransmitterActive = size(me.OutgoingList);
             setprop(me.MpVariable,outgoing);
+        };
+        new_class.TransmitEnd = func
+        {
+            if (getprop(me.MpVariable) != "") {
+                setprop(me.MpVariable,"");
+            }
         };
         new_class.TransmitTimer.restart(new_class.TransmitFrequencySeconds);
         return new_class;
