@@ -359,10 +359,10 @@ var DamageRecipient =
                             var maxDist = 0;# distance where the explosion dont hurt us anymore
                             var lbs = 0;
                             
-                            if (wh[2] == 0) {
+                            if (wh[2] == 1) {
                               lbs = wh[1];
                               maxDist = maxDamageDistFromWarhead(lbs);#3*sqrt(lbs)
-                            } elsif (hitable_by_air_munitions and wh[2] == 1) {
+                            } elsif (hitable_by_air_munitions and wh[2] == 0) {
                               lbs = wh[1];
                               maxDist = maxDamageDistFromWarhead(lbs);
                             } else {
