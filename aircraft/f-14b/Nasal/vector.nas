@@ -2,7 +2,7 @@ var Math = {
     #
     # Author: Nikolai V. Chr.
     #
-    # Version 1.6
+    # Version 1.9
     #
     # When doing euler coords. to cartesian: +x = forw, +y = left,  +z = up.
     # FG struct. coords:                     +x = back, +y = right, +z = up.
@@ -21,6 +21,30 @@ var Math = {
 
     convertAngles: func (heading,pitch,roll) {
         return [-heading, pitch, roll];
+    },
+    
+    # returns direction in geo coordinate system
+    vectorToGeoVector: func (a, coord) {
+        me.handp = me.cartesianToEuler(a);
+        me.end_dist_m = 100;# not too low for floating point precision. Not too high to get into earth curvature stuff.
+        me.tgt_coord = geo.Coord.new(coord);
+        if (me.handp[0] != nil) {
+            me.tgt_coord.apply_course_distance(me.handp[0],me.end_dist_m);
+            me.upamount = me.end_dist_m * math.tan(me.handp[1]*D2R);
+        } elsif (me.handp[1] == 90) {
+            me.upamount = me.end_dist_m;
+        } else {
+            me.upamount = -me.end_dist_m;
+        }
+        me.tgt_coord.set_alt(coord.alt()+me.upamount);
+        
+        return {"x":me.tgt_coord.x()-coord.x(),  "y":me.tgt_coord.y()-coord.y(), "z":me.tgt_coord.z()-coord.z()};
+    },
+    
+    # When observing another MP aircraft the groundspeed velocity info is in body frame, this method will convert it to cartesian vector.
+    getCartesianVelocity: func (yaw_deg, pitch_deg, roll_deg, uBody_fps, vBody_fps, wBody_fps) {
+        me.bodyVelocity = [uBody_fps, -vBody_fps, -wBody_fps];
+        return me.yawPitchRollVector(yaw_deg, pitch_deg, roll_deg, me.bodyVelocity);
     },
 
     # angle between 2 vectors. Returns 0-180 degrees.
@@ -46,7 +70,7 @@ var Math = {
         me.rollM  = me.rollMatrix(roll);
         me.pitchM = me.pitchMatrix(pitch);
         me.yawM   = me.yawMatrix(yaw);
-        me.rotation = me.multiplyMatrices(me.multiplyMatrices(me.yawM, me.pitchM), me.rollM);
+        me.rotation = me.multiplyMatrices(me.rollM, me.multiplyMatrices(me.pitchM, me.yawM));
         return me.multiplyMatrixWithVector(me.rotation, vector);
     },
 
@@ -55,7 +79,7 @@ var Math = {
         me.rollM  = me.rollMatrix(roll);
         me.pitchM = me.pitchMatrix(pitch);
         me.yawM   = me.yawMatrix(yaw);
-        me.rotation = me.multiplyMatrices(me.multiplyMatrices(me.rollM, me.pitchM), me.yawM);
+        me.rotation = me.multiplyMatrices(me.yawM, me.multiplyMatrices(me.pitchM, me.rollM));
         return me.multiplyMatrixWithVector(me.rotation, vector);
     },
 
@@ -245,6 +269,18 @@ var Math = {
     normalize: func (v) {
       me.mag = me.magnitudeVector(v);
       return [v[0]/me.mag, v[1]/me.mag, v[2]/me.mag];
+    },
+    
+    crossProduct: func (a,b) {
+        return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+    },
+    
+    distance_from_point_to_line: func (coordP, coordL1, coordL2) {
+        var P  = [coordP.x(),  coordP.y(),  coordP.z()];
+        var L1 = [coordL1.x(), coordL1.y(), coordL1.z()];
+        var L2 = [coordL2.x(), coordL2.y(), coordL2.z()];
+        
+        return me.magnitudeVector(me.crossProduct(me.minus(L2,L1), me.minus(L1,P)))/me.magnitudeVector(me.minus(L2,L1));
     },
 
 # rotation matrices

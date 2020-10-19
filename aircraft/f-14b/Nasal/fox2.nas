@@ -3778,6 +3778,17 @@ var AIM = {
 #print("fox2.nas: transmit in flight");
 #f14.debugRecipient.Receive(msg);
 	},
+	
+	notifyCrater: func (lat,lon,alt,big,heading) {
+		var msg = notifications.StaticNotification.new("stat", int(rand()*15000000), 1, big);
+        
+        msg.Position.set_latlon(lat,lon,alt);
+        msg.IsDistinct = 0;
+        msg.Heading = heading;
+        f14.hitBridgedTransmitter.NotifyAll(msg);
+#print("fox2.nas: transmit crater");
+#f14.debugRecipient.Receive(msg);
+	},
 		
 	notifyHit: func (RelativeAltitude, Distance, callsign, Bearing, typeID, type, self) {
 		var msg = notifications.ArmamentNotification.new("mhit", 4, 21+typeID);
@@ -3788,6 +3799,7 @@ var AIM = {
         if (self) {
         	# RJHTODO: we need to send the message to ourselves here, how to do that?
         	msg.Callsign = callsign; # RJHTODO: maybe handle flares / chaff 
+        	msg.FromIncomingBridge = 1; # so that the receiver dont ignore it.
         	armament.damage_recipient.Receive(msg);
         }
         f14.hitBridgedTransmitter.NotifyAll(msg);
@@ -4845,22 +4857,22 @@ var AIM = {
 		       	geo.put_model(getprop("payload/armament/models") ~ "bomb_hit_smoke.xml", me.coord.lat(), me.coord.lon());
 		    } else if ((info[1] != nil) and (info[1].solid == 1)) {
 		        var crater_model = "";
-		        var siz = 0;
+		        var siz = -1;
 		        if (me.weight_whead_lbm < 850 and (me.target_sea or me.target_gnd)) {
 		          	crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
-		          	siz = 1;
+		          	siz = 0;
 					#print("small crater");
 		        } elsif (me.target_sea or me.target_gnd) {
 					#print("big crater");
 		          	crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
-		          	siz=2;
+		          	siz=1;
 		        }
 		       
 		       	if (crater_model != "" and me.weight_whead_lbm > 150) {
 		            geo.put_model(crater_model, me.coord.lat(), me.coord.lon());
 					#print("put crater");
 					if(getprop("payload/armament/msg") and info[0] != nil) {
-						append(AIM.timerQueue, [AIM, AIM.notifyInFlight, [me.coord.lat(), me.coord.lon(),info[0],0,179,"",me.unique_id,0,""~siz, 0, 0, 0,-1], 0]);
+						append(AIM.timerQueue, [AIM, AIM.notifyCrater, [me.coord.lat(), me.coord.lon(),info[0],siz, 0], 0]);
 					}
 				}
 		    }

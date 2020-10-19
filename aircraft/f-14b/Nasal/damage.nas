@@ -18,12 +18,16 @@ var hitable_by_air_munitions = 1;   # if anti-air can do damage
 var hitable_by_cannon = 1;          # if cannon can do damage
 #var hitable_by_ground_munitions = 1;# if anti-ground/marine can do damage
 var is_fleet = 0;  # Is really 7 ships, 3 of which has offensive missiles.
+var rwr_to_screen=1; # for aircraft that do not yet have proper RWR
+var tacview_supported=0; # For aircraft with tacview support
+var m28_auto=0; # only used by automats
 ##########################################################################################################################
-
-var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 
 var TRUE  = 1;
 var FALSE = 0;
+
+var hp = hp_max;
+setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
 
 var shells = {
     # [id,damage,(name)]
@@ -54,7 +58,7 @@ var warheads = {
     "AGM-65":            [0,  126.00,1,0],
     "AGM-84":            [1,  488.00,1,0],
     "AGM-88":            [2,  146.00,1,0],
-    "AGM65":             [3,  200.00,1,0],
+    "AGM65":             [3,  200.00,1,0],#deprecated
     "AGM-119":           [4,  264.50,1,0],
     "AGM-154A":          [5,  493.00,1,0],
     "AGM-158":           [6, 1000.00,1,0],
@@ -73,8 +77,8 @@ var warheads = {
     "GBU-24":            [19,  945.00,1,0],
     "GBU-31":            [20,  945.00,1,0],
     "GBU-54":            [21,  190.00,1,0],
-    "GBU12":             [22,  190.00,1,0],
-    "GBU16":             [23,  450.00,1,0],
+    "GBU12":             [22,  190.00,1,0],#deprecated
+    "GBU-16":            [23,  450.00,1,0],
     "HVAR":              [24,    7.50,1,0],#P51
     "KAB-500":           [25,  564.38,1,0],
     "Kh-25MP":           [26,  197.53,1,0],
@@ -102,19 +106,19 @@ var warheads = {
     "STORMSHADOW":       [48,  850.00,1,0],
     "ZB-250":            [49,  236.99,1,0],
     "ZB-500":            [50,  473.99,1,0],
-    "aim-120":           [51,   44.00,0,0],
+    "aim-120":           [51,   44.00,0,0],#deprecated
     "AIM-120":           [52,   44.00,0,0],
     "AIM-54":            [53,  135.00,0,0],
-    "aim-7":             [54,   88.00,0,0],
+    "aim-7":             [54,   88.00,0,0],#deprecated
     "AIM-7":             [55,   88.00,0,0],
-    "aim-9":             [56,   20.80,0,0],
+    "aim-9":             [56,   20.80,0,0],#deprecated
     "AIM-9":             [57,   20.80,0,0],
     "AIM120":            [58,   44.00,0,0],
     "AIM132":            [59,   22.05,0,0],
-    "AIM9":              [60,   20.80,0,0],
+    "AIM9":              [60,   20.80,0,0],#deprecated
     "KN-06":             [61,  315.00,0,0],
     "M317":              [62,  145.00,0,0],
-    "Magic-2":           [63,   27.00,0,0], 
+    "Magic-2":           [63,   27.00,0,0],#deprecated 
     "Majic":             [64,   26.45,0,0],
     "Matra MICA":        [65,   30.00,0,0],
     "Matra R550 Magic 2":[66,   27.00,0,0],
@@ -145,6 +149,7 @@ var warheads = {
     "S530D":             [91,   66.00,0,0],
     "S48N6":             [92,  330.00,0,0],# 48N6 from S-300pmu
     "pilot":             [93,    0.00,1,0],# ejected pilot
+    "BETAB-500ShP":      [94, 1160.00,1,0],
 };
 
 var id2warhead = [];
@@ -197,6 +202,9 @@ var DamageRecipient =
 
         new_class.Receive = func(notification)
         {
+            if (!notification.FromIncomingBridge) {
+              return emesary.Transmitter.ReceiptStatus_NotProcessed;
+            }
 #
 #
 # This will be where movement and damage notifications are received. 
@@ -224,7 +232,7 @@ var DamageRecipient =
                 # todo:
                 #   animate missiles
                 #
-                if(getprop("payload/armament/msg") == 0) {
+                if(getprop("payload/armament/msg") == 0 and notification.RemoteCallsign != notification.Callsign) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
                 if (notification.Kind == 3) {
@@ -234,16 +242,17 @@ var DamageRecipient =
                   # ejection seat
                   return emesary.Transmitter.ReceiptStatus_OK;
                 }
-                if (notification.SecondaryKind == 200) {
-                  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
-                    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
-                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
-                  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
-                    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
-                    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
-                  }
-                  return emesary.Transmitter.ReceiptStatus_OK;
-                }
+                # craters now use their own notifiction
+                #if (notification.SecondaryKind == 200) {
+                #  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
+                #    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+                #    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                #  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
+                #    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+                #    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
+                #  }
+                #  return emesary.Transmitter.ReceiptStatus_OK;
+                #}
                 
                 
                 
@@ -266,7 +275,7 @@ var DamageRecipient =
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
                       var out = sprintf("Missile Launch Warning from %03d degrees.", bearing);
-                      screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
+                      if (rwr_to_screen) screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
                       print(out);
                       damageLog.push(sprintf("Missile Launch Warning from %03d degrees from %s.", bearing, notification.Callsign));
                     }
@@ -283,12 +292,13 @@ var DamageRecipient =
                 setprop("payload/armament/MAW-bearing", bearing);
                 setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
                 MAW_elapsed = elapsed;
-                printf("Missile Approach Warning from %03d degrees.", bearing);
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
                 if (appr == nil or elapsed - appr > 450) {
+                  printf("Missile Approach Warning from %03d degrees.", bearing);
                   damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
-                  screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
+                  if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
                   approached[notification.Callsign~notification.UniqueIdentity] = elapsed;
+                  if (m28_auto) mig28.engagedBy(notification.Callsign);
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
@@ -309,10 +319,11 @@ var DamageRecipient =
                     callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                     if (notification.RemoteCallsign == callsign and getprop("payload/armament/msg") == 1) {
                         #damage enabled and were getting hit
-                        if (notification.SecondaryKind > 150 and hitable_by_cannon) {
+                        if (m28_auto) mig28.engagedBy(notification.Callsign);
+                        if (notification.SecondaryKind < 0 and hitable_by_cannon) {
                             # cannon hit
-                            var probability = id2shell[notification.SecondaryKind - 151][1];
-                            var typ = id2shell[notification.SecondaryKind - 151][2];
+                            var probability = id2shell[-1*notification.SecondaryKind-1][1];
+                            var typ = id2shell[-1*notification.SecondaryKind-1][2];
                             var hit_count = notification.Distance;
                             if (hit_count != nil) {
                                 var damaged_sys = 0;
@@ -354,10 +365,10 @@ var DamageRecipient =
                             var maxDist = 0;# distance where the explosion dont hurt us anymore
                             var lbs = 0;
                             
-                            if (wh[2] == 0) {
+                            if (wh[2] == 1) {
                               lbs = wh[1];
                               maxDist = maxDamageDistFromWarhead(lbs);#3*sqrt(lbs)
-                            } elsif (hitable_by_air_munitions and wh[2] == 1) {
+                            } elsif (hitable_by_air_munitions and wh[2] == 0) {
                               lbs = wh[1];
                               maxDist = maxDamageDistFromWarhead(lbs);
                             } else {
@@ -411,17 +422,47 @@ var DamageRecipient =
 #                }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
+            if (notification.NotificationType == "StaticNotification") {
+                if(getprop("payload/armament/msg") == 0) {
+                  return emesary.Transmitter.ReceiptStatus_NotProcessed;
+                }
+                if (notification.Kind == CREATE and getprop("payload/armament/enable-craters") == 1 and statics["obj_"~notification.UniqueIdentity] == nil) {
+                    if (notification.SecondaryKind == 0) {# TODO: make a hash with all the models
+                        var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
+                        var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
+                        if (static != nil) {
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                            #static is a PropertyNode inside /models
+                        }
+                    } elsif (notification.SecondaryKind == 1) {
+                        var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
+                        var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
+                        if (static != nil) {
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                        }
+                    }
+                }
+                return emesary.Transmitter.ReceiptStatus_OK;
+            }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
         };
         return new_class;
     }
 };
 
+# Static variables for notification.Kind:
+var CREATE = 1;
+var MOVE = 2;
+var DESTROY = 3;
+var IMPACT = 3;
+
+var statics = {};
+
 damage_recipient = DamageRecipient.new("DamageRecipient");
 emesary.GlobalTransmitter.Register(damage_recipient);
 
 var maxDamageDistFromWarhead = func (lbs) {
-  # very simple
+  # Calc at what distance the warhead will do zero damage every time.
   var dist = 3*math.sqrt(lbs);
 
   return dist;
@@ -640,7 +681,7 @@ var code_ct = func () {
       setprop("/sim/speed-up", 1);
       setprop("/gui/map/draw-traffic", 0);
       setprop("/sim/gui/dialogs/map-canvas/draw-TFC", 0);
-      fgcommand("timeofday", props.Node.new({"timeofday": "real"}));
+      #fgcommand("timeofday", props.Node.new({"timeofday": "real"}));
       #setprop("/sim/rendering/als-filters/use-filtering", 1);
       call(func{var interfaceController = fg1000.GenericInterfaceController.getOrCreateInstance();
       interfaceController.stop();},nil,var err2=[]);      
