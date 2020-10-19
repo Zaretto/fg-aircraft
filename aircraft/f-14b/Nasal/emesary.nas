@@ -1,26 +1,26 @@
 #---------------------------------------------------------------------------
  #
- #  Title                : EMESARY inter-object communication
+ #	Title                : EMESARY inter-object communication
  #
- #  File Type            : Implementation File
+ #	File Type            : Implementation File
  #
- #  Description          : Provides generic inter-object communication. For an object to receive a message it
- #                       : must first register with an instance of a Transmitter, and provide a Receive method
+ #	Description          : Provides generic inter-object communication. For an object to receive a message it
+ #	                     : must first register with an instance of a Transmitter, and provide a Receive method
  #
- #                       : To send a message use a Transmitter with an object. That's all there is to it.
+ #	                     : To send a message use a Transmitter with an object. That's all there is to it.
  #  
  #  References           : http://chateau-logic.com/content/emesary-nasal-implementation-flightgear
  #                       : http://www.chateau-logic.com/content/class-based-inter-object-communication
  #                       : http://chateau-logic.com/content/emesary-efficient-inter-object-communication-using-interfaces-and-inheritance
  #                       : http://chateau-logic.com/content/c-wpf-application-plumbing-using-emesary
  #
- #  Author               : Richard Harrison (richard@zaretto.com)
+ #	Author               : Richard Harrison (richard@zaretto.com)
  #
- #  Creation Date        : 29 January 2016
+ #	Creation Date        : 29 January 2016
  #
- #  Version              : 4.8
+ #	Version              : 4.8
  #
- #  Copyright Â© 2016 Richard Harrison           Released under GPL V2
+ #  Copyright © 2016 Richard Harrison           Released under GPL V2
  #
  #---------------------------------------------------------------------------
  # Classes in this file:
@@ -95,13 +95,13 @@ var Transmitter =
         {
             logprint(LOG_INFO, "Transmitter.Register: argument is not a Recipient object");
         }
-        #not having a Receive function is an error
-        
-        
-        
-        # snippet removed here
-        
-        
+        # Warn if recipient doesn't have a Receive function - this is not an error because
+        #a receive function could be added after the recipient has been registered - so it is
+        # deprecated to do this.
+        if (!isfunc(recipient["Receive"]))
+        {
+            logprint(DEV_ALERT, "Transmitter.Register: Error, argument has no Receive method!");
+        }
         foreach (var r; me.Recipients)
         {
             if (r == recipient) {
@@ -304,24 +304,36 @@ var TypeIdUnspecified = 1;
 var NotificationAutoTypeId = 1;
 var Notification =
 {
-    new: func(_type, _ident, _typeid=-1)
+    new: func(_type, _ident, _typeid=0)
     {
         if (!isscalar(_type)) {
             logprint(DEV_ALERT, "Notification.new: _type must be a scalar!");
             return nil;
         }
-        if (!isscalar(_ident)) {
+        if (!isscalar(_ident) and _ident != nil) {
             logprint(DEV_ALERT, "Notification.new: _ident is not scalar but ", typeof(_ident));
             return nil;
         }
         
-        if (_typeid == 0) {
-            NotificationAutoTypeId += 1;
+# typeID of 0 means that the notification does not have an assigned type ID
+#           <0 means an automatic ID is required
+#           >= 16 is a reserved ID
+# normally the typeID should be unique across all of FlightGear.
+# use of automatic ID's is really only for notifications that will never be bridged,
+# or more accurate when bridged the type isn't going to be known fully.
+
+        if (_typeid < 0) {
+            if (_ident != nil){
+                logprint(DEV_ALERT, "_typeid can only be omitted when registering class");
+                return nil;
+            }
+
             # IDs >= 16 are reserved; see http://wiki.flightgear.org/Emesary_Notifications
-            if (NotificationAutoTypeId == 16) {
+            if (NotificationAutoTypeId >= 16) {
                 logprint(LOG_ALERT, "Notification: AutoTypeID limit exceeded: "~NotificationAutoTypeId);
                 return nil;
             }
+            NotificationAutoTypeId += 1;
             _typeid = NotificationAutoTypeId;
         }
 
@@ -398,7 +410,6 @@ var Recipient =
     },
 };
 
-
 #
 # Instantiate a Global Transmitter, this is a convenience and a known starting point. 
 # Generally most classes will use this transmitters, however other transmitters 
@@ -413,12 +424,12 @@ var BinaryAsciiTransfer =
 {
     #excluded chars 32 (<space>), 33 (!), 35 (#), 36($), 126 (~), 127 (<del>)
     alphabet : 
-                 chr(1) ~chr(2) ~chr(3) ~chr(4) ~chr(5) ~chr(6) ~chr(7) ~chr(8) ~chr(9)
-        ~chr(10)~chr(11)~chr(12)~chr(13)~chr(14)~chr(15)~chr(16)~chr(17)~chr(18)~chr(19)
+         chr(1)~chr(2)~chr(3)~chr(4)~chr(5)~chr(6)~chr(7)~chr(8)
+        ~chr(9)~chr(10)~chr(11)~chr(12)~chr(13)~chr(14)~chr(15)~chr(16)~chr(17)~chr(18)~chr(19)
         ~chr(20)~chr(21)~chr(22)~chr(23)~chr(24)~chr(25)~chr(26)~chr(27)~chr(28)~chr(29)
-        ~chr(30)~chr(31)                ~chr(34)
+        ~chr(30)~chr(31)~chr(34)
         ~"%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}"
-            ~chr(128)~chr(129)
+        ~chr(128)~chr(129)
         ~chr(130)~chr(131)~chr(132)~chr(133)~chr(134)~chr(135)~chr(136)~chr(137)~chr(138)~chr(139)
         ~chr(140)~chr(141)~chr(142)~chr(143)~chr(144)~chr(145)~chr(146)~chr(147)~chr(148)~chr(149)
         ~chr(150)~chr(151)~chr(152)~chr(153)~chr(154)~chr(155)~chr(156)~chr(157)~chr(158)~chr(159)
@@ -441,14 +452,14 @@ var BinaryAsciiTransfer =
     empty_encoding: chr(1)~chr(1)~chr(1)~chr(1)~chr(1)~chr(1)~chr(1)~chr(1)~chr(1)~chr(1)~chr(1),
     encodeNumeric : func(_num,length,factor)
     {
-        var num = int(_num / factor);
+		var num = int(_num / factor);
 
-        var irange = int(BinaryAsciiTransfer.po2[length]);
+		var irange = int(BinaryAsciiTransfer.po2[length]);
 
-        if (num < -irange) num = -irange;
-        else if (num > irange) num = irange;
+		if (num < -irange) num = -irange;
+		else if (num > irange) num = irange;
 
-        num = int(num + irange);
+		num = int(num + irange);
 
         if (num == 0)
             return substr(BinaryAsciiTransfer.empty_encoding,0,length);
@@ -468,7 +479,7 @@ var BinaryAsciiTransfer =
     retval : {value:0, pos:0},
     decodeNumeric : func(str, length, factor, pos)
     {
-        var irange = int(BinaryAsciiTransfer.po2[length]);
+		var irange = int(BinaryAsciiTransfer.po2[length]);
         var power = length-1;
         BinaryAsciiTransfer.retval.value = 0;
         BinaryAsciiTransfer.retval.pos = pos;
@@ -496,8 +507,8 @@ var BinaryAsciiTransfer =
             length = length-1;
             BinaryAsciiTransfer.retval.pos = BinaryAsciiTransfer.retval.pos + 1;
         }
-        BinaryAsciiTransfer.retval.value -= irange;
-        BinaryAsciiTransfer.retval.value = BinaryAsciiTransfer.retval.value * factor;
+		BinaryAsciiTransfer.retval.value -= irange;
+		BinaryAsciiTransfer.retval.value = BinaryAsciiTransfer.retval.value * factor;
         return BinaryAsciiTransfer.retval;
     },
     encodeInt : func(num,length){
@@ -640,7 +651,6 @@ var TransferCoord =
     }
 };
 
-
 # genericEmesaryGlobalTransmitterTransmit  allowes to use the emesary.GlobalTransmitter via fgcommand
 # which in turn allows using it in XML bindings, e.g.
 #   <binding>
@@ -692,7 +702,8 @@ var genericEmesaryGlobalTransmitterTransmit  = func(node)
     transmitter.NotifyAll(message);
 };
 
-#removecommand("emesary-transmit"); #in case of reload
+# Temporary bugfix -- FIXME
+# removecommand("emesary-transmit"); #in case of reload
 addcommand("emesary-transmit", genericEmesaryGlobalTransmitterTransmit);
 
 #setprop("/sim/startup/terminal-ansi-colors",0);
