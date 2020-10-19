@@ -18,12 +18,16 @@ var hitable_by_air_munitions = 1;   # if anti-air can do damage
 var hitable_by_cannon = 1;          # if cannon can do damage
 #var hitable_by_ground_munitions = 1;# if anti-ground/marine can do damage
 var is_fleet = 0;  # Is really 7 ships, 3 of which has offensive missiles.
+var rwr_to_screen=1; # for aircraft that do not yet have proper RWR
+var tacview_supported=0; # For aircraft with tacview support
+var m28_auto=0; # only used by automats
 ##########################################################################################################################
-
-var clamp = func(v, min, max) { v < min ? min : v > max ? max : v }
 
 var TRUE  = 1;
 var FALSE = 0;
+
+var hp = hp_max;
+setprop("sam/damage", math.max(0,100*hp/hp_max));#used in HUD
 
 var shells = {
     # [id,damage,(name)]
@@ -228,7 +232,7 @@ var DamageRecipient =
                 # todo:
                 #   animate missiles
                 #
-                if(getprop("payload/armament/msg") == 0) {
+                if(getprop("payload/armament/msg") == 0 and notification.RemoteCallsign != notification.Callsign) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
                 if (notification.Kind == 3) {
@@ -271,7 +275,7 @@ var DamageRecipient =
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
                       var out = sprintf("Missile Launch Warning from %03d degrees.", bearing);
-                      screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
+                      if (rwr_to_screen) screen.log.write(out, 1,1,0);# temporary till someone models a RWR in RIO seat
                       print(out);
                       damageLog.push(sprintf("Missile Launch Warning from %03d degrees from %s.", bearing, notification.Callsign));
                     }
@@ -288,12 +292,13 @@ var DamageRecipient =
                 setprop("payload/armament/MAW-bearing", bearing);
                 setprop("payload/armament/MAW-active", 1);# resets every 1 seconds
                 MAW_elapsed = elapsed;
-                printf("Missile Approach Warning from %03d degrees.", bearing);
                 var appr = approached[notification.Callsign~notification.UniqueIdentity];
                 if (appr == nil or elapsed - appr > 450) {
+                  printf("Missile Approach Warning from %03d degrees.", bearing);
                   damageLog.push(sprintf("Missile Approach Warning from %03d degrees from %s.", bearing, notification.Callsign));
-                  screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
+                  if (rwr_to_screen) screen.log.write(sprintf("Missile Approach Warning from %03d degrees.", bearing), 1,1,0);# temporary till someone models a RWR in RIO seat
                   approached[notification.Callsign~notification.UniqueIdentity] = elapsed;
+                  if (m28_auto) mig28.engagedBy(notification.Callsign);
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
@@ -314,6 +319,7 @@ var DamageRecipient =
                     callsign = size(callsign) < 8 ? callsign : left(callsign,7);
                     if (notification.RemoteCallsign == callsign and getprop("payload/armament/msg") == 1) {
                         #damage enabled and were getting hit
+                        if (m28_auto) mig28.engagedBy(notification.Callsign);
                         if (notification.SecondaryKind < 0 and hitable_by_cannon) {
                             # cannon hit
                             var probability = id2shell[-1*notification.SecondaryKind-1][1];
@@ -456,7 +462,7 @@ damage_recipient = DamageRecipient.new("DamageRecipient");
 emesary.GlobalTransmitter.Register(damage_recipient);
 
 var maxDamageDistFromWarhead = func (lbs) {
-  # very simple
+  # Calc at what distance the warhead will do zero damage every time.
   var dist = 3*math.sqrt(lbs);
 
   return dist;
