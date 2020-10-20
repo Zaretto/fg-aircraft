@@ -8,7 +8,7 @@
 
 
 ############################ Config ######################################################################################
-var full_damage_dist_m = 3;# Can vary from aircraft to aircraft depending on how many failure modes it has.
+var full_damage_dist_m = 3.00;# Can vary from aircraft to aircraft depending on how many failure modes it has.
                            # Many modes (like Viggen) ought to have lower number like zero.
                            # Few modes (like F-14) ought to have larger number such as 3.
                            # For assets this should be average radius of the asset.
@@ -21,6 +21,7 @@ var is_fleet = 0;  # Is really 7 ships, 3 of which has offensive missiles.
 var rwr_to_screen=1; # for aircraft that do not yet have proper RWR
 var tacview_supported=0; # For aircraft with tacview support
 var m28_auto=0; # only used by automats
+var mlw_max=2.25; # 
 ##########################################################################################################################
 
 var TRUE  = 1;
@@ -261,8 +262,21 @@ var DamageRecipient =
                 var bearing = ownPos.course_to(notification.Position);
                 var radarOn = bits.test(notification.Flags, 0);
                 var thrustOn = bits.test(notification.Flags, 1);
+                var typ = id2warhead[notification.SecondaryKind-21];
                 
-                
+                if (tacview_supported and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
+                  if (tacview.starttime) {
+                    var typp = typ[4]=="pilot"?"Parachutist":typ[4];
+                    var extra = typp=="Parachutist"?"|0|0|0":"";
+                    var extra2 = typ[2]==0?",Type=Weapon+Missile":",Type=Weapon+Bomb";
+                    extra2 = typp=="Parachutist"?"":extra2;
+                    var color = radarOn?",Color=Red":",Color=Yellow";
+                    thread.lock(tacview.mutexWrite);
+                    tacview.write("#" ~ (systime() - tacview.starttime)~"\n");
+                    tacview.write((21000-notification.UniqueIdentity)~",T="~notification.Position.lon()~"|"~notification.Position.lat()~"|"~notification.Position.alt()~extra~",Name="~typp~color~extra2~"\n");
+                    thread.unlock(tacview.mutexWrite);
+                  }
+                }
                 
                 # Missile launch warning:
                 if (thrustOn) {
@@ -270,7 +284,7 @@ var DamageRecipient =
                   if (launch == nil or elapsed - launch > 300) {
                     launch = elapsed;
                     launched[notification.Callsign~notification.UniqueIdentity] = launch;
-                    if (notification.Position.direct_distance_to(ownPos)*M2NM < 5) {
+                    if (notification.Position.direct_distance_to(ownPos)*M2NM < mlw_max) {
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
@@ -431,16 +445,34 @@ var DamageRecipient =
                         var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
                         var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
                         if (static != nil) {
-                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading, notification.SecondaryKind];
                             #static is a PropertyNode inside /models
                         }
                     } elsif (notification.SecondaryKind == 1) {
                         var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
                         var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
                         if (static != nil) {
-                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading, notification.SecondaryKind];
+                        }
+                    } elsif (notification.SecondaryKind == 2) {
+                        var crater_model = getprop("payload/armament/models") ~ "bomb_hit_smoke.xml";
+                        var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
+                        if (static != nil) {
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading, notification.SecondaryKind];
                         }
                     }
+                } elsif (notification.Kind == REQUEST_ALL and getprop("payload/armament/enable-craters") == 1) {
+                  # someone has requested all statics, lets send them out
+                  var kes = keys(statics);
+                  printf(notification.Callsign~" has requested all statics, sending %d to him/her.",size(kes));
+                  foreach(ke;kes) {
+                    var static = statics[ke];
+                    var msg = notifications.StaticNotification.new("stat", num(substr(ke,4)), CREATE, static[5]);
+                    msg.Position.set_latlon(static[1],static[2],static[3]);
+                    msg.IsDistinct = 0;
+                    msg.Heading = static[4];
+                    notifications.hitBridgedTransmitter.NotifyAll(msg);
+                  }
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
@@ -454,9 +486,36 @@ var DamageRecipient =
 var CREATE = 1;
 var MOVE = 2;
 var DESTROY = 3;
-var IMPACT = 3;
+var IMPACT = 4;
+var REQUEST_ALL = 5;
 
 var statics = {};
+
+
+setlistener("sim/multiplay/online", func {
+  check_for_Request();
+},0,0);
+
+setlistener("payload/armament/msg", func {
+  check_for_Request();
+},0,0);
+
+var last_check = -65;
+
+var check_for_Request = func {
+  if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and getprop("payload/armament/msg") and systime()-last_check > 60) {
+    last_check = systime();
+    var msg = notifications.StaticNotification.new("stat", int(rand()*15000000), REQUEST_ALL, 0);
+    msg.IsDistinct = 0;
+    msg.Heading = 0;
+    notifications.hitBridgedTransmitter.NotifyAll(msg);
+    #print("REQUEST_ALL");
+  } else {
+    #print("REQUEST_NONE");
+  }
+}
+
+settimer(check_for_Request, 60);# for aircraft like mig21 that starts with damage enabled
 
 damage_recipient = DamageRecipient.new("DamageRecipient");
 emesary.GlobalTransmitter.Register(damage_recipient);
@@ -561,16 +620,26 @@ setlistener("/sim/signals/reinit", repairYasim);
 hp_f = [hp_max,hp_max,hp_max,hp_max,hp_max,hp_max,hp_max];
 
 var fail_fleet_systems = func (probability, factor) {
-  var no = 7;
-  while (no > 6 or hp_f[no] < 0) {
-    no = int(rand()*7);
-    if (hp_f[no] < 0) {
-      if (rand() > 0.9) {
-        armament.defeatSpamFilter("You shot one of our already sinking ships, you are just mean.");
-        hp_f[no] -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage
-        print("HP["~no~"]: " ~ hp_f[no] ~ "/" ~ hp_max);
-        return;
-      }
+  
+  var sinking_ships = (hp_f[0]<0) + (hp_f[1]<0) + (hp_f[2]<0) + (hp_f[3]<0) + (hp_f[4]<0) + (hp_f[5]<0) + (hp_f[6]<0);
+  var hit_sinking = 0;
+  if (sinking_ships == 0) {
+    hit_sinking = 0;
+  } elsif (sinking_ships == 7) {
+    hit_sinking = 1;
+  } else {
+    hit_sinking = rand()<0.10;
+  }
+  if (hit_sinking) {
+    armament.defeatSpamFilter("You shot one of our already sinking ships, you are just mean.");
+    return;
+  }
+ 
+  var no = 0;
+  
+  for (no=0; no < 7; no+=1) {
+    if (hp_f[no] > 0) {
+      break;
     }
   }
   hp_f[no] -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage

@@ -54,7 +54,7 @@
 			<script><![CDATA[
 				var str = "";
 				if (getprop("velocities/groundspeed-kt") < 1) {
-				  var buffer = armament.damageLog.get_buffer();
+				  var buffer = damage.damageLog.get_buffer();
 				  
 				  foreach(entry; buffer) {
 				      str = str~""~entry.time~" "~entry.message~"\n";
