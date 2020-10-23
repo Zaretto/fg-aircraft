@@ -43,13 +43,13 @@ hitoutgoingBridge.TransmitFrequencySeconds = 1.5;
 hitoutgoingBridge.MPStringMaxLen = 180;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
 
-#----- bridge static (crater) notifications
-#var statRoutedNotifications = [notifications.StaticNotification.new(nil)];
-#var statBridgedTransmitter = emesary.Transmitter.new("staticNotificationBridge");
-#var statoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.stat",statRoutedNotifications, 19, "", statBridgedTransmitter);
-
-#hitoutgoingBridge.MPStringMaxLen = 180;
-#emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
+#----- bridge object notifications
+var objectRoutedNotifications = [notifications.ObjectInFlightNotification.new()];
+var objectBridgedTransmitter = emesary.Transmitter.new("objectNotificationBridge");
+var objectoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.object",objectRoutedNotifications, 17, "", objectBridgedTransmitter);
+objectoutgoingBridge.TransmitFrequencySeconds = 0.75;
+objectoutgoingBridge.MPStringMaxLen = 180;
+emesary_mp_bridge.IncomingMPBridge.startMPBridge(objectRoutedNotifications, 17, emesary.GlobalTransmitter);
 
 #
 # debug all messages - this can be removed when testing isn't required.

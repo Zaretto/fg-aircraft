@@ -7,7 +7,7 @@
 #
 
 
-############################ Config ######################################################################################
+############################ Config ########################################################################################
 var full_damage_dist_m = 3;# Can vary from aircraft to aircraft depending on how many failure modes it has.
                            # Many modes (like Viggen) ought to have lower number like zero.
                            # Few modes (like F-14) ought to have larger number such as 3.
@@ -22,7 +22,8 @@ var rwr_to_screen=1; # for aircraft that do not yet have proper RWR
 var tacview_supported=0; # For aircraft with tacview support
 var m28_auto=0; # only used by automats
 var mlw_max=2.25; # 
-##########################################################################################################################
+var auto_flare_caller = 0; # If damage.nas should detect flare releases, or if function is called from somewhere in aircraft
+############################################################################################################################
 
 var TRUE  = 1;
 var FALSE = 0;
@@ -195,6 +196,10 @@ for(var myid = 0;myid<size(k);myid+=1) {
   }
 }
 
+#==================================================================
+#                       Notification processing
+#==================================================================
+
 #
 # Create emesary recipient for handling other craft's missile positioins.
 var DamageRecipient =
@@ -214,7 +219,7 @@ var DamageRecipient =
 # This can replace MP chat for damage notifications 
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
-            if (notification.NotificationType == "ArmamentInFlightNotification") {
+            if (notification.NotificationType == "ArmamentInFlightNotification" or notification.NotificationType == "ObjectInFlightNotification") {
 #                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
 #                      " UniqueIdentity=",notification.UniqueIdentity,
 #                      " Kind=",notification.Kind,
@@ -501,12 +506,22 @@ var DamageRecipient =
     }
 };
 
+damage_recipient = DamageRecipient.new("DamageRecipient");
+emesary.GlobalTransmitter.Register(damage_recipient);
+
+#==================================================================
+#                       Notification Kinds
+#==================================================================
 # Static variables for notification.Kind:
 var CREATE = 1;
 var MOVE = 2;
 var DESTROY = 3;
 var IMPACT = 4;
 var REQUEST_ALL = 5;
+
+#==================================================================
+#                       Flying missiles over MP
+#==================================================================
 
 var statics = {};
 var dynamics = {};
@@ -515,6 +530,7 @@ var deadreckon_updatetime = 0.1;# 1/15 of missile send rate
 var time_before_delete = 2.5;# time since last notification before deleting
 
 var dynamic_loop = func {
+  # This keeps track of flying missiles/parachutes/flares and manages ModelManager.
   var new_dynamic3d = [];
   var stime = systime();
   foreach (dynamic3d_entry ; dynamic3d) {
@@ -554,6 +570,7 @@ var dynamic_loop = func {
 }
 
 var ModelManager = {
+    # This shows missiles/parachutes/flares flying and their smoke trail.
     new: func (path,lat,lon,alt_ft,heading,pitch,para) {
         var m = {parents:[ModelManager]};
         var n = props.globals.getNode("models", 1);
@@ -601,7 +618,7 @@ var ModelManager = {
         m.pAlt_ft = m.vAlt_ft;
         m.pHeading = m.vHeading;
         m.pPitch = m.vPitch;
-        m.delayTime = 0;
+        
         
         m.model.getNode("latitude-deg-prop", 1).setValue(m.lat.getPath());
         m.model.getNode("longitude-deg-prop", 1).setValue(m.lon.getPath());
@@ -612,11 +629,10 @@ var ModelManager = {
         
         m.coord = geo.Coord.new();
         m.uBody_fps = 0;
-        me.last = [geo.Coord.new().set_latlon(lat,lon,alt_ft*FT2M).xyz(),systime()];
-        me.past = me.last;
-        me.frametime = 0;
-        
-        m.loadNode = m.model.getNode("load", 1);
+        m.last = [geo.Coord.new().set_latlon(lat,lon,alt_ft*FT2M).xyz(),systime()];
+        m.past = m.last;
+        m.frametime = 0;
+        m.delayTime = 0;        
         
         return m;
     },
@@ -660,7 +676,8 @@ var ModelManager = {
         return [me.xx,me.yy,me.zz];
     },
     place: func {
-      if (me.loadNode.getValue()==nil) {
+      if (me["loadNode"] == nil) {
+        me.loadNode = me.model.getNode("load", 1);
         me.loadNode.setBoolValue(1);
         me.loadNode.setBoolValue(0);
       }
@@ -755,24 +772,35 @@ var reckon_delete = func (entry) {
 
 dynamic_loop();
 
+#==================================================================
+#                       Flares over MP
+#==================================================================
+
 var last_prop = 0;
 var last_release = 0;
 var flare_list = [];
+var flare_update_time = 0.75;
+var flare_duration = 8;
+var flare_terminal_speed = 50;#m/s
 
 var animate_flare = func {
+  # This detects own flares and send out notifications about their position every 0.75s
+  if (!getprop("payload/armament/msg")) {
+    return;
+  }
   var stime = systime();
   # old flares
   var old_flares = [];
   foreach(flare; flare_list) {
-    if (stime-flare[0] > 8) {
+    if (stime-flare[0] > flare_duration) {
       #print("Remove flare "~flare[5]);
       continue;
     }
-    flare = [flare[0], flare[1], flare[2], (flare[4]<50)?(flare[4]+0.75*9.83*0.5):(flare[4]-0.75*3), math.max(0,flare[3]-0.75*3), flare[5]];
-    flare[1].apply_course_distance(flare[2], 0.75*flare[4]);
+    flare = [flare[0], flare[1], flare[2], (flare[3]<flare_terminal_speed)?(flare[3]+flare_update_time*9.83*0.5):(flare[3]-flare_update_time*3), math.max(0,flare[4]-flare_update_time*7), flare[5]];
+    flare[1].apply_course_distance(flare[2], flare_update_time*flare[4]);
     flare[1].set_alt(flare[1].alt()-0.75*flare[3]);
     
-    var msg = notifications.ArmamentInFlightNotification.new("mfly", flare[5], MOVE, 21+95);
+    var msg = notifications.ObjectInFlightNotification.new("ffly", flare[5], MOVE, 21+95);
     msg.Flags = 0;
     msg.Position = flare[1];
     msg.IsDistinct = 1;
@@ -781,17 +809,32 @@ var animate_flare = func {
     msg.Pitch = 0;
     msg.Heading = 0;
     msg.u_fps = 0;
-    notifications.geoBridgedTransmitter.NotifyAll(msg);
+    notifications.objectBridgedTransmitter.NotifyAll(msg);
     #print("Update flare "~flare[5]);
     append(old_flares, flare);
   }
   flare_list = old_flares;
+  
+  if(auto_flare_caller) {
+    auto_flare_released();
+  }
+}
+var flaretimer = maketimer(flare_update_time, animate_flare);
+flaretimer.start();
+
+var auto_flare_released = func {
   # new flare
   var prop = getprop("rotors/main/blade[3]/flap-deg");
+  var stime = systime();
   if (prop != nil and prop != 0 and prop != last_prop and stime-last_release > 1)  {
-    var flare = [stime, geo.aircraft_position(), getprop("orientation/heading-deg"),FT2M*getprop("velocities/speed-down-fps"),FT2M*math.sqrt(getprop("velocities/speed-north-fps")*getprop("velocities/speed-north-fps")+getprop("velocities/speed-east-fps")*getprop("velocities/speed-east-fps")), int(rand()*200)-100];
+    var flare =[stime,
+                geo.aircraft_position(),
+                getprop("orientation/heading-deg"),
+                FT2M*getprop("velocities/speed-down-fps"),
+                FT2M*math.sqrt(getprop("velocities/speed-north-fps")*getprop("velocities/speed-north-fps")+getprop("velocities/speed-east-fps")*getprop("velocities/speed-east-fps")),
+                int(rand()*200)-100];
     append(flare_list, flare);
-    var msg = notifications.ArmamentInFlightNotification.new("mfly", flare[5], MOVE, 21+95);
+    var msg = notifications.ObjectInFlightNotification.new("ffly", flare[5], MOVE, 21+95);
     msg.Flags = 0;
     msg.Position = flare[1];
     msg.IsDistinct = 1;
@@ -800,14 +843,39 @@ var animate_flare = func {
     msg.Pitch = 0;
     msg.Heading = 0;
     msg.u_fps = 0;
-    notifications.geoBridgedTransmitter.NotifyAll(msg);
+    notifications.objectBridgedTransmitter.NotifyAll(msg);
     last_release = stime;
     #print("Adding flare "~flare[5]);
   }
   last_prop = prop;
-  settimer(animate_flare, 0.75);
 }
-animate_flare();
+
+var flare_released = func {
+  # new flare
+    var stime = systime();
+    var flare =[stime,
+                geo.aircraft_position(),
+                getprop("orientation/heading-deg"),
+                FT2M*getprop("velocities/speed-down-fps"),
+                FT2M*math.sqrt(getprop("velocities/speed-north-fps")*getprop("velocities/speed-north-fps")+getprop("velocities/speed-east-fps")*getprop("velocities/speed-east-fps")),
+                int(rand()*200)-100];
+    append(flare_list, flare);
+    var msg = notifications.ObjectInFlightNotification.new("ffly", flare[5], MOVE, 21+95);
+    msg.Flags = 0;
+    msg.Position = flare[1];
+    msg.IsDistinct = 1;
+    msg.RemoteCallsign = "";
+    msg.UniqueIndex = flare[5];
+    msg.Pitch = 0;
+    msg.Heading = 0;
+    msg.u_fps = 0;
+    notifications.objectBridgedTransmitter.NotifyAll(msg);
+    #print("Adding flare "~flare[5]);
+}
+
+#==================================================================
+#                       Notification for getting craters
+#==================================================================
 
 setlistener("sim/multiplay/online", func {
   check_for_Request();
@@ -820,6 +888,7 @@ setlistener("payload/armament/msg", func {
 var last_check = -65;
 
 var check_for_Request = func {
+  # This sends out a notification to ask other aircraft for all craters
   if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and getprop("payload/armament/msg") and systime()-last_check > 60) {
     last_check = systime();
     var msg = notifications.StaticNotification.new("stat", int(rand()*15000000), REQUEST_ALL, 0);
@@ -834,8 +903,9 @@ var check_for_Request = func {
 
 settimer(check_for_Request, 60);# for aircraft like mig21 that starts with damage enabled
 
-damage_recipient = DamageRecipient.new("DamageRecipient");
-emesary.GlobalTransmitter.Register(damage_recipient);
+#==================================================================
+#                       Damage functions
+#==================================================================
 
 var maxDamageDistFromWarhead = func (lbs) {
   # Calc at what distance the warhead will do zero damage every time.
@@ -985,6 +1055,10 @@ setlistener("payload/armament/MLW-count", func {
   setLaunch(getprop("payload/armament/MLW-launcher"), 0);#TODO: figure out if that callsign is a SAM/ship.
 });
 
+#==================================================================
+#                       RWR and sound functions
+#==================================================================
+
 var setLaunch = func (c,s) {
   setprop("sound/rwr-launch-sam", s);
   setprop("sound/rwr-launch", c);
@@ -1019,6 +1093,10 @@ var nearby_explosion_b = func {
   setprop("damage/sounds/nearby-explode-on", 0);
 }
 
+#==================================================================
+#                       Helper functions
+#==================================================================
+
 var callsign_struct = {};
 var getCallsign = func (callsign) {
   var node = callsign_struct[callsign];
@@ -1052,6 +1130,10 @@ processCallsignsTimer = maketimer(1.5, processCallsigns);
 processCallsignsTimer.simulatedTime = 1;
 processCallsignsTimer.start();
 
+#==================================================================
+#                       Stuff
+#==================================================================
+
 var code_ct = func () {
   #ANTIC
   if (getprop("payload/armament/msg")) {
@@ -1082,6 +1164,10 @@ setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 code_ctTimer.start();
 
+#==================================================================
+#                       Relocation function
+#==================================================================
+
 var re_init = func (node) {
   # repair the aircraft
   if (node.getValue() == 0) return;
@@ -1094,6 +1180,10 @@ var re_init = func (node) {
   }
   damageLog.push("Aircraft was repaired due to re-init.");
 }
+
+#==================================================================
+#                       Event log
+#==================================================================
 
 var damageLog = events.LogBuffer.new(echo: 0);
 
