@@ -77,7 +77,7 @@ var F15HUD = {
 	new : func (svgname){
 		var obj = {parents : [F15HUD] };
 
-        obj.process_targets = PartitionProcessor.new("HUD-radar", 20, nil);
+        obj.process_targets = frame_utils.PartitionProcessor.new("HUD-radar", 20, nil);
         obj.process_targets.set_max_time_usec(500);
 
         obj.canvas= canvas.new({
