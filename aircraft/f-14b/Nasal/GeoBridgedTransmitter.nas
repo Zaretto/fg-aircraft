@@ -30,7 +30,7 @@ var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
 var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
 
 # bridge should be tuned to be around 90% of the packet size full.
-
+geooutgoingBridge.TransmitFrequencySeconds = 0.75;
 geooutgoingBridge.MPStringMaxLen = 150;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
 
@@ -39,17 +39,18 @@ emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, eme
 var hitRoutedNotifications = [notifications.ArmamentNotification.new(),notifications.StaticNotification.new()];
 var hitBridgedTransmitter = emesary.Transmitter.new("armamentNotificationBridge");
 var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
-hitoutgoingBridge.TransmitFrequencySeconds = 2;
-hitoutgoingBridge.MPStringMaxLen = 180;
+hitoutgoingBridge.TransmitFrequencySeconds = 1.5;
+hitoutgoingBridge.MPStringMaxLen = 120;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
 
-#----- bridge static (crater) notifications
-#var statRoutedNotifications = [notifications.StaticNotification.new(nil)];
-#var statBridgedTransmitter = emesary.Transmitter.new("staticNotificationBridge");
-#var statoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.stat",statRoutedNotifications, 19, "", statBridgedTransmitter);
-
-#hitoutgoingBridge.MPStringMaxLen = 180;
-#emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
+#----- bridge object notifications
+var objectRoutedNotifications = [notifications.ObjectInFlightNotification.new()];
+var objectBridgedTransmitter = emesary.Transmitter.new("objectNotificationBridge");
+var objectoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-14mp.object",objectRoutedNotifications, 17, "", objectBridgedTransmitter);
+objectoutgoingBridge.TransmitFrequencySeconds = 0.2;
+objectoutgoingBridge.MessageLifeTime = 1;
+objectoutgoingBridge.MPStringMaxLen = 150;
+emesary_mp_bridge.IncomingMPBridge.startMPBridge(objectRoutedNotifications, 17, emesary.GlobalTransmitter);
 
 #
 # debug all messages - this can be removed when testing isn't required.

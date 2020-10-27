@@ -53,8 +53,8 @@
 			<command>nasal</command>
 			<script><![CDATA[
 				var str = "";
-				if (getprop("velocities/groundspeed-kt") < 1) {
-				  var buffer = armament.damageLog.get_buffer();
+				if (getprop("velocities/groundspeed-kt") < 10) {
+				  var buffer = damage.damageLog.get_buffer();
 				  
 				  foreach(entry; buffer) {
 				      str = str~""~entry.time~" "~entry.message~"\n";

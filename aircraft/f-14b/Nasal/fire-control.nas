@@ -408,7 +408,7 @@ var FireControl = {
 	updateAll: func {
 		# called from the stations when they change.
 		if (me.selectedType != nil) {
-			#screen.log.write("Fire-control: deselecting "~me.selectedType, 0.5, 0.5, 1); not needed in F-14
+			#screen.log.write("Fire-control: deselecting "~me.selectedType, 0.5, 0.5, 1);
 		}
 		me.noWeapon();
 	},
@@ -673,9 +673,10 @@ var FireControl = {
 				if (getprop("sim/time/elapsed-sec")>me.gunTriggerTime+10 or me.aim.alternate) {
 					# only say guns guns every 10 seconds.
 					#armament.AIM.sendMessage(me.aim.brevity);
+					
 					me.gunTriggerTime = getprop("sim/time/elapsed-sec");
 				}
-				armament.damageLog.push("Cannon fired");
+				damage.damageLog.push("Cannon fired");
 				me.triggerTime = 0;
 			}
 		} elsif (getprop("controls/armament/trigger") < 1) {
@@ -702,7 +703,7 @@ var FireControl = {
 				add = " at: "~me.aim.callsign;
 			}
 			#me.aim.sendMessage(me.aim.brevity~add);
-			armament.damageLog.push(me.aim.brevity~add);
+			damage.damageLog.push(me.aim.brevity~add);
 		}
 		return me.aim;
 	},
@@ -755,10 +756,13 @@ var FireControl = {
 			return;
 		}
 		aimer = me.pylons[me.selected[0]].fireWeapon(me.selected[1], getCompleteRadarTargetsList());
-		#aimer.sendMessage(aimer.brevity~" Maddog released");
-		me.aimNext = me.nextWeapon(me.selectedType);
-		if (me.aimNext != nil) {
-			me.aimNext.start();
+		if (aimer != nil) {
+			#aimer.sendMessage(aimer.brevity~" Maddog released");
+			damage.damageLog.push(aimer.brevity~" Maddog");
+			me.aimNext = me.nextWeapon(me.selectedType);
+			if (me.aimNext != nil) {
+				me.aimNext.start();
+			}
 		}
 		return;
 	},
@@ -1029,7 +1033,6 @@ var FireControl = {
 var debug = 0;
 var printDebug = func (msg) {if (debug == 1) print(msg);};
 var printfDebug = func {if (debug == 1) call(printf,arg);};
-
 
 
 # This is non-generic methods, please edit it to fit your radar setup:

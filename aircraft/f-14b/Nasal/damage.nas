@@ -7,7 +7,7 @@
 #
 
 
-############################ Config ######################################################################################
+############################ Config ########################################################################################
 var full_damage_dist_m = 3;# Can vary from aircraft to aircraft depending on how many failure modes it has.
                            # Many modes (like Viggen) ought to have lower number like zero.
                            # Few modes (like F-14) ought to have larger number such as 3.
@@ -21,7 +21,9 @@ var is_fleet = 0;  # Is really 7 ships, 3 of which has offensive missiles.
 var rwr_to_screen=1; # for aircraft that do not yet have proper RWR
 var tacview_supported=0; # For aircraft with tacview support
 var m28_auto=0; # only used by automats
-##########################################################################################################################
+var mlw_max=2.25; # 
+var auto_flare_caller = 0; # If damage.nas should detect flare releases, or if function is called from somewhere in aircraft
+############################################################################################################################
 
 var TRUE  = 1;
 var FALSE = 0;
@@ -44,27 +46,28 @@ var shells = {
     "Mk3Z":              [6,0.100], # 30mm Jaguar
     "BK27 cannon":       [7,0.070], # 27mm
     "GSh-23":            [8,0.065], # 23mm
-    "M61A1 shell":       [9,0.050], # 20mm
+    "M61A1 shell":       [9,0.050], # 20mm F14, F15, F16
     "50 BMG":            [10,0.015], # 12.7mm (non-explosive)    
     "7.62":              [11,0.005], # 7.62mm (non-explosive)
     "Hydra-70":          [12,0.250], # F-16
     "SNEB":              [13,0.250], # Jaguar   
+    "DEFA 554":          [14,0.100], # 30mm Mirage
 };    
 
 # lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
 
 var warheads = {
     # [id,lbs,anti surface,cluster,(name)]
-    "AGM-65":            [0,  126.00,1,0],
-    "AGM-84":            [1,  488.00,1,0],
-    "AGM-88":            [2,  146.00,1,0],
-    "AGM65":             [3,  200.00,1,0],#deprecated
-    "AGM-119":           [4,  264.50,1,0],
-    "AGM-154A":          [5,  493.00,1,0],
-    "AGM-158":           [6, 1000.00,1,0],
-    "ALARM":             [7,  450.00,1,0],
-    "AM39-Exocet":       [8,  364.00,1,0], 
-    "AS-37-Martel":      [9,  330.00,1,0], 
+    "AGM-65":            [ 0,  126.00,1,0],
+    "AGM-84":            [ 1,  488.00,1,0],
+    "AGM-88":            [ 2,  146.00,1,0],
+    "MK-82SE":           [ 3,  192.00,1,0],# snake eye
+    "AGM-119":           [ 4,  264.50,1,0],
+    "AGM-154A":          [ 5,  493.00,1,0],
+    "AGM-158":           [ 6, 1000.00,1,0],
+    "ALARM":             [ 7,  450.00,1,0],
+    "AM39-Exocet":       [ 8,  364.00,1,0], 
+    "AS-37-Martel":      [ 9,  330.00,1,0], 
     "AS30L":             [10,  529.00,1,0],
     "BL755":             [11,  100.00,1,1],# 800lb bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-87":            [12,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
@@ -122,10 +125,10 @@ var warheads = {
     "Majic":             [64,   26.45,0,0],
     "Matra MICA":        [65,   30.00,0,0],
     "Matra R550 Magic 2":[66,   27.00,0,0],
-    "MATRA-R530":        [67,   55.00,0,0],
-    "MatraMica":         [68,   30.00,0,0],
-    "MatraMicaIR":       [69,   30.00,0,0],
-    "MatraR550Magic2":   [70,   27.00,0,0],
+    "Matra R530":        [67,   55.00,0,0],
+    "MatraMica":         [68,   30.00,0,0],#deprecated
+    "MatraMicaIR":       [69,   30.00,0,0],#deprecated
+    "MatraR550Magic2":   [70,   27.00,0,0],#deprecated 
     "Meteor":            [71,   55.00,0,0],
     "MICA-EM":           [72,   30.00,0,0], 
     "MICA-IR":           [73,   30.00,0,0], 
@@ -150,11 +153,13 @@ var warheads = {
     "S48N6":             [92,  330.00,0,0],# 48N6 from S-300pmu
     "pilot":             [93,    0.00,1,0],# ejected pilot
     "BETAB-500ShP":      [94, 1160.00,1,0],
+    "Flare":             [95,    0.00,0,0],
 };
 
 var id2warhead = [];
 var launched = {};# callsign: elapsed-sec
 var approached = {};# callsign: uniqueID
+var heavy_smoke = [61,62,92];
 
 var k = keys(warheads);
 
@@ -192,6 +197,10 @@ for(var myid = 0;myid<size(k);myid+=1) {
   }
 }
 
+#==================================================================
+#                       Notification processing
+#==================================================================
+
 #
 # Create emesary recipient for handling other craft's missile positioins.
 var DamageRecipient =
@@ -211,7 +220,7 @@ var DamageRecipient =
 # This can replace MP chat for damage notifications 
 # and allow missile visibility globally (i.e. all suitable equipped models) have the possibility
 # to receive notifications from all other suitably equipped models.
-            if (notification.NotificationType == "ArmamentInFlightNotification") {
+            if (notification.NotificationType == "ArmamentInFlightNotification" or notification.NotificationType == "ObjectInFlightNotification") {
 #                print("recv(d1): ",notification.NotificationType, " ", notification.Ident, 
 #                      " UniqueIdentity=",notification.UniqueIdentity,
 #                      " Kind=",notification.Kind,
@@ -232,37 +241,84 @@ var DamageRecipient =
                 # todo:
                 #   animate missiles
                 #
+                if (notification.NotificationType == "ObjectInFlightNotification") {
+                  notification.Pitch = 0;
+                  notification.Heading = 0;
+                  notification.u_fps = 0;
+                  notification.Flags = 0;
+                  notification.RemoteCallsign = "";
+                }
                 if(getprop("payload/armament/msg") == 0 and notification.RemoteCallsign != notification.Callsign) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
-                if (notification.Kind == 3) {
-                  return emesary.Transmitter.ReceiptStatus_OK;
-                }
-                if (notification.SecondaryKind-21 == 93) {
-                  # ejection seat
-                  return emesary.Transmitter.ReceiptStatus_OK;
-                }
-                # craters now use their own notifiction
-                #if (notification.SecondaryKind == 200) {
-                #  if (notification.RemoteCallsign == "1" and getprop("payload/armament/enable-craters") == 1) {
-                #    var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
-                #    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
-                #  } elsif (notification.RemoteCallsign == "2" and getprop("payload/armament/enable-craters") == 1) {
-                #    var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
-                #    geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt());
-                #  }
-                #  return emesary.Transmitter.ReceiptStatus_OK;
-                #}
-                
-                
-                
+                                
                 var elapsed = getprop("sim/time/elapsed-sec");
                 var ownPos = geo.aircraft_position();
                 var bearing = ownPos.course_to(notification.Position);
                 var radarOn = bits.test(notification.Flags, 0);
                 var thrustOn = bits.test(notification.Flags, 1);
+                var index = notification.SecondaryKind-21;
+                var typ = id2warhead[index];
                 
+                if (notification.Kind == MOVE) {
+                  if (thrustOn or index == 93 or index == 95) {
+                    # visualize missile smoke trail
+                    
+                      var smoke = 1;
+                      if (index == 93) {
+                        smoke = 0;
+                      } elsif (index == 95) {
+                        smoke = 3;
+                        if (notification.Position.distance_to(ownPos)*M2NM > 5) {
+                          return emesary.Transmitter.ReceiptStatus_OK;
+                        }
+                      } else {
+                        foreach(var black;heavy_smoke) {
+                          if (index == black) {
+                            smoke = 2;
+                            break;
+                          }
+                        }
+                      }
+                      dynamics["noti_"~notification.Callsign~"_"~notification.UniqueIdentity] = [systime(), notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.u_fps, notification.Heading, notification.Pitch,smoke];
+                                     
+                  } else {
+                    # the +1.5 is the update time that missiles send notifications out in
+                    dynamics["noti_"~notification.Callsign~"_"~notification.UniqueIdentity] = [systime()-(time_before_delete-1.6), notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.u_fps, notification.Heading, notification.Pitch,-1]
+                  }
+                } elsif (notification.Kind == DESTROY) {
+                  dynamics["noti_"~notification.Callsign~"_"~notification.UniqueIdentity] = [systime()-(time_before_delete-1.6), notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.u_fps, notification.Heading, notification.Pitch,-1]
+                }
                 
+                if (tacview_supported and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
+                  if (tacview.starttime) {
+                    var tacID = left(md5(notification.Callsign~notification.UniqueIdentity),6);
+                    if (notification.Kind == DESTROY) {
+                      thread.lock(tacview.mutexWrite);
+                      tacview.write("#" ~ (systime() - tacview.starttime)~"\n");
+                      tacview.write(tacID~",Visible=0\n-"~tacID~"\n");
+                      thread.unlock(tacview.mutexWrite);
+                    } else {
+                      var typp = typ[4]=="pilot"?"Parachutist":typ[4];
+                      var extra = typp=="Parachutist"?"|0|0|0":"";
+                      var extra2 = typ[2]==0?",Type=Weapon+Missile":",Type=Weapon+Bomb";
+                      extra2 = typp=="Parachutist"?"":extra2;
+                      var color = radarOn?",Color=Red":",Color=Yellow";
+                      thread.lock(tacview.mutexWrite);
+                      tacview.write("#" ~ (systime() - tacview.starttime)~"\n");
+                      tacview.write(tacID~",T="~notification.Position.lon()~"|"~notification.Position.lat()~"|"~notification.Position.alt()~extra~",Name="~typp~color~extra2~"\n");
+                      thread.unlock(tacview.mutexWrite);
+                    }
+                  }
+                }
+                
+                if (notification.Kind == DESTROY) {
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
+                
+                if (index == 95 or index == 93) {
+                  return emesary.Transmitter.ReceiptStatus_OK;
+                }
                 
                 # Missile launch warning:
                 if (thrustOn) {
@@ -270,7 +326,7 @@ var DamageRecipient =
                   if (launch == nil or elapsed - launch > 300) {
                     launch = elapsed;
                     launched[notification.Callsign~notification.UniqueIdentity] = launch;
-                    if (notification.Position.direct_distance_to(ownPos)*M2NM < 5) {
+                    if (notification.Position.direct_distance_to(ownPos)*M2NM < mlw_max) {
                       setprop("payload/armament/MLW-bearing", bearing);
                       setprop("payload/armament/MLW-launcher", notification.Callsign);
                       setprop("payload/armament/MLW-count", getprop("payload/armament/MLW-count")+1);
@@ -332,7 +388,7 @@ var DamageRecipient =
                                   damaged_sys = damaged_sys + failed;
                                 }
                                 printf("Took %.1f%% x %2d damage from %s! %s systems was hit.", probability*100, hit_count, typ, damaged_sys);
-                                damageLog.push(sprintf("%d %s impact from %s.", hit_count, typ, notification.Callsign));
+                                damageLog.push(sprintf("%s hit you with %d %s.", notification.Callsign, hit_count, typ));
                                 nearby_explosion();
                             }
                         } elsif (notification.SecondaryKind > 20) {
@@ -340,7 +396,6 @@ var DamageRecipient =
                             var dist     = notification.Distance;
                             var wh = id2warhead[notification.SecondaryKind - 21];
                             var type = wh[4];#test code
-                            damageLog.push(sprintf("%s impact at %.1f meters from %s.", type, dist, notification.Callsign));
                             if (wh[3] == 1) {
                                 # cluster munition
                                 var lbs = wh[1];
@@ -356,6 +411,7 @@ var DamageRecipient =
                                 var failed = fail_systems(probability, hp_max);
                                 var percent = 100 * probability;
                                 printf("Took %.1f%% damage from %s clusterbomb at %0.1f meters from bomblet. %s systems was hit", percent,type,distance,failed);
+                                damageLog.push(sprintf("%s hit you with %s bomblet, %.1f meters distance.", notification.Callsign, type, dist));
                                 nearby_explosion();
                                 return;
                             }
@@ -390,7 +446,8 @@ var DamageRecipient =
 
                             var failed = fail_systems(probability, hp_max);
                             var percent = 100 * probability;
-                            printf("Took %.1f%% damage from %s missile at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+                            printf("Took %.1f%% damage from %s at %0.1f meters. %s systems was hit", percent,type,dist,failed);
+                            damageLog.push(sprintf("%s hit you with %s, %.1f meters distance.", notification.Callsign, type, dist));
                             nearby_explosion();
                             
                             ####
@@ -431,16 +488,34 @@ var DamageRecipient =
                         var crater_model = getprop("payload/armament/models") ~ "crater_small.xml";
                         var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
                         if (static != nil) {
-                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading, notification.SecondaryKind];
                             #static is a PropertyNode inside /models
                         }
                     } elsif (notification.SecondaryKind == 1) {
                         var crater_model = getprop("payload/armament/models") ~ "crater_big.xml";
                         var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
                         if (static != nil) {
-                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading];
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading, notification.SecondaryKind];
+                        }
+                    } elsif (notification.SecondaryKind == 2) {
+                        var crater_model = getprop("payload/armament/models") ~ "bomb_hit_smoke.xml";
+                        var static = geo.put_model(crater_model, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading);
+                        if (static != nil) {
+                            statics["obj_"~notification.UniqueIdentity] = [static, notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.Heading, notification.SecondaryKind];
                         }
                     }
+                } elsif (notification.Kind == REQUEST_ALL and getprop("payload/armament/enable-craters") == 1) {
+                  # someone has requested all statics, lets send them out
+                  var kes = keys(statics);
+                  printf(notification.Callsign~" has requested all statics, sending %d to him/her.",size(kes));
+                  foreach(ke;kes) {
+                    var static = statics[ke];
+                    var msg = notifications.StaticNotification.new("stat", num(substr(ke,4)), CREATE, static[5]);
+                    msg.Position.set_latlon(static[1],static[2],static[3]);
+                    msg.IsDistinct = 0;
+                    msg.Heading = static[4];
+                    notifications.hitBridgedTransmitter.NotifyAll(msg);
+                  }
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
@@ -450,16 +525,419 @@ var DamageRecipient =
     }
 };
 
+damage_recipient = DamageRecipient.new("DamageRecipient");
+emesary.GlobalTransmitter.Register(damage_recipient);
+
+#==================================================================
+#                       Notification Kinds
+#==================================================================
 # Static variables for notification.Kind:
 var CREATE = 1;
 var MOVE = 2;
 var DESTROY = 3;
-var IMPACT = 3;
+var IMPACT = 4;
+var REQUEST_ALL = 5;
+
+#==================================================================
+#                       Flying missiles over MP
+#==================================================================
 
 var statics = {};
+var dynamics = {};
+var dynamic3d = [];
+var deadreckon_updatetime = 0.1;# 1/15 of missile send rate
+var time_before_delete = 2.5;# time since last notification before deleting
 
-damage_recipient = DamageRecipient.new("DamageRecipient");
-emesary.GlobalTransmitter.Register(damage_recipient);
+var dynamic_loop = func {
+  # This keeps track of flying missiles/parachutes/flares and manages ModelManager.
+  var new_dynamic3d = [];
+  var stime = systime();
+  foreach (dynamic3d_entry ; dynamic3d) {
+    var dyna = dynamics[dynamic3d_entry[0]];
+    if (dyna != nil and stime-dyna[0] > time_before_delete) {
+      # OLD, DELETE ALL
+      delete(dynamics, dynamic3d_entry[0]);
+      reckon_delete(dynamic3d_entry);
+    } elsif (dyna != nil and dynamic3d_entry[1] < dyna[0]) {
+      # REFRESH INCOMING
+      # update pos and attitude
+      append(new_dynamic3d, reckon_update(dyna, dynamic3d_entry, stime));
+      delete(dynamics, dynamic3d_entry[0]);
+    } elsif (dyna == nil and stime-dynamic3d_entry[1] < time_before_delete) {
+      # BETWEEN UPDATES
+      # deadreckon
+      reckon_move(dynamic3d_entry, stime);
+      append(new_dynamic3d, dynamic3d_entry);
+    } else {
+      # OLD, DELETE ALL
+      reckon_delete(dynamic3d_entry);
+    }
+  }
+  dynamic3d = new_dynamic3d;
+  var kees = keys(dynamics);
+  foreach(kee; kees) {
+    var dyna = dynamics[kee];
+    if (stime-dyna[0] < time_before_delete) {
+      var new_entry = reckon_create(kee, dyna, stime);
+      if (new_entry !=nil) {
+        append(dynamic3d, new_entry);
+      }
+    }
+    delete(dynamics, kee);
+  }
+  settimer(dynamic_loop,deadreckon_updatetime);
+}
+
+var ModelManager = {
+    # This shows missiles/parachutes/flares flying and their smoke trail.
+    new: func (path,lat,lon,alt_ft,heading,pitch,para) {
+        var m = {parents:[ModelManager]};
+        var n = props.globals.getNode("models", 1);
+        var i = 0;
+        for (i = 0; 1==1; i += 1) {
+          if (n.getChild("model", i, 0) == nil) {
+            break;
+          }
+        }
+        m.model = n.getChild("model", i, 1);
+        
+        n = props.globals.getNode("sim/emesary-models", 1);
+        for (i = 0; 1==1; i += 1) {
+          if (n.getChild("dynamic", i, 0) == nil) {
+            break;
+          }
+        }
+        m.ai = n.getChild("dynamic", i, 1);
+        
+        m.model.getNode("path", 1).setValue(path);
+        
+        # Create the AI position and orientation properties.
+        m.lat   = m.ai.getNode("position/latitude-deg", 1);
+        m.lon   = m.ai.getNode("position/longitude-deg", 1);
+        m.alt_ft= m.ai.getNode("position/altitude-ft", 1);
+        m.heading= m.ai.getNode("orientation/true-heading-deg", 1);
+        m.pitch = m.ai.getNode("orientation/pitch-deg", 1);
+        m.roll  = m.ai.getNode("orientation/roll-deg", 1);
+        
+        m.lat.setDoubleValue(lat);
+        m.lon.setDoubleValue(lon);
+        m.alt_ft.setDoubleValue(alt_ft);
+        m.heading.setDoubleValue(heading);
+        m.pitch.setDoubleValue(para?0:pitch);
+        m.roll.setDoubleValue(0);
+        
+        m.vLat = lat;
+        m.vLon = lon;
+        m.vAlt_ft = alt_ft;
+        m.vHeading = heading;
+        m.vPitch = pitch;
+        #m.vRoll = 0;
+        m.pLat = m.vLat;
+        m.pLon = m.vLon;
+        m.pAlt_ft = m.vAlt_ft;
+        m.pHeading = m.vHeading;
+        m.pPitch = m.vPitch;
+        
+        
+        m.model.getNode("latitude-deg-prop", 1).setValue(m.lat.getPath());
+        m.model.getNode("longitude-deg-prop", 1).setValue(m.lon.getPath());
+        m.model.getNode("elevation-ft-prop", 1).setValue(m.alt_ft.getPath());
+        m.model.getNode("heading-deg-prop", 1).setValue(m.heading.getPath());
+        m.model.getNode("pitch-deg-prop", 1).setValue(m.pitch.getPath());
+        m.model.getNode("roll-deg-prop", 1).setValue(m.roll.getPath());
+        
+        m.coord = geo.Coord.new();
+        m.uBody_fps = 0;
+        m.last = [geo.Coord.new().set_latlon(lat,lon,alt_ft*FT2M).xyz(),systime()];
+        m.past = m.last;
+        m.frametime = 0;
+        m.delayTime = 0;        
+        
+        return m;
+    },
+    moveRealtime: func (uBody_fps, dt, factor) {
+        if (me.uBody_fps == 0) me.uBody_fps = uBody_fps;
+        me.slant_ft   = (me.uBody_fps < uBody_fps?me.uBody_fps:uBody_fps) * dt * factor;
+        me.uBody_fps  = uBody_fps;
+        me.alt_dist   = me.slant_ft*math.sin(me.vPitch*D2R);
+        me.horiz_dist = me.slant_ft*math.cos(me.vPitch*D2R);
+        
+        me.coord.set_latlon(me.vLat, me.vLon, (me.vAlt_ft+me.alt_dist) * FT2M);
+        
+        me.coord = me.coord.apply_course_distance(me.vHeading, me.horiz_dist*FT2M);
+                
+        me.latlon = me.coord.latlon();
+        
+        me.vLat    = me.latlon[0];
+        me.vLon    = me.latlon[1];
+        me.vAlt_ft = me.latlon[2]*M2FT;
+        
+        me.lat.setDoubleValue(me.vLat);
+        me.lon.setDoubleValue(me.vLon);
+        me.alt_ft.setDoubleValue(me.vAlt_ft);
+    },
+    moveDelayed: func (dt) {
+        if (me.frametime==0) return;
+        me.place();
+        me.xyz = me.interpolate(me.past[0],me.last[0], me.delayTime/me.frametime);
+        #print("% "~100*me.delayTime/me.frametime);
+        me.coord.set_xyz(me.xyz[0],me.xyz[1],me.xyz[2]);
+        me.latlon = me.coord.latlon();
+        me.lat.setDoubleValue(me.latlon[0]);
+        me.lon.setDoubleValue(me.latlon[1]);
+        me.alt_ft.setDoubleValue(me.latlon[2]*M2FT);
+        me.delayTime += dt;
+    },
+    interpolate: func (start, end, fraction) {
+        me.xx = (start[0]*(1-fraction)+end[0]*fraction);
+        me.yy = (start[1]*(1-fraction)+end[1]*fraction);
+        me.zz = (start[2]*(1-fraction)+end[2]*fraction);
+        return [me.xx,me.yy,me.zz];
+    },
+    place: func {
+      if (me["loadNode"] == nil) {
+        me.loadNode = me.model.getNode("load", 1);
+        me.loadNode.setBoolValue(1);
+        me.loadNode.setBoolValue(0);
+      }
+    },
+    translateDelayed: func (lat,lon,alt_ft,heading,pitch, para) {
+        me.heading.setDoubleValue(heading);
+        me.pitch.setDoubleValue(para?0:pitch);
+        
+        me.pLat = me.vLat;
+        me.pLon = me.vLon;
+        me.pAlt_ft = me.vAlt_ft;
+        me.pHeading = me.vHeading;
+        me.pPitch = me.vPitch;
+        
+        me.vLat = lat;
+        me.vLon = lon;
+        me.vAlt_ft = alt_ft;
+        me.vHeading = heading;
+        me.vPitch = pitch;
+        #me.vRoll = 0;
+        
+        me.past = me.last;
+        me.last = [geo.Coord.new().set_latlon(lat,lon,alt_ft*FT2M).xyz(),systime()];
+        me.delayTime = 0;
+        me.frametime = me.last[1]-me.past[1];
+    },
+    translateRealtime: func (lat,lon,alt_ft,heading,pitch, para) {
+        me.lat.setDoubleValue(lat);
+        me.lon.setDoubleValue(lon);
+        me.alt_ft.setDoubleValue(alt_ft);
+        me.heading.setDoubleValue(heading);
+        me.pitch.setDoubleValue(para?0:pitch);
+        #me.roll.setDoubleValue(0);
+                
+        me.vLat = lat;
+        me.vLon = lon;
+        me.vAlt_ft = alt_ft;
+        me.vHeading = heading;
+        me.vPitch = pitch;
+        #me.vRoll = 0;
+    },
+    del: func {
+      me.model.remove();
+      me.ai.remove();
+    },
+};
+
+var reckon_create = func (kee, dyna, stime) {
+  #print("ES create "~kee);
+  var path = getprop("payload/armament/models") ~ "parachutist.xml";
+  if (dyna[7]==1) {
+    path = getprop("payload/armament/models") ~ "light_smoke.xml";
+  } elsif (dyna[7] ==2) {
+    path = getprop("payload/armament/models") ~ "heavy_smoke.xml";
+  } elsif (dyna[7] ==3) {
+    path = getprop("payload/armament/models") ~ "the-flare.xml";
+  }
+  var static = ModelManager.new(path, dyna[1],dyna[2],dyna[3]*M2FT,dyna[5],dyna[6],dyna[7]==0);#path,lat,lon,alt_m,heading,pitch
+  if (static != nil) {
+    #static.place();
+    var entry = [kee, stime, static, dyna[4]];
+    return entry;
+  }
+  print("NOT FOUND (Emesary): "~path);
+  return nil;
+}
+
+var reckon_update = func (dyna, entry, stime) {
+  #print("ES update");
+  var static = entry[2];
+  var dynami2 = [entry[0], stime, static, dyna[4]];
+  # translate
+  static.translateDelayed(dyna[1],dyna[2],dyna[3]*M2FT,dyna[5],dyna[6],dyna[7]==0);
+  static.moveDelayed(deadreckon_updatetime);
+  return dynami2;
+}
+
+var reckon_move = func (entry, stime) {
+  #print("ES move");
+  var static = entry[2];
+  var time_then = entry[1];
+  var time_now = stime;
+  # dead-reckon
+  #static.moveRealtime(entry[3] , time_now-time_then, entry[4]?0.25:0.5);
+  static.moveDelayed(deadreckon_updatetime);#time_now-time_then);
+}
+
+var reckon_delete = func (entry) {
+  #print("ES delete");
+  entry[2].del();
+}
+
+dynamic_loop();
+
+#==================================================================
+#                       Flares over MP
+#==================================================================
+
+var last_prop = 0;
+var last_release = 0;
+var flare_list = [];
+var flare_update_time = 0.4;
+var flare_duration = 8;
+var flare_terminal_speed = 50;#m/s
+var flares_max_process_per_loop = 4;
+
+var flare_sorter = func(a, b) {
+    if(a[0] < b[0]){
+        return -1; # A should before b in the returned vector
+    }elsif(a[0] == b[0]){
+        return 0; # A is equivalent to b 
+    }else{
+        return 1; # A should after b in the returned vector
+    }
+}
+
+var animate_flare = func {
+  # This detects own flares and send out notifications about their position every 0.75s
+  if (!getprop("payload/armament/msg")) {
+    return;
+  }
+  var stime = systime();
+  # old flares
+  var old_flares = [];
+  var flares_sent = 0;
+  flare_list = sort(flare_list, flare_sorter);
+  foreach(flare; flare_list) {
+    if (stime-flare[1] > flare_duration) {
+      var msg = notifications.ObjectInFlightNotification.new("ffly", flare[6], DESTROY, 21+95);
+      msg.Flags = 0;
+      msg.Position = flare[2];
+      msg.IsDistinct = 1;
+      msg.RemoteCallsign = "";
+      msg.UniqueIndex = flare[6];
+      msg.Pitch = 0;
+      msg.Heading = 0;
+      msg.u_fps = 0;
+      notifications.objectBridgedTransmitter.NotifyAll(msg);
+      continue;
+    }
+    if (flares_sent < flares_max_process_per_loop) {
+      var flare_dt = stime-flare[0];
+      #       update_t,start_t, coord,    heading,  speed_down_mps,                                                                   , speed_horiz_mps,                  unique
+      flare = [stime, flare[1], flare[2], flare[3], (flare[4]<flare_terminal_speed)?(flare[4]+flare_dt*9.83*0.5):(flare[4]-flare_dt*3), math.max(0,flare[5]-flare_dt*20), flare[6]];
+      flare[2].apply_course_distance(flare[3], flare_dt*flare[5]);
+      flare[2].set_alt(flare[2].alt()-flare_dt*flare[4]);
+      
+      var msg = notifications.ObjectInFlightNotification.new("ffly", flare[6], MOVE, 21+95);
+      msg.Flags = 0;
+      msg.Position = flare[2];
+      msg.IsDistinct = 1;
+      msg.RemoteCallsign = "";
+      msg.UniqueIndex = flare[6];
+      msg.Pitch = 0;
+      msg.Heading = 0;
+      msg.u_fps = 0;
+      notifications.objectBridgedTransmitter.NotifyAll(msg);
+      flares_sent += 1;
+    }
+    #print("Update flare "~flare[5]);
+    append(old_flares, flare);
+  }
+  flare_list = old_flares;
+  #print(flares_sent~" flares sent, out of "~size(flare_list));
+  if(auto_flare_caller) {
+    auto_flare_released();
+  }  
+}
+var flaretimer = maketimer(flare_update_time, animate_flare);
+flaretimer.start();
+
+var auto_flare_released = func {
+  # new flare
+  var prop = getprop("rotors/main/blade[3]/flap-deg");
+  var stime = systime();
+  if (prop != nil and prop != 0 and prop != last_prop and stime-last_release > 1)  {
+    flare_released();
+    last_release = stime;
+  }
+  last_prop = prop;
+}
+
+var flare_released = func {
+    if (!getprop("payload/armament/msg")) {
+      return;
+    }
+    # new flare
+    var stime = systime();
+    var flare =[stime, stime,
+                geo.aircraft_position(),
+                getprop("orientation/heading-deg"),
+                FT2M*getprop("velocities/speed-down-fps"),
+                FT2M*math.sqrt(getprop("velocities/speed-north-fps")*getprop("velocities/speed-north-fps")+getprop("velocities/speed-east-fps")*getprop("velocities/speed-east-fps")),
+                int(rand()*200)-100];
+    append(flare_list, flare);
+    var msg = notifications.ObjectInFlightNotification.new("ffly", flare[6], MOVE, 21+95);
+    msg.Flags = 0;
+    msg.Position = flare[2];
+    msg.IsDistinct = 1;
+    msg.RemoteCallsign = "";
+    msg.UniqueIndex = flare[6];
+    msg.Pitch = 0;
+    msg.Heading = 0;
+    msg.u_fps = 0;
+    notifications.objectBridgedTransmitter.NotifyAll(msg);
+    #print("Adding flare "~flare[6]);
+}
+
+#==================================================================
+#                       Notification for getting craters
+#==================================================================
+
+setlistener("sim/multiplay/online", func {
+  check_for_Request();
+},0,0);
+
+setlistener("payload/armament/msg", func {
+  check_for_Request();
+},0,0);
+
+var last_check = -65;
+
+var check_for_Request = func {
+  # This sends out a notification to ask other aircraft for all craters
+  if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and getprop("payload/armament/msg") and systime()-last_check > 60) {
+    last_check = systime();
+    var msg = notifications.StaticNotification.new("stat", int(rand()*15000000), REQUEST_ALL, 0);
+    msg.IsDistinct = 0;
+    msg.Heading = 0;
+    notifications.hitBridgedTransmitter.NotifyAll(msg);
+    #print("REQUEST_ALL");
+  } else {
+    #print("REQUEST_NONE");
+  }
+}
+
+settimer(check_for_Request, 60);# for aircraft like mig21 that starts with damage enabled
+
+#==================================================================
+#                       Damage functions
+#==================================================================
 
 var maxDamageDistFromWarhead = func (lbs) {
   # Calc at what distance the warhead will do zero damage every time.
@@ -491,39 +969,41 @@ var fail_systems = func (probability, factor = 100) {#this factor needs tuning a
           if (rand() < probability) {
               FailureMgr.set_failure_level(failure_mode_id, 1);
               failed += 1;
-              if (failure_mode_id == "Engines/engine" and yasim_list == nil and getprop("sim/flight-model") == "yasim") {
-                # fail  yasim:
-                setprop("sim/model/uh1/state",0);
-                setprop("controls/engines/engine/magnetos", 0);
-                setprop("controls/engines/engine/cutoff", 1);
-                setprop("controls/engines/engine/on-fire", 1);
-                #set a listener so that if a restart is attempted, it'll fail.
-                yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
-                yasim_list2 = setlistener("controls/engines/engine/cutoff",func {setprop("controls/engines/engine/cutoff",1);});
-              }
-              if (failure_mode_id == "Engines/engine[1]" and yasim_list3 == nil and getprop("sim/flight-model") == "yasim") {
-                # fail  yasim:
-                setprop("controls/engines/engine[1]/magnetos", 0);
-                setprop("controls/engines/engine[1]/cutoff", 1);
-                setprop("controls/engines/engine[1]/on-fire", 1);
-                #set a listener so that if a restart is attempted, it'll fail.
-                yasim_list3 = setlistener("controls/engines/engine[1]/cutoff",func {setprop("controls/engines/engine[1]/cutoff",1);});
-              }
-              if (failure_mode_id == "Engines/engine[2]" and yasim_list4 == nil and getprop("sim/flight-model") == "yasim") {
-                # fail  yasim:
-                setprop("controls/engines/engine[2]/magnetos", 0);
-                setprop("controls/engines/engine[2]/cutoff", 1);
-                setprop("controls/engines/engine[2]/on-fire", 1);
-                #set a listener so that if a restart is attempted, it'll fail.
-                yasim_list4 = setlistener("controls/engines/engine[2]/cutoff",func {setprop("controls/engines/engine[2]/cutoff",1);});
-              }
-              if (failure_mode_id == "Engines/engine[3]" and yasim_list5 == nil and getprop("sim/flight-model") == "yasim") {
-                # fail  yasim:
-                setprop("controls/engines/engine[3]/magnetos", 0);
-                setprop("controls/engines/engine[3]/cutoff", 1);
-                setprop("controls/engines/engine[3]/on-fire", 1);
-                #set a listener so that if a restart is attempted, it'll fail.
-                yasim_list5 = setlistener("controls/engines/engine[3]/cutoff",func {setprop("controls/engines/engine[3]/cutoff",1);});
+              if (getprop("sim/flight-model") == "yasim") {
+                if (failure_mode_id == "Engines/engine" and yasim_list2 == nil) {
+                  # fail  yasim:
+                  setprop("sim/model/uh1/state",0);
+                  setprop("controls/engines/engine/magnetos", 0);
+                  setprop("controls/engines/engine/cutoff", 1);
+                  setprop("controls/engines/engine/on-fire", 1);
+                  #set a listener so that if a restart is attempted, it'll fail.
+                  yasim_list = setlistener("sim/model/uh1/state",func {setprop("sim/model/uh1/state",0);});
+                  yasim_list2 = setlistener("controls/engines/engine/cutoff",func {setprop("controls/engines/engine/cutoff",1);});
+                }
+                if (failure_mode_id == "Engines/engine[1]" and yasim_list3 == nil) {
+                  # fail  yasim:
+                  setprop("controls/engines/engine[1]/magnetos", 0);
+                  setprop("controls/engines/engine[1]/cutoff", 1);
+                  setprop("controls/engines/engine[1]/on-fire", 1);
+                  #set a listener so that if a restart is attempted, it'll fail.
+                  yasim_list3 = setlistener("controls/engines/engine[1]/cutoff",func {setprop("controls/engines/engine[1]/cutoff",1);});
+                }
+                if (failure_mode_id == "Engines/engine[2]" and yasim_list4 == nil) {
+                  # fail  yasim:
+                  setprop("controls/engines/engine[2]/magnetos", 0);
+                  setprop("controls/engines/engine[2]/cutoff", 1);
+                  setprop("controls/engines/engine[2]/on-fire", 1);
+                  #set a listener so that if a restart is attempted, it'll fail.
+                  yasim_list4 = setlistener("controls/engines/engine[2]/cutoff",func {setprop("controls/engines/engine[2]/cutoff",1);});
+                }
+                if (failure_mode_id == "Engines/engine[3]" and yasim_list5 == nil) {
+                  # fail  yasim:
+                  setprop("controls/engines/engine[3]/magnetos", 0);
+                  setprop("controls/engines/engine[3]/cutoff", 1);
+                  setprop("controls/engines/engine[3]/on-fire", 1);
+                  #set a listener so that if a restart is attempted, it'll fail.
+                  yasim_list5 = setlistener("controls/engines/engine[3]/cutoff",func {setprop("controls/engines/engine[3]/cutoff",1);});
+                }
               }
           }
       }
@@ -561,16 +1041,26 @@ setlistener("/sim/signals/reinit", repairYasim);
 hp_f = [hp_max,hp_max,hp_max,hp_max,hp_max,hp_max,hp_max];
 
 var fail_fleet_systems = func (probability, factor) {
-  var no = 7;
-  while (no > 6 or hp_f[no] < 0) {
-    no = int(rand()*7);
-    if (hp_f[no] < 0) {
-      if (rand() > 0.9) {
-        armament.defeatSpamFilter("You shot one of our already sinking ships, you are just mean.");
-        hp_f[no] -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage
-        print("HP["~no~"]: " ~ hp_f[no] ~ "/" ~ hp_max);
-        return;
-      }
+  
+  var sinking_ships = (hp_f[0]<0) + (hp_f[1]<0) + (hp_f[2]<0) + (hp_f[3]<0) + (hp_f[4]<0) + (hp_f[5]<0) + (hp_f[6]<0);
+  var hit_sinking = 0;
+  if (sinking_ships == 0) {
+    hit_sinking = 0;
+  } elsif (sinking_ships == 7) {
+    hit_sinking = 1;
+  } else {
+    hit_sinking = rand()<0.10;
+  }
+  if (hit_sinking) {
+    armament.defeatSpamFilter("You shot one of our already sinking ships, you are just mean.");
+    return;
+  }
+ 
+  var no = 0;
+  
+  for (no=0; no < 7; no+=1) {
+    if (hp_f[no] > 0) {
+      break;
     }
   }
   hp_f[no] -= factor * probability*(0.75+rand()*0.25);# from 75 to 100% damage
@@ -598,6 +1088,10 @@ var fail_fleet_systems = func (probability, factor) {
 setlistener("payload/armament/MLW-count", func {
   setLaunch(getprop("payload/armament/MLW-launcher"), 0);#TODO: figure out if that callsign is a SAM/ship.
 });
+
+#==================================================================
+#                       RWR and sound functions
+#==================================================================
 
 var setLaunch = func (c,s) {
   setprop("sound/rwr-launch-sam", s);
@@ -633,6 +1127,10 @@ var nearby_explosion_b = func {
   setprop("damage/sounds/nearby-explode-on", 0);
 }
 
+#==================================================================
+#                       Helper functions
+#==================================================================
+
 var callsign_struct = {};
 var getCallsign = func (callsign) {
   var node = callsign_struct[callsign];
@@ -666,6 +1164,10 @@ processCallsignsTimer = maketimer(1.5, processCallsigns);
 processCallsignsTimer.simulatedTime = 1;
 processCallsignsTimer.start();
 
+#==================================================================
+#                       Stuff
+#==================================================================
+
 var code_ct = func () {
   #ANTIC
   if (getprop("payload/armament/msg")) {
@@ -696,6 +1198,10 @@ setprop("/sim/failure-manager/display-on-screen", FALSE);
 
 code_ctTimer.start();
 
+#==================================================================
+#                       Relocation function
+#==================================================================
+
 var re_init = func (node) {
   # repair the aircraft
   if (node.getValue() == 0) return;
@@ -708,6 +1214,10 @@ var re_init = func (node) {
   }
   damageLog.push("Aircraft was repaired due to re-init.");
 }
+
+#==================================================================
+#                       Event log
+#==================================================================
 
 var damageLog = events.LogBuffer.new(echo: 0);
 
@@ -736,7 +1246,7 @@ var printDamageLog = func {
 #TODO testing:
 
 var writeDamageLog = func {
-  var output_file = getprop("/sim/fg-home") ~ "/Export/emesary-war-combat-log.txt";
+  var output_file = getprop("/sim/fg-home") ~ "/Export/combat-log.txt";
   var buffer = damageLog.get_buffer();
   var str = "\n";
   foreach(entry; buffer) {
@@ -751,10 +1261,9 @@ var writeDamageLog = func {
   file = io.open(output_file, "a");
   io.write(file, str);
   io.close(file);
-  settimer(writeDamageLog, 600);
 }
 
-settimer(writeDamageLog, 600);
+setlistener("sim/signals/exit", writeDamageLog, 0, 0);
 
 #screen.property_display.add("payload/armament/MAW-bearing");
 #screen.property_display.add("payload/armament/MAW-active");
