@@ -39,19 +39,21 @@ var shells = {
     #
     "M70 rocket":        [0,0.250], #135mm
     "S-5 rocket":        [1,0.200], # 55mm
-    "M55 cannon shell":  [2,0.100], # 30mm
-    "KCA cannon shell":  [3,0.100], # 30mm
-    "GSh-30":            [4,0.100], # 30mm
+    "M55 shell":         [2,0.100], # 30mm
+    "KCA shell":         [3,0.100], # 30mm
+    "GSh-30":            [4,0.100], # 30mm mig29/su27
     "GAU-8/A":           [5,0.100], # 30mm
     "Mk3Z":              [6,0.100], # 30mm Jaguar
-    "BK27 cannon":       [7,0.070], # 27mm
+    "BK27":              [7,0.070], # 27mm
     "GSh-23":            [8,0.065], # 23mm
     "M61A1 shell":       [9,0.050], # 20mm F14, F15, F16
     "50 BMG":            [10,0.015], # 12.7mm (non-explosive)    
     "7.62":              [11,0.005], # 7.62mm (non-explosive)
-    "Hydra-70":          [12,0.250], # F-16
+    "Hydra-70":          [12,0.250], # F-16/A-6 LAU-68 and LAU-61
     "SNEB":              [13,0.250], # Jaguar   
     "DEFA 554":          [14,0.100], # 30mm Mirage
+    "20mm APDS":         [15,0.050], # CIWS
+    "LAU-10":            [16,0.225], # 127mm
 };    
 
 # lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
@@ -66,13 +68,13 @@ var warheads = {
     "AGM-154A":          [ 5,  493.00,1,0],
     "AGM-158":           [ 6, 1000.00,1,0],
     "ALARM":             [ 7,  450.00,1,0],
-    "AM39-Exocet":       [ 8,  364.00,1,0], 
-    "AS-37-Martel":      [ 9,  330.00,1,0], 
+    "AM 39 Exocet":      [ 8,  364.00,1,0], 
+    "AS 37 Martel":      [ 9,  330.00,1,0], 
     "AS30L":             [10,  529.00,1,0],
     "BL755":             [11,  100.00,1,1],# 800lb bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-87":            [12,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-105":           [13,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
-    "Exocet":            [14,  364.00,1,0],
+    "AJ 168 Martel":     [14,  330.00,1,0],
     "FAB-100":           [15,   92.59,1,0],
     "FAB-250":           [16,  202.85,1,0],
     "FAB-500":           [17,  564.38,1,0],
@@ -80,7 +82,7 @@ var warheads = {
     "GBU-24":            [19,  945.00,1,0],
     "GBU-31":            [20,  945.00,1,0],
     "GBU-54":            [21,  190.00,1,0],
-    "GBU12":             [22,  190.00,1,0],#deprecated
+    "GBU-10":            [22, 2000.00,1,0],
     "GBU-16":            [23,  450.00,1,0],
     "HVAR":              [24,    7.50,1,0],#P51
     "KAB-500":           [25,  564.38,1,0],
@@ -103,32 +105,32 @@ var warheads = {
     "RS-2US":            [42,   28.66,1,0],
     "S-21":              [43,  245.00,1,0],
     "S-24":              [44,  271.00,1,0],
-    "SCALP":             [45,  992.00,1,0],
+    "SCALP EG":          [45,  992.00,1,0],# aka. Storm Shadow
     "Sea Eagle":         [46,  505.00,1,0],
-    "SeaEagle":          [47,  505.00,1,0],
-    "STORMSHADOW":       [48,  850.00,1,0],
+    "MK-82HD":           [47,  192.00,1,0],
+    "MK-20":             [48,  100.00,1,1],#aka CBU-100 # bomblet warhead. 247 x 0.4lb
     "ZB-250":            [49,  236.99,1,0],
     "ZB-500":            [50,  473.99,1,0],
-    "aim-120":           [51,   44.00,0,0],#deprecated
-    "AIM-120":           [52,   44.00,0,0],
+    "AGM-45":            [51,  149.00,1,0],#shrike
+    "AIM-120B":          [52,   44.00,0,0],
     "AIM-54":            [53,  135.00,0,0],
-    "aim-7":             [54,   88.00,0,0],#deprecated
-    "AIM-7":             [55,   88.00,0,0],
-    "aim-9":             [56,   20.80,0,0],#deprecated
-    "AIM-9":             [57,   20.80,0,0],
-    "AIM120":            [58,   44.00,0,0],
-    "AIM132":            [59,   22.05,0,0],
-    "AIM9":              [60,   20.80,0,0],#deprecated
+    "AGM-78":            [54,  215.00,1,0],
+    "AIM-7F":            [55,   88.00,0,0],
+    "AGM-62":            [56, 2000.00,1,0],
+    "AIM-9L":            [57,   20.80,0,0],
+    "d-7":               [58,   44.00,0,0],#deprecated
+    "AIM-132":           [59,   22.05,0,0],
+    "d-8":               [60,   20.80,0,0],#deprecated
     "KN-06":             [61,  315.00,0,0],
-    "M317":              [62,  145.00,0,0],
-    "Magic-2":           [63,   27.00,0,0],#deprecated 
-    "Majic":             [64,   26.45,0,0],
-    "Matra MICA":        [65,   30.00,0,0],
-    "Matra R550 Magic 2":[66,   27.00,0,0],
-    "Matra R530":        [67,   55.00,0,0],
-    "MatraMica":         [68,   30.00,0,0],#deprecated
-    "MatraMicaIR":       [69,   30.00,0,0],#deprecated
-    "MatraR550Magic2":   [70,   27.00,0,0],#deprecated 
+    "9M317":             [62,  145.00,0,0],
+    "d9":                [63,   27.00,0,0],#deprecated 
+    "R.550 Magic":       [64,   26.45,0,0],# also called majic
+    "d-0":               [65,   30.00,0,0],#deprecated
+    "R.550 Magic 2":     [66,   27.00,0,0],
+    "R.530":             [67,   55.00,0,0],
+    "d-a":               [68,   30.00,0,0],#deprecated
+    "AIM-9M":            [69,   20.80,0,0],
+    "R-73 RMD-1":        [70,   16.31,0,0],# automat Mig29/su27
     "Meteor":            [71,   55.00,0,0],
     "MICA-EM":           [72,   30.00,0,0], 
     "MICA-IR":           [73,   30.00,0,0], 
@@ -149,8 +151,8 @@ var warheads = {
     "RB-71":             [88,   88.00,0,0],
     "RB-74":             [89,   20.80,0,0],
     "RB-99":             [90,   44.00,0,0],
-    "S530D":             [91,   66.00,0,0],
-    "S48N6":             [92,  330.00,0,0],# 48N6 from S-300pmu
+    "Super 530D":        [91,   66.00,0,0],
+    "48N6":              [92,  330.00,0,0],# 48N6 from S-300pmu
     "pilot":             [93,    0.00,1,0],# ejected pilot
     "BETAB-500ShP":      [94, 1160.00,1,0],
     "Flare":             [95,    0.00,0,0],
@@ -549,7 +551,7 @@ var deadreckon_updatetime = 0.1;# 1/15 of missile send rate
 var time_before_delete = 2.5;# time since last notification before deleting
 
 var dynamic_loop = func {
-  # This keeps track of flying missiles/parachutes/flares and manages ModelManager.
+  # This keeps track of MP flying missiles/parachutes/flares and manages ModelManager.
   var new_dynamic3d = [];
   var stime = systime();
   foreach (dynamic3d_entry ; dynamic3d) {
@@ -745,7 +747,6 @@ var ModelManager = {
 };
 
 var reckon_create = func (kee, dyna, stime) {
-  #print("ES create "~kee);
   var path = getprop("payload/armament/models") ~ "parachutist.xml";
   if (dyna[7]==1) {
     path = getprop("payload/armament/models") ~ "light_smoke.xml";
@@ -753,10 +754,11 @@ var reckon_create = func (kee, dyna, stime) {
     path = getprop("payload/armament/models") ~ "heavy_smoke.xml";
   } elsif (dyna[7] ==3) {
     path = getprop("payload/armament/models") ~ "the-flare.xml";
+  } elsif (dyna[7] == -1) {
+    return nil;
   }
   var static = ModelManager.new(path, dyna[1],dyna[2],dyna[3]*M2FT,dyna[5],dyna[6],dyna[7]==0);#path,lat,lon,alt_m,heading,pitch
   if (static != nil) {
-    #static.place();
     var entry = [kee, stime, static, dyna[4]];
     return entry;
   }
@@ -765,7 +767,6 @@ var reckon_create = func (kee, dyna, stime) {
 }
 
 var reckon_update = func (dyna, entry, stime) {
-  #print("ES update");
   var static = entry[2];
   var dynami2 = [entry[0], stime, static, dyna[4]];
   # translate
@@ -775,7 +776,6 @@ var reckon_update = func (dyna, entry, stime) {
 }
 
 var reckon_move = func (entry, stime) {
-  #print("ES move");
   var static = entry[2];
   var time_then = entry[1];
   var time_now = stime;
@@ -785,7 +785,6 @@ var reckon_move = func (entry, stime) {
 }
 
 var reckon_delete = func (entry) {
-  #print("ES delete");
   entry[2].del();
 }
 
@@ -814,7 +813,7 @@ var flare_sorter = func(a, b) {
 }
 
 var animate_flare = func {
-  # This detects own flares and send out notifications about their position every 0.75s
+  # Send out notifications about own flare positions every 0.4s
   if (!getprop("payload/armament/msg")) {
     return;
   }
@@ -856,11 +855,9 @@ var animate_flare = func {
       notifications.objectBridgedTransmitter.NotifyAll(msg);
       flares_sent += 1;
     }
-    #print("Update flare "~flare[5]);
     append(old_flares, flare);
   }
   flare_list = old_flares;
-  #print(flares_sent~" flares sent, out of "~size(flare_list));
   if(auto_flare_caller) {
     auto_flare_released();
   }  
@@ -869,7 +866,7 @@ var flaretimer = maketimer(flare_update_time, animate_flare);
 flaretimer.start();
 
 var auto_flare_released = func {
-  # new flare
+  # This detects own flares releases
   var prop = getprop("rotors/main/blade[3]/flap-deg");
   var stime = systime();
   if (prop != nil and prop != 0 and prop != last_prop and stime-last_release > 1)  {
@@ -883,7 +880,7 @@ var flare_released = func {
     if (!getprop("payload/armament/msg")) {
       return;
     }
-    # new flare
+    # We released a flare. If you call this method manually, then make sure 'auto_flare_caller' is false.
     var stime = systime();
     var flare =[stime, stime,
                 geo.aircraft_position(),
@@ -902,7 +899,6 @@ var flare_released = func {
     msg.Heading = 0;
     msg.u_fps = 0;
     notifications.objectBridgedTransmitter.NotifyAll(msg);
-    #print("Adding flare "~flare[6]);
 }
 
 #==================================================================
@@ -927,9 +923,7 @@ var check_for_Request = func {
     msg.IsDistinct = 0;
     msg.Heading = 0;
     notifications.hitBridgedTransmitter.NotifyAll(msg);
-    #print("REQUEST_ALL");
   } else {
-    #print("REQUEST_NONE");
   }
 }
 
