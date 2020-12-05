@@ -61,6 +61,13 @@
             date="November 1992"
         />
         <reference
+            refID="NASA-TM-81833"
+            title="Simulator results of an F-14A airplane utilizing an aileron-rudder interconnect during carrier approaches and landings"
+            author="Kelly, W. W. and Brown, P. W. (NASA Langley Research Center Hampton, VA, United States)"
+            date="May 1, 1980"
+            URL="https://ntrs.nasa.gov/citations/19800020867"
+        />
+        <reference
             refID="NASA-TM-84643"
             author="M. Leroy Spearman"
             title="Effects of Wing and tail location on the aerodynamic characteristics of an airplane for mach numbers from 0.25 to 4.63"
@@ -68,6 +75,10 @@
         />
         <reference
             refID="NASA-aaia-2000-0900"
+            title="Aerodynamic characteristics, database development and flight simulation of the X-34 vehicle"
+            author="Bandu Pamadi, Gregory Brauckmann, Michael Ruth and Henri Fuhrmann"
+            date="22 Aug 2012"
+            URL="https://doi.org/10.2514/6.2000-900"
         />
         <reference
             refID="NASA-TM-104326"
@@ -696,7 +707,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property>fcs/wing-sweep-mode</property>
         <property>fcs/spoiler-ground-brake-armed</property>
         <property>fcs/flap-cmd-sum</property>
-
+        <property value="1">fcs/dfcs-active</property>
+        
         <!-- wing sweep normalization is 0.01470588235294117647058823529412 per degree (1/range)== 1/68 -->
         <channel name="Wing Sweep">
             <pure_gain name="fcs/wing-sweep-pos-deg">
@@ -1207,6 +1219,15 @@ Figure 2-54.  Longitudinal System Authority
 	<!-- SAS YAW Channel configuration -->
     <property value="0.5">sas/rudder-power-actuator-cval</property>
 	
+	<!-- yaw-sas-2-v1-stkr-factor is 2.60 for System B and 3.19 for System C 
+	     this is the only difference between the two systems.
+	     The described High-Alpha ARI system is the same as System B 
+	     Figure 20 from [1] below for YAW SAS
+	     Figure 21 from [1] below for ROLL SAS
+	     see https://ntrs.nasa.gov/citations/19800020867
+	     and https://ntrs.nasa.gov/citations/19820005275
+	     -->
+    <property value="3.19">sas/yaw-sas-2-v1-stkr-factor</property>
     <property value="0">sas/yaw-sas-2-v3-c1</property>
     <property value="1">sas/yaw-sas-2-v3-c2</property>
     <property value="0.125">sas/yaw-sas-2-v3-c3</property>
@@ -1248,7 +1269,7 @@ Figure 2-54.  Longitudinal System Authority
             </fcs_function>
 
         <!--
-         | yaw SAS (based on channel C) - NASA TM-81833, Figure 15
+         | yaw SAS (based on channel C) - NASA TM-81833, Figure 21
          -->
         <switch name="fcs/yaw-damper-active">
             <default value="0.0" />
@@ -1267,7 +1288,7 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <property>-sas/roll-sas-1-input</property>
-                    <value>3.19</value>
+                    <property>sas/yaw-sas-2-v1-stkr-factor</property>
                 </product>
             </function>
         </fcs_function>
@@ -1394,7 +1415,14 @@ Figure 2-54.  Longitudinal System Authority
                     </eq>
                     <value>0</value>
                     <sum>
-                        <property>sas/yaw-sas-2-output</property>
+                        <ifthen>
+                            <nq>
+                                <property>fcs/dfcs-active</property>
+                                <value>0</value>
+                            </nq>
+                            <property>sas/yaw-sas-2-output</property>
+                            <value>0</value>
+                        </ifthen>
                         <property>sas/yaw-sas-3-output</property>
                     </sum>
                 </ifthen>
@@ -1541,6 +1569,7 @@ Figure 2-54.  Longitudinal System Authority
             <fcs_function name="sas/roll-sas-2-ha-v2">
                 <function>
                     <product>
+                        <property>fcs/dfcs-active</property>
                         <property>sas/roll-sas-2-ha-v1</property>
                         <property>sas/roll-sas-2-ha-v2-alpha-mach</property>
                     </product>
@@ -1588,12 +1617,19 @@ Figure 2-54.  Longitudinal System Authority
                 </function>
             </fcs_function>
 
-            <fcs_function name="sas/roll-sas-2-v4">
-                <function>
+        <fcs_function name="sas/roll-sas-2-v4">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>fcs/dfcs-active</property>
+                        <value>0</value>
+                    </nq>
                     <product>
                         <property>sas/roll-sas-2-v3</property>
                         <property>sas/roll-sas-2-v4-alpha-mach</property>
                     </product>
+                    <property>sas/roll-sas-2-v3</property>
+                </ifthen>
                 </function>
             </fcs_function>
 
@@ -1635,6 +1671,7 @@ Figure 2-54.  Longitudinal System Authority
                         </ifthen>
                 </function>
             </fcs_function>
+
             <fcs_function name="sas/roll-sas-3-v1">
                 <function>
                     <product>
@@ -1643,6 +1680,7 @@ Figure 2-54.  Longitudinal System Authority
                     </product>
                 </function>
             </fcs_function>
+            
             <fcs_function name="sas/roll-sas-3-v2">
                 <function>
                     <product>
@@ -1723,10 +1761,17 @@ Figure 2-54.  Longitudinal System Authority
 
             <fcs_function name="sas/roll-sas-3">
                 <function>
-                    <sum>
-                        <property>sas/roll-sas-3-v4</property>
-                        <property>sas/roll-sas-3-v5</property>
-                    </sum>
+                    <ifthen>
+                        <nq>
+                            <property>fcs/dfcs-active</property>
+                            <value>0</value>
+                        </nq>
+                        <sum>
+                            <property>sas/roll-sas-3-v4</property>
+                            <property>sas/roll-sas-3-v5</property>
+                        </sum>
+                        <property>sas/roll-sas-3-v1</property>
+                    </ifthen>
                 </function>
             </fcs_function>
 
@@ -4085,32 +4130,6 @@ Figure 2-54.  Longitudinal System Authority
                     <tableData>
                        -10  0.0100
                         -5 -0.0147
-                         0 -0.0333
-                         5 -0.0947
-                        10 -0.1068
-                        15 -0.1189
-                        20 -0.1310
-                        25 -0.0800
-                        30 -0.0116
-                        35  0.1421
-                        40  0.1007
-                        45 -0.0298
-                        50 -0.0958
-                        55 -0.0134
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CNP-unused">
-            <description>CNP, AFWAL, Revised TM-81833 Fig37.</description>
-            <product>
-                <property>aero/bi2vel</property>
-                <property>velocities/p-aero-rad_sec</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <tableData>
-                       -10 -0.0947
-                        -5 -0.0947
                          0 -0.0333
                          5 -0.0947
                         10 -0.1068
