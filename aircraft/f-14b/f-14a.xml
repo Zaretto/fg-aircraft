@@ -61,6 +61,13 @@
             date="November 1992"
         />
         <reference
+            refID="NASA-TM-81833"
+            title="Simulator results of an F-14A airplane utilizing an aileron-rudder interconnect during carrier approaches and landings"
+            author="Kelly, W. W. and Brown, P. W. (NASA Langley Research Center Hampton, VA, United States)"
+            date="May 1, 1980"
+            URL="https://ntrs.nasa.gov/citations/19800020867"
+        />
+        <reference
             refID="NASA-TM-84643"
             author="M. Leroy Spearman"
             title="Effects of Wing and tail location on the aerodynamic characteristics of an airplane for mach numbers from 0.25 to 4.63"
@@ -68,6 +75,10 @@
         />
         <reference
             refID="NASA-aaia-2000-0900"
+            title="Aerodynamic characteristics, database development and flight simulation of the X-34 vehicle"
+            author="Bandu Pamadi, Gregory Brauckmann, Michael Ruth and Henri Fuhrmann"
+            date="22 Aug 2012"
+            URL="https://doi.org/10.2514/6.2000-900"
         />
         <reference
             refID="NASA-TM-104326"
@@ -166,17 +177,17 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </metrics>
 
     <mass_balance>
-        <location name="CG" unit="IN">
-            <x> 416</x>
-            <y>   0.00 </y>
-            <z>   0.00 </z>
-        </location>
         <ixx unit="SLUG*FT2">     58950 </ixx>
         <iyy unit="SLUG*FT2">    225600 </iyy>
         <izz unit="SLUG*FT2">    285000 </izz>
         <!-- using GE F110 engines but aero is for F14A -->
         <!-- left to right; 01 pylons, 2 left tank, 3456 centre rails, 7 right tank, 89 right  pylons -->
         <emptywt unit="LBS" >     42104 </emptywt>
+        <location name="CG" unit="IN">
+            <x> 407</x>
+            <y>   0.00 </y>
+            <z>   0.00 </z>
+        </location>
         <pointmass name="Left Pylon0">
             <weight unit="LBS"> 0 </weight>
             <location name="POINTMASS" unit="IN">
@@ -489,7 +500,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 652.75591 </x>
                 <y> -58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -506,7 +517,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <location unit="IN">
                 <x> 652.75591 </x>
                 <y> -58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -519,7 +530,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 652.75591 </x>
                 <y> 58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <orient unit="DEG">
                 <roll> 0 </roll>
@@ -537,7 +548,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <location unit="IN">
                 <x> 652.75591 </x>
                 <y> 58.26772 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
                 </location>
                 <orient unit="DEG">
                     <roll> 0 </roll>
@@ -689,1090 +700,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </propulsion>
 
 
-    <flight_control name="FCS F14">
-
-        <property>fcs/hook-engage</property>
-        <property>fcs/wing-sweep-pilot-dmd</property>
-        <property>fcs/wing-sweep-mode</property>
-        <property>fcs/spoiler-ground-brake-armed</property>
-        <property>fcs/flap-cmd-sum</property>
-        <property>fcs/roll-trim-sas-cmd-norm</property>
-
-        <!-- wing sweep normalization is 0.01470588235294117647058823529412 per degree (1/range)== 1/68 -->
-        <channel name="Wing Sweep">
-            <pure_gain name="fcs/wing-sweep-pos-deg">
-                <input>fcs/wing-sweep-norm</input>
-                <gain>68</gain>
-                <clipto>
-                    <min> 20 </min>
-                    <max> 82 </max>
-                </clipto>
-            </pure_gain>
-
-            <kinematic name="Sweep Position">
-                <noscale/>
-                <input>fcs/wing-sweep-dmd-flap-limit</input>
-                <traverse>
-                    <setting>
-                        <position>0.294117647</position>
-                        <time>16</time>
-                        <!-- F14AAD-1 15 deg/sec sweep rate, (68-20)/15 -->
-                    </setting>
-                    <setting>
-                        <position>1</position>
-                        <time>16</time>
-                    </setting>
-                    <setting>
-                        <position>1.102941176</position>
-                        <time>5</time>
-                    </setting>
-                </traverse>
-                <!--<output>fcs/wing-sweep-cmd</output>-->
-                <output>/fdm/jsbsim/fcs/wing-sweep-norm</output>
-            </kinematic>
-
-
-            <!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
-                we limit the sweep to the computed wing-sweep-cadc-pos -->
-            <switch name="fcs/wing-sweep-dmd">
-                <default value="fcs/wing-sweep-cadc-dmd"/>
-
-                <test value="fcs/wing-sweep-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-                <test value="fcs/wing-sweep-pilot-dmd">
-                    fcs/wing-sweep-pilot-dmd ge fcs/wing-sweep-cadc-dmd
-                    fcs/wing-sweep-mode eq 1
-                </test>
-                <test value="1.2">
-                    fcs/wing-sweep-mode eq 4
-                </test>
-            </switch>
-
-            <switch name="fcs/wing-sweep-dmd-flap-limit">
-                <default value="0.2941176470588235"/>
-                <test value="0.3088235294117647">
-                    fcs/aux-flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd ge 0.3088235294117647
-                    fcs/wing-sweep-dmd lt 0.3235294117647059
-                </test>
-                <test value="0.3235294117647059">
-                    fcs/aux-flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd ge 0.3235294117647059
-                    fcs/wing-sweep-dmd lt 0.3382352941176471
-                </test>
-                <test value="fcs/wing-sweep-dmd">
-                    fcs/flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd le 0.7352941176470588
-                </test>
-                <test value=".7352941176470588">
-                    fcs/flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd gt 0.7352941176470588
-                </test>
-                <test value="fcs/wing-sweep-dmd">
-                    fcs/flap-pos-deg eq 0
-                </test>
-                <output>fcs/wing-sweep-dmd-flap-limit</output>
-            </switch>
-
-        </channel>
-
-        <channel name="Pitch">
-
-            <summer name="Pitch Trim Sum">
-                <input>fcs/elevator-cmd-norm</input>
-                <input>fcs/pitch-trim-cmd-norm</input>
-                <input>fcs/pitch-damper-rate</input>
-                <input>systems/afcs/elevator-cmd-delta</input>
-                <clipto>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </clipto>
-            </summer>
-
-            <switch name="position/aircraft-on-ground">
-                <description>Aircraft on ground</description>
-                <default value="0"/>
-                <test value="1" logic="OR">
-                    gear/unit[0]/WOW ne 0
-                    gear/unit[1]/WOW ne 0
-                    gear/unit[2]/WOW ne 0
-                </test>
-            </switch>
-
-            <!-- spoilers -4deg when flaps deployed more than 25 deg -->
-            <switch name="fcs/spoilers-zeropos">
-                <default value="0"/>
-                <test value="-0.081">
-                    fcs/flap-pos-norm ge 0.7142857142857143
-                </test>
-            </switch>
-
-            <switch name="fcs/pitch-trim-actuator">
-                <default value="fcs/pitch-trim-sum"/>
-                <test value="fcs/pitch-trim-actuator">
-                    systems/hydraulics/flight-system-pressure ne 1
-                </test>
-            </switch>
-            
-            <aerosurface_scale name="Elevator Control">
-                <input>fcs/pitch-trim-actuator</input>
-                <!-- maybe this should take into account the trim limits from the AAP -->
-                <range>
-                    <min> -0.57895 </min>
-                    <max>  0.2105 </max>
-                </range>
-                <output>fcs/elevator-pos-demand</output>
-            </aerosurface_scale>
-
-            <switch name="fcs/spoiler-differential-cmd">
-                <description>Differential spoiler due to stick deflection</description>
-                <default value="0"/>
-
-                <test value="fcs/roll-trim-actuator">
-                    fcs/wing-sweep-dmd le 0.9117647058823529
-                    systems/hydraulics/combined-system-pressure ne 0
-                </test>
-            </switch>
-
-            <switch name="fcs/spoiler-ground-brake-deployed">
-                <description>Ground braking spoilers</description>
-                <default value="0"/>
-
-                <test value="fcs/spoiler-ground-brake-deployed">
-                    systems/hydraulics/combined-system-pressure eq 0
-                </test>
-
-                <test value="1">
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg lt 55.0
-                    fcs/spoiler-ground-brake-armed ne 0.0
-                    fcs/throttle-cmd-norm[0] le 0.15
-                    fcs/throttle-cmd-norm[1] le 0.15
-                    position/aircraft-on-ground ne 0
-                </test>
-            </switch>
-
-            <kinematic name="fcs/spoiler-differential-pos">
-                <input>fcs/spoiler-differential-cmd</input>
-                <traverse>
-                    <setting>
-                        <position>-1</position>
-                        <time>0.22</time>
-                        <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
-                    </setting>
-                    <setting>
-                        <position>1</position>
-                        <time>0.22</time>
-                        <!-- F14AAD-1 Figure 2-61 15 deg/sec sweep rate  -->
-                    </setting>
-                </traverse>
-            </kinematic>
-
-            <switch name="fcs/spoiler-left-cmd">
-                <description>Left wing spoiler deflection</description>
-                <default value="fcs/spoilers-zeropos"/>
-
-                <test value="0">
-                    systems/flyt/wing-asymmetry lt  0
-                </test>
-
-                <test value="1">
-                    fcs/spoiler-ground-brake-deployed eq 1
-                </test>
-
-                <test value="-fcs/spoiler-differential-pos">
-                    fcs/spoiler-differential-pos le 0
-                </test>
-            </switch>
-
-            <kinematic name="fcs/spoiler-left-pos">
-                <input>fcs/spoiler-left-cmd</input>
-                <traverse>
-                    <setting>
-                        <position>-0.0818181818181819</position>
-                        <time>0.22</time>
-                        <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
-                    </setting>
-                    <setting>
-                        <position>1</position>
-                        <time>0.22</time>
-                        <!-- F14AAD-1 Figure 2-61 15 deg/sec sweep rate  -->
-                    </setting>
-                </traverse>
-            </kinematic>
-
-            <switch name="fcs/spoiler-right-cmd">
-                <description>Right  wing spoiler deflection</description>
-                <default value="fcs/spoilers-zeropos"/>
-
-                <test value="0">
-                    systems/flyt/wing-asymmetry gt  0
-                </test>
-
-                <test value="1">
-                    fcs/spoiler-ground-brake-deployed eq 1
-                </test>
-
-                <test value="fcs/spoiler-differential-pos">
-                    fcs/spoiler-differential-pos ge 0
-                </test>
-            </switch>
-
-            <kinematic name="fcs/spoiler-right-pos">
-                <input>fcs/spoiler-right-cmd</input>
-                <traverse>
-                    <setting>
-                        <position>-0.0818181818181819</position>
-                        <time>0.22</time>
-                        <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
-                    </setting>
-                    <setting>
-                        <position>1</position>
-                        <time>0.22</time>
-                        <!-- F14AAD-1 Figure 2-61 15 deg/sec sweep rate  -->
-                    </setting>
-                </traverse>
-            </kinematic>
-
-            <aerosurface_scale name="fcs/spoiler-left-pos-deg">
-                <input>fcs/spoiler-left-pos</input>
-                <range>
-                    <min> -4 </min>
-                    <max> 55 </max>
-                </range>
-            </aerosurface_scale>
-            <aerosurface_scale name="fcs/spoiler-right-pos-deg">
-                <input>fcs/spoiler-right-pos</input>
-                <range>
-                    <min> -4 </min>
-                    <max> 55 </max>
-                </range>
-            </aerosurface_scale>
-
-            <!-- F14a stabilizer: +/- 7deg : +/- 30 deg/sec -->
-            <kinematic name="elevator position">
-                <input>fcs/elevator-pos-demand</input>
-                <traverse>
-                    <setting>
-                        <position>-1</position>
-                        <time>1.75</time>
-                    </setting>
-                    <setting>
-                        <position>1</position>
-                        <time>0.90</time>
-                        <!-- based on 30 deg/sec -->
-                    </setting>
-                </traverse>
-                <output>fcs/elevator-pos-rad</output>
-            </kinematic>
-
-
-            <summer name="Left elevator normalization">
-                <input>fcs/elevator-pos-deg</input>
-                <input>fcs/left-aileron-pos-deg</input>
-                <output>fcs/left-elevator-pos-deg</output>
-            </summer>
-            <summer name="Right elevator normalization">
-                <input>fcs/elevator-pos-deg</input>
-                <input>-fcs/right-aileron-pos-deg</input>
-                <output>fcs/right-elevator-pos-deg</output>
-            </summer>
-
-            <aerosurface_scale name="elevator normalization">
-                <input>fcs/elevator-pos-rad</input>
-                <domain>
-                    <min>  -0.57895 </min>
-                    <max>   0.21053 </max>
-                </domain>
-                <range>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </range>
-                <output>fcs/elevator-pos-norm</output>
-            </aerosurface_scale>
-
-            <switch name="fcs/stabilizer-1p-factor">
-                <default value="0"/>
-                <test logic="AND" value="1">
-                    fcs/elevator-pos-rad ge -0.17453
-                </test>
-            </switch>
-            <switch name="fcs/stabilizer-2p-factor">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    fcs/elevator-pos-rad lt -0.17453
-                </test>
-            </switch>
-        </channel>
-
-        <property>systems/NWS/engaged</property>
-
-        <channel name="Nose Wheel Steering">
-            <switch name="systems/NWS/engaged">
-                <default value="0"/>
-                <test value="1">
-                    gear/unit[0]/wheel-speed-fps le 135
-                    systems/hydraulics/combined-system-pressure ne 0
-                    position/aircraft-on-ground ne 0
-                    systems/holdback/launchbar-engaged eq 0
-                </test>
-                <output>systems/NWS/engaged</output>
-            </switch>
-
-            <scheduled_gain name="fcs/scheduled-steer-pos-deg">
-                <input>fcs/steer-cmd-norm</input>
-                <table>
-                    <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
-                    <independentVar lookup="column">systems/NWS/engaged</independentVar>
-                    <tableData>
-                               0    1
-                          0    0   87
-                         80    0   15
-                        135    0    0
-                    </tableData>
-                </table>
-                <output>fcs/steer-pos-deg</output>
-            </scheduled_gain>
-        </channel>
-
-        <channel name="SoundFX">
-            <fcs_function name="fcs/flap-windfx-volume">
-                <function>
-                    <product>
-                        <property>velocities/ve-kts</property>
-                        <property>fcs/flap-pos-norm</property>
-                    </product>
-                </function>
-                <output>fcs/flap-windfx-volume</output>
-            </fcs_function>
-            <fcs_function name="fcs/gear-windfx-volume">
-                <function>
-                    <product>
-                        <property>velocities/ve-kts</property>
-                        <property>gear/gear-pos-norm</property>
-                    </product>
-                </function>
-                <output>fcs/gear-windfx-volume</output>
-            </fcs_function>
-        </channel>
-
-        <!-- aileron: +/- 5deg : +/- 33 deg/sec -->
-        <channel name="Roll">
-            <summer name="Roll Trim Sum">
-                <input>fcs/aileron-cmd-norm</input>
-                <input>fcs/roll-trim-cmd-norm</input>
-                <input>fcs/roll-trim-sas-cmd-norm</input>
-                <input>fcs/roll-rate-limiter</input>
-                <clipto>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </clipto>
-            </summer>
-
-            <switch name="fcs/roll-trim-actuator">
-                <default value="fcs/roll-trim-sum"/>
-                <test value="fcs/roll-trim-actuator">
-                    systems/hydraulics/flight-system-pressure ne 1
-                </test>
-            </switch>
-            <aerosurface_scale name="Left Aileron Control">
-                <input>fcs/roll-trim-actuator</input>
-                <range>
-                    <min> -0.22807 </min>
-                    <max>  0.22807 </max>
-                </range>
-                <output>fcs/left-aileron-pos-rad</output>
-            </aerosurface_scale>
-
-            <aerosurface_scale name="Right Aileron Control">
-                <input>fcs/roll-trim-actuator</input>
-                <range>
-                    <min> -0.22807 </min>
-                    <max>  0.22807 </max>
-                </range>
-                <output>fcs/right-aileron-pos-rad</output>
-            </aerosurface_scale>
-
-            <aerosurface_scale name="left aileron normalization">
-                <input>fcs/left-aileron-pos-rad</input>
-                <domain>
-                    <min> -0.22807 </min>
-                    <max>  0.22807 </max>
-                </domain>
-                <range>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </range>
-                <output>fcs/left-aileron-pos-norm</output>
-            </aerosurface_scale>
-
-            <aerosurface_scale name="right aileron normalization">
-                <input>fcs/right-aileron-pos-rad</input>
-                <domain>
-                    <min> -0.22807 </min>
-                    <max>  0.22807 </max>
-                </domain>
-                <range>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </range>
-                <output>fcs/right-aileron-pos-norm</output>
-            </aerosurface_scale>
-
-        </channel>
-
-        <property value="0">fcs/yaw-damper-enable</property>
-        <property value="0">fcs/pitch-damper-enable</property>
-        <property value="0">fcs/roll-sas-enable</property>
-        <property value="0">fcs/external-tanks-fitted</property>
-        <property value="0">fcs/aim-fitted</property>
-        <property value="0">fcs/slat-cmd</property>
-
-
-
-	<!-- SAS YAW Channels Lead/Lag values -->
-	<property value="3.32">sas/yaw-r-c1</property>
-	<property value="8.01">sas/yaw-r-c2</property>
-	<property value="16.3">sas/yaw-r-c3</property>
-	<property value="32.1">sas/yaw-r-c4</property>
-	
-
-        <channel name="Yaw">
-
-            <!-- 
-                 * In the DMS model the static yawing moment coefficient was treated as
-                 * a function of three variables: alpha, beta, and stab deflection. 
-                 * The unusual influence of stabilator deflection on directional stability arises from
-                 * an interaction between the engine inlet shed vortex and the vertical and 
-                 * horizontal stabilizers, [Ref. 10].
-                 * Examination of the data indicated that this effect could be modeled as a yawing 
-                 * moment increment which was a function of alpha and stab deflection with a lookup
-                 * table using sin(8.2 beta). (See DCNDS)
-                 *-->
-            <fcs_function name="aero/cn-sin-82beta">
-                <function>
-                    <sin>
-                        <product>
-                            <property>aero/beta-rad</property>
-                            <value>8.2</value>
-                        </product>
-                    </sin>
-                </function>
-                <output>aero/cn-sin-82beta</output>
-            </fcs_function>
-
-            <!-- yaw damper 
-                possibly only active at certain alphas.
-                possibly inactive when wow
-            -->
-            <switch name="fcs/yaw-damper-active">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    fcs/yaw-damper-enable ne 0.0
-                    gear/wow eq 0
-                    aero/alpha-deg gt -10
-                    aero/alpha-deg lt  25
-                </test>
-                <output>fcs/yaw-damper-active</output>
-            </switch>
-
-		<fcs_function name="sas/yaw-r-0">
-			<function>
-				<ifthen>
-					<nq>
-						<property>velocities/vt-fps</property>
-						<value>0</value>
-					</nq>
-					<product>
-						<quotient>
-							<value>32.17</value>
-							<property>velocities/vt-fps</property>
-						</quotient>
-						<sin>
-							<property>attitude/phi-deg</property>
-						</sin>
-					</product>
-					<value>0</value>
-				</ifthen>
-			</function>
-		</fcs_function>
-
-		<fcs_function name="sas/yaw-r-01">
-			<function>
-				<sum>
-					<property>sas/yaw-r-0</property>
-					<property>velocities/r-rad_sec</property>
-				</sum>
-			</function>
-		</fcs_function>
-
-		<lead_lag_filter name="sas/yaw-r-1">
-			<input>sas/yaw-r-01</input>
-			<c1>sas/yaw-r-c1</c1>
-			<c2>sas/yaw-r-c2</c2>
-			<c3>sas/yaw-r-c3</c3>
-			<c4>sas/yaw-r-c4</c4>
-		</lead_lag_filter>
-
-		<fcs_function name="sas/yaw-output">
-			<function>
-				<ifthen>
-					<eq>
-						<property>fcs/yaw-damper-active</property>
-						<value>0</value>
-					</eq>
-					<value>0</value>
-					<sum>
-						<product>
-							<property>sas/yaw-r-1</property>
-							<value>1</value>
-						</product>
-						<value>0</value>
-					</sum>
-				</ifthen>
-			</function>
-			<clipto>
-				<min>-0.3</min>
-				<max>0.3</max>
-			</clipto>
-		</fcs_function>
-
-
-
-            <switch name="fcs/roll-sas-active">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    aero/alpha-rad ge -0.175438596491228
-                    aero/alpha-rad le  0.2631578947368421
-                    fcs/roll-sas-enable ne 0.0
-                </test>
-                <output>fcs/roll-sas-active</output>
-            </switch>
-            <!-- rudder limits +/-30deg 40 deg/sec-->
-            <!-- stabilizer limits +/7deg 30 deg/sec-->
-
-            <pure_gain name="Pilot G">
-                <input>accelerations/n-pilot-z-norm</input>
-                <gain>-1</gain>
-                <output>/accelerations/pilot-gdamped</output>
-            </pure_gain>
-
-            <switch name="fcs/pitch-damper-active">
-                <default value="0.0"/>
-                <test logic="AND" value="1">
-                    aero/alpha-rad ge -0.175438596491228
-                    aero/alpha-rad le  0.2631578947368421
-                    fcs/elevator-cmd-norm ge -0.15
-                    fcs/elevator-cmd-norm le 0.15
-                    fcs/pitch-damper-enable ne 0.0
-                </test>
-                <output>fcs/pitch-damper-active</output>
-            </switch>
-
-            <scheduled_gain name="Pitch Damper Rate">
-                <!-- Figure 2-57 F14AAD-1  -->
-                <input>velocities/q-aero-rad_sec</input>
-                <table>
-                    <independentVar lookup="row">velocities/ve-kts</independentVar>
-                    <tableData>
-                        30    0
-                        60    1
-                    </tableData>
-                </table>
-                <gain>fcs/pitch-damper-active</gain>
-                <min> -0.2857142857142857 </min>
-                <max>  0.2857142857142857 </max>
-            </scheduled_gain>
-
-            <scheduled_gain name="fcs/roll-rate-limiter">
-                <input>fcs/aileron-cmd-norm</input>
-                <table>
-                    <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
-                    <tableData>
-                      -6.2      -1
-                      -1.4       0
-                       1.4       0
-                       6.2      -1
-                    </tableData>
-                </table>
-                <gain>fcs/roll-sas-active</gain>
-            </scheduled_gain>
-
-
-            <summer name="Rudder Command Sum">
-                <input>fcs/rudder-cmd-norm</input>
-                <input>fcs/yaw-trim-cmd-norm</input>
-                <clipto>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </clipto>
-            </summer>
-
-            <summer name="Rudder Sum">
-                <input>fcs/rudder-command-sum</input>
-                <input>sas/yaw-output</input>
-                <clipto>
-                    <min> -1.1 </min>
-                    <max>  1.1 </max>
-                </clipto>
-            </summer>
-
-            <switch name="fcs/rudder-actuator-pos">
-                <default value="fcs/rudder-sum"/>
-                <test value="fcs/rudder-actuator-pos">
-                    systems/hydraulics/flight-system-pressure ne 1
-                </test>
-            </switch>
-            <kinematic name="Rudder Control">
-                <input>fcs/rudder-actuator-pos</input>
-                <traverse>
-                    <setting>
-                        <position>-0.35</position>
-                        <time>0.90</time>
-                        <!-- based on 30 deg/sec -->
-                    </setting>
-                    <setting>
-                        <position>0.35</position>
-                        <time>0.90</time>
-                        <!-- based on 30 deg/sec -->
-                    </setting>
-                </traverse>
-                <output>fcs/rudder-pos-rad</output>
-            </kinematic>
-
-            <aerosurface_scale name="rudder normalization">
-                <input>fcs/rudder-pos-rad</input>
-                <domain>
-                    <min> -0.35 </min>
-                    <max>  0.35 </max>
-                </domain>
-                <range>
-                    <min> -1 </min>
-                    <max>  1 </max>
-                </range>
-                <output>fcs/rudder-pos-norm</output>
-            </aerosurface_scale>
-
-
-        </channel>
-
-        <channel name="Flaps">
-
-            <switch name="fcs/flap-total-dmd">
-                <default value="0"/>
-                <test value="fcs/flap-total-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-                <test value="fcs/flap-cmd-norm">
-                    fcs/flap-cmd-norm ne 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg le 50
-                </test>
-                <test value="systems/cadc/manuv-flap-extension-cmd">
-                    systems/cadc/manuv-flap-extension-cmd ne 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg le 50
-                </test>
-                <clipto>
-                    <min> 0 </min>
-                    <max>  1 </max>
-                </clipto>
-                <output>fcs/flap-total-dmd</output>
-            </switch>
-
-            <switch name="fcs/aux-flap-total-dmd">
-                <default value="0"/>
-                <test value="fcs/aux-flap-total-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-                <test value="fcs/flap-cmd-norm">
-                    fcs/flap-cmd-norm ge 0.1428571
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg le 22
-                </test>
-                <clipto>
-                    <min> 0 </min>
-                    <max>  1 </max>
-                </clipto>
-                <output>fcs/aux-flap-total-dmd</output>
-            </switch>
-
-            <pure_gain name="Flap Slat gain">
-                <input>fcs/flap-total-dmd</input>
-                <gain>2.33333348888889925925995061733</gain>
-                <clipto>
-                    <min>  0 </min>
-                    <max>  1 </max>
-                </clipto>
-            </pure_gain>
-            <switch name="fcs/slat-total-dmd">
-                <default value="0"/>
-                <test value="fcs/slat-total-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-
-                <test value="fcs/flap-slat-gain">
-                    fcs/flap-total-dmd gt 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg le 50
-                </test>
-
-                <test value="fcs/slat-cmd">
-                    fcs/slat-cmd ne 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg le 50
-                </test>
-                <test value="systems/cadc/manuv-slat-extension-cmd">
-                    systems/cadc/manuv-slat-extension-cmd ne 0
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg le 50
-                </test>
-                <clipto>
-                    <min> 0 </min>
-                    <max>  1 </max>
-                </clipto>
-                <output>fcs/slat-total-dmd</output>
-            </switch>
-
-
-            <kinematic name="Flaps Control">
-                <input>fcs/flap-total-dmd</input>
-                <traverse>
-                    <setting>
-                        <position>  0 </position>
-                        <time>      0 </time>
-                    </setting>
-                    <setting>
-                        <position> 10 </position>
-                        <time>    0.4 </time>
-                    </setting>
-                    <setting>
-                        <!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
-                        <position> 25 </position>
-                        <time>    1.0 </time>
-                    </setting>
-                    <setting>
-                        <!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
-                        <position> 35 </position>
-                        <time>    1.5 </time>
-                    </setting>
-                </traverse>
-                <output>fcs/flap-pos-deg</output>
-            </kinematic>
-            <kinematic name="Flaps Control">
-                <input>fcs/aux-flap-total-dmd</input>
-                <traverse>
-                    <setting>
-                        <position>  0 </position>
-                        <time>      0 </time>
-                    </setting>
-                    <setting>
-                        <position> 10 </position>
-                        <time>    0.4 </time>
-                    </setting>
-                    <setting>
-                        <!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
-                        <position> 25 </position>
-                        <time>    1.0 </time>
-                    </setting>
-                    <setting>
-                        <!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
-                        <position> 35 </position>
-                        <time>    1.5 </time>
-                    </setting>
-                </traverse>
-                <output>fcs/aux-flap-pos-deg</output>
-            </kinematic>
-
-            <aerosurface_scale name="flap normalization">
-                <input>fcs/flap-pos-deg</input>
-                <domain>
-                    <min>  0 </min>
-                    <max> 35 </max>
-                </domain>
-                <range>
-                    <min> 0 </min>
-                    <max> 1 </max>
-                </range>
-                <output>fcs/flap-pos-norm</output>
-            </aerosurface_scale>
-
-            <aerosurface_scale name="aux flap normalization">
-                <input>fcs/aux-flap-pos-deg</input>
-                <domain>
-                    <min>  0 </min>
-                    <max> 35 </max>
-                </domain>
-                <range>
-                    <min> 0 </min>
-                    <max> 1 </max>
-                </range>
-                <output>fcs/aux-flap-pos-norm</output>
-            </aerosurface_scale>
-
-        </channel>
-
-        <channel name="Slats">
-            <kinematic name="Slats Control">
-                <input>fcs/slat-total-dmd</input>
-                <traverse>
-                    <setting>
-                        <position>  0 </position>
-                        <time>      0 </time>
-                    </setting>
-                    <setting>
-                        <position>  1 </position>
-                        <time>      1 </time>
-                    </setting>
-                </traverse>
-                <output>fcs/slat-cmd-norm</output>
-            </kinematic>
-
-            <aerosurface_scale name="Slat normalization">
-                <input>fcs/slat-cmd-norm</input>
-                <domain>
-                    <min>  0 </min>
-                    <max>  1 </max>
-                </domain>
-                <range>
-                    <min> 0 </min>
-                    <max> 17 </max>
-                </range>
-                <output>fcs/slat-pos-norm-deg</output>
-            </aerosurface_scale>
-        </channel>
-
-
-        <channel name="Landing Gear">
-            <switch name="gear/gear-dmd-norm">
-                <default value="1"/>
-                <test value="1">
-                    <!-- always force gear down when on ground - to prevent inadvertant retraction -->
-                    position/aircraft-on-ground ne 0
-                </test>
-                <test value="gear/gear-dmd-norm">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-                <test value="gear/gear-cmd-norm">
-                    systems/hydraulics/combined-system-pressure ne 0
-                </test>
-                <clipto>
-                    <min> 0 </min>
-                    <max>  1 </max>
-                </clipto>
-                <output>gear/gear-dmd-norm</output>
-            </switch>
-            <kinematic name="Gear Control">
-                <input>gear/gear-dmd-norm</input>
-                <traverse>
-                    <setting>
-                        <position> 0 </position>
-                        <time>     0 </time>
-                    </setting>
-                    <setting>
-                        <position> 1 </position>
-                        <time>     5 </time>
-                    </setting>
-                </traverse>
-                <output>gear/gear-pos-norm</output>
-            </kinematic>
-
-        </channel>
-
-        <channel name="Speedbrake">
-            <switch name="fcs/speedbrake-dmd-norm">
-                <default value="0"/>
-                <test value="fcs/speedbrake-dmd-norm">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
-                <test value="fcs/speedbrake-cmd-norm">
-                    systems/hydraulics/combined-system-pressure ne 0
-                </test>
-                <clipto>
-                    <min> 0 </min>
-                    <max>  1 </max>
-                </clipto>
-                <output>fcs/speedbrake-dmd-norm</output>
-            </switch>
-
-            <kinematic name="Speedbrake Control">
-                <input>fcs/speedbrake-dmd-norm</input>
-                <traverse>
-                    <setting>
-                        <position> 0 </position>
-                        <time>     0 </time>
-                    </setting>
-                    <!--<setting>
-          <position> 0.3 </position>
-          <time>     0.5 </time>
-       </setting>
-       <setting>
-          <position> 0.6 </position>
-          <time>     0.5 </time>
-       </setting>-->
-                    <setting>
-                        <position> 1 </position>
-                        <time>     1.5 </time>
-                    </setting>
-                </traverse>
-                <output>fcs/speedbrake-pos-norm</output>
-            </kinematic>
-        </channel>
-
-        <channel name="Hook">
-
-            <kinematic name="fcs/hook-control">
-                <input>fcs/hook-engage</input>
-                <traverse>
-                    <setting>
-                        <position>0</position>
-                        <time>0</time>
-                    </setting>
-                    <setting>
-                        <position>1</position>
-                        <time>2.5</time>
-                    </setting>
-                </traverse>
-                <output>fcs/hook-pos-norm</output>
-            </kinematic>
-
-        </channel>
-
-        <channel name="extra-aero">
-            <fcs_function name="aero/alpha-indicated-deg">
-                <description>NASA TM-81833, page 56, Figure 17; converted to linear function</description>
-                <function>
-                    <product>
-                        <sum>
-                            <property> aero/alpha-deg </property>
-                            <value> 0.1 </value>
-                        </sum>
-                            <property> tuning/alpha-mx </property>
-
-                    </product>
-                </function>
-            </fcs_function>
-
-
-<!--
-                        <value>1.40162500000</value>
-            <fcs_function name="aero/alpha-indicated-deg">
-                <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 * alphaNOSEPROBE + .797deg</description>
-                <function>
-                    <product>
-                        <sum>
-                            <property> aero/alpha-deg </property>
-                            <value> 0.797 </value>
-                        </sum>
-                        <value>1.231223836</value>
-                    </product>
-                </function>
-            </fcs_function>
--->            <fcs_function name="aero/aero-rp-x-in">
-                <function>
-                    <description>Centre of pressure due to mach and wingsweep angle</description>
-                    <!-- MAC is 16% cbar . cbar is 9.8ft giving us 18.81in as offset to %MAC -->
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <independentVar lookup="column">fcs/wing-sweep-dmd</independentVar>
-                            <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
-                            <tableData>
-                                    0.294117647  1.000000000
-                               0.0        419.0        429.1
-                               2.4        421.0        449.6
-                            </tableData>
-                        </table>
-                </function>
-                <output>metrics/aero-rp-x-in</output>
-            </fcs_function>
-
-            <fcs_function name="aero/cadc-control-effectivity-factor">
-                <function>
-                    <description>High speeds CADC control effectivity limitation of rudder and stabilator</description>
-                        <table>
-                            <independentVar lookup="row">velocities/mach</independentVar>
-                            <!-- mach 2.40 with wingsweep 22deg isn't in the envelope -->
-                            <tableData>
-                               0.0   1.0
-                               1.0   0.6
-                               2.4   0.3
-                            </tableData>
-                        </table>
-                </function>
-            </fcs_function>
-
-            <!-- need %Cg in chord for moments [Xcg - Xref)/100] -->
-            <summer name="cg-x-offset-chord-in">
-                <input> inertia/cg-x-in</input>
-                <input> -metrics/aero-rp-x-in</input>
-                <output>inertia/cg-x-offset-chord-in</output>
-            </summer>
-
-            <pure_gain name="cg-x-chord-percent">
-                <description>Percent offset of the CoP from the CG</description>
-                <input>inertia/cg-x-offset-chord-in</input>
-                <gain> -0.01</gain>
-                <clipto>
-                    <min> -1 </min>
-                    <max> 1 </max>
-                </clipto>
-                <output> inertia/cg-x-mac-percent </output>
-            </pure_gain>
-
-            <fcs_function name="cbarq-2vo">
-                <description>For denormalization</description>
-                <function>
-                    <quotient>
-                        <product>
-                            <property>metrics/cbarw-ft</property>
-                            <property>velocities/q-aero-rad_sec</property>
-                        </product>
-                        <!-- over -->
-                        <product>
-                            <value>2</value>
-                            <property>velocities/vt-fps</property>
-                        </product>
-                    </quotient>
-                </function>
-                <clipto>
-                    <min> -2.01 </min>
-                    <max>  2.01 </max>
-                </clipto>
-                <output>aero/cbarq-2vo</output>
-            </fcs_function>
-
-
-            <fcs_function name="aero-cos-alpha">
-                <function>
-                        <cos>
-                            <property>aero/alpha-rad</property>
-                        </cos>
-                </function>
-                <output>aero/cos-alpha</output>
-            </fcs_function>
-
-            <fcs_function name="aero-sin-alpha">
-                <function>
-                        <sin>
-                            <property>aero/alpha-rad</property>
-                        </sin>
-                </function>
-                <output>aero/sin-alpha</output>
-            </fcs_function>
-        </channel>
-        <channel name="throttles">
-          <pure_gain name="fcs/throttle-input-pos[0]">
-            <input>fcs/throttle-pos-norm[0]</input>
-            <gain>1</gain>
-          </pure_gain>
-          <pure_gain name="fcs/throttle-input-pos[1]">
-            <input>fcs/throttle-pos-norm[1]</input>
-            <gain>1</gain>
-          </pure_gain>
-        </channel>
-
-    </flight_control>
+    <flight_control name="FCS F14" file="systems/f-14-fcs.xml"/>
 
     <!--The roll(L) and yaw(N) moments are due to aerodynamics only, while
    the pitch(Z), includes a thrust term. These are given by.
@@ -2284,7 +1212,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <description>DRAG INCREMENT DUE TO SPOILER DEFLECTION</description>
             <product>
                 <sum>
-          <property>fcs/spoiler-right-pos-deg</property>
+                    <property>fcs/spoiler-left-pos-deg</property>
           <property>fcs/spoiler-right-pos-deg</property>
           <property>aero/coefficients/CSPL</property>
                 </sum>
@@ -2336,28 +1264,49 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                       -25  0.0210
-                       -20  0.0210
-                       -15  0.0414
-                        -5  0.0650
-                         0  0.0784
-                         5  0.0650
-                        15  0.0514
-                        25  0.0210
-                        40  0.0210
+                       -10    0.02013
+                        -5    0.02183
+                        -2    0.02370
+                         0    0.02378
+                         1    0.02578
+                         2    0.02537
+                         3    0.02532
+                         4    0.02690
+                         5    0.02726
+                         6    0.02839
+                         7    0.02971
+                         8    0.03055
+                         9    0.03142
+                        10    0.03178
+                        11    0.03352
+                        12    0.03433
+                        13    0.03497
+                        14    0.03718
+                        15    0.03602
+                        16    0.03826
+                        17    0.03835
+                        18    0.03819
+                        19    0.03785
+                        20    0.04139
+                        22    0.03926
+                        24    0.02865
+                        25    0.02662
+                        28    0.01376
+                        30    0.00236
+                        35    0.00000
                     </tableData>
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CdMach">
+        <!-- <function name="aero/coefficients/CdMach">
             <description>Drag increment due to mach (NASA-TP-2580 Figure 16)</description>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
-                    <tableData>
+                    <tableData> -->
                         <!-- This follows the basic shape to provide a factor that has been
                              tuned to match known performance characteristics and may well be wrong
                              based on tp2580 but tuned to meet F14-AAD-1 -->
-                      0.20  0.00000
+                      <!-- 0.20  0.00000
                       0.80  0.02472
                       0.84  0.02772
                       0.90  0.02520
@@ -2374,8 +1323,65 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                       2.47  0.02179
                    </tableData>
                 </table>
-        </function>
+        </function> -->
 
+        <function name="aero/coefficients/CdMach">
+            <description>DRAG DUE TO MACH AND WINGSWEEP</description>
+            <product>
+                <property>tuning/CMBRK</property>
+            <table>
+                <independentVar lookup="row">velocities/mach</independentVar>
+                <independentVar lookup="column">aero/alpha-deg</independentVar>
+                <independentVar lookup="table">fcs/wing-sweep-pos-deg</independentVar>
+                <tableData breakPoint="20">					
+                    -15	-10	0	10	15
+                0.20	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.40	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.60	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.80	0.03735	0.01165	0.02241	0.03317	0.06043
+                0.90	0.05973	0.01912	0.03583	0.05254	0.08956
+                0.94	0.20353	0.07172	0.10596	0.14020	0.19890
+                1.05	0.60457	0.35993	0.40589	0.45185	0.67596
+                1.10	0.19079	0.12711	0.11777	0.10843	0.18283
+                1.20	0.07924	0.05217	0.05176	0.05135	0.09366
+                1.30	0.06076	0.03646	0.04127	0.04608	0.08509
+                1.80	0.06702	0.03979	0.04541	0.05103	0.09826
+                2.50	0.03947	0.02362	0.02445	0.02527	0.05227
+                </tableData>					
+                <tableData breakPoint="45">					
+                    -15	-10	0	10	15
+                0.20	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.40	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.60	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.80	0.02311	0.00726	0.01253	0.01780	0.02817
+                0.90	0.03336	0.01108	0.01758	0.02407	0.03842
+                0.94	0.10884	0.04090	0.04437	0.04784	0.06215
+                1.05	0.40537	0.22989	0.28925	0.34862	0.63077
+                1.10	0.14576	0.08522	0.09692	0.10862	0.18324
+                1.20	0.13373	0.07642	0.08539	0.09435	0.16593
+                1.30	0.11643	0.06993	0.08400	0.09808	0.18076
+                1.80	0.11305	0.05998	0.07194	0.08391	0.15928
+                2.50	0.06231	0.03497	0.03878	0.04259	0.08769
+                </tableData>					
+                <tableData breakPoint="68">					
+                    -15	-10	0	10	15
+                0.20	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.40	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.60	0.00000	0.00000	0.00000	0.00000	0.00000
+                0.80	0.01616	0.00530	0.00965	0.01399	0.02681
+                0.90	0.02450	0.00857	0.01473	0.02089	0.03790
+                0.94	0.08469	0.03295	0.04492	0.05689	0.08850
+                1.05	0.15133	0.10011	0.11320	0.12629	0.30554
+                1.10	0.05603	0.04325	0.04570	0.04815	0.08968
+                1.20	0.05455	0.04190	0.04431	0.04673	0.08138
+                1.30	0.04105	0.02814	0.03216	0.03618	0.08293
+                1.80	0.05272	0.03414	0.03953	0.04491	0.09641
+                2.50	0.03955	0.02780	0.03018	0.03257	0.06680
+                </tableData>					
+
+            </table>
+        </product>
+    </function>
         <function name="aero/coefficients/CdBAS">
             <description>CdBAS</description>
                 <table>
@@ -2908,9 +1914,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
           <table>
             <independentVar lookup="row">fcs/wing-sweep-pos-deg</independentVar>
             <tableData>
-                25           1.0
-                55           0.5
-                58           0.0
+22	1.0000
+25	0.9775
+30	0.9340
+35	0.8835
+40	0.8262
+45	0.7626
+50	0.6933
+55	0.6186
+58	0.0000
             </tableData>
           </table>
     </function>
@@ -3296,15 +2308,15 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
  <!-- based on 0.1 of 0aoa CMDS1 at 55deg deflection-->
-                        -55	  0.0
-                        -50	  0.0
-                        -45	  0.0
-                        -40	  0.0
-                        -35	  0.0
-                        -30	  0.0
-                        -15	  0.0
+                       -55    0.000000000
+                       -50    0.000000000
+                       -45    0.000000000
+                       -40    0.000000000
+                       -35    0.000000000
+                       -30    0.000000000
+                       -15    0.000000000
                          0	 -0.000001636
-                        10	  0.0
+                        16    0.000000000
                     </tableData>
                 </table>
             </product>
@@ -3312,121 +2324,44 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/CMDFM">
             <description>CM increment due to flap mean position</description>
             <product>
-                <p>tuning/CMDFM</p>
+                <property>tuning/CMDFM</property>
+                <property>fcs/flap-pos-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <independentVar lookup="table">fcs/flap-pos-deg</independentVar>
-                        <tableData breakPoint="0">
-                            -10	        -5	        -2	         0	         2	         5	        10
-                            -10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            -5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            -2	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            0	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            1	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            2	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            3	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            4	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            5	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            6	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            7	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            8	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            9	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            10	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            11	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            12	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            13	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            14	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            15	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            16	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            17	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            18	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            19	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            20	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            22	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            24	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            25	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            28	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            30	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            35	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            45	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            50	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            55	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                            60	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000	 0.00000000
-                        </tableData>
-                        <tableData breakPoint="20">
-	-10	-5	-2	0	2	5	10
--10	0.00167000	-0.00835000	-0.00450000	-0.01564000	-0.00189400	-0.00835000	0.00206800
--5	-0.00587200	-0.01796800	-0.02095800	-0.02002000	-0.02094600	-0.01796600	-0.00587200
--2	-0.01298400	-0.02281200	-0.02874400	-0.02772200	-0.02874400	-0.02282000	-0.01298400
-0	-0.01515000	-0.02689000	-0.03295800	-0.03313600	-0.03296000	-0.02690400	-0.01514800
-1	-0.01719600	-0.02845200	-0.03417800	-0.03483000	-0.03417800	-0.02844400	-0.01682000
-2	-0.01722400	-0.03060400	-0.03523800	-0.03598200	-0.03607600	-0.03030200	-0.01722400
-3	-0.01796200	-0.03156600	-0.03614000	-0.03699000	-0.03614800	-0.03156800	-0.01779600
-4	-0.01770800	-0.03211200	-0.03698600	-0.03777400	-0.03698600	-0.03211400	-0.01825000
-5	-0.01842600	-0.03317000	-0.03768200	-0.03837600	-0.03768200	-0.03317000	-0.01843400
-6	-0.01950200	-0.03359600	-0.03810600	-0.03883000	-0.03813400	-0.03359000	-0.01951000
-7	-0.01918000	-0.03259800	-0.03665000	-0.03733600	-0.03666200	-0.03259800	-0.01918000
-8	-0.01686800	-0.02992200	-0.03344200	-0.03405000	-0.03345000	-0.02991800	-0.01690600
-9	-0.01419800	-0.02611800	-0.02956000	-0.03011800	-0.02956000	-0.02611800	-0.01424800
-10	-0.01031400	-0.02211400	-0.02536600	-0.02593400	-0.02535200	-0.02210000	-0.01030600
-11	-0.00655000	-0.01846600	-0.02208600	-0.02266200	-0.02209000	-0.01885400	-0.00657200
-12	-0.00391000	-0.01598400	-0.01921800	-0.01981400	-0.01925400	-0.01598200	-0.00390800
-13	-0.00771400	-0.01538600	-0.01825200	-0.01878200	-0.01825200	-0.01538400	-0.00528400
-14	-0.00435600	-0.01453400	-0.01729400	-0.01780200	-0.01729400	-0.01451400	-0.00435600
-15	-0.00417000	-0.01427800	-0.01674200	-0.01715200	-0.01674600	-0.01409000	-0.00419200
-16	-0.00249600	-0.01376200	-0.01627800	-0.01682200	-0.01634200	-0.01376200	-0.00437000
-17	-0.00514000	-0.01388000	-0.01592400	-0.01636000	-0.01592400	-0.01388000	-0.00521800
-18	-0.00591000	-0.01380000	-0.01572600	-0.01618200	-0.01572600	-0.01379800	-0.00590800
-19	-0.00670200	-0.01381600	-0.01547800	-0.01586800	-0.01548000	-0.01381600	-0.00670400
-20	-0.00781400	-0.01425000	-0.01533000	-0.01524800	-0.01540400	-0.01425000	-0.00781400
-22	-0.00678600	-0.01268600	-0.01491400	-0.01559800	-0.01491400	-0.01267000	-0.00678600
-24	-0.00671800	-0.01369200	-0.01581400	-0.01626800	-0.01588000	-0.01369200	-0.00671800
-25	-0.00509600	-0.01415400	-0.01611200	-0.01650200	-0.01613800	-0.01417600	-0.00716800
-28	-0.00833400	-0.01451200	-0.01575800	-0.01608600	-0.01583000	-0.01451200	-0.00833400
-30	-0.00771600	-0.01356000	-0.01507200	-0.01532200	-0.01507200	-0.01356400	-0.00741000
-35	-0.00437600	-0.01099200	-0.01272400	-0.01301800	-0.01272400	-0.01102200	-0.00384600
-45	-0.00301200	-0.00999200	-0.01237400	-0.01267600	-0.01239600	-0.00999200	-0.00301200
-50	-0.00291200	-0.00946600	-0.01182400	-0.01230600	-0.01182400	-0.00946600	-0.00262200
-55	-0.00329800	-0.00988600	-0.01343400	-0.01261600	-0.01343400	-0.00988600	-0.00329400
-60	-0.00218200	-0.01005000	-0.01148000	-0.01187200	-0.01148000	-0.01005200	-0.00327600
-                        </tableData>
-                        <tableData breakPoint="35">
-	-10	-5	-2	0	2	5	10
--10	-0.04268076	-0.05912388	-0.04131398	-0.06520260	-0.03527696	-0.05859570	-0.04268540
--5	-0.05758567	-0.05548685	-0.08192835	-0.07932914	-0.08234997	-0.05667294	-0.05725208
--2	-0.07502956	-0.09968729	-0.10839302	-0.11190959	-0.10838838	-0.09966876	-0.07502956
-0	-0.07934767	-0.10949571	-0.11935046	-0.12625852	-0.11935046	-0.10949108	-0.07934304
-1	-0.08305884	-0.11356827	-0.12237129	-0.12611489	-0.12240836	-0.11357753	-0.08306811
-2	-0.08407351	-0.11125168	-0.12093501	-0.12283461	-0.12287631	-0.11125168	-0.08407814
-3	-0.07968126	-0.10860151	-0.11878058	-0.12174118	-0.11879448	-0.10860151	-0.07968126
-4	-0.07701255	-0.10536756	-0.11465243	-0.11563466	-0.11466633	-0.10536756	-0.07829594
-5	-0.06864968	-0.09921007	-0.10855518	-0.10937525	-0.10855518	-0.09921007	-0.06866822
-6	-0.06145900	-0.09319159	-0.10209654	-0.10321777	-0.10215677	-0.09319159	-0.06145437
-7	-0.05455558	-0.08660322	-0.09541551	-0.09701395	-0.09544331	-0.08660322	-0.05455558
-8	-0.04865292	-0.07938474	-0.08809046	-0.08975841	-0.08810900	-0.07938937	-0.04874095
-9	-0.04092943	-0.07165661	-0.08018628	-0.08183105	-0.08018628	-0.07165661	-0.04104525
-10	-0.03317350	-0.06378022	-0.07173537	-0.07341258	-0.07173537	-0.06371999	-0.03317350
-11	-0.02454654	-0.05648761	-0.06530917	-0.06695394	-0.06530917	-0.05729378	-0.02456507
-12	-0.02208169	-0.05156255	-0.05955477	-0.06106518	-0.05966133	-0.05154402	-0.02194269
-13	-0.03402600	-0.05411543	-0.06123198	-0.06253853	-0.06123198	-0.05411079	-0.02839670
-14	-0.02728011	-0.05271158	-0.05946674	-0.06069453	-0.05946674	-0.05272084	-0.02728011
-15	-0.02796118	-0.05219266	-0.05861424	-0.05959184	-0.05861424	-0.05229459	-0.02801215
-16	-0.02970789	-0.05210927	-0.05808142	-0.05919802	-0.05808142	-0.05210927	-0.02970789
-17	-0.03329396	-0.05298030	-0.05748838	-0.05840574	-0.05748838	-0.05298030	-0.03329396
-18	-0.03630089	-0.05310540	-0.05722429	-0.05822042	-0.05722429	-0.05310076	-0.03629626
-19	-0.03281211	-0.05337412	-0.05664977	-0.05749301	-0.05664977	-0.05337412	-0.03966457
-20	-0.04433944	-0.05468067	-0.05626985	-0.05601503	-0.05644128	-0.05459728	-0.04433944
-22	-0.03953947	-0.05032549	-0.05527372	-0.05601039	-0.05527372	-0.05037183	-0.03953947
-24	-0.03808466	-0.05388840	-0.05871617	-0.05958720	-0.05871617	-0.05388840	-0.03808466
-25	-0.03972943	-0.05511156	-0.05942967	-0.06023121	-0.05942967	-0.05516252	-0.03969700
-28	-0.04457110	-0.05607989	-0.05839648	-0.05902659	-0.05849377	-0.05607989	-0.04457110
-30	-0.04299119	-0.05357798	-0.05647371	-0.05700189	-0.05647834	-0.05357798	-0.04228231
-35	-0.03213104	-0.04643363	-0.05023746	-0.05087684	-0.05023746	-0.04650313	-0.03213104
-45	-0.02639980	-0.04242594	-0.04783748	-0.04882435	-0.04788845	-0.04242594	-0.02639980
-50	-0.02456044	-0.04160124	-0.04294022	-0.04798574	-0.04704058	-0.04160124	-0.02458360
-55	0.01367712	-0.04096186	-0.04903284	-0.04701741	-0.04903284	-0.04096186	-0.02506545
-60	-0.01962611	-0.03891400	-0.04229621	-0.04327844	-0.04229621	-0.03891400	-0.02216972
+                        <tableData>
+                            -2 -0.00118
+                             0 -0.00129
+                             1 -0.00134
+                             2 -0.00140
+                             3 -0.00146
+                             4 -0.00152
+                             5 -0.00158
+                             6 -0.00164
+                             7 -0.00170
+                             8 -0.00177
+                             9 -0.00183
+                            10 -0.00190
+                            11 -0.00196
+                            12 -0.00203
+                            13 -0.00209
+                            14 -0.00216
+                            15 -0.00222
+                            16 -0.00229
+                            17 -0.00235
+                            18 -0.00242
+                            19 -0.00248
+                            20 -0.00254
+                            22 -0.00267
+                            24 -0.00278
+                            25 -0.00284
+                            28 -0.00300
+                            30 -0.00309
+                            35 -0.00329
+                            45 -0.00346
+                            50 -0.00345
+                            55 -0.00338
+                            60 -0.00328
+                            65 -0.00318
                         </tableData>
                 </table>
             </product>
@@ -3434,46 +2369,44 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/CMDAFM">
             <description>CM increment due to flap mean position</description>
             <product>
-                <p>tuning/CMADFM</p>
-                <v>1</v>
+                <property>tuning/CMADFM</property>
+                <property>fcs/aux-flap-pos-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                                    0         20         35
-                        -5  0.0000000  0.0021300  0.0030804
-                        -2  0.0000000  0.0066700  0.0042024
-                         0  0.0000000  0.0095300  0.0060520
-                         1  0.0000000  0.0111300  0.0066266
-                         2  0.0000000  0.0118000  0.0068204
-                         3  0.0000000  0.0123200  0.0067592
-                         4  0.0000000  0.0126500  0.0065688
-                         5  0.0000000  0.0128900  0.0063478
-                         6  0.0000000  0.0132000  0.0059126
-                         7  0.0000000  0.0134500  0.0055046
-                         8  0.0000000  0.0130300  0.0050864
-                         9  0.0000000  0.0118300  0.0046614
-                        10  0.0000000  0.0103300  0.0041718
-                        11  0.0000000  0.0086000  0.0036652
-                        12  0.0000000  0.0071300  0.0032198
-                        13  0.0000000  0.0059600  0.0029206
-                        14  0.0000000  0.0060200  0.0031756
-                        15  0.0000000  0.0054800  0.0030294
-                        16  0.0000000  0.0053100  0.0030090
-                        17  0.0000000  0.0051000  0.0030260
-                        18  0.0000000  0.0052500  0.0030872
-                        19  0.0000000  0.0053000  0.0031348
-                        20  0.0000000  0.0053400  0.0031212
-                        22  0.0000000  0.0054800  0.0032708
-                        24  0.0000000  0.0051300  0.0030906
-                        25  0.0000000  0.0053900  0.0032232
-                        28  0.0000000  0.0054300  0.0032912
-                        30  0.0000000  0.0056800  0.0033694
-                        35  0.0000000  0.0053300  0.0032368
-                        45  0.0000000  0.0041800  0.0027540
-                        50  0.0000000  0.0038600  0.0025160
-                        55  0.0000000  0.0036800  0.0024140
-                        60  0.0000000  0.0040100  0.0021284
+                        -2 -0.00085
+                         0 -0.00093
+                         1 -0.00097
+                         2 -0.00102
+                         3 -0.00108
+                         4 -0.00113
+                         5 -0.00119
+                         6 -0.00124
+                         7 -0.00130
+                         8 -0.00136
+                         9 -0.00142
+                        10 -0.00149
+                        11 -0.00155
+                        12 -0.00161
+                        13 -0.00167
+                        14 -0.00173
+                        15 -0.00179
+                        16 -0.00185
+                        17 -0.00191
+                        18 -0.00197
+                        19 -0.00202
+                        20 -0.00208
+                        22 -0.00218
+                        24 -0.00227
+                        25 -0.00232
+                        28 -0.00243
+                        30 -0.00250
+                        35 -0.00262
+                        45 -0.00269
+                        50 -0.00267
+                        55 -0.00266
+                        60 -0.00269
+                        65 -0.00266
                     </tableData>
                 </table>
             </product>
@@ -3561,32 +2494,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <tableData>
                        -10  0.0100
                         -5 -0.0147
-                         0 -0.0333
-                         5 -0.0947
-                        10 -0.1068
-                        15 -0.1189
-                        20 -0.1310
-                        25 -0.0800
-                        30 -0.0116
-                        35  0.1421
-                        40  0.1007
-                        45 -0.0298
-                        50 -0.0958
-                        55 -0.0134
-                    </tableData>
-                </table>
-            </product>
-        </function>
-        <function name="aero/coefficients/CNP-unused">
-            <description>CNP, AFWAL, Revised TM-81833 Fig37.</description>
-            <product>
-                <property>aero/bi2vel</property>
-                <property>velocities/p-aero-rad_sec</property>
-                <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <tableData>
-                       -10 -0.0947
-                        -5 -0.0947
                          0 -0.0333
                          5 -0.0947
                         10 -0.1068
@@ -3777,7 +2684,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/Cy</property>
-                    <property>aero/coefficients/Cmach</property>
                 </product>
             </function>
         </axis>
@@ -3789,7 +2695,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>metrics/Sw-sqft</property>
                     <property>metrics/bw-ft</property>
                     <property>aero/coefficients/CL</property>
-                    <property>aero/coefficients/Cmach</property>
                 </product>
             </function>
         </axis>
@@ -3813,7 +2718,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>metrics/Sw-sqft</property>
                     <property>metrics/bw-ft</property>
                     <property>aero/coefficients/CN</property>
-                    <property>aero/coefficients/Cmach</property>
                 </product>
             </function>
         </axis>
@@ -3879,7 +2783,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 667 </x>
                 <y> -45 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <direction>
                 <x>  -0.9995 </x>
@@ -3891,7 +2795,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <location unit="IN">
                 <x> 667 </x>
                 <y> 45 </y>
-                <z> -10 </z>
+                <z> -7.66</z>
             </location>
             <direction>
                 <x>  -0.9995 </x>

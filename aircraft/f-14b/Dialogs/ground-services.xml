@@ -445,6 +445,31 @@
         <group>
             <layout>hbox</layout>
             <slider>
+                <name>CMDLC</name>
+                <property>fdm/jsbsim/tuning/CMDLC</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-1</min>
+                <max>1</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CMDLC</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CMDLC 0.00</label>
+                <live>true</live>
+                <format>CMDLC %.4f</format>
+                <property>fdm/jsbsim/tuning/CMDLC</property>
+            </text>
+        </group>
+    </group>
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
                 <name>ClDFM</name>
                 <property>fdm/jsbsim/tuning/ClDFM</property>
                 <pref-width>300</pref-width>
