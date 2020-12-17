@@ -15,6 +15,8 @@
     <property>fcs/flap-cmd-sum</property>
     <property value="0">fcs/dlc-thumbwheel-norm</property>
     <property value="0">fcs/dlc-active</property>
+    <property value="0">fcs/mod-dlc-AFC-735-active</property>
+
     <property value="1">fcs/dfcs-active</property>
 
     <property value="0">fcs/yaw-damper-enable</property>
@@ -416,11 +418,13 @@ Figure 2-54.  Longitudinal System Authority
                 <product>
                     <property>fcs/dlc-active</property>
                     <table>
+                        <independentVar lookup="column">fcs/mod-dlc-AFC-735-active</independentVar>
                         <independentVar lookup="row">fcs/dlc-thumbwheel-norm</independentVar>
                         <tableData>
-                            -1	0.00000
-                            0	0.16000
-                            1	0.30958
+                                      0         1
+                            -1	 0.0000    0.0000 
+                             0	 0.1600    0.3091
+                             1   0.3096    1.0000
                         </tableData>
                     </table>
                 </product>
@@ -455,22 +459,70 @@ Figure 2-54.  Longitudinal System Authority
             </test>
         </switch>
 
-        <fcs_function name="fcs/spoiler-left-cmd">
+ 
+        <fcs_function name="fcs/spoiler-left-outer-cmd">
             <description>
                 Left spoiler commanded deflection - adjusted to negative deflection (when flaps deployed) and scaled to be -4 to 55 degrees
                 based on demand with additional DLC demanded deflection
             </description>
             <function>
-                <sum>
-                    <property>fcs/spoiler-zeropos</property>
-                    <product>
-                        <property>fcs/spoiler-zero-factor</property>
-                        <sum>
-                            <property>fcs/spoiler-dlc-increment-cmd</property>
-                            <property>fcs/spoiler-left-dmd</property>
-                        </sum>
-                    </product>
-                </sum>
+                <switch>
+                    <property>fcs/mod-dlc-AFC-735-active</property>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                                <property>fcs/spoiler-left-dmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-left-dmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                </switch>
+            </function>
+            <clipto>
+                <min>-1</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+        
+        <fcs_function name="fcs/spoiler-left-inner-cmd">
+            <description>
+                Left spoiler commanded deflection - adjusted to negative deflection (when flaps deployed) and scaled to be -4 to 55 degrees
+                based on demand with additional DLC demanded deflection
+            </description>
+            <function>
+                <switch>
+                    <property>fcs/mod-dlc-AFC-735-active</property>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                                <property>fcs/spoiler-left-dmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                </switch>
             </function>
             <clipto>
                 <min>-1</min>
@@ -478,9 +530,10 @@ Figure 2-54.  Longitudinal System Authority
             </clipto>
         </fcs_function>
 
-        <kinematic name="fcs/spoiler-left-pos">
+        <!-- outer spoilers are the furthest from the centreline --> 
+        <kinematic name="fcs/spoiler-left-outer-pos">
             <description>Left spoiler actuator position</description>
-            <input>fcs/spoiler-left-cmd</input>
+            <input>fcs/spoiler-left-outer-cmd</input>
             <traverse>
                 <setting>
                     <position>-0.0818181818181819</position>
@@ -495,9 +548,39 @@ Figure 2-54.  Longitudinal System Authority
             </traverse>
         </kinematic>
 
-        <aerosurface_scale name="fcs/spoiler-left-pos-deg">
-            <description>Left spoiler actuator position in degrees</description>
-            <input>fcs/spoiler-left-pos</input>
+        <kinematic name="fcs/spoiler-left-inner-pos">
+            <description>Left spoiler actuator position</description>
+            <input>fcs/spoiler-left-inner-cmd</input>
+            <traverse>
+                <setting>
+                    <position>-0.0818181818181819</position>
+                    <time>0.016</time>
+                    <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.22</time>
+                    <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate  -->
+                </setting>
+            </traverse>
+        </kinematic>
+
+        <aerosurface_scale name="fcs/spoiler-left-inner-pos-deg">
+            <description>Left inner spoiler actuator position in degrees</description>
+            <input>fcs/spoiler-left-inner-pos</input>
+            <domain>
+                <min>-0.081</min>>
+                <max>1</max>
+            </domain>
+            <range>
+                <min> -4 </min>
+                <max> 55 </max>
+            </range>
+        </aerosurface_scale>
+
+        <aerosurface_scale name="fcs/spoiler-left-outer-pos-deg">
+            <description>Left outer spoiler actuator position in degrees</description>
+            <input>fcs/spoiler-left-outer-pos</input>
             <domain>
                 <min>-0.081</min>>
                 <max>1</max>
@@ -526,22 +609,34 @@ Figure 2-54.  Longitudinal System Authority
             </test>
         </switch>
 
-        <fcs_function name="fcs/spoiler-right-cmd">
+        <fcs_function name="fcs/spoiler-right-outer-cmd">
             <description>
                 Right spoiler commanded deflection - adjusted to negative deflection (when flaps deployed) and scaled to be -4 to 55 degrees
                 based on demand with additional DLC demanded deflection
             </description>
             <function>
-                <sum>
-                    <property>fcs/spoiler-zeropos</property>
-                    <product>
-                        <property>fcs/spoiler-zero-factor</property>
-                        <sum>
-                            <property>fcs/spoiler-dlc-increment-cmd</property>
-                            <property>fcs/spoiler-right-dmd</property>
-                        </sum>
-                    </product>
-                </sum>
+                <switch>
+                    <property>fcs/mod-dlc-AFC-735-active</property>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                                <property>fcs/spoiler-right-dmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-right-dmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                </switch>              
             </function>
             <clipto>
                 <min>-1</min>
@@ -549,9 +644,44 @@ Figure 2-54.  Longitudinal System Authority
             </clipto>
         </fcs_function>
 
-        <kinematic name="fcs/spoiler-right-pos">
-            <description>Right spoiler actuator position</description>
-            <input>fcs/spoiler-right-cmd</input>
+        <fcs_function name="fcs/spoiler-right-inner-cmd">
+            <description>
+                Right spoiler commanded deflection - adjusted to negative deflection (when flaps deployed) and scaled to be -4 to 55 degrees
+                based on demand with additional DLC demanded deflection
+            </description>
+            <function>
+                <switch>
+                    <property>fcs/mod-dlc-AFC-735-active</property>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                                <property>fcs/spoiler-right-dmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                    <sum>
+                        <property>fcs/spoiler-zeropos</property>
+                        <product>
+                            <property>fcs/spoiler-zero-factor</property>
+                            <sum>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                            </sum>
+                        </product>
+                    </sum>
+                </switch>
+            </function>
+            <clipto>
+                <min>-1</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+
+        <kinematic name="fcs/spoiler-right-outer-pos">
+            <description>Right outer spoiler actuator position</description>
+            <input>fcs/spoiler-right-outer-cmd</input>
             <traverse>
                 <setting>
                     <position>-0.0818181818181819</position>
@@ -566,9 +696,39 @@ Figure 2-54.  Longitudinal System Authority
             </traverse>
         </kinematic>
 
-        <aerosurface_scale name="fcs/spoiler-right-pos-deg">
-            <description>Right spoiler actuator position in degrees</description>
-            <input>fcs/spoiler-right-pos</input>
+        <aerosurface_scale name="fcs/spoiler-right-outer-pos-deg">
+            <description>Right outer spoiler actuator position in degrees</description>
+            <input>fcs/spoiler-right-outer-pos</input>
+            <domain>
+                <min>-0.081</min>>
+                <max>1</max>
+            </domain>
+            <range>
+                <min> -4 </min>
+                <max> 55 </max>
+            </range>
+        </aerosurface_scale>
+
+        <kinematic name="fcs/spoiler-right-inner-pos">
+            <description>Right inner spoiler actuator position</description>
+            <input>fcs/spoiler-right-inner-cmd</input>
+            <traverse>
+                <setting>
+                    <position>-0.0818181818181819</position>
+                    <time>0.016</time>
+                    <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate -->
+                </setting>
+                <setting>
+                    <position>1</position>
+                    <time>0.22</time>
+                    <!-- F14AAD-1 Figure 2-61 250 deg/sec sweep rate  -->
+                </setting>
+            </traverse>
+        </kinematic>
+
+        <aerosurface_scale name="fcs/spoiler-right-inner-pos-deg">
+            <description>Right inner spoiler actuator position in degrees</description>
+            <input>fcs/spoiler-right-inner-pos</input>
             <domain>
                 <min>-0.081</min>>
                 <max>1</max>
@@ -1599,7 +1759,7 @@ Figure 2-54.  Longitudinal System Authority
                 <min> 0 </min>
                 <max> 17 </max>
             </range>
-            <output>fcs/slat-pos-norm-deg</output>
+            <output>fcs/slat-pos-deg</output>
         </aerosurface_scale>
     </channel>
 
