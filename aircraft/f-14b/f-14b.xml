@@ -1062,20 +1062,31 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </product>
         </function>
 
-        <function name="aero/coefficients/ClUC">
-            <description>Cl increment due to gear</description>
+        <function name="aero/coefficients/CldLandingGear">
+            <description>LIFT INCREMENT DUE TO LANDING GEAR (NASA TM-X-62306 Test 4 Run 9, Run 10)</description>
             <product>
                 <property>gear/gear-pos-norm</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                       -10    0.0000
-                         0   -0.0012
-                         8   -0.0010
-                        12   -0.0004
-                        14   -0.0002
-                        16   -0.0001
-                        18    0.0000
+                             -5     -0.024846  
+                             -3     -0.016396  
+                             -1     -0.007945  
+                              1      0.001158  
+                              3      0.008777  
+                              5     -0.010894  
+                              7     -0.014578  
+                              9      0.001478  
+                             11     -0.006986  
+                             13     -0.014324  
+                             15     -0.034631  
+                             17     -0.020303  
+                             19     -0.030354  
+                             21     -0.028310  
+                             23     -0.029453  
+                             25     -0.030599  
+                             27      0.000154  
+                             29      0.000627  
                     </tableData>
                 </table>
             </product>
@@ -1215,24 +1226,37 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/CldSpoilersLeftOuter</property>
                 <property>aero/coefficients/CldSpoilersRightInner</property>
                 <property>aero/coefficients/CldSpoilersRightOuter</property>
-                <property>aero/coefficients/ClUC</property>
+                <property>aero/coefficients/CldLandingGear</property>
                 <property>aero/coefficients/ClDasym</property>
                 <property>aero/coefficients/CldSpeedbrake</property>
             </sum>
         </function>
 
-        <function name="aero/coefficients/CdUC">
-            <description>Cd increment due to gear</description>
+        <function name="aero/coefficients/CddLandingGear">
+            <description>DRAG INCREMENT DUE LANDING GEAR (NASA TM-X-62306 Test 4 Run 9, Run 10)</description>
             <product>
                 <property>gear/gear-pos-norm</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                       -10    0.00000
-                        -5    0.00017
-                         0    0.00001
-                         5    0.00005
-                        10    0.00000
+                             -5      0.021200  
+                             -3      0.021200  
+                             -1      0.021200  
+                              1      0.021182  
+                              3      0.020718  
+                              5      0.017841  
+                              7      0.015770  
+                              9      0.015320  
+                             11      0.015118  
+                             13      0.012160  
+                             15      0.009332  
+                             17      0.010239  
+                             19      0.007700  
+                             21      0.005274  
+                             23      0.004325  
+                             25     -0.002253  
+                             27     -0.005119  
+                             29      0.001078  
                     </tableData>
                 </table>
             </product>
@@ -1657,7 +1681,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <sum>
                     <property>aero/coefficients/CdMach</property>
                     <property>aero/coefficients/CdBAS</property>
-                    <property>aero/coefficients/CdUC</property>
+                    <property>aero/coefficients/CddLandingGear</property>
                     <property>aero/coefficients/CddSpeedbrake</property>
                     <property>aero/coefficients/CdTNK</property>
                     <property>aero/coefficients/CdDasym</property>
@@ -2329,25 +2353,36 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </product>
         </function>
         
-        <function name="aero/coefficients/CMUC">
-            <description>CM increment due to gear</description>
+        <function name="aero/coefficients/CMMdLandingGear">
+            <description>PITCH MOMENT INCREMENT DUE TO LANDING GEAR (NASA TM-X-62306 Test 4 Run 9, Run 10)</description>
             <product>
                 <property>gear/gear-pos-norm</property>
-                <property>tuning/CMUC</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                       -10    0.0000
-                        -4    0.0000
-                         0   -0.0175
-                         5   -0.0100
-                        10   -0.0025
-                        20    0.0000
+                             -5     -0.004695  
+                             -3     -0.006761  
+                             -1     -0.008827  
+                              1     -0.012508  
+                              3     -0.020714  
+                              5     -0.013253  
+                              7     -0.007610  
+                              9     -0.023677  
+                             11     -0.022854  
+                             13     -0.015323  
+                             15     -0.010899  
+                             17     -0.015617  
+                             19     -0.009559  
+                             21     -0.008336  
+                             23     -0.003089  
+                             25      0.005663  
+                             27      0.000888  
+                             30      0.000000
                     </tableData>
                 </table>
             </product>
         </function>
-
+        
         <function name="aero/coefficients/CMMdSpoilersLeftInner">
             <description>PITCH MOMENT INCREMENT DUE TO LEFT INNER SPOILERS (NASA TM-X-62306 Test 2 Run 5,10)</description>
             <product>
@@ -2554,7 +2589,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/CMQ</property>
                 <property>aero/coefficients/DCMDS1</property>
                 <property>aero/coefficients/DCMDS2</property>
-                <property>aero/coefficients/CMUC</property>
+                <property>aero/coefficients/CMMdLandingGear</property>
                 <property>aero/coefficients/CMMdSpeedbrake</property>
                 <property>aero/coefficients/CMMdFlaps</property>
                 <property>aero/coefficients/CMMdAuxFlaps</property>
