@@ -932,121 +932,125 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </function>
         
             <function name="aero/coefficients/CldSpoilersLeftInner">
-            <description>LIFT INCREMENT DUE TO LEFT INNER SPOILERS  (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-left-inner-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                 -10        -5         0         5        10
-                       -15 -0.004031 -0.005312 -0.006593 -0.007873 -0.009154
-                       -10 -0.004826 -0.005952 -0.007078 -0.008204 -0.009330
-                        -5 -0.006178 -0.007303 -0.008429 -0.009555 -0.010681
-                         0 -0.007529 -0.008655 -0.009781 -0.010906 -0.012032
-                         5 -0.009043 -0.009965 -0.010887 -0.011808 -0.012730
-                        10 -0.011368 -0.010766 -0.010164 -0.009562 -0.008960
-                        15 -0.011939 -0.009721 -0.007502 -0.005284 -0.003066
-                        20 -0.010101 -0.006853 -0.003605 -0.000356  0.002892
-                        25 -0.005349 -0.003169 -0.000988  0.001193  0.003373
-                        30 -0.002338 -0.000650  0.001037  0.002725  0.004413
-                        35 -0.000589  0.001444  0.003476  0.005509  0.007542
-                        40  0.001850  0.003883  0.005915  0.007948  0.009981
-                        45  0.004289  0.006322  0.008355  0.010387  0.012420
-                        50  0.006728  0.008761  0.010794  0.012826  0.014859
-                        55  0.009168  0.011200  0.013233  0.015265  0.017298
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
-            <function name="aero/coefficients/CldSpoilersLeftOuter">
-            <description>LIFT INCREMENT DUE TO LEFT OUTER SPOILERS  (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-left-outer-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                 -10        -5         0         5        10
-                       -15 -0.004031 -0.005312 -0.006593 -0.007873 -0.009154
-                       -10 -0.004826 -0.005952 -0.007078 -0.008204 -0.009330
-                        -5 -0.006178 -0.007303 -0.008429 -0.009555 -0.010681
-                         0 -0.007529 -0.008655 -0.009781 -0.010906 -0.012032
-                         5 -0.009043 -0.009965 -0.010887 -0.011808 -0.012730
-                        10 -0.011368 -0.010766 -0.010164 -0.009562 -0.008960
-                        15 -0.011939 -0.009721 -0.007502 -0.005284 -0.003066
-                        20 -0.010101 -0.006853 -0.003605 -0.000356  0.002892
-                        25 -0.005349 -0.003169 -0.000988  0.001193  0.003373
-                        30 -0.002338 -0.000650  0.001037  0.002725  0.004413
-                        35 -0.000589  0.001444  0.003476  0.005509  0.007542
-                        40  0.001850  0.003883  0.005915  0.007948  0.009981
-                        45  0.004289  0.006322  0.008355  0.010387  0.012420
-                        50  0.006728  0.008761  0.010794  0.012826  0.014859
-                        55  0.009168  0.011200  0.013233  0.015265  0.017298
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
-            <function name="aero/coefficients/CldSpoilersRightInner">
-            <description>LIFT INCREMENT DUE TO RIGHT INNER SPOILERS  (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-right-inner-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                 -10        -5         0         5        10
-                       -15 -0.004031 -0.005312 -0.006593 -0.007873 -0.009154
-                       -10 -0.004826 -0.005952 -0.007078 -0.008204 -0.009330
-                        -5 -0.006178 -0.007303 -0.008429 -0.009555 -0.010681
-                         0 -0.007529 -0.008655 -0.009781 -0.010906 -0.012032
-                         5 -0.009043 -0.009965 -0.010887 -0.011808 -0.012730
-                        10 -0.011368 -0.010766 -0.010164 -0.009562 -0.008960
-                        15 -0.011939 -0.009721 -0.007502 -0.005284 -0.003066
-                        20 -0.010101 -0.006853 -0.003605 -0.000356  0.002892
-                        25 -0.005349 -0.003169 -0.000988  0.001193  0.003373
-                        30 -0.002338 -0.000650  0.001037  0.002725  0.004413
-                        35 -0.000589  0.001444  0.003476  0.005509  0.007542
-                        40  0.001850  0.003883  0.005915  0.007948  0.009981
-                        45  0.004289  0.006322  0.008355  0.010387  0.012420
-                        50  0.006728  0.008761  0.010794  0.012826  0.014859
-                        55  0.009168  0.011200  0.013233  0.015265  0.017298
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
-            <function name="aero/coefficients/CldSpoilersRightOuter">
-            <description>LIFT INCREMENT DUE TO RIGHT OUTER SPOILERS  (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-right-outer-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                 -10        -5         0         5        10
-                       -15 -0.004031 -0.005312 -0.006593 -0.007873 -0.009154
-                       -10 -0.004826 -0.005952 -0.007078 -0.008204 -0.009330
-                        -5 -0.006178 -0.007303 -0.008429 -0.009555 -0.010681
-                         0 -0.007529 -0.008655 -0.009781 -0.010906 -0.012032
-                         5 -0.009043 -0.009965 -0.010887 -0.011808 -0.012730
-                        10 -0.011368 -0.010766 -0.010164 -0.009562 -0.008960
-                        15 -0.011939 -0.009721 -0.007502 -0.005284 -0.003066
-                        20 -0.010101 -0.006853 -0.003605 -0.000356  0.002892
-                        25 -0.005349 -0.003169 -0.000988  0.001193  0.003373
-                        30 -0.002338 -0.000650  0.001037  0.002725  0.004413
-                        35 -0.000589  0.001444  0.003476  0.005509  0.007542
-                        40  0.001850  0.003883  0.005915  0.007948  0.009981
-                        45  0.004289  0.006322  0.008355  0.010387  0.012420
-                        50  0.006728  0.008761  0.010794  0.012826  0.014859
-                        55  0.009168  0.011200  0.013233  0.015265  0.017298
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
+                <description>LIFT INCREMENT DUE TO LEFT INNER SPOILERS  (NASA TM-X-62306 Test 2 Run 5,10)</description>
+                <product>
+                      <property>fcs/spoiler-left-inner-pos-deg</property>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <tableData>
+                                 -5     -0.003938  
+                                 -3     -0.004291  
+                                 -1     -0.004644  
+                                  1     -0.004927  
+                                  3     -0.005025  
+                                  5     -0.005030  
+                                  7     -0.004889  
+                                  9     -0.004832  
+                                 11     -0.004918  
+                                 13     -0.004565  
+                                 15     -0.004191  
+                                 17     -0.003584  
+                                 19     -0.002790  
+                                 21     -0.002327  
+                                 23     -0.002970  
+                                 25     -0.002134  
+                                 27     -0.001149  
+                                 29     -0.000315  
+                        </tableData>
+                      </table>
+                   </product>
+                </function>
+            
+                <function name="aero/coefficients/CldSpoilersLeftOuter">
+                <description>LIFT INCREMENT DUE TO LEFT OUTER SPOILERS  (NASA TM-X-62306 Test 2 Run 5,10)</description>
+                <product>
+                      <property>fcs/spoiler-left-outer-pos-deg</property>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <tableData>
+                                 -5     -0.003938  
+                                 -3     -0.004291  
+                                 -1     -0.004644  
+                                  1     -0.004927  
+                                  3     -0.005025  
+                                  5     -0.005030  
+                                  7     -0.004889  
+                                  9     -0.004832  
+                                 11     -0.004918  
+                                 13     -0.004565  
+                                 15     -0.004191  
+                                 17     -0.003584  
+                                 19     -0.002790  
+                                 21     -0.002327  
+                                 23     -0.002970  
+                                 25     -0.002134  
+                                 27     -0.001149  
+                                 29     -0.000315  
+                        </tableData>
+                      </table>
+                   </product>
+                </function>
+            
+                <function name="aero/coefficients/CldSpoilersRightInner">
+                <description>LIFT INCREMENT DUE TO RIGHT INNER SPOILERS  (NASA TM-X-62306 Test 2 Run 5,10)</description>
+                <product>
+                      <property>fcs/spoiler-right-inner-pos-deg</property>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <tableData>
+                                 -5     -0.003938  
+                                 -3     -0.004291  
+                                 -1     -0.004644  
+                                  1     -0.004927  
+                                  3     -0.005025  
+                                  5     -0.005030  
+                                  7     -0.004889  
+                                  9     -0.004832  
+                                 11     -0.004918  
+                                 13     -0.004565  
+                                 15     -0.004191  
+                                 17     -0.003584  
+                                 19     -0.002790  
+                                 21     -0.002327  
+                                 23     -0.002970  
+                                 25     -0.002134  
+                                 27     -0.001149  
+                                 29     -0.000315  
+                        </tableData>
+                      </table>
+                   </product>
+                </function>
+            
+                <function name="aero/coefficients/CldSpoilersRightOuter">
+                <description>LIFT INCREMENT DUE TO RIGHT OUTER SPOILERS  (NASA TM-X-62306 Test 2 Run 5,10)</description>
+                <product>
+                      <property>fcs/spoiler-right-outer-pos-deg</property>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <tableData>
+                                 -5     -0.003938  
+                                 -3     -0.004291  
+                                 -1     -0.004644  
+                                  1     -0.004927  
+                                  3     -0.005025  
+                                  5     -0.005030  
+                                  7     -0.004889  
+                                  9     -0.004832  
+                                 11     -0.004918  
+                                 13     -0.004565  
+                                 15     -0.004191  
+                                 17     -0.003584  
+                                 19     -0.002790  
+                                 21     -0.002327  
+                                 23     -0.002970  
+                                 25     -0.002134  
+                                 27     -0.001149  
+                                 29     -0.000315  
+                        </tableData>
+                      </table>
+                   </product>
+                </function>
+                    
 
         <function name="aero/coefficients/ClDasym">
             <description>Delta Cl due to wing asymmetry</description>
@@ -1173,6 +1177,34 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </sum>
             </product>
         </function>
+
+        <function name="aero/coefficients/CldSpeedbrake">
+            <description>LIFT INCREMENT DUE TO SPEEDBRAKE (NASA TM-X-62306 Test [15,18] [28,32])</description>
+            <product>
+                <property>fcs/speedbrake-pos-deg</property>
+                <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <tableData>
+                            -15      0.002016  
+                            -10      0.001226  
+                             -5      0.000436  
+                              0     -0.000355  
+                              5     -0.001241  
+                             10     -0.001424  
+                             15     -0.000445  
+                             20     -0.000892  
+                             25      0.000842  
+                             30     -0.000935  
+                             35     -0.003989  
+                             40     -0.007043  
+                             45     -0.010097  
+                             50     -0.013151  
+                             55     -0.016205  
+                    </tableData>
+                </table>
+            </product>
+        </function>
+
         <function name="aero/coefficients/Cl">
             <sum>
                 <property>aero/coefficients/ClBAS</property>
@@ -1185,8 +1217,10 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/CldSpoilersRightOuter</property>
                 <property>aero/coefficients/ClUC</property>
                 <property>aero/coefficients/ClDasym</property>
+                <property>aero/coefficients/CldSpeedbrake</property>
             </sum>
         </function>
+
         <function name="aero/coefficients/CdUC">
             <description>Cd increment due to gear</description>
             <product>
@@ -1204,48 +1238,34 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </product>
         </function>
 
-        <function name="aero/coefficients/CdDBRK">
-            <description>Drag due to speedbrakes</description>
+        <function name="aero/coefficients/CddSpeedbrake">
+            <description>DRAG INCREMENT DUE SPEEDBRAKE (NASA TM-X-62306 Test [15,18] [28,32])</description>
             <product>
-                <property>fcs/speedbrake-pos-norm</property>
-                <table>
+                  <property>fcs/speedbrake-pos-deg</property>
+                  <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                       -10    0.02013
-                        -5    0.02183
-                        -2    0.02370
-                         0    0.02378
-                         1    0.02578
-                         2    0.02537
-                         3    0.02532
-                         4    0.02690
-                         5    0.02726
-                         6    0.02839
-                         7    0.02971
-                         8    0.03055
-                         9    0.03142
-                        10    0.03178
-                        11    0.03352
-                        12    0.03433
-                        13    0.03497
-                        14    0.03718
-                        15    0.03602
-                        16    0.03826
-                        17    0.03835
-                        18    0.03819
-                        19    0.03785
-                        20    0.04139
-                        22    0.03926
-                        24    0.02865
-                        25    0.02662
-                        28    0.01376
-                        30    0.00236
-                        35    0.00000
+                            -15      0.001108  
+                            -10      0.001069  
+                             -5      0.001030  
+                              0      0.000990  
+                              5      0.000858  
+                             10      0.000732  
+                             15      0.000797  
+                             20      0.000845  
+                             25      0.001012  
+                             30      0.001000  
+                             35      0.001160  
+                             40      0.001319  
+                             45      0.001479  
+                             50      0.001638  
+                             55      0.001798  
                     </tableData>
-                </table>
-            </product>
-        </function>
-
+                  </table>
+               </product>
+            </function>
+        
+        
         <function name="aero/coefficients/CdMach">
             <description>DRAG DUE TO MACH AND WINGSWEEP</description>
             <product>
@@ -1415,125 +1435,127 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                   </table>
             </function>
         
-            <function name="aero/coefficients/CddSpoilersLeftInner">
-            <description>DRAG INCREMENT DUE TO LEFT INNER SPOILERS F(ALPHA) (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-left-inner-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.000120  -0.000017  -0.000155  -0.000293  -0.000430
-                         0   0.000124   0.000011  -0.000102  -0.000215  -0.000328
-                         2   0.000006  -0.000129  -0.000264  -0.000398  -0.000533
-                         4  -0.000145  -0.000293  -0.000442  -0.000591  -0.000740
-                         6  -0.000334  -0.000469  -0.000604  -0.000738  -0.000873
-                         8  -0.000506  -0.000628  -0.000750  -0.000873  -0.000995
-                        10  -0.000681  -0.000768  -0.000854  -0.000941  -0.001028
-                        12  -0.000820  -0.000863  -0.000906  -0.000950  -0.000993
-                        14  -0.000905  -0.000907  -0.000909  -0.000912  -0.000914
-                        16  -0.000902  -0.000911  -0.000921  -0.000930  -0.000940
-                        18  -0.000928  -0.000919  -0.000909  -0.000900  -0.000890
-                        20  -0.000986  -0.000890  -0.000794  -0.000699  -0.000603
-                        22  -0.000929  -0.000761  -0.000592  -0.000423  -0.000255
-                        24  -0.000528  -0.000608  -0.000688  -0.000768  -0.000848
-                        26  -0.000655  -0.000696  -0.000737  -0.000778  -0.000819
-                        28  -0.000630  -0.000764  -0.000899  -0.001033  -0.001168
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
-            <function name="aero/coefficients/CddSpoilersLeftOuter">
-            <description>DRAG INCREMENT DUE TO LEFT OUTER SPOILERS F(ALPHA) (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-left-outer-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.000120  -0.000017  -0.000155  -0.000293  -0.000430
-                         0   0.000124   0.000011  -0.000102  -0.000215  -0.000328
-                         2   0.000006  -0.000129  -0.000264  -0.000398  -0.000533
-                         4  -0.000145  -0.000293  -0.000442  -0.000591  -0.000740
-                         6  -0.000334  -0.000469  -0.000604  -0.000738  -0.000873
-                         8  -0.000506  -0.000628  -0.000750  -0.000873  -0.000995
-                        10  -0.000681  -0.000768  -0.000854  -0.000941  -0.001028
-                        12  -0.000820  -0.000863  -0.000906  -0.000950  -0.000993
-                        14  -0.000905  -0.000907  -0.000909  -0.000912  -0.000914
-                        16  -0.000902  -0.000911  -0.000921  -0.000930  -0.000940
-                        18  -0.000928  -0.000919  -0.000909  -0.000900  -0.000890
-                        20  -0.000986  -0.000890  -0.000794  -0.000699  -0.000603
-                        22  -0.000929  -0.000761  -0.000592  -0.000423  -0.000255
-                        24  -0.000528  -0.000608  -0.000688  -0.000768  -0.000848
-                        26  -0.000655  -0.000696  -0.000737  -0.000778  -0.000819
-                        28  -0.000630  -0.000764  -0.000899  -0.001033  -0.001168
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
-            <function name="aero/coefficients/CddSpoilersRightInner">
-            <description>DRAG INCREMENT DUE TO RIGHT INNER SPOILERS F(ALPHA) (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-right-inner-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.000120  -0.000017  -0.000155  -0.000293  -0.000430
-                         0   0.000124   0.000011  -0.000102  -0.000215  -0.000328
-                         2   0.000006  -0.000129  -0.000264  -0.000398  -0.000533
-                         4  -0.000145  -0.000293  -0.000442  -0.000591  -0.000740
-                         6  -0.000334  -0.000469  -0.000604  -0.000738  -0.000873
-                         8  -0.000506  -0.000628  -0.000750  -0.000873  -0.000995
-                        10  -0.000681  -0.000768  -0.000854  -0.000941  -0.001028
-                        12  -0.000820  -0.000863  -0.000906  -0.000950  -0.000993
-                        14  -0.000905  -0.000907  -0.000909  -0.000912  -0.000914
-                        16  -0.000902  -0.000911  -0.000921  -0.000930  -0.000940
-                        18  -0.000928  -0.000919  -0.000909  -0.000900  -0.000890
-                        20  -0.000986  -0.000890  -0.000794  -0.000699  -0.000603
-                        22  -0.000929  -0.000761  -0.000592  -0.000423  -0.000255
-                        24  -0.000528  -0.000608  -0.000688  -0.000768  -0.000848
-                        26  -0.000655  -0.000696  -0.000737  -0.000778  -0.000819
-                        28  -0.000630  -0.000764  -0.000899  -0.001033  -0.001168
-                    </tableData>
-                  </table>
-               </product>
-            </function>
-        
-            <function name="aero/coefficients/CddSpoilersRightOuter">
-            <description>DRAG INCREMENT DUE TO RIGHT OUTER SPOILERS F(ALPHA) (NASA TM-X-62306 Test [15,18] [28,32])</description>
-            <product>
-                  <property>fcs/spoiler-right-outer-pos-deg</property>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
-                    <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.000120  -0.000017  -0.000155  -0.000293  -0.000430
-                         0   0.000124   0.000011  -0.000102  -0.000215  -0.000328
-                         2   0.000006  -0.000129  -0.000264  -0.000398  -0.000533
-                         4  -0.000145  -0.000293  -0.000442  -0.000591  -0.000740
-                         6  -0.000334  -0.000469  -0.000604  -0.000738  -0.000873
-                         8  -0.000506  -0.000628  -0.000750  -0.000873  -0.000995
-                        10  -0.000681  -0.000768  -0.000854  -0.000941  -0.001028
-                        12  -0.000820  -0.000863  -0.000906  -0.000950  -0.000993
-                        14  -0.000905  -0.000907  -0.000909  -0.000912  -0.000914
-                        16  -0.000902  -0.000911  -0.000921  -0.000930  -0.000940
-                        18  -0.000928  -0.000919  -0.000909  -0.000900  -0.000890
-                        20  -0.000986  -0.000890  -0.000794  -0.000699  -0.000603
-                        22  -0.000929  -0.000761  -0.000592  -0.000423  -0.000255
-                        24  -0.000528  -0.000608  -0.000688  -0.000768  -0.000848
-                        26  -0.000655  -0.000696  -0.000737  -0.000778  -0.000819
-                        28  -0.000630  -0.000764  -0.000899  -0.001033  -0.001168
-                    </tableData>
-                  </table>
-               </product>
-            </function>
+           
+    <function name="aero/coefficients/CddSpoilersLeftInner">
+        <description>DRAG INCREMENT DUE TO LEFT INNER SPOILERS F(ALPHA) (NASA TM-X-62306 Test 2 Run 5,10)</description>
+        <product>
+              <property>fcs/spoiler-left-inner-pos-deg</property>
+              <table>
+                <independentVar lookup="row">aero/alpha-deg</independentVar>
+                <tableData>
+                         -5      0.000403  
+                         -3      0.000323  
+                         -1      0.000242  
+                          1      0.000165  
+                          3      0.000087  
+                          5      0.000043  
+                          7     -0.000022  
+                          9     -0.000080  
+                         11     -0.000156  
+                         13      0.000206  
+                         15     -0.000229  
+                         17     -0.000323  
+                         19     -0.000332  
+                         21     -0.000424  
+                         23     -0.000500  
+                         25     -0.000579  
+                         27     -0.000479  
+                         29     -0.000316  
+                </tableData>
+              </table>
+           </product>
+        </function>
+    
+        <function name="aero/coefficients/CddSpoilersLeftOuter">
+        <description>DRAG INCREMENT DUE TO LEFT OUTER SPOILERS F(ALPHA) (NASA TM-X-62306 Test 2 Run 5,10)</description>
+        <product>
+              <property>fcs/spoiler-left-outer-pos-deg</property>
+              <table>
+                <independentVar lookup="row">aero/alpha-deg</independentVar>
+                <tableData>
+                         -5      0.000403  
+                         -3      0.000323  
+                         -1      0.000242  
+                          1      0.000165  
+                          3      0.000087  
+                          5      0.000043  
+                          7     -0.000022  
+                          9     -0.000080  
+                         11     -0.000156  
+                         13      0.000206  
+                         15     -0.000229  
+                         17     -0.000323  
+                         19     -0.000332  
+                         21     -0.000424  
+                         23     -0.000500  
+                         25     -0.000579  
+                         27     -0.000479  
+                         29     -0.000316  
+                </tableData>
+              </table>
+           </product>
+        </function>
+    
+        <function name="aero/coefficients/CddSpoilersRightInner">
+        <description>DRAG INCREMENT DUE TO RIGHT INNER SPOILERS F(ALPHA) (NASA TM-X-62306 Test 2 Run 5,10)</description>
+        <product>
+              <property>fcs/spoiler-right-inner-pos-deg</property>
+              <table>
+                <independentVar lookup="row">aero/alpha-deg</independentVar>
+                <tableData>
+                         -5      0.000403  
+                         -3      0.000323  
+                         -1      0.000242  
+                          1      0.000165  
+                          3      0.000087  
+                          5      0.000043  
+                          7     -0.000022  
+                          9     -0.000080  
+                         11     -0.000156  
+                         13      0.000206  
+                         15     -0.000229  
+                         17     -0.000323  
+                         19     -0.000332  
+                         21     -0.000424  
+                         23     -0.000500  
+                         25     -0.000579  
+                         27     -0.000479  
+                         29     -0.000316  
+                </tableData>
+              </table>
+           </product>
+        </function>
+    
+        <function name="aero/coefficients/CddSpoilersRightOuter">
+        <description>DRAG INCREMENT DUE TO RIGHT OUTER SPOILERS F(ALPHA) (NASA TM-X-62306 Test 2 Run 5,10)</description>
+        <product>
+              <property>fcs/spoiler-right-outer-pos-deg</property>
+              <table>
+                <independentVar lookup="row">aero/alpha-deg</independentVar>
+                <tableData>
+                         -5      0.000403  
+                         -3      0.000323  
+                         -1      0.000242  
+                          1      0.000165  
+                          3      0.000087  
+                          5      0.000043  
+                          7     -0.000022  
+                          9     -0.000080  
+                         11     -0.000156  
+                         13      0.000206  
+                         15     -0.000229  
+                         17     -0.000323  
+                         19     -0.000332  
+                         21     -0.000424  
+                         23     -0.000500  
+                         25     -0.000579  
+                         27     -0.000479  
+                         29     -0.000316  
+                </tableData>
+              </table>
+           </product>
+        </function>
+    
         
 
         <function name="aero/coefficients/CdDS1">
@@ -1636,7 +1658,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>aero/coefficients/CdMach</property>
                     <property>aero/coefficients/CdBAS</property>
                     <property>aero/coefficients/CdUC</property>
-                    <property>aero/coefficients/CdDBRK</property>
+                    <property>aero/coefficients/CddSpeedbrake</property>
                     <property>aero/coefficients/CdTNK</property>
                     <property>aero/coefficients/CdDasym</property>
                     <property>aero/coefficients/CddFlaps</property>
@@ -2279,26 +2301,34 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </table>
             </product>
         </function>
-        <function name="aero/coefficients/CMBRK">
-            <description>CM increment due speedbrakes</description>
+
+        <function name="aero/coefficients/CMMdSpeedbrake">
+            <description>PITCH MOMENT INCREMENT DUE TO SPEEDBRAKE (NASA TM-X-62306 Test [15,18] [28,32])</description>
             <product>
-                <property>fcs/speedbrake-pos-norm</property>
-                <property>tuning/CMBRK</property>
+                <property>fcs/speedbrake-pos-deg</property>
                 <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <tableData>
-                       -14    0.0000
-                        -5    0.0219
-                        -3    0.0000
-                         0    0.0003
-                         5    0.0000
-                         8   -0.0180
-                        12   -0.0220
-                        14    0.0000
+                            -15     -0.001067  
+                            -10     -0.000664  
+                             -5     -0.000261  
+                              0      0.000142  
+                              5      0.000675  
+                             10      0.001348  
+                             15      0.001731  
+                             20      0.002423  
+                             25      0.000490  
+                             30      0.001006  
+                             35      0.001540  
+                             40      0.002074  
+                             45      0.002608  
+                             50      0.003143  
+                             55      0.003677  
                     </tableData>
                 </table>
             </product>
         </function>
+        
         <function name="aero/coefficients/CMUC">
             <description>CM increment due to gear</description>
             <product>
@@ -2319,124 +2349,125 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         </function>
 
         <function name="aero/coefficients/CMMdSpoilersLeftInner">
-            <description>PITCH MOMENT INCREMENT DUE TO LEFT INNER SPOILERS (NASA TM-X-62306 Test [15,18] [28,32])</description>
+            <description>PITCH MOMENT INCREMENT DUE TO LEFT INNER SPOILERS (NASA TM-X-62306 Test 2 Run 5,10)</description>
             <product>
                   <property>fcs/spoiler-left-inner-pos-deg</property>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
                     <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.002261   0.002485   0.002708   0.002932   0.003155
-                         0   0.002549   0.002696   0.002842   0.002988   0.003134
-                         2   0.002439   0.002943   0.003447   0.003950   0.004454
-                         4   0.003260   0.003493   0.003726   0.003960   0.004193
-                         6   0.003433   0.003800   0.004167   0.004534   0.004901
-                         8   0.004216   0.004155   0.004094   0.004033   0.003972
-                        10   0.004324   0.004036   0.003748   0.003460   0.003172
-                        12   0.003884   0.003714   0.003544   0.003374   0.003203
-                        14   0.003665   0.003513   0.003362   0.003210   0.003058
-                        16   0.003683   0.003281   0.002880   0.002479   0.002077
-                        18   0.003274   0.002782   0.002289   0.001796   0.001304
-                        20   0.002761   0.002171   0.001581   0.000990   0.000400
-                        22   0.001840   0.001516   0.001191   0.000866   0.000542
-                        24   0.001520   0.001109   0.000697   0.000286  -0.000125
-                        26   0.001160   0.000582   0.000003  -0.000575  -0.001154
-                        28   0.000172  -0.000039  -0.000249  -0.000460  -0.000671
+                             -5      0.001478  
+                             -3      0.001499  
+                             -1      0.001521  
+                              1      0.001489  
+                              3      0.001434  
+                              5      0.001521  
+                              7      0.001596  
+                              9      0.001500  
+                             11      0.001417  
+                             13      0.002231  
+                             15      0.001359  
+                             17      0.001182  
+                             19      0.000978  
+                             21      0.001131  
+                             23      0.001815  
+                             25      0.001316  
+                             27      0.000731  
+                             29      0.000243  
                     </tableData>
                   </table>
                </product>
             </function>
         
             <function name="aero/coefficients/CMMdSpoilersLeftOuter">
-            <description>PITCH MOMENT INCREMENT DUE TO LEFT OUTER SPOILERS (NASA TM-X-62306 Test [15,18] [28,32])</description>
+            <description>PITCH MOMENT INCREMENT DUE TO LEFT OUTER SPOILERS (NASA TM-X-62306 Test 2 Run 5,10)</description>
             <product>
                   <property>fcs/spoiler-left-outer-pos-deg</property>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
                     <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.002261   0.002485   0.002708   0.002932   0.003155
-                         0   0.002549   0.002696   0.002842   0.002988   0.003134
-                         2   0.002439   0.002943   0.003447   0.003950   0.004454
-                         4   0.003260   0.003493   0.003726   0.003960   0.004193
-                         6   0.003433   0.003800   0.004167   0.004534   0.004901
-                         8   0.004216   0.004155   0.004094   0.004033   0.003972
-                        10   0.004324   0.004036   0.003748   0.003460   0.003172
-                        12   0.003884   0.003714   0.003544   0.003374   0.003203
-                        14   0.003665   0.003513   0.003362   0.003210   0.003058
-                        16   0.003683   0.003281   0.002880   0.002479   0.002077
-                        18   0.003274   0.002782   0.002289   0.001796   0.001304
-                        20   0.002761   0.002171   0.001581   0.000990   0.000400
-                        22   0.001840   0.001516   0.001191   0.000866   0.000542
-                        24   0.001520   0.001109   0.000697   0.000286  -0.000125
-                        26   0.001160   0.000582   0.000003  -0.000575  -0.001154
-                        28   0.000172  -0.000039  -0.000249  -0.000460  -0.000671
+                             -5      0.001478  
+                             -3      0.001499  
+                             -1      0.001521  
+                              1      0.001489  
+                              3      0.001434  
+                              5      0.001521  
+                              7      0.001596  
+                              9      0.001500  
+                             11      0.001417  
+                             13      0.002231  
+                             15      0.001359  
+                             17      0.001182  
+                             19      0.000978  
+                             21      0.001131  
+                             23      0.001815  
+                             25      0.001316  
+                             27      0.000731  
+                             29      0.000243  
                     </tableData>
                   </table>
                </product>
             </function>
         
             <function name="aero/coefficients/CMMdSpoilersRightInner">
-            <description>PITCH MOMENT INCREMENT DUE TO RIGHT INNER SPOILERS (NASA TM-X-62306 Test [15,18] [28,32])</description>
+            <description>PITCH MOMENT INCREMENT DUE TO RIGHT INNER SPOILERS (NASA TM-X-62306 Test 2 Run 5,10)</description>
             <product>
                   <property>fcs/spoiler-right-inner-pos-deg</property>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
                     <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.002261   0.002485   0.002708   0.002932   0.003155
-                         0   0.002549   0.002696   0.002842   0.002988   0.003134
-                         2   0.002439   0.002943   0.003447   0.003950   0.004454
-                         4   0.003260   0.003493   0.003726   0.003960   0.004193
-                         6   0.003433   0.003800   0.004167   0.004534   0.004901
-                         8   0.004216   0.004155   0.004094   0.004033   0.003972
-                        10   0.004324   0.004036   0.003748   0.003460   0.003172
-                        12   0.003884   0.003714   0.003544   0.003374   0.003203
-                        14   0.003665   0.003513   0.003362   0.003210   0.003058
-                        16   0.003683   0.003281   0.002880   0.002479   0.002077
-                        18   0.003274   0.002782   0.002289   0.001796   0.001304
-                        20   0.002761   0.002171   0.001581   0.000990   0.000400
-                        22   0.001840   0.001516   0.001191   0.000866   0.000542
-                        24   0.001520   0.001109   0.000697   0.000286  -0.000125
-                        26   0.001160   0.000582   0.000003  -0.000575  -0.001154
-                        28   0.000172  -0.000039  -0.000249  -0.000460  -0.000671
+                             -5      0.001478  
+                             -3      0.001499  
+                             -1      0.001521  
+                              1      0.001489  
+                              3      0.001434  
+                              5      0.001521  
+                              7      0.001596  
+                              9      0.001500  
+                             11      0.001417  
+                             13      0.002231  
+                             15      0.001359  
+                             17      0.001182  
+                             19      0.000978  
+                             21      0.001131  
+                             23      0.001815  
+                             25      0.001316  
+                             27      0.000731  
+                             29      0.000243  
                     </tableData>
                   </table>
                </product>
             </function>
         
             <function name="aero/coefficients/CMMdSpoilersRightOuter">
-            <description>PITCH MOMENT INCREMENT DUE TO RIGHT OUTER SPOILERS (NASA TM-X-62306 Test [15,18] [28,32])</description>
+            <description>PITCH MOMENT INCREMENT DUE TO RIGHT OUTER SPOILERS (NASA TM-X-62306 Test 2 Run 5,10)</description>
             <product>
                   <property>fcs/spoiler-right-outer-pos-deg</property>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">aero/beta-deg</independentVar>
                     <tableData>
-                                  -10         -5          0          5         10
-                        -2   0.002261   0.002485   0.002708   0.002932   0.003155
-                         0   0.002549   0.002696   0.002842   0.002988   0.003134
-                         2   0.002439   0.002943   0.003447   0.003950   0.004454
-                         4   0.003260   0.003493   0.003726   0.003960   0.004193
-                         6   0.003433   0.003800   0.004167   0.004534   0.004901
-                         8   0.004216   0.004155   0.004094   0.004033   0.003972
-                        10   0.004324   0.004036   0.003748   0.003460   0.003172
-                        12   0.003884   0.003714   0.003544   0.003374   0.003203
-                        14   0.003665   0.003513   0.003362   0.003210   0.003058
-                        16   0.003683   0.003281   0.002880   0.002479   0.002077
-                        18   0.003274   0.002782   0.002289   0.001796   0.001304
-                        20   0.002761   0.002171   0.001581   0.000990   0.000400
-                        22   0.001840   0.001516   0.001191   0.000866   0.000542
-                        24   0.001520   0.001109   0.000697   0.000286  -0.000125
-                        26   0.001160   0.000582   0.000003  -0.000575  -0.001154
-                        28   0.000172  -0.000039  -0.000249  -0.000460  -0.000671
+                             -5      0.001478  
+                             -3      0.001499  
+                             -1      0.001521  
+                              1      0.001489  
+                              3      0.001434  
+                              5      0.001521  
+                              7      0.001596  
+                              9      0.001500  
+                             11      0.001417  
+                             13      0.002231  
+                             15      0.001359  
+                             17      0.001182  
+                             19      0.000978  
+                             21      0.001131  
+                             23      0.001815  
+                             25      0.001316  
+                             27      0.000731  
+                             29      0.000243  
                     </tableData>
                   </table>
                </product>
-        </function>
+            </function>
+        
 
         <function name="aero/coefficients/CMMdFlaps">
             <description>PITCH INCREMENT DUE TO  FLAPS</description>
@@ -2524,7 +2555,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/DCMDS1</property>
                 <property>aero/coefficients/DCMDS2</property>
                 <property>aero/coefficients/CMUC</property>
-                <property>aero/coefficients/CMBRK</property>
+                <property>aero/coefficients/CMMdSpeedbrake</property>
                 <property>aero/coefficients/CMMdFlaps</property>
                 <property>aero/coefficients/CMMdAuxFlaps</property>
                 <property>aero/coefficients/CMMdSlats</property>
@@ -2534,7 +2565,14 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/CMMdSpoilersRightOuter</property>
             </sum>
         </function>
-
+        <function name="CM-spoilers">
+            <sum>
+                <property>aero/coefficients/CMMdSpoilersLeftInner</property>
+                <property>aero/coefficients/CMMdSpoilersLeftOuter</property>
+                <property>aero/coefficients/CMMdSpoilersRightInner</property>
+                <property>aero/coefficients/CMMdSpoilersRightOuter</property>
+            </sum>
+        </function>
         <function name="aero/coefficients/CNBAS">
             <description>CNBAS</description>
                 <table>
@@ -2975,13 +3013,37 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <output name="c:/temp/JSBOut.csv" type="CSV" rate="10">
         <property caption="alpha-deg">aero/alpha-deg</property>
         <property caption="beta-deg">aero/beta-deg</property>
+        <property caption="qbar">aero/qbar-psf</property>
+        <property caption="pb">velocities/p-aero-rad_sec</property>
+        <property caption="qb">velocities/q-aero-rad_sec</property>
+        <property caption="rb">velocities/r-aero-rad_sec</property>
+        <property caption="dlc-active">fcs/dlc-active</property>
+
+        <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>
+        <property caption="dlc-thumbwheel-norm">fcs/dlc-thumbwheel-norm</property>
+        <property caption="pitch-1-dlc">fcs/pitch-1-dlc-tw-norm-v1</property>
+        <property caption="spoiler-dlc-increment-cmd">fcs/spoiler-dlc-increment-cmd</property>
+
+        <property caption="spoiler-right-inner-pos-deg">fcs/spoiler-right-inner-pos-deg</property>
+        <property caption="spoiler-leftright-inner-pos-deg">fcs/spoiler-leftright-inner-pos-deg</property>
+        <property caption="CM">aero/coefficients/CM</property>
+        <property caption="CMUC">aero/coefficients/CMUC</property>
+        <property caption="CMBRK">aero/coefficients/CMBRK</property>
+        <property caption="CMMdFlaps">aero/coefficients/CMMdFlaps</property>
+        <property caption="CMMdAuxFlaps">aero/coefficients/CMMdAuxFlaps</property>
+        <property caption="CMMdSlats">aero/coefficients/CMMdSlats</property>
+        <property caption="CMMdSpoilersLeftInner">aero/coefficients/CMMdSpoilersLeftInner</property>
+        <property caption="CMMdSpoilersLeftOuter">aero/coefficients/CMMdSpoilersLeftOuter</property>
+        <property caption="CMMdSpoilersRightInner">aero/coefficients/CMMdSpoilersRightInner</property>
+        <property caption="CMMdSpoilersRightOuter">aero/coefficients/CMMdSpoilersRightOuter</property>
+<!--         
         <property caption="pb">velocities/p-aero-rad_sec</property>
         <property caption="qb">velocities/q-aero-rad_sec</property>
         <property caption="rb">velocities/r-aero-rad_sec</property>
         <property caption="pitch-trim-sum">fcs/pitch-trim-sum</property>
         <property caption="pitch-3-q">sas/pitch-3-q</property>
         <property caption="pitch-command">fcs/pitch-command</property>
-        <property caption="pitch-cmd-norm">fcs/pitch-cmd-norm</property>
+        <property caption="pitch-cmd-norm">fcs/pitch-cmd-norm</property> -->
        
         <!-- <property caption="sas-yaw">sas/yaw-output</property>
         <property caption="yawr0">sas/yaw-r-0</property>

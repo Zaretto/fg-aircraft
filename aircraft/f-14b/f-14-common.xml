@@ -1341,64 +1341,38 @@
             <use-overlay type="bool">1</use-overlay>
         </aircraft-effects>
     </environment>
+
     <fdm>
         <jsbsim>
-            <!--tuning>
-                <ClDFM type="double">1.63</ClDFM>
-                <ClDAFM type="double">1.59</ClDAFM>
-                <CdDFM type="double">1.21</CdDFM>
-                <CdDAFM type="double">1.59</CdDAFM>
-                <CMDFM type="double">0.37</CMDFM>
-                <CMADFM type="double">0.64</CMADFM>
-            </tuning-->
             <tuning>
-                <!--ClDFM type="double">1.42</ClDFM>
-                <ClDAFM type="double">1.38</ClDAFM>
-                <CdDFM type="double">1.21</CdDFM>
-                <CdDAFM type="double">1.59</CdDAFM>
-                <CMDFM type="double">0.37</CMDFM>
-                <CMADFM type="double">0.64</CMADFM-->
-
                 <ClDFM type="double">1.0</ClDFM>
                 <ClDAFM type="double">1.0</ClDAFM>
                 <CdDFM type="double">1.0</CdDFM>
                 <CdDAFM type="double">1.0</CdDAFM>
                 <CMDFM type="double">1.0</CMDFM>
                 <CMADFM type="double">1.0</CMADFM>
-                <DClSLM type="double">1.0</DClSLM> 
+                <DClSLM type="double">1.0</DClSLM>
                 <CMUC type="double">1.0</CMUC>
                 <CMBRK type="double">1.0</CMBRK>
-                <CMDLC type="double">0.0342</CMDLC>
-                 <alpha-mx type="double">1.34706</alpha-mx>
+                <CMDLC type="double">1.00</CMDLC>
+                <alpha-mx type="double">1.34706</alpha-mx>
             </tuning>
-            <systems>
-				<apc>
-					<active type="bool">0</active>
-				</apc>
-                <hook>
-                    <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
-                </hook>
-                <hydraulics>
-                    <flight-system-psi type="float">0</flight-system-psi>
-                    <combined-system-psi type="float">0</combined-system-psi>
-                </hydraulics>
-                <electrics>
-                    <ac-right-main-bus type="float">0</ac-right-main-bus>
-                </electrics>
-                <afcs>
-                    <altitude-hold-alt-diff-feet type="float">0</altitude-hold-alt-diff-feet>
-                </afcs>
-                <catapult>
-                    <cat-pos-norm type="float">0</cat-pos-norm>
-                </catapult>
-            </systems>
             <fcs>
+                <aim-fitted type="double">0</aim-fitted>
+                <aux-flap-pos-deg type="float">0</aux-flap-pos-deg>
+                <dfcs-active type="double">1</dfcs-active>
+                <dlc-active type="double">0</dlc-active>
+                <dlc-thumbwheel-norm type="double">0</dlc-thumbwheel-norm>
+                <external-tanks-fitted type="double">0</external-tanks-fitted>
+                <mod-dlc-AFC-735-active type="double">1</mod-dlc-AFC-735-active>
+                <pitch-damper-enable type="double">0</pitch-damper-enable>
+                <roll-sas-enable type="double">0</roll-sas-enable>
+                <roll-trim-actuator type="float">0</roll-trim-actuator>
+                <slat-cmd type="double">0</slat-cmd>
                 <wing-sweep-cmd type="float">0</wing-sweep-cmd>
                 <wing-sweep-cadc-dmd type="float">0</wing-sweep-cadc-dmd>
-                <aux-flap-pos-deg type="float">0</aux-flap-pos-deg>
-                <roll-trim-actuator type="float">0</roll-trim-actuator>
+                <yaw-damper-enable type="double">0</yaw-damper-enable>
             </fcs>
-
             <propulsion>
                 <engine n="0">
                     <augmentation-alight type="float">0</augmentation-alight>
@@ -1407,11 +1381,63 @@
                     <augmentation-alight type="float">0</augmentation-alight>
                 </engine>
             </propulsion>
+            <sas>
+                <!-- SAS Pitch channel configuration TM-81833- Figure 3 -->
+                <pitch-3-q-c1 type="double">2</pitch-3-q-c1>
+                <pitch-3-q-c2 type="double">0</pitch-3-q-c2>
+                <pitch-3-q-c3 type="double">2</pitch-3-q-c3>
+                <pitch-3-q-c4 type="double">1</pitch-3-q-c4>
+
+                <rudder-power-actuator-cval type="double">0.5</rudder-power-actuator-cval>
+
+                <!-- SAS YAW Channel configuration -->
+                <!-- yaw-sas-2-v1-stkr-factor is 2.60 for System B and 3.19 for System C 
+                    this is the only difference between the two systems.
+                    The described High-Alpha ARI system is the same as System B 
+                    Figure 20 from [1] below for YAW SAS
+                    Figure 21 from [1] below for ROLL SAS
+                    see https://ntrs.nasa.gov/citations/19800020867
+                    and https://ntrs.nasa.gov/citations/19820005275
+                -->
+                <yaw-sas-2-v1-stkr-factor type="double">3.19</yaw-sas-2-v1-stkr-factor>
+                <yaw-sas-2-v3-c1 type="double">0</yaw-sas-2-v3-c1>
+                <yaw-sas-2-v3-c2 type="double">1</yaw-sas-2-v3-c2>
+                <yaw-sas-2-v3-c3 type="double">0.125</yaw-sas-2-v3-c3>
+                <yaw-sas-2-v3-c4 type="double">1</yaw-sas-2-v3-c4>
+                <yaw-sas-3-ay-c3 type="double">0.05</yaw-sas-3-ay-c3>
+                <yaw-sas-3-r-c1 type="double">2</yaw-sas-3-r-c1>
+                <yaw-sas-3-r-c2 type="double">0</yaw-sas-3-r-c2>
+                <yaw-sas-3-r-c3 type="double">2</yaw-sas-3-r-c3>
+                <yaw-sas-3-r-c4 type="double">1</yaw-sas-3-r-c4>
+            </sas>
+            <systems>
+                <afcs>
+                    <altitude-hold-alt-diff-feet type="float">0</altitude-hold-alt-diff-feet>
+                </afcs>
+                <apc>
+                    <active type="bool">0</active>
+                </apc>
+                <catapult>
+                    <cat-pos-norm type="float">0</cat-pos-norm>
+                </catapult>
+                <electrics>
+                    <ac-right-main-bus type="float">0</ac-right-main-bus>
+                </electrics>
+                <hook>
+                    <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
+                </hook>
+                <hydraulics>
+                    <flight-system-psi type="float">0</flight-system-psi>
+                    <combined-system-psi type="float">0</combined-system-psi>
+                </hydraulics>
+            </systems>
         </jsbsim>
     </fdm>
+
     <orientation>
         <alpha-indicated-deg alias="/fdm/jsbsim/aero/alpha-indicated-deg"/>
     </orientation>
+    
     <systems>
         <refuel>
             <type>probe</type>
