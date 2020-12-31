@@ -411,6 +411,22 @@ Figure 2-54.  Longitudinal System Authority
                 </test>
         </switch>
 
+        <aerosurface_scale name="fcs/dlc-thumbwheel-pos-deg">
+            <description>DLC thumbwheel deflection, 
+                positive for aft deflection, 
+                aft deflection = retract spoilers
+                deg +/- 50
+            </description>
+            <input>fcs/dlc-thumbwheel-norm</input>
+            <domain>
+                <min>-1</min>>
+                <max>1</max>
+            </domain>
+            <range>
+                <min> -50 </min>
+                <max>  50 </max>
+            </range>
+        </aerosurface_scale>
         <fcs_function name="fcs/spoiler-dlc-increment-cmd">
             <!-- TM-818333 Figure 4; gives us a range of +50, -50 for the thumbwheel range
                                      which equates to +7.48, -9.16 degrees
@@ -492,9 +508,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/spoiler-zeropos</property>
                         <product>
                             <property>fcs/spoiler-zero-factor</property>
-                            <sum>
-                                <property>fcs/spoiler-left-dmd</property>
-                            </sum>
+                            <property>fcs/spoiler-left-dmd</property>
                         </product>
                     </sum>
                 </switch>
@@ -527,9 +541,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/spoiler-zeropos</property>
                         <product>
                             <property>fcs/spoiler-zero-factor</property>
-                            <sum>
-                                <property>fcs/spoiler-dlc-increment-cmd</property>
-                            </sum>
+                            <property>fcs/spoiler-dlc-increment-cmd</property>
                         </product>
                     </sum>
                 </switch>
@@ -641,9 +653,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/spoiler-zeropos</property>
                         <product>
                             <property>fcs/spoiler-zero-factor</property>
-                            <sum>
-                                <property>fcs/spoiler-right-dmd</property>
-                            </sum>
+                            <property>fcs/spoiler-right-dmd</property>
                         </product>
                     </sum>
                 </switch>              
@@ -676,9 +686,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/spoiler-zeropos</property>
                         <product>
                             <property>fcs/spoiler-zero-factor</property>
-                            <sum>
-                                <property>fcs/spoiler-dlc-increment-cmd</property>
-                            </sum>
+                            <property>fcs/spoiler-dlc-increment-cmd</property>
                         </product>
                     </sum>
                 </switch>

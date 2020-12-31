@@ -163,7 +163,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     <system file="catapult"/>
     <system file="holdback"/>
     <system file="f-14b-landing-gear"/>
-    
+    <system file="f-14-apc"/>
+
     <metrics>
         <wingarea       unit="FT2">   565 </wingarea>
         <wingspan       unit="FT" >    64 </wingspan>
@@ -3052,14 +3053,32 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property caption="pb">velocities/p-aero-rad_sec</property>
         <property caption="qb">velocities/q-aero-rad_sec</property>
         <property caption="rb">velocities/r-aero-rad_sec</property>
+        <property caption="Nz">accelerations/Nz</property>
         <property caption="dlc-active">fcs/dlc-active</property>
+
+        <property caption="alpha-u">apc/alpha-u</property>
+        <property caption="alpha-ref">apc/alpha-u-reference</property>
+        <property caption="apc/v-1-1">apc/v-1-1</property>
+        <property caption="apc/v-1-2">apc/v-1-2</property>
+        <property caption="apc/v-1">apc/v-1</property>
+        <property caption="apc/v-2-1">apc/v-2-1</property>
+        <property caption="apc/v-2-2">apc/v-2-2</property>
+        <property caption="apc/v-2">apc/v-2</property>
+        <property caption="apc/v-3-dh">apc/v-3-dh</property>
+        <property caption="apc/v-3-dlc">apc/v-3-dlc</property>
+        <property caption="apc/v-3-1">apc/v-3-1</property>
+        <property caption="apc/v-3-2">apc/v-3-2</property>
+        <property caption="apc/v-3">apc/v-3</property>
+        <property caption="apc/throttle-pla-deg">apc/throttle-pla-deg</property>
+        <property caption="throttle-apc">apc/throttle-pla-norm</property>
+        
 
         <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>
         <property caption="dlc-thumbwheel-norm">fcs/dlc-thumbwheel-norm</property>
         <property caption="pitch-1-dlc">fcs/pitch-1-dlc-tw-norm-v1</property>
         <property caption="spoiler-dlc-increment-cmd">fcs/spoiler-dlc-increment-cmd</property>
 
-        <property caption="spoiler-right-inner-pos-deg">fcs/spoiler-right-inner-pos-deg</property>
+        <!-- <property caption="spoiler-right-inner-pos-deg">fcs/spoiler-right-inner-pos-deg</property>
         <property caption="spoiler-leftright-inner-pos-deg">fcs/spoiler-leftright-inner-pos-deg</property>
         <property caption="CM">aero/coefficients/CM</property>
         <property caption="CMUC">aero/coefficients/CMUC</property>
@@ -3070,7 +3089,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property caption="CMMdSpoilersLeftInner">aero/coefficients/CMMdSpoilersLeftInner</property>
         <property caption="CMMdSpoilersLeftOuter">aero/coefficients/CMMdSpoilersLeftOuter</property>
         <property caption="CMMdSpoilersRightInner">aero/coefficients/CMMdSpoilersRightInner</property>
-        <property caption="CMMdSpoilersRightOuter">aero/coefficients/CMMdSpoilersRightOuter</property>
+        <property caption="CMMdSpoilersRightOuter">aero/coefficients/CMMdSpoilersRightOuter</property> -->
 <!--         
         <property caption="pb">velocities/p-aero-rad_sec</property>
         <property caption="qb">velocities/q-aero-rad_sec</property>
@@ -3089,12 +3108,12 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property caption="psi-deg">attitude/psi-deg</property>
         <property caption="theta-deg">attitude/theta-deg</property>
         <property caption="aileron-pos-deg">fcs/aileron-pos-deg</property> -->
-        <property caption="differential-elevator-pos-deg">fcs/differential-elevator-pos-deg</property>
+        <!-- <property caption="differential-elevator-pos-deg">fcs/differential-elevator-pos-deg</property>
         <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>
         <property caption="rudder-pos-deg">fcs/rudder-pos-deg</property>
         <property caption="fbx-total-lbs">forces/fbx-total-lbs</property>
         <property caption="fby-total-lbs">forces/fby-total-lbs</property>
         <property caption="fbz-total-lbs">forces/fbz-total-lbs</property>
-        <property caption="vt-fps">velocities/vt-fps</property>
+        <property caption="vt-fps">velocities/vt-fps</property> -->
     </output>
 </fdm_config>
