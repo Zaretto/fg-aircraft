@@ -694,7 +694,7 @@ var common_carrier_init = func {
             if (f14.carrier_ara_63_position == nil or geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 200)
             {
                 print("Special init for Carrier cat launch");
-                setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
+                setprop("/fdm/jsbsim/systems/holdback/holdback-cmd",1);
                 setprop("gear/launchbar/position-norm",1);
                 repos_gear_down = 1;
             }

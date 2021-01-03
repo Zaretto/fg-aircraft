@@ -106,6 +106,11 @@ var cnpy = aircraft.door.new("canopy", 3.9);
 setprop("sim/model/f-14b/controls/canopy/canopy-switch", 0);
 var pos = props.globals.getNode("canopy/position-norm");
 
+setlistener("sim/model/f-14b/config/mod-AFC-735", func(v) {
+    print("AFC-735 active=",v.getValue());
+    setprop("/fdm/jsbsim/fcs/mod-dlc-AFC-735-active",v.getValue());
+}, 1, 0);
+
 #
 #
 # cockpit will simply toggle the value of this.
