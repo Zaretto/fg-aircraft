@@ -7,55 +7,6 @@
 
 
 <flight_control name="F-14-FCS">
-    <property>fcs/hook-engage</property>
-    <property>fcs/wing-sweep-pilot-dmd</property>
-    <property>fcs/wing-sweep-mode</property>
-    <property>fcs/spoiler-ground-brake-armed</property>
-    <property>fcs/flap-cmd-sum</property>
-    <property value="0">fcs/dlc-thumbwheel-norm</property>
-    <property value="0">fcs/dlc-active</property>
-    <property value="1">fcs/mod-dlc-AFC-735-active</property>
-
-    <property value="1">fcs/dfcs-active</property>
-
-    <property value="0">fcs/yaw-damper-enable</property>
-    <property value="0">fcs/pitch-damper-enable</property>
-    <property value="0">fcs/roll-sas-enable</property>
-    <property value="0">fcs/external-tanks-fitted</property>
-    <property value="0">fcs/aim-fitted</property>
-    <property value="0">fcs/slat-cmd</property>
-
-    <!-- SAS Pitch channel configuration TM-81833- Figure 3 -->
-    <property value="2">sas/pitch-3-q-c1</property>
-    <property value="0">sas/pitch-3-q-c2</property>
-    <property value="2">sas/pitch-3-q-c3</property>
-    <property value="1">sas/pitch-3-q-c4</property>
-
-
-    <!-- SAS YAW Channel configuration -->
-    <property value="0.5">sas/rudder-power-actuator-cval</property>
-
-    <!-- yaw-sas-2-v1-stkr-factor is 2.60 for System B and 3.19 for System C 
-	     this is the only difference between the two systems.
-	     The described High-Alpha ARI system is the same as System B 
-	     Figure 20 from [1] below for YAW SAS
-	     Figure 21 from [1] below for ROLL SAS
-	     see https://ntrs.nasa.gov/citations/19800020867
-	     and https://ntrs.nasa.gov/citations/19820005275
-	     -->
-    <property value="3.19">sas/yaw-sas-2-v1-stkr-factor</property>
-    <property value="0">sas/yaw-sas-2-v3-c1</property>
-    <property value="1">sas/yaw-sas-2-v3-c2</property>
-    <property value="0.125">sas/yaw-sas-2-v3-c3</property>
-    <property value="1">sas/yaw-sas-2-v3-c4</property>
-
-    <property value="2">sas/yaw-sas-3-r-c1</property>
-    <property value="0">sas/yaw-sas-3-r-c2</property>
-    <property value="2">sas/yaw-sas-3-r-c3</property>
-    <property value="1">sas/yaw-sas-3-r-c4</property>
-
-    <property value="0.05">sas/yaw-sas-3-ay-c3</property>
-
 
 
     <!-- wing sweep normalization is 0.01470 per degree (1/range)== 1/68 -->
@@ -809,8 +760,6 @@ Figure 2-54.  Longitudinal System Authority
                 </test>
         </switch>
     </channel>
-
-    <property>systems/NWS/engaged</property>
 
     <channel name="Nose Wheel Steering">
         <switch name="systems/NWS/engaged">
@@ -1886,7 +1835,7 @@ Figure 2-54.  Longitudinal System Authority
     <channel name="extra-aero">
 
         <fcs_function name="aero/alpha-indicated-deg">
-            <description>NASA TM-81833, page 56, Figure 17; converted to linear function</description>
+            <description>NASA TM-81833, page 56, Figure 17; converted to linear function, tuned based on flight tests</description>
             <function>
                 <product>
                     <sum>
@@ -1899,21 +1848,6 @@ Figure 2-54.  Longitudinal System Authority
             </function>
         </fcs_function>
 
-        <!--
-                        <value>1.40162500000</value>
-            <fcs_function name="aero/alpha-indicated-deg">
-                <description>ARI nose probe; ref ADA101648 p84; alpha_true = .8122 * alphaNOSEPROBE + .797deg</description>
-                <function>
-                    <product>
-                        <sum>
-                            <property> aero/alpha-deg </property>
-                            <value> 0.797 </value>
-                        </sum>
-                        <value>1.231223836</value>
-                    </product>
-                </function>
-            </fcs_function>
--->
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach and wingsweep angle</description>
@@ -1926,7 +1860,7 @@ Figure 2-54.  Longitudinal System Authority
                                       0.294117647    1.000000000
                                0.0          419.0          429.1
                                2.4          421.0          449.6
-                            </tableData>
+                     </tableData>
                 </table>
             </function>
             <output>metrics/aero-rp-x-in</output>

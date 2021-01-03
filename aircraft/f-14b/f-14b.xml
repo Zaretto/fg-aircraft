@@ -2979,7 +2979,20 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <z>   0.0 </z>
             </direction>
         </force>
-        <moment name="ai-wake" frame="BODY"/>
+
+        <moment name="ai-wake" frame="BODY">
+            <location unit="M">
+                <!-- Center of the main wing leading edge -->
+                <x> 7.1</x>
+                <y> 0.0 </y>
+                <z> 0.523 </z>
+            </location>
+            <direction>
+                <x>   0.0 </x>
+                <y>   0.0 </y>
+                <z>   0.0 </z>
+            </direction>
+        </moment>
         
         <force name="catapult" frame="BODY">
             <location unit="IN">
@@ -3056,21 +3069,20 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <property caption="Nz">accelerations/Nz</property>
         <property caption="dlc-active">fcs/dlc-active</property>
 
-        <property caption="alpha-u">apc/alpha-u</property>
-        <property caption="alpha-ref">apc/alpha-u-reference</property>
-        <property caption="apc/v-1-1">apc/v-1-1</property>
-        <property caption="apc/v-1-2">apc/v-1-2</property>
-        <property caption="apc/v-1">apc/v-1</property>
-        <property caption="apc/v-2-1">apc/v-2-1</property>
-        <property caption="apc/v-2-2">apc/v-2-2</property>
-        <property caption="apc/v-2">apc/v-2</property>
-        <property caption="apc/v-3-dh">apc/v-3-dh</property>
-        <property caption="apc/v-3-dlc">apc/v-3-dlc</property>
-        <property caption="apc/v-3-1">apc/v-3-1</property>
-        <property caption="apc/v-3-2">apc/v-3-2</property>
-        <property caption="apc/v-3">apc/v-3</property>
-        <property caption="apc/throttle-pla-deg">apc/throttle-pla-deg</property>
-        <property caption="throttle-apc">apc/throttle-pla-norm</property>
+        <property caption="alpha-u">systems/apc/alpha-u</property>
+        <property caption="alpha-ref">systems/apc/alpha-u-reference</property>
+        <property caption="apc/v-1-1">systems/apc/v-1-1</property>
+        <property caption="apc/v-1-2">systems/apc/v-1-2</property>
+        <property caption="apc/v-1">systems/apc/v-1</property>
+        <property caption="apc/v-2-1">systems/apc/v-2-1</property>
+        <property caption="apc/v-2-2">systems/apc/v-2-2</property>
+        <property caption="apc/v-2">systems/apc/v-2</property>
+        <property caption="apc/v-3-dh">systems/apc/v-3-dh</property>
+        <property caption="apc/v-3-dlc">systems/apc/v-3-dlc</property>
+        <property caption="apc/v-3-1">systems/apc/v-3-1</property>
+        <property caption="apc/v-3-2">systems/apc/v-3-2</property>
+        <property caption="apc/v-3">systems/apc/v-3</property>
+        <property caption="apc/throttle-norm">systems/apc/throttle-pla-norm</property>
         
 
         <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>

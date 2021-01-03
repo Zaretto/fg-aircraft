@@ -8,9 +8,9 @@
 
 <system name="CADC">
 
-    <property value="0">systems/cadc/manuv-slat-extension-manual</property>
-    <property value="0.9">systems/cadc/manuv-flap-extension-calc-lag</property>
-    <property value="1.3">systems/cadc/manuv-flap-extension-washout-lag</property>
+<!-- systems/flyt/flutter-pulsation (2 * 3.14 * 3.0)
+systems/flyt/permanent-bend-factor = MaxBend / max-g * 2
+systems/flyt/distortion-factor-per-g = 0.16 / MaxG  -->
 
     <channel name="MANOUEVRE">
 
@@ -214,14 +214,7 @@
         </switch>
     </channel>
 
-    <property value="0">systems/flyt/stress-run</property>
-    <property value="0">systems/flyt/wing-damage-enabled</property>
-    <property value="850">systems/flyt/flutter-onset-ias</property>
-    <property value="950">systems/flyt/flutter-full-ias</property>
-    <property value="0.3">systems/flyt/flutter-max-bend-amplitude</property>
-    <property value="18.84">systems/flyt/flutter-pulsation</property>
-    <!--(2 * 3.14 * 3.0);-->
-
+ 
     <channel name="flutter">
 
         <fcs_function name="systems/flyt/flutter-current-amplitude">
@@ -318,16 +311,7 @@
         </fcs_function>
     </channel>
 
-    <property value="7.5">systems/flyt/max-g</property>
-    <property value="-3.0">systems/flyt/min-g</property>
-    <property value="15.0">systems/flyt/ultimate-max-g</property>
-    <property value="-6.0">systems/flyt/ultimate-min-g</property>
-    <property value="0.02">systems/flyt/permanent-bend-factor</property>
-    <!--MaxBend / max-g * 2-->
-    <property value="0.0213">systems/flyt/distortion-factor-per-g</property>
-    <!-- 0.16 / MaxG -->
-    <property value="0">systems/flyt/damage-reset</property>
-
+ 
     <channel name="airframe-stress">
         <fcs_function name="systems/flyt/current-g-loading">
             <function>

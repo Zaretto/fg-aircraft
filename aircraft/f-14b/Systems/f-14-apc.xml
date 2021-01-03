@@ -9,7 +9,6 @@
 
 
 <system name="F-14-AOC">
-    <property value="15">apc/alpha-u-reference</property>
     <channel name="Approach Power Compensator">
 
         <fcs_function name="systems/apc/trigger">
@@ -22,28 +21,19 @@
             </function>
         </fcs_function>
 
-        <fcs_function name="apc/alpha-u">
+        <fcs_function name="systems/apc/alpha-u">
             <function>
-                <sum>
-                    <difference>
-                        <property>aero/alpha-indicated-deg</property>
-                        <!-- <sum>
-                            <product>
-                                <property>aero/alpha-deg</property>
-                                <value>1.089</value>
-                            </product>
-                            <value>3.715</value>
-                        </sum> -->
-                        <product>
-                            <value>7.62</value>
-                            <property>velocities/q-aero-rad_sec</property>
-                        </product>
-                    </difference>
-                </sum>
+                <difference>
+                    <property>aero/alpha-indicated-deg</property>
+                    <product>
+                        <value>7.62</value>
+                        <property>velocities/q-aero-rad_sec</property>
+                    </product>
+                </difference>
             </function>
         </fcs_function>
 
-        <fcs_function name="apc/v-3-dlc">
+        <fcs_function name="systems/apc/v-3-dlc">
             <function>
                 <product>
                     <property>fcs/dlc-active</property>
@@ -60,13 +50,13 @@
             </function>
         </fcs_function>
         
-        <fcs_function name="apc/v-1-1">
+        <fcs_function name="systems/apc/v-1-1">
             <function>
                 <product>
                     <difference>
                         <!-- <property>aero/alpha-indicated-deg</property> -->
-                        <property>apc/alpha-u</property>
-                        <property>apc/alpha-u-reference</property>
+                        <property>systems/apc/alpha-u</property>
+                        <property>systems/apc/alpha-u-reference</property>
                     </difference>
                     <value>3.5</value>
                     </product>
@@ -77,22 +67,22 @@
             </clipto> -->
         </fcs_function>
 
-        <fcs_function name="apc/v-1-2">
+        <fcs_function name="systems/apc/v-1-2">
             <function>
                 <ifthen>
                     <and>
                         <lt>
-                            <property>apc/v-1-1</property>
+                            <property>systems/apc/v-1-1</property>
                             <value>10</value>
                         </lt>
                         <gt>
-                            <property>apc/v-1-1</property>
+                            <property>systems/apc/v-1-1</property>
                             <value>-10</value>
                         </gt>
                     </and>
                     <product>
                         <property>systems/apc/active</property>
-                        <property>apc/v-1-1</property>
+                        <property>systems/apc/v-1-1</property>
                         <value>0.134</value>
                     </product>
                     <value>0</value>
@@ -108,14 +98,14 @@
              __1__
                S
         -->
-        <integrator name="apc/v-1-func">
-            <input>apc/v-1-2</input>
+        <integrator name="systems/apc/v-1-func">
+            <input>systems/apc/v-1-2</input>
             <trigger>systems/apc/trigger</trigger>
             <c1>1</c1>
-            <output>apc/v-1</output>
+            <output>systems/apc/v-1</output>
         </integrator>
 
-        <fcs_function name="apc/v-2-1">
+        <fcs_function name="systems/apc/v-2-1">
             <function>
                 <!-- An is normal acceleration positive along negative body axes, g units.
                      In JSBSim acclerations/Nz is positive along positive (down) body axes
@@ -126,13 +116,13 @@
                 </product>
             </function>
         </fcs_function>
-        <fcs_function name="apc/v-2-2">
+        <fcs_function name="systems/apc/v-2-2">
             <function>
                 <product>
                     <property>systems/apc/active</property>
                     <sum>
-                        <property>apc/v-1-1</property>
-                        <property>-apc/v-2-1</property>
+                        <property>systems/apc/v-1-1</property>
+                        <property>-systems/apc/v-2-1</property>
                     </sum>
                 </product>
         </function>
@@ -141,8 +131,8 @@
              ____1___
                S + 1
         -->
-        <lead_lag_filter name="apc/v-2">
-            <input>apc/v-2-2</input>
+        <lead_lag_filter name="systems/apc/v-2">
+            <input>systems/apc/v-2-2</input>
             <c1>0</c1>
             <c2>1</c2>
             <c3>1</c3>
@@ -150,7 +140,7 @@
         </lead_lag_filter>
 
         
-        <fcs_function name="apc/v-3-dh">
+        <fcs_function name="systems/apc/v-3-dh">
             <function>
                 <product>
                     <property>fcs/elevator-pos-deg</property>
@@ -159,28 +149,28 @@
             </function>
         </fcs_function>
 
-        <fcs_function name="apc/v-3-1">
+        <fcs_function name="systems/apc/v-3-1">
             <function>
                 <product>
                     <property>systems/apc/active</property>
                     <sum>
-                        <property>apc/v-3-dlc</property>
-                        <property>apc/v-3-dh</property>
+                        <property>systems/apc/v-3-dlc</property>
+                        <property>systems/apc/v-3-dh</property>
                     </sum>
                 </product>
             </function>
         </fcs_function>
 
-        <lead_lag_filter name="apc/v-3-2">
-            <input>apc/v-3-1</input>
+        <lead_lag_filter name="systems/apc/v-3-2">
+            <input>systems/apc/v-3-1</input>
             <c1>10</c1>
             <c2>0</c2>
             <c3>10</c3>
             <c4>1</c4>
         </lead_lag_filter>
         
-        <lead_lag_filter name="apc/v-3">
-            <input>apc/v-3-2</input>
+        <lead_lag_filter name="systems/apc/v-3">
+            <input>systems/apc/v-3-2</input>
             <c1>0</c1>
             <c2>1</c2>
             <c3>0.5</c3>
@@ -188,12 +178,12 @@
         </lead_lag_filter>
         
         
-        <fcs_function name="apc/throttle-pla-deg">
+        <fcs_function name="systems/apc/throttle-pla-deg">
             <function>
                 <sum>
-                    <property>apc/v-1</property>
-                    <property>apc/v-2</property>
-                    <property>-apc/v-3</property>
+                    <property>systems/apc/v-1</property>
+                    <property>systems/apc/v-2</property>
+                    <property>-systems/apc/v-3</property>
                 </sum>
             </function>
             <clipto>
@@ -203,11 +193,11 @@
         </fcs_function>
 
          
-        <fcs_function name="apc/throttle-pla-norm">
+        <fcs_function name="systems/apc/throttle-pla-norm">
             <function>
                 <quotient>
                     <difference>
-                        <property>apc/throttle-pla-deg</property>
+                        <property>systems/apc/throttle-pla-deg</property>
                         <value>20</value>
                     </difference>
                     <value>45</value>
