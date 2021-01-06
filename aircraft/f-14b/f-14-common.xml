@@ -248,9 +248,16 @@
 
 
         <flaps>
+            <!-- 
+                deg norm
+                0   0.00000
+                14  0.40000
+                25  0.71429
+                35  1.00000
+            -->
             <setting>0.0</setting>
             <setting>0.4</setting>
-            <setting>0.6</setting>
+            <setting>0.71429</setting>
             <setting>1.0</setting>
         </flaps>
 
@@ -326,18 +333,18 @@
                 <name>Ctrl-S</name>
                 <desc>Toggle APC (Landing Automatic Power control)</desc>
             </key>
-            <!--<key>
+            <key>
 				<name>Ctrl-d</name>
-				<desc>Toggle DLC (Landing Direct Lift Control)</desc>
+				<desc>Stick DLC/CHAFF switch</desc>
 			</key>
 			<key>
-				<name>d</name>
-				<desc>DLC increase</desc>
+				<name>l</name>
+				<desc>Stick DLC thumbwheel fore</desc>
 			</key>
 			<key>
-				<name>D</name>
-				<desc>DLC decrease</desc>
-			</key>-->
+				<name>n</name>
+				<desc>Stick DLC thumbwheel aft</desc>
+			</key>
             <key>
                 <name>Ctrl-t</name>
                 <desc>Toggle AFCS (Attitude Mode)</desc>
@@ -853,7 +860,7 @@
                         <target-roll-deg type="double">0</target-roll-deg>
                     </afcs>
                     <apc>
-                        <engaged type="bool">false</engaged>
+                        <engaged alias="/fdm/jsbsim/systems/apc/active"/>
                         <self-disengaged-light type="bool">0</self-disengaged-light>
                     </apc>
                     <fdm>
@@ -983,7 +990,7 @@
                     <deck-offset-m type="double">-4.5</deck-offset-m>
                     <!-- align with cat1 -->
                     <special-carrier-handling type="bool">false</special-carrier-handling>
-                    <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
+                    <aircraft-agl-height type="double">7.728680129</aircraft-agl-height>
                     <!--                    <init-delay type="int">0.1</init-delay> -->
                 </overrides>
             </f-14b>
@@ -1557,7 +1564,8 @@
         <flight>
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
             <fake>0.0</fake>
-            <DLC-engaged type="bool">false</DLC-engaged>
+            <DLC-engaged alias="/fdm/jsbsim/fcs/dlc-active"/>
+            <DLC alias="/fdm/jsbsim/fcs/stick-thumbwheel-norm"/>
             <flapscommand alias="/fdm/jsbsim/fcs/flap-cmd-norm"/>
             <wing-sweep-cmd alias="/fdm/jsbsim/fcs/wing-sweep-pilot-dmd"/>
         </flight>
@@ -1594,6 +1602,18 @@
                 </binding>
             </key>
             
+            <key n="4">
+                <name>CTRL-d</name>
+                <desc>Stick DLC/Flares switch</desc>
+                <repeatable>false</repeatable>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>/fdm/jsbsim/fcs/stick-dlc-mf-switch</property>
+                    <value type="bool">true</value>
+                </binding>
+
+            </key>
+
             <key n="5">
                 <name>CTRL-e</name>
                 <desc>Ignore trolls</desc>
@@ -1761,18 +1781,6 @@
                     </script>
                 </binding>
             </key>
-<!--
-            <key n="68">
-                <name>D</name>
-                <desc>DLC decrease</desc>
-                <binding>
-                    <command>property-adjust</command>
-                    <property>/controls/flight/DLC</property>
-                    <step>-0.1</step>
-                    <min>0</min>
-                </binding>
-            </key>
--->
 
             <key n="69">
                 <name>E</name>
@@ -1867,6 +1875,15 @@
                 </binding>
             </key>
 
+            <key n="83">
+                <name>S</name>
+                <desc>smoke</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke-cmd</property>
+                </binding>
+            </key>
+
             <key n="99">
                 <name>c</name>
                 <desc>Open canopy and access ladder</desc>
@@ -1875,19 +1892,6 @@
                     <script>f14.canopyswitch(2);</script>
                 </binding>
             </key>
-
-<!--
-            <key n="100">
-                <name>d</name>
-                <desc>DLC increase</desc>
-                <binding>
-                    <command>property-adjust</command>
-                    <property>controls/flight/DLC</property>
-                    <step>0.1</step>
-                    <max>1.0</max>
-                </binding>
-            </key>
--->
 
             <key n="101">
                 <name>e</name>
@@ -1924,6 +1928,17 @@
                 </binding>
             </key>
 
+           <key n="108">
+                <name>l</name>
+                <desc>Stick DLC/MANUV-FLAPS decrease</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>/fdm/jsbsim/fcs/stick-thumbwheel-norm</property>
+                    <step>-0.1</step>
+                    <min>-1</min>
+                </binding>
+            </key>
+
             <key n="109">
                 <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
@@ -1935,6 +1950,17 @@
                     <max>4</max>
                     <repeat>false</repeat>
                     <wrap>true</wrap>
+                </binding>
+            </key>
+
+             <key n="110">
+                <name>n</name>
+                <desc>Stick DLC/MANUV-FLAP increase</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>/fdm/jsbsim/fcs/stick-thumbwheel-norm</property>
+                    <step>0.1</step>
+                    <max>1.0</max>
                 </binding>
             </key>
 
@@ -1952,15 +1978,6 @@
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.toggle_radar_standby();</script>
-                </binding>
-            </key>
-
-            <key n="83">
-                <name>S</name>
-                <desc>smoke</desc>
-                <binding>
-                    <command>property-toggle</command>
-                    <property>sim/model/f-14b/fx/smoke-cmd</property>
                 </binding>
             </key>
 

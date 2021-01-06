@@ -3,6 +3,8 @@
         Description: F-14 FCS (DFCS)
         Author: Richard Harrison (rjh@zaretto.com)
         References: NASA TM-X-81833
+
+        TODO: MANEUVER FLAPS VIA THUMBWHEEL
 -->
 
 
@@ -20,7 +22,7 @@
             </clipto>
         </pure_gain>
 
-        <kinematic name="fcs/wing-sweep-norm">
+      <kinematic name="fcs/wing-sweep-norm">
             <noscale />
             <input>fcs/wing-sweep-dmd-flap-limit</input>
             <traverse>
@@ -57,26 +59,34 @@
                     fcs/wing-sweep-mode eq 4
                 </test>
         </switch>
-
+        <!-- 
+        wing sweep conversion.
+        deg  norm
+        20   0.294118
+        21   0.308824
+        22   0.323529
+        23   0.338235
+        50   0.735294
+        -->
         <switch name="fcs/wing-sweep-dmd-flap-limit">
-            <default value="0.2941176470588235" />
-            <test value="0.3088235294117647">
+            <default value="0.294118" />
+            <test value="0.308824">
                     fcs/aux-flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd ge 0.3088235294117647
-                    fcs/wing-sweep-dmd lt 0.3235294117647059
+                    fcs/wing-sweep-dmd ge 0.308824
+                    fcs/wing-sweep-dmd lt 0.323529
                 </test>
-            <test value="0.3235294117647059">
+            <test value="0.323529">
                     fcs/aux-flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd ge 0.3235294117647059
-                    fcs/wing-sweep-dmd lt 0.3382352941176471
+                    fcs/wing-sweep-dmd ge 0.323529
+                    fcs/wing-sweep-dmd lt 0.338235
                 </test>
             <test value="fcs/wing-sweep-dmd">
                     fcs/flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd le 0.7352941176470588
+                    fcs/wing-sweep-dmd le 0.735294
                 </test>
-            <test value=".7352941176470588">
+            <test value="0.735294">
                     fcs/flap-pos-deg ne 0
-                    fcs/wing-sweep-dmd gt 0.7352941176470588
+                    fcs/wing-sweep-dmd gt 0.735294
                 </test>
             <test value="fcs/wing-sweep-dmd">
                     fcs/flap-pos-deg eq 0
@@ -154,7 +164,7 @@ Figure 2-54.  Longitudinal System Authority
                     <property>fcs/dlc-active</property>
                     <property>tuning/CMDLC</property>
                     <table>
-                        <independentVar lookup="row">fcs/dlc-thumbwheel-norm</independentVar>
+                        <independentVar lookup="row">fcs/stick-thumbwheel-norm</independentVar>
                         <independentVar lookup="column">fcs/mod-dlc-AFC-735-active</independentVar>
                         <tableData>
                                          0       1
@@ -326,7 +336,7 @@ Figure 2-54.  Longitudinal System Authority
         </aerosurface_scale>
 
         <!-- spoilers -->
-        <!-- spoilers -4deg when flaps deployed more than 25 deg -->
+        <!-- spoilers -4deg when flaps deployed more than 25 deg (2.21.1.3 Main Flaps)-->
         <switch name="fcs/spoiler-zeropos">
             <default value="0" />
             <test value="-0.081">
@@ -334,15 +344,32 @@ Figure 2-54.  Longitudinal System Authority
                 </test>
         </switch>
 
-        <switch name="fcs/spoiler-differential-stick-cmd">
-            <description>Differential spoiler due to stick deflection</description>
+        <switch name="fcs/spoiler-differential-active-0">
+            <description>1 or 0</description>
             <default value="0" />
 
-            <test value="fcs/roll-trim-actuator">
+            <test value="1">
                     fcs/wing-sweep-dmd le 0.9117647058823529
                     systems/hydraulics/combined-system-pressure ne 0
                 </test>
         </switch>
+
+        <actuator name="fcs/spoiler-differential-active">
+            <description>1 or 0</description>
+            <input>fcs/spoiler-differential-active-0</input>
+            <rate_limit>fcs/spoiler-differential-active-rate</rate_limit>
+            <output>fcs/spoiler-differential-active-v</output>
+        </actuator>
+
+        <fcs_function name="fcs/spoiler-differential-stick-cmd">
+            <description>Differential spoiler due to stick deflection</description>
+            <function>
+                <product>
+                    <property>fcs/spoiler-differential-active</property>
+                    <property>fcs/roll-trim-actuator</property>
+                </product>
+            </function>
+        </fcs_function>
 
          <switch name="fcs/spoiler-ground-brake-deployed">
             <description>Ground braking spoilers</description>
@@ -368,7 +395,7 @@ Figure 2-54.  Longitudinal System Authority
                 aft deflection = retract spoilers
                 deg +/- 50
             </description>
-            <input>fcs/dlc-thumbwheel-norm</input>
+            <input>fcs/stick-thumbwheel-norm</input>
             <domain>
                 <min>-1</min>>
                 <max>1</max>
@@ -378,6 +405,97 @@ Figure 2-54.  Longitudinal System Authority
                 <max>  50 </max>
             </range>
         </aerosurface_scale>
+        
+        <!--2.23.6 Direct Lift Control 
+            Before DLC can be engaged, the following conditions are required:
+        1. Flaps down greater than 25deg
+        2. Throttles less than MIL power.
+        3. (n/a) Inboard spoilers operational.
+        4. (n/a) Pitch B, and yaw B computers operational.
+        5. Operable combined hydraulic pump.
+
+        Items marked with (n/a) above are not implemented in this model.
+        -->
+        <fcs_function name="fcs/dlc-active-0">
+            <function>
+                <ifthen>
+                    <and>
+                        <nq>
+                            <property>fcs/stick-dlc-mf-switch-lv</property>
+                            <property>fcs/stick-dlc-mf-switch</property>
+                        </nq>
+                        <gt>
+                            <property>fcs/flap-pos-deg</property>
+                            <value>25</value>
+                        </gt>
+                        <lt>
+                            <property>fcs/throttle-pos-norm[0]</property>
+                            <value>0.91</value>
+                        </lt>
+                        <lt>
+                            <property>fcs/throttle-pos-norm[1]</property>
+                            <value>0.91</value>
+                        </lt>
+                        <gt>
+                            <property>systems/hydraulics/combined-system-psi</property>
+                            <value>2100</value>
+                        </gt>>
+                    </and>
+                    <difference>
+                        <value>1</value>
+                        <property>fcs/dlc-active</property>
+                    </difference>
+                    <property>fcs/dlc-active</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="fcs/stick-dlc-mf-switch-lv">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>fcs/stick-dlc-mf-switch-lv</property>
+                        <property>fcs/stick-dlc-mf-switch</property>
+                    </nq>
+                    <property>fcs/stick-dlc-mf-switch</property>
+                    <property>fcs/stick-dlc-mf-switch-lv</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="fcs/dlc-active">
+            <function>
+                <ifthen>
+                    <and>
+                    <nq>
+                        <property>fcs/flap-pos-deg-lv</property>
+                        <property>fcs/flap-pos-deg</property>
+                    </nq>
+                    <lt>
+                        <property>fcs/flap-pos-deg</property>
+                        <value>25</value>
+                    </lt>
+                    </and>
+                <value>0</value>
+                <property>fcs/dlc-active-0</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="fcs/flap-pos-deg-lv">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>fcs/flap-pos-deg-lv</property>
+                        <property>fcs/flap-pos-deg</property>
+                    </nq>
+                    <property>fcs/flap-pos-deg</property>
+                    <property>fcs/flap-pos-deg-lv</property>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+
         <fcs_function name="fcs/spoiler-dlc-increment-cmd">
             <!-- TM-818333 Figure 4; gives us a range of +50, -50 for the thumbwheel range
                                      which equates to +7.48, -9.16 degrees
@@ -386,6 +504,10 @@ Figure 2-54.  Longitudinal System Authority
 
                 The DLC thumbwheel appears to be aft for retract, forwards for fully extended
                 which equates to -1 for 1.0 (full) and pos 1.0 for retract
+
+                Stick has DLC switch - momentary depression with flaps greater than 25, throttle less than MIL
+                will engage DLC. If DCL engaged DLC will be disengaged by pushing DLC switch, flap retraction or 
+                throttles to MIL
             -->
             <function>
                 <switch>
@@ -394,7 +516,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/dlc-active</property>
                         <table>
                             <independentVar lookup="column">fcs/mod-dlc-AFC-735-active</independentVar>
-                            <independentVar lookup="row">fcs/dlc-thumbwheel-norm</independentVar>
+                            <independentVar lookup="row">fcs/stick-thumbwheel-norm</independentVar>
                             <tableData>
                                       0         1
                             -1	 0.3096    1.0000 
@@ -1573,8 +1695,8 @@ Figure 2-54.  Longitudinal System Authority
             <test value="fcs/aux-flap-total-dmd">
                     systems/hydraulics/combined-system-pressure ne 1
                 </test>
-            <test value="fcs/flap-cmd-norm">
-                    fcs/flap-cmd-norm ge 0.1428571
+            <test value="1">
+                    fcs/flap-cmd-norm ge 0.14286
                     systems/hydraulics/combined-system-pressure ne 0
                     fcs/wing-sweep-pos-deg le 22
                 </test>
@@ -1647,7 +1769,7 @@ Figure 2-54.  Longitudinal System Authority
             </traverse>
             <output>fcs/flap-pos-deg</output>
         </kinematic>
-        <kinematic name="Flaps Control">
+        <kinematic name="fcs/aux-flap-pos-deg">
             <input>fcs/aux-flap-total-dmd</input>
             <traverse>
                 <setting>
@@ -1655,21 +1777,11 @@ Figure 2-54.  Longitudinal System Authority
                     <time>      0 </time>
                 </setting>
                 <setting>
-                    <position> 10 </position>
-                    <time>    0.4 </time>
-                </setting>
-                <setting>
-                    <!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
-                    <position> 25 </position>
-                    <time>    1.0 </time>
-                </setting>
-                <setting>
                     <!-- 01-F14AAD-1 figure 2-50 35 degrees  -->
                     <position> 35 </position>
                     <time>    1.5 </time>
                 </setting>
             </traverse>
-            <output>fcs/aux-flap-pos-deg</output>
         </kinematic>
 
         <aerosurface_scale name="flap normalization">
