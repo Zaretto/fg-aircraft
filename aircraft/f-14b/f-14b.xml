@@ -9,14 +9,11 @@
         <filecreationdate>2014-08-02</filecreationdate>
         <version>1.0</version>
         <description>
-            Models an F14-B with GE engines. The aerodata used is from
-            ref[1] volumes 1 and 2 is only for sweep of 22degrees, positive
-            alpha, clean, low speed so various data have been extrapolated
-            estimated based on best available data where I cannot find specific
-            details for F14 other aero models that I can find (often using NASA
-            CR-1756 as guidance for general trends) are guidance or starting point for each value.
-            The estimation of negative alpha values follows CR-1756 trends with values based on 
-            F14 data for positive values.
+            Models an F14-B with GE engines. The aerodata used is from AFWAL-TR-80-3141 and
+            AFWAL-TR-80-3141 which is for sweep of 22degrees, positive alpha, clean, low speed.
+            NASA TM-X-62306 is used for longitudinal flaps, speedbrakes, gear and spoilers
+
+            Wingsweep and lateral spoilers are based on CFD computed values (OpenVSP).
 
             Engine Thrust are based on NASA-TM-104326 tables 4-6 adjusted for altitude and with
             augmentation figures based on that of the mil thrust.
@@ -29,7 +26,7 @@
         </description>
         <note>Aircraft origin for measurements is the nose.</note>
         <note>Low speed clean should be exactly as an F-14 as this model is based on accurate aerodata (see limitations below).</note>
-        <limitation>wing sweep, speedbrake, gear aerodata not modelled in ADA101648 - figured out values are be used</limitation>
+        <limitation>wing sweep not modelled in ADA101648 - figured out values are be used</limitation>
         <reference 
             refID="http://zaretto.com/f-14b"
             author="Richard Harrison"
@@ -718,7 +715,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
     </propulsion>
 
 
-    <flight_control name="FCS F14" file="systems/f-14-fcs.xml"/>
+    <flight_control name="FCS F14" file="Systems/f-14-fcs.xml"/>
 
     <!--The roll(L) and yaw(N) moments are due to aerodynamics only, while
    the pitch(Z), includes a thrust term. These are given by.
