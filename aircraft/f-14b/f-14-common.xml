@@ -568,6 +568,7 @@
                     <mod-AFC-735 type="int">1</mod-AFC-735> <!-- DLC upgrade to use inner spoilers for DLC and outer for roll control -->
                 </config>
                 <controls>
+                    <damage-enabled type="int">0</damage-enabled>
                     <AFCS>
                         <engage type="bool">false</engage>
                         <vec-acl type="int">0</vec-acl>
@@ -981,7 +982,6 @@
                 <wings>
                     <left-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-left"/>
                     <right-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-right"/>
-                    <damage-enabled type="bool">false</damage-enabled>
                 </wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
@@ -1378,10 +1378,10 @@
         <vne>850</vne>
 
         <max-gear-extension-speed>300</max-gear-extension-speed>
-        <max-flap-extension-speed>
+        <!-- <max-flap-extension-speed>
             <flaps>0.4857142857142857</flaps>
             <speed>245</speed>
-        </max-flap-extension-speed>
+        </max-flap-extension-speed> -->
     </limits>
 
     <consumables>

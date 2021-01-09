@@ -6,7 +6,8 @@
 -->
 
 
-<system name="CADC">
+<system name="CADC"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="http://raw.githubusercontent.com/JSBSim-Team/jsbsim/master/JSBSim.xsd">
 
 <!-- systems/flyt/flutter-pulsation (2 * 3.14 * 3.0)
 systems/flyt/permanent-bend-factor = MaxBend / max-g * 2
@@ -436,7 +437,7 @@ systems/flyt/distortion-factor-per-g = 0.16 / MaxG  -->
         </fcs_function>
     </channel>
 
-    <channel name="airframe-damage">
+    <channel name="airframe-damage" execute="systems/flyt/damage-enabled">
         <fcs_function name="systems/flyt/wing-asymmetry">
             <function>
                 <ifthen>
@@ -445,10 +446,6 @@ systems/flyt/distortion-factor-per-g = 0.16 / MaxG  -->
                             <property>sim-time-sec</property>
                             <v>5</v>
                         </gt>
-                        <nq>
-                            <p>systems/flyt/wing-damage-enabled</p>
-                            <v>0</v>
-                        </nq>
                         <nq>
                             <!-- a value of 99 in this property will reset the damage-->
                             <p>systems/flyt/wing-asymmetry-action</p>
@@ -528,6 +525,244 @@ systems/flyt/distortion-factor-per-g = 0.16 / MaxG  -->
                 </ifthen>
             </function>
         </fcs_function>
+<!-- Flaps/Slats Down 0 − 2.0
+    225 kts max  flap/slat speed
+280 kts max  landing gear speed
+
+145 kts max  wheel braking (51.0 k A/C)
+165 kts max  wheel braking (46 k A/C)
+190 kts max tire speed
+145 kts max  E 5 engagement speed (69.8 k A/C)
+175 kts max  E−28 engagement speed
+20 kts max  90deg  crosswind component
+60 kts max  canopy open
+
+Prohibited:  AIM−9 launch with flaps/slats extended.
+
+(Figure 2-42. NAVAIR 01-F14AAP-1) * REDUCE SPEED LIGHT WILL ILLUMINATE IF AIRSPEED >225 KIAS AND FLAPS ARE GREATER THAN 4!
+
+2.21.1.1.1 Emergency Flaps
+EMER UP enables the pilot to override any electromechanical  commands  
+that  may  exist  because  of  malfunction of the CADC. 
+To position the flaps, move the FLAP handle to the end of the normal
+travel range; then, move the handle outboard and continue moving
+to extreme EMER UP.
+While moving the handle, forces may be higher than normal.
+EMER DN has no function.
+
+Figure 2-46. Flap and Slat Controls and Indicators (Sheet 2)
+Disagreement between main and/or AUX flap position (10-second light) or
+asymmetry lockout (3-second light).
+-->
+        <!-- flaps damage -->
+        <fcs_function name="systems/flyt/flaps-main-max-speed-kts">
+            <description></description>
+            <function>
+                <table>
+                    <independentVar lookup="row">fcs/flap-pos-deg-effective</independentVar>
+                    <tableData>
+                             0     9999
+                            14.9   9999
+                            15      300
+                            35      270
+                        </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/flaps-main-damage-rate">
+            <function>
+                <ifthen>
+                    <and>
+                        <nq>
+                            <property>systems/flyt/damage-reset</property>
+                            <value>1</value>
+                        </nq>
+                        <!-- conditions for flap damage -->
+                        <gt>
+                            <property>velocities/vc-kts</property>
+                            <property>systems/flyt/flaps-main-max-speed-kts</property>
+                        </gt>
+                    </and>
+                    <!-- overspeed  -->
+                    <product>
+                        <quotient>
+                            <pow>
+                                <quotient>
+                                    <difference>
+                                        <property>velocities/vc-kts</property>
+                                        <property>systems/flyt/flaps-main-max-speed-kts</property>
+                                    </difference>
+                                    <value>50</value>
+                                </quotient>
+                                <value>2</value>
+                            </pow>
+                            <property>systems/flyt/flaps-damage-time</property>
+                        </quotient>
+                        <property>simulation/channel-dt</property>
+                    </product>
+                    <!-- not damaged -->
+                   <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/flyt/flaps-main-damage-rate-manuv">
+            <function>
+                <ifthen>
+                    <and>
+                        <nq>
+                            <property>systems/flyt/damage-reset</property>
+                            <value>1</value>
+                        </nq>
+                        <!-- conditions for flap damage -->
+                        <gt>
+                            <property>velocities/mach</property>
+                            <property>systems/cadc/manuv-flap-fully-extended-max-mn</property>
+                        </gt>
+                        <gt>
+                            <property>fcs/flap-pos-deg-effective</property>
+                            <value>0</value>
+                        </gt>
+                    </and>
+                    <!-- overspeed  -->
+                    <product>
+                        <quotient>
+                            <pow>
+                                <quotient>
+                                    <difference>
+                                        <property>velocities/mach</property>
+                                        <property>systems/cadc/manuv-flap-fully-extended-max-mn</property>
+                                    </difference>
+                                    <value>1</value>
+                                </quotient>
+                                <value>2</value>
+                            </pow>
+                            <property>systems/flyt/flaps-damage-time</property>
+                        </quotient>
+                        <property>simulation/channel-dt</property>
+                    </product>
+                    <!-- not damaged -->
+                   <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+
+     
+    </channel>
+
+    <channel name="airframe-damage-common">
+
+           <fcs_function name="systems/flyt/flaps-main-damage-total">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>systems/flyt/damage-reset</property>
+                        <value>1</value>
+                    </nq>
+                    <sum>
+                        <property>systems/flyt/flaps-main-damage-total</property>
+                        <ifthen>
+                            <property>systems/flyt/damage-enabled</property>
+                            <sum>
+                                <property>systems/flyt/flaps-main-damage-rate</property>
+                                <property>systems/flyt/flaps-main-damage-rate-manuv</property>
+                            </sum>
+                            <value>0</value>
+                        </ifthen>
+                    </sum>
+                    <value>0</value>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+        
+        <fcs_function name="systems/flyt/slats-damage-total">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>systems/flyt/damage-reset</property>
+                        <value>1</value>
+                    </nq>
+                    <sum>
+                        <property>systems/flyt/flaps-main-damage-total</property>
+                        <ifthen>
+                            <property>systems/flyt/damage-enabled</property>
+                            <property>systems/flyt/flaps-main-damage-rate-manuv</property>
+                            <value>0</value>
+                        </ifthen>
+                    </sum>
+                    <value>0</value>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="fcs/flap-pos-deg-effective">
+            <function>
+                <product>
+                    <property>systems/flyt/flaps-main-damage-factor</property>
+                    <property>fcs/flap-pos-deg</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="fcs/aux-flap-pos-deg-effective">
+            <function>
+                <product>
+                    <property>systems/flyt/flaps-main-damage-factor</property>
+                    <property>fcs/aux-flap-pos-deg</property>
+                </product>
+            </function>
+        </fcs_function>
+        <!-- the cumulative damage will cause the following
+             (1) damage to the surfaces
+             (2) jamming of the movement
+
+             (1) is implemented as a factor that is applied to the coefficients
+             (2) when the movement is jammed the flaps angle will not be changed
+        -->
+        <fcs_function name="systems/flyt/flaps-main-damage-factor">
+            <function>
+                <difference>
+                    <value>1</value>
+                    <property>systems/flyt/flaps-main-damage-total</property>
+                </difference>
+            </function>
+        </fcs_function>
+        
+
+        <fcs_function name="systems/flyt/slats-damage-factor">
+            <function>
+                <difference>
+                    <value>1</value>
+                    <property>systems/flyt/slats-damage-total</property>
+                </difference>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/flaps-jammed">
+            <function>
+                <gt>
+                    <property>systems/flyt/flaps-main-damage-total</property>
+                    <value>0.5</value>
+                </gt>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/flyt/slats-jammed">
+            <function>
+                <gt>
+                    <property>systems/flyt/slats-damage-total</property>
+                    <value>0.7</value>
+                </gt>
+            </function>
+        </fcs_function>
     </channel>
 
     <channel name="reset-damage" execute="systems/flyt/damage-reset">
@@ -536,6 +771,18 @@ systems/flyt/distortion-factor-per-g = 0.16 / MaxG  -->
                 <v>0</v>
             </function>
             <output>systems/flyt/damage-reset</output>
+        </fcs_function>
+        <fcs_function name="systems/flyt/tied/damage-reset1">
+            <function>
+                <v>0</v>
+            </function>
+            <output>systems/flyt/flaps-main-damage-rate-manuv</output>
+        </fcs_function>
+        <fcs_function name="systems/flyt/tied/damage-reset1">
+            <function>
+                <v>0</v>
+            </function>
+            <output>systems/flyt/flaps-main-damage-rate</output>
         </fcs_function>
     </channel>
 </system>

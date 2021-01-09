@@ -131,23 +131,6 @@
             <hrule/>
             <group>
                 <layout>hbox</layout>
-
-                <text>
-                    <label>Excessive G damage</label>
-                </text>
-
-                <checkbox>
-                    <property>sim/model/f-14b/wings/damage-enabled</property>
-                    <live>true</live>
-                    <binding>
-                        <command>property-toggle</command>
-                        <property>sim/model/f-14b/wings/damage-enabled</property>
-                    </binding>
-                </checkbox>
-            </group>
-            <hrule/>
-            <group>
-                <layout>hbox</layout>
                 <text>
                     <label>Compressor Stall Parameters</label>
                 </text>
@@ -667,8 +650,8 @@
                 <property>fdm/jsbsim/tuning/CMBRK</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-10</min>
-                <max>10</max>
+                <min>-2</min>
+                <max>2</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CMBRK</object-name>

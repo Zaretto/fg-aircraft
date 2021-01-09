@@ -1670,9 +1670,12 @@ Figure 2-54.  Longitudinal System Authority
 
         <switch name="fcs/flap-total-dmd">
             <default value="0" />
-            <test value="fcs/flap-total-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
+
+            <test value="fcs/flap-total-dmd" logic="OR">
+                systems/hydraulics/combined-system-pressure ne 1
+                systems/flyt/flaps-jammed ne 0
+            </test>
+
             <test value="fcs/flap-cmd-norm">
                     fcs/flap-cmd-norm ne 0
                     systems/hydraulics/combined-system-pressure ne 0
@@ -1692,9 +1695,12 @@ Figure 2-54.  Longitudinal System Authority
 
         <switch name="fcs/aux-flap-total-dmd">
             <default value="0" />
-            <test value="fcs/aux-flap-total-dmd">
-                    systems/hydraulics/combined-system-pressure ne 1
-                </test>
+
+            <test value="fcs/aux-flap-total-dmd" logic="OR">
+                systems/hydraulics/combined-system-pressure ne 1
+                systems/flyt/flaps-jammed ne 0
+            </test>
+
             <test value="1">
                     fcs/flap-cmd-norm ge 0.14286
                     systems/hydraulics/combined-system-pressure ne 0
@@ -1708,7 +1714,7 @@ Figure 2-54.  Longitudinal System Authority
         </switch>
 
         <pure_gain name="Flap Slat gain">
-            <input>fcs/flap-total-dmd</input>
+            <input>fcs/flap-cmd-norm</input>
             <gain>2.33333348888889925925995061733</gain>
             <clipto>
                 <min>  0 </min>
@@ -1717,9 +1723,11 @@ Figure 2-54.  Longitudinal System Authority
         </pure_gain>
         <switch name="fcs/slat-total-dmd">
             <default value="0" />
-            <test value="fcs/slat-total-dmd">
+
+            <test value="fcs/slat-total-dmd" logic="OR">
                     systems/hydraulics/combined-system-pressure ne 1
-                </test>
+                    systems/flyt/slats-jammed ne 0
+            </test>
 
             <test value="fcs/flap-slat-gain">
                     fcs/flap-total-dmd gt 0
@@ -1785,7 +1793,7 @@ Figure 2-54.  Longitudinal System Authority
         </kinematic>
 
         <aerosurface_scale name="flap normalization">
-            <input>fcs/flap-pos-deg</input>
+            <input>fcs/flap-pos-deg-effective</input>
             <domain>
                 <min>  0 </min>
                 <max> 35 </max>
@@ -1798,7 +1806,7 @@ Figure 2-54.  Longitudinal System Authority
         </aerosurface_scale>
 
         <aerosurface_scale name="aux flap normalization">
-            <input>fcs/aux-flap-pos-deg</input>
+            <input>fcs/aux-flap-pos-deg-effective</input>
             <domain>
                 <min>  0 </min>
                 <max> 35 </max>
@@ -1813,8 +1821,16 @@ Figure 2-54.  Longitudinal System Authority
     </channel>
 
     <channel name="Slats">
+        <fcs_function name="fcs/slat-total-dmd-effective">
+            <function>
+                <product>
+                    <property>fcs/slat-total-dmd</property>
+                    <property>systems/flyt/slats-damage-factor</property>
+                </product>
+            </function>
+        </fcs_function>
         <kinematic name="Slats Control">
-            <input>fcs/slat-total-dmd</input>
+            <input>fcs/slat-total-dmd-effective</input>
             <traverse>
                 <setting>
                     <position>  0 </position>
