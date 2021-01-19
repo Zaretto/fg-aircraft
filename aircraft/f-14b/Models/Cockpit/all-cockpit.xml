@@ -94,39 +94,7 @@
 			<blue>0.10</blue>
 		</emission>
 	</animation>-->
-    <animation>
-        <object-name>radio-labels</object-name>
-        <object-name>vert-side-panels</object-name>
-        <object-name>panel-front-up</object-name>
-        <object-name>knee-panels</object-name>
-        <object-name>pedestal</object-name>
-        <object-name>consoles</object-name>
-        <object-name>checklists-pilot</object-name>
-        <object-name>pedals</object-name>
-        <object-name>bathtub-sides</object-name>
-        <object-name>fire-handle-l</object-name>
-        <object-name>fire-handle-r</object-name>
-        <object-name>floor</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <effect>
         <name>f14panel</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel</inherits-from>
@@ -1306,80 +1274,9 @@
         </axis>
     </animation>
     <!--lighting -->
-    <animation>
-        <object-name>ag_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -1781,80 +1678,9 @@
         </action>
     </animation>
     <!-- Lightning -->
-    <animation>
-        <object-name>a_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -2076,80 +1902,9 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fa_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fa_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fa_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -2381,80 +2136,9 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>ra_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>ra_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>ra_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -2536,80 +2220,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>v_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>v_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>v_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -2820,80 +2433,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>eg_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>eg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>eg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -2928,80 +2470,9 @@
         </axis>
     </animation>
     <!-- Lighting -->
-    <animation>
-        <object-name>opgL_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>opgL_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>opgL_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -3037,80 +2508,9 @@
         </axis>
     </animation>
     <!-- Lighting -->
-    <animation>
-        <object-name>opgR_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>opgR_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>opgR_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -3161,80 +2561,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>hg_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>hg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>hg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -3256,80 +2585,9 @@
         </axis>
     </animation>
     <!-- Lighting -->
-    <animation>
-        <object-name>ngL_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>ngL_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>ngL_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -3352,80 +2610,9 @@
         </axis>
     </animation>
     <!-- Lighting -->
-    <animation>
-        <object-name>ngR_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>ngR_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>ngR_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -3568,80 +2755,9 @@
         </condition>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>sfgi_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>sfgi_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>sfgi_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -3804,30 +2920,7 @@
         </condition>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>lcp_mount</object-name>
-        <object-name>switches</object-name>
-        <object-name>switches-and-levers</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -4213,29 +3306,7 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fp_mount</object-name>
-        <object-name>fp_switches</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -4246,58 +3317,8 @@
         <name>f14panel-knob</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
     </effect>
-    <animation>
-        <object-name>fp_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fp_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <!--Renamed objects: 
       mount: fp_mount
       switches: fp_switches
@@ -4432,29 +3453,7 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>a_mount_1</object-name>
-        <object-name>a_switches</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -4660,29 +3659,7 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>ec_mount</object-name>
-        <object-name>ec_switches</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -4948,28 +3925,7 @@
         <object-name>sweep-cover-transparent</object-name>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>throttles</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -5180,28 +4136,7 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>t_mount_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -5214,80 +4149,9 @@
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
         <object-name>mode-knob</object-name>
     </effect>
-    <animation>
-        <object-name>t_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>t_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>t_mount_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <animation>
         <object-name>tacan</object-name>
         <type>noshadow</type>
@@ -5688,29 +4552,7 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>aa1_mount</object-name>
-        <object-name>switches-and-knobs</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <effect>
         <name>f14panel</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel</inherits-from>
@@ -6262,31 +5104,7 @@
         </condition>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>a_mount_2</object-name>
-        <object-name>a_switches_1</object-name>
-        <object-name>a_switches-and-levers</object-name>
-        <object-name>sta-disp</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -6316,58 +5134,8 @@
             <blue>0.05</blue>
         </emission>
     </animation>
-    <animation>
-        <object-name>a_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <!--Renamed objects: 
       mount: a_mount_2
       switches: a_switches_1
@@ -7078,28 +5846,7 @@
 			<blue>0.0</blue>
 		</emission>
 	</animation>-->
-    <animation>
-        <object-name>casing</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -15741,28 +14488,7 @@
             <blue>0.0</blue>
         </emission>
     </animation>
-    <animation>
-        <object-name>hm_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -15961,80 +14687,9 @@
         </action>
     </animation>
     <!--lighting -->
-    <animation>
-        <object-name>si_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>si_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>si_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -16059,58 +14714,8 @@
         </axis>
     </animation>
     <!--Lighting-->
-    <animation>
-        <object-name>cp_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>cp_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -16194,80 +14799,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>sa_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>sa_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>sa_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -16444,80 +14978,9 @@
         </axis>
     </animation>
     <!-- Lighting -->
-    <animation>
-        <object-name>a_mount_3</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument_2</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument_2</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -16727,80 +15190,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>b_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>b_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>b_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -16921,28 +15313,7 @@
         </condition>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fd1_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -17068,28 +15439,7 @@
     </animation>
     <!-- lighting -->
     <!-- lighting -->
-    <animation>
-        <object-name>fd2_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -17453,80 +15803,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fg_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -17659,80 +15938,9 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>c_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>c_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>c_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -17759,80 +15967,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>lg_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>lg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>lg_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -18071,31 +16208,7 @@
             <blue>0.8</blue>
         </emission>
     </animation>
-    <animation>
-        <object-name>rvc_mount</object-name>
-        <object-name>displays-mount</object-name>
-        <object-name>kook-mount</object-name>
-        <type>material</type>
-        <object-name>switches-and-buttons</object-name>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -18107,58 +16220,8 @@
         <name>f14panel-knob</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
     </effect>
-    <animation>
-        <object-name>rounds-drums</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>rounds-drums</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <!--Renamed objects: 
       drum-1: rvc_drum-1
       drum-2: rvc_drum-2
@@ -18228,28 +16291,7 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>a6p_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -18547,81 +16589,9 @@
     </animation>
     
     <!-- lighting -->
-    <animation>
-        <object-name>mlp_mount</object-name>
-        <object-name>mlp_switches</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>wheels</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>wheels</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -18809,29 +16779,7 @@
         </action>
         </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>mtp_mount</object-name>
-        <object-name>mtp_switches</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -20115,28 +18063,7 @@
         </emission>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>wpp_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -20268,58 +18195,8 @@
             </binding>
         </action>
     </animation>
-    <animation>
-        <object-name>temp-wheel</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>temp-wheel</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <!-- bleed air source -->
     <animation>
         <type>pick</type>
@@ -20616,29 +18493,7 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>mg_mount</object-name>
-        <object-name>mg_switches</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -20699,28 +18554,7 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>htp_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -21295,28 +19129,7 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>rddp_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -21328,58 +19141,8 @@
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
         <object-name>-knob</object-name>
     </effect>
-    <animation>
-        <object-name>rddp_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>rddp_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <!--Renamed objects: 
       tws-auto: rddp_tws-auto
       pulse-srch: rddp_pulse-srch
@@ -23776,80 +21539,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>sa_mount_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>sa_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>sa_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -23882,58 +21574,8 @@
         </axis>
     </animation>
     <!--Lighting-->
-    <animation>
-        <object-name>cp_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>cp_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -24068,28 +21710,7 @@
         </condition>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fd12_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -24507,80 +22128,9 @@
         </action>
     </animation>
     <!-- Lightning -->
-    <animation>
-        <object-name>a_mount_4</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument_3</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>a_instrument_3</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -24811,80 +22361,9 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fa_mount_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fa_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fa_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -25128,28 +22607,7 @@
         </action>
     </animation>
     <!-- Lightning -->
-    <animation>
-        <object-name>ap_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -25615,28 +23073,7 @@
         </action>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>aa1_mount_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <effect>
         <name>f14panel</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel</inherits-from>
@@ -25788,80 +23225,9 @@
             <blue>0.0</blue>
         </emission>
     </animation>
-    <animation>
-        <object-name>rt_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>rt_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>rt_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <animation>
         <type>knob</type>
         <object-name>TID-brightness-knob</object-name>
@@ -33863,80 +31229,9 @@
         </emission>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>fgr_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fgr_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>fgr_instrument</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -34165,80 +31460,9 @@
         </axis>
     </animation>
     <!-- lighting -->
-    <animation>
-        <object-name>b_mount_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>b_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than-equals>
-                <property>controls/lighting/instruments-norm</property>
-                <property>controls/lighting/dome-norm</property>
-            </greater-than-equals>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/instruments-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
-    <animation>
-        <object-name>b_instrument_1</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <greater-than>
-                <property>controls/lighting/dome-norm</property>
-                <property>controls/lighting/instruments-norm</property>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1.1000</red>
-            <green>0.576</green>
-            <blue> 0.161</blue>
-            <red-prop>controls/lighting/instrument-red</red-prop>
-            <green-prop>controls/lighting/instrument-green</green-prop>
-            <blue-prop>controls/lighting/instrument-blue</blue-prop>
-        </emission>
-    </animation>
+    
+    
+    
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -34376,7 +31600,7 @@
         <type>rotate</type>
         <object-name>h_tacan-bearing</object-name>
         <property>orientation/heading-magnetic-deg</property>
-        <factor>-1</factor>>
+        <factor>-1</factor>&gt;
         <axis>
             <object-name>h_compass-rose-axis</object-name>
         </axis>
@@ -34410,7 +31634,7 @@
         <type>rotate</type>
         <object-name>h_course-group</object-name>
         <property>orientation/heading-magnetic-deg</property>
-        <factor>-1</factor>>
+        <factor>-1</factor>&gt;
         <axis>
             <object-name>h_compass-rose-axis</object-name>
         </axis>
@@ -35211,28 +32435,7 @@
         </action>
     </animation>
     <!-- Lightning -->
-    <animation>
-        <object-name>red_mount</object-name>
-        <type>material</type>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
-        </condition>
-        <emission>
-            <factor-prop>controls/lighting/dome-norm</factor-prop>
-            <red>  1</red>
-            <green>1</green>
-            <blue> 1</blue>
-            <red-prop>controls/lighting/dome-red</red-prop>
-            <green-prop>controls/lighting/dome-green</green-prop>
-            <blue-prop>controls/lighting/dome-blue</blue-prop>
-        </emission>
-    </animation>
+    
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -35244,4 +32447,190 @@
       mount: red_mount
       panel: A1ed_panel
       switches: A1ed_switches-->
-</PropertyList>
+<animation>
+		<type>material</type>
+        <object-name>a_mount</object-name>
+        <object-name>a_mount_1</object-name>
+        <object-name>a_mount_2</object-name>
+        <object-name>a_mount_3</object-name>
+        <object-name>a_mount_4</object-name>
+        <object-name>a6p_mount</object-name>
+        <object-name>aa1_mount</object-name>
+        <object-name>aa1_mount_1</object-name>
+        <object-name>ag_mount</object-name>
+        <object-name>ap_mount</object-name>
+        <object-name>b_mount</object-name>
+        <object-name>b_mount_1</object-name>
+        <object-name>c_mount</object-name>
+        <object-name>displays-mount</object-name>
+        <object-name>ec_mount</object-name>
+        <object-name>eg_mount</object-name>
+        <object-name>fa_mount</object-name>
+        <object-name>fa_mount_1</object-name>
+        <object-name>fd1_mount</object-name>
+        <object-name>fd12_mount</object-name>
+        <object-name>fd2_mount</object-name>
+        <object-name>fg_mount</object-name>
+        <object-name>fgr_mount</object-name>
+        <object-name>fp_mount</object-name>
+        <object-name>hg_mount</object-name>
+        <object-name>hm_mount</object-name>
+        <object-name>htp_mount</object-name>
+        <object-name>kook-mount</object-name>
+        <object-name>lcp_mount</object-name>
+        <object-name>lg_mount</object-name>
+        <object-name>mg_mount</object-name>
+        <object-name>mlp_mount</object-name>
+        <object-name>mtp_mount</object-name>
+        <object-name>ngL_mount</object-name>
+        <object-name>ngR_mount</object-name>
+        <object-name>opgL_mount</object-name>
+        <object-name>opgR_mount</object-name>
+        <object-name>ra_mount</object-name>
+        <object-name>rddp_mount</object-name>
+        <object-name>red_mount</object-name>
+        <object-name>rt_mount</object-name>
+        <object-name>rvc_mount</object-name>
+        <object-name>sa_mount</object-name>
+        <object-name>sa_mount_1</object-name>
+        <object-name>sfgi_mount</object-name>
+        <object-name>si_mount</object-name>
+        <object-name>t_mount_1</object-name>
+        <object-name>t_mount_1</object-name>
+        <object-name>v_mount</object-name>
+        <object-name>wpp_mount</object-name>
+        <object-name>bathtub-sides</object-name>
+
+        <object-name>fire-handle-l</object-name>
+        <object-name>fire-handle-r</object-name>
+        <object-name>floor</object-name>
+        <object-name>knee-panels</object-name>
+        <object-name>panel-front-up</object-name>
+        <object-name>pedals</object-name>
+        <object-name>pedestal</object-name>
+        <object-name>throttles</object-name>
+        <object-name>vert-side-panels</object-name>
+        <object-name>casing</object-name>
+        <object-name>checklists-pilot</object-name>
+        <object-name>consoles</object-name>
+        <object-name>a_switches</object-name>
+        <object-name>a_switches_1</object-name>
+        <object-name>a_switches-and-levers</object-name>
+        <object-name>ec_switches</object-name>
+        <object-name>mg_switches</object-name>
+        <object-name>mlp_switches</object-name>
+        <object-name>mtp_switches</object-name>
+                <object-name>switches</object-name>
+        <object-name>switches-and-buttons</object-name>
+        <object-name>switches-and-knobs</object-name>
+        <object-name>switches-and-levers</object-name>
+
+          <condition>
+	      <greater-than>
+	        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+	        <value>0</value>
+	      </greater-than>
+	      <not>
+	        <property>/sim/rendering/rembrandt/enabled</property>
+	      </not>
+	    </condition>
+	    <emission>
+	      <red>  1</red>
+	      <green>1</green>
+	      <blue> 1</blue>
+	      <red-prop>controls/lighting/dome-red</red-prop>
+	      <green-prop>controls/lighting/dome-green</green-prop>
+	      <blue-prop>controls/lighting/dome-blue</blue-prop>
+	    </emission>
+	</animation><animation>
+	    <type>material</type>
+	        <object-name>a_instrument</object-name>
+        <object-name>a_instrument</object-name>
+        <object-name>a_instrument_1</object-name>
+        <object-name>a_instrument_1</object-name>
+        <object-name>a_instrument_2</object-name>
+        <object-name>a_instrument_2</object-name>
+        <object-name>a_instrument_3</object-name>
+        <object-name>a_instrument_3</object-name>
+        <object-name>b_instrument</object-name>
+        <object-name>b_instrument</object-name>
+        <object-name>b_instrument_1</object-name>
+        <object-name>b_instrument_1</object-name>
+        <object-name>c_instrument</object-name>
+        <object-name>c_instrument</object-name>
+        <object-name>cp_instrument</object-name>
+        <object-name>cp_instrument</object-name>
+        <object-name>cp_instrument_1</object-name>
+        <object-name>cp_instrument_1</object-name>
+
+        <object-name>eg_instrument</object-name>
+        <object-name>eg_instrument</object-name>
+        <object-name>fa_instrument</object-name>
+        <object-name>fa_instrument</object-name>
+        <object-name>fa_instrument_1</object-name>
+        <object-name>fa_instrument_1</object-name>
+        <object-name>fg_instrument</object-name>
+        <object-name>fg_instrument</object-name>
+        <object-name>fgr_instrument</object-name>
+        <object-name>fgr_instrument</object-name>
+        <object-name>fp_instrument</object-name>
+        <object-name>fp_instrument</object-name>
+        <object-name>fp_switches</object-name>
+        <object-name>hg_instrument</object-name>
+        <object-name>hg_instrument</object-name>
+        <object-name>instrument</object-name>
+        <object-name>instrument</object-name>
+        <object-name>lg_instrument</object-name>
+        <object-name>lg_instrument</object-name>
+
+        <object-name>ngL_instrument</object-name>
+        <object-name>ngL_instrument</object-name>
+        <object-name>ngR_instrument</object-name>
+        <object-name>ngR_instrument</object-name>
+        <object-name>opgL_instrument</object-name>
+        <object-name>opgL_instrument</object-name>
+        <object-name>opgR_instrument</object-name>
+        <object-name>opgR_instrument</object-name>
+        <object-name>ra_instrument</object-name>
+        <object-name>ra_instrument</object-name>
+        <object-name>radio-labels</object-name>
+        <object-name>rddp_instrument</object-name>
+        <object-name>rddp_instrument</object-name>
+        <object-name>rounds-drums</object-name>
+        <object-name>rounds-drums</object-name>
+        <object-name>rt_instrument</object-name>
+        <object-name>rt_instrument</object-name>
+        <object-name>sa_instrument</object-name>
+        <object-name>sa_instrument</object-name>
+        <object-name>sa_instrument_1</object-name>
+        <object-name>sa_instrument_1</object-name>
+        <object-name>sfgi_instrument</object-name>
+        <object-name>sfgi_instrument</object-name>
+        <object-name>si_instrument</object-name>
+        <object-name>si_instrument</object-name>
+        <object-name>sta-disp</object-name>
+        <object-name>t_instrument</object-name>
+        <object-name>t_instrument</object-name>
+        <object-name>temp-wheel</object-name>
+        <object-name>temp-wheel</object-name>
+        <object-name>v_instrument</object-name>
+        <object-name>v_instrument</object-name>
+        <object-name>wheels</object-name>
+        <object-name>wheels</object-name>    <condition>
+	      <greater-than>
+	        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+	        <value>0</value>
+	      </greater-than>
+	      <not>
+	        <property>/sim/rendering/rembrandt/enabled</property>
+	      </not>
+	    </condition>
+	    <emission>
+	      <red>  1</red>
+	      <green>1</green>
+	      <blue> 1</blue>
+	      <red-prop>controls/lighting/instrument-red</red-prop>
+	      <green-prop>controls/lighting/instrument-green</green-prop>
+	      <blue-prop>controls/lighting/instrument-blue</blue-prop>
+	    </emission>
+  </animation></PropertyList>

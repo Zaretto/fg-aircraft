@@ -858,6 +858,7 @@ return;
 	awg_9.init();
 	an_arc_182v.init();
 	an_arc_159v1.init();
+    f14.set_flood_lighting_colour();
 	setprop("controls/switches/radar_init", 0);
 	# properties to be stored
 	foreach (var f_tc; TcFreqs.getChildren()) {

@@ -67,7 +67,15 @@ red_flood_switch = func{
 	set_flood_lighting_colour();
 }
 
+setlistener("controls/lighting/instruments-norm", func(v){
+    set_flood_lighting_colour();
+},0,0);
 
+# sets the flood lighting and instrument lighting illuminations
+# based on the setting of
+# - donme flood white switch (dim,off,bright)
+# - red flood switch (dim, med, bright)
+# - instrument lighting wheel
 
 set_flood_lighting_colour = func
 {
@@ -88,7 +96,6 @@ set_flood_lighting_colour = func
     var r = getprop(red_prop ~ "-red");
 	var g = getprop(red_prop ~ "-green");
 	var b = getprop(red_prop ~ "-blue");
-printf("Red(%s) %f,%f,%f ", red_prop, r, g, b);
 
 	var white_prop = "";
 	var white_pos = white_flood_switch_prop.getValue();
@@ -109,12 +116,10 @@ printf("Red(%s) %f,%f,%f ", red_prop, r, g, b);
     else
         white_flood.setValue(1);
 
-printf("White(%s)",white_prop);
-
 	var white_r = getprop(white_prop~"-red");
 	var white_g = getprop(white_prop~"-green");
 	var white_b = getprop(white_prop~"-blue");
-	printf("White(%s) %f,%f,%f ",white_prop, white_r, white_g, white_b);
+
 	if (white_flood_switch_prop.getValue() != 1)
 	{
 		r = math.min(1.0,r + white_r);
@@ -122,11 +127,23 @@ printf("White(%s)",white_prop);
 		b = math.min(1.0,b + white_b);
 	}
 
-printf("dome light (%f,%f,%f)", r, g, b);
-
 	setprop("controls/lighting/dome-red",r);
 	setprop("controls/lighting/dome-green",g);
 	setprop("controls/lighting/dome-blue",b);
+
+# now blend the red/dome light and the instrument lights; this used to be 
+# done via conditions in the cockpit model emissions however when I added
+# support for the red flood we need to be a bit more sophisticated in 
+# how we blend the lights - so that the insruments will be displayed in red
+# unless the instrument lighing is bright enough to shine through.
+    var instrument_norm = getprop("controls/lighting/instruments-norm");
+    inst_prop = "controls/lighting/white-flood-brt";
+    var inst_r = math.min(1.0,r + getprop(inst_prop~"-red") * instrument_norm);
+    var inst_g = math.min(1.0,g + getprop(inst_prop~"-green") * instrument_norm);
+    var inst_b = math.min(1.0,b + getprop(inst_prop~"-blue") * instrument_norm);
+    setprop("controls/lighting/instrument-red", inst_r);
+    setprop("controls/lighting/instrument-green", inst_g);
+    setprop("controls/lighting/instrument-blue", inst_b);
 }
 
 
