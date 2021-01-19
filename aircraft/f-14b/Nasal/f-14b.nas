@@ -43,32 +43,109 @@ string.truncateAt = func(src, match){
     }, nil, var err = []);
     return src;
 }
+setprop("controls/lighting/white-flood-dim-red", getprop("controls/lighting/white-flood-red")/2.0);
+setprop("controls/lighting/white-flood-dim-green", getprop("controls/lighting/white-flood-green")/2.0);
+setprop("controls/lighting/white-flood-dim-blue", getprop("controls/lighting/white-flood-blue")/2.0);
+setprop("controls/lighting/white-flood-off-red", 0);
+setprop("controls/lighting/white-flood-off-green", 0);
+setprop("controls/lighting/white-flood-off-blue", 0);
+setprop("controls/lighting/white-flood-brt-red", getprop("controls/lighting/white-flood-red"));
+setprop("controls/lighting/white-flood-brt-green", getprop("controls/lighting/white-flood-green"));
+setprop("controls/lighting/white-flood-brt-blue", getprop("controls/lighting/white-flood-blue"));
 
-var position_switch = func(n) {
-	var sw_pos = sw_pos_prop.getValue();
-	if (n == 1) {
-		if (sw_pos == 0) {
-			sw_pos_prop.setIntValue(1);
-			position.switch(0);
-			position_intens = 0;
-		} elsif (sw_pos == 1) {
-			sw_pos_prop.setIntValue(2);
-			position.switch(1);
-			position_intens = 6;
-		}
-	} else {
-		if (sw_pos == 2) {
-			sw_pos_prop.setIntValue(1);
-			position.switch(0);
-			position_intens = 0;
-		} elsif (sw_pos == 1) {
-			sw_pos_prop.setIntValue(0);
-			position.switch(1);
-			position_intens = 3;
-		}
-	}	
+
+var white_flood_switch_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/white-flood-light-switch", 1);
+var white_flood = props.globals.getNode("controls/lighting/dome-norm", 1);
+
+white_flood_switch = func{
+	set_flood_lighting_colour();
 }
-var position_flash_switch = func {
+var red_flood_switch_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/red-flood-light-switch", 1);
+var red_flood = props.globals.getNode("controls/lighting/dome-red-norm", 1);
+
+red_flood_switch = func{
+	set_flood_lighting_colour();
+}
+
+
+
+set_flood_lighting_colour = func
+{
+	var red_pos = red_flood_switch_prop.getValue();
+	var red_prop = "";
+    if (red_pos == 1)
+	{
+		red_prop = "controls/lighting/red-flood-med";
+	}
+	else if (red_pos == 2)
+	{
+		red_prop = "controls/lighting/red-flood-brt";
+	}
+	else 
+	{
+		red_prop = "controls/lighting/red-flood-dim";
+	}
+    var r = getprop(red_prop ~ "-red");
+	var g = getprop(red_prop ~ "-green");
+	var b = getprop(red_prop ~ "-blue");
+printf("Red(%s) %f,%f,%f ", red_prop, r, g, b);
+
+	var white_prop = "";
+	var white_pos = white_flood_switch_prop.getValue();
+	if (white_pos == 0)
+	{
+		white_prop = "controls/lighting/white-flood-dim";
+	}
+	else if (white_pos == 2)
+	{
+		white_prop = "controls/lighting/white-flood-brt";
+	}
+	else
+	{
+		white_prop = "controls/lighting/white-flood-off";
+	}
+    if (red_pos == 0 and white_pos == 1)
+        white_flood.setValue(0);
+    else
+        white_flood.setValue(1);
+
+printf("White(%s)",white_prop);
+
+	var white_r = getprop(white_prop~"-red");
+	var white_g = getprop(white_prop~"-green");
+	var white_b = getprop(white_prop~"-blue");
+	printf("White(%s) %f,%f,%f ",white_prop, white_r, white_g, white_b);
+	if (white_flood_switch_prop.getValue() != 1)
+	{
+		r = math.min(1.0,r + white_r);
+		g = math.min(1.0,g + white_g);
+		b = math.min(1.0,b + white_b);
+	}
+
+printf("dome light (%f,%f,%f)", r, g, b);
+
+	setprop("controls/lighting/dome-red",r);
+	setprop("controls/lighting/dome-green",g);
+	setprop("controls/lighting/dome-blue",b);
+}
+
+
+position_switch = func(n) {
+	var sw_pos = sw_pos_prop.getValue();
+    print("position switch ",n," -> ",sw_pos);
+    if (sw_pos == 0){
+              position.switch(1);
+                position_intens = 3;
+    } else if (sw_pos == 1){
+                position.switch(0);
+                position_intens = 0;
+    } else if (sw_pos == 2){
+                position.switch(1);
+                position_intens = 6;
+    }
+}
+
+position_flash_switch = func {
 	if (! position_flash_sw.getBoolValue() ) {
 		position_flash_sw.setBoolValue(1);
 		position.blink();
@@ -107,7 +184,7 @@ setprop("sim/model/f-14b/controls/canopy/canopy-switch", 0);
 var pos = props.globals.getNode("canopy/position-norm");
 
 setlistener("sim/model/f-14b/config/mod-AFC-735", func(v) {
-    print("AFC-735 active=",v.getValue());
+#    print("AFC-735 active=",v.getValue());
     setprop("/fdm/jsbsim/fcs/mod-dlc-AFC-735-active",v.getValue());
 }, 1, 0);
 
@@ -378,7 +455,7 @@ var ownshipAlt = props.globals.getNode("position/altitude-ft");
 
 var F14_exec = {
 	new : func (_ident){
-        print("F14_exec: init");
+#        print("F14_exec: init");
         var obj = { parents: [F14_exec]};
 #        input = {
 #               name : "property",
@@ -711,7 +788,7 @@ var fixAirframe = func {
 }
 
 setlistener("sim/model/f-14b/controls/damage-enabled", func(v){
-print("Damage enabled ",v.getValue());
+#print("Damage enabled ",v.getValue());
     if (v.getValue())
       setprop("fdm/jsbsim/systems/flyt/damage-enabled",1);
     else

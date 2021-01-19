@@ -29,18 +29,6 @@ setlistener("fdm/jsbsim/fcs/dlc-active", func(v){
     setprop("/controls/flight/DLC",0);
 },0,0);
 
-setlistener("sim/model/f-14b/controls/switch-throttle-mode", func(v){
-    #
-    # throttle mode cockpit switch has three positions
-    # -1 MAN
-    #  0 BOOST
-    #  1 AUTO (APC)
-    if (v.getValue() == 1)
-        APC_on();
-    else if (v.getValue() == 0)
-        APC_off();
-},0,0);
-
 
 var computeAPC = func {
     # When throttles advanced to MIL retract speedbrake and disengage APC and DLC
@@ -91,13 +79,16 @@ var computeAPC = func {
 var toggleAPC = func {
 	engaged = APCengaged.getBoolValue();
 	if ( ! engaged ){
+        setprop("sim/model/f-14b/controls/switch-throttle-mode", 2);
 		APC_on();
 	} else {
+        setprop("sim/model/f-14b/controls/switch-throttle-mode", 0);
 		APC_off();
 	}
 }
 
 var APC_on = func {
+#    print("APC_ON");
 	if (!wow  and gear_down.getBoolValue() )
     {
 		APCengaged.setBoolValue(1);
@@ -105,17 +96,16 @@ var APC_on = func {
         if(usingJSBSim){
     		setprop ("fdm/jsbsim/systems/apc/active",1);
         }
-        setprop("sim/model/f-14b/controls/switch-throttle-mode", 1);
 	}
 }
 
 var APC_off = func {
+#    print("APC_OFF");
 	APCengaged.setBoolValue(0);
 	disengaged_light.setBoolValue(1);
 	settimer(func { disengaged_light.setBoolValue(0); }, 10);
     if(usingJSBSim){
         setprop ("fdm/jsbsim/systems/apc/active",0);
     }
-    setprop("sim/model/f-14b/controls/switch-throttle-mode", 0);
 }
 

@@ -88,6 +88,20 @@ var afcs_engage_toggle = func {
 	else afcs_disengage();
 }
 
+setlistener("sim/model/f-14b/controls/AFCS/heading-gt", func(v){
+	if (v.getValue() == 1){
+		afcs_heading_engage();
+#        print("HDG: hdg");
+	}
+	else if (v.getValue() == -1){
+		afcs_groundtrack_engage();
+#		print("HDG: gt");
+	}
+	else {
+		afcs_heading_disengage();
+#		print("HDG: wing lev");
+	}
+},0,0);
 
 var afcs_heading_switch = func(n) {
 	var hdg_gt = hdg_gt_switch.getValue();
@@ -97,33 +111,33 @@ var afcs_heading_switch = func(n) {
 			hdg_gt_switch.setValue(0);
 		} elsif (hdg_gt == 0) {
 			hdg_gt_switch.setValue(1);
-			afcs_heading_engage();
+#			afcs_heading_engage();
 		}
 	} elsif (n == -1) {
 		if (hdg_gt == 0) {
 			hdg_gt_switch.setValue(-1);
-			afcs_groundtrack_engage();
+#			afcs_groundtrack_engage();
 		} elsif (hdg_gt == 1) {
 			hdg_gt_switch.setValue(0);
-			afcs_heading_disengage();
+#			afcs_heading_disengage();
 		}
 	} else {
 		# keyb Ctrl-h Toggle case ( 0 )
 		if (hdg_gt == -1) {
 #            print("HDG: wing lev");
 			hdg_gt_switch.setValue(0);
-			afcs_heading_disengage();
+#			afcs_heading_disengage();
 		} else if (hdg_gt == 1) {
 #            print("HDG: gt");
 			hdg_gt_switch.setValue(-1);
-			afcs_heading_engage();
+#			afcs_heading_engage();
 		} else if (hdg_gt == 0) {
 #            print("HDG: hdg");
 			hdg_gt_switch.setValue(1);
-			afcs_heading_engage();
+#			afcs_heading_engage();
 		} else {
 #            print("HDG: wing lev");
-			hdg_gt_switch.setValue(0);
+#			hdg_gt_switch.setValue(0);
 			afcs_heading_disengage();
 		}
 	}
