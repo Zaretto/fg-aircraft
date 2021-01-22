@@ -9,8 +9,10 @@
         <filecreationdate>2014-08-02</filecreationdate>
         <version>1.0</version>
         <description>
-            Models an F14-B with GE engines. The aerodata used is from AFWAL-TR-80-3141 and
-            AFWAL-TR-80-3141 which is for sweep of 22degrees, positive alpha, clean, low speed.
+            Models an F14-B with F110-GE-400 engines.
+            
+            The aerodata used is from AFWAL-TR-80-3141 and AFWAL-TR-80-3141 
+            which is for sweep of 22degrees, positive alpha, clean, low speed.
             NASA TM-X-62306 is used for longitudinal flaps, speedbrakes, gear and spoilers
 
             Wingsweep and lateral spoilers are based on CFD computed values (OpenVSP).
@@ -851,84 +853,93 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </table>
         </function>
 
-        <function name="aero/coefficients/CLdFlaps">
-            <description>LIFT INCREMENT DUE TO  FLAPS</description>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                    <tableData>
-                                   0        20        35
-                       -15  0.000000  0.016412  0.027623
-                       -10  0.000000  0.194234  0.326918
-                        -5  0.000000  0.372056  0.626212
-                         0  0.000000  0.318723  0.536446
-                         5  0.000000  0.324025  0.545371
-                        10  0.000000  0.328174  0.552352
-                        15  0.000000  0.361335  0.608166
-                        20  0.000000  0.340758  0.573533
-                        25  0.000000  0.291502  0.490630
-                        30  0.000000  0.227616  0.383102
-                        35  0.000000  0.211718  0.356345
-                        40  0.000000  0.255814  0.430563
-                        45  0.000000  0.279286  0.470070
-                        50  0.000000  0.297256  0.500315
-                        55  0.000000  0.339597  0.571580
-                    </tableData>
-                  </table>
-            </function>
-        
-            <function name="aero/coefficients/CLdAuxFlaps">
+        <function name="aero/coefficients/CldAuxFlaps">
             <description>LIFT INCREMENT DUE TO AUX FLAPS</description>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                                   0        20        35
-                       -15  0.000000  0.007034  0.011839
-                       -10  0.000000  0.083243  0.140108
-                        -5  0.000000  0.159453  0.268377
-                         0  0.000000  0.136595  0.229905
-                         5  0.000000  0.138868  0.233730
-                        10  0.000000  0.140646  0.236722
-                        15  0.000000  0.154858  0.260643
-                        20  0.000000  0.146039  0.245800
-                        25  0.000000  0.124929  0.210270
-                        30  0.000000  0.097550  0.164187
-                        35  0.000000  0.090736  0.152719
-                        40  0.000000  0.109635  0.184527
-                        45  0.000000  0.119694  0.201458
-                        50  0.000000  0.127395  0.214421
-                        55  0.000000  0.145542  0.244963
+                                          0           20           35  
+                             -5    0.000000    0.104836    0.183464  
+                             -3    0.000000    0.099545    0.174203  
+                             -1    0.000000    0.094253    0.164943  
+                              1    0.000000    0.091280    0.159740  
+                              3    0.000000    0.091205    0.159609  
+                              5    0.000000    0.089673    0.156928  
+                              7    0.000000    0.087377    0.152910  
+                              9    0.000000    0.085215    0.149126  
+                             11    0.000000    0.087796    0.153643  
+                             13    0.000000    0.094550    0.165463  
+                             15    0.000000    0.110560    0.193481  
+                             17    0.000000    0.119595    0.209291  
+                             19    0.000000    0.124878    0.218536  
+                             21    0.000000    0.121385    0.212423  
+                             23    0.000000    0.118945    0.208153  
+                             25    0.000000    0.117241    0.205172  
+                             27    0.000000    0.111122    0.194463  
+                             29    0.000000    0.103004    0.180257  
                     </tableData>
                   </table>
             </function>
         
-            <function name="aero/coefficients/CLdSlats">
+            <function name="aero/coefficients/CldMainFlaps">
+            <description>LIFT INCREMENT DUE TO MAIN FLAPS</description>
+                  <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                    <tableData>
+                                          0           20           35  
+                             -5    0.000000    0.244618    0.428082  
+                             -3    0.000000    0.232271    0.406475  
+                             -1    0.000000    0.219924    0.384867  
+                              1    0.000000    0.212987    0.372728  
+                              3    0.000000    0.212812    0.372421  
+                              5    0.000000    0.209237    0.366166  
+                              7    0.000000    0.203880    0.356789  
+                              9    0.000000    0.198835    0.347961  
+                             11    0.000000    0.204858    0.358501  
+                             13    0.000000    0.220618    0.386081  
+                             15    0.000000    0.257974    0.451455  
+                             17    0.000000    0.279055    0.488346  
+                             19    0.000000    0.291381    0.509917  
+                             21    0.000000    0.283231    0.495654  
+                             23    0.000000    0.277538    0.485691  
+                             25    0.000000    0.273562    0.478734  
+                             27    0.000000    0.259284    0.453747  
+                             29    0.000000    0.240343    0.420600  
+                    </tableData>
+                  </table>
+            </function>
+        
+            <function name="aero/coefficients/CldSlats">
             <description>LIFT INCREMENT DUE TO SLATS</description>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/slat-pos-deg</independentVar>
                     <tableData>
-                                   0         8        17
-                       -15  0.000000  0.001778  0.004680
-                       -10  0.000000  0.021045  0.055390
-                        -5  0.000000  0.040312  0.106099
-                         0  0.000000  0.034534  0.090890
-                         5  0.000000  0.035108  0.092402
-                        10  0.000000  0.035558  0.093585
-                        15  0.000000  0.039151  0.103042
-                        20  0.000000  0.036921  0.097174
-                        25  0.000000  0.031584  0.083127
-                        30  0.000000  0.024662  0.064909
-                        35  0.000000  0.022940  0.060375
-                        40  0.000000  0.027717  0.072950
-                        45  0.000000  0.030261  0.079644
-                        50  0.000000  0.032208  0.084768
-                        55  0.000000  0.036795  0.096843
+                                          0            8           17  
+                             -5    0.000000    0.071947    0.152887  
+                             -3    0.000000    0.068315    0.145170  
+                             -1    0.000000    0.064684    0.137453  
+                              1    0.000000    0.062643    0.133117  
+                              3    0.000000    0.062592    0.133007  
+                              5    0.000000    0.061540    0.130773  
+                              7    0.000000    0.059965    0.127425  
+                              9    0.000000    0.058481    0.124272  
+                             11    0.000000    0.060252    0.128036  
+                             13    0.000000    0.064888    0.137886  
+                             15    0.000000    0.075875    0.161234  
+                             17    0.000000    0.082075    0.174409  
+                             19    0.000000    0.085700    0.182113  
+                             21    0.000000    0.083303    0.177019  
+                             23    0.000000    0.081629    0.173461  
+                             25    0.000000    0.080460    0.170977  
+                             27    0.000000    0.076260    0.162053  
+                             29    0.000000    0.070689    0.150214  
                     </tableData>
                   </table>
             </function>
-        
+                
             <function name="aero/coefficients/CldSpoilersLeftInner">
                 <description>LIFT INCREMENT DUE TO LEFT INNER SPOILERS  (NASA TM-X-62306 Test 2 Run 5,10)</description>
                 <product>
@@ -1217,9 +1228,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
         <function name="aero/coefficients/Cl">
             <sum>
                 <property>aero/coefficients/ClBAS</property>
-                <property>aero/coefficients/CLdFlaps</property>
-                <property>aero/coefficients/CLdAuxFlaps</property>
-                <property>aero/coefficients/CLdSlats</property>
+
+                <property>aero/coefficients/CldAuxFlaps</property>
+                <property>aero/coefficients/CldMainFlaps</property>
+                <property>aero/coefficients/CldSlats</property>
+                
                 <property>aero/coefficients/CldSpoilersLeftInner</property>
                 <property>aero/coefficients/CldSpoilersLeftOuter</property>
                 <property>aero/coefficients/CldSpoilersRightInner</property>
@@ -1379,54 +1392,60 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 </table>
         </function>
 
-        <function name="aero/coefficients/CddFlaps">
-            <description>DRAG INCREMENT DUE TO  FLAPS</description>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                    <tableData>
-                                   0        20        35
-                       -15  0.000000  0.000000  0.000000
-                       -10  0.000000  0.000000  0.000000
-                        -5  0.000000  0.019760  0.033258
-                         0  0.000000  0.040578  0.068297
-                         5  0.000000  0.046296  0.077921
-                        10  0.000000  0.036398  0.061262
-                        15  0.000000  0.015927  0.026808
-                        20  0.000000  0.009658  0.016255
-                        25  0.000000  0.032968  0.055488
-                        30  0.000000  0.064812  0.109086
-                        35  0.000000  0.113747  0.191449
-                        40  0.000000  0.202559  0.340930
-                        45  0.000000  0.277840  0.467636
-                        50  0.000000  0.342620  0.576667
-                        55  0.000000  0.430726  0.724959
-                    </tableData>
-                  </table>
-            </function>
-        
-            <function name="aero/coefficients/CddAuxFlaps">
+        <function name="aero/coefficients/CddAuxFlaps">
             <description>DRAG INCREMENT DUE TO AUX FLAPS</description>
                   <table>
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
                     <tableData>
-                                   0        20        35
-                       -15  0.000000  0.000000  0.000000
-                       -10  0.000000  0.000000  0.000000
-                        -5  0.000000  0.008468  0.014253
-                         0  0.000000  0.017391  0.029270
-                         5  0.000000  0.019841  0.033395
-                        10  0.000000  0.015599  0.026255
-                        15  0.000000  0.006826  0.011489
-                        20  0.000000  0.004139  0.006967
-                        25  0.000000  0.014129  0.023781
-                        30  0.000000  0.027777  0.046751
-                        35  0.000000  0.048749  0.082050
-                        40  0.000000  0.086811  0.146113
-                        45  0.000000  0.119074  0.200415
-                        50  0.000000  0.146837  0.247143
-                        55  0.000000  0.184597  0.310697
+                                          0           20           35  
+                             -5    0.000000    0.010065    0.017614  
+                             -3    0.000000    0.011746    0.020556  
+                             -1    0.000000    0.013427    0.023497  
+                              1    0.000000    0.014305    0.025034  
+                              3    0.000000    0.015602    0.027304  
+                              5    0.000000    0.016928    0.029623  
+                              7    0.000000    0.018037    0.031565  
+                              9    0.000000    0.019017    0.033281  
+                             11    0.000000    0.020122    0.035214  
+                             13    0.000000    0.019703    0.034480  
+                             15    0.000000    0.015243    0.026676  
+                             17    0.000000    0.013511    0.023644  
+                             19    0.000000    0.011916    0.020852  
+                             21    0.000000    0.012053    0.021092  
+                             23    0.000000    0.014083    0.024645  
+                             25    0.000000    0.016798    0.029396  
+                             27    0.000000    0.020741    0.036297  
+                             29    0.000000    0.025189    0.044081  
+                    </tableData>
+                  </table>
+            </function>
+        
+            <function name="aero/coefficients/CddMainFlaps">
+            <description>DRAG INCREMENT DUE TO MAIN FLAPS</description>
+                  <table>
+                    <independentVar lookup="row">aero/alpha-deg</independentVar>
+                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                    <tableData>
+                                          0           20           35  
+                             -5    0.000000    0.023485    0.041099  
+                             -3    0.000000    0.027407    0.047963  
+                             -1    0.000000    0.031330    0.054827  
+                              1    0.000000    0.033378    0.058412  
+                              3    0.000000    0.036406    0.063710  
+                              5    0.000000    0.039498    0.069121  
+                              7    0.000000    0.042087    0.073653  
+                              9    0.000000    0.044374    0.077655  
+                             11    0.000000    0.046952    0.082166  
+                             13    0.000000    0.045974    0.080454  
+                             15    0.000000    0.035567    0.062243  
+                             17    0.000000    0.031525    0.055170  
+                             19    0.000000    0.027803    0.048656  
+                             21    0.000000    0.028123    0.049216  
+                             23    0.000000    0.032860    0.057506  
+                             25    0.000000    0.039194    0.068590  
+                             27    0.000000    0.048396    0.084694  
+                             29    0.000000    0.058774    0.102855  
                     </tableData>
                   </table>
             </function>
@@ -1437,27 +1456,30 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <independentVar lookup="row">aero/alpha-deg</independentVar>
                     <independentVar lookup="column">fcs/slat-pos-deg</independentVar>
                     <tableData>
-                                   0         8        17
-                       -15  0.000000  0.000000  0.000000
-                       -10  0.000000  0.000000  0.000000
-                        -5  0.000000  0.002141  0.005635
-                         0  0.000000  0.004397  0.011572
-                         5  0.000000  0.005016  0.013202
-                        10  0.000000  0.003944  0.010380
-                        15  0.000000  0.001726  0.004542
-                        20  0.000000  0.001046  0.002754
-                        25  0.000000  0.003572  0.009401
-                        30  0.000000  0.007022  0.018483
-                        35  0.000000  0.012325  0.032437
-                        40  0.000000  0.021947  0.057764
-                        45  0.000000  0.030104  0.079232
-                        50  0.000000  0.037123  0.097705
-                        55  0.000000  0.046669  0.122830
+                                          0            8           17  
+                             -5    0.000000    0.006907    0.014678  
+                             -3    0.000000    0.008061    0.017130  
+                             -1    0.000000    0.009215    0.019581  
+                              1    0.000000    0.009817    0.020861  
+                              3    0.000000    0.010708    0.022754  
+                              5    0.000000    0.011617    0.024686  
+                              7    0.000000    0.012379    0.026305  
+                              9    0.000000    0.013051    0.027734  
+                             11    0.000000    0.013809    0.029345  
+                             13    0.000000    0.013522    0.028733  
+                             15    0.000000    0.010461    0.022230  
+                             17    0.000000    0.009272    0.019703  
+                             19    0.000000    0.008177    0.017377  
+                             21    0.000000    0.008272    0.017577  
+                             23    0.000000    0.009665    0.020538  
+                             25    0.000000    0.011528    0.024496  
+                             27    0.000000    0.014234    0.030248  
+                             29    0.000000    0.017286    0.036734  
                     </tableData>
                   </table>
             </function>
         
-           
+                   
     <function name="aero/coefficients/CddSpoilersLeftInner">
         <description>DRAG INCREMENT DUE TO LEFT INNER SPOILERS F(ALPHA) (NASA TM-X-62306 Test 2 Run 5,10)</description>
         <product>
@@ -1683,9 +1705,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                     <property>aero/coefficients/CddSpeedbrake</property>
                     <property>aero/coefficients/CdTNK</property>
                     <property>aero/coefficients/CdDasym</property>
-                    <property>aero/coefficients/CddFlaps</property>
+
                     <property>aero/coefficients/CddAuxFlaps</property>
+                    <property>aero/coefficients/CddMainFlaps</property>
                     <property>aero/coefficients/CddSlats</property>
+    
                     <property>aero/coefficients/CddSpoilersLeftInner</property>
                     <property>aero/coefficients/CddSpoilersLeftOuter</property>
                     <property>aero/coefficients/CddSpoilersRightInner</property>
@@ -2502,84 +2526,94 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             </function>
         
 
-        <function name="aero/coefficients/CMMdFlaps">
-            <description>PITCH INCREMENT DUE TO  FLAPS</description>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
-                    <tableData>
-                                    0         20         35
-                       -15   0.000000  -0.006346  -0.010681
-                       -10   0.000000  -0.030612  -0.051523
-                        -5   0.000000  -0.042639  -0.071766
-                         0   0.000000  -0.055489  -0.093394
-                         5   0.000000  -0.059962  -0.100922
-                        10   0.000000  -0.054912  -0.092423
-                        15   0.000000  -0.048724  -0.082007
-                        20   0.000000  -0.053453  -0.089968
-                        25   0.000000  -0.047727  -0.080330
-                        30   0.000000  -0.043938  -0.073953
-                        35   0.000000  -0.040242  -0.067731
-                        40   0.000000  -0.027053  -0.045534
-                        45   0.000000  -0.025051  -0.042164
-                        50   0.000000  -0.016321  -0.027470
-                        55   0.000000  -0.012965  -0.021821
-                    </tableData>
-                  </table>
-            </function>
-        
             <function name="aero/coefficients/CMMdAuxFlaps">
-            <description>PITCH INCREMENT DUE TO AUX FLAPS</description>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
-                    <tableData>
-                                    0         20         35
-                       -15   0.000000  -0.002720  -0.004577
-                       -10   0.000000  -0.013119  -0.022081
-                        -5   0.000000  -0.018274  -0.030757
-                         0   0.000000  -0.023781  -0.040026
-                         5   0.000000  -0.025698  -0.043252
-                        10   0.000000  -0.023534  -0.039610
-                        15   0.000000  -0.020882  -0.035146
-                        20   0.000000  -0.022908  -0.038558
-                        25   0.000000  -0.020454  -0.034427
-                        30   0.000000  -0.018831  -0.031694
-                        35   0.000000  -0.017246  -0.029028
-                        40   0.000000  -0.011594  -0.019514
-                        45   0.000000  -0.010736  -0.018070
-                        50   0.000000  -0.006995  -0.011773
-                        55   0.000000  -0.005556  -0.009352
-                    </tableData>
-                  </table>
-            </function>
-        
-            <function name="aero/coefficients/CMMdSlats">
-            <description>PITCH INCREMENT DUE TO SLATS</description>
-                  <table>
-                    <independentVar lookup="row">aero/alpha-deg</independentVar>
-                    <independentVar lookup="column">fcs/slat-pos-deg</independentVar>
-                    <tableData>
-                                    0          8         17
-                       -15   0.000000  -0.000688  -0.001810
-                       -10   0.000000  -0.003317  -0.008730
-                        -5   0.000000  -0.004620  -0.012159
-                         0   0.000000  -0.006012  -0.015824
-                         5   0.000000  -0.006497  -0.017099
-                        10   0.000000  -0.005950  -0.015659
-                        15   0.000000  -0.005279  -0.013895
-                        20   0.000000  -0.005792  -0.015243
-                        25   0.000000  -0.005171  -0.013610
-                        30   0.000000  -0.004761  -0.012530
-                        35   0.000000  -0.004360  -0.011476
-                        40   0.000000  -0.002931  -0.007715
-                        45   0.000000  -0.002714  -0.007144
-                        50   0.000000  -0.001768  -0.004654
-                        55   0.000000  -0.001405  -0.003697
-                    </tableData>
-                  </table>
-            </function>
-
+                <description>PITCH INCREMENT DUE TO AUX FLAPS</description>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <independentVar lookup="column">fcs/aux-flap-pos-deg</independentVar>
+                        <tableData>
+                                              0           20           35  
+                                 -5    0.000000   -0.009741   -0.017047  
+                                 -3    0.000000   -0.011441   -0.020022  
+                                 -1    0.000000   -0.013141   -0.022997  
+                                  1    0.000000   -0.013787   -0.024128  
+                                  3    0.000000   -0.010962   -0.019183  
+                                  5    0.000000   -0.007828   -0.013699  
+                                  7    0.000000   -0.004044   -0.007078  
+                                  9    0.000000   -0.002042   -0.003574  
+                                 11    0.000000   -0.001670   -0.002923  
+                                 13    0.000000   -0.002105   -0.003684  
+                                 15    0.000000    0.001932    0.003380  
+                                 17    0.000000   -0.005740   -0.010044  
+                                 19    0.000000   -0.004058   -0.007102  
+                                 21    0.000000   -0.008155   -0.014272  
+                                 23    0.000000   -0.019376   -0.033908  
+                                 25    0.000000   -0.022328   -0.039074  
+                                 27    0.000000   -0.021409   -0.037465  
+                                 29    0.000000   -0.019516   -0.034153  
+                        </tableData>
+                      </table>
+                </function>
+            
+                <function name="aero/coefficients/CMMdMainFlaps">
+                <description>PITCH INCREMENT DUE TO MAIN FLAPS</description>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
+                        <tableData>
+                                              0           20           35  
+                                 -5    0.000000   -0.022729   -0.039776  
+                                 -3    0.000000   -0.026696   -0.046718  
+                                 -1    0.000000   -0.030663   -0.053660  
+                                  1    0.000000   -0.032171   -0.056299  
+                                  3    0.000000   -0.025577   -0.044760  
+                                  5    0.000000   -0.018265   -0.031964  
+                                  7    0.000000   -0.009437   -0.016514  
+                                  9    0.000000   -0.004765   -0.008339  
+                                 11    0.000000   -0.003898   -0.006821  
+                                 13    0.000000   -0.004912   -0.008596  
+                                 15    0.000000    0.004507    0.007888  
+                                 17    0.000000   -0.013392   -0.023437  
+                                 19    0.000000   -0.009470   -0.016572  
+                                 21    0.000000   -0.019029   -0.033301  
+                                 23    0.000000   -0.045210   -0.079118  
+                                 25    0.000000   -0.052098   -0.091172  
+                                 27    0.000000   -0.049954   -0.087419  
+                                 29    0.000000   -0.045537   -0.079690  
+                        </tableData>
+                      </table>
+                </function>
+            
+                <function name="aero/coefficients/CMMdSlats">
+                <description>PITCH INCREMENT DUE TO SLATS</description>
+                      <table>
+                        <independentVar lookup="row">aero/alpha-deg</independentVar>
+                        <independentVar lookup="column">fcs/slat-pos-deg</independentVar>
+                        <tableData>
+                                              0            8           17  
+                                 -5    0.000000   -0.006685   -0.014206  
+                                 -3    0.000000   -0.007852   -0.016685  
+                                 -1    0.000000   -0.009018   -0.019164  
+                                  1    0.000000   -0.009462   -0.020107  
+                                  3    0.000000   -0.007523   -0.015986  
+                                  5    0.000000   -0.005372   -0.011416  
+                                  7    0.000000   -0.002776   -0.005898  
+                                  9    0.000000   -0.001402   -0.002978  
+                                 11    0.000000   -0.001146   -0.002436  
+                                 13    0.000000   -0.001445   -0.003070  
+                                 15    0.000000    0.001326    0.002817  
+                                 17    0.000000   -0.003939   -0.008370  
+                                 19    0.000000   -0.002785   -0.005919  
+                                 21    0.000000   -0.005597   -0.011893  
+                                 23    0.000000   -0.013297   -0.028256  
+                                 25    0.000000   -0.015323   -0.032561  
+                                 27    0.000000   -0.014692   -0.031221  
+                                 29    0.000000   -0.013393   -0.028461  
+                        </tableData>
+                      </table>
+                </function>
+            
+            
         <function name="aero/coefficients/CM">
             <sum>
                 <property>aero/coefficients/CMBAS</property>
@@ -2589,9 +2623,11 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <property>aero/coefficients/DCMDS2</property>
                 <property>aero/coefficients/CMMdLandingGear</property>
                 <property>aero/coefficients/CMMdSpeedbrake</property>
-                <property>aero/coefficients/CMMdFlaps</property>
+
                 <property>aero/coefficients/CMMdAuxFlaps</property>
+                <property>aero/coefficients/CMMdMainFlaps</property>
                 <property>aero/coefficients/CMMdSlats</property>
+
                 <property>aero/coefficients/CMMdSpoilersLeftInner</property>
                 <property>aero/coefficients/CMMdSpoilersLeftOuter</property>
                 <property>aero/coefficients/CMMdSpoilersRightInner</property>
