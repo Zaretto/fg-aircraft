@@ -30,13 +30,14 @@ var target_hdg   = props.globals.getNode("autopilot/settings/heading-bug-deg", 1
 # Locks
 var ap_alt_lock  = props.globals.getNode("autopilot/locks/altitude");
 var ap_hdg_lock  = props.globals.getNode("autopilot/locks/heading");
+var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/f-14b/gui/dialogs/autopilot-dlg.xml");
 
-if (f14.usingJSBSim)
-{
+#if (f14.usingJSBSim)
+#{
 #print("Using JSB Sim AFCS Altitude hold");
 #target_alt   = props.globals.getNode("fdm/jsbsim/systems/afcs/target-altitude-ft", 1);
-ap_alt_lock  = props.globals.getNode("fdm/jsbsim/systems/afcs/altitude-hold-active",1);
-}
+#ap_alt_lock  = props.globals.getNode("fdm/jsbsim/systems/afcs/altitude-hold-active",1);
+#}
 
 # Locks Flag (used by SAS.nas to override Autopilot when Control Stick Steering).
 # 0 = off, 1 = enabled, 2 = temporarly overriden  
@@ -62,6 +63,8 @@ var sas_pitch_toggle = func {
 	}		
 }
 
+
+
 var sas_roll_toggle = func {
 	if (SASroll_on.getValue()) {
 		SASroll_on.setValue(0);
@@ -85,6 +88,20 @@ var afcs_engage_toggle = func {
 	else afcs_disengage();
 }
 
+setlistener("sim/model/f-14b/controls/AFCS/heading-gt", func(v){
+	if (v.getValue() == 1){
+		afcs_heading_engage();
+#        print("HDG: hdg");
+	}
+	else if (v.getValue() == -1){
+		afcs_groundtrack_engage();
+#		print("HDG: gt");
+	}
+	else {
+		afcs_heading_disengage();
+#		print("HDG: wing lev");
+	}
+},0,0);
 
 var afcs_heading_switch = func(n) {
 	var hdg_gt = hdg_gt_switch.getValue();
@@ -94,33 +111,33 @@ var afcs_heading_switch = func(n) {
 			hdg_gt_switch.setValue(0);
 		} elsif (hdg_gt == 0) {
 			hdg_gt_switch.setValue(1);
-			afcs_heading_engage();
+#			afcs_heading_engage();
 		}
 	} elsif (n == -1) {
 		if (hdg_gt == 0) {
 			hdg_gt_switch.setValue(-1);
-			afcs_groundtrack_engage();
+#			afcs_groundtrack_engage();
 		} elsif (hdg_gt == 1) {
 			hdg_gt_switch.setValue(0);
-			afcs_heading_disengage();
+#			afcs_heading_disengage();
 		}
 	} else {
 		# keyb Ctrl-h Toggle case ( 0 )
 		if (hdg_gt == -1) {
 #            print("HDG: wing lev");
 			hdg_gt_switch.setValue(0);
-			afcs_heading_disengage();
+#			afcs_heading_disengage();
 		} else if (hdg_gt == 1) {
 #            print("HDG: gt");
 			hdg_gt_switch.setValue(-1);
-			afcs_heading_engage();
+#			afcs_heading_engage();
 		} else if (hdg_gt == 0) {
 #            print("HDG: hdg");
 			hdg_gt_switch.setValue(1);
-			afcs_heading_engage();
+#			afcs_heading_engage();
 		} else {
 #            print("HDG: wing lev");
-			hdg_gt_switch.setValue(0);
+#			hdg_gt_switch.setValue(0);
 			afcs_heading_disengage();
 		}
 	}
@@ -130,20 +147,21 @@ var afcs_altitude_engage_toggle = func() {
 	# Two step mode. This is step #1
 	if (alt_switch.getBoolValue()) {
 		alt_switch.setBoolValue(0);
-		alt_enable.setBoolValue(0);
-		afcs_altitude_disengage();
+#		alt_enable.setBoolValue(0);
+#		afcs_altitude_disengage();
+        ap_alt_lock.setValue("pitch-hold");
 #        print("Alt disengage");
 	} else {
 		alt_switch.setBoolValue(1);
 		alt_enable.setBoolValue(1);
 #        print("Alt engage");
-        if (f14.usingJSBSim)
-        {
+#        if (f14.usingJSBSim)
+#        {
             target_alt.setValue(press_alt_ft.getValue());
-setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
-setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
-#            ap_alt_lock.setValue(1);
-        }
+#setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
+#etprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
+            ap_alt_lock.setValue("altitude-hold");
+#        }
 	}
 }
 
@@ -165,18 +183,18 @@ var afcs_attitude_engage = func() {
 	if ( pdeg > 30 ) { pdeg = 30 }
 	target_pitch.setValue(pdeg);
 
-    if (!f14.usingJSBSim)
+#    if (!f14.usingJSBSim)
 	    ap_alt_lock.setValue("pitch-hold");
-else
-{
-target_alt.setValue(press_alt_ft.getValue());
-setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
-setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", target_alt.getValue());
-setprop("fdm/jsbsim/systems/afcs/altitude-hold-active",1);
+#else
+#{
+#target_alt.setValue(press_alt_ft.getValue());
+#setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
+#setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", target_alt.getValue());
+#setprop("fdm/jsbsim/systems/afcs/altitude-hold-active",1);
 #print("Alt lock engage[1]");
-ap_alt_lock.setValue(1);
-
-}
+#ap_alt_lock.setValue(1);#
+#
+#}
 
 	var rdeg = roll_deg.getValue();
 	if ( hdg_gt_switch.getBoolValue()) {	
@@ -241,18 +259,18 @@ var afcs_engage_selected_mode = func() {
 		# This is Altitude step #2
 		if (alt_enable.getBoolValue()) {
 			target_alt.setValue(press_alt_ft.getValue());
-setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
-setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
-            if (f14.usingJSBSim)
-            {
+#setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
+#setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
+#            if (f14.usingJSBSim)
+#            {
 #                print("Alt lock engage");
-                ap_alt_lock.setValue(1);
-            }
-            else
-            {
+#                ap_alt_lock.setValue(1);
+#            }
+#            else
+#            {
                 ap_alt_lock.setValue("altitude-hold");
                 alt_enable.setBoolValue(0);
-            }
+#            }
 		}
 		# Here other selectable modes.
 	}
@@ -269,13 +287,18 @@ afcs_groundtrack_engage = func() {
 #	ap_hdg_lock.setValue("dg-heading-hold");
 }
 
-var afcs_disengage = func() {
+var afcs_disengage_1 = func() {
 	main_ap_engaged.setBoolValue( 0 );
 	alt_switch.setBoolValue( 0 );
 	alt_enable.setBoolValue(0);
 	hdg_gt_switch.setBoolValue( 0 );
 	ap_alt_lock.setValue("");
 	ap_lock_att = 0;
+	ap_hdg_lock.setValue("");
+}
+var afcs_disengage = func() {
+    afcs_disengage_1();
+	ap_alt_lock.setValue("");
 	ap_hdg_lock.setValue("");
 }
 
@@ -289,18 +312,18 @@ var afcs_altitude_disengage = func() {
 	target_pitch.setValue(pdeg);
     target_alt.setValue(press_alt_ft.getValue());
 
-    if (f14.usingJSBSim)
-    {
+#    if (f14.usingJSBSim)
+#    {
 #                print("Alt lock disengage");
-        ap_alt_lock.setValue(0);
-        alt_enable.setBoolValue(0);
-        main_ap_engaged.setBoolValue( 0 );
-    }
-    else
-    {
+#        ap_alt_lock.setValue(0);
+#        alt_enable.setBoolValue(0);
+#        main_ap_engaged.setBoolValue( 0 );
+#    }
+#    else
+#    {
         ap_alt_lock.setValue("pitch-hold");
         alt_enable.setBoolValue(0);
-    }
+#    }
 	ap_altlock_pitch = 1;
 	alt_enable.setBoolValue(0);
 }
@@ -322,14 +345,36 @@ var afcs_heading_disengage = func() {
 	target_roll.setValue( rdeg );
 	ap_hdg_lock.setValue("wing-leveler");
 }
-if(f14.usingJSBSim)
-{
+#if(f14.usingJSBSim)
+#{
+#
+#setlistener("autopilot/settings/target-altitude-ft", func {
+#    var v = getprop("autopilot/settings/target-altitude-ft");
+#    if (v != nil)
+#        setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", v);
+#}, 1, 0);
 
-setlistener("autopilot/settings/target-altitude-ft", func {
-    var v = getprop("autopilot/settings/target-altitude-ft");
-    if (v != nil)
-        setprop("fdm/jsbsim/systems/afcs/target-altitude-ft", v);
-}, 1, 0);
+setlistener("/autopilot/locks/heading", func(v) {
+    if (v.getValue() == "wing-leveler")
+      setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
+    print("hdg: ",v.getValue(), " -> ",getprop("autopilot/settings/target-roll-deg"));
+    if (v.getValue() == "") {
+        setprop("/controls/flight/SAS-roll",0);
+        afcs_disengage_1();
+    }
+}
+            , 1, 0);
+
+setlistener("/autopilot/locks/altitude", func(v) {
+    if (v.getValue() == "pitch-hold")
+      setprop("autopilot/settings/target-pitch-deg", getprop("orientation/pitch-deg"));
+    if (v.getValue() == "") {
+        setprop("fdm/jsbsim/systems/afcs/elevator-cmd-delta",0);
+        afcs_disengage_1();
+    }
+    #print("pitch: ",v.getValue(), " -> ",getprop("autopilot/settings/target-pitch-deg"));
+}
+            , 1, 0);
 
 var current_leg_is_gs = 0;
 
@@ -358,9 +403,9 @@ setlistener("autopilot/route-manager/current-wp", func {
                 if (demalt > 0)
                 {
                     if (demalt > groundElev)
-                        setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
+						target_alt.setValue(demalt);
                     else
-                        setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",getprop("position/ground-elev-ft") + demalt);
+						target_alt.setValue(getprop("position/ground-elev-ft") + demalt);
                 }
                 else
                 {
@@ -375,7 +420,7 @@ setlistener("autopilot/route-manager/current-wp", func {
                         else
                             demalt = getprop("/autopilot/settings/target-altitude-ft");
 
-                        setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
+                        #setprop("/fdm/jsbsim/systems/afcs/target-altitude-ft",demalt);
                         setprop("/autopilot/settings/target-altitude-ft", demalt);
                     }
                 }
@@ -401,17 +446,18 @@ setlistener("autopilot/route-manager/current-wp", func {
                     demalt = demalt + 1000;
                     print(" -- alt lock too low, using ",demalt);
                 }
-                setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft", demalt);
+                #setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft", demalt);
+				target_alt.setValue(demalt);
 #                print("staying with althold value ",getprop("fdm/jsbsim/systems/afcs/altitude-hold-ft"));
                 current_leg = -1;
             }
         }
         else
-            setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft", getprop("autopilot/settings/target-altitude-ft"));
+            target_alt.setValue(getprop("autopilot/settings/target-altitude-ft"));
 
     }
 }, 1, 0);
-}
+
 
 # Route Manager advance code
 # Joshua Davidson (it0uchpods)

@@ -30,10 +30,7 @@
         <fuel-fraction>0.1</fuel-fraction>
 
         <systems>
-            <autopilot>
-                <path>Aircraft/f-14b/Systems/apc.xml</path>
-            </autopilot>
-            <autopilot>
+             <autopilot>
                 <path>Aircraft/f-14b/f-14b-AFCS.xml</path>
             </autopilot>
             <autopilot>
@@ -251,9 +248,16 @@
 
 
         <flaps>
+            <!-- 
+                deg norm
+                0   0.00000
+                14  0.40000
+                25  0.71429
+                35  1.00000
+            -->
             <setting>0.0</setting>
             <setting>0.4</setting>
-            <setting>0.6</setting>
+            <setting>0.71429</setting>
             <setting>1.0</setting>
         </flaps>
 
@@ -329,18 +333,18 @@
                 <name>Ctrl-S</name>
                 <desc>Toggle APC (Landing Automatic Power control)</desc>
             </key>
-            <!--<key>
+            <key>
 				<name>Ctrl-d</name>
-				<desc>Toggle DLC (Landing Direct Lift Control)</desc>
+				<desc>Stick DLC/CHAFF switch</desc>
 			</key>
 			<key>
-				<name>d</name>
-				<desc>DLC increase</desc>
+				<name>l</name>
+				<desc>Stick DLC thumbwheel fore</desc>
 			</key>
 			<key>
-				<name>D</name>
-				<desc>DLC decrease</desc>
-			</key>-->
+				<name>n</name>
+				<desc>Stick DLC thumbwheel aft</desc>
+			</key>
             <key>
                 <name>Ctrl-t</name>
                 <desc>Toggle AFCS (Attitude Mode)</desc>
@@ -520,6 +524,12 @@
         </hud>
 
         <model>
+            <!-- Offset from aircraft x,y,z position to the position that is used as a
+            reference for things like FLOLS, ILS etc. -->
+            <reference-offset-x type="double">0</reference-offset-x>
+            <reference-offset-y type="double">0</reference-offset-y>
+            <reference-offset-z type="double">3.59</reference-offset-z>
+
             <!--path>Aircraft/f-14b/Models/F-14-model.xml</path-->
             <fallback-model-index type="int">514</fallback-model-index>
             <path>Aircraft/f-14b/Models/f-14b.xml</path>
@@ -554,7 +564,11 @@
             </livery-patch>
 
             <f-14b>
+                <config>
+                    <mod-AFC-735 type="int">1</mod-AFC-735> <!-- DLC upgrade to use inner spoilers for DLC and outer for roll control -->
+                </config>
                 <controls>
+                    <damage-enabled type="int">0</damage-enabled>
                     <AFCS>
                         <engage type="bool">false</engage>
                         <vec-acl type="int">0</vec-acl>
@@ -847,7 +861,7 @@
                         <target-roll-deg type="double">0</target-roll-deg>
                     </afcs>
                     <apc>
-                        <engaged type="bool">false</engaged>
+                        <engaged alias="/fdm/jsbsim/systems/apc/active"/>
                         <self-disengaged-light type="bool">0</self-disengaged-light>
                     </apc>
                     <fdm>
@@ -968,7 +982,6 @@
                 <wings>
                     <left-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-left"/>
                     <right-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-right"/>
-                    <damage-enabled type="bool">false</damage-enabled>
                 </wings>
                 <!-- values that may need to be changed in the future if the carrier handling is fixed 
                      and/or the intialization procedure changes
@@ -976,8 +989,8 @@
                 <overrides>
                     <deck-offset-m type="double">-4.5</deck-offset-m>
                     <!-- align with cat1 -->
-                    <special-carrier-handling userarchive="y" type="bool">true</special-carrier-handling>
-                    <aircraft-agl-height userarchive="y" type="double">7.728680129</aircraft-agl-height>
+                    <special-carrier-handling type="bool">false</special-carrier-handling>
+                    <aircraft-agl-height type="double">7.728680129</aircraft-agl-height>
                     <!--                    <init-delay type="int">0.1</init-delay> -->
                 </overrides>
             </f-14b>
@@ -1335,72 +1348,15 @@
             <use-overlay type="bool">1</use-overlay>
         </aircraft-effects>
     </environment>
+
     <fdm>
-        <jsbsim>
-            <!--tuning>
-                <ClDFM type="double">1.63</ClDFM>
-                <ClDAFM type="double">1.59</ClDAFM>
-                <CdDFM type="double">1.21</CdDFM>
-                <CdDAFM type="double">1.59</CdDAFM>
-                <CMDFM type="double">0.37</CMDFM>
-                <CMADFM type="double">0.64</CMADFM>
-            </tuning-->
-            <tuning>
-                <!--ClDFM type="double">1.42</ClDFM>
-                <ClDAFM type="double">1.38</ClDAFM>
-                <CdDFM type="double">1.21</CdDFM>
-                <CdDAFM type="double">1.59</CdDAFM>
-                <CMDFM type="double">0.37</CMDFM>
-                <CMADFM type="double">0.64</CMADFM-->
-
-                <ClDFM type="double">1.53</ClDFM>
-                <ClDAFM type="double">1.45</ClDAFM>
-                <CdDFM type="double">1.21</CdDFM>
-                <CdDAFM type="double">1.59</CdDAFM>
-                <CMDFM type="double">2.00</CMDFM>
-                <CMADFM type="double">0.89</CMADFM>
-            </tuning>
-            <systems>
-				<apc>
-					<active type="bool">0</active>
-				</apc>
-                <hook>
-                    <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
-                </hook>
-                <hydraulics>
-                    <flight-system-psi type="float">0</flight-system-psi>
-                    <combined-system-psi type="float">0</combined-system-psi>
-                </hydraulics>
-                <electrics>
-                    <ac-right-main-bus type="float">0</ac-right-main-bus>
-                </electrics>
-                <afcs>
-                    <altitude-hold-alt-diff-feet type="float">0</altitude-hold-alt-diff-feet>
-                </afcs>
-                <catapult>
-                    <cat-pos-norm type="float">0</cat-pos-norm>
-                </catapult>
-            </systems>
-            <fcs>
-                <wing-sweep-cmd type="float">0</wing-sweep-cmd>
-                <wing-sweep-cadc-dmd type="float">0</wing-sweep-cadc-dmd>
-                <aux-flap-pos-deg type="float">0</aux-flap-pos-deg>
-                <roll-trim-actuator type="float">0</roll-trim-actuator>
-            </fcs>
-
-            <propulsion>
-                <engine n="0">
-                    <augmentation-alight type="float">0</augmentation-alight>
-                </engine>
-                <engine n="1">
-                    <augmentation-alight type="float">0</augmentation-alight>
-                </engine>
-            </propulsion>
-        </jsbsim>
+        <jsbsim include="Systems/f-14-config.xml"/>
     </fdm>
+
     <orientation>
         <alpha-indicated-deg alias="/fdm/jsbsim/aero/alpha-indicated-deg"/>
     </orientation>
+    
     <systems>
         <refuel>
             <type>probe</type>
@@ -1422,10 +1378,10 @@
         <vne>850</vne>
 
         <max-gear-extension-speed>300</max-gear-extension-speed>
-        <max-flap-extension-speed>
+        <!-- <max-flap-extension-speed>
             <flaps>0.4857142857142857</flaps>
             <speed>245</speed>
-        </max-flap-extension-speed>
+        </max-flap-extension-speed> -->
     </limits>
 
     <consumables>
@@ -1592,6 +1548,22 @@
             <dome-green type="double">0.576</dome-green>
             <dome-blue type="double">0.161</dome-blue>
 
+            <white-flood-red type="double">1.000</white-flood-red>
+            <white-flood-green type="double">0.576</white-flood-green>
+            <white-flood-blue type="double">0.161</white-flood-blue>
+
+            <red-flood-dim-red type="double">0.1</red-flood-dim-red>
+            <red-flood-dim-green type="double">0</red-flood-dim-green>
+            <red-flood-dim-blue type="double">0</red-flood-dim-blue>
+
+            <red-flood-med-red type="double">0.4</red-flood-med-red>
+            <red-flood-med-green type="double">0</red-flood-med-green>
+            <red-flood-med-blue type="double">0</red-flood-med-blue>
+
+            <red-flood-brt-red type="double">0.8</red-flood-brt-red>
+            <red-flood-brt-green type="double">0</red-flood-brt-green>
+            <red-flood-brt-blue type="double">0</red-flood-brt-blue>
+
             <instrument-red type="double">1.000</instrument-red>
             <instrument-green type="double">0.576</instrument-green>
             <instrument-blue type="double">0.161</instrument-blue>
@@ -1608,7 +1580,8 @@
         <flight>
             <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
             <fake>0.0</fake>
-            <DLC-engaged type="bool">false</DLC-engaged>
+            <DLC-engaged alias="/fdm/jsbsim/fcs/dlc-active"/>
+            <DLC alias="/fdm/jsbsim/fcs/stick-thumbwheel-norm"/>
             <flapscommand alias="/fdm/jsbsim/fcs/flap-cmd-norm"/>
             <wing-sweep-cmd alias="/fdm/jsbsim/fcs/wing-sweep-pilot-dmd"/>
         </flight>
@@ -1645,6 +1618,18 @@
                 </binding>
             </key>
             
+            <key n="4">
+                <name>CTRL-d</name>
+                <desc>Stick DLC/Flares switch</desc>
+                <repeatable>false</repeatable>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>/fdm/jsbsim/fcs/stick-dlc-mf-switch</property>
+                    <value type="bool">true</value>
+                </binding>
+
+            </key>
+
             <key n="5">
                 <name>CTRL-e</name>
                 <desc>Ignore trolls</desc>
@@ -1812,18 +1797,6 @@
                     </script>
                 </binding>
             </key>
-<!--
-            <key n="68">
-                <name>D</name>
-                <desc>DLC decrease</desc>
-                <binding>
-                    <command>property-adjust</command>
-                    <property>/controls/flight/DLC</property>
-                    <step>-0.1</step>
-                    <min>0</min>
-                </binding>
-            </key>
--->
 
             <key n="69">
                 <name>E</name>
@@ -1918,6 +1891,15 @@
                 </binding>
             </key>
 
+            <key n="83">
+                <name>S</name>
+                <desc>smoke</desc>
+                <binding>
+                    <command>property-toggle</command>
+                    <property>sim/model/f-14b/fx/smoke-cmd</property>
+                </binding>
+            </key>
+
             <key n="99">
                 <name>c</name>
                 <desc>Open canopy and access ladder</desc>
@@ -1926,19 +1908,6 @@
                     <script>f14.canopyswitch(2);</script>
                 </binding>
             </key>
-
-<!--
-            <key n="100">
-                <name>d</name>
-                <desc>DLC increase</desc>
-                <binding>
-                    <command>property-adjust</command>
-                    <property>controls/flight/DLC</property>
-                    <step>0.1</step>
-                    <max>1.0</max>
-                </binding>
-            </key>
--->
 
             <key n="101">
                 <name>e</name>
@@ -1975,6 +1944,17 @@
                 </binding>
             </key>
 
+           <key n="108">
+                <name>l</name>
+                <desc>Stick DLC/MANUV-FLAPS decrease</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>/fdm/jsbsim/fcs/stick-thumbwheel-norm</property>
+                    <step>-0.1</step>
+                    <min>-1</min>
+                </binding>
+            </key>
+
             <key n="109">
                 <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
@@ -1986,6 +1966,17 @@
                     <max>4</max>
                     <repeat>false</repeat>
                     <wrap>true</wrap>
+                </binding>
+            </key>
+
+             <key n="110">
+                <name>n</name>
+                <desc>Stick DLC/MANUV-FLAP increase</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>/fdm/jsbsim/fcs/stick-thumbwheel-norm</property>
+                    <step>0.1</step>
+                    <max>1.0</max>
                 </binding>
             </key>
 
@@ -2003,15 +1994,6 @@
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.toggle_radar_standby();</script>
-                </binding>
-            </key>
-
-            <key n="83">
-                <name>S</name>
-                <desc>smoke</desc>
-                <binding>
-                    <command>property-toggle</command>
-                    <property>sim/model/f-14b/fx/smoke-cmd</property>
                 </binding>
             </key>
 

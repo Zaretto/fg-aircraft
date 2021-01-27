@@ -11,20 +11,6 @@
 
 <system name="hydraulic">
 
-  <property value="3022">systems/hydraulics/normal-pressure</property>
-  <property value="2100">systems/hydraulics/bidi-activation</property>
-  <property value="2500">systems/hydraulics/bidi-normal-pressure</property>
-<!-- the min pressure is really for when no hydraulic fluid and the pressure has been at that level
-     for more than 10 seconds, so for now we will not model this as there is no way for fluid to be depleted -->
-  <property value="-500">systems/hydraulics/bidi-cutoff-min-pressure</property>
-  <property value="25">systems/hydraulics/reservoir-quantity</property>
-  <property value="2100">systems/hydraulics/emerg-pump-auto-activation</property>
-  <property value="2400">systems/hydraulics/emerg-pump-auto-deactivation</property>
-  <property value="0">systems/hydraulics/emerg-system-pump-failed</property>
-  <property value="0">systems/hydraulics/flight-system-pump-failed</property>
-  <property value="0">systems/hydraulics/combined-system-pump-failed</property>
-  <property value="0">systems/hydraulics/emerg-flyt-hyd-switch</property>
-  <property value="1">systems/hydraulics/hyd-transfer-pump-switch</property>
 
   <channel name="flight">
     <switch name="systems/hydraulics/flight-system-pressure">
@@ -187,7 +173,7 @@ engines at 11 percent rpm.
   <channel name="bleed">
     <summer name="systems/hydraulics/elevator-bleed">
         <input>-fcs/elevator-cmd-norm</input>
-        <input>-fcs/elevator-normalization</input>
+        <input>-fcs/elevator-pos-norm</input>
     </summer>
 
     <summer name="systems/hydraulics/flight-system-bleed-basic">

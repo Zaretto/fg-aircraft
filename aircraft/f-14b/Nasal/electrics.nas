@@ -12,6 +12,8 @@ var ca_oil_press_light  = props.globals.getNode("sim/model/f-14b/lights/ca-oil-p
 var bingo      = props.globals.getNode("sim/model/f-14b/controls/fuel/bingo", 1);
 var ca_bingo_light  = props.globals.getNode("sim/model/f-14b/lights/ca-bingo", 1);
 
+var ca_flaps_light = props.globals.getNode("sim/model/f-14b/lights/ca-flap", 1);
+
 var ca_canopy_light = props.globals.getNode("sim/model/f-14b/lights/ca-lad-canopy", 1);
 var canopy = props.globals.getNode("canopy/position-norm", 1);
 canopy.setValue(0);
@@ -325,6 +327,19 @@ var runEMMISC = func {
         {
             setprop("sim/model/f-14b/lights/ca-launch-bar",0);
         }
+    }
+
+    if ( (getprop("fdm/jsbsim/fcs/flap-pos-deg") - getprop("fdm/jsbsim/fcs/flap-pos-deg-effective")) > 1 )
+    {
+        if (!ca_flaps_light.getBoolValue()){
+            ca_flaps_light.setBoolValue(1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        ca_flaps_light.setBoolValue(0);
     }
 
     if (canopy.getValue() > 0)

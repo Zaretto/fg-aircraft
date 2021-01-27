@@ -43,32 +43,126 @@ string.truncateAt = func(src, match){
     }, nil, var err = []);
     return src;
 }
+setprop("controls/lighting/white-flood-dim-red", getprop("controls/lighting/white-flood-red")/2.0);
+setprop("controls/lighting/white-flood-dim-green", getprop("controls/lighting/white-flood-green")/2.0);
+setprop("controls/lighting/white-flood-dim-blue", getprop("controls/lighting/white-flood-blue")/2.0);
+setprop("controls/lighting/white-flood-off-red", 0);
+setprop("controls/lighting/white-flood-off-green", 0);
+setprop("controls/lighting/white-flood-off-blue", 0);
+setprop("controls/lighting/white-flood-brt-red", getprop("controls/lighting/white-flood-red"));
+setprop("controls/lighting/white-flood-brt-green", getprop("controls/lighting/white-flood-green"));
+setprop("controls/lighting/white-flood-brt-blue", getprop("controls/lighting/white-flood-blue"));
 
-var position_switch = func(n) {
-	var sw_pos = sw_pos_prop.getValue();
-	if (n == 1) {
-		if (sw_pos == 0) {
-			sw_pos_prop.setIntValue(1);
-			position.switch(0);
-			position_intens = 0;
-		} elsif (sw_pos == 1) {
-			sw_pos_prop.setIntValue(2);
-			position.switch(1);
-			position_intens = 6;
-		}
-	} else {
-		if (sw_pos == 2) {
-			sw_pos_prop.setIntValue(1);
-			position.switch(0);
-			position_intens = 0;
-		} elsif (sw_pos == 1) {
-			sw_pos_prop.setIntValue(0);
-			position.switch(1);
-			position_intens = 3;
-		}
-	}	
+
+var white_flood_switch_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/white-flood-light-switch", 1);
+var white_flood = props.globals.getNode("controls/lighting/dome-norm", 1);
+
+white_flood_switch = func{
+	set_flood_lighting_colour();
 }
-var position_flash_switch = func {
+var red_flood_switch_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/red-flood-light-switch", 1);
+var red_flood = props.globals.getNode("controls/lighting/dome-red-norm", 1);
+
+red_flood_switch = func{
+	set_flood_lighting_colour();
+}
+
+setlistener("controls/lighting/instruments-norm", func(v){
+    set_flood_lighting_colour();
+},0,0);
+
+# sets the flood lighting and instrument lighting illuminations
+# based on the setting of
+# - donme flood white switch (dim,off,bright)
+# - red flood switch (dim, med, bright)
+# - instrument lighting wheel
+
+set_flood_lighting_colour = func
+{
+	var red_pos = red_flood_switch_prop.getValue();
+	var red_prop = "";
+    if (red_pos == 1)
+	{
+		red_prop = "controls/lighting/red-flood-med";
+	}
+	else if (red_pos == 2)
+	{
+		red_prop = "controls/lighting/red-flood-brt";
+	}
+	else 
+	{
+		red_prop = "controls/lighting/red-flood-dim";
+	}
+    var r = getprop(red_prop ~ "-red");
+	var g = getprop(red_prop ~ "-green");
+	var b = getprop(red_prop ~ "-blue");
+
+	var white_prop = "";
+	var white_pos = white_flood_switch_prop.getValue();
+	if (white_pos == 0)
+	{
+		white_prop = "controls/lighting/white-flood-dim";
+	}
+	else if (white_pos == 2)
+	{
+		white_prop = "controls/lighting/white-flood-brt";
+	}
+	else
+	{
+		white_prop = "controls/lighting/white-flood-off";
+	}
+    if (red_pos == 0 and white_pos == 1)
+        white_flood.setValue(0);
+    else
+        white_flood.setValue(1);
+
+	var white_r = getprop(white_prop~"-red");
+	var white_g = getprop(white_prop~"-green");
+	var white_b = getprop(white_prop~"-blue");
+
+	if (white_flood_switch_prop.getValue() != 1)
+	{
+		r = math.min(1.0,r + white_r);
+		g = math.min(1.0,g + white_g);
+		b = math.min(1.0,b + white_b);
+	}
+
+	setprop("controls/lighting/dome-red",r);
+	setprop("controls/lighting/dome-green",g);
+	setprop("controls/lighting/dome-blue",b);
+
+# now blend the red/dome light and the instrument lights; this used to be 
+# done via conditions in the cockpit model emissions however when I added
+# support for the red flood we need to be a bit more sophisticated in 
+# how we blend the lights - so that the insruments will be displayed in red
+# unless the instrument lighing is bright enough to shine through.
+    var instrument_norm = getprop("controls/lighting/instruments-norm");
+    inst_prop = "controls/lighting/white-flood-brt";
+    var inst_r = math.min(1.0,r + getprop(inst_prop~"-red") * instrument_norm);
+    var inst_g = math.min(1.0,g + getprop(inst_prop~"-green") * instrument_norm);
+    var inst_b = math.min(1.0,b + getprop(inst_prop~"-blue") * instrument_norm);
+    setprop("controls/lighting/instrument-red", inst_r);
+    setprop("controls/lighting/instrument-green", inst_g);
+    setprop("controls/lighting/instrument-blue", inst_b);
+}
+
+
+position_switch = func(n) {
+	var sw_pos = sw_pos_prop.getValue();
+    print("position switch ",n," -> ",sw_pos);
+    if (sw_pos == 0){
+              position.switch(1);
+                position_intens = 3;
+    } else if (sw_pos == 1){
+                position.switch(0);
+                position_intens = 0;
+    } else if (sw_pos == 2){
+                position.switch(1);
+                position_intens = 6;
+    }
+}
+
+position_flash_switch = func {
 	if (! position_flash_sw.getBoolValue() ) {
 		position_flash_sw.setBoolValue(1);
 		position.blink();
@@ -105,6 +199,11 @@ var cnpy = aircraft.door.new("canopy", 3.9);
 # 
 setprop("sim/model/f-14b/controls/canopy/canopy-switch", 0);
 var pos = props.globals.getNode("canopy/position-norm");
+
+setlistener("sim/model/f-14b/config/mod-AFC-735", func(v) {
+#    print("AFC-735 active=",v.getValue());
+    setprop("/fdm/jsbsim/fcs/mod-dlc-AFC-735-active",v.getValue());
+}, 1, 0);
 
 #
 #
@@ -312,10 +411,13 @@ var timedMotions = func {
 
         # the F14 FDM has a combined aileron deflection so split this for animation purposes.
         var current_aileron = aileron.getValue();
-        if (abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
+        if (getprop("/autopilot/locks/heading") == "wing-leveler" and abs(getprop("fdm/jsbsim/fcs/aileron-cmd-norm")) > deadZ_roll)
         {
-#print("Outside dead zone ",current_aileron," roll ",getprop("autopilot/settings/target-roll-deg"));
             setprop("autopilot/settings/target-roll-deg", getprop("orientation/roll-deg"));
+        }
+        if (getprop("/autopilot/locks/altitude") == "pitch-hold" and abs(getprop("fdm/jsbsim/fcs/elevator-cmd-norm")) > deadZ_pitch)
+        {
+            setprop("autopilot/settings/target-pitch-deg", getprop("orientation/pitch-deg"));
         }
         var elevator_deflection_due_to_aileron_deflection =  current_aileron / 2.0;
     	left_elev_generic.setDoubleValue(elev_output.getValue() + elevator_deflection_due_to_aileron_deflection);
@@ -370,7 +472,7 @@ var ownshipAlt = props.globals.getNode("position/altitude-ft");
 
 var F14_exec = {
 	new : func (_ident){
-        print("F14_exec: init");
+#        print("F14_exec: init");
         var obj = { parents: [F14_exec]};
 #        input = {
 #               name : "property",
@@ -505,6 +607,9 @@ var toggle_cockpit_views = func() {
 
 
 var quickstart = func() {
+
+    fixAirframe();
+
 #    setprop("controls/electric/engine[0]/generator",1);
 #    setprop("controls/electric/engine[1]/generator",1);
 #    setprop("controls/electric/engine[0]/bus-tie",1);
@@ -699,15 +804,15 @@ var fixAirframe = func {
     }
 }
 
-setlistener("sim/model/f-14b/wings/damage-enabled", func(v){
-print("Damage enabled ",v.getValue());
+setlistener("sim/model/f-14b/controls/damage-enabled", func(v){
+#print("Damage enabled ",v.getValue());
     if (v.getValue())
-      setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",1);
+      setprop("fdm/jsbsim/systems/flyt/damage-enabled",1);
     else
-      setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",0);
+      setprop("fdm/jsbsim/systems/flyt/damage-enabled",0);
   },0,0);
 
-setprop("fdm/jsbsim/systems/flyt/wing-damage-enabled",getprop("sim/model/f-14b/wings/damage-enabled"));
+setprop("fdm/jsbsim/systems/flyt/damage-enabled",getprop("sim/model/f-14b/controls/damage-enabled"));
 
 
 var esRIO = nil;

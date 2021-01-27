@@ -78,7 +78,9 @@ var nav1_freq_update = func {
 		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_as_selected);
 	}
 }
-var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+# carrier approach 'glideslope' based on 3/4 mile @ 360feet
+# (i.e. 1207m at 109m)
+var FD_TANDEG = math.tan(3.5 / 57.29577950560105);
 
 #
 # AN/SPN 46 transmits - this receives.
@@ -359,6 +361,7 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/VDI/on-off",
 	"sim/hud/visibility[0]",
 	"sim/hud/visibility[1]",
+	"sim/model/f-14b/controls/damage-enabled",
 	"sim/model/f-14b/controls/hud/on-off",
 	"sim/model/f-14b/controls/HSD/on-off",
 	"sim/model/f-14b/controls/pilots-displays/mode/aa-bt",
@@ -366,10 +369,8 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/pilots-displays/mode/cruise-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/ldg-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/to-bt",
-    "sim/model/f-14b/wings/damage-enabled",
     "sim/model/f-14b/controls/windshield-heat",
 	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav",
-	"sim/model/f-14b/wings/damage-enabled",
 	"fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount",
 	"fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount",
 	"fdm/jsbsim/propulsion/engine[0]/mcb-failed",
@@ -692,7 +693,7 @@ var common_carrier_init = func {
             if (f14.carrier_ara_63_position == nil or geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 200)
             {
                 print("Special init for Carrier cat launch");
-                setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
+                setprop("/fdm/jsbsim/systems/holdback/holdback-cmd",1);
                 setprop("gear/launchbar/position-norm",1);
                 repos_gear_down = 1;
             }
@@ -790,6 +791,8 @@ var common_init = func {
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
+f14_afcs.afcs_disengage();
+
         setprop("sim/multiplay/visibility-range-nm", 200);
 	print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
@@ -835,8 +838,14 @@ var common_init = func {
 }
 
 # Init ####################
-var init = func {
-	print("Initializing F-14 Systems");
+var init = func(v) {
+if (v == nil or !v.getValue())
+  {
+	print("init: not ready ",v.getValue());
+return;
+  }
+
+	print("Initializing F-14 Systems ",v.getValue());
 	f14.ext_loads_init();
 	f14.init_fuel_system();
 	aircraft.data.load();
@@ -849,6 +858,7 @@ var init = func {
 	awg_9.init();
 	an_arc_182v.init();
 	an_arc_159v1.init();
+    f14.set_flood_lighting_colour();
 	setprop("controls/switches/radar_init", 0);
 	# properties to be stored
 	foreach (var f_tc; TcFreqs.getChildren()) {
@@ -954,9 +964,8 @@ carrier_approach_reposition = func {
     var dist_m = 11000;
     if (getprop("sim/presets/carrier-approach-dist-m") != nil)
         dist_m  = getprop("sim/presets/carrier-approach-dist-m");
-    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
     np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
-    var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
+    var gs_height = ((dist_m*FD_TANDEG)+20)*3.281;
     lat = np.lat();
     lon = np.lon();
     onspeed = get_approach_onspeed();
@@ -1020,7 +1029,6 @@ return;
 }
 
 print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
-    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
 
     var np = geo.Coord.new()
     .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
