@@ -23,7 +23,7 @@ and Robert J. Shaw,  May 1985
     <channel name="engine-control">
         <switch name="fcs/throttle-switched[0]">
             <default value="fcs/throttle-cmd-norm[0]"/>
-            <test logic="AND" value="fcs/throttle-apc">
+            <test logic="AND" value="systems/apc/throttle-pla-norm">
                 systems/apc/active eq 1
                 position/aircraft-on-ground eq 0
             </test>

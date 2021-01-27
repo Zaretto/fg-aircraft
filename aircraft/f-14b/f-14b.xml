@@ -7,27 +7,48 @@
     <fileheader>
         <author>Richard Harrison</author>
         <filecreationdate>2014-08-02</filecreationdate>
-        <version>1.0</version>
+        <version>1.2</version>
         <description>
             Models an F14-B with F110-GE-400 engines.
+
+            The aerodata used is from AFWAL-TR-80-3141 parts I and III which is
+            for sweep of 22degrees, positive alpha, clean, low speed.  NASA
+            TM-X-62306 is used for longitudinal flaps, speedbrakes, gear and
+            spoilers
             
-            The aerodata used is from AFWAL-TR-80-3141 and AFWAL-TR-80-3141 
-            which is for sweep of 22degrees, positive alpha, clean, low speed.
-            NASA TM-X-62306 is used for longitudinal flaps, speedbrakes, gear and spoilers
-
-            Wingsweep and lateral spoilers are based on CFD computed values (OpenVSP).
-
-            Engine Thrust are based on NASA-TM-104326 tables 4-6 adjusted for altitude and with
-            augmentation figures based on that of the mil thrust.
-
-            The flaps and auxiliary flaps coefficients are modelled based on tuning to meet F-14AAD-1 as no data
-            is currently available. The proportions assigned are relative to their surface area 
-            (as measured roughly 64% main, 36% aux) - the values assigned are 0.7 and 0.3 based on this 
-            and this applies to ClDFM, CdDFM and CMDFM
-
+            The flaps, AUX flaps and slats coefficients are based on the values in
+            NASA TM-X-62306 however this only gives us coefficients for 35 degrees
+            of flaps and 17 degrees of slats; so the total value is divided up
+            between flaps and slats with flaps contributing 80% of the total and
+            slats the remaining 20%. Flaps are further divided with main
+            contributing 70% and AUX 30% and also appropriate scaling for
+            intermediate values of both slats and flaps.
+            
+            Wingsweep and lateral spoilers are based on CFD computed values
+            (OpenVSP).
+            
+            The flight control system (FCS) is modelled based on the schematic
+            data in NASA-TM-81833 - and also I model both the analog SAS and the
+            digital SAS.
+            
+            DLC is modelled based on the data in NASA-TM-81833 but also with both
+            the original DLC which uses all spoilers between -4 and 17 degrees for
+            both roll control and DLC and the mod AFC 735 which uses the inner
+            spoilers for DLC using the full deflection (-4 +50) and the outer
+            spoilers for roll control.
+            
+            ACLS is not currently modelled - I'm hoping that I will discover
+            enough information to enable an accurate model to be built.
+            
+            APC is also based on the schematic data in NASA-TM-81833.
+            
+            Engine Thrust are based on NASA-TM-104326 tables 4-6 adjusted for
+            altitude and with augmentation figures based on that of the mil
+            thrust.
+                                   
         </description>
         <note>Aircraft origin for measurements is the nose.</note>
-        <note>Low speed clean should be exactly as an F-14 as this model is based on accurate aerodata (see limitations below).</note>
+        <note>The aerodynamic and FCS model are based on accurate aerodata with the exceptions in the limitations section below.</note>
         <limitation>Wingsweep and lateral spoilers are based on CFD computed values (OpenVSP).</limitation>
         <reference 
             refID="http://zaretto.com/f-14b"
@@ -3089,76 +3110,6 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
                 <z>   0.01 </z>
             </direction>
         </force>
-
-
     </external_reactions>
-    <output name="c:/temp/JSBOut.csv" type="CSV" rate="10">
-        <property caption="alpha-deg">aero/alpha-deg</property>
-        <property caption="beta-deg">aero/beta-deg</property>
-        <property caption="qbar">aero/qbar-psf</property>
-        <property caption="pb">velocities/p-aero-rad_sec</property>
-        <property caption="qb">velocities/q-aero-rad_sec</property>
-        <property caption="rb">velocities/r-aero-rad_sec</property>
-        <property caption="Nz">accelerations/Nz</property>
-        <property caption="dlc-active">fcs/dlc-active</property>
 
-        <property caption="alpha-u">systems/apc/alpha-u</property>
-        <property caption="alpha-ref">systems/apc/alpha-u-reference</property>
-        <property caption="apc/v-1-1">systems/apc/v-1-1</property>
-        <property caption="apc/v-1-2">systems/apc/v-1-2</property>
-        <property caption="apc/v-1">systems/apc/v-1</property>
-        <property caption="apc/v-2-1">systems/apc/v-2-1</property>
-        <property caption="apc/v-2-2">systems/apc/v-2-2</property>
-        <property caption="apc/v-2">systems/apc/v-2</property>
-        <property caption="apc/v-3-dh">systems/apc/v-3-dh</property>
-        <property caption="apc/v-3-dlc">systems/apc/v-3-dlc</property>
-        <property caption="apc/v-3-1">systems/apc/v-3-1</property>
-        <property caption="apc/v-3-2">systems/apc/v-3-2</property>
-        <property caption="apc/v-3">systems/apc/v-3</property>
-        <property caption="apc/throttle-norm">systems/apc/throttle-pla-norm</property>
-        
-
-        <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>
-        <property caption="stick-thumbwheel-norm">fcs/stick-thumbwheel-norm</property>
-        <property caption="pitch-1-dlc">fcs/pitch-1-dlc-tw-norm-v1</property>
-        <property caption="spoiler-dlc-increment-cmd">fcs/spoiler-dlc-increment-cmd</property>
-
-        <!-- <property caption="spoiler-right-inner-pos-deg">fcs/spoiler-right-inner-pos-deg</property>
-        <property caption="spoiler-leftright-inner-pos-deg">fcs/spoiler-leftright-inner-pos-deg</property>
-        <property caption="CM">aero/coefficients/CM</property>
-        <property caption="CMUC">aero/coefficients/CMUC</property>
-        <property caption="CMBRK">aero/coefficients/CMBRK</property>
-        <property caption="CMMdFlaps">aero/coefficients/CMMdFlaps</property>
-        <property caption="CMMdAuxFlaps">aero/coefficients/CMMdAuxFlaps</property>
-        <property caption="CMMdSlats">aero/coefficients/CMMdSlats</property>
-        <property caption="CMMdSpoilersLeftInner">aero/coefficients/CMMdSpoilersLeftInner</property>
-        <property caption="CMMdSpoilersLeftOuter">aero/coefficients/CMMdSpoilersLeftOuter</property>
-        <property caption="CMMdSpoilersRightInner">aero/coefficients/CMMdSpoilersRightInner</property>
-        <property caption="CMMdSpoilersRightOuter">aero/coefficients/CMMdSpoilersRightOuter</property> -->
-<!--         
-        <property caption="pb">velocities/p-aero-rad_sec</property>
-        <property caption="qb">velocities/q-aero-rad_sec</property>
-        <property caption="rb">velocities/r-aero-rad_sec</property>
-        <property caption="pitch-trim-sum">fcs/pitch-trim-sum</property>
-        <property caption="pitch-3-q">sas/pitch-3-q</property>
-        <property caption="pitch-command">fcs/pitch-command</property>
-        <property caption="pitch-cmd-norm">fcs/pitch-cmd-norm</property> -->
-       
-        <!-- <property caption="sas-yaw">sas/yaw-output</property>
-        <property caption="yawr0">sas/yaw-r-0</property>
-        <property caption="yawr01">sas/yaw-r-01</property>
-        <property caption="yawr1">sas/yaw-r-1</property>
-        <property caption="qbar-psf">aero/qbar-psf</property>
-        <property caption="phi-deg">attitude/phi-deg</property>
-        <property caption="psi-deg">attitude/psi-deg</property>
-        <property caption="theta-deg">attitude/theta-deg</property>
-        <property caption="aileron-pos-deg">fcs/aileron-pos-deg</property> -->
-        <!-- <property caption="differential-elevator-pos-deg">fcs/differential-elevator-pos-deg</property>
-        <property caption="elevator-pos-deg">fcs/elevator-pos-deg</property>
-        <property caption="rudder-pos-deg">fcs/rudder-pos-deg</property>
-        <property caption="fbx-total-lbs">forces/fbx-total-lbs</property>
-        <property caption="fby-total-lbs">forces/fby-total-lbs</property>
-        <property caption="fbz-total-lbs">forces/fbz-total-lbs</property>
-        <property caption="vt-fps">velocities/vt-fps</property> -->
-    </output>
 </fdm_config>

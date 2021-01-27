@@ -1,27 +1,84 @@
+F14 Aero notes: (rjh@zaretto.com); aero V1.2; updated 2021-01
+-------------------------------------------------------------
 
-F14 Aero notes: (rjh@zaretto.com)
+The original aerodynamic model that I created in 2014 was primarily
+using windtunnel data from AFWAL-TR-80-3141 parts I and III – however
+back in 2018 I found some new data in documents TM-X-62244
+(longitudinal) https://github.com/Zaretto/fg-aircraft/issues/59 and
+TM-X-62306 (lateral)
 
-Estimated
-* All negative alpha values have been estimated; generally using NASA CR-1756 747-100 (Boeing D6039643 VolII) and data from F15 (flightgear Erik Hofman) been used as a guide and to calculate typical coefficient increments where no data is available; so for flaps I've taken the 747 coefficient increments; scaled them accordingly (for flap angle and a slight tuning factor) to get values that I think are applicable for an F14. * Flap increments
-* Gear increments
-* Speedbrake.
+Adjusted engine power tables based on the NASA-TM-104326 but adjusted
+to match known performance points. Still needs more work
+
+Correct simulation of analogue and digital flight controls (and SAS)
+based on based on the schematic data in NASA-TM-81833
+
+Added DLC simulation based on the data in NASA-TM-81833 but also with
+both the original DLC which uses all spoilers between -4 and 17
+degrees for both roll control and DLC and the mod AFC 735 which uses
+the inner spoilers for DLC using the full deflection (-4 +50) and the
+outer spoilers for roll control.
+
+New APC with accurately simulated APC based on "NASA TM-X-81833. see
+https://i.imgur.com/gAbAGeE.png
+
+When the damage is turned on the flaps and slats will both receive
+damage as a result of overspeed conditions. This will have the same
+aerodynamic effect as flap retraction - however also the flaps and
+slats will get jammed if overspeed continues for an extended period.
+
+Estimated / non wind tunnel or flight test data
+-----------------------------------------------
+* All negative alpha values have been estimated based on experience
+  and using NASA CR-1756 747-100 (Boeing D6039643 VolII) to validate
+  the basic concepts.
 * Stores coefficients
-* Sweep is calculated as a factor based on values in NASA TN-D6909
-* Slats based on (Cl,Cd,CM)  - based loosely on adg.stanford.edu/aa241/highlift/clmaxest.html with some tuning and guesstimation
-* Mach number affects are applied as a simple factor (based on Cl value differences) and applied to all forces/moments. This doesn't accurately model the transonic region and probably isn't accurate for each invdividual coefficient group but until I find some more data it is all I've got to work with.
-* Ground spoilers use estimated and tuned values.
-* Spoilers are aerodynamically modelled for Lift,Drag,Roll. Differential spoilers are used below wingsweep of 57degrees to augment the roll performance. The spoilers are currently modelled per wing surface, whereas the aircraft can deploy these in pairs per wing, which is used for DLC (the inboard spoilers are used to control descent/ascent, and the outboard spoilers are used for roll). This model is as per AFC 735, i.e. engaging DLC uses the inboard two spoilers for descent control, prior to AFC 735 all spoilers were used for DLC, however two spoilers moving full deflection was found to be more effective than the four spoilers going to 17 degrees, which is why it was changed in AFC 735 (see http://www.bobistheoilguy.com/forums/ubbthreads.php/topics/3867303/Re:_F-14_Questions_Answered_-_#Post3867303)
+* Wing Sweep and mache effects are based on values from VSPAERO
 
-Things that are definitely missing;
-* PQR Cross coupling (CNP, CNR etc) effects does not take into account flap deflection
+General features
+----------------
+    * Complete simulation of the airframe and the various 
+      features.
+    * Engine simulation is really only accurate for thrust; 
+      this is a limitation of JSBSim
+    * Flaps and slats can be damaged by overspeed
+    * Excessive G will tear a wing off
+    * Digital and analog simulation of Flight Control system
+    * APC
+    * DLC
+    * Arrestor wire simulation based on aircraft mass and speed
+      - overspeed landing will result in less efficient or non 
+        effective arresting wires 
 
+Missing features
+----------------
+    * No ACLS
+    * No RATS for GE engines
 
-The YASim model was removed October, 2015 to allow for the correct JSBSim model names (and also because the YASim was becoming more time consuming to support and a consensus was achieved with consultation (xii,flying_toaster,Richard) that it could be removed)
+Validation of aero V1.2
+-----------------------
+
+Mostly the validation has been by flight testing; but also the
+coefficients have been compared against the original data sources to
+ensure that the values are consistent with the originating data.
+
+Overall error is within 2% of published; Figure 11-8. Landing Approach
+Airspeed (15 Units AOA) in NAVAIR 01-F14AAP-1, also in NAVAIR
+01-F14AAP-1.1 Figure 7-1 Approach Speed DLC netural- Flaps down (15
+units AOA) two engine gives us 136 kts IAS; which when allowing 8knots
+for DLC gives us also 124 kts IAS.
+
+Also I’ve used photographic references to cross check; photo(2) below
+is useful because I can see that it is onspeed from the lights on the
+nose gear; with some matching of my model against the photo it appears
+that the pitch angle is around 6 to 7 degrees.
+
+1. https://www.airhistory.net/photo/173772/163414
+2. https://www.airhistory.net/photo/134161/163897
+3. https://i.imgur.com/aXvizJU.png 
 
 ---------------------------------------
 F-14A (TF-30) October, 2015
-
-The F-14B JSBSim version that was using the f-14a aircraft name is now f-14b (YASim version removed).
 
 The new F-14A JSBSim has the TF-30 engines fitted. As part of this change a basic compressor stall model was added (as these engines are famous for this). The model attempts to follow the documentation in the released MIR (Lt. Hultgreen, F-14A) and information in NATOPS.
 
