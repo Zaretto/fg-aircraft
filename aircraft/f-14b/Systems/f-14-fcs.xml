@@ -844,6 +844,7 @@ Figure 2-54.  Longitudinal System Authority
                     <!-- based on 30 deg/sec -->
                 </setting>
             </traverse>
+            <output>fcs/elevator-pos-rad</output>>
         </kinematic>
 
 
@@ -1057,7 +1058,10 @@ Figure 2-54.  Longitudinal System Authority
         <fcs_function name="sas/yaw-sas-2-stkr">
             <function>
                 <product>
-                    <property>-sas/roll-sas-1-input</property>
+                    <product>
+                        <property>sas/roll-sas-1-input</property>
+                        <value>-1</value>
+                    </product>
                     <property>sas/yaw-sas-2-v1-stkr-factor</property>
                 </product>
             </function>
@@ -1241,8 +1245,8 @@ Figure 2-54.  Longitudinal System Authority
                         <value>-1</value>
                         <sum>
                             <product>
-                                <property>-sas/roll-sas-1-input-0</property>
-                                <value>0.4696</value>
+                                <property>sas/roll-sas-1-input-0</property>
+                                <value>-0.4696</value>
                             </product>
                             <product>
                                 <property>sas/roll-sas-1-input-0</property>
@@ -1407,8 +1411,14 @@ Figure 2-54.  Longitudinal System Authority
         <fcs_function name="sas/roll-sas-2">
             <function>
                 <sum>
-                    <property>-sas/roll-sas-2-ha-v2</property>
-                    <property>-sas/roll-sas-2-v4</property>
+                    <product>
+                        <property>sas/roll-sas-2-ha-v2</property>
+                        <value>-1</value>
+                    </product>
+                    <product>
+                        <property>sas/roll-sas-2-v4</property>
+                        <value>-1</value>
+                    </product>
                 </sum>
             </function>
         </fcs_function>

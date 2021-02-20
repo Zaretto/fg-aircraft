@@ -111,8 +111,8 @@
                      In JSBSim acclerations/Nz is positive along positive (down) body axes
                  -->
                 <product>
-                    <property>-accelerations/Nz</property>
-                    <value>50</value>
+                    <property>accelerations/Nz</property>
+                    <value>-50</value>
                 </product>
             </function>
         </fcs_function>
@@ -122,7 +122,10 @@
                     <property>systems/apc/active</property>
                     <sum>
                         <property>systems/apc/v-1-1</property>
-                        <property>-systems/apc/v-2-1</property>
+                        <product>
+                            <property>systems/apc/v-2-1</property>
+                            <value>-1</value>
+                        </product>
                     </sum>
                 </product>
         </function>
@@ -183,7 +186,10 @@
                 <sum>
                     <property>systems/apc/v-1</property>
                     <property>systems/apc/v-2</property>
-                    <property>-systems/apc/v-3</property>
+                    <product>
+                        <property>systems/apc/v-3</property>
+                        <value>-1</value>
+                    </product>
                 </sum>
             </function>
             <clipto>
