@@ -772,13 +772,13 @@ asymmetry lockout (3-second light).
             </function>
             <output>systems/flyt/damage-reset</output>
         </fcs_function>
-        <fcs_function name="systems/flyt/tied/damage-reset1">
+        <fcs_function name="systems/flyt/tied/damage-reset-flaps-main-damage-rate-manuv">
             <function>
                 <v>0</v>
             </function>
             <output>systems/flyt/flaps-main-damage-rate-manuv</output>
         </fcs_function>
-        <fcs_function name="systems/flyt/tied/damage-reset1">
+        <fcs_function name="systems/flyt/tied/damage-reset-flaps-main-damage-rate">
             <function>
                 <v>0</v>
             </function>
@@ -798,19 +798,18 @@ asymmetry lockout (3-second light).
 
             <test value="0">
                 systems/hook/tailhook-bypass-field ne 0
+                gear/gear-cmd-norm gt 0.1
             </test>
 
             <test value="0">
-                systems/hook/tailhook-pos-norm gt 0.5
-                gear/gear-pos-norm le 0
+                systems/hook/tailhook-bypass-field eq 0
+                systems/hook/tailhook-pos-norm gt 0.4
+                gear/gear-cmd-norm gt 0.1
             </test>
-
             <test value="systems/electrics/aoa-indexer-light/state">
                 systems/hook/tailhook-bypass-field eq 0
                 systems/hook/tailhook-pos-norm lt 0.4
-            </test>
-            <test value="1">
-                gear/gear-pos-norm le 0
+                gear/gear-cmd-norm gt 0.1
             </test>
         </switch>
 
