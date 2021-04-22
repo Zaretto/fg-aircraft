@@ -1006,6 +1006,7 @@
                 <bool n="0" type="bool" alias="/instrumentation/gci/picture"/><!-- Use ctrl 1 to 3 to communicate with Ground Control Intercept if one is spawned near -->
                 <bool n="1" type="bool" alias="/instrumentation/gci/bogeydope"/><!-- if change these to other bools, the l0k1 assets on github needs to be updated also -->
                 <bool n="2" type="bool" alias="/instrumentation/gci/cutoff"/>
+                <bool n="3" type="bool" alias="/damage/fire/serviceable"/>
                 <bool n="28" type="bool"/> <!-- aoa indexer slow -->
                 <bool n="29" type="bool"/> <!-- aoa indexer onspeed -->
                 <bool n="30" type="bool"/> <!-- aoa indexer fast -->
@@ -1058,6 +1059,7 @@
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
                 <string n="5" type="string">00--++00--Empty</string><!-- mp stores -->
+                <string n="6" type="string"></string><!-- mp radar spike -->
                 <string n="13" type="string"></string>
                 <!-- instruments -->
                 <!-- <string n="2" type="string">50</string>      free -->
@@ -1160,6 +1162,13 @@
                         <binding>
                             <command>nasal</command>
                             <script>f14.cold_and_dark()</script>
+                        </binding>
+                    </item>
+                    <item n="10">
+                        <label>Event Log</label>
+                        <binding>
+                            <command>dialog-show</command>
+                            <dialog-name>flightlog</dialog-name>
                         </binding>
                     </item>
                 </menu>
@@ -2235,11 +2244,17 @@
             </frequencies>
         </nav>
     </instrumentation>
+    
+    <damage>
+        <fire>
+            <serviceable type="bool">true</serviceable>
+        </fire>
+    </damage>
 
     <payload>                        
         <armament>
-          <use-fg-default-hud type="bool">true</use-fg-default-hud>
-          <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <use-fg-default-hud type="bool">true</use-fg-default-hud>
+            <models type="string">Aircraft/f-14b/Models/Stores/</models>
             <modelsUseCase type="bool">true</modelsUseCase>
             <modelsUpperCase type="bool">true</modelsUpperCase>
             <pylon-offset type="int">1</pylon-offset>
@@ -2247,12 +2262,19 @@
             <station-name type="string">station</station-name>
             <hit-interpolation type="bool">true</hit-interpolation>
             <enable-craters type="bool">true</enable-craters>
-            <MP-lat type="string">rotors/main/blade[0]/flap-deg</MP-lat>
+            <!--MP-lat type="string">rotors/main/blade[0]/flap-deg</MP-lat>
             <MP-lon type="string">rotors/main/blade[1]/flap-deg</MP-lon>
-            <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt>
+            <MP-alt type="string">rotors/main/blade[2]/flap-deg</MP-alt-->
             <msg type="bool">false</msg>
             <damage type="bool">false</damage>
+            <MLW-bearing type="double">0</MLW-bearing>
+            <MLW-count type="int">0</MLW-count>
+            <MLW-launcher type="string"></MLW-launcher>
+            <MAW-bearing type="double">0</MAW-bearing>
+            <MAW-active type="bool">false</MAW-active>
+            <spike type="bool">false</spike>
             <aim-9>
+                <type-id type="int">57</type-id>
                 <short-name type="string">A-9L</short-name>
                 <long-name type="string">AIM-9L Sidewinder</long-name>
                 <vol-search type="double">0.075</vol-search>
@@ -2279,7 +2301,7 @@
                 <seeker-angular-speed-dps type="double">30</seeker-angular-speed-dps><!-- deg/sec guess-->
                 <lock-on-sun-deg type="double">5</lock-on-sun-deg>
                 <loft-altitude type="int">0</loft-altitude>
-                <min-fire-range-nm type="double">0.2</min-fire-range-nm>
+                <min-fire-range-nm type="double">0.2</min-fire-range-nm><!-- 0.2 -->
                 <rail type="bool">true</rail>
                 <rail-length-m type="double">2.667</rail-length-m><!-- 16S210 AIM-9 Missile Launcher -->
                 <rail-point-forward type="bool">true</rail-point-forward>
@@ -2303,13 +2325,14 @@
                 <ready-time type="double">0.5</ready-time>
             </aim-9>
             <aim-7>
+                <type-id type="int">55</type-id>
                 <short-name type="string">A-7F</short-name>
                 <long-name type="string">AIM-7F Sparrow</long-name>
                 <guidance type="string">semi-radar</guidance>
                 <vol-search type="double">0.00</vol-search>
                 <vol-track type="double">0.20</vol-track>
                 <max-fire-range-nm type="int">22</max-fire-range-nm><!-- authentic 21.5 for 2m2 RCS -->
-                <min-fire-range-nm type="double">0.16</min-fire-range-nm>
+                <min-fire-range-nm type="double">0.16</min-fire-range-nm><!-- 0.16 -->
                 <FCS-field-deg type="int">25</FCS-field-deg>
                 <seeker-field-deg type="int">110</seeker-field-deg>
                 <max-g type="int">20</max-g>
@@ -2344,11 +2367,12 @@
                 <drop-time type="double">0.5</drop-time>
             </aim-7>
             <aim-54>
+                <type-id type="int">53</type-id>
                 <short-name type="string">A-54</short-name>
-                <long-name type="string">AIM-54A Phoenix</long-name><!-- Or was it B? Should really be upgraded to C -->
+                <long-name type="string">AIM-54B Phoenix</long-name>
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
-                <guidance source="authentic" type="string">radar</guidance>
+                <guidance source="authentic" type="string">semi-radar</guidance>
                 <all-aspect source="authentic" type="bool">true</all-aspect>
                 <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm> 
                 <FCS-field-deg type="int">25</FCS-field-deg>                              
@@ -2367,7 +2391,7 @@
                 <min-speed-for-guiding-mach type="double">0.80</min-speed-for-guiding-mach>
                 <self-destruct-time-sec type="double">180</self-destruct-time-sec>         
                 <loft-altitude source="authentic" type="int">100000</loft-altitude>
-                <min-fire-range-nm type="double">0.4</min-fire-range-nm>
+                <min-fire-range-nm type="double">2.0</min-fire-range-nm><!-- was 0.4 -->
                 <rail type="bool">false</rail>
                 <max-report-distance type="double">100</max-report-distance>
                 <navigation type="string">PN</navigation>
@@ -2380,6 +2404,7 @@
                 <drop-time type="double">0.5</drop-time>
             </aim-54>
             <mk-83> 
+                <type-id type="int">33</type-id>
                 <short-name type="string">B83</short-name>
                 <long-name type="string">MK-83 General Purpose Bomb</long-name>
                 <fire-msg type="string">Bombs away</fire-msg>
@@ -2402,7 +2427,7 @@
                 <weight-fuel-lbm type="double"> 0 </weight-fuel-lbm>
                 <drag-coeff type="double"> 0.125 </drag-coeff>
                 <cross-section-sqft type="double"> 1.07744817 </cross-section-sqft><!-- the MK83 is 357 mm diam -->
-                <arming-time-sec type="double"> 5 </arming-time-sec>
+                <arming-time-sec type="double"> 2 </arming-time-sec><!-- was 5 -->
                 <min-speed-for-guiding-mach type="double"> 0 </min-speed-for-guiding-mach>
                 <self-destruct-time-sec type="double"> 10000 </self-destruct-time-sec>
                 <all-aspect type="bool">true</all-aspect>
@@ -2420,6 +2445,7 @@
                 <ejector-speed-fps type="double">10</ejector-speed-fps>
             </mk-83>
             <es>                    <!-- Ejection seat -->
+                <type-id type="int">93</type-id>
                 <vol-search type="double">0.075</vol-search>
                 <vol-track type="double">0.25</vol-track>
                 <vol-track-weak type="double">0.175</vol-track-weak>
@@ -2492,8 +2518,15 @@
     </f14>
     
     <nasal>
+        <!--emesary>
+            <file>Aircraft/f-14b/Nasal/emesary.nas</file>
+        </emesary>
+        <emesary_mp_bridge>
+            <file>Aircraft/f-14b/Nasal/emesary_mp_bridge.nas</file>
+        </emesary_mp_bridge-->
         <notifications>
             <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
+            <file>Aircraft/f-14b/Nasal/GeoBridgedTransmitter.nas</file>
         </notifications>
       <aar>
             <file>Aircraft/Generic/aar.nas</file>
@@ -2510,9 +2543,11 @@
         <rcs>
             <file>Aircraft/f-14b/Nasal/rcs.nas</file>
         </rcs>
+        <damage>
+            <file>Aircraft/f-14b/Nasal/damage.nas</file>
+        </damage>
         <armament>
             <file>Aircraft/f-14b/Nasal/fox2.nas</file>
-            <file>Aircraft/f-14b/Nasal/damage.nas</file>
         </armament>
         <dual_control_tools>
             <file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>

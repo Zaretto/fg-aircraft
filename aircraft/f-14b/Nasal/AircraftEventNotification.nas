@@ -1,103 +1,112 @@
-#
-# Uses PropertySyncNotificationBase to allow properties to be transmitted and received over MP.
-# --
-# PropertySyncNotificationBase is a shortcut notification; as it doesn't need to received and all
-# of the properties are simply set when the notification is unpacked over MP.
-var PropertySyncNotification = 
+var AircraftEventNotification = 
   {
    new: func(_ident="none", _name="", _kind=0, _secondary_kind=0)
    {
-        var new_class = notifications.PropertySyncNotificationBase.new(_ident, _name, _kind, _secondary_kind);
+       var new_class = emesary.Notification.new("AircraftEventNotification", _ident);
 
-        new_class.addIntProperty("TotalFuelLbs", "consumables/fuel/total-fuel-lbs", 2);
-        new_class.addIntProperty("FuelDumpValue", "controls/fuel/dump-valve", 1);
-        new_class.addIntProperty("Engine0Afterburner", "engines/engine[0]/afterburner", 1);
-        new_class.addIntProperty("Engine0Augmentation", "engines/engine[0]/augmentation-burner", 1);
-        new_class.addIntProperty("Engine0AugmentationAlight", "engines/engine[0]/augmentation-alight", 1);
-        new_class.addIntProperty("Engine0N1","engines/engine[0]/n1", 1);
-        new_class.addIntProperty("Engine0N2","engines/engine[0]/n2", 1);
+       new_class.IsDistinct = 1;
+       new_class.Kind = _kind;
+       new_class.Name = _name;
+       new_class.SecondaryKind = _secondary_kind;
+       new_class.Callsign = nil; # populated automatically by the incoming bridge when routed
 
-        new_class.addIntProperty("Engine1N1","engines/engine[1]/n1", 1);
-        new_class.addIntProperty("Engine1N2","engines/engine[1]/n2", 1);
-        new_class.addIntProperty("Engine1Afterburner", "engines/engine[1]/afterburner", 1);
-        new_class.addIntProperty("Engine1Augmentation", "engines/engine[1]/augmentation-burner", 1);
-        new_class.addIntProperty("Engine1AugmentationAlight", "engines/engine[1]/augmentation-alight", 1);
+	   new_class.AuxFlaps = 0;
+	   new_class.ElectricsEssentialPowered = 0;
+	   new_class.ElectricsMainPowered = 0;
+       new_class.ElectricsPowered = 0;
+       new_class.EngineAugmentationBurnerL = 0; # 0 to 5
+       new_class.EngineAugmentationBurnerR = 0; # 0 to 5
+       new_class.EngineNozzleL = 0;
+       new_class.EngineNozzleR = 0;
+       new_class.Flaps = 0;
+       new_class.FuelDump = 0;
+       new_class.FuelTotal = 0;
+	   new_class.GearPosition = 0;
+	   new_class.GearCompression0 = 0;
+	   new_class.GearCompression1 = 0;
+	   new_class.GearCompression2 = 0;
+       new_class.HsdNeedleDeflection = 0;
+       new_class.LeftElevator = 0;
+       new_class.LightingAntiCollision = 0;
+       new_class.LightingFormation = 0;
+       new_class.LightingPosition = 0;
+       new_class.Nav1RadialSelectedDeg = 0;
+       new_class.RadarMode = 0;
+       new_class.Refuel = 0;
+       new_class.RightElevator = 0;
+	   new_class.Rudder = 0;
+       new_class.Slats = 0;
+       new_class.Smoke = 0;
+	   new_class.SpeedBrake = 0;
+       new_class.SteerSubmodeCode = 0;
+	   new_class.SpoilerLeft = 0;
+	   new_class.SpoilerRight = 0;
+       new_class.TacanInRange = 0;
+       new_class.TacanIndicatedBearing = 0;
+       new_class.TacanIndicatedDistanceNm = 0;
+       new_class.TacanMode = 0;
+       new_class.WingDamage = 0; #0,1=l,2=r,3=both
+       new_class.WingSweep = 20;
 
-        new_class.addIntProperty("ElectricsAcEssentialBus1", "fdm/jsbsim/systems/electrics/ac-essential-bus1", 1);
-        new_class.addIntProperty("ElectricsAcEssentialBus2", "fdm/jsbsim/systems/electrics/ac-essential-bus2", 1);
-        new_class.addIntProperty("ElectricsAcLeftMainBus", "fdm/jsbsim/systems/electrics/ac-left-main-bus", 1);
-        new_class.addIntProperty("ElectricsAcLeftMainBusPowered", "fdm/jsbsim/systems/electrics/ac-left-main-bus-powered", 1);
-        new_class.addIntProperty("ElectricsAcMainBus1", "fdm/jsbsim/systems/electrics/ac-main-bus1", 1);
-        new_class.addIntProperty("ElectricsAcRightMainBus", "fdm/jsbsim/systems/electrics/ac-right-main-bus", 1);
-        new_class.addIntProperty("ElectricsDcEssentialBus1", "fdm/jsbsim/systems/electrics/dc-essential-bus1", 1);
-        new_class.addIntProperty("ElectricsDcEssentialBus2", "fdm/jsbsim/systems/electrics/dc-essential-bus2", 1);
-        new_class.addIntProperty("NavRadialSelected", "instrumentation/nav[1]/radials/selected-deg", 2);
-        new_class.addIntProperty("TacanInRange", "instrumentation/tacan/in-range", 1);
-        new_class.addIntProperty("TacanDistanceNm", "instrumentation/tacan/indicated-distance-nm", 1);
-        new_class.addIntProperty("TacanIndicatedBearingDeg", "instrumentation/tacan/indicated-mag-bearing-deg", 2);
-        new_class.addNormProperty("RefuelProbe", "sim/model/f-14b/refuel/position-norm", 1);
-        new_class.addIntProperty("LightingFormation", "sim/model/f-14b/controls/lighting/formation", 1);
-        new_class.addIntProperty("SteerSubmodeCode", "sim/model/f-14b/controls/pilots-displays/steer-submode-code", 1);
-        new_class.addIntProperty("HSDNeedleDeflection", "sim/model/f-14b/instrumentation/hsd/needle-deflection", 1);
-        new_class.addIntProperty("TacanMode", "sim/model/f-14b/instrumentation/tacan/mode", 1);
-        new_class.addIntProperty("LightingAntiCollision", "sim/model/f-14b/lighting/anti-collision/state", 1);
-        new_class.addIntProperty("LightingPosition", "sim/model/f-14b/lighting/position/state", 1);
-        new_class.addIntProperty("IASkt", "instrumentation/airspeed-indicator/indicated-speed-kt", 2);
-        new_class.addIntProperty("FuelTotal", "sim/model/f-14b/instrumentation/fuel-gauges/total", 2);
-        new_class.addIntProperty("CabinAltitde", "fdm/jsbsim/systems/ecs/cabin-altitude-ft", 2);
+new_class.Ruddder= 0;
+new_class.SpeedBrake= 0;
+new_class.SpeedBrake= 0;
+new_class.Launchbar= 0;
+new_class.Canopy= 0;
+new_class.Engine0N1= 0;
+new_class.Engine0N2= 0;
+new_class.Engine1N1= 0;
+new_class.Engine1N2= 0;
 
-        new_class.addIntProperty("RadarAWG9On","sim/model/f-14b/controls/radar-awg-9/on-off",1);
-        new_class.addIntProperty("RadarRange", "instrumentation/radar/radar2-range", 2);
-        new_class.addIntProperty("RadarStandby", "instrumentation/radar/radar-standby", 1);
-        new_class.addIntProperty("RadarWCSMode", "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode", 1);
-        new_class.addIntProperty("TargetRange", "sim/model/f-14b/systems/armament/aim9/target-range-nm", 1);
-
-        new_class.addIntProperty("StationSelector0", "sim/model/f-14b/controls/armament/station-selector[0]", 1);
-        new_class.addIntProperty("StationSelector1", "sim/model/f-14b/controls/armament/station-selector[1]", 1);
-        new_class.addIntProperty("StationSelector2", "sim/model/f-14b/controls/armament/station-selector[2]", 1);
-        new_class.addIntProperty("StationSelector3", "sim/model/f-14b/controls/armament/station-selector[3]", 1);
-        new_class.addIntProperty("StationSelector4", "sim/model/f-14b/controls/armament/station-selector[4]", 1);
-        new_class.addIntProperty("StationSelector5", "sim/model/f-14b/controls/armament/station-selector[5]", 1);
-        new_class.addIntProperty("StationSelector6", "sim/model/f-14b/controls/armament/station-selector[6]", 1);
-        new_class.addIntProperty("StationSelector7", "sim/model/f-14b/controls/armament/station-selector[7]", 1);
-
-        new_class.addIntProperty("StationLoad0", "sim/model/f-14b/systems/external-loads/station[0]/id", 1);
-        new_class.addIntProperty("StationLoad1", "sim/model/f-14b/systems/external-loads/station[1]/id", 1);
-        new_class.addIntProperty("StationLoad2", "sim/model/f-14b/systems/external-loads/station[2]/id", 1);
-        new_class.addIntProperty("StationLoad3", "sim/model/f-14b/systems/external-loads/station[3]/id", 1);
-        new_class.addIntProperty("StationLoad4", "sim/model/f-14b/systems/external-loads/station[4]/id", 1);
-        new_class.addIntProperty("StationLoad5", "sim/model/f-14b/systems/external-loads/station[5]/id", 1);
-        new_class.addIntProperty("StationLoad6", "sim/model/f-14b/systems/external-loads/station[6]/id", 1);
-        new_class.addIntProperty("StationLoad7", "sim/model/f-14b/systems/external-loads/station[7]/id", 1);
-
-
-
-
-        new_class.addNormProperty("Canopy", "canopy/position-norm", 1);
-        new_class.addNormProperty("Engine0NozzlePosNorm", "engines/engine[0]/nozzle-pos-norm", 1);
-        new_class.addNormProperty("Engine1NozzlePosNorm", "engines/engine[1]/nozzle-pos-norm", 1);
-        new_class.addNormProperty("Gear0CompressionNorm", "gear/gear[0]/compression-norm", 1);
-        new_class.addNormProperty("Gear0PositionNorm", "gear/gear[0]/position-norm", 1);
-        new_class.addNormProperty("Gear1CompressionNorm", "gear/gear[1]/compression-norm", 1);
-        new_class.addNormProperty("Gear1PositionNorm", "gear/gear[1]/position-norm", 1);
-        new_class.addNormProperty("Gear2CompressionNorm", "gear/gear[2]/compression-norm", 1);
-        new_class.addNormProperty("Gear2PositionNorm", "gear/gear[2]/position-norm", 1);
-        new_class.addNormProperty("LaunchbarPositionNorm", "gear/launchbar/position-norm", 1);
-        new_class.addNormProperty("TailhookPositionNorm", "gear/tailhook/position-norm", 1);
-        new_class.addNormProperty("AuxFlapPosNorm","surface-positions/aux-flap-pos-norm", 1);
-        new_class.addNormProperty("InnerLeftSpoilersPosNorm","surface-positions/inner-left-spoilers", 1);
-        new_class.addNormProperty("InnerRightSpoilersPosNorm","surface-positions/inner-right-spoilers", 1);
-        new_class.addNormProperty("LeftElevatorPosNorm","surface-positions/left-elevator-pos-norm", 1);
-        new_class.addNormProperty("LeftSpoilersPosNorm","surface-positions/left-spoilers", 1);
-        new_class.addNormProperty("FlapPosNorm","surface-positions/flap-pos-norm", 1);
-        new_class.addNormProperty("RightElevatorPosNorm","surface-positions/right-elevator-pos-norm", 1);
-        new_class.addNormProperty("RightSpoilersPosNorm","surface-positions/right-spoilers", 1);
-        new_class.addNormProperty("RudderPosNorm","surface-positions/rudder-pos-norm", 1);
-        new_class.addNormProperty("SlatsPosNorm","surface-positions/slats-pos-norm", 1);
-        new_class.addNormProperty("SpeedbrakePosNorm","surface-positions/speedbrake-pos-norm", 1);
-        new_class.addNormProperty("WingPosNorm","surface-positions/wing-pos-norm", 1);
-        new_class.addStringProperty("Livery","sim/model/livery/file");
-
+       new_class.bridgeProperties = func()
+         {
+             return 
+               [ 
+				{ getValue:func{return emesary.TransferNorm.encode(new_class.Rudder,1);},               setValue:func(v){new_class.Rudder=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.ElectricsEssentialPowered);},               setValue:func(v){new_class.ElectricsPowered=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.ElectricsMainPowered);},               setValue:func(v){new_class.ElectricsPowered=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Engine0N1);},               setValue:func(v){new_class.Engine0N1=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Engine0N2);},               setValue:func(v){new_class.Engine0N2=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Engine1N1);},               setValue:func(v){new_class.Engine1N1=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Engine1N2);},               setValue:func(v){new_class.Engine1N2=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.EngineAugmentationBurnerL,1);},               setValue:func(v){new_class.EngineAugmentationBurnerL=emesary.TransferInt.decode(v,1);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.EngineAugmentationBurnerR,1);},               setValue:func(v){new_class.EngineAugmentationBurnerR=emesary.TransferInt.decode(v,1);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.EngineNozzleL,1);},               setValue:func(v){new_class.EngineNozzleL=emesary.TransferInt.decode(v,1);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.EngineNozzleR,1);},               setValue:func(v){new_class.EngineNozzleR=emesary.TransferInt.decode(v,1);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.FuelDump,1);},               setValue:func(v){new_class.FuelDump=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.FuelTotal);},               setValue:func(v){new_class.FuelTotal=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.HsdNeedleDeflection);},               setValue:func(v){new_class.HsdNeedleDeflection=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.LightingAntiCollision);},               setValue:func(v){new_class.LightingAntiCollision=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.LightingFormation);},               setValue:func(v){new_class.LightingFormation=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.LightingPosition);},               setValue:func(v){new_class.LightingPosition=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Nav1RadialSelectedDeg);},               setValue:func(v){new_class.Nav1RadialSelectedDeg=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.RadarMode);},               setValue:func(v){new_class.RadarMode=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Refuel);},               setValue:func(v){new_class.Refuel=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.Smoke);},               setValue:func(v){new_class.Smoke=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.SteerSubmodeCode);},               setValue:func(v){new_class.SteerSubmodeCode=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.TacanInRange,1);},               setValue:func(v){new_class.TacanInRange=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.TacanIndicatedBearing);},               setValue:func(v){new_class.TacanIndicatedBearing=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.TacanIndicatedDistanceNm,1);},               setValue:func(v){new_class.TacanIndicatedDistanceNm=emesary.TransferInt.decode(v,1);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.TacanMode,1);},               setValue:func(v){new_class.TacanMode=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferInt.encode(new_class.WingDamage);},               setValue:func(v){new_class.WingDamage=emesary.TransferInt.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.AuxFlaps);},               setValue:func(v){new_class.AuxFlaps=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.Canopy);},               setValue:func(v){new_class.Canopy=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.Flaps);},               setValue:func(v){new_class.Flaps=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.GearCompression0);},               setValue:func(v){new_class.GearCompression0=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.GearCompression1);},               setValue:func(v){new_class.GearCompression1=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.GearCompression2);},               setValue:func(v){new_class.GearCompression2=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.GearPosition);},               setValue:func(v){new_class.GearPosition=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.Launchbar);},               setValue:func(v){new_class.Launchbar=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.LeftElevator);},               setValue:func(v){new_class.LeftElevator=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.RightElevator);},               setValue:func(v){new_class.RightElevator=emesary.TransferNorm.decode(v);}, }, 
+                { getValue:func{return emesary.TransferNorm.encode(new_class.Ruddder);},               setValue:func(v){new_class.Ruddder=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.Slats);},               setValue:func(v){new_class.Slats=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.SpeedBrake);},               setValue:func(v){new_class.SpeedBrake=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.SpoilerLeft);},               setValue:func(v){new_class.SpoilerLeft=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.SpoilerRight);},               setValue:func(v){new_class.SpoilerRight=emesary.TransferNorm.decode(v);}, },
+                { getValue:func{return emesary.TransferNorm.encode(new_class.WingSweep,2);},               setValue:func(v){new_class.WingSweep=emesary.TransferNorm.decode(v);}, },
+               ];
+         };
        return new_class;
-    }
+   },
   };

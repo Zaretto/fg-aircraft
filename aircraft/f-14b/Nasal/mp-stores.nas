@@ -2,7 +2,7 @@
 var pylon = 0;
 var loop = func {
 	pylon += 1;
-	if (pylon == 12) {
+	if (pylon == 11) {
 		pylon = 0;
 	}
 	var type = getprop("payload/armament/station/id-"~pylon~"-type");

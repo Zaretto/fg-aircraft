@@ -1,8 +1,8 @@
 var Math = {
     #
-    # Author: Nikolai V. Chr.
+    # Authors: Nikolai V. Chr, Axel Paccalin.
     #
-    # Version 1.6
+    # Version 1.93
     #
     # When doing euler coords. to cartesian: +x = forw, +y = left,  +z = up.
     # FG struct. coords:                     +x = back, +y = right, +z = up.
@@ -21,6 +21,30 @@ var Math = {
 
     convertAngles: func (heading,pitch,roll) {
         return [-heading, pitch, roll];
+    },
+    
+    # returns direction in geo coordinate system
+    vectorToGeoVector: func (a, coord) {
+        me.handp = me.cartesianToEuler(a);
+        me.end_dist_m = 100;# not too low for floating point precision. Not too high to get into earth curvature stuff.
+        me.tgt_coord = geo.Coord.new(coord);
+        if (me.handp[0] != nil) {
+            me.tgt_coord.apply_course_distance(me.handp[0],me.end_dist_m);
+            me.upamount = me.end_dist_m * math.tan(me.handp[1]*D2R);
+        } elsif (me.handp[1] == 90) {
+            me.upamount = me.end_dist_m;
+        } else {
+            me.upamount = -me.end_dist_m;
+        }
+        me.tgt_coord.set_alt(coord.alt()+me.upamount);
+        
+        return {"x":me.tgt_coord.x()-coord.x(),  "y":me.tgt_coord.y()-coord.y(), "z":me.tgt_coord.z()-coord.z()};
+    },
+    
+    # When observing another MP aircraft the groundspeed velocity info is in body frame, this method will convert it to cartesian vector.
+    getCartesianVelocity: func (yaw_deg, pitch_deg, roll_deg, uBody_fps, vBody_fps, wBody_fps) {
+        me.bodyVelocity = [uBody_fps, -vBody_fps, -wBody_fps];
+        return me.yawPitchRollVector(yaw_deg, pitch_deg, roll_deg, me.bodyVelocity);
     },
 
     # angle between 2 vectors. Returns 0-180 degrees.
@@ -46,7 +70,7 @@ var Math = {
         me.rollM  = me.rollMatrix(roll);
         me.pitchM = me.pitchMatrix(pitch);
         me.yawM   = me.yawMatrix(yaw);
-        me.rotation = me.multiplyMatrices(me.multiplyMatrices(me.yawM, me.pitchM), me.rollM);
+        me.rotation = me.multiplyMatrices(me.rollM, me.multiplyMatrices(me.pitchM, me.yawM));
         return me.multiplyMatrixWithVector(me.rotation, vector);
     },
 
@@ -55,7 +79,7 @@ var Math = {
         me.rollM  = me.rollMatrix(roll);
         me.pitchM = me.pitchMatrix(pitch);
         me.yawM   = me.yawMatrix(yaw);
-        me.rotation = me.multiplyMatrices(me.multiplyMatrices(me.rollM, me.pitchM), me.yawM);
+        me.rotation = me.multiplyMatrices(me.yawM, me.multiplyMatrices(me.pitchM, me.rollM));
         return me.multiplyMatrixWithVector(me.rotation, vector);
     },
 
@@ -220,6 +244,12 @@ var Math = {
     projVectorOnPlane: func (planeNormal, vector) {
       return me.minus(vector, me.product(me.dotProduct(vector,planeNormal)/math.pow(me.magnitudeVector(planeNormal),2), planeNormal));
     },
+    
+    # unary - vector
+    opposite: func (v){
+        # author: Paccalin
+        return [-v[0], -v[1], -v[2]];
+    },
 
     # vector a - vector b
     minus: func (a, b) {
@@ -245,6 +275,41 @@ var Math = {
     normalize: func (v) {
       me.mag = me.magnitudeVector(v);
       return [v[0]/me.mag, v[1]/me.mag, v[2]/me.mag];
+    },
+    
+    crossProduct: func (a,b) {
+        return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+    },
+    
+    distance_from_point_to_line: func (coordP, coordL1, coordL2) {
+        var P  = [coordP.x(),  coordP.y(),  coordP.z()];
+        var L1 = [coordL1.x(), coordL1.y(), coordL1.z()];
+        var L2 = [coordL2.x(), coordL2.y(), coordL2.z()];
+        
+        return me.magnitudeVector(me.crossProduct(me.minus(L2,L1), me.minus(L1,P)))/me.magnitudeVector(me.minus(L2,L1));
+    },
+    
+    # Orthogonal projection of a vector `vec` onto another `ref` !!can throw an exception if the referential vector is null!!.
+    orthogonalProjection: func(vec, ref){
+      # author: Paccalin
+      me.op_refMag = me.magnitudeVector(ref);
+      if(me.op_refMag == 0)
+        die("Orthogonal projection on a null vector referential");
+
+      return me.dotProduct(vec, ref) / me.op_refMag;
+    },
+
+    # Time at which two particles will be at shortest distance !!can throw an exception if the relative speed is null!!
+    particleShortestDistTime: func (orig1, speed1, orig2, speed2) {
+      # author: Paccalin
+      # Compute the origin of the second particle in a referential positionally centered on the first particle.
+      me.psdt_tgtOrig = me.minus(orig2, orig1);
+      # Compute the speed of the second particle in a referential inertially based on the first particle.
+      me.psdt_tgtSpeed = me.minus(speed2, speed1);
+
+      # Project the origin of the particle1 referential onto the line supported by the particle2 trajectory in 1 unit of time.
+      # And divide the result by the magnitude of the speed to have it normalized relative to the time.
+      return me.orthogonalProjection(me.opposite(me.psdt_tgtOrig), me.psdt_tgtSpeed) / me.magnitudeVector(me.psdt_tgtSpeed);
     },
 
 # rotation matrices

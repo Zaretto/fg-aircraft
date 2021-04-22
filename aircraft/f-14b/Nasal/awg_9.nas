@@ -307,7 +307,10 @@ var rdr_loop = func(notification) {
 			u.set_display(0);
 		}
         armament.contact = nil;
-	}
+        setprop("sim/multiplay/generic/string[6]", "");
+	} else {
+        setprop("sim/multiplay/generic/string[6]", "");
+    }
 }
 
 var sweep_frame_inc = 0.2;
@@ -424,7 +427,7 @@ var az_scan = func(notification) {
                             u.setClass(SURFACE);
                         } elsif (contains(knownShips,mdl)) {
                             u.setClass(MARINE);
-                        } elsif (u.get_altitude() < 5) {
+                        } elsif (u.get_altitude() < 1.5 and u.get_altitude() > -1.5) {
                             u.setClass(MARINE);
                         } elsif (u.get_Speed() < 60) {
                             u.setClass(SURFACE);
@@ -709,6 +712,21 @@ if(awg9_trace)
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
         active_u = nil; armament.contact = active_u;
+    }
+    if (active_u != nil and active_u.get_display() and getprop("controls/armament/master-arm") and active_u_callsign != nil and active_u_callsign != "") {
+        # transmit what we are locked onto
+        setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+        
+        # the below code is needed so missile can lock/not-lock onto active_u depending on class.
+        if (active_u.get_type() == armament.AIR and active_u.get_Speed() < 60) {
+            # active_u have landed
+            active_u.setClass(armament.SURFACE);
+        } elsif ((active_u.get_type() == armament.SURFACE or active_u.get_type() == armament.MARINE) and active_u.get_Speed() > 60) {
+            # active_u have taken-off
+            active_u.setClass(armament.AIR);
+        }
+    } else {
+        setprop("sim/multiplay/generic/string[6]", "");
     }
 }
 
@@ -1169,6 +1187,9 @@ var Target = {
         obj.pitch   = c.getNode("orientation/pitch-deg");
         obj.roll   = c.getNode("orientation/roll-deg");
 		obj.Alt = c.getNode("position/altitude-ft");
+        obj.ubody           = c.getNode("velocities/uBody-fps");
+        obj.vbody           = c.getNode("velocities/vBody-fps");
+        obj.wbody           = c.getNode("velocities/wBody-fps");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
 		obj.Valid = c.getNode("valid");
@@ -1676,6 +1697,36 @@ else
     isVirtual: func {
         # used by missile-code
         return FALSE;
+    },
+    get_uBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.ubody.getValue();
+      }
+      if(body == nil) {
+        body = me.get_Speed()*KT2FPS;
+      }
+      return body;
+    },    
+    get_vBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.vbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
+    },    
+    get_wBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.wbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
     },
 	list : [],
 };
