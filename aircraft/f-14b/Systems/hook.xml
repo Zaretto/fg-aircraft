@@ -2,23 +2,7 @@
 
 <system name="hook">
 
-    <!-- property>systems/hook/tailhook-cmd-norm</property -->
-    <property value="10.1">systems/hook/tailhook-length-ft</property>
-    <property value="0">systems/hook/tailhook-pos-min-deg</property>
-    <property value="52.369">systems/hook/tailhook-pos-max-deg</property>
-
-    <property value="646">systems/hook/tailhook-offset-x-in</property>
-    <property value="0.0">systems/hook/tailhook-offset-y-in</property>
-    <property value="0">systems/hook/tailhook-offset-z-in</property>
-    <property value="0">systems/hook/tailhook-pos-deg</property>
-    <property value="1.0">systems/hook/funcs/hook-operational-efficiency</property>
-    <!--<property value="1.0">systems/hook/funcs/hook-functional</property>
-    <property value="0">systems/hook/funcs/reset-hook</property>-->
-
-    <property value="0">systems/hook/hook-decel-force</property>
-    <property value="-60">systems/hook/funcs/arrestor-wire-available-dt</property>
-    <property value="20">systems/hook/arrestor-wire-reset-time</property>
-    <!--<channel name="hook-resets" execute="systems/hook/funcs/reset-hook">
+     <!--<channel name="hook-resets" execute="systems/hook/funcs/reset-hook">
         <fcs_function name="systems/hook/zz-intermediate/reset-hook">
             <output>systems/hook/funcs/reset-hook</output>
             <function>
@@ -132,27 +116,19 @@
             </table>
         </scheduled_gain>
 
-        <fcs_function name="systems/hook/funcs/on-speed-kts">
+        <fcs_function name="systems/hook/funcs/onspeed-kts">
             <description>
                 On speed (15 degrees alpha) based on total weight.
-                Quadratic Fit:  y=a+bx+cx^2, a =	45.85, b=0.002055, c=-0.0000000075
+                Power Fit: y=ax^b	:: a=0.655             b = 0.493500
             </description>
             <function>
-                <sum>
-                    <v>0.4</v>
-                    <sum>
-                        <v>45.85</v>
-                        <product>
-                            <v>0.002055</v>
-                            <p>inertia/weight-lbs</p>
-                        </product>
-                    </sum>
-                        <product>
-                            <v>-0.0000000075</v>
-                            <p>inertia/weight-lbs</p>
-                            <p>inertia/weight-lbs</p>
-                        </product>
-                </sum>
+                <product>
+                    <v>0.655</v>
+                    <pow>
+                        <p>inertia/weight-lbs</p>
+                        <v>0.493500</v>
+                    </pow>
+                </product>
             </function>
             <output>inertia/onspeed-kts</output>
         </fcs_function>
@@ -186,6 +162,52 @@
         <!--<p>position/aircraft-on-ground</p>-->
 
         <fcs_function name="systems/hook/zz-intermediate/hook-operational-efficiency">
+            <description>
+                The operational efficiency of the arresting system decreases exponentially
+                such that the aircraft needs to be within 10kts of onspeed and at roughly 
+                15kts of overspeed will not be sufficient to arrest the aircraft and the arresting
+                mechanism will not function at 17kts of overspeed
+
+                We assume that the wire will be set to the upper range of permissable airspeed
+                which is 7kts. Most of these figures are estimations.
+
+                Based on the intertia (mv^2) we use the formula for the
+                effictivity as y= x^2 / (10^2); where x = v (as onspeed already
+                calculated based on mass);
+                The graph for this function is as follows
+                |  1.0 +  ______________________
+                |      |                        `--.
+                |      |                            `-.
+                |      |                               `.
+                |      |                                 \
+                |      |                                  `.
+                |  0.8 |                                    \
+                |      |                                     \
+                |      |                                      \
+                |      |                                       \
+                |      |                                        \
+                |      |                                        `
+                |  0.6 |                                         \
+                |      |                                          \
+                |      |                                          `
+                |      |                                           \
+                |      |                                            \
+                |  0.4 +                                            `
+                |      |                                             \
+                |      |                                             \
+                |      |                                             `
+                |      |                                             \
+                |  0.2 +                                             \
+                |      |                                             \
+                |      |                                              `
+                |      |                                              \
+                |      |                                              \
+                |  0.0 +--+------------+------------+------------+------------+
+                |         1            1            1            1            1
+                |         3            3            4            4            5
+                |         0            5            0            5            0
+                
+            </description>
             <function>
                 <ifthen>
                     <and>
@@ -200,26 +222,30 @@
                     </and>
                     <difference>
                         <v>1</v>
-                        <product>
+                        <quotient>
                             <pow>
                                 <difference>
                                     <p>velocities/vc-kts</p>
-                                    <p>inertia/onspeed-kts</p>
+                                    <sum>
+                                        <p>inertia/onspeed-kts</p>
+                                        <v>7</v> <!-- wire margin kts-->
+                                    </sum>
                                 </difference>
                                 <v>2</v>
                             </pow>
-                            <v>0.001111111</v>
-                        </product>
+                            <v>100</v>
+                        </quotient>>
                     </difference>
                     <v>1</v>
                 </ifthen>
             </function>
             <clipto>
-                <min> 0 </min>
-                <max>  1 </max>
+                <min>0</min>
+                <max>1</max>
             </clipto>
             <output>systems/hook/funcs/hook-operational-efficiency</output>
         </fcs_function>
+
         <fcs_function name="systems/hook/animation-norm">
             <function>
                 <product>
@@ -240,7 +266,7 @@
                 <ifthen>
                     <lt>
                         <p>systems/hook/funcs/hook-operational-efficiency</p>
-                        <v>0.4</v>
+                        <v>0.0</v>
                     </lt>
                     <sum>
                         <p>simulation/sim-time-sec</p>

@@ -38,11 +38,6 @@ var RightSpoilersTarget = 0.0;
 var InnerLeftSpoilersTarget = 0.0;
 var InnerRightSpoilersTarget = 0.0;
 
-# create a property for direct lift control (DLC)
-setprop ("/controls/flight/DLC", 0.0);
-var DLCactive = false;
-var DLC_Engaged = props.globals.getNode("controls/flight/DLC-engaged");
-
 # create properties for ground spoilers 
 #setprop ("/controls/flight/ground-spoilers-armed", false);
 var GroundSpoilersDeployed = false;

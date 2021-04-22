@@ -218,7 +218,6 @@ var u_ecm_signal      = 0;
 var u_ecm_signal_norm = 0;
 var u_radar_standby   = 0;
 var u_ecm_type_num    = 0;
-var FD_TAN3DEG = 0.052407779283; # tan(3)
 var sel_next_target = 0;
 var sel_prev_target = 0;
 var stby = 0;

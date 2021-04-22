@@ -11,34 +11,6 @@
 
 
 <system name="ECS">
-
-  <!--<property value="0">systems/apc/target-vc-kts</property>-->
-  <property value="1">systems/ecs/pressurisation-active</property>
-  <property value="0">systems/ecs/emerg-vent</property>
-
-  <!--0 : BOTH
-    1 : Right
-    2 : Off
-    3 : Left -->
-  <property value="0">systems/ecs/bleed-air-source</property>
-
-  <property value="0">systems/ecs/liquid-oxygen-activated</property>
-  <property value="0">systems/ecs/oxygen-qty-test</property>
-  <!-- 0 off, 1 normal, 2 emerg-->
-  <property value="0">systems/ecs/oxygen-supply-mode</property>
-  <property value="0">systems/ecs/anti-fog</property>
-  <property value="0">systems/ecs/windshield-heat</property>
-  <property>systems/ecs/oxygen-quantity-liters</property>
-  <property>systems/ecs/cabin-altitude-ft</property>
-  <property>systems/ecs/oxygen-pressure-psi</property>
-<!--Windscreen Heating-->
-  <property value="6750">systems/ecs/windscreen-factor1</property>
-  <property value="0.1">systems/ecs/windscreen-frost-amount-dmd-rate</property>
-
-  <property value="46">systems/ecs/windscreen-heater-watts-second</property> <!--Watts per second ramp up on heater input consumption-->
-  <property value="290">systems/ecs/windscreen-temperature-k</property>
-  <property>systems/ecs/windscreen-heater-power-watts</property>
-
   <channel name="Oxygen" execrate="4">
 
     <switch name="systems/ecs/oxygen-converter-qty-dmd">
@@ -58,6 +30,8 @@
       <rate_limit>systems/ecs/oxygen-converter-rate</rate_limit>
       <output>systems/ecs/oxygen-converter-qty</output>
     </actuator>
+
+    <!-- systems/ecs/oxygen-supply-mode 0 off, 1 normal, 2 emerg-->
     <switch name="systems/ecs/oxygen-pressure-psi-dmd">
       <default value="80"/>
       <test value="0">
@@ -114,6 +88,12 @@
 
   </channel>
   <channel name="Pressurisation"  execrate="4" >
+
+      <!-- Bleed air source 
+          0 : BOTH
+          1 : Right
+          2 : Off
+          3 : Left -->
 
     <switch name="systems/ecs/pressurisation-active">
       <default value="0.0"/>

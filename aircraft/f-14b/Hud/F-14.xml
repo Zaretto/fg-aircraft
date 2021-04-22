@@ -17,10 +17,10 @@
 		<width>20</width>
 		<height>50</height>
 		<roll-input>
-			<property>/orientation/roll-deg</property>
+			<property>orientation/roll-deg</property>
 		</roll-input>
 		<pitch-input>
-			<property>/orientation/pitch-deg</property>
+			<property>orientation/pitch-deg</property>
 		</pitch-input>
 
 		<compression-factor>11.375</compression-factor>
@@ -180,10 +180,10 @@
         <width>40</width>
         <height>50</height>
         <roll-input>
-            <property>/orientation/roll-deg</property>
+            <property>orientation/roll-deg</property>
         </roll-input>
         <pitch-input>
-            <property>/orientation/pitch-deg</property>
+            <property>orientation/pitch-deg</property>
         </pitch-input>
 
         <compression-factor>11.375</compression-factor>
@@ -281,7 +281,7 @@
             </or>
         </condition>
         <input>
-            <property>/velocities/airspeed-kt</property>
+            <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
             <min>0.0</min>
             <factor>1</factor>
         </input>
@@ -335,7 +335,7 @@
         <pointer-width>10</pointer-width>
         <pointer-length>5</pointer-length>
         <input>
-            <property>/velocities/airspeed-kt</property>
+            <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
         </input>
     </label>
 
@@ -358,7 +358,7 @@
         <format>%4.0f</format>
         <box>true</box>
         <input>
-            <property>/velocities/airspeed-kt</property>
+            <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
         </input>
     </label>
 
@@ -422,7 +422,7 @@
         </condition>
 
         <input>
-            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <property>instrumentation/altimeter/indicated-altitude-ft</property>
             <factor>0.001</factor>
         </input>
 
@@ -467,7 +467,7 @@
             </or>
         </condition>
         <input>
-            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <property>instrumentation/altimeter/indicated-altitude-ft</property>
             <factor>0.1</factor>
         </input>
         <x>50</x>
@@ -493,7 +493,7 @@
             </or>
         </condition>
         <input>
-            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <property>instrumentation/altimeter/indicated-altitude-ft</property>
             <factor>0.1</factor>
         </input>
         <x>50</x>
@@ -510,7 +510,7 @@
         <name>Waypoint</name>
         <condition>
             <property>sim/hud/extended-mode</property>
-            <property>/autopilot/route-manager/active</property>
+            <property>autopilot/route-manager/active</property>
             <or>
                 <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
             </or>
@@ -530,7 +530,7 @@
         <name>Waypoint Dist</name>
         <condition>
             <property>sim/hud/extended-mode</property>
-            <property>/autopilot/route-manager/active</property>
+            <property>autopilot/route-manager/active</property>
             <or>
                 <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
             </or>
@@ -550,7 +550,7 @@
         <name>Waypoint ETA</name>
         <condition>
             <property>sim/hud/extended-mode</property>
-            <property>/autopilot/route-manager/active</property>
+            <property>autopilot/route-manager/active</property>
             <or>
                 <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
             </or>
@@ -575,7 +575,7 @@
             <property>sim/model/f-14b/controls/pilots-displays/mode/aa-bt</property>
         </condition>
         <input>
-            <property>/instrumentation/altimeter/indicated-altitude-ft</property>
+            <property>instrumentation/altimeter/indicated-altitude-ft</property>
             <factor>0.1</factor>
         </input>
         <x>50</x>
@@ -769,10 +769,10 @@
         <width>140</width>
         <height>140</height>
         <bank-input>
-            <property>/orientation/roll-deg</property>
+            <property>orientation/roll-deg</property>
         </bank-input>
         <sideslip-input>
-            <property>/orientation/side-slip-deg</property>
+            <property>orientation/side-slip-deg</property>
         </sideslip-input>
         <bank-scale>true</bank-scale>
         <option>bottom</option>
@@ -809,7 +809,7 @@
         <width>1</width>
         <height>1</height>
         <input>
-            <property>/velocities/mach</property>
+            <property>velocities/mach</property>
         </input>
         <format>M %4.2f</format>
     </label>
@@ -826,7 +826,7 @@
         <width>1</width>
         <height>1</height>
         <input>
-            <property>/accelerations/pilot/z-accel-fps_sec</property>
+            <property>accelerations/pilot/z-accel-fps_sec</property>
             <factor>-0.03108095</factor>
             <damp>1.0</damp>
         </input>
@@ -841,7 +841,7 @@
 		<condition>
             <property>sim/hud/extended-mode</property>
             <equals>
-                <property>/controls/gear/gear-down</property>
+                <property>controls/gear/gear-down</property>
                 <value>true</value>
             </equals>
         </condition>
@@ -856,12 +856,12 @@
         <name>Flaps</name>
         <condition>
             <not-equals>
-                <property>/surface-positions/flap-pos-norm</property>
+                <property>surface-positions/flap-pos-norm</property>
                 <value>0</value>
             </not-equals>
         </condition>
         <input>
-            <property>/surface-positions/flap-pos-norm</property>
+            <property>surface-positions/flap-pos-norm</property>
             <factor>35</factor>
         </input>
         <x>-61</x>
@@ -926,12 +926,12 @@
 		<condition>
             <property>sim/hud/extended-mode</property>
             <not-equals>
-                <property>/surface-positions/speedbrake-pos-norm</property>
+                <property>surface-positions/speedbrake-pos-norm</property>
                 <value>0</value>
             </not-equals>
         </condition>
         <input>
-            <property>/surface-positions/speedbrake-pos-norm</property>
+            <property>surface-positions/speedbrake-pos-norm</property>
             <factor>60</factor>
         </input>
         <x>-63</x>
@@ -946,7 +946,7 @@
 		<condition>
             <property>sim/hud/extended-mode</property>
             <greater-than>
-                <property>/gear/tailhook/position-norm</property>
+                <property>gear/tailhook/position-norm</property>
                 <value>0.1</value>
             </greater-than>
         </condition>
@@ -982,10 +982,7 @@
         <name>APC - Approach Power Compensator (Auto Throttle)</name>
 		<condition>
             <property>sim/hud/extended-mode</property>
-            <equals>
-                <property>sim/model/f-14b/systems/apc/engaged</property>
-                <value>true</value>
-            </equals>
+            <property>sim/model/f-14b/systems/apc/engaged</property>
         </condition>
         <x>20</x>
         <y>-125</y>
@@ -998,13 +995,10 @@
         <name>DLC - Direct Lift Control</name>
 		<condition>
             <property>sim/hud/extended-mode</property>
-            <equals>
-                <property>/controls/flight/DLC-engaged</property>
-                <value>true</value>
-            </equals>
+            <property>controls/flight/DLC-engaged</property>
         </condition>
         <input>
-            <property>/controls/flight/DLC</property>
+            <property>controls/flight/DLC</property>
             <factor>10</factor>
         </input>
         <x>30</x>
@@ -1018,7 +1012,7 @@
         <name>Ground Spoilers</name>
         <condition>
             <equals>
-                <property>/controls/flight/ground-spoilers-armed</property>
+                <property>controls/flight/ground-spoilers-armed</property>
                 <value>true</value>
             </equals>
         </condition>

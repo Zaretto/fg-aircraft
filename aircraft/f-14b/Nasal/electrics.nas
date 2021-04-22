@@ -12,6 +12,8 @@ var ca_oil_press_light  = props.globals.getNode("sim/model/f-14b/lights/ca-oil-p
 var bingo      = props.globals.getNode("sim/model/f-14b/controls/fuel/bingo", 1);
 var ca_bingo_light  = props.globals.getNode("sim/model/f-14b/lights/ca-bingo", 1);
 
+var ca_flaps_light = props.globals.getNode("sim/model/f-14b/lights/ca-flap", 1);
+
 var ca_canopy_light = props.globals.getNode("sim/model/f-14b/lights/ca-lad-canopy", 1);
 var canopy = props.globals.getNode("canopy/position-norm", 1);
 canopy.setValue(0);
@@ -327,6 +329,19 @@ var runEMMISC = func {
         }
     }
 
+    if ( (getprop("fdm/jsbsim/fcs/flap-pos-deg") - getprop("fdm/jsbsim/fcs/flap-pos-deg-effective")) > 1 )
+    {
+        if (!ca_flaps_light.getBoolValue()){
+            ca_flaps_light.setBoolValue(1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        ca_flaps_light.setBoolValue(0);
+    }
+
     if (canopy.getValue() > 0)
     {
 		if (!ca_canopy_light.getBoolValue()){
@@ -460,20 +475,6 @@ setlistener("sim/model/f-14b/controls/electrics/emerg-gen-switch", func {
             setprop("fdm/jsbsim/systems/electrics/emerg-generator-status", 0);
         }
     }
-}, 1, 0);
-
-#
-# Use ALS secondary lighting 
-# ref: http://wiki.flightgear.org/ALS_technical_notes#ALS_secondary_lights
-setlistener("sim/current-view/internal", func {
-    if (getprop("sim/current-view/internal"))
-        setprop("sim/rendering/als-secondary-lights/use-landing-light", getprop("controls/lighting/taxi-light") != 0);
-    else
-        setprop("sim/rendering/als-secondary-lights/use-landing-light", 0);
-}, 1, 0);
-
-setlistener("controls/lighting/taxi-light", func {
-    setprop("sim/rendering/als-secondary-lights/use-landing-light", getprop("controls/lighting/taxi-light") != 0);
 }, 1, 0);
 
 setlistener("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch", func {

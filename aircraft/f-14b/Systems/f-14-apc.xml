@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<!--
+        Description : F-14 APC
+        Date        : 15 December 2020
+        Author      : Richard Harrison (rjh@zaretto.com) 
+        References  : NASA TM-X-81833, Figure 38 Schematic of autothrottle control law.
+                    : https://i.imgur.com/gAbAGeE.png
+-->
+
+
+<system name="F-14-AOC">
+    <channel name="Approach Power Compensator">
+
+        <fcs_function name="systems/apc/trigger">
+            <function>
+                <switch>
+                    <property>systems/apc/active</property>
+                    <value>-1</value>
+                    <value>0</value>
+                </switch>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/apc/alpha-u">
+            <function>
+                <difference>
+                    <property>aero/alpha-indicated-deg</property>
+                    <product>
+                        <value>7.62</value>
+                        <property>velocities/q-aero-rad_sec</property>
+                    </product>
+                </difference>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/apc/v-3-dlc">
+            <function>
+                <product>
+                    <property>fcs/dlc-active</property>
+                    <property>fcs/dlc-thumbwheel-pos-deg</property>
+                    <ifthen>
+                        <gt>
+                            <property>fcs/dlc-thumbwheel-pos-deg</property>
+                            <value>0</value>
+                        </gt>
+                        <value>0.378</value>
+                        <value>0.208</value>
+                    </ifthen>
+                </product>
+            </function>
+        </fcs_function>
+        
+        <fcs_function name="systems/apc/v-1-1">
+            <function>
+                <product>
+                    <difference>
+                        <!-- <property>aero/alpha-indicated-deg</property> -->
+                        <property>systems/apc/alpha-u</property>
+                        <property>systems/apc/alpha-u-reference</property>
+                    </difference>
+                    <value>3.5</value>
+                    </product>
+            </function>
+            <!-- <clipto>
+                <min>-40</min>
+                <max>40</max>
+            </clipto> -->
+        </fcs_function>
+
+        <fcs_function name="systems/apc/v-1-2">
+            <function>
+                <ifthen>
+                    <and>
+                        <lt>
+                            <property>systems/apc/v-1-1</property>
+                            <value>10</value>
+                        </lt>
+                        <gt>
+                            <property>systems/apc/v-1-1</property>
+                            <value>-10</value>
+                        </gt>
+                    </and>
+                    <product>
+                        <property>systems/apc/active</property>
+                        <property>systems/apc/v-1-1</property>
+                        <value>0.134</value>
+                    </product>
+                    <value>0</value>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>-1</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+        
+        <!--  
+             __1__
+               S
+        -->
+        <integrator name="systems/apc/v-1-func">
+            <input>systems/apc/v-1-2</input>
+            <trigger>systems/apc/trigger</trigger>
+            <c1>1</c1>
+            <output>systems/apc/v-1</output>
+        </integrator>
+
+        <fcs_function name="systems/apc/v-2-1">
+            <function>
+                <!-- An is normal acceleration positive along negative body axes, g units.
+                     In JSBSim acclerations/Nz is positive along positive (down) body axes
+                 -->
+                <product>
+                    <property>-accelerations/Nz</property>
+                    <value>50</value>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/apc/v-2-2">
+            <function>
+                <product>
+                    <property>systems/apc/active</property>
+                    <sum>
+                        <property>systems/apc/v-1-1</property>
+                        <property>-systems/apc/v-2-1</property>
+                    </sum>
+                </product>
+        </function>
+        </fcs_function>
+        <!--  
+             ____1___
+               S + 1
+        -->
+        <lead_lag_filter name="systems/apc/v-2">
+            <input>systems/apc/v-2-2</input>
+            <c1>0</c1>
+            <c2>1</c2>
+            <c3>1</c3>
+            <c4>1</c4>
+        </lead_lag_filter>
+
+        
+        <fcs_function name="systems/apc/v-3-dh">
+            <function>
+                <product>
+                    <property>fcs/elevator-pos-deg</property>
+                    <value>4</value>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/apc/v-3-1">
+            <function>
+                <product>
+                    <property>systems/apc/active</property>
+                    <sum>
+                        <property>systems/apc/v-3-dlc</property>
+                        <property>systems/apc/v-3-dh</property>
+                    </sum>
+                </product>
+            </function>
+        </fcs_function>
+
+        <lead_lag_filter name="systems/apc/v-3-2">
+            <input>systems/apc/v-3-1</input>
+            <c1>10</c1>
+            <c2>0</c2>
+            <c3>10</c3>
+            <c4>1</c4>
+        </lead_lag_filter>
+        
+        <lead_lag_filter name="systems/apc/v-3">
+            <input>systems/apc/v-3-2</input>
+            <c1>0</c1>
+            <c2>1</c2>
+            <c3>0.5</c3>
+            <c4>1</c4>
+        </lead_lag_filter>
+        
+        
+        <fcs_function name="systems/apc/throttle-pla-deg">
+            <function>
+                <sum>
+                    <property>systems/apc/v-1</property>
+                    <property>systems/apc/v-2</property>
+                    <property>-systems/apc/v-3</property>
+                </sum>
+            </function>
+            <clipto>
+                <min>20</min>
+                <max>60</max>
+            </clipto>
+        </fcs_function>
+
+         
+        <fcs_function name="systems/apc/throttle-pla-norm">
+            <function>
+                <quotient>
+                    <difference>
+                        <property>systems/apc/throttle-pla-deg</property>
+                        <value>20</value>
+                    </difference>
+                    <value>45</value>
+                </quotient>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+    </channel>
+</system>

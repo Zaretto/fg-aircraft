@@ -34,6 +34,39 @@
                 <layout>hbox</layout>
 
                 <text>
+                    <label>Digital Flight Controls System (DFCS)</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/fcs/dfcs-active</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/fcs/dfcs-active</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <group>
+                <layout>hbox</layout>
+
+                <text>
+                    <label>Mod DLC (AFC 735) active</label>
+                </text>
+
+                <checkbox>
+                    <property>fdm/jsbsim/fcs/mod-dlc-AFC-735-active</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/fcs/mod-dlc-AFC-735-active</property>
+                    </binding>
+                </checkbox>
+            </group>
+
+            <group>
+                <layout>hbox</layout>
+
+                <text>
                     <label>External Electrical Power Connected</label>
                 </text>
 
@@ -92,23 +125,6 @@
                     <binding>
                         <command>property-toggle</command>
                         <property>sim/hud/extended-mode</property>
-                    </binding>
-                </checkbox>
-            </group>
-            <hrule/>
-            <group>
-                <layout>hbox</layout>
-
-                <text>
-                    <label>Excessive G damage</label>
-                </text>
-
-                <checkbox>
-                    <property>sim/model/f-14b/wings/damage-enabled</property>
-                    <live>true</live>
-                    <binding>
-                        <command>property-toggle</command>
-                        <property>sim/model/f-14b/wings/damage-enabled</property>
                     </binding>
                 </checkbox>
             </group>
@@ -422,7 +438,32 @@
             </binding>
         </button>
     </group>
-<!--
+
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>CMDLC</name>
+                <property>fdm/jsbsim/tuning/CMDLC</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-1</min>
+                <max>1</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CMDLC</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CMDLC 0.00</label>
+                <live>true</live>
+                <format>CMDLC %.4f</format>
+                <property>fdm/jsbsim/tuning/CMDLC</property>
+            </text>
+        </group>
+    </group>
     <group>
         <layout>vbox</layout>
         <group>
@@ -443,7 +484,7 @@
                 <halign>right</halign>
                 <label>ClDFM 0.00</label>
                 <live>true</live>
-                <format>ClDFM %.2f</format>
+                <format>ClDFM %.4f</format>
                 <property>fdm/jsbsim/tuning/ClDFM</property>
             </text>
         </group>
@@ -468,8 +509,33 @@
                 <halign>right</halign>
                 <label>ClDAFM 0.00</label>
                 <live>true</live>
-                <format>ClDAFM %.2f</format>
+                <format>ClDAFM %.4f</format>
                 <property>fdm/jsbsim/tuning/ClDAFM</property>
+            </text>
+        </group>
+    </group>
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>DClSLM</name>
+                <property>fdm/jsbsim/tuning/DClSLM</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-2</min>
+                <max>2</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>DClSLM</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>DClSLM 0.00</label>
+                <live>true</live>
+                <format>DClSLM %.4f</format>
+                <property>fdm/jsbsim/tuning/DClSLM</property>
             </text>
         </group>
     </group>
@@ -493,7 +559,7 @@
                 <halign>right</halign>
                 <label>CdDFM 0.00</label>
                 <live>true</live>
-                <format>CdDFM %.2f</format>
+                <format>CdDFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CdDFM</property>
             </text>
         </group>
@@ -518,7 +584,7 @@
                 <halign>right</halign>
                 <label>CdDAFM 0.00</label>
                 <live>true</live>
-                <format>CdDAFM %.2f</format>
+                <format>CdDAFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CdDAFM</property>
             </text>
         </group>
@@ -544,7 +610,7 @@
                 <halign>right</halign>
                 <label>CMDFM 0.00</label>
                 <live>true</live>
-                <format>CMDFM %.2f</format>
+                <format>CMDFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CMDFM</property>
             </text>
         </group>
@@ -558,8 +624,8 @@
                 <property>fdm/jsbsim/tuning/CMADFM</property>
                 <pref-width>300</pref-width>
                 <live>1</live>
-                <min>-2</min>
-                <max>2</max>
+                <min>-10</min>
+                <max>10</max>
                 <binding>
                     <command>dialog-apply</command>
                     <object-name>CMADFM</object-name>
@@ -569,11 +635,87 @@
                 <halign>right</halign>
                 <label>CMADFM 0.00</label>
                 <live>true</live>
-                <format>CMADFM %.2f</format>
+                <format>CMADFM %.4f</format>
                 <property>fdm/jsbsim/tuning/CMADFM</property>
             </text>
         </group>
     </group>
--->
+
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>CMBRK</name>
+                <property>fdm/jsbsim/tuning/CMBRK</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-2</min>
+                <max>2</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CMBRK</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CMBRK 0.00</label>
+                <live>true</live>
+                <format>CMBRK %.4f</format>
+                <property>fdm/jsbsim/tuning/CMBRK</property>
+            </text>
+        </group>
+    </group>
+
+
+    <group>
+        <layout>vbox</layout>
+        <group>
+            <layout>hbox</layout>
+            <slider>
+                <name>CMUC</name>
+                <property>fdm/jsbsim/tuning/CMUC</property>
+                <pref-width>300</pref-width>
+                <live>1</live>
+                <min>-10</min>
+                <max>10</max>
+                <binding>
+                    <command>dialog-apply</command>
+                    <object-name>CMUC</object-name>
+                </binding>
+            </slider>
+            <text>
+                <halign>right</halign>
+                <label>CMUC 0.00</label>
+                <live>true</live>
+                <format>CMUC %.4f</format>
+                <property>fdm/jsbsim/tuning/CMUC</property>
+            </text>
+        </group>
+    </group>
+
+    <group>
+        <layout>hbox</layout>
+        <slider>
+            <name>ALPHAMX</name>
+            <property>fdm/jsbsim/tuning/alpha-mx</property>
+            <pref-width>300</pref-width>
+            <live>1</live>
+            <min>1</min>
+            <max>2</max>
+            <binding>
+                <command>dialog-apply</command>
+                <object-name>ALPHAMX</object-name>
+            </binding>
+        </slider>
+        <text>
+            <halign>right</halign>
+            <label>ALPHAMX 0.00</label>
+            <live>true</live>
+            <format>ALPHAMX %.4f</format>
+            <property>fdm/jsbsim/tuning/alpha-mx</property>
+        </text>
+    </group>
+
    
 </PropertyList>

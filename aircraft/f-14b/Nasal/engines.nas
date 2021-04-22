@@ -281,7 +281,7 @@ var engineControls = func {
 
     var bleed_air_available = jfs_running or l_running or r_running or getprop("/fdm/jsbsim/systems/electrics/ground-air");
 
-    if (engine_crank_switch_pos_prop.getValue() > 0 
+    if (engine_crank_switch_pos_prop.getValue() != 0
             and l_starter == 0 
             and r_starter == 0
             and engine_start_initiated
@@ -308,11 +308,11 @@ var jfs_set_running = func{
     jfs_running = 1;
     jfs_starting = 0;
 
-    if (engine_crank_switch_pos == 1) {
+    if (engine_crank_switch_pos == -1) {
 #        print("JFS: Now set starter L");
         setprop("controls/engines/engine[0]/starter",1);
     }
-    if (engine_crank_switch_pos == 2) {
+    if (engine_crank_switch_pos == 1) {
 #        print("JFS: Now set starter R");
         setprop("controls/engines/engine[1]/starter",1);
     }
@@ -331,7 +331,6 @@ var jfs_invoke_shutdown = func{
     var l_running = l_running_prop.getValue();
     var r_running = r_running_prop.getValue();
 
-#
 # If neither engine running then need JFS
     if (!l_running and !r_running)
     {
@@ -374,15 +373,23 @@ var engine_crank_switch = func(n) {
     var l_running = l_running_prop.getValue();
     var r_running = r_running_prop.getValue();
 
-
+  if(l_running_prop.getValue() and engine_crank_switch_pos_prop.getValue() == -1){
+		settimer(func { engine_crank_switch_pos_prop.setIntValue(0); }, 0.2);
+        return;
+    }
+    if(r_running_prop.getValue() and engine_crank_switch_pos_prop.getValue() == 1){
+		settimer(func { engine_crank_switch_pos_prop.setIntValue(0); }, 0.2);
+        return;
+    }
     if (engine_crank_switch_pos == nil)
     {
+#        print("engine_crank_switch was nil");
         engine_crank_switch_pos_prop.setIntValue(0);
     }
-    if (engine_crank_switch_pos != 0) {
+    if (engine_crank_switch_pos == 0) {
         setprop("controls/engines/engine[0]/starter",0);
         setprop("controls/engines/engine[1]/starter",0);
-		engine_crank_switch_pos_prop.setIntValue(0);
+#		engine_crank_switch_pos_prop.setIntValue(0);
 
         if(jfs_starting){
             jfs_starting = 0;
@@ -397,11 +404,11 @@ var engine_crank_switch = func(n) {
 # if both running then just set the switch
     if (l_running and r_running)
     {
-        if(n==0) 
-            engine_crank_switch_pos_prop.setIntValue(1);
+#        if(n==-1) 
+#            engine_crank_switch_pos_prop.setIntValue(1);
 
-        if(n==1) 
-            engine_crank_switch_pos_prop.setIntValue(2);
+#        if(n==1) 
+#            engine_crank_switch_pos_prop.setIntValue(2);
 
         shutdownTimer.stop();
         startupTimer.stop();
@@ -430,41 +437,28 @@ var engine_crank_switch = func(n) {
                 jfs_starting = 1;
                 jfs_start.setValue(10);
                 startupTimer.restart(jfsStartupTime);
-                print("Start JFS");
+#                print("Start JFS");
             }
-            if (n == 0) {
-                engine_crank_switch_pos_prop.setIntValue(1);
-            } 
-            if (n == 1) {
-                engine_crank_switch_pos_prop.setIntValue(2);
-            } 
+#            if (n == 0) {
+#                engine_crank_switch_pos_prop.setIntValue(1);
+#            } 
+#            if (n == 1) {
+#                engine_crank_switch_pos_prop.setIntValue(2);
+#            } 
             return;
         }
     }
 
-	if (n == 0) {
-		if (engine_crank_switch_pos == 0) {
-            if (bleed_air_available){
-                setprop("controls/engines/engine[0]/starter",1);
-            }
-			engine_crank_switch_pos_prop.setIntValue(1);
-		} elsif (engine_crank_switch_pos == 1) {
-			engine_crank_switch_pos_prop.setIntValue(0);
-            setprop("controls/engines/engine[0]/starter",0);
-		}
-	}
-    else 
-    {
-		if (engine_crank_switch_pos == 0) {
-			engine_crank_switch_pos_prop.setIntValue(2);
-            if (bleed_air_available){
-                setprop("controls/engines/engine[1]/starter",1);
-            }
-		} elsif (engine_crank_switch_pos == 2) {
-            setprop("controls/engines/engine[1]/starter",0);
-			engine_crank_switch_pos_prop.setIntValue(0);
-		}
-	}	
+    if (engine_crank_switch_pos == -1) {
+        if (bleed_air_available){
+            setprop("controls/engines/engine[0]/starter",1);
+        }
+    }
+    if (engine_crank_switch_pos == 1) {
+        if (bleed_air_available){
+            setprop("controls/engines/engine[1]/starter",1);
+        }
+    }
 }
 
 #
@@ -527,29 +521,21 @@ var econt_l_ramp = func(n) {
 
 #
 # engine controls panel - throttle mode
-var econt_throttle_mode = func(n) {
-    setprop("sim/model/f-14b/controls/switch-throttle-mode", n);
-    if(n == 1) # Auto - APC
+setlistener("sim/model/f-14b/controls/switch-throttle-mode", func(v)
+{
+    # 0 - man
+    # 1 - boost
+    # 2 - auto  
+    if(v.getValue() == 2) # Auto - APC
     {
         APC_on();
     }
     else
     {
-    APC_off();
+        APC_off();
     }
-}
 
-#
-# engine controls panel - backup ignition
-var econt_backup_ignition_toggle = func {
-    setprop("sim/model/f-14b/controls/switch-backup-ignition", 1 - getprop("sim/model/f-14b/controls/switch-backup-ignition"));
-}
-
-#
-# engine controls panel - temperature switch
-var econt_temp = func(n) {
-    setprop("sim/model/f-14b/controls/switch-temp", n);
-}
+}, 0, 0); # the 2 zeros make this not update unless the value actually changes
 
 setlistener("/fdm/jsbsim/systems/apc/milthrust", func {
 	if (getprop("/fdm/jsbsim/systems/apc/milthrust") == 1) {

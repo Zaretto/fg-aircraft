@@ -129,10 +129,10 @@ var VSD_Device =
         }
 
         obj.vsd_on = 1;
-        obj.process_targets = PartitionProcessor.new("VSD-radar", 20, nil);
+        obj.process_targets = frame_utils.PartitionProcessor.new("VSD-radar", 20, nil);
         obj.process_targets.set_max_time_usec(500);
 
-        obj.process_display = PartitionProcessor.new("VSD-display", 100, nil);
+        obj.process_display = frame_utils.PartitionProcessor.new("VSD-display", 100, nil);
         obj.process_display.set_max_time_usec(500);
 
         var pitch_offset = 12;
@@ -393,7 +393,7 @@ var ModelEventsRecipient =
             {
                 root_node = props.globals;
                 print("F15D receive model notification",notification.NotificationType," V=",notification.Ident);
-                if (notification.root_node != nil) {
+                if (notification.root_node != nil and notification.root_node != "") {
                     print("F-15VSD: Using path ",notification.root_node.getPath());
                     root_node = notification.root_node;
                 }
