@@ -392,7 +392,7 @@ aircraft.data.add("sim/model/f-14b/instrumentation/radar-altimeter/limit-bug");
 
 # Lighting ################
 aircraft.data.add(
-	"sim/model/f-14b/controls/lighting/hook-bypass",
+	"sim/model/f-14b/controls/lighting/hook-bypass-field",
 	"controls/lighting/instruments-norm",
 	"controls/lighting/panel-norm",
 	"sim/model/f-14b/controls/lighting/anti-collision-switch",
@@ -563,20 +563,49 @@ var instruments_exec = {
 	new : func (_ident){
         print("instruments_exec: init");
         var obj = { parents: [instruments_exec]};
-#        input = {
-#               name : "property",
-#        };
-#
-#        foreach (var name; keys(input)) {
-#            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident, name, input[name]));
-#        }
+
+        # export / import properties from JSBSim that are bools as this doesn't seem to work directly.
+        input = {
+               aoa_indexer_slow : "/fdm/jsbsim/systems/electrics/aoa-indexer-slow",
+               aoa_indexer_onspeed : "/fdm/jsbsim/systems/electrics/aoa-indexer-onspeed",
+               aoa_indexer_fast : "/fdm/jsbsim/systems/electrics/aoa-indexer-fast",
+               tailhook_bypass_field: "sim/model/f-14b/controls/lighting/hook-bypass-field"
+        };
+        foreach (var name; keys(input)) {
+            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident, name, input[name]));
+        }
+
+        # corresponding properties to export/import from/to
+        obj.aoa_indexer_slow    = props.globals.getNode("sim/multiplay/generic/bool[28]");
+        obj.aoa_indexer_onspeed = props.globals.getNode("sim/multiplay/generic/bool[29]");
+        obj.aoa_indexer_fast    = props.globals.getNode("sim/multiplay/generic/bool[30]");
+        obj.tailhook_bypass_field = props.globals.getNode("fdm/jsbsim/systems/hook/tailhook-bypass-field");
+
 
         #
         # recipient that will be registered on the global transmitter and connect this
         # subsystem to allow subsystem notifications to be received
         obj.recipient = emesary.Recipient.new(_ident~".Subsystem");
         obj.recipient.instruments_exec = obj;
-
+        
+        obj.update_items = [
+            props.UpdateManager.FromHashValue("aoa_indexer_slow", 1, func(val)
+                                            {
+                                                obj.aoa_indexer_slow.setBoolValue(val);
+                                            }),
+            props.UpdateManager.FromHashValue("aoa_indexer_onspeed", 1, func(val)
+                                            {
+                                                obj.aoa_indexer_onspeed.setBoolValue(val);
+                                            }),
+            props.UpdateManager.FromHashValue("aoa_indexer_fast", 1, func(val)
+                                            {
+                                                obj.aoa_indexer_fast.setBoolValue(val);
+                                            }),
+            props.UpdateManager.FromHashValue("tailhook_bypass_field", 1, func(val)
+                                            {
+                                                obj.tailhook_bypass_field.setBoolValue(val);
+                                            }),
+        ];
         obj.recipient.Receive = func(notification)
         {
             if (notification.NotificationType == "FrameNotification")
@@ -595,6 +624,11 @@ var instruments_exec = {
 #        print("Exec instruments: dT",notification.dT, " frame=",notification.FrameCount);        
         aircraft.ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
         
+        foreach(var update_item; me.update_items)
+        {
+            update_item.update(notification);
+        }
+
         burner +=1;
         if ( burner == 3 ) { burner = 0 }
         BurnerN.setValue(burner);
@@ -792,7 +826,7 @@ var common_init = func {
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
 f14_afcs.afcs_disengage();
-
+    setprop("fdm/jsbsim/systems/hook/tailhook-bypass-field",getprop("sim/model/f-14b/controls/lighting/hook-bypass-field"));
         setprop("sim/multiplay/visibility-range-nm", 200);
 	print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
@@ -915,8 +949,8 @@ setlistener("sim/signals/reinit", func (reinit) {
 
 # warning lights medium speed flasher
 # -----------------------------------
-aircraft.light.new("sim/model/f-14b/lighting/warn-medium-lights-switch", [0.3, 0.2]);
-setprop("sim/model/f-14b/lighting/warn-medium-lights-switch/enabled", 1);
+aircraft.light.new("fdm/jsbsim/systems/electrics/aoa-indexer-light", [0.3, 0.2]);
+setprop("fdm/jsbsim/systems/electrics/aoa-indexer-light/enabled", 1);
 
 
 # Old Fashioned Radio Button Selectors
@@ -1134,6 +1168,6 @@ setlistener("fdm/jsbsim/systems/hook/arrestor-wire-available", func(v)
 {
 	if (v != nil and v.getValue() == 0 and getprop("fdm/jsbsim/systems/hook/funcs/hook-operational-efficiency") < 1)
 	{
-		setprop("/sim/messages/copilot", "Arrestor wire inoperable due to overspeed. Onspeed VC "~int(getprop("fdm/jsbsim/inertia/onspeed-kts"))~"kts ");
+		setprop("/sim/messages/copilot", "Arrestor wire inoperable due to overspeed. Onspeed VC "~int(getprop("fdm/jsbsim/inertia/aoa-indexer-kts"))~"kts ");
 	}
 },0,0);

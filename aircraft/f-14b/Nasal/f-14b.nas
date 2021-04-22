@@ -683,7 +683,7 @@ var cold_and_dark = func()
     setprop("controls/lighting/stby-inst", 0);
     setprop("controls/lighting/warn-caution", 0);
 
-    setprop("sim/model/f-14b/controls/lighting/hook-bypass",0);
+    setprop("sim/model/f-14b/controls/lighting/hook-bypass-field",0);
     setprop("controls/lighting/instruments-norm",0);
     setprop("controls/lighting/panel-norm",0);
     setprop("sim/model/f-14b/controls/lighting/anti-collision-switch",0);

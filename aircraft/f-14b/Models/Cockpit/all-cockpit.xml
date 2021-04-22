@@ -888,116 +888,43 @@
         <type>select</type>
         <object-name>aoa-slow</object-name>
         <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+            <equals>
+                <property>sim/multiplay/generic/bool[28]</property>
+                <value>true</value>
+            </equals>
+            <equals>
+                <property>fdm/jsbsim/systems/electrics/aoa-indexer-light-off</property>
                 <value>0</value>
-            </greater-than>
-            <or>
-                <property>sim/model/f-14b/lights/master-test-lights</property>
-                <and>
-                    <greater-than-equals>
-                        <property>orientation/alpha-indicated-deg</property>
-                        <property>sim/model/f-14b/instrumentation/aoa-indexer/slow-deg-start</property>
-                    </greater-than-equals>
-                    <equals>
-                        <property>gear/gear[0]/position-norm</property>
-                        <value>1</value>
-                    </equals>
-                    <or>
-                        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-                        <and>
-                            <less-than>
-                                <property>gear/tailhook/position-norm</property>
-                                <value>0.4</value>
-                            </less-than>
-                            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-                        </and>
-                        <greater-than>
-                            <property>gear/tailhook/position-norm</property>
-                            <value>0.5</value>
-                        </greater-than>
-                    </or>
-                </and>
-            </or>
-        </condition>
+            </equals>
+       </condition>
     </animation>
     <animation>
         <type>select</type>
         <object-name>aoa-optimum</object-name>
         <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+            <equals>
+                <property>sim/multiplay/generic/bool[29]</property>
+                <value>true</value>
+            </equals>
+            <equals>
+                <property>fdm/jsbsim/systems/electrics/aoa-indexer-light-off</property>
                 <value>0</value>
-            </greater-than>
-            <or>
-                <property>sim/model/f-14b/lights/master-test-lights</property>
-                <and>
-                    <greater-than-equals>
-                        <property>orientation/alpha-indicated-deg</property>
-                        <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-start</property>
-                    </greater-than-equals>
-                    <less-than-equals>
-                        <property>orientation/alpha-indicated-deg</property>
-                        <property>sim/model/f-14b/instrumentation/aoa-indexer/optimum-deg-end</property>
-                    </less-than-equals>
-                    <equals>
-                        <property>gear/gear[0]/position-norm</property>
-                        <value>1</value>
-                    </equals>
-                    <or>
-                        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-                        <and>
-                            <less-than>
-                                <property>gear/tailhook/position-norm</property>
-                                <value>0.4</value>
-                            </less-than>
-                            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-                        </and>
-                        <greater-than>
-                            <property>gear/tailhook/position-norm</property>
-                            <value>0.5</value>
-                        </greater-than>
-                    </or>
-                </and>
-            </or>
-        </condition>
+            </equals>
+       </condition>
     </animation>
     <animation>
         <type>select</type>
         <object-name>aoa-fast</object-name>
         <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+            <equals>
+                <property>sim/multiplay/generic/bool[30]</property>
+                <value>true</value>
+            </equals>
+            <equals>
+                <property>fdm/jsbsim/systems/electrics/aoa-indexer-light-off</property>
                 <value>0</value>
-            </greater-than>
-            <or>
-                <property>sim/model/f-14b/lights/master-test-lights</property>
-                <and>
-                    <less-than-equals>
-                        <property>orientation/alpha-indicated-deg</property>
-                        <property>sim/model/f-14b/instrumentation/aoa-indexer/fast-deg-end</property>
-                    </less-than-equals>
-                    <equals>
-                        <property>gear/gear[0]/position-norm</property>
-                        <value>1</value>
-                    </equals>
-                    <or>
-                        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
-                        <and>
-                            <less-than>
-                                <property>gear/tailhook/position-norm</property>
-                                <value>0.4</value>
-                            </less-than>
-                            <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
-                        </and>
-                        <greater-than>
-                            <property>gear/tailhook/position-norm</property>
-                            <value>0.5</value>
-                        </greater-than>
-                    </or>
-                </and>
-            </or>
-        </condition>
+            </equals>
+       </condition>
     </animation>
     <!-- Warning Lights -->
     <animation>
@@ -1033,7 +960,7 @@
                         <property>controls/engines/engine[0]/throttle</property>
                         <value>0.85</value>
                     </less-than>
-                    <property>sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                    <property>fdm/jsbsim/systems/electrics/aoa-indexer-light/state</property>
                 </and>
             </or>
         </condition>
@@ -1100,7 +1027,7 @@
         <object-name>aoa-slow</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/aoa-indexer-norm</factor-prop>
             <red>0.8</red>
             <green>0.8</green>
             <blue>0.8</blue>
@@ -1110,7 +1037,7 @@
         <object-name>aoa-optimum</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/aoa-indexer-norm</factor-prop>
             <red>0.8</red>
             <green>0.8</green>
             <blue>0.8</blue>
@@ -1120,7 +1047,7 @@
         <object-name>aoa-fast</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/aoa-indexer-norm</factor-prop>
             <red>0.8</red>
             <green>0.8</green>
             <blue>0.8</blue>
@@ -1130,7 +1057,7 @@
         <object-name>wheels-lit</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>0.7</green>
             <blue>0.7</blue>
@@ -1140,7 +1067,7 @@
         <object-name>brakes-lit</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -1150,7 +1077,7 @@
         <object-name>acls-lit</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -1160,7 +1087,7 @@
         <object-name>nws-lit</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -1170,7 +1097,7 @@
         <object-name>throt-lit</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -1231,7 +1158,7 @@
         <type>material</type>
         <object-name>type1-lit</object-name>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -1241,7 +1168,7 @@
         <type>material</type>
         <object-name>type2-lit</object-name>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -5861,7 +5788,7 @@
         <object-name>warnings</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -16548,7 +16475,7 @@
     <animation>
         <type>knob</type>
         <object-name>hook-bypass-switch</object-name>
-        <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+        <property>sim/model/f-14b/controls/lighting/hook-bypass-field</property>
         <factor>33</factor>
         <axis>
             <object-name>hook-bypass-switch-axis</object-name>
@@ -16557,7 +16484,7 @@
             <button>0</button>
             <binding>
                 <command>property-toggle</command>
-                <property>sim/model/f-14b/controls/lighting/hook-bypass</property>
+                <property>sim/model/f-14b/controls/lighting/hook-bypass-field</property>
             </binding>
         </action>
     </animation>
@@ -16622,7 +16549,7 @@
         <object-name>light-nogo</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -16643,7 +16570,7 @@
         <object-name>light-go</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17546,7 +17473,7 @@
         <object-name>pitch-stab-1</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17556,7 +17483,7 @@
         <object-name>roll-stab-1</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17566,7 +17493,7 @@
         <object-name>yaw-stab-op</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17576,7 +17503,7 @@
         <object-name>read-mfd</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17586,7 +17513,7 @@
         <object-name>pitch-stab-2</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17596,7 +17523,7 @@
         <object-name>roll-stab-2</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17606,7 +17533,7 @@
         <object-name>yaw-stab-out</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17616,7 +17543,7 @@
         <object-name>qbogs</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17626,7 +17553,7 @@
         <object-name>flap</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17636,7 +17563,7 @@
         <object-name>b-u-oxy-low</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17646,7 +17573,7 @@
         <object-name>wpp_spoilers</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17656,7 +17583,7 @@
         <object-name>start-valve</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17666,7 +17593,7 @@
         <object-name>hz-tail-auth</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17676,7 +17603,7 @@
         <object-name>rudder-auth</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17686,7 +17613,7 @@
         <object-name>auto-pilot</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17696,7 +17623,7 @@
         <object-name>inlet-ice</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17706,7 +17633,7 @@
         <object-name>l-inlet</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17716,7 +17643,7 @@
         <object-name>r-inlet</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17726,7 +17653,7 @@
         <object-name>oil-press</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17736,7 +17663,7 @@
         <object-name>bleed-duct</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17746,7 +17673,7 @@
         <object-name>l-ramps</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17756,7 +17683,7 @@
         <object-name>r-ramps</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17766,7 +17693,7 @@
         <object-name>l-eng-sec</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17776,7 +17703,7 @@
         <object-name>r-eng-sec</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17786,7 +17713,7 @@
         <object-name>l-gen</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17796,7 +17723,7 @@
         <object-name>r-gen</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17806,7 +17733,7 @@
         <object-name>lad-canopy</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17816,7 +17743,7 @@
         <object-name>bingo</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17826,7 +17753,7 @@
         <object-name>l-oil-hot</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17836,7 +17763,7 @@
         <object-name>r-oil-hot</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17846,7 +17773,7 @@
         <object-name>cadc</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17856,7 +17783,7 @@
         <object-name>hyd-press</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17866,7 +17793,7 @@
         <object-name>l-fuel-press</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17876,7 +17803,7 @@
         <object-name>r-fuel-press</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17886,7 +17813,7 @@
         <object-name>l-fuel-low</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17896,7 +17823,7 @@
         <object-name>r-fuel-low</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17906,7 +17833,7 @@
         <object-name>blank-10-1</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17916,7 +17843,7 @@
         <object-name>blank-10-2</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17926,7 +17853,7 @@
         <object-name>rats</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17936,7 +17863,7 @@
         <object-name>blank-10-4</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17946,7 +17873,7 @@
         <object-name>trans-rect</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17956,7 +17883,7 @@
         <object-name>mach-trim</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17966,7 +17893,7 @@
         <object-name>blank-11-3</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17976,7 +17903,7 @@
         <object-name>blank-11-4</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17986,7 +17913,7 @@
         <object-name>integ-trim</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -17996,7 +17923,7 @@
         <object-name>wing-sweep</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -18006,7 +17933,7 @@
         <object-name>sahrs</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -18016,7 +17943,7 @@
         <object-name>blank-12-4</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -18026,7 +17953,7 @@
         <object-name>eng-fire-ext</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -18036,7 +17963,7 @@
         <object-name>aux-fire-ext</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -18046,7 +17973,7 @@
         <object-name>wshld-hot</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -18056,7 +17983,7 @@
         <object-name>launch-bar</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/lighting/index-norm</factor-prop>
+            <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>

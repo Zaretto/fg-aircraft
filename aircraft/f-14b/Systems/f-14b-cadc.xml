@@ -772,17 +772,92 @@ asymmetry lockout (3-second light).
             </function>
             <output>systems/flyt/damage-reset</output>
         </fcs_function>
-        <fcs_function name="systems/flyt/tied/damage-reset1">
+        <fcs_function name="systems/flyt/tied/damage-reset-flaps-main-damage-rate-manuv">
             <function>
                 <v>0</v>
             </function>
             <output>systems/flyt/flaps-main-damage-rate-manuv</output>
         </fcs_function>
-        <fcs_function name="systems/flyt/tied/damage-reset1">
+        <fcs_function name="systems/flyt/tied/damage-reset-flaps-main-damage-rate">
             <function>
                 <v>0</v>
             </function>
             <output>systems/flyt/flaps-main-damage-rate</output>
         </fcs_function>
+    </channel>
+
+    <channel name="indexer">
+        <!-- this handles the illuminated or not (flashing) -->
+
+        <switch name="systems/electrics/aoa-indexer-light-off">
+            <default value="1" />
+
+            <test value="0">
+                systems/electrics/master-test-lights ne 0
+            </test>
+
+            <test value="0">
+                systems/hook/tailhook-bypass-field ne 0
+                gear/gear-cmd-norm gt 0.1
+            </test>
+
+            <test value="0">
+                systems/hook/tailhook-bypass-field eq 0
+                systems/hook/tailhook-pos-norm gt 0.4
+                gear/gear-cmd-norm gt 0.1
+            </test>
+            <test value="systems/electrics/aoa-indexer-light/state">
+                systems/hook/tailhook-bypass-field eq 0
+                systems/hook/tailhook-pos-norm lt 0.4
+                gear/gear-cmd-norm gt 0.1
+            </test>
+        </switch>
+
+        <switch name="systems/electrics/aoa-indexer-slow">
+            <default value="0" />
+            <test value="0">
+                systems/electrics/ac-essential-bus1 le 0   
+            </test>
+
+            <test value="1">
+                systems/electrics/master-test-lights ne 0
+            </test>
+
+            <test value="1"> 
+                aero/alpha-indicated-deg ge metrics/aoa-indexer/slow-deg-start
+            </test>
+        </switch>
+
+        <switch name="systems/electrics/aoa-indexer-onspeed">
+            <default value="0" />
+            <test value="0">
+                systems/electrics/ac-essential-bus1 le 0   
+            </test>
+
+            <test value="1">
+                systems/electrics/master-test-lights ne 0
+            </test>
+
+            <test value="1"> 
+                aero/alpha-indicated-deg ge metrics/aoa-indexer/optimum-deg-start
+                aero/alpha-indicated-deg le metrics/aoa-indexer/optimum-deg-end
+            </test>
+        </switch>
+
+        <switch name="systems/electrics/aoa-indexer-fast">
+            <default value="0" />
+
+            <test value="0">
+                systems/electrics/ac-essential-bus1 le 0   
+            </test>
+
+            <test value="1">
+                systems/electrics/master-test-lights ne 0
+            </test>
+
+            <test value="1"> 
+                aero/alpha-indicated-deg le metrics/aoa-indexer/fast-deg-end
+            </test>
+        </switch>
     </channel>
 </system>

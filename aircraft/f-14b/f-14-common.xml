@@ -240,9 +240,12 @@
                 </signal>
                 <signal>
                     <type>float</type>
-                    <property type="string">sim/model/f-14b/lighting/warn-medium-lights-switch/state</property>
+                    <property type="string">fdm/jsbsim/systems/electrics/aoa-indexer-light/state</property>
                 </signal>
-
+                <signal>
+                    <type>int</type>
+                    <property type="string">sim/multiplay/generic/int[32]</property>
+                </signal>
             </config>
         </flight-recorder>
 
@@ -633,7 +636,7 @@
                     </hud>
                     <lighting>
                         <anti-collision-switch type="bool">true</anti-collision-switch>
-                        <hook-bypass type="bool">false</hook-bypass>
+                        <hook-bypass-field type="bool"/>
                         <!-- false = carrier -->
                         <index-norm type="double">1</index-norm>
                         <position-tail-switch type="int">1</position-tail-switch>
@@ -785,14 +788,13 @@
                         <!-- target = 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
                         <!-- F-14AAD-1 Figure 2-124; Angle-of-Attack Displays -->
 
-                        <slow-deg-start>15.5</slow-deg-start>
-                        <optimum-deg-start>14</optimum-deg-start>
-                        <optimum-deg-end>16</optimum-deg-end>
-                        <fast-deg-end>14.5</fast-deg-end>
+                        <slow-deg-start alias="/fdm/jsbsim/metrics/aoa-indexer/slow-deg-start"/>
+                        <optimum-deg-start alias="/fdm/jsbsim/metrics/aoa-indexer/optimum-deg-start"/>
+                        <optimum-deg-end alias="/fdm/jsbsim/metrics/aoa-indexer/optimum-deg-end"/>
+                        <fast-deg-end alias="/fdm/jsbsim/metrics/aoa-indexer/fast-deg-end"/>
 
-                        <target-deg>15</target-deg>
                         <!-- target (AFCS)-->
-
+                        <target-deg alias="/fdm/jsbsim/metrics/aoa-indexer/target-deg"/>
                     </aoa-indexer>
                     <acls>
                         <engaged type="bool">false</engaged>
@@ -1005,6 +1007,9 @@
                 <bool n="1" type="bool" alias="/instrumentation/gci/bogeydope"/><!-- if change these to other bools, the l0k1 assets on github needs to be updated also -->
                 <bool n="2" type="bool" alias="/instrumentation/gci/cutoff"/>
                 <bool n="3" type="bool" alias="/damage/fire/serviceable"/>
+                <bool n="28" type="bool"/> <!-- aoa indexer slow -->
+                <bool n="29" type="bool"/> <!-- aoa indexer onspeed -->
+                <bool n="30" type="bool"/> <!-- aoa indexer fast -->
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="1" alias="/sim/model/f-14b/fx/smoke"/>

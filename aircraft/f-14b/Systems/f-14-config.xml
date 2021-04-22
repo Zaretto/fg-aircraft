@@ -45,6 +45,19 @@
           <z-position-base type="double">-94.01</z-position-base>
         </unit>
       </gear>
+      <metrics>
+        <aoa-indexer>
+            <!-- target = 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
+            <!-- F-14AAD-1 Figure 2-124; Angle-of-Attack Displays -->
+
+            <slow-deg-start>15.5</slow-deg-start>
+            <optimum-deg-start>14</optimum-deg-start>
+            <optimum-deg-end>16</optimum-deg-end>
+            <fast-deg-end>14.5</fast-deg-end>
+            <!-- target (AFCS)-->
+            <target-deg>15</target-deg>
+        </aoa-indexer>
+      </metrics>
     <propulsion>
         <engine n="0">
             <augmentation-alight type="float">0</augmentation-alight>
@@ -135,6 +148,7 @@
             <ground-power type="double">0</ground-power>
             <lgenerator-status type="double">1</lgenerator-status>
             <rgenerator-status type="double">1</rgenerator-status>
+            <master-test-lights alias="/sim/model/f-14b/lights/master-test-lights"></master-test-lights>
         </electrics>
         <flyt>
             <damage-reset type="double">0</damage-reset>
@@ -162,6 +176,7 @@
         <hook>
             <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
             <arrestor-wire-reset-time type="double">20</arrestor-wire-reset-time>
+            <tailhook-bypass-field type="int">0</tailhook-bypass-field> <!-- non zero  if hook bypass in field setting -->
             <funcs>
                 <arrestor-wire-available-dt type="double">-60</arrestor-wire-available-dt>
                 <hook-operational-efficiency type="double">1.0</hook-operational-efficiency>
