@@ -289,22 +289,17 @@ Figure 2-54.  Longitudinal System Authority
                     <property>sas/pitch-sas-3</property>
                 </sum>
             </function>
-            <output>fcs/pitch-command</output>
+            <output>sas/pitch-sas-1</output>
         </fcs_function>
 
-        <!-- Removed this filter because it makes
-            the aircraft very hard to control in pitch.
-            Not sure if it is an implementation problem
-            or something that I have misunderstood.
-            
-            <lead_lag_filter name="fcs/pitch-command">
+        <lead_lag_filter name="fcs/pitch-command">
             <input>sas/pitch-sas-1</input>
             <c1>0</c1>
             <c2>1</c2>
-            <c3>0.5</c3>
+            <c3>0.05</c3>
             <c4>1</c4>
         </lead_lag_filter>
- -->
+        
         <summer name="fcs/pitch-trim-sum">
             <input>fcs/pitch-command</input>
             <input>-systems/afcs/elevator-cmd-delta</input>
@@ -614,7 +609,14 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/spoiler-zeropos</property>
                         <product>
                             <property>fcs/spoiler-zero-factor</property>
-                            <property>fcs/spoiler-dlc-increment-cmd</property>
+                            <ifthen>
+                                <nq>
+                                    <property>fcs/dlc-active</property>
+                                    <value>0</value>
+                                </nq>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                                <property>fcs/spoiler-left-dmd</property>
+                            </ifthen>
                         </product>
                     </sum>
                 </switch>
@@ -759,7 +761,14 @@ Figure 2-54.  Longitudinal System Authority
                         <property>fcs/spoiler-zeropos</property>
                         <product>
                             <property>fcs/spoiler-zero-factor</property>
-                            <property>fcs/spoiler-dlc-increment-cmd</property>
+                            <ifthen>
+                                <nq>
+                                    <property>fcs/dlc-active</property>
+                                    <value>0</value>
+                                </nq>
+                                <property>fcs/spoiler-dlc-increment-cmd</property>
+                                <property>fcs/spoiler-right-dmd</property>
+                            </ifthen>
                         </product>
                     </sum>
                 </switch>
@@ -1045,6 +1054,9 @@ Figure 2-54.  Longitudinal System Authority
         <switch name="fcs/yaw-damper-active">
             <default value="0.0" />
             <test logic="AND" value="1">
+                fcs/yaw-damper-enable ne 0.0
+            </test>
+            <test logic="AND" value="1">
                     fcs/yaw-damper-enable ne 0.0
                     simulation/sim-time-sec gt 2.0
                     gear/wow eq 0
@@ -1128,6 +1140,27 @@ Figure 2-54.  Longitudinal System Authority
                 </product>
             </function>
         </fcs_function>
+
+        <!-- <lead_lag_filter name="sas/yaw-sas-3-r-d">
+            <input>velocities/r-aero-deg_sec</input>
+            <c1>sas/yaw-sas-3-r-c1</c1>
+            <c2>sas/yaw-sas-3-r-c2</c2>
+            <c3>sas/yaw-sas-3-r-c3</c3>
+            <c4>sas/yaw-sas-3-r-c4</c4>
+            <clipto>
+                <min>-50</min>
+                <max>50</max>
+            </clipto>
+        </lead_lag_filter>
+        <fcs_function name="sas/yaw-sas-3-r">
+            <function>
+                <product>
+                    <property>sas/yaw-sas-3-r-d</property>
+                    <value>0.01754385964912280701754385964912</value>
+                </product>
+            </function>
+        </fcs_function>
+ -->
 
         <lead_lag_filter name="sas/yaw-sas-3-r">
             <input>velocities/r-aero-rad_sec</input>
@@ -1579,11 +1612,12 @@ Figure 2-54.  Longitudinal System Authority
         </fcs_function>
 
         <!---        ROLL SAS 5 - combine all          -->
+
         <lead_lag_filter name="sas/roll-sas-5-v2">
             <input>sas/roll-sas-5-v1</input>
             <c1>0</c1>
             <c2>1</c2>
-            <c3>0.5</c3>
+            <c3>0.05</c3>
             <c4>1</c4>
             <clipto>
                 <min>-12</min>
