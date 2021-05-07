@@ -1249,9 +1249,9 @@ Figure 2-54.  Longitudinal System Authority
                     simulation/sim-time-sec gt 2.0
                 </test>
             <output>fcs/roll-sas-active</output>
-        </switch>
+        </switch>v
         <!---        ROLL SAS 1      NASA TM-81833, Figure 21    -->
-        <fcs_function name="sas/roll-sas-1-input-0">
+        <fcs_function name="sas/roll-stick-input">
             <description>Sum of all stick inputs (stick, trim)</description>
             <function>
                 <sum>
@@ -1260,6 +1260,14 @@ Figure 2-54.  Longitudinal System Authority
                 </sum>
             </function>
         </fcs_function>
+
+        <actuator name="sas/roll-sas-1-input-0">
+            <description>Rate limited stick movement</description>
+            <input>sas/roll-stick-input</input>
+            <rate_limit>sas/roll-sas-1-input-0-rate</rate_limit>
+            <output>sas/roll-sas-1-input-0-v</output>
+        </actuator>
+
         <fcs_function name="sas/roll-sas-1-input">
             <description>
                     Stick position force simulation - 
@@ -1357,7 +1365,7 @@ Figure 2-54.  Longitudinal System Authority
                                 10         0
                                 21         1
                                 22         1
-                                </tableData>
+                        </tableData>
                     </table>
                     <value>1.0</value>
                     <table name="sas/roll-sas-2-ha-v2-alpha-mach-1.00">
@@ -1367,7 +1375,7 @@ Figure 2-54.  Longitudinal System Authority
                                 17         0
                                 43         1
                                 44         1
-                            </tableData>
+                        </tableData>
                     </table>
                 </interpolate1d>
             </function>
@@ -1472,16 +1480,15 @@ Figure 2-54.  Longitudinal System Authority
 
         <fcs_function name="sas/roll-sas-3-v1-f">
             <function>
-                <ifthen>
-                    <le>
-                        <abs>
-                            <property>sas/roll-sas-3-p-deg-sec</property>
-                        </abs>
-                        <value>135</value>
-                    </le>
-                    <value>0.04</value>
-                    <value>0.15</value>
-                </ifthen>
+                <table>
+                    <independentVar lookup="row">sas/roll-sas-3-p-deg-sec</independentVar>
+                    <tableData>
+                        -250      0.15
+                        -135      0.04
+                         135      0.04
+                         250      0.15
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
 
@@ -1503,7 +1510,8 @@ Figure 2-54.  Longitudinal System Authority
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <tableData>
                                0.0      1
-                               0.6      1
+                               0.5      1
+                               0.65     0
                                0.7      0
                         </tableData>
                     </table>
@@ -1554,17 +1562,18 @@ Figure 2-54.  Longitudinal System Authority
 
         <fcs_function name="sas/roll-sas-3-v5">
             <function>
-                <ifthen>
-                    <ge>
-                        <property>aero/alpha-indicated-deg</property>
-                        <value>44</value>
-                    </ge>
-                    <product>
-                        <value>57.32</value>
-                        <property>velocities/r-aero-rad_sec</property>
-                    </product>
-                    <value>0</value>
-                </ifthen>
+                <product>
+                    <value>57.32</value>
+                    <property>velocities/r-aero-rad_sec</property>
+                    <table>
+                        <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                        <tableData>
+                          0     0
+                         35     1
+                         44     44
+                    </tableData>
+                    </table>
+                </product>
             </function>
             <clipto>
                 <min>-20</min>
