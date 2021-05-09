@@ -95,6 +95,30 @@
 
     </channel>
 
+    <channel name="Sensors">
+        <sensor name="velocities/p-aero-rad_sec-sensor">
+            <input>velocities/p-aero-rad_sec</input>
+            <delay type="time">0.007</delay>
+            <!-- <lag>0.970419515992059</lag> -->
+            <output>velocities/p-aero-rad_sec-sensor</output>
+            <bias>0.0</bias>
+        </sensor>
+        <sensor name="velocities/q-aero-rad_sec-sensor">
+            <input>velocities/q-aero-rad_sec</input>
+            <delay type="time">0.007</delay>
+            <!-- <lag>0.970419515992059</lag> -->
+            <output>velocities/q-aero-rad_sec-sensor</output>
+            <bias>0.0</bias>
+        </sensor>
+        <sensor name="velocities/r-aero-rad_sec-sensor">
+            <input>velocities/r-aero-rad_sec</input>
+            <delay type="time">0.007</delay>
+            <!-- <lag>0.970419515992059</lag> -->
+            <output>velocities/r-aero-rad_sec-sensor</output>
+            <bias>0.0</bias>
+        </sensor>
+    </channel>
+
     <channel name="Pitch">
         <!-- 
 Figure 2-54.  Longitudinal System Authority
@@ -244,8 +268,7 @@ Figure 2-54.  Longitudinal System Authority
         </switch>
 
         <pure_gain name="sas/pitch-3-q">
-            <input>velocities/q-aero-rad_sec</input>
-            <gain>fcs/sas-pitch-active</gain>
+            <input>velocities/q-aero-rad_sec-sensor</input>
             <clipto>
                 <!-- 50 (deg/sec) in figure 3 -->
                 <min> -0.878 </min>
@@ -268,10 +291,17 @@ Figure 2-54.  Longitudinal System Authority
 
         <fcs_function name="sas/pitch-sas-3">
             <function>
-                <product>
-                    <property>sas/pitch-sas-3-q</property>
-                    <value>0.3</value>
-                </product>
+                <ifthen>
+                    <nq>
+                        <property>fcs/sas-pitch-active</property>
+                        <value>0</value>
+                    </nq>
+                    <product>
+                        <property>sas/pitch-sas-3-q</property>
+                        <value>0.3</value>
+                    </product>
+                    <value>0</value>
+                </ifthen>
             </function>
 
             <clipto>
@@ -1082,7 +1112,7 @@ Figure 2-54.  Longitudinal System Authority
         <fcs_function name="sas/yaw-sas-2-p">
             <function>
                 <product>
-                    <property>velocities/p-aero-rad_sec</property>
+                    <property>velocities/p-aero-rad_sec-sensor</property>
                     <!-- <value>57.3</value> -->
                     <ifthen>
                         <and>
@@ -1163,7 +1193,7 @@ Figure 2-54.  Longitudinal System Authority
  -->
 
         <lead_lag_filter name="sas/yaw-sas-3-r">
-            <input>velocities/r-aero-rad_sec</input>
+            <input>velocities/r-aero-rad_sec-sensor</input>
             <c1>sas/yaw-sas-3-r-c1</c1>
             <c2>sas/yaw-sas-3-r-c2</c2>
             <c3>sas/yaw-sas-3-r-c3</c3>
@@ -1469,7 +1499,7 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <value>-57.32</value>
-                    <property>velocities/p-aero-rad_sec</property>
+                    <property>velocities/p-aero-rad_sec-sensor</property>
                 </product>
             </function>
             <clipto>
@@ -1564,7 +1594,7 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <value>57.32</value>
-                    <property>velocities/r-aero-rad_sec</property>
+                    <property>velocities/r-aero-rad_sec-sensor</property>
                     <table>
                         <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
                         <tableData>
@@ -1624,10 +1654,10 @@ Figure 2-54.  Longitudinal System Authority
 
         <lead_lag_filter name="sas/roll-sas-5-v2">
             <input>sas/roll-sas-5-v1</input>
-            <c1>0</c1>
-            <c2>1</c2>
-            <c3>0.05</c3>
-            <c4>1</c4>
+            <c1>sas/roll-sas-5-v2-c1</c1>
+            <c2>sas/roll-sas-5-v2-c2</c2>
+            <c3>sas/roll-sas-5-v2-c3</c3>
+            <c4>sas/roll-sas-5-v2-c4</c4>
             <clipto>
                 <min>-12</min>
                 <max>12</max>
@@ -2086,7 +2116,7 @@ Figure 2-54.  Longitudinal System Authority
                 <quotient>
                     <product>
                         <property>metrics/cbarw-ft</property>
-                        <property>velocities/q-aero-rad_sec</property>
+                        <property>velocities/q-aero-rad_sec-sensor</property>
                     </product>
                     <!-- over -->
                     <product>
