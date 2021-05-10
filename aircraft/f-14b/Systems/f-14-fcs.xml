@@ -128,6 +128,7 @@ Figure 2-54.  Longitudinal System Authority
 |ACTUATION                     |MODE                      |MOTION                           |AUTHORITY         |RATE    |AUTHORITY       |AVERAGE RATE  |
 +==============================+==========================+=================================+==================+========+================+==============+
 |Control Stick                 |Manual                    |4 inches forward 5.5 inches aft  |10° TED, 33° TEU  |36°/sec |9° TED, 18° TEU |1/second      |
+|                                                         |10cm fore 14cm aft               |10° TED, 33° TEU  |36°/sec |9° TED, 18° TEU |1/second      |
 +==============================+==========================+=================================+==================+========+================+==============+
 | DFCS                         |Series (SAS)              |None                             |±3°               |20°/sec |     =          |      =       |
 |                              |Parallel                  |4 inches, forward 5.5 inches aft |10° TED 33° TEU   |36°/sec |9° TED 18° TEU  |0.1°/second   |
@@ -142,25 +143,25 @@ Figure 2-54.  Longitudinal System Authority
 +==============================+==========================+=================================+==================+========+================+==============+
  -->
 
-        <fcs_function name="fcs/its-pitch-slats-norm">
+        <fcs_function name="fcs/its-pitch-slats-deg">
             <description>F-14-AAP-1 Figure 2-56 Integrated Trim Schedules - MANEUVER FLAPS - TEU</description>
             <function>
                 <table>
                     <independentVar lookup="row">fcs/flap-pos-deg</independentVar>
                     <tableData>
                              0  0.0000
-                            15 -0.0787
-                            35 -0.0787
+                            15 -2.7
+                            35 -2.7
                         </tableData>
                 </table>
             </function>
             <clipto>
-                <min>-0.1</min>
+                <min>-2.7</min>
                 <max>0</max>
             </clipto>
         </fcs_function>
 
-        <fcs_function name="fcs/its-pitch-flaps-norm">
+        <fcs_function name="fcs/its-pitch-flaps-deg">
             <description>F-14-AAP-1 Figure 2-56 Integrated Trim Schedules - LANDING FLAPS - TEU</description>
             <function>
                 <table>
@@ -168,20 +169,19 @@ Figure 2-54.  Longitudinal System Authority
                     <tableData>
                              0.0  0.0000
                              7.4  0.0000
-                            27.0 -0.0909
+                            27.0 -3.0000
                         </tableData>
                 </table>
             </function>
             <clipto>
-                <min>-0.1</min>
+                <min>-3.0</min>
                 <max>0</max>
             </clipto>
         </fcs_function>
 
-        <fcs_function name="fcs/pitch-1-dlc-tw-norm-v1">
+        <fcs_function name="fcs/pitch-1-dlc-tw-deg-v1">
             <description>
                     NASA TM-81833; Figure 5 - Increment horizontal stabilizer command as function of DLC thumbwheel position
-                    (Normalized based on )
                 </description>
             <function>
                 <product>
@@ -189,30 +189,28 @@ Figure 2-54.  Longitudinal System Authority
                     <property>tuning/CMDLC</property>
                     <table>
                         <independentVar lookup="row">fcs/stick-thumbwheel-norm</independentVar>
-                        <independentVar lookup="column">fcs/mod-dlc-AFC-735-active</independentVar>
                         <tableData>
-                                         0       1
-                            -1.0    0.2329  0.3671
-                            -0.9    0.2388  0.3534
-                            -0.8    0.2444  0.3130
-                            -0.7    0.2705  0.2931
-                            -0.6    0.2854  0.2681
-                            -0.5    0.2819  0.2379
-                            -0.4    0.2460  0.2141
-                            -0.3    0.2101  0.1903
-                            -0.2    0.1772  0.1695
-                            -0.1    0.1444  0.1487
-                            -0.0    0.1099  0.1263
-                             0.1    0.0821  0.1085
-                             0.2    0.0709  0.0964
-                             0.3    0.0547  0.0844
-                             0.4    0.0528  0.0723
-                             0.5    0.0440  0.0603
-                             0.6    0.0352  0.0482
-                             0.7    0.0264  0.0362
-                             0.8    0.0176  0.0241
-                             0.9    0.0088  0.0121
-                             1.0    0.0000  0.0000
+                            -1.0	8.422
+                            -0.9	8.253
+                            -0.8	8.084
+                            -0.7	7.914
+                            -0.6	7.745
+                            -0.5	7.576
+                            -0.4	7.406
+                            -0.3	7.157
+                            -0.2	6.799
+                            -0.1	6.440
+                             0  	6.082
+                             0.1	5.724
+                             0.2	5.365
+                             0.3	4.844
+                             0.4	4.255
+                             0.5	3.665
+                             0.6	3.075
+                             0.7	2.486
+                             0.8	1.699
+                             0.9	0.850
+                             1.0  	0.000
                         </tableData>
                     </table>
                 </product>
@@ -223,36 +221,24 @@ Figure 2-54.  Longitudinal System Authority
             <input>fcs/pitch-trim-cmd-norm</input>
             <input>fcs/elevator-cmd-norm</input>
         </summer>
-        <fcs_function name="fcs/pitch-1-dh-v2">
+        <fcs_function name="fcs/pitch-1-dh-deg-v2">
             <function>
                 <table>
                     <independentVar lookup="row">fcs/pitch-cmd-norm</independentVar>
                     <tableData>
-                        -1.00	-1.00000
-                            -0.83	-0.59729
-                            -0.67	-0.40427
-                            -0.50	-0.25689
-                            -0.33	-0.13915
-                            -0.17	-0.06254
-                            0.00	0.00000
-                            0.17	0.06254
-                            0.33	0.13915
-                            0.50	0.25689
-                            0.67	0.40427
-                            0.83	0.59729
-                            1.00	1.00000
-                        <!--
-                                -1.00000    -1.00000
-                                 -0.82643    -0.66040
-                            -0.56660    -0.25705
-                            -0.24666     0.02732
-                             0.04170     0.09350
-                             0.37898     0.26659
-                             0.62542     0.47650
-                             0.78054     0.60352
-                             0.94528     0.84095
-                             1.00000     1.00000
-                              -->
+                        -1.000	-33.000
+                        -0.830	-19.711
+                        -0.670	-13.341
+                        -0.500	-8.477
+                        -0.330	-4.592
+                        -0.170	-2.064
+                         0.000	 0.000
+                         0.170	 0.625
+                         0.330	 1.392
+                         0.500	 2.569
+                         0.670	 4.043
+                         0.830	 5.973
+                         1.000	 10.000
                     </tableData>
                 </table>
             </function>
@@ -269,10 +255,11 @@ Figure 2-54.  Longitudinal System Authority
 
         <pure_gain name="sas/pitch-3-q">
             <input>velocities/q-aero-rad_sec-sensor</input>
+            <gain>57.297</gain>
             <clipto>
                 <!-- 50 (deg/sec) in figure 3 -->
-                <min> -0.878 </min>
-                <max>  0.878 </max>
+                <min> -50 </min>
+                <max>  50 </max>
             </clipto>
         </pure_gain>
 
@@ -284,8 +271,8 @@ Figure 2-54.  Longitudinal System Authority
             <c4>sas/pitch-3-q-c4</c4>
             <clipto>
                 <!-- 10 (deg/sec) in figure 3 -->
-                <min>-0.175</min>
-                <max>0.175</max>
+                <min>-10</min>
+                <max>10</max>
             </clipto>
         </lead_lag_filter>
 
@@ -314,8 +301,8 @@ Figure 2-54.  Longitudinal System Authority
         <fcs_function name="sas/pitch-sas-1">
             <function>
                 <sum>
-                    <property>fcs/pitch-1-dlc-tw-norm-v1</property>
-                    <property>fcs/pitch-1-dh-v2</property>
+                    <property>fcs/pitch-1-dlc-tw-deg-v1</property>
+                    <property>fcs/pitch-1-dh-deg-v2</property>
                     <property>sas/pitch-sas-3</property>
                 </sum>
             </function>
@@ -330,35 +317,56 @@ Figure 2-54.  Longitudinal System Authority
             <c4>1</c4>
         </lead_lag_filter>
         
-        <summer name="fcs/pitch-trim-sum">
+        <fcs_function name="fcs/afcs-elevator-deg">
+            <function>
+                <table>
+                    <independentVar lookup="row">systems/afcs/elevator-cmd-delta</independentVar>
+                    <tableData>
+                        -1.000	-33.000
+                        -0.830	-19.711
+                        -0.670	-13.341
+                        -0.500	-8.477
+                        -0.330	-4.592
+                        -0.170	-2.064
+                         0.000	 0.000
+                         0.170	 0.625
+                         0.330	 1.392
+                         0.500	 2.569
+                         0.670	 4.043
+                         0.830	 5.973
+                         1.000	 10.000
+                    </tableData>
+                </table>
+            </function>
+            </fcs_function>
+
+        <summer name="fcs/pitch-trim-sum-deg">
             <input>fcs/pitch-command</input>
-            <input>-systems/afcs/elevator-cmd-delta</input>
-            <input>fcs/its-pitch-flaps-norm</input>
-            <input>fcs/its-pitch-slats-norm</input>
+            <input>-fcs/afcs-elevator-deg</input>
+            <input>fcs/its-pitch-flaps-deg</input>
+            <input>fcs/its-pitch-slats-deg</input>
 
             <clipto>
-                <min> -1 </min>
-                <max>  1 </max>
+                <min> -33 </min>
+                <max>  10 </max>
             </clipto>
         </summer>
 
 
-        <switch name="fcs/pitch-trim-actuator">
-            <default value="fcs/pitch-trim-sum" />
+        <switch name="fcs/elevator-pos-demand-deg">
+            <default value="fcs/pitch-trim-sum-deg" />
             <test value="fcs/pitch-trim-actuator">
                     systems/hydraulics/flight-system-pressure ne 1
-                </test>
-        </switch>
-
-        <aerosurface_scale name="fcs/elevator-pos-demand">
-            <input>fcs/pitch-trim-actuator</input>
-            <range>
+            </test>
+            <clipto>
                 <!-- Limits below are  +12.06(0.2105), -33.17(-0.57895)
                      TM-81833, Figure 3) specifies +10, -30 -->
-                <min> -0.57895 </min>
-                <max>  0.2105 </max>
-            </range>
-        </aerosurface_scale>
+                <min> -33</min>
+                <max>  10 </max>
+            </clipto>
+        </switch>
+
+
 
         <!-- spoilers -->
         <!-- spoilers -4deg when flaps deployed more than 25 deg (2.21.1.3 Main Flaps)-->
@@ -870,20 +878,21 @@ Figure 2-54.  Longitudinal System Authority
         </aerosurface_scale>
 
         <!-- F14a stabilator: +/- 7deg : +/- 30 deg/sec -->
-        <kinematic name="fcs/elevator-pos-rad">
-            <input>fcs/elevator-pos-demand</input>
+        <kinematic name="fcs/elevator-pos-deg">
+            <input>fcs/elevator-pos-demand-deg</input>
+            <noscale/>
             <traverse>
                 <setting>
-                    <position>-1</position>
+                    <position>-33</position>
                     <time>1.75</time>
                 </setting>
                 <setting>
-                    <position>1</position>
+                    <position>12</position>
                     <time>0.90</time>
                     <!-- based on 30 deg/sec -->
                 </setting>
             </traverse>
-            <output>fcs/elevator-pos-rad</output>>
+            <output>fcs/elevator-pos-deg</output>>
         </kinematic>
 
 
