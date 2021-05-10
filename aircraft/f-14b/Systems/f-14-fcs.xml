@@ -293,8 +293,8 @@ Figure 2-54.  Longitudinal System Authority
 
             <clipto>
                 <!-- 20 (deg/sec) in figure 3 -->
-                <min>-0.0526</min>
-                <max>0.0526</max>
+                <min>-20</min>
+                <max>20</max>
             </clipto>
         </fcs_function>
 
@@ -355,7 +355,7 @@ Figure 2-54.  Longitudinal System Authority
 
         <switch name="fcs/elevator-pos-demand-deg">
             <default value="fcs/pitch-trim-sum-deg" />
-            <test value="fcs/pitch-trim-actuator">
+            <test value="fcs/elevator-pos-demand-deg">
                     systems/hydraulics/flight-system-pressure ne 1
             </test>
             <clipto>
