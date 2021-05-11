@@ -117,6 +117,21 @@
             <output>velocities/r-aero-rad_sec-sensor</output>
             <bias>0.0</bias>
         </sensor>
+        <sensor name="velocities/velocities/r-aero-deg_sec-sensor">
+            <input>velocities/r-aero-rad_sec</input>
+            <delay type="time">0.007</delay>
+            <gain>57.32</gain>
+            <!-- <lag>0.970419515992059</lag> -->
+            <output>velocities/r-aero-deg_sec-sensor</output>
+            <bias>0.0</bias>
+        </sensor>
+        <sensor name="accelerations/Ny-sensor">
+            <input>accelerations/Ny</input>
+            <delay type="time">0.007</delay>
+            <lag>0.18</lag>
+            <output>accelerations/Ny-sensor</output>
+            <bias>0.0</bias>
+        </sensor>        
     </channel>
 
     <channel name="Pitch">
@@ -373,8 +388,8 @@ Figure 2-54.  Longitudinal System Authority
         <switch name="fcs/spoiler-zeropos">
             <default value="0" />
             <test value="-0.081">
-                    fcs/flap-pos-norm ge 0.7142857142857143
-                </test>
+                fcs/flap-pos-norm ge 0.7142857142857143
+            </test>
         </switch>
 
         <switch name="fcs/spoiler-differential-active-0">
@@ -409,17 +424,17 @@ Figure 2-54.  Longitudinal System Authority
             <default value="0" />
 
             <test value="fcs/spoiler-ground-brake-deployed">
-                    systems/hydraulics/combined-system-pressure eq 0
-                </test>
+                systems/hydraulics/combined-system-pressure eq 0
+            </test>
 
             <test value="1">
-                    systems/hydraulics/combined-system-pressure ne 0
-                    fcs/wing-sweep-pos-deg lt 55.0
-                    fcs/spoiler-ground-brake-armed ne 0.0
-                    fcs/throttle-cmd-norm[0] le 0.15
-                    fcs/throttle-cmd-norm[1] le 0.15
-                    position/aircraft-on-ground ne 0
-                </test>
+                systems/hydraulics/combined-system-pressure ne 0
+                fcs/wing-sweep-pos-deg lt 55.0
+                fcs/spoiler-ground-brake-armed ne 0.0
+                fcs/throttle-cmd-norm[0] le 0.15
+                fcs/throttle-cmd-norm[1] le 0.15
+                position/aircraft-on-ground ne 0
+            </test>
         </switch>
 
         <aerosurface_scale name="fcs/dlc-thumbwheel-pos-deg">
@@ -1111,7 +1126,7 @@ Figure 2-54.  Longitudinal System Authority
                 <product>
                     <product>
                         <property>sas/roll-sas-1-input</property>
-                        <value>-1</value>
+                        <value>1</value>
                     </product>
                     <property>sas/yaw-sas-2-v1-stkr-factor</property>
                 </product>
@@ -1122,7 +1137,7 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <property>velocities/p-aero-rad_sec-sensor</property>
-                    <!-- <value>57.3</value> -->
+                    <value>57.2974</value>
                     <ifthen>
                         <and>
                             <lt>
@@ -1140,8 +1155,8 @@ Figure 2-54.  Longitudinal System Authority
                 </product>
             </function>
             <clipto>
-                <min>-1.052</min>
-                <max>1.052</max>
+                <min>-30</min>
+                <max>30</max>
             </clipto>
         </fcs_function>
 
@@ -1165,23 +1180,32 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <property>sas/yaw-sas-2-v3</property>
-                    <table>
-                        <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
-                        <independentVar lookup="column">velocities/mach</independentVar>
-                        <tableData>
-                                0.000  0.550  0.551
-                            10    0.0    0.0    0.0
-                            12    0.2    0.2    0.0
-                            20    1.0    1.0    0.8
-                            22    1.0    1.0    1.0
+                    <interpolate1d>
+                        <property>velocities/mach</property>
+                        <value>0</value>
+                        <table name="sas/yaw-sas-2-v3-alpha-mach-0.55">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                12         0
+                                22         1
                         </tableData>
-                    </table>
+                        </table>
+                        <value>0.55</value>
+                        <table name="sas/yaw-sas-2-v3-alpha-mach-1.00">
+                            <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
+                            <tableData>
+                                10         0
+                                22         1
+                        </tableData>
+                        </table>
+                    </interpolate1d>
                 </product>
             </function>
         </fcs_function>
 
-        <!-- <lead_lag_filter name="sas/yaw-sas-3-r-d">
-            <input>velocities/r-aero-deg_sec</input>
+
+        <lead_lag_filter name="sas/yaw-sas-3-r-deg">
+            <input>velocities/r-aero-deg_sec-sensor</input>
             <c1>sas/yaw-sas-3-r-c1</c1>
             <c2>sas/yaw-sas-3-r-c2</c2>
             <c3>sas/yaw-sas-3-r-c3</c3>
@@ -1191,45 +1215,20 @@ Figure 2-54.  Longitudinal System Authority
                 <max>50</max>
             </clipto>
         </lead_lag_filter>
-        <fcs_function name="sas/yaw-sas-3-r">
-            <function>
-                <product>
-                    <property>sas/yaw-sas-3-r-d</property>
-                    <value>0.01754385964912280701754385964912</value>
-                </product>
-            </function>
-        </fcs_function>
- -->
-
-        <lead_lag_filter name="sas/yaw-sas-3-r">
-            <input>velocities/r-aero-rad_sec-sensor</input>
-            <c1>sas/yaw-sas-3-r-c1</c1>
-            <c2>sas/yaw-sas-3-r-c2</c2>
-            <c3>sas/yaw-sas-3-r-c3</c3>
-            <c4>sas/yaw-sas-3-r-c4</c4>
-            <clipto>
-                <min>-0.877</min>
-                <max>0.877</max>
-            </clipto>
-        </lead_lag_filter>
 
         <fcs_function name="sas/yaw-sas-3-ay-0">
             <function>
                 <product>
-                    <property>accelerations/Ny</property>
+                    <property>-accelerations/Ny-sensor</property>
                     <ifthen>
-                        <or>
-                            <lt>
-                                <property>fcs/roll-trim-cmd-norm</property>
-                                <value>-0.2</value>
-                            </lt>
-                            <gt>
-                                <property>fcs/roll-trim-cmd-norm</property>
-                                <value>0.2</value>
-                            </gt>
-                        </or>
-                        <value>0.38859649122807017543859649122807</value>
-                        <value>0.16052631578947368421052631578947</value>
+                        <lt>
+                            <abs>
+                                <property>sas/roll-sas-1-stkr-limit</property>
+                            </abs>
+                            <value>2.54</value>
+                        </lt>
+                        <value>-9.15</value>
+                        <value>-22.15</value>
                     </ifthen>
                 </product>
             </function>
@@ -1237,22 +1236,22 @@ Figure 2-54.  Longitudinal System Authority
 
         <lead_lag_filter name="sas/yaw-sas-3-ay-1">
             <input>sas/yaw-sas-3-ay-0</input>
-            <c1>0</c1>
-            <c2>1</c2>
+            <c1>sas/yaw-sas-3-ay-c1</c1>
+            <c2>sas/yaw-sas-3-ay-c2</c2>
             <c3>sas/yaw-sas-3-ay-c3</c3>
-            <c4>1</c4>
+            <c4>sas/yaw-sas-3-ay-c4</c4>
             <clipto>
-                <min>-0.7167</min>
-                <max>0.7167</max>
+                <min>-21.5</min>
+                <max>21.5</max>
             </clipto>
         </lead_lag_filter>
 
         <summer name="sas/yaw-sas-3-output">
-            <input>sas/yaw-sas-3-r</input>
+            <input>sas/yaw-sas-3-r-deg</input>
             <input>sas/yaw-sas-3-ay-1</input>
         </summer>
 
-        <fcs_function name="sas/yaw-output">
+        <fcs_function name="sas/yaw-output-0">
             <function>
                 <ifthen>
                     <eq>
@@ -1266,21 +1265,31 @@ Figure 2-54.  Longitudinal System Authority
                                 <property>fcs/dfcs-active</property>
                                 <value>0</value>
                             </nq>
-                            <property>sas/yaw-sas-2-output</property>
-                            <value>0</value>
+                            <product>
+                                <value>-1</value>
+                                <property>sas/yaw-sas-2-output</property>
+                            </product>
+                        <value>0</value>
                         </ifthen>
                         <property>sas/yaw-sas-3-output</property>
                     </sum>
                 </ifthen>
             </function>
             <clipto>
-                <min>-0.63</min>
-                <max>0.63</max>
+                <min>-19</min>
+                <max>19</max>
             </clipto>
         </fcs_function>
+        <actuator name="sas/yaw-output">
+            <description>Yaw SAS Actuator</description>
+            <input>sas/yaw-output-0</input>
+            <rate_limit>63.4</rate_limit>
+            <output>sas/yaw-output</output>
+        </actuator>
+
     </channel>
 
-    <channel name="Roll">
+    <channel name="Roll SAS">
         <switch name="fcs/roll-sas-active">
             <default value="0.0" />
             <test logic="AND" value="1">
@@ -1396,7 +1405,7 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <interpolate1d>
                     <property>velocities/mach</property>
-                    <value>0.5</value>
+                    <value>0.55</value>
                     <table name="sas/roll-sas-2-ha-v2-alpha-mach-0.55">
                         <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
                         <tableData>
@@ -1447,24 +1456,20 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <interpolate1d>
                     <property>velocities/mach</property>
-                    <value>0.5</value>
+                    <value>0.55</value>
                     <table name="sas/roll-sas-2-v4-alpha-mach-0.55">
                         <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
                         <tableData>
-                                16    1
                                 17    1
                                 43    0
-                                44    0
                             </tableData>
                     </table>
                     <value>1.0</value>
                     <table name="sas/roll-sas-2-v4-alpha-mach-1.00">
                         <independentVar lookup="row">aero/alpha-indicated-deg</independentVar>
                         <tableData>
-                                 9    1
                                 10    1
                                 21    0
-                                22    0
                             </tableData>
                     </table>
                 </interpolate1d>
@@ -1564,12 +1569,12 @@ Figure 2-54.  Longitudinal System Authority
                     <property>sas/roll-sas-3-v2</property>
                     <table name="sas/roll-sas-3-v3-ped">
                         <independentVar lookup="row">fcs/rudder-cmd-norm</independentVar>
+                        <!-- travel of rudder pedal 7.62 cm  -->
                         <tableData>
-                             -0.110      0
-                             -0.109      1
-                              0.000      1
-                              0.109      1
-                              0.110      0
+                             -0.833      0
+                             -0.333      1
+                              0.333      1
+                              0.833      0
                         </tableData>
                     </table>
                 </product>
@@ -1637,7 +1642,7 @@ Figure 2-54.  Longitudinal System Authority
         </fcs_function>
 
         <!---        ROLL SAS 4          -->
-        <fcs_function name="sas/roll-sas-4">
+        <fcs_function name="sas/roll-sas-4-v0">
             <function>
                 <sum>
                     <property>sas/roll-sas-3</property>
@@ -1650,6 +1655,14 @@ Figure 2-54.  Longitudinal System Authority
             </clipto>
         </fcs_function>
 
+        <actuator name="sas/roll-sas-4">
+            <description>SAS Actuator</description>
+            <input>sas/roll-sas-4-v0</input>
+            <rate_limit>33.4</rate_limit>
+            <output>sas/roll-sas-4</output>
+        </actuator>
+
+        <!-- Power actuator -->
         <fcs_function name="sas/roll-sas-5-v1">
             <function>
                 <sum>
@@ -1659,10 +1672,16 @@ Figure 2-54.  Longitudinal System Authority
             </function>
         </fcs_function>
 
+        <actuator name="sas/roll-sas-5-v2">
+            <input>sas/roll-sas-5-v1</input>
+            <rate_limit>36</rate_limit>
+            <output>sas/roll-sas-5-v2</output>
+        </actuator>
+
         <!---        ROLL SAS 5 - combine all          -->
 
-        <lead_lag_filter name="sas/roll-sas-5-v2">
-            <input>sas/roll-sas-5-v1</input>
+        <lead_lag_filter name="sas/roll-sas-5-v3">
+            <input>sas/roll-sas-5-v2</input>
             <c1>sas/roll-sas-5-v2-c1</c1>
             <c2>sas/roll-sas-5-v2-c2</c2>
             <c3>sas/roll-sas-5-v2-c3</c3>
@@ -1671,18 +1690,22 @@ Figure 2-54.  Longitudinal System Authority
                 <min>-12</min>
                 <max>12</max>
             </clipto>
+            <output>sas/roll-sas-5-v3-v</output>
         </lead_lag_filter>
 
+        <!-- normalize the output (1/12)-->
         <fcs_function name="sas/roll-sas-output">
             <function>
                 <product>
-                    <property>sas/roll-sas-5-v2</property>
-                    <value>0.11</value>
+                    <property>sas/roll-sas-5-v3</property>
+                    <value>0.08333</value>
                 </product>
             </function>
         </fcs_function>
         <!---        END OF ROLL SAS          -->
+    </channel>
 
+    <channel name="Rudder">
         <!-- rudder limits +/-30deg 40 deg/sec-->
         <!-- stabilizer limits +/7deg 30 deg/sec-->
 
