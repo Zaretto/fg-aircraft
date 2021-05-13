@@ -96,6 +96,13 @@
     </channel>
 
     <channel name="Sensors">
+        <sensor name="Pilot G">
+            <input>accelerations/n-pilot-z-norm</input>
+            <delay type="time">0.007</delay>
+            <gain>-1</gain>
+            <output>/accelerations/pilot-gdamped</output>
+        </sensor>
+
         <sensor name="velocities/p-aero-rad_sec-sensor">
             <input>velocities/p-aero-rad_sec</input>
             <delay type="time">0.007</delay>
@@ -1110,13 +1117,6 @@ Figure 2-54.  Longitudinal System Authority
             <test logic="AND" value="1">
                 fcs/yaw-damper-enable ne 0.0
             </test>
-            <test logic="AND" value="1">
-                    fcs/yaw-damper-enable ne 0.0
-                    simulation/sim-time-sec gt 2.0
-                    gear/wow eq 0
-                    aero/alpha-deg gt -10
-                    aero/alpha-deg lt  25
-                </test>
             <output>fcs/yaw-damper-active</output>
         </switch>
 
@@ -1125,7 +1125,7 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <product>
-                        <property>sas/roll-sas-1-input</property>
+                        <property>sas/roll-sas-1-stkr-limit</property>
                         <value>1</value>
                     </product>
                     <property>sas/yaw-sas-2-v1-stkr-factor</property>
@@ -1155,8 +1155,9 @@ Figure 2-54.  Longitudinal System Authority
                 </product>
             </function>
             <clipto>
-                <min>-30</min>
-                <max>30</max>
+                <!-- +/-30 - however we have applied the 0.2 factor first so need to reduce the limits accordingly -->
+                <min>-6</min>
+                <max>6</max>
             </clipto>
         </fcs_function>
 
@@ -1219,7 +1220,7 @@ Figure 2-54.  Longitudinal System Authority
         <fcs_function name="sas/yaw-sas-3-ay-0">
             <function>
                 <product>
-                    <property>-accelerations/Ny-sensor</property>
+                    <property>accelerations/Ny-sensor</property>
                     <ifthen>
                         <lt>
                             <abs>
@@ -1227,8 +1228,8 @@ Figure 2-54.  Longitudinal System Authority
                             </abs>
                             <value>2.54</value>
                         </lt>
-                        <value>-9.15</value>
-                        <value>-22.15</value>
+                        <value>9.15</value>
+                        <value>22.15</value>
                     </ifthen>
                 </product>
             </function>
@@ -1284,9 +1285,77 @@ Figure 2-54.  Longitudinal System Authority
             <description>Yaw SAS Actuator</description>
             <input>sas/yaw-output-0</input>
             <rate_limit>63.4</rate_limit>
-            <output>sas/yaw-output</output>
+            <output>sas/yaw-output-v</output>
         </actuator>
 
+        <!-- End of yaw SAS - rudder pedal next -->
+        <!-- rudder limits +/-30deg 40 deg/sec-->
+        <!-- stabilizer limits +/7deg 30 deg/sec-->
+
+        <summer name="fcs/rudder-cmd-norm-sum">
+            <input>fcs/rudder-cmd-norm</input>
+            <input>fcs/yaw-trim-cmd-norm</input>
+            <clipto>
+                <min> -1 </min>
+                <max>  1 </max>
+            </clipto>
+        </summer>
+
+        <fcs_function name="fcs/rudder-cmd-degrees">
+            <function>
+                <product>
+                    <property>fcs/rudder-cmd-norm-sum</property>
+                    <value>30</value>
+                </product>
+                <clipto>
+                    <min> -30 </min>
+                    <max>  30 </max>
+                </clipto>
+            </function>
+        </fcs_function>
+
+        <summer name="fcs/rudder-total">
+            <input>fcs/rudder-cmd-degrees</input>
+            <input>sas/yaw-output</input>
+            <clipto>
+                <min> -30 </min>
+                <max>  30 </max>
+            </clipto>
+        </summer>
+
+        <!-- rate limit 106 deg/s -->
+        <lead_lag_filter name="fcs/rudder-actuator-0">
+            <input>fcs/rudder-total</input>
+            <c1>0</c1>
+            <c2>1</c2>
+            <c3>sas/rudder-power-actuator-cval</c3>
+            <c4>1</c4>
+        </lead_lag_filter>
+
+        <actuator name="fcs/rudder-actuator-deg">
+            <input>fcs/rudder-actuator-0</input>
+            <rate_limit>106</rate_limit>
+            <output>fcs/rudder-actuator-v</output>
+        </actuator> 
+
+        <switch name="fcs/rudder-pos-deg">
+            <default value="fcs/rudder-actuator-deg" />
+            <test value="fcs/rudder-pos-deg">
+                systems/hydraulics/flight-system-pressure ne 1
+            </test>
+        </switch>
+        <fcs_function name="fcs/rudder-pos-norm">
+            <function>
+                <quotient>
+                    <property>fcs/rudder-pos-deg</property>
+                    <value>30</value>
+                </quotient>
+            </function>
+            <clipto>
+                <min> -1 </min>
+                <max>  1 </max>
+        </clipto>
+        </fcs_function>
     </channel>
 
     <channel name="Roll SAS">
@@ -1309,14 +1378,14 @@ Figure 2-54.  Longitudinal System Authority
             </function>
         </fcs_function>
 
-        <actuator name="sas/roll-sas-1-input-0">
+        <!-- <actuator name="sas/roll-sas-1-input-0">
             <description>Rate limited stick movement</description>
             <input>sas/roll-stick-input</input>
             <rate_limit>sas/roll-sas-1-input-0-rate</rate_limit>
             <output>sas/roll-sas-1-input-0-v</output>
-        </actuator>
+        </actuator> -->
 
-        <fcs_function name="sas/roll-sas-1-input">
+        <!-- <fcs_function name="sas/roll-sas-1-input">
             <description>
                     Stick position force simulation - 
                     ref: NAVAIR 01-F14AAP-1, 2.22.3.1 Lateral  Feel.
@@ -1361,13 +1430,13 @@ Figure 2-54.  Longitudinal System Authority
                 <min>-1</min>
                 <max>1</max>
             </clipto>
-        </fcs_function>
+        </fcs_function> -->
 
         <fcs_function name="sas/roll-sas-1-stkr-limit">
             <function>
                 <product>
                     <value>9</value>
-                    <property>sas/roll-sas-1-input</property>
+                    <property>sas/roll-stick-input</property>
                 </product>
             </function>
             <clipto>
@@ -1703,82 +1772,6 @@ Figure 2-54.  Longitudinal System Authority
             </function>
         </fcs_function>
         <!---        END OF ROLL SAS          -->
-    </channel>
-
-    <channel name="Rudder">
-        <!-- rudder limits +/-30deg 40 deg/sec-->
-        <!-- stabilizer limits +/7deg 30 deg/sec-->
-
-        <pure_gain name="Pilot G">
-            <input>accelerations/n-pilot-z-norm</input>
-            <gain>-1</gain>
-            <output>/accelerations/pilot-gdamped</output>
-        </pure_gain>
-
-        <summer name="Rudder Command Sum">
-            <input>fcs/rudder-cmd-norm</input>
-            <input>fcs/yaw-trim-cmd-norm</input>
-            <clipto>
-                <min> -1 </min>
-                <max>  1 </max>
-            </clipto>
-        </summer>
-
-        <summer name="Rudder Sum">
-            <input>fcs/rudder-command-sum</input>
-            <input>sas/yaw-output</input>
-            <clipto>
-                <min> -1.1 </min>
-                <max>  1.1 </max>
-            </clipto>
-        </summer>
-
-        <!-- rate limit 106 deg/s -->
-        <lead_lag_filter name="sas/rudder-power-actuator">
-            <input>sas/yaw-output</input>
-            <c1>0</c1>
-            <c2>1</c2>
-            <c3>sas/rudder-power-actuator-cval</c3>
-            <c4>1</c4>
-        </lead_lag_filter>
-
-        <switch name="fcs/rudder-actuator-pos">
-            <default value="fcs/rudder-sum" />
-            <test value="fcs/rudder-actuator-pos">
-                    systems/hydraulics/flight-system-pressure ne 1
-                </test>
-        </switch>
-        <kinematic name="Rudder Control">
-            <input>fcs/rudder-actuator-pos</input>
-            <traverse>
-                <setting>
-                    <position>-0.35</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
-                </setting>
-                <setting>
-                    <position>0.35</position>
-                    <time>0.90</time>
-                    <!-- based on 30 deg/sec -->
-                </setting>
-            </traverse>
-            <output>fcs/rudder-pos-rad</output>
-        </kinematic>
-
-        <aerosurface_scale name="rudder normalization">
-            <input>fcs/rudder-pos-rad</input>
-            <domain>
-                <min> -0.35 </min>
-                <max>  0.35 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max>  1 </max>
-            </range>
-            <output>fcs/rudder-pos-norm</output>
-        </aerosurface_scale>
-
-
     </channel>
 
     <channel name="Flaps">
