@@ -1171,10 +1171,10 @@
                         </binding>
                     </item>
                     <item n="10">
-                        <label>IFF Channel Selection</label>
+                        <label>IFF and DataLink</label>
                         <binding>
                             <command>dialog-show</command>
-                            <dialog-name>iff</dialog-name>
+                            <dialog-name>iff-datalink</dialog-name>
                         </binding>
                     </item>
                     <item n="11">
@@ -2203,6 +2203,13 @@
             <channel type="int">0000</channel>
         </iff>
 
+		<datalink>
+	        <channel type="int">42</channel>
+	        <power_prop type="string">controls/electric/engine[0]/generator</power_prop>
+	        <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
+            <receive_period type="double">1</receive_period>
+        </datalink>
+
         <tacan>
             <switch-position type="int">1</switch-position>
         </tacan>
@@ -2538,10 +2545,13 @@
     </f14>
     
     <nasal>
+        <!-- IFF And Datalink -->
         <iff>
             <file>Aircraft/f-14b/Nasal/iff.nas</file>
         </iff>
-
+        <datalink>
+            <file>Aircraft/f-14b/Nasal/datalink.nas</file>
+        </datalink>
         <!--emesary>
             <file>Aircraft/f-14b/Nasal/emesary.nas</file>
         </emesary>
@@ -2554,7 +2564,7 @@
             <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
             <file>Aircraft/f-14b/Nasal/GeoBridgedTransmitter.nas</file>
         </notifications>
-      <aar>
+        <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
         <limits>
@@ -2633,9 +2643,6 @@
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>
-        <iff>
-            <file>Aircraft/f-14b/Nasal/iff.nas</file>
-        </iff>
         <blackout>
             <file>Aircraft/f-14b/Nasal/blackout.nas</file>
         </blackout>
