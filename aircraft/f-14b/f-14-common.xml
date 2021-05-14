@@ -2197,17 +2197,17 @@
 
     <instrumentation>
         <iff>
-            <power_prop type="string">instrumentation/iff/power</power_prop>
+            <power_prop type="string">fdm/jsbsim/systems/electrics/dc-main-bus-powered</power_prop>
             <channel_prop type="string">instrumentation/iff/channel</channel_prop>
             <power type="bool">true</power>
-            <channel type="int">0000</channel>
+            <channel type="int">00</channel>
         </iff>
 
 		<datalink>
-	        <channel type="int">42</channel>
-	        <power_prop type="string">controls/electric/engine[0]/generator</power_prop>
+            <power_prop type="string">fdm/jsbsim/systems/electrics/dc-main-bus-powered</power_prop>
 	        <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
             <receive_period type="double">1</receive_period>
+            <channel type="int">00</channel>
         </datalink>
 
         <tacan>
