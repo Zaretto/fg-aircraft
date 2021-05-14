@@ -1165,6 +1165,13 @@
                         </binding>
                     </item>
                     <item n="10">
+                        <label>IFF Channel Selection</label>
+                        <binding>
+                            <command>dialog-show</command>
+                            <dialog-name>iff</dialog-name>
+                        </binding>
+                    </item>
+                    <item n="11">
                         <label>Event Log</label>
                         <binding>
                             <command>dialog-show</command>
@@ -2183,6 +2190,13 @@
     </input>
 
     <instrumentation>
+        <iff>
+            <power_prop type="string">instrumentation/iff/power</power_prop>
+            <channel_prop type="string">instrumentation/iff/channel</channel_prop>
+            <power type="bool">true</power>
+            <channel type="int">0000</channel>
+        </iff>
+
         <tacan>
             <switch-position type="int">1</switch-position>
         </tacan>
@@ -2609,6 +2623,9 @@
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>
+        <iff>
+            <file>Aircraft/f-14b/Nasal/iff.nas</file>
+        </iff>
         <blackout>
             <file>Aircraft/f-14b/Nasal/blackout.nas</file>
         </blackout>
