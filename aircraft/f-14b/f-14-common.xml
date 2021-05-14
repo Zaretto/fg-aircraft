@@ -842,6 +842,12 @@
                     <warnings>
                         <master-caution type="bool">0</master-caution>
                     </warnings>
+                    <iff>
+                        <power_prop type="string">instrumentation/iff/power</power_prop>
+                        <channel_prop type="string">instrumentation/iff/channel</channel_prop>
+                        <power type="bool">true</power>
+                        <channel type="int">00</channel>
+                    </iff>
                 </instrumentation>
                 <lighting>
                     <position-wing-factor type="int">0</position-wing-factor>
@@ -2532,6 +2538,10 @@
     </f14>
     
     <nasal>
+        <iff>
+            <file>Aircraft/f-14b/Nasal/iff.nas</file>
+        </iff>
+
         <!--emesary>
             <file>Aircraft/f-14b/Nasal/emesary.nas</file>
         </emesary>
