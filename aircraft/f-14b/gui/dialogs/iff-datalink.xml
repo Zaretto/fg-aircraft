@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PropertyList>
+    <name>iff</name>
+    <modal type="bool">false</modal>
+    <layout>vbox</layout>
+    <draggable>true</draggable>
+    <width>384</width>
+
+    <group>
+        <layout>hbox</layout>
+        <text>
+            <label>IFF 4 and DataLink Channels</label>
+        </text>
+        <empty><stretch>1</stretch></empty>
+
+        <button>
+            <pref-width>16</pref-width>
+            <pref-height>16</pref-height>
+            <legend></legend>
+            <default>1</default>
+            <keynum>27</keynum>
+            <border>2</border>
+            <binding>
+                <command>dialog-close</command>
+            </binding>
+            <binding>
+                <command>dialog-apply</command>
+            </binding>
+        </button>
+    </group>
+
+    <hrule/>
+
+    <group>
+        <layout>hbox</layout>
+        <input>
+            <width>250</width>
+            <label>IFF 4 Channel</label>
+            <property>instrumentation/iff/channel</property>
+            <live>true</live>
+            <halight>left</halight>
+            <binding>
+                <command>dialog-apply</command>
+            </binding>
+        </input>
+
+        <button>
+            <legend>Clear</legend>
+            <halign>right</halign>
+        <binding>
+            <command>nasal</command>
+            <script>
+                <![CDATA[setprop("instrumentation/iff/channel", 0);]]>
+            </script>
+        </binding>
+        </button>
+    </group>
+
+    <empty><stretch>1</stretch></empty>
+
+    <group>
+        <layout>hbox</layout>
+        <input>
+            <width>250</width>
+            <hight>25</hight>
+            <label>Datalink Channel</label>
+            <property>instrumentation/datalink/channel</property>
+            <live>true</live>
+            <halight>left</halight>
+            <binding>
+                <command>dialog-apply</command>
+            </binding>
+        </input>
+
+        <button>
+            <legend>Clear</legend>
+            <halign>right</halign>
+            <binding>
+                <command>nasal</command>
+                <script><![CDATA[setprop("instrumentation/datalink/channel", 0);]]></script>
+            </binding>
+        </button>
+    </group>
+
+  <empty><stretch>1</stretch></empty>
+
+</PropertyList>
