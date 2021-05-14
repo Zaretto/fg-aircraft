@@ -53,9 +53,6 @@ var interrogate = func(tgt) {
     hash1 = _calculate_hash(int(systime()) - int(math.mod(int(systime()),iff_refresh_rate)), tgt.getChild("callsign").getValue(),node.channel.getValue());
     hash2 = _calculate_hash(int(systime()) - int(math.mod(int(systime()),iff_refresh_rate)) - iff_refresh_rate, tgt.getChild("callsign").getValue(),node.channel.getValue());
     check_hash = tgt.getNode("sim/multiplay/generic/string["~iff_mp_string~"]").getValue();
-    print("hash1 " ~ hash1);
-    print("hash2 " ~ hash2);
-    print("check_hash " ~ check_hash);
     if ( hash1 == check_hash or hash2 == check_hash ) {
         return 1;
     } else {
@@ -64,11 +61,7 @@ var interrogate = func(tgt) {
 }
 
 var _calculate_hash = func(time, callsign, channel) {
-	print("time|" ~ time ~ "|");
-	print("callsign|" ~ callsign ~ "|");
-	print("channel|" ~ channel ~ "|");
-	print("hash|"~left(md5(time ~ callsign ~ channel ~ iff_unique_id),iff_hash_length)~"|");
-	return left(md5(time ~ callsign ~ channel ~ iff_unique_id),iff_hash_length);
+    return left(md5(time ~ callsign ~ channel ~ iff_unique_id),iff_hash_length);
 }
 
 var new_hashing = iff_hash.new();
