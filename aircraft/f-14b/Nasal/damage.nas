@@ -37,30 +37,36 @@ var shells = {
     # 0.20 means a direct hit will disable 20% of the failure modes on average.
     # or, 0.20 also means a direct hit can do 20 hitpoints damage.
     #
-    "M70 rocket":        [0,0.250], #135mm
-    "S-5 rocket":        [1,0.200], # 55mm
-    "M55 shell":         [2,0.100], # 30mm
-    "KCA shell":         [3,0.100], # 30mm
-    "GSh-30":            [4,0.100], # 30mm mig29/su27
-    "GAU-8/A":           [5,0.100], # 30mm
-    "Mk3Z":              [6,0.100], # 30mm Jaguar
-    "BK27":              [7,0.070], # 27mm
-    "GSh-23":            [8,0.065], # 23mm
-    "M61A1 shell":       [9,0.050], # 20mm F14, F15, F16
-    "50 BMG":            [10,0.015], # 12.7mm (non-explosive)    
+    # Damage roughly proportional to projectile weight.
+    # If weight isn't listed here, it was estimated from dimensions (proportional to diameter^2 * length).
+    # Approximate formulae for cannons:
+    # damage ~ weight / 3.6 (in g)
+    # or damage ~ diameter^2 * length / 1.6e6 (in mm)
+    #
+    "M70 rocket":        [0,0.500], # 135mm, ~5kg warhead
+    "S-5 rocket":        [1,0.200], # 55mm, ~1-2kg warhead
+    "M55 shell":         [2,0.060], # 30x113mm, 220g
+    "KCA shell":         [3,0.100], # 30x173mm, 360g
+    "GSh-30":            [4,0.095], # 30x165mm mig29/su27
+    "GAU-8/A":           [5,0.100], # 30x173mm, 360g
+    "Mk3Z":              [6,0.060], # 30x113mm Jaguar, 220g
+    "BK27":              [7,0.070], # 27x145mm, 270g
+    "GSh-23":            [8,0.040], # 23x115mm,
+    "M61A1 shell":       [9,0.030], # 20x102mm F14, F15, F16, 100g
+    "50 BMG":            [10,0.015], # 12.7mm (non-explosive)
     "7.62":              [11,0.005], # 7.62mm (non-explosive)
-    "Hydra-70":          [12,0.250], # F-16/A-6 LAU-68 and LAU-61
-    "SNEB":              [13,0.250], # Jaguar   
-    "DEFA 554":          [14,0.100], # 30mm Mirage
-    "20mm APDS":         [15,0.050], # CIWS
-    "LAU-10":            [16,0.225], # 127mm
-};    
+    "Hydra-70":          [12,0.500], # 70mm, F-16/A-6 LAU-68 and LAU-61, ~4-6kg warhead
+    "SNEB":              [13,0.500], # 68mm, Jaguar
+    "DEFA 554":          [14,0.060], # 30x113mm Mirage, 220g
+    "20mm APDS":         [15,0.030], # CIWS
+    "LAU-10":            [16,0.500], # 127mm, ~4-7kg warhead
+};
 
 # lbs of warheads is explosive+fragmentation+fuse, so total warhead mass.
 
 var warheads = {
     # [id,lbs,anti surface,cluster,(name)]
-    "AGM-65":            [ 0,  126.00,1,0],
+    "AGM-65B":           [ 0,  126.00,1,0],
     "AGM-84":            [ 1,  488.00,1,0],
     "AGM-88":            [ 2,  146.00,1,0],
     "MK-82SE":           [ 3,  192.00,1,0],# snake eye
@@ -69,12 +75,12 @@ var warheads = {
     "AGM-158":           [ 6, 1000.00,1,0],
     "ALARM":             [ 7,  450.00,1,0],
     "AM 39 Exocet":      [ 8,  364.00,1,0], 
-    "AS 37 Martel":      [ 9,  330.00,1,0], 
+    "AS 37 Martel":      [ 9,  330.00,1,0],# Also : AJ 168 Martel 
     "AS30L":             [10,  529.00,1,0],
     "BL755":             [11,  100.00,1,1],# 800lb bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-87":            [12,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
     "CBU-105":           [13,  100.00,1,1],# bomblet warhead. Mix of armour piecing and HE. 100 due to need to be able to kill buk-m2.    
-    "AJ 168 Martel":     [14,  330.00,1,0],
+    "AS 37 Armat":       [14,  330.00,1,0],
     "FAB-100":           [15,   92.59,1,0],
     "FAB-250":           [16,  202.85,1,0],
     "FAB-500":           [17,  564.38,1,0],
@@ -82,7 +88,7 @@ var warheads = {
     "GBU-24":            [19,  945.00,1,0],
     "GBU-31":            [20,  945.00,1,0],
     "GBU-54":            [21,  190.00,1,0],
-    "GBU-10":            [22, 2000.00,1,0],
+    "GBU-10":            [22,  945.00,1,0],
     "GBU-16":            [23,  450.00,1,0],
     "HVAR":              [24,    7.50,1,0],#P51
     "KAB-500":           [25,  564.38,1,0],
@@ -118,17 +124,17 @@ var warheads = {
     "AIM-7F":            [55,   88.00,0,0],
     "AGM-62":            [56, 2000.00,1,0],
     "AIM-9L":            [57,   20.80,0,0],
-    "d-7":               [58,   44.00,0,0],#deprecated
+    "AGM-65D":           [58,  126.00,1,0],
     "AIM-132":           [59,   22.05,0,0],
-    "d-8":               [60,   20.80,0,0],#deprecated
+    "Apache AP":         [60,  110.23,0,1],# Real mass of bomblet. (x 10). Anti runway.
     "KN-06":             [61,  315.00,0,0],
     "9M317":             [62,  145.00,0,0],
-    "d9":                [63,   27.00,0,0],#deprecated 
+    "GEM":               [63,  185.00,0,0],#MIM-104D 
     "R.550 Magic":       [64,   26.45,0,0],# also called majic
-    "d-0":               [65,   30.00,0,0],#deprecated
+    "5Ya23":             [65,  414.00,0,0],#Volga-M
     "R.550 Magic 2":     [66,   27.00,0,0],
     "R.530":             [67,   55.00,0,0],
-    "d-a":               [68,   30.00,0,0],#deprecated
+    "MK-82AIR":          [68,  192.00,1,0],
     "AIM-9M":            [69,   20.80,0,0],
     "R-73 RMD-1":        [70,   16.31,0,0],# automat Mig29/su27
     "Meteor":            [71,   55.00,0,0],
@@ -161,7 +167,7 @@ var warheads = {
 var id2warhead = [];
 var launched = {};# callsign: elapsed-sec
 var approached = {};# callsign: uniqueID
-var heavy_smoke = [61,62,92];
+var heavy_smoke = [61,62,63,65,92];
 
 var k = keys(warheads);
 
@@ -250,7 +256,7 @@ var DamageRecipient =
                   notification.Flags = 0;
                   notification.RemoteCallsign = "";
                 }
-                if(getprop("payload/armament/msg") == 0 and notification.RemoteCallsign != notification.Callsign) {
+                if(getprop("payload/armament/msg") == 0 and getprop("payload/armament/spectator") != 1 and notification.RemoteCallsign != notification.Callsign) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
                                 
@@ -482,7 +488,7 @@ var DamageRecipient =
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             if (notification.NotificationType == "StaticNotification") {
-                if(getprop("payload/armament/msg") == 0) {
+                if(getprop("payload/armament/msg") == 0 and getprop("payload/armament/spectator") != 1) {
                   return emesary.Transmitter.ReceiptStatus_NotProcessed;
                 }
                 if (notification.Kind == CREATE and getprop("payload/armament/enable-craters") == 1 and statics["obj_"~notification.UniqueIdentity] == nil) {
@@ -913,11 +919,15 @@ setlistener("payload/armament/msg", func {
   check_for_Request();
 },0,0);
 
+setlistener("payload/armament/spectator", func {
+  check_for_Request();
+},0,0);
+
 var last_check = -65;
 
 var check_for_Request = func {
   # This sends out a notification to ask other aircraft for all craters
-  if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and getprop("payload/armament/msg") and systime()-last_check > 60) {
+  if (getprop("payload/armament/enable-craters") == 1 and getprop("sim/multiplay/online") and (getprop("payload/armament/spectator") or getprop("payload/armament/msg")) and systime()-last_check > 60) {
     last_check = systime();
     var msg = notifications.StaticNotification.new("stat", int(rand()*15000000), REQUEST_ALL, 0);
     msg.IsDistinct = 0;
