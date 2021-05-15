@@ -48,12 +48,11 @@
         <button>
             <legend>Clear</legend>
             <halign>right</halign>
-        <binding>
-            <command>nasal</command>
-            <script>
-                <![CDATA[setprop("instrumentation/iff/channel", 0);]]>
-            </script>
-        </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>instrumentation/iff/channel</property>
+                <value>0</value>
+            </binding>
         </button>
     </group>
 
@@ -77,10 +76,9 @@
             <legend>Clear</legend>
             <halign>right</halign>
             <binding>
-                <command>nasal</command>
-                <script>
-                    <![CDATA[setprop("instrumentation/datalink/channel", 0);]]>
-                </script>
+                <command>property-assign</command>
+                <property>instrumentation/datalink/channel</property>
+                <value>0</value>
             </binding>
         </button>
     </group>
