@@ -251,7 +251,7 @@
 
 
         <flaps>
-            <!-- 
+            <!--
                 deg norm
                 0   0.00000
                 14  0.40000
@@ -842,12 +842,6 @@
                     <warnings>
                         <master-caution type="bool">0</master-caution>
                     </warnings>
-                    <iff>
-                        <power_prop type="string">instrumentation/iff/power</power_prop>
-                        <channel_prop type="string">instrumentation/iff/channel</channel_prop>
-                        <power type="bool">true</power>
-                        <channel type="int">00</channel>
-                    </iff>
                 </instrumentation>
                 <lighting>
                     <position-wing-factor type="int">0</position-wing-factor>
@@ -991,7 +985,7 @@
                     <left-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-left"/>
                     <right-wing-torn alias="/fdm/jsbsim/systems/flyt/wing-torn-right"/>
                 </wings>
-                <!-- values that may need to be changed in the future if the carrier handling is fixed 
+                <!-- values that may need to be changed in the future if the carrier handling is fixed
                      and/or the intialization procedure changes
                 -->
                 <overrides>
@@ -1171,10 +1165,10 @@
                         </binding>
                     </item>
                     <item n="10">
-                        <label>IFF Channel Selection</label>
+                        <label>IFF and DataLink</label>
                         <binding>
                             <command>dialog-show</command>
-                            <dialog-name>iff</dialog-name>
+                            <dialog-name>iff-datalink</dialog-name>
                         </binding>
                     </item>
                     <item n="11">
@@ -1383,7 +1377,7 @@
     <orientation>
         <alpha-indicated-deg alias="/fdm/jsbsim/aero/alpha-indicated-deg"/>
     </orientation>
-    
+
     <systems>
         <refuel>
             <type>probe</type>
@@ -1470,7 +1464,7 @@
 
     <controls>
         <windshield-heat type="int">1</windshield-heat>
-        
+
         <armament>
             <trigger type="bool">false</trigger>
             <!-- the station offsets is used by the fox2.nas to fire the missiles from their correct positions, some of them needs to be updated -->
@@ -1644,7 +1638,7 @@
                     <script>f14_afcs.afcs_altitude_engage_toggle();</script>
                 </binding>
             </key>
-            
+
             <key n="4">
                 <name>CTRL-d</name>
                 <desc>Stick DLC/Flares switch</desc>
@@ -1703,7 +1697,7 @@
                     <value type="bool">true</value>
                 </binding>
             </key>
-            
+
             <key n="18">
               <name>Ctrl-R</name>
               <desc>Activate the instant replay system</desc>
@@ -1908,7 +1902,7 @@
                     </script>
                 </binding>
             </key>
-            
+
             <key n="82">
                 <name>R</name>
                 <desc>Increase Radar Range</desc>
@@ -2147,7 +2141,7 @@
                     </script>
                 </binding>
              </key>
-             
+
              <key n="49">
                 <name>CTRL-1</name>
                 <mod-ctrl>
@@ -2197,11 +2191,18 @@
 
     <instrumentation>
         <iff>
-            <power_prop type="string">instrumentation/iff/power</power_prop>
+            <power_prop type="string">fdm/jsbsim/systems/electrics/ac-essential-bus1-powered</power_prop>
             <channel_prop type="string">instrumentation/iff/channel</channel_prop>
             <power type="bool">true</power>
-            <channel type="int">0000</channel>
+            <channel type="int">0</channel>
         </iff>
+
+        <datalink>
+            <power_prop type="string">fdm/jsbsim/systems/electrics/ac-essential-bus1-powered</power_prop>
+            <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
+            <receive_period type="double">1</receive_period>
+            <channel type="int">0</channel>
+        </datalink>
 
         <tacan>
             <switch-position type="int">1</switch-position>
@@ -2264,14 +2265,14 @@
             </frequencies>
         </nav>
     </instrumentation>
-    
+
     <damage>
         <fire>
             <serviceable type="bool">true</serviceable>
         </fire>
     </damage>
 
-    <payload>                        
+    <payload>
         <armament>
             <use-fg-default-hud type="bool">true</use-fg-default-hud>
             <models type="string">Aircraft/f-14b/Models/Stores/</models>
@@ -2394,22 +2395,22 @@
                 <vol-track type="double">0.20</vol-track>
                 <guidance source="authentic" type="string">semi-radar</guidance>
                 <all-aspect source="authentic" type="bool">true</all-aspect>
-                <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm> 
-                <FCS-field-deg type="int">25</FCS-field-deg>                              
-                <seeker-field-deg type="int">155</seeker-field-deg>                 
+                <max-fire-range-nm source="authentic" type="double">80</max-fire-range-nm>
+                <FCS-field-deg type="int">25</FCS-field-deg>
+                <seeker-field-deg type="int">155</seeker-field-deg>
                 <max-g type="int">17</max-g><!-- AIM-54A could do 17G -->
                 <thrust-lbf-stage-1 source="authentic" type="double">4000</thrust-lbf-stage-1>
-                <thrust-lbf-stage-2 source="authentic" type="double">0.0</thrust-lbf-stage-2>    
+                <thrust-lbf-stage-2 source="authentic" type="double">0.0</thrust-lbf-stage-2>
                 <stage-1-duration-sec source="authentic" type="double">30</stage-1-duration-sec>
                 <stage-2-duration-sec source="authentic" type="double">0.0</stage-2-duration-sec>
-                <weight-launch-lbs source="authentic" type="double">1020</weight-launch-lbs>      
+                <weight-launch-lbs source="authentic" type="double">1020</weight-launch-lbs>
                 <weight-warhead-lbs source="source" type="double">135</weight-warhead-lbs>
                 <weight-fuel-lbm source="authentic" type="double">364</weight-fuel-lbm>
                 <drag-coeff type="double">0.18</drag-coeff>
                 <cross-section-sqft source="authentic" type="double">1.227</cross-section-sqft>
-                <arming-time-sec type="double">3</arming-time-sec>          
+                <arming-time-sec type="double">3</arming-time-sec>
                 <min-speed-for-guiding-mach type="double">0.80</min-speed-for-guiding-mach>
-                <self-destruct-time-sec type="double">180</self-destruct-time-sec>         
+                <self-destruct-time-sec type="double">180</self-destruct-time-sec>
                 <loft-altitude source="authentic" type="int">100000</loft-altitude>
                 <min-fire-range-nm type="double">2.0</min-fire-range-nm><!-- was 0.4 -->
                 <rail type="bool">false</rail>
@@ -2423,7 +2424,7 @@
                 <ejector-speed-fps type="double">20</ejector-speed-fps>
                 <drop-time type="double">0.5</drop-time>
             </aim-54>
-            <mk-83> 
+            <mk-83>
                 <type-id type="int">33</type-id>
                 <short-name type="string">B83</short-name>
                 <long-name type="string">MK-83 General Purpose Bomb</long-name>
@@ -2471,27 +2472,27 @@
                 <vol-track-weak type="double">0.175</vol-track-weak>
                 <guidance type="string">unguided</guidance>
                 <navigation type="string">direct</navigation>
-                <all-aspect type="bool">false</all-aspect> 
+                <all-aspect type="bool">false</all-aspect>
                 <max-fire-range-nm type="double">6.9</max-fire-range-nm>
-                <FCS-field-deg type="int">50</FCS-field-deg>            
-                <seeker-field-deg type="int">54</seeker-field-deg>      
-                <max-g type="int">10</max-g>                            
-                <max-launch-g type="int">9</max-launch-g>      
+                <FCS-field-deg type="int">50</FCS-field-deg>
+                <seeker-field-deg type="int">54</seeker-field-deg>
+                <max-g type="int">10</max-g>
+                <max-launch-g type="int">9</max-launch-g>
                 <thrust-lbf-stage-1 type="double">1500</thrust-lbf-stage-1>
-                <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>  
+                <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>
                 <stage-1-duration-sec type="double">1</stage-1-duration-sec>
                 <stage-2-duration-sec type="double">0.0</stage-2-duration-sec>
                 <weight-launch-lbs type="double">300</weight-launch-lbs>
-                <weight-warhead-lbs type="double">0.0</weight-warhead-lbs>  
-                <weight-fuel-lbm type="double">5.0</weight-fuel-lbm>        
-                <drag-coeff type="double">1.35</drag-coeff>                 
+                <weight-warhead-lbs type="double">0.0</weight-warhead-lbs>
+                <weight-fuel-lbm type="double">5.0</weight-fuel-lbm>
+                <drag-coeff type="double">1.35</drag-coeff>
                 <delta-drag-coeff-deploy type="double">75.00</delta-drag-coeff-deploy>
                 <cross-section-sqft type="double">2</cross-section-sqft>
-                <arming-time-sec type="double">0</arming-time-sec>    
+                <arming-time-sec type="double">0</arming-time-sec>
                 <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
-                <self-destruct-time-sec type="double">5000</self-destruct-time-sec>       
+                <self-destruct-time-sec type="double">5000</self-destruct-time-sec>
                 <seeker-angular-speed-dps type="double">10.0</seeker-angular-speed-dps>
-                <lock-on-sun-deg type="double">20</lock-on-sun-deg>       
+                <lock-on-sun-deg type="double">20</lock-on-sun-deg>
                 <loft-altitude type="int">0</loft-altitude>
                 <min-fire-range-nm type="double">0.0</min-fire-range-nm>
                 <rail type="bool">true</rail>
@@ -2499,9 +2500,9 @@
                 <rail-point-forward type="bool">false</rail-point-forward>
                 <rail-pitch-deg type="double">90</rail-pitch-deg>
                 <drop-time type="double">0</drop-time>
-                <deploy-time type="double">3.5</deploy-time>                            
-                <inert type="bool">true</inert>                            
-                <lateral-dps type="int">2</lateral-dps>                            
+                <deploy-time type="double">3.5</deploy-time>
+                <inert type="bool">true</inert>
+                <lateral-dps type="int">2</lateral-dps>
                 <max-report-distance type="double">65</max-report-distance>
                 <class type="string">A</class>
                 <fire-msg type="string">weeeeee</fire-msg>
@@ -2530,18 +2531,21 @@
             </blade>
         </main>
     </rotors>
-    
+
     <f14>
         <!-- ejection seat -->
         <done type="bool">false</done>
         <force type="double">0</force>
     </f14>
-    
+
     <nasal>
+        <!-- IFF And Datalink -->
         <iff>
             <file>Aircraft/f-14b/Nasal/iff.nas</file>
         </iff>
-
+        <datalink>
+            <file>Aircraft/f-14b/Nasal/datalink.nas</file>
+        </datalink>
         <!--emesary>
             <file>Aircraft/f-14b/Nasal/emesary.nas</file>
         </emesary>
@@ -2554,7 +2558,7 @@
             <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
             <file>Aircraft/f-14b/Nasal/GeoBridgedTransmitter.nas</file>
         </notifications>
-      <aar>
+        <aar>
             <file>Aircraft/Generic/aar.nas</file>
         </aar>
         <limits>
@@ -2605,7 +2609,7 @@
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
             <file>Aircraft/f-14b/Nasal/crash-and-stress.nas</file>
         </f14>
-        <awg_9> 
+        <awg_9>
             <!-- needs to be after the f14 modules - as otherwise the recipient will be registered before
                  the one that populates the aircraft fields in the notification -->
             <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
@@ -2633,9 +2637,6 @@
         <environment>
             <file>Aircraft/f-14b/Nasal/environment.nas</file>
         </environment>
-        <iff>
-            <file>Aircraft/f-14b/Nasal/iff.nas</file>
-        </iff>
         <blackout>
             <file>Aircraft/f-14b/Nasal/blackout.nas</file>
         </blackout>
