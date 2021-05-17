@@ -641,11 +641,16 @@ var FireControl = {
 			printDebug("trigger propagating");
 			me.aim = me.getSelectedWeapon();
 			#printfDebug(" to %d",me.aim != nil);
-			if (me.aim != nil and me.aim.parents[0] == armament.AIM and (me.aim.status == armament.MISSILE_LOCK or me.aim.guidance=="unguided")) {
-				me.aim = me.fireAIM(me.selected[0],me.selected[1]);
+			if (me.aim != nil and me.aim.parents[0] == armament.AIM and me.aim.status != armament.MISSILE_LOCK and me.aim.guidance!="unguided" and !me.aim.loal) {
+				me.guidanceEnabled = 0;
+			} else {
+				me.guidanceEnabled = 1;
+			}
+			if (me.aim != nil and me.aim.parents[0] == armament.AIM and (me.aim.status == armament.MISSILE_LOCK or me.aim.guidance=="unguided" or me.aim.loal or !me.guidanceEnabled)) {
+				me.aim = me.fireAIM(me.selected[0],me.selected[1], me.guidanceEnabled);
 				if (me.selectedAdd != nil) {
 					foreach(me.seldual ; me.selectedAdd) {
-						me.fireAIM(me.seldual[0],me.seldual[1]);
+						me.fireAIM(me.seldual[0],me.seldual[1], me.guidanceEnabled);
 					}
 				}
 				me.nextWeapon(me.selectedType);
@@ -692,9 +697,10 @@ var FireControl = {
 		}
 	},
 	
-	fireAIM: func (p,w) {
+	fireAIM: func (p,w,g) {
 		# fire a weapon (that is a missile-code instance)
 		me.aim = me._getSpecificWeapon(p,w);
+		if (!g) me.aim.guidanceEnabled = 0;
 		me.lockedfire = me.aim.status == armament.MISSILE_LOCK;
 		me.aim = me.pylons[p].fireWeapon(w, getCompleteRadarTargetsList());
 		if (me.aim != nil) {
@@ -723,10 +729,10 @@ var FireControl = {
 		if (geo.aircraft_position().distance_to(me.rippleCoord) > me.rippleDist*(me.rippleThis-1)) {
 			me.aim = me.getSelectedWeapon();
 			if (me.aim != nil and me.aim.parents[0] == armament.AIM and (me.aim.status == armament.MISSILE_LOCK or me.aim.guidance=="unguided")) {
-				me.fireAIM(me.selected[0],me.selected[1]);
+				me.fireAIM(me.selected[0],me.selected[1],me.guidanceEnabled);
 				if (me.selectedAdd != nil) {
 					foreach(me.seldual ; me.selectedAdd) {
-						me.fireAIM(me.seldual[0],me.seldual[1]);
+						me.fireAIM(me.seldual[0],me.seldual[1],me.guidanceEnabled);
 					}
 				}
 				me.nextWeapon(me.selectedType);
@@ -758,7 +764,7 @@ var FireControl = {
 		aimer = me.pylons[me.selected[0]].fireWeapon(me.selected[1], getCompleteRadarTargetsList());
 		if (aimer != nil) {
 			#aimer.sendMessage(aimer.brevity~" Maddog released");
-			damage.damageLog.push(aimer.brevity~" Maddog");
+			damage.damageLog.push(aimer.brevity~" Maddog released");
 			me.aimNext = me.nextWeapon(me.selectedType);
 			if (me.aimNext != nil) {
 				me.aimNext.start();
@@ -1036,6 +1042,7 @@ var printfDebug = func {if (debug == 1) call(printf,arg);};
 
 
 # This is non-generic methods, please edit it to fit your radar setup:
+# List of weapons that can be ripple/dual dropped:
 var dualWeapons = ["MK-83"];
 var getCompleteRadarTargetsList = func {
 	# A list of all MP/AI aircraft/ships/surface-targets around the aircraft.
