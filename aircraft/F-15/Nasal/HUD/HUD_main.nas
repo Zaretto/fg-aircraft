@@ -184,6 +184,29 @@ obj.dlzY = 70;
                            .setColor(0,1,0)
                            .setStrokeLineWidth(obj.dlzLW);
 
+            hudmath.HudMath.init([-5.63907,0.10206,1.41853], [-5.7967,-0.08217,1.2481], [256,296], [0.124048, 0.586015], [0.879649,0.045312], 0);
+            obj.ccipGrp = obj.canvas.createGroup();
+            obj.ccipGrp.setTranslation(hudmath.HudMath.getCenterOrigin());
+            obj.pipperRadius = 10;
+            obj.ccipPipper = obj.ccipGrp.createChild("path")
+                          .moveTo(-obj.pipperRadius,0)
+                          .arcSmallCW(obj.pipperRadius,obj.pipperRadius, 0, obj.pipperRadius*2, 0)
+                          .arcSmallCW(obj.pipperRadius,obj.pipperRadius, 0, -obj.pipperRadius*2, 0)
+                          .moveTo(-1,0)
+                          .arcSmallCW(1,1, 0, 1*2, 0)
+                          .arcSmallCW(1,1, 0, -1*2, 0)                   
+                          .setStrokeLineWidth(1)
+                          .hide()
+                          .setColor(0,1,0);
+            obj.ccipCross = obj.ccipGrp.createChild("path")
+                          .moveTo(-15, -15)
+                           .lineTo(15, 15)
+                           .moveTo(-15, 15)
+                           .lineTo( 15, -15)                  
+                          .setStrokeLineWidth(1)
+                          .hide()
+                          .setColor(0,1,0);
+
         #
         #
         # using the new property manager to update items on the HUD.
@@ -336,6 +359,13 @@ obj.dlzY = 70;
                                                                                  }
                                                                                  obj.window6.setText(model);
                                                                                  obj.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
+                                                                             } else {
+                                                                                  # this else added by Leto
+                                                                                 obj.window3.setText("");
+                                                                                 obj.window4.setText("");
+                                                                                 obj.window5.setText("");
+                                                                                 obj.window6.setText("");
+                                                                                 obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
                                                                              }
                                                                          } else {
                                                                              obj.window2.setVisible(0);
@@ -423,6 +453,23 @@ return obj;
             me.dlz.show();
         }
         
+        me.ccipInfo = pylons.getCCIP();
+        if (me.ccipInfo == nil) {
+            me.ccipPipper.hide();
+            me.ccipCross.hide();
+        } elsif (me.ccipInfo[1] == 0) {
+            var poscc = hudmath.HudMath.getPosFromCoord(me.ccipInfo[0]);
+            me.ccipPipper.setTranslation(poscc);
+            me.ccipCross.setTranslation(poscc);
+            me.ccipPipper.show();
+            me.ccipCross.show();
+            me.ccipPipper.update();
+        } else {
+            me.ccipPipper.setTranslation(hudmath.HudMath.getPosFromCoord(me.ccipInfo[0]));
+            me.ccipPipper.show();
+            me.ccipCross.hide();
+            me.ccipPipper.update();
+        }
         
         if(me.FocusAtInfinity)
           {

@@ -7,23 +7,37 @@
 var AcModel = props.globals.getNode("sim/model/f15");
 var SwCoolOffLight   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
 var MslPrepOffLight  = AcModel.getNode("controls/armament/acm-panel-lights/msl-prep-off-light");
-var WeaponSelector    = AcModel.getNode("controls/armament/weapon-selector");
-var ArmSwitch        = AcModel.getNode("controls/armament/master-arm-switch");
+var WeaponSelector    = AcModel.getNode("controls/armament/weapon-selector");# 0: gun 1:aim9 2:aim7/aim120 5:mk84
+var ArmSwitch        = AcModel.getNode("controls/armament/master-arm-switch");# 0:off 1:armed
 var GrSwitch         = AcModel.getNode("controls/armament/gun-rate-switch");
 var SysRunning       = AcModel.getNode("systems/armament/system-running");
 var GunRunning       = AcModel.getNode("systems/gun/running");
-var GunCountAi       = props.globals.getNode("ai/submodels/submodel[3]/count");
+var GunCountAi       = props.globals.getNode("ai/submodels/submodel[4]/count");
 var GunCount         = AcModel.getNode("systems/gun/rounds");
 var GunReady         = AcModel.getNode("systems/gun/ready");
-var GunStop          = AcModel.getNode("systems/gun/stop", 1);
+#var GunStop          = AcModel.getNode("systems/gun/stop", 1);
 var GunRateHighLight = AcModel.getNode("controls/armament/acm-panel-lights/gun-rate-high-light");
+var WeaponsWeight = props.globals.getNode("sim/model/f15/systems/external-loads/weapons-weight", 1);
+var PylonsWeight = props.globals.getNode("sim/model/f15/systems/external-loads/pylons-weight", 1);
+var TankssWeight = props.globals.getNode("sim/model/f15/systems/external-loads/tankss-weight", 1);
 
+# smoke stuff:
+var Smoke = props.globals.getNode("sim/model/f15/fx/smoke", 1);#double
+var SmokeCmd = props.globals.initNode("sim/model/f15/fx/smoke-cmd", 0,"BOOL");
+var SmokeMountedL = props.globals.initNode("sim/model/f15/fx/smoke-mnt-left", 0,"BOOL");
+var SmokeMountedR = props.globals.initNode("sim/model/f15/fx/smoke-mnt-right", 0,"BOOL");
+
+var Count9 = props.globals.initNode("sim/model/f15/systems/armament/aim9/count", 0,"INT");
+var Count7 = props.globals.initNode("sim/model/f15/systems/armament/aim7/count", 0,"INT");
+var Count120 = props.globals.initNode("sim/model/f15/systems/armament/aim120/count", 0,"INT");
+var Count84 = props.globals.initNode("sim/model/f15/systems/armament/agm/count", 0,"INT");
+var CountG = props.globals.initNode("sim/model/f15/systems/gun/rounds", 0,"INT");
 
 # AIM-9 stuff:
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
-var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
+
 var Current_srm   = nil;
 var Current_agm   = nil;
 var Current_mrm   = nil;
@@ -32,154 +46,170 @@ var sel_missile_count = 0;
 
 aircraft.data.add( WeaponSelector, ArmSwitch );
 
+var FALSE = 0;
+var TRUE  = 1;
+
 setlistener("sim/model/f15/controls/armament/weapon-selector", func(v)
 {
     aircraft.arm_selector();
-    aircraft.demand_weapons_refresh();
 });
 
 var getDLZ = func {
-    if (ArmSwitch.getValue() and Current_missile != nil) {
-        return Current_missile.getDLZ();
+    return pylons.getDLZ();
+}
+
+var ccrp = func {
+    var weap = pylons.fcs.getSelectedWeapon();
+    if (weap != nil and weap.parents[0] == armament.AIM and weap.type == "MK-84") {
+        var ccrp_meters = weap.getCCRP(20,0.25);#meters left to release point
+        if (ccrp_meters != nil) {
+            # this should make the ccrp bomb steering line and the bomb release cue.
+            # 
+            # the vertical steering line should have same heading deviation as the target and span entirety of HUD
+            # the small horizontal cue should have same heading deviation but its vertical position should be middle of HUD when ccrp_meter is 0 and top of HUD when ccrp_meters is 1000 or larger.
+            # another fixed small horizontal lines should be in middle of HUD vertical. Horizontal it should follow steering line.
+            setprop("sim/model/f15/systems/armament/aim9/ccrp",1);#if ccrp should be displayed in HUD.
+            setprop("sim/model/f15/systems/armament/aim9/ccrp-hud-vert", ccrp_meters);# haven't linked this to anything yet.
+            return;
+        }
     }
+    setprop("sim/model/f15/systems/armament/aim9/ccrp",0);
+    setprop("sim/model/f15/systems/armament/aim9/ccrp-hud-vert", 0);
 }
 
 # Init
-var weapons_init = func()
-{
-	print("Initializing F-15 weapons system");
-	ArmSwitch.setValue(0);
-	system_stop();
-	SysRunning.setBoolValue(0);
-	update_gun_ready();
-	setlistener("controls/armament/trigger", func(Trig)
-                {
-# Check selected weapon type and set the trigger listeners.
-                    var weapon_s = WeaponSelector.getValue();
-                    print("Trigger ",weapon_s," ",Trig.getBoolValue());
-                    if ( weapon_s == 0 ) {
-                        update_gun_ready();
-                        if ( Trig.getBoolValue())
-                        {
-                            GunStop.setBoolValue(0);
-                            fire_gun();
-                        }
-                        else
-                        {
-                            GunStop.setBoolValue(1);
-                        }
-                    }
-                    elsif ( weapon_s == 1 and Trig.getBoolValue())
-                    {
-                        release_aim9();
-                    }
-                    elsif ( weapon_s == 2 and Trig.getBoolValue())
-                    {
-                        release_aim9();
-                    }
-                    elsif ( weapon_s == 5 and Trig.getBoolValue())
-                    {
-                        release_aim9();
-                    }
-                }, 0, 1);
-	setlistener("controls/armament/pickle", func(Trig)
-                {
-# this should release all locked missles. need to fix the logic to lock on missiles
-# so for now this will just work with the currently selected armament, but not the gun.
-                    var weapon_s = WeaponSelector.getValue();
-                    print("Pickle ",weapon_s," ",Trig.getBoolValue());
-                    if ( weapon_s == 0 ) {
-                        print("Pickle does not fire the gun");
-                    }
-                    elsif ( weapon_s == 1 and Trig.getBoolValue())
-                    {
-                        release_aim9();
-                    }
-                    elsif ( weapon_s == 2 and Trig.getBoolValue())
-                    {
-                        release_aim9();
-                    }
-                }, 0, 1);
+var weapons_init = func() {
+    print("Initializing F-15 weapons system");
+
+    masw(ArmSwitch);
+    update_gun_ready();
+    arm_selector();
 }
-
-
 
 # Main loop
 var armament_update = func {
-	# Trigered each 0.1 sec by instruments.nas main_loop() if Master Arm Engaged.
+    # Trigered each 0.1 sec by instruments.nas main_loop() if Master Arm Engaged.
 
-    sel_missile_count = get_sel_missile_count();
-	# Turn sidewinder cooling lights On/Off.
-	if ( sel_missile_count > 0 ) {
-		SWCoolOn.setBoolValue(1);
-		SWCoolOff.setBoolValue(0);
-		update_sw_ready();
-	} else {
-		SWCoolOn.setBoolValue(0);
-		SWCoolOff.setBoolValue(1);
-		# Turn Current_srm.status to stand by.
-		#set_status_current_aim9(-1);
-	}
-
-    if (WeaponSelector.getValue() == 5) {
-        if (Current_agm != nil and Current_agm.status == 1) {
-            setprop("sim/model/f15/systems/armament/launch-light",1);
+    var stick_s = WeaponSelector.getValue();
+    
+    for (var i = 0;i<10;i+=1) {
+        # Pylon lights and count of ready weapons:
+        var p = pylons.pylons[i+1];
+        var weaps = p.getWeapons();
+        if (size(weaps) and weaps[0] != nil) {
+            setprop("sim/model/f15/systems/external-loads/station["~p.guiID ~"]/display",1);
         } else {
-            setprop("sim/model/f15/systems/armament/launch-light",0);
+            setprop("sim/model/f15/systems/external-loads/station["~p.guiID~"]/display",0);
         }
-    } 
-    elsif (WeaponSelector.getValue() == 1) {
-        if (Current_srm != nil and Current_srm.status == 1) {
-            setprop("sim/model/f15/systems/armament/launch-light",1);
+        #populate the payload dialog:
+        setprop("sim/model/f15/systems/external-loads/station["~p.guiID~"]/type", getprop("payload/weight["~p.guiID~"]/selected"));
+    }
+    # Turn sidewinder cooling lights On/Off.
+    var aim9_count = pylons.fcs.getAmmoOfType("AIM-9");
+    if (stick_s == 1) {
+        if (aim9_count > 0) {
+            SWCoolOn.setBoolValue(1);
+            SWCoolOff.setBoolValue(0);
         } else {
-            setprop("sim/model/f15/systems/armament/launch-light",0);
-        }
-    } elsif (WeaponSelector.getValue() == 2) {
-        if (Current_mrm != nil and Current_mrm.status == 1) {
-            setprop("sim/model/f15/systems/armament/launch-light",1);
-        } else {
-            setprop("sim/model/f15/systems/armament/launch-light",0);
+            SWCoolOn.setBoolValue(0);
+            SWCoolOff.setBoolValue(1);
         }
     } else {
-        setprop("sim/model/f15/systems/armament/launch-light",0);
+        SWCoolOn.setBoolValue(0);
+        SWCoolOff.setBoolValue(0);
+    }
+    
+    SwCount.setValue(aim9_count);
+    Count9.setValue(aim9_count);
+    Count7.setValue(pylons.fcs.getAmmoOfType("AIM-7"));
+    Count120.setValue(pylons.fcs.getAmmoOfType("AIM-120"));
+    Count84.setValue(pylons.fcs.getAmmoOfType("MK-84"));
+
+    update_gun_ready();
+    setCockpitLights();
+    #ccrp();
+}
+
+# Main loop 2
+var armament_update2 = func {
+    # Trigered each 0.1 sec by instruments.nas main_loop()
+    
+    # calculate pylon and weapon total mass:
+    var pw = getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[13]") + getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[14]");# TODO: find out where these are set, and put it into pylon.nas instead, so its set indirectly.
+    var wWeight = 0;
+    var pWeight = 0;
+    var tWeight = 0;
+    var updatePayload = 0;
+    for (var i = 0;i<11;i+=1) {
+        var ws = pylons.pylons[i+1].getWeapons();
+        if ((i == 1 or i==5 or i==9) and getprop("payload/weight["~i~"]/selected") == "MK-84" and size(ws) > 0 and ws[0] == nil) {
+            # the MK-84 on this station has been released
+            setprop("payload/weight["~i~"]/selected","none");
+            updatePayload = 1;
+        }
+        setprop("sim/model/f15/systems/external-loads/station["~i~"]/type", getprop("payload/weight["~i~"]/selected"));
+        var mass = pylons.pylons[i+1].getMass();
+        wWeight += mass[0];
+        pWeight += mass[1];
+    }
+    if (updatePayload) {
+        payload_dialog_reload("update_stores_mk84 "~i);
+        arm_selector();# because the fire-control.nas will deselect all weapons when the GUI is set to "none" or "Droptank".
+    }
+    if (aircraft.Centre_External.is_fitted()) {
+        tWeight += getprop("payload/weight[5]/weight-lb");
+    }
+    if (aircraft.WingExternal_L.is_fitted()) {
+        tWeight += getprop("payload/weight[1]/weight-lb");
+    }
+    if (aircraft.WingExternal_R.is_fitted()) {
+        tWeight += getprop("payload/weight[9]/weight-lb");
+    }
+
+    WeaponsWeight.setDoubleValue(wWeight);
+    PylonsWeight.setDoubleValue(pWeight);
+    TankssWeight.setDoubleValue(tWeight);
+    
+    # set internal master-arm.
+    setprop("controls/armament/master-arm", ArmSwitch.getValue()>0);
+    
+    # manage smoke
+    if (SmokeCmd.getValue() and (SmokeMountedR.getValue() or SmokeMountedL.getValue())) {
+        Smoke.setDoubleValue(1);
+    } else {
+        Smoke.setDoubleValue(0);
     }
 }
 
-var update_gun_ready = func()
- {
-	var ready = 0;
-	if ( ArmSwitch.getValue() and GunCount.getValue() > 0 )
- {
-		ready = 1;
-	}
-	GunReady.setBoolValue(ready);
+var setCockpitLights = func {
+    if (ArmSwitch.getValue() > 0 and pylons.fcs.isLock()) {
+        setprop("sim/model/f15/systems/armament/launch-light", 1);
+    } else {
+        setprop("sim/model/f15/systems/armament/launch-light", 0);
+    }
+    return;
+    var dlzArray = getDLZ();
+    if (dlzArray == nil or size(dlzArray) == 0) {
+        setprop("sim/model/f15/systems/armament/lock-light", 0);
+    } else {
+        if (dlzArray[4] < dlzArray[1]) {
+            setprop("sim/model/f15/systems/armament/lock-light", 1);
+        } else {
+            setprop("sim/model/f15/systems/armament/lock-light", 0);
+        }
+    }
 }
 
-var fire_gun = func {
-	var grun   = GunRunning.getValue();
-	var gready = GunReady.getBoolValue();
-	var gstop  = GunStop.getBoolValue();
-	if (gstop) {
-		GunRunning.setBoolValue(0);
-		return;
-	}
-	if (gready and !grun) {
-		GunRunning.setBoolValue(1);
-		grun = 1;
-	}
-	if (gready and grun) {
-		var real_gcount = GunCountAi.getValue();
-		var new_gcount = real_gcount*5;
-		if (new_gcount < 5 ) {
-			new_gcount = 0;
-			GunRunning.setBoolValue(0);
-			GunReady.setBoolValue(0);
-			GunCount.setValue(new_gcount);
-			return;
-		}
-		GunCount.setValue(new_gcount);
-		settimer(fire_gun, 0.1);
-	}
+
+var update_gun_ready = func() {
+    var ready = 0;
+    if ( ArmSwitch.getValue() and GunCount.getValue() > 0 and getprop("payload/armament/fire-control/serviceable")) {#todo: add elec/hydr requirements here too
+        ready = 1;
+    }
+    GunReady.setBoolValue(ready);
+    var real_gcount = GunCountAi.getValue();
+    GunCount.setIntValue(real_gcount*5);
+    CountG.setIntValue(real_gcount*5);
 }
 
 var missile_code_from_ident= func(mty)
@@ -199,113 +229,54 @@ var missile_code_from_ident= func(mty)
 }
 var get_sel_missile_count = func()
 {
-        if (WeaponSelector.getValue() == 5)
-        {
-            Current_missile = Current_agm;
-            return getprop("sim/model/f15/systems/armament/agm/count");
-        }
-        else if (WeaponSelector.getValue() == 1)
-        {
-            Current_missile = Current_srm;
-            return getprop("sim/model/f15/systems/armament/aim9/count");
-        }
-        else if (WeaponSelector.getValue() == 2)
-        {
-            Current_missile = Current_mrm;
-            return getprop("sim/model/f15/systems/armament/aim7/count")+getprop("sim/model/f15/systems/armament/aim120/count");
-        }
-        return 0;
-}
-
-var update_sw_ready = func()
-{
-	if (WeaponSelector.getValue() > 0 and ArmSwitch.getValue())
+    if (WeaponSelector.getValue() == 5)
     {
-    	sel_missile_count = get_sel_missile_count();
-        var pylon = -1;
-		if ( (WeaponSelector.getValue() == 1 and (Current_srm == nil or Current_srm.status == 2)  and sel_missile_count > 0 )
-             or (WeaponSelector.getValue() == 2 and (Current_mrm == nil or Current_mrm.status == 2)  and sel_missile_count > 0 )
-             or (WeaponSelector.getValue() == 5 and (Current_agm == nil or Current_agm.status == 2)  and sel_missile_count > 0 ))
-        {
-            print("Missile: sel_missile_count = ", sel_missile_count - 1);
-            foreach (var S; Station.firing_order)
-            {
-                printf("AIM %d: %s, %s",S.index, S.get_type(), S.get_selected());
-#                if (S.get_type() == "AIM-9" and S.get_selected())
-                if (S.get_selected())
-                {
-                    print("New AIM ",S.index);
-                    pylon = S.index;
-                    break;
-                }
-            }
-            if (pylon >= 0)
-            {
-                if (S.get_type() == "AIM-9" or S.get_type() == "AIM-7" or S.get_type() == "AIM-120" or S.get_type() == "MK-84")
-                {
-                    print(S.get_type()," new !! ", pylon, " sel_missile_count - 1 = ", sel_missile_count - 1);
-                    if (WeaponSelector.getValue() == 1) {
-                        armament.AIM.new(pylon, S.get_type(), S.get_type());
-                        Current_srm = armament.AIM.active[pylon];# if there already was a missile at that pylon, new will return -1, so we just get whatever missile is rdy at that pylon.
-                    } elsif (WeaponSelector.getValue() == 2) {
-                        armament.AIM.new(pylon, S.get_type(), S.get_type());
-                        Current_mrm = armament.AIM.active[pylon];
-                    } elsif (WeaponSelector.getValue() == 5) {
-                        armament.AIM.new(pylon, S.get_type(), S.get_type());
-                        Current_agm = armament.AIM.active[pylon];
-                    }
-                }
-                else
-                    print ("Cannot fire ",S.get_type());
-
-            }
-#            else
-#                print("Error no missile available");
-        }
-        elsif (Current_missile != nil and Current_missile.status == -1)
-        {
-            Current_missile.status = 0;	
-            Current_missile.search();	
-        }
+        return pylons.fcs.getAmmoOfType("MK-84");
     }
-    elsif (Current_missile != nil)
+    else if (WeaponSelector.getValue() == 1)
     {
-		Current_missile.status = -1;	
-		SwSoundVol.setValue(0);
-	}
+        return pylons.fcs.getAmmoOfType("AIM-9");
+    }
+    else if (WeaponSelector.getValue() == 2)
+    {
+        return pylons.fcs.getAmmoOfType("AIM-7")+pylons.fcs.getAmmoOfType("AIM-120");
+    }
+    return 0;
 }
 
-var release_aim9 = func()
-{
-	if (Current_missile != nil) {
-        print("RELEASE MISSILE status: ", Current_missile.status);
-		if ( Current_missile.status == 1 ) {
-			var phrase = Current_missile.brevity~" at: " ~ Current_missile.Tgt.Callsign.getValue();
-			if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-				armament.defeatSpamFilter(phrase);
-			} else {
-				setprop("/sim/messages/atc", phrase);
-			}
-			# Set the pylon empty:
-			var current_pylon = "payload/weight["~Current_missile.ID~"]/selected";
-print("Release ",current_pylon);
-			setprop(current_pylon,"none");
-print("currently ",getprop(current_pylon));
-			armament_update();
-setprop("sim/model/f15/systems/armament/launch-light",0);
-			Current_missile.release();
-            arm_selector();
-		}
-	}
-    else print("No current missile to release");
-}
 
-var set_status_current_aim9 = func(n)
-{
-	if (Current_missile != nil) {
-		Current_missile.status = n;	
-	}
+
+#
+#
+# F-15 throttle has weapons selector switch with
+# (AFT)
+# GUN
+# SRM = AIM-9 (Sidewinder)
+# MRM = AIM-120, AIM-7
+# (FWD)
+
+var arm_selector = func() {
+    # Checks to do when changing weapons selector
+    update_gun_ready();
+
+    var stick_s = WeaponSelector.getValue();
+    if ( stick_s == 0 ) {
+        pylons.fcs.selectWeapon("20mm Cannon");
+    } elsif ( stick_s == 1 ) {
+        pylons.fcs.selectWeapon("AIM-9");
+    } elsif ( stick_s == 2 ) {
+        var p = pylons.fcs.selectWeapon("AIM-120");
+        if (p == nil) {
+            pylons.fcs.selectWeapon("AIM-7");
+        }
+    } elsif ( stick_s == 5 ) {
+        pylons.fcs.selectWeapon("MK-84");
+    } else {
+        pylons.fcs.selectNothing();
+    }
+    setCockpitLights();
 }
+setlistener(WeaponSelector, arm_selector, nil, 0);
 
 # System start and stop.
 # Timers for weapons system status lights.
@@ -317,12 +288,6 @@ var system_start = func
 	SysRunning.setBoolValue(1);
 	settimer (func { SwCoolOffLight.setBoolValue(1); }, 0.6);
 	settimer (func { MslPrepOffLight.setBoolValue(1); }, 2);
-	settimer (func {
-                  if (Current_missile != nil and WeaponSelector.getValue() and sel_missile_count > 0) {
-                      Current_missile.status = 0;	
-                      Current_missile.search();	
-                  }
-              }, 2.5);
 }
 
 var system_stop = func
@@ -330,39 +295,28 @@ var system_stop = func
     print("Weapons System stop");
 	GunRateHighLight.setBoolValue(0);
 	SysRunning.setBoolValue(0);
-                setprop("sim/model/f15/systems/armament/launch-light",0);
-	foreach (var S; Station.list)
-    {
-		S.set_display(0); # initialize bcode (showing weapons set over MP).
-	}
-	if (Current_missile != nil)
-    {
-		set_status_current_aim9(-1);	
-	}
-	SwSoundVol.setValue(0);
+    setprop("sim/model/f15/systems/armament/launch-light",0);
+	
 	settimer (func { SwCoolOffLight.setBoolValue(0);SWCoolOn.setBoolValue(0); }, 0.6);
 	settimer (func { MslPrepOffLight.setBoolValue(0); }, 1.2);
 }
 
 
 # Controls
-setlistener("sim/model/f15/controls/armament/master-arm-switch", func(v)
+var masw = func(v)
 {
     print("Master arm ",v.getValue());
-    var a = v.getValue();
-	var master_arm_switch = ArmSwitch.getValue(); 
-	if (master_arm_switch)
+
+    if (v.getValue())
     {
         system_start();
-		SysRunning.setBoolValue(1);
-	}
+    }
     else
     {
         system_stop();
-		SysRunning.setBoolValue(0);
-	}
-    demand_weapons_refresh();
-});
+    }
+};
+setlistener("sim/model/f15/controls/armament/master-arm-switch", masw);
 
 var master_arm_cycle = func()
 {
@@ -378,188 +332,110 @@ var master_arm_cycle = func()
 	}
 }
 
-var demand_weapons_refresh = func {
-    setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
-}
-#
-#
-# F-15 throttle has weapons selector switch with
-# (AFT)
-# GUN
-# SRM = AIM-9 (Sidewinder)
-# MRM = AIM-120, AIM-7
-# (FWD)
-var arm_selector = func() {
-	update_gun_ready();
-	var weapon_s = WeaponSelector.getValue();
-#    print("arm stick selector ",weapon_s);
-    setprop("sim/model/f15/systems/armament/launch-light",0);
-	if ( weapon_s == 0 ) 
-    {
-		SwSoundVol.setValue(0);
-		set_status_current_aim9(-1);
-	} 
-    elsif ( weapon_s == 5 ) # AG
-    {
-		if (Current_agm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
-        {
-            Current_missile = Current_agm;
-			Current_missile.status = 0;	
-			Current_missile.search();	
-		}
-	} 
-    elsif ( weapon_s == 1 )
-    {
-		# AIM-9: (SRM)
-		if (Current_srm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
-        {
-            Current_missile = Current_srm;
-			Current_missile.status = 0;	
-			Current_missile.search();	
-		}
-	} 
-    elsif ( weapon_s == 2 )
-    {
-        # MRM
-		if (Current_mrm != nil and ArmSwitch.getValue() == 2 and sel_missile_count > 0) 
-        {
-            Current_missile = Current_mrm;
-			Current_missile.status = 0;	
-			Current_missile.search();	
-		}
-	} 
-    else
-    {
-		SwSoundVol.setValue(0);
-		set_status_current_aim9(-1);	
-	}
-    if (Station.firing_order == nil){
-        print(" --> arm_selector : weapons not ready");
-    }
-    else {
-        var sel=1; # only the next will be selected
-        foreach (var S; Station.firing_order)
-          {
-              S.set_selected(0);
-              if (weapon_s == 2) {
-                  if (S.bcode == 2 or S.bcode == 3) {
-                      S.set_selected(sel);
-                      sel=0;
-                  }
-              } else if (weapon_s == 1) {
-                  if (S.bcode == 1) {
-                      S.set_selected(sel);
-                      sel=0;
-                  }
-              } else if (weapon_s == 5) {
-                  if (S.bcode == 4) # MK-84
-                    {
-                        S.set_selected(sel);
-                        sel=0;
-                    }
-              }
-#printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
-#              printf("Station %d %s:%s = %d (%d)",S.index,S.bcode, S.type.getValue(), S.get_selected(),sel);
-              S.set_type(S.get_type()); # initialize bcode.
-          }
-        setprop("sim/model/f15/controls/armament/weapons-updated", getprop("sim/model/f15/controls/armament/weapons-updated")+1);
-    }
-}
 
-setlistener("/payload/weight[0]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[1]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[2]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[3]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[4]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[5]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[6]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[7]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[8]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[9]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
-setlistener("/payload/weight[10]/selected", func(v)
-{
-    demand_weapons_refresh();
-    arm_selector();
-});
 
   ############ Cannon impact messages #####################
 
-var last_impact = 0;
+var hits_count = 0;
+var hit_timer = nil;
+var hit_callsign = "";
 
-var hit_count = 0;
+var Mp = props.globals.getNode("ai/models");
+var valid_mp_types = {
+  multiplayer: 1, tanker: 1, aircraft: 1, ship: 1, groundvehicle: 1,
+};
+
+# Find a MP aircraft close to a given point (code from the Mirage 2000)
+var findmultiplayer = func(targetCoord, dist) {
+  if(targetCoord == nil) return nil;
+
+  var raw_list = Mp.getChildren();
+  var SelectedMP = nil;
+  foreach(var c ; raw_list)
+  {    
+    var is_valid = c.getNode("valid");
+    if(is_valid == nil or !is_valid.getBoolValue()) continue;
+    
+    var type = c.getName();
+    
+    var position = c.getNode("position");
+    var name = c.getValue("callsign");
+    if(name == nil or name == "") {
+      # fallback, for some AI objects
+      var name = c.getValue("name");
+    }
+    if(position == nil or name == nil or name == "" or !contains(valid_mp_types, type)) continue;
+
+    var lat = position.getValue("latitude-deg");
+    var lon = position.getValue("longitude-deg");
+    var elev = position.getValue("altitude-ft") * FT2M;
+
+    if(lat == nil or lon == nil or elev == nil) continue;
+
+    var MpCoord = geo.Coord.new().set_latlon(lat, lon, elev);
+    var tempoDist = MpCoord.direct_distance_to(targetCoord);
+    if(dist > tempoDist) {
+      dist = tempoDist;
+      SelectedMP = name;
+    }
+  }
+  return SelectedMP;
+}
 
 var impact_listener = func {
-  if (awg_9.active_u != nil and (getprop("sim/time/elapsed-sec")-last_impact) > 1) {
-    var ballistic_name = props.globals.getNode("/ai/models/model-impact3",1).getValue();
-    var ballistic = props.globals.getNode(ballistic_name, 0);
-    if (ballistic != nil and ballistic.getName() != "munition") {
-      var typeNode = ballistic.getNode("impact/type");
-      if (typeNode != nil and typeNode.getValue() != "terrain") {
-        var lat = ballistic.getNode("impact/latitude-deg").getValue();
-        var lon = ballistic.getNode("impact/longitude-deg").getValue();
-        var impactPos = geo.Coord.new().set_latlon(lat, lon);
+  var ballistic_name = getprop("/ai/models/model-impact3");
+  var ballistic = props.globals.getNode(ballistic_name, 0);
+  if (ballistic != nil and ballistic.getName() != "munition") {
+    var typeNode = ballistic.getNode("impact/type");
+    if (typeNode != nil and typeNode.getValue() != "terrain") {
+      var lat = ballistic.getNode("impact/latitude-deg").getValue();
+      var lon = ballistic.getNode("impact/longitude-deg").getValue();
+      var elev = ballistic.getNode("impact/elevation-m").getValue();
+      var impactPos = geo.Coord.new().set_latlon(lat, lon, elev);
+      var target = findmultiplayer(impactPos, 80);
 
-        var track = awg_9.active_u.propNode;
+      if (target != nil) {
+        var typeOrd = ballistic.getNode("name").getValue();
 
-        var x = track.getNode("position/global-x").getValue();
-        var y = track.getNode("position/global-y").getValue();
-        var z = track.getNode("position/global-z").getValue();
-        var selectionPos = geo.Coord.new().set_xyz(x, y, z);
-
-        var distance = impactPos.distance_to(selectionPos);
-        if (distance < 125) {
-          last_impact = getprop("sim/time/elapsed-sec");
-          var phrase =  ballistic.getNode("name").getValue() ~ " hit: " ~ awg_9.active_u.Callsign.getValue();
-          if (getprop("sim/model/f15/systems/armament/mp-messaging")) {
-            armament.defeatSpamFilter(phrase);
-                  #hit_count = hit_count + 1;
-          } else {
-            setprop("/sim/messages/atc", phrase);
+        if(target == hit_callsign) {
+          # Previous impacts on same target
+          hits_count += 1;
+        } else {
+          if(hit_timer != nil) {
+            # Previous impacts on different target, flush them first
+            hit_timer.stop();
+            hitmessage(typeOrd);
           }
+          hits_count = 1;
+          hit_callsign = target;
+          hit_timer = maketimer(1, func{hitmessage(typeOrd);});
+          hit_timer.singleShot = 1;
+          hit_timer.start();
         }
       }
     }
   }
+}
+
+var hitmessage = func(typeOrd) {
+  #print("inside hitmessage");
+  var phrase = typeOrd ~ " hit: " ~ hit_callsign ~ ": " ~ hits_count ~ " hits";
+  if (getprop("payload/armament/msg") == TRUE) {
+    print(phrase);
+    #print("Second id: "~(151+armament.shells[typeOrd][0]));
+    var msg = notifications.ArmamentNotification.new("mhit", 4, -1*(damage.shells[typeOrd][0]+1));
+                msg.RelativeAltitude = 0;
+                msg.Bearing = 0;
+                msg.Distance = hits_count;
+                msg.RemoteCallsign = hit_callsign; # RJHTODO: maybe handle flares / chaff 
+                notifications.hitBridgedTransmitter.NotifyAll(msg);
+    damage.damageLog.push("You hit "~hit_callsign~" with "~typeOrd~", "~hits_count~" times.");
+  } else {
+    setprop("/sim/messages/atc", phrase);
+  }
+  hit_callsign = "";
+  hit_timer = nil;
+  hits_count = 0;
 }
 
 # setup impact listener
@@ -572,41 +448,45 @@ var flareStart = -1;
 var flareLoop = func {
   # Flare release
   if (getprop("ai/submodels/submodel[5]/flare-release-snd") == nil) {
-    setprop("ai/submodels/submodel[5]/flare-release-snd", 0);
-    setprop("ai/submodels/submodel[5]/flare-release-out-snd", 0);
+    setprop("ai/submodels/submodel[5]/flare-release-snd", FALSE);
+    setprop("ai/submodels/submodel[5]/flare-release-out-snd", FALSE);
   }
   var flareOn = getprop("ai/submodels/submodel[5]/flare-release-cmd");
-  if (flareOn == 1 and getprop("ai/submodels/submodel[5]/flare-release") == 0
-      and getprop("ai/submodels/submodel[5]/flare-release-out-snd") == 0
-      and getprop("ai/submodels/submodel[5]/flare-release-snd") == 0) {
+  if (flareOn == TRUE and getprop("ai/submodels/submodel[5]/flare-release") == FALSE
+      and getprop("ai/submodels/submodel[5]/flare-release-out-snd") == FALSE
+      and getprop("ai/submodels/submodel[5]/flare-release-snd") == FALSE) {
     flareCount = getprop("ai/submodels/submodel[5]/count");
     flareStart = getprop("sim/time/elapsed-sec");
-    setprop("ai/submodels/submodel[5]/flare-release-cmd", 0);
+    setprop("ai/submodels/submodel[5]/flare-release-cmd", FALSE);
     if (flareCount > 0) {
       # release a flare
-      setprop("ai/submodels/submodel[5]/flare-release-snd", 1);
-      setprop("ai/submodels/submodel[5]/flare-release", 1);
+      setprop("ai/submodels/submodel[5]/flare-release-snd", TRUE);
+      setprop("ai/submodels/submodel[5]/flare-release", TRUE);
       setprop("rotors/main/blade[3]/flap-deg", flareStart);
       setprop("rotors/main/blade[3]/position-deg", flareStart);
+      damage.flare_released();
     } else {
       # play the sound for out of flares
-      setprop("ai/submodels/submodel[5]/flare-release-out-snd", 1);
+      setprop("ai/submodels/submodel[5]/flare-release-out-snd", TRUE);
     }
   }
-  if (getprop("ai/submodels/submodel[5]/flare-release-snd") == 1 and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
-    setprop("ai/submodels/submodel[5]/flare-release-snd", 0);
+  if (getprop("ai/submodels/submodel[5]/flare-release-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
+    setprop("ai/submodels/submodel[5]/flare-release-snd", FALSE);
     setprop("rotors/main/blade[3]/flap-deg", 0);
     setprop("rotors/main/blade[3]/position-deg", 0);
   }
-  if (getprop("ai/submodels/submodel[5]/flare-release-out-snd") == 1 and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
-    setprop("ai/submodels/submodel[5]/flare-release-out-snd", 0);
+  if (getprop("ai/submodels/submodel[5]/flare-release-out-snd") == TRUE and (flareStart + 1) < getprop("sim/time/elapsed-sec")) {
+    setprop("ai/submodels/submodel[5]/flare-release-out-snd", FALSE);
   }
   if (flareCount > getprop("ai/submodels/submodel[5]/count")) {
     # A flare was released in last loop, we stop releasing flares, so user have to press button again to release new.
-    setprop("ai/submodels/submodel[5]/flare-release", 0);
+    setprop("ai/submodels/submodel[5]/flare-release", FALSE);
     flareCount = -1;
   }
   settimer(flareLoop, 0.1);
 };
 
 flareLoop();
+
+# damage already listens to this, but wont work since its aliased, so we gotta listen to what its aliased to also:
+setlistener("sim/model/f15/systems/armament/mp-messaging", func {damage.damageLog.push("Damage is now "~(getprop("sim/model/f15/systems/armament/mp-messaging")?"ON.":"OFF."));}, 1, 0);

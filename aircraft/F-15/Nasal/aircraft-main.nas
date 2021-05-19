@@ -42,14 +42,18 @@ var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialog
 error_mismatch.open();
 }
 var fixAirframe = func {
-# F-15 doesn't support wing detachment.
-    left_wing_torn.setValue(0);
-    right_wing_torn.setValue(0);
-	setprop ("fdm/jsbsim/gear/damage-reset", 1);
-	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
-	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
-	repairMe();
-	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
+    if (getprop("payload/armament/msg")==1 and !getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+        screen.log.write(pylons.msgA);
+    } else {
+    # F-15 doesn't support wing detachment.
+        left_wing_torn.setValue(0);
+        right_wing_torn.setValue(0);
+    	setprop ("fdm/jsbsim/gear/damage-reset", 1);
+    	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
+    	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
+    	repairMe();
+    	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
+    }
 }
 #
 # 2017.3 or earlier FG compatibility fixes
@@ -748,7 +752,7 @@ var F15_Recipient =
                 } elsif (frame_count == 1)
                   aircraft.computeNWS ();
                 elsif (frame_count == 2)
-                  aircraft.update_weapons_over_mp();
+                  mps.loop();# update weapons over MP
                 elsif (frame_count == 3)
                   updateVolume();
                 elsif (frame_count == 4)

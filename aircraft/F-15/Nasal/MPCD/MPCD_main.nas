@@ -50,51 +50,60 @@ var MPCD_Station =
     update: func
     {
         var weapon_mode = getprop("sim/model/f15/controls/armament/weapon-selector");
-        var na = getprop(me.prop~"/selected");
+        var na = pylons.pylons[me.ident+1].getWeapons(); #getprop(me.prop~"/selected");
         var sel = 0;
         var mode = "STBY";
         var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
         var master_arm=getprop("sim/model/f15/controls/armament/master-arm-switch");
 
-        if (na != nil and na != "none")
+        if (na != nil and size(na) and na[0] != nil)
         {
-            if (na == "AIM-9")
+            if (na[0].type == "AIM-9")
             {
                 na = "9L";
                 if (weapon_mode == 1)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "SRM";
             }
-            elsif (na == "AIM-120") 
+            elsif (na[0].type == "AIM-120") 
             {
-                na = "120A";
+                na = "120B";
                 if (weapon_mode == 2)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "MRM";
             }
-            elsif (na == "MK-84") {
+            elsif (na[0].type == "MK-84") {
                 na = "";
                 mode = "";
             }
-            elsif (na == "AIM-7") 
+            elsif (na[0].type == "AIM-7") 
             {
-                na = "7M";
+                na = "7F";
                 if (weapon_mode == 2)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "MRM";
             }
+            else
+            {
+                mode = "";
+                na = "";
+            }
+
             me.status.setText(mode);
             me.label.setText(na);
 
@@ -174,7 +183,8 @@ var MPCD_GroundStation =
                 na = "84";
                 if (weapon_mode == 5)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
@@ -583,6 +593,9 @@ var MPCD_Device =
         };
         svg.samLookup = {
                 "buk-m2":                   "11",
+                "S-75":                     "02",
+                "MIM104D":                  " P",
+                "s300":                     "20",
         };     
         svg.typeLookup = {
                 "f-14b":                    "F",     #fighter
