@@ -322,6 +322,7 @@ var common_init = func
 }
 
 # Init ####################
+var prop = nil;
 var init = func {
 	print("Initializing f15 Systems");
     var modelNotification = emesary.Notification.new("F15Model", nil, 0);
@@ -345,9 +346,16 @@ var init = func {
 
     common_init();
      main_loop_launched = 1;
-    var prop = "/instrumentation/radar";
+
+
+    if (prop != nil) return;#the code below must only be run once:
+    prop = "/instrumentation/radar";
     var actuator_radar = compat_failure_modes.set_unserviceable(prop);
     FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
+
+    prop = "/payload/armament/fire-control";
+    var actuator_Fire_control = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Fire control", actuator_Fire_control);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
