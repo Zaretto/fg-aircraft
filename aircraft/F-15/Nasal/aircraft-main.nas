@@ -751,7 +751,7 @@ var F15_Recipient =
                     acFrost.setValue(sysFrost.getValue());
                 } elsif (frame_count == 1)
                   aircraft.computeNWS ();
-                elsif (frame_count == 2)
+                #elsif (frame_count == 2)
                   #mps.loop();# update weapons over MP
                 elsif (frame_count == 3)
                   updateVolume();
