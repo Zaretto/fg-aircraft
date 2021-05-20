@@ -39,7 +39,7 @@ var pylonSets = {
 	empty: {name: "Empty", content: [], fireOrder: [], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 1},
 	mm20:  {name: "20mm Cannon", content: [cannon], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 
-    m84:  {name: "MK-84", content: ["MK-84"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 100, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 3},
+    m84:  {name: "MK-84", content: ["MK-84"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 3},
     
     # 340 = outer pylon
 	smokeWL: {name: "Smokewinder White", content: [smokewinderWhite2a], fireOrder: [0], launcherDragArea: -0.05, launcherMass: 53+340, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
@@ -49,26 +49,31 @@ var pylonSets = {
 #   fuel600C: {name: "Droptank", content: [fuelTank600Center], fireOrder: [0], launcherDragArea: 0.35, launcherMass: 271, launcherJettisonable: 1, showLongTypeInsteadOfCount: 1, category: 2},
 #	fuel600R: {name: "Droptank", content: [fuelTank600Right], fireOrder: [0], launcherDragArea: 0.35, launcherMass: 271, launcherJettisonable: 1, showLongTypeInsteadOfCount: 1, category: 2},
 
-    # A/A weapons:
+    # A/A weapons for fuselage pylons:
 	aim9:    {name: "AIM-9L Sidewinder",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 10, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 	aim7:    {name: "AIM-7F Sparrow",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 30, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
-	aim120:  {name: "AIM-120B AMRAAM", content: ["AIM-120"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 57, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+	aim120:  {name: "AIM-120B AMRAAM", content: ["AIM-120"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 30, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+
+    # A/A weapons for wing pylons: (launchermass is calculated in jsbsim pointmass weight 13 & 14)
+    aim9w:    {name: "AIM-9L Sidewinder",   content: ["AIM-9"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+    aim7w:    {name: "AIM-7F Sparrow",   content: ["AIM-7"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
+    aim120w:  {name: "AIM-120B AMRAAM", content: ["AIM-120"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 };
 
 # sets. The first in the list is the default. Earlier in the list means higher up in dropdown menu.
 # These are not strictly needed in F-15 beside from the Empty, since it uses a custom payload dialog, but there for good measure.
 #var pylon1set = [pylonSets.empty];
-var pylon2aset = [pylonSets.empty, pylonSets.aim9, pylonSets.aim120];
+var pylon2aset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
 var pylon2bset = [pylonSets.empty, pylonSets.m84];
-var pylon2cset = [pylonSets.empty, pylonSets.aim9, pylonSets.aim120];
+var pylon2cset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
 var pylon3set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
 var pylon4set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
 var pylon5set = [pylonSets.empty, pylonSets.m84];
 var pylon6set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
 var pylon7set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
-var pylon8aset = [pylonSets.empty, pylonSets.aim9, pylonSets.aim120];
+var pylon8aset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
 var pylon8bset = [pylonSets.empty, pylonSets.m84];
-var pylon8cset = [pylonSets.empty, pylonSets.aim9, pylonSets.aim120];
+var pylon8cset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
 #var pylon9set = [pylonSets.empty];
 
 # pylons
@@ -196,17 +201,17 @@ var clean = func {
 var standard = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim120);
+        pylon2a.loadSet(pylonSets.aim120w);
         pylon2b.loadSet(pylonSets.empty);
-        pylon2c.loadSet(pylonSets.aim9);
+        pylon2c.loadSet(pylonSets.aim9w);
         pylon3.loadSet(pylonSets.aim7);
         pylon4.loadSet(pylonSets.aim120);
         pylon5.loadSet(pylonSets.empty);
         pylon6.loadSet(pylonSets.aim120);
         pylon7.loadSet(pylonSets.aim7);
-        pylon8a.loadSet(pylonSets.aim9);
+        pylon8a.loadSet(pylonSets.aim9w);
         pylon8b.loadSet(pylonSets.empty);
-        pylon8c.loadSet(pylonSets.aim120);
+        pylon8c.loadSet(pylonSets.aim120w);
         reloadCannon();
         return 1;
     } else {
@@ -218,17 +223,17 @@ var standard = func {
 var counter = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim9);
+        pylon2a.loadSet(pylonSets.aim9w);
         pylon2b.loadSet(pylonSets.empty);
-        pylon2c.loadSet(pylonSets.aim9);
+        pylon2c.loadSet(pylonSets.aim9w);
         pylon3.loadSet(pylonSets.aim120);
         pylon4.loadSet(pylonSets.aim120);
         pylon5.loadSet(pylonSets.empty);
         pylon6.loadSet(pylonSets.aim120);
         pylon7.loadSet(pylonSets.aim120);
-        pylon8a.loadSet(pylonSets.aim9);
+        pylon8a.loadSet(pylonSets.aim9w);
         pylon8b.loadSet(pylonSets.empty);
-        pylon8c.loadSet(pylonSets.aim9);
+        pylon8c.loadSet(pylonSets.aim9w);
         reloadCannon();
         return 1;
     } else {
@@ -240,17 +245,17 @@ var counter = func {
 var nofly = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim120);
+        pylon2a.loadSet(pylonSets.aim120w);
         pylon2b.loadSet(pylonSets.empty);
-        pylon2c.loadSet(pylonSets.aim9);
+        pylon2c.loadSet(pylonSets.aim9w);
         pylon3.loadSet(pylonSets.aim7);
         pylon4.loadSet(pylonSets.aim7);
         pylon5.loadSet(pylonSets.empty);
         pylon6.loadSet(pylonSets.aim7);
         pylon7.loadSet(pylonSets.aim7);
-        pylon8a.loadSet(pylonSets.aim9);
+        pylon8a.loadSet(pylonSets.aim9w);
         pylon8b.loadSet(pylonSets.empty);
-        pylon8c.loadSet(pylonSets.aim120);
+        pylon8c.loadSet(pylonSets.aim120w);
         reloadCannon();
         return 1;
     } else {
@@ -284,17 +289,17 @@ var ferry = func {
 var super = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim120);
+        pylon2a.loadSet(pylonSets.aim120w);
         pylon2b.loadSet(pylonSets.empty);
-        pylon2c.loadSet(pylonSets.aim120);
+        pylon2c.loadSet(pylonSets.aim120w);
         pylon3.loadSet(pylonSets.aim120);
         pylon4.loadSet(pylonSets.aim120);
         pylon5.loadSet(pylonSets.empty);
         pylon6.loadSet(pylonSets.aim120);
         pylon7.loadSet(pylonSets.aim120);
-        pylon8a.loadSet(pylonSets.aim120);
+        pylon8a.loadSet(pylonSets.aim120w);
         pylon8b.loadSet(pylonSets.empty);
-        pylon8c.loadSet(pylonSets.aim120);
+        pylon8c.loadSet(pylonSets.aim120w);
         reloadCannon();
         return 1;
     } else {
@@ -306,17 +311,17 @@ var super = func {
 var ground = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim120);
+        pylon2a.loadSet(pylonSets.aim120w);
         pylon2b.loadSet(pylonSets.m84);
-        pylon2c.loadSet(pylonSets.aim120);
+        pylon2c.loadSet(pylonSets.aim120w);
         pylon3.loadSet(pylonSets.empty);
         pylon4.loadSet(pylonSets.empty);
         pylon5.loadSet(pylonSets.m84);
         pylon6.loadSet(pylonSets.empty);
         pylon7.loadSet(pylonSets.empty);
-        pylon8a.loadSet(pylonSets.aim120);
+        pylon8a.loadSet(pylonSets.aim120w);
         pylon8b.loadSet(pylonSets.m84);
-        pylon8c.loadSet(pylonSets.aim120);
+        pylon8c.loadSet(pylonSets.aim120w);
         reloadCannon();
         return 1;
     } else {
@@ -328,17 +333,17 @@ var ground = func {
 var patrol = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim9);
+        pylon2a.loadSet(pylonSets.aim9w);
         pylon2b.loadSet(pylonSets.empty);
-        pylon2c.loadSet(pylonSets.aim120);
+        pylon2c.loadSet(pylonSets.aim120w);
         pylon3.loadSet(pylonSets.aim120);
         pylon4.loadSet(pylonSets.aim120);
         pylon5.loadSet(pylonSets.empty);
         pylon6.loadSet(pylonSets.aim120);
         pylon7.loadSet(pylonSets.aim120);
-        pylon8a.loadSet(pylonSets.aim120);
+        pylon8a.loadSet(pylonSets.aim120w);
         pylon8b.loadSet(pylonSets.empty);
-        pylon8c.loadSet(pylonSets.aim9);
+        pylon8c.loadSet(pylonSets.aim9w);
         reloadCannon();
         return 1;
     } else {
@@ -350,17 +355,17 @@ var patrol = func {
 var train = func {
     if (fcs != nil and (!getprop("payload/armament/msg") or getprop("fdm/jsbsim/gear/unit[0]/WOW"))) {
 
-        pylon2a.loadSet(pylonSets.aim120);
+        pylon2a.loadSet(pylonSets.aim120w);
         pylon2b.loadSet(pylonSets.empty);
-        pylon2c.loadSet(pylonSets.aim9);
+        pylon2c.loadSet(pylonSets.aim9w);
         pylon3.loadSet(pylonSets.empty);
         pylon4.loadSet(pylonSets.empty);
         pylon5.loadSet(pylonSets.empty);
         pylon6.loadSet(pylonSets.empty);
         pylon7.loadSet(pylonSets.empty);
-        pylon8a.loadSet(pylonSets.aim9);
+        pylon8a.loadSet(pylonSets.aim9w);
         pylon8b.loadSet(pylonSets.empty);
-        pylon8c.loadSet(pylonSets.aim120);
+        pylon8c.loadSet(pylonSets.aim120w);
         reloadCannon();
         return 1;
     } else {

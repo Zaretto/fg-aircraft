@@ -135,9 +135,9 @@ var armament_update2 = func {
     # Trigered each 0.1 sec by instruments.nas main_loop()
     
     # calculate pylon and weapon total mass:
-    var pw = getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[13]") + getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[14]");# TODO: find out where these are set, and put it into pylon.nas instead, so its set indirectly.
+    var pw = getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[13]") + getprop("fdm/jsbsim/inertia/pointmass-weight-lbs[14]");
     var wWeight = 0;
-    var pWeight = 0;
+    var pWeight = pw;
     var tWeight = 0;
     var updatePayload = 0;
     for (var i = 0;i<11;i+=1) {
