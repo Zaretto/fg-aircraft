@@ -498,7 +498,7 @@ return obj;
 
         # CCIP is after update_item so it can get VV up-to-date location
         me.ccipInfo = pylons.getCCIP();
-        if (me.ccipInfo == nil) {
+        if (me.ccipInfo == nil or notification.ControlsArmamentWeaponSelector != 5) {
             me.ccipGrp.hide();
         } else {
             hudmath.HudMath.reCalc();

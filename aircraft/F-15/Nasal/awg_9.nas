@@ -1602,7 +1602,11 @@ var Target = {
     },
     isPainted: func {
         # AIM-7 require continuing lock of target during flight:
-        return active_u != nil and get_Callsign() == active_u_callsign;
+        return active_u != nil and me.get_Callsign() == active_u_callsign;
+    },
+    isLaserPainted: func{
+        # should really check if the laser is armed here
+        return me.isPainted();
     },
     getFlareNode: func {
         return me.propNode.getNode("rotors/main/blade[3]/flap-deg");

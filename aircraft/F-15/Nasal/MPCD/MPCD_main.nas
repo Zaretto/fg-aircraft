@@ -82,7 +82,7 @@ var MPCD_Station =
                 }
                 else mode = "MRM";
             }
-            elsif (na[0].type == "MK-84") {
+            elsif (na[0].type == "MK-84" or na[0].type == "GBU-10") {
                 na = "";
                 mode = "";
             }
@@ -181,6 +181,18 @@ var MPCD_GroundStation =
             if (na == "MK-84")
             {
                 na = "84";
+                if (weapon_mode == 5)
+                {
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
+                    if (sel and master_arm)
+                        mode = "RDY";
+                }
+                else mode = "AG";
+            }
+             elsif (na == "GBU-10")
+            {
+                na = "10";
                 if (weapon_mode == 5)
                 {
                     #sel = getprop(sel_node);

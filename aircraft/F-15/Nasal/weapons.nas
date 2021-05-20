@@ -60,7 +60,7 @@ var getDLZ = func {
 
 var ccrp = func {
     var weap = pylons.fcs.getSelectedWeapon();
-    if (weap != nil and weap.parents[0] == armament.AIM and weap.type == "MK-84") {
+    if (weap != nil and weap.parents[0] == armament.AIM and (weap.type == "MK-84" or weap.type == "GBU-10")) {
         var ccrp_meters = weap.getCCRP(20,0.25);#meters left to release point
         if (ccrp_meters != nil) {
             # this should make the ccrp bomb steering line and the bomb release cue.
@@ -123,7 +123,7 @@ var armament_update = func {
     Count9.setValue(aim9_count);
     Count7.setValue(pylons.fcs.getAmmoOfType("AIM-7"));
     Count120.setValue(pylons.fcs.getAmmoOfType("AIM-120"));
-    Count84.setValue(pylons.fcs.getAmmoOfType("MK-84"));
+    Count84.setValue(pylons.fcs.getAmmoOfType("MK-84")+pylons.fcs.getAmmoOfType("GBU-10"));
 
     update_gun_ready();
     setCockpitLights();
@@ -142,7 +142,7 @@ var armament_update2 = func {
     var updatePayload = 0;
     for (var i = 0;i<11;i+=1) {
         var ws = pylons.pylons[i+1].getWeapons();
-        if ((i == 1 or i==5 or i==9) and getprop("payload/weight["~i~"]/selected") == "MK-84" and size(ws) > 0 and ws[0] == nil) {
+        if ((i == 1 or i==5 or i==9) and (getprop("payload/weight["~i~"]/selected") == "MK-84" or getprop("payload/weight["~i~"]/selected") == "GBU-10") and size(ws) > 0 and ws[0] == nil) {
             # the MK-84 on this station has been released
             setprop("payload/weight["~i~"]/selected","none");
             updatePayload = 1;
@@ -153,7 +153,7 @@ var armament_update2 = func {
         pWeight += mass[1];
     }
     if (updatePayload) {
-        payload_dialog_reload("update_stores_mk84 "~i);
+        payload_dialog_reload("update_stores_bombs "~i);
         arm_selector();# because the fire-control.nas will deselect all weapons when the GUI is set to "none" or "Droptank".
     }
     if (aircraft.Centre_External.is_fitted()) {
@@ -224,6 +224,8 @@ var missile_code_from_ident= func(mty)
             return "mk83";
         else if (mty == "MK-84")
             return "mk84";
+        else if (mty == "GBU-10")
+            return "gbu10";
         else if (mty == "AIM-120")
             return "aim120";
 }
@@ -231,7 +233,7 @@ var get_sel_missile_count = func()
 {
     if (WeaponSelector.getValue() == 5)
     {
-        return pylons.fcs.getAmmoOfType("MK-84");
+        return pylons.fcs.getAmmoOfType("MK-84")+pylons.fcs.getAmmoOfType("GBU-10");
     }
     else if (WeaponSelector.getValue() == 1)
     {
@@ -270,7 +272,10 @@ var arm_selector = func() {
             pylons.fcs.selectWeapon("AIM-7");
         }
     } elsif ( stick_s == 5 ) {
-        pylons.fcs.selectWeapon("MK-84");
+        var p = pylons.fcs.selectWeapon("GBU-10");
+        if (p == nil) {
+            pylons.fcs.selectWeapon("MK-84");
+        }
     } else {
         pylons.fcs.selectNothing();
     }

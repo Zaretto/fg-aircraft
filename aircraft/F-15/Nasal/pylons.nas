@@ -39,6 +39,7 @@ var pylonSets = {
 	empty: {name: "Empty", content: [], fireOrder: [], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 1},
 	mm20:  {name: "20mm Cannon", content: [cannon], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 1, category: 1},
 
+    g10:  {name: "GBU-10", content: ["GBU-10"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 2},
     m84:  {name: "MK-84", content: ["MK-84"], fireOrder: [0], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 3},
     
     # 340 = outer pylon
@@ -64,15 +65,15 @@ var pylonSets = {
 # These are not strictly needed in F-15 beside from the Empty, since it uses a custom payload dialog, but there for good measure.
 #var pylon1set = [pylonSets.empty];
 var pylon2aset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
-var pylon2bset = [pylonSets.empty, pylonSets.m84];
+var pylon2bset = [pylonSets.empty, pylonSets.m84, pylonSets.g10];
 var pylon2cset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
 var pylon3set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
 var pylon4set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
-var pylon5set = [pylonSets.empty, pylonSets.m84];
+var pylon5set = [pylonSets.empty, pylonSets.m84, pylonSets.g10];
 var pylon6set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
 var pylon7set = [pylonSets.empty, pylonSets.m84, pylonSets.aim7, pylonSets.aim120];
 var pylon8aset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
-var pylon8bset = [pylonSets.empty, pylonSets.m84];
+var pylon8bset = [pylonSets.empty, pylonSets.m84, pylonSets.g10];
 var pylon8cset = [pylonSets.empty, pylonSets.aim9w, pylonSets.aim120w];
 #var pylon9set = [pylonSets.empty];
 
@@ -103,7 +104,7 @@ var pylons = [pylonI,pylon2a,pylon2b,pylon2c,pylon3,pylon4,pylon5,pylon6,pylon7,
 
 # The order of first vector in this line is the default pylon order weapons is released in.
 # The order of second vector in this line is the order cycle key would cycle through the weapons (since F15 doesn't use the cycle option that order is not important):
-fcs = fc.FireControl.new(pylons, [0,6,1,11,3,9,2,10,4,7,5,8], ["20mm Cannon","AIM-9","AIM-7","AIM-120","MK-84"]);
+fcs = fc.FireControl.new(pylons, [0,6,1,11,3,9,2,10,4,7,5,8], ["20mm Cannon","AIM-9","AIM-7","AIM-120","MK-84", "GBU-10"]);
 
 var callback = func (aim = nil) {
     # after something has changed in pylon system, this will make MPCD update its A/A and A/G pages:
@@ -116,6 +117,13 @@ var callbackClass = func (aim = nil) {
         settimer(func selectNextOfSameClass("AIM-120"), 0.5);
     }
 }
+var callbackClassG = func (aim = nil) {
+    if (aim != nil and aim.type == "GBU-10") {
+        settimer(func selectNextOfSameClass("MK-84"), 0.5);
+    } elsif (aim != nil and aim.type == "MK-84") {
+        settimer(func selectNextOfSameClass("GBU-10"), 0.5);
+    }
+}
 
 var selectNextOfSameClass = func (type) {
     # to avoid cyclic callstack this method is called delayed. Also due to callbackClass can be called before next has been selected.
@@ -125,7 +133,11 @@ var selectNextOfSameClass = func (type) {
 }
 
 for (var j = 1;j<12;j+=1) {
-    pylons[j].setAIMListener(callbackClass);
+    if (j==2 or j==6 or j==10) {
+        pylons[j].setAIMListener(callbackClassG);
+    } else {
+        pylons[j].setAIMListener(callbackClass);
+    }
     pylons[j].guiChanged();# update the pylons to whatever startup stores should be loaded.
 }
 fcs.setChangeListener(callback);
@@ -149,8 +161,13 @@ var getCCIP = func {
     if (fcs != nil and getprop("controls/armament/master-arm")) {
         var w = fcs.getSelectedWeapon();
         if (w!=nil and w.parents[0] == armament.AIM) {
-            var result = w.getCCIPadv(20, 0.2);
-            return result;
+            if (w.type=="MK-84") {
+                # 20s fall time limit and calculate fall trajectory at every 0.20s on the way to ground.
+                return w.getCCIPadv(20, 0.20);
+            } elsif (w.type=="GBU-10") {
+                # 35s fall time limit and calculate fall trajectory at every 0.30s on the way to ground.
+                return w.getCCIPadv(35, 0.30);
+            }
         }
     }
     return nil;
