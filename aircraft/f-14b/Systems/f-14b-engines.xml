@@ -40,13 +40,13 @@
                 <independentVar>fcs/throttle-switched[0]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
-                    0.00    0.0
-                    0.8999  0.999
-                    0.91    1.0
-                    0.93    1.25
-                    0.95    1.50
-                    0.97    1.75
-                    1.00    2.0
+                    0.0000    0.000
+                    0.8999    0.999
+                    0.9100    1.000
+                    0.9300    1.250
+                    0.9500    1.500
+                    0.9700    1.750
+                    1.0000    2.000
                 </tableData>
             </table>
             <output>fcs/throttle-pos-norm[0]</output>
@@ -58,13 +58,13 @@
                 <independentVar>fcs/throttle-switched[1]</independentVar>
                 <tableData>
                     <!-- 5 stage non linear augmentation-->
-                    0.00    0.0
-                    0.8999  0.999
-                    0.91    1.0
-                    0.93    1.25
-                    0.95    1.50
-                    0.97    1.75
-                    1.00    2.0
+                    0.0000    0.000
+                    0.8999    0.999
+                    0.9100    1.000
+                    0.9300    1.250
+                    0.9500    1.500
+                    0.9700    1.750
+                    1.0000    2.000
                 </tableData>
             </table>
             <output>fcs/throttle-pos-norm[1]</output>
@@ -78,12 +78,12 @@
                         <table>
                             <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                             <tableData>
-                                0	18.2
-                                10	12.7
-                                24	8.45
-                                42	5.25
-                                56	4.77
-                                100	4.4
+                                  0 18.20
+                                 10 12.70
+                                 24  8.45
+                                 42  5.25
+                                 56  4.77
+                                100  4.40
                             </tableData>
                         </table>
             </function>
@@ -94,12 +94,12 @@
                         <table>
                             <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                             <tableData>
-                                0	3.20
-                                10	2.15
-                                24	0.99
-                                42	0.56
-                                56	0.25
-                                100	0.21
+                                  0  3.20
+                                 10  2.15
+                                 24  0.99
+                                 42  0.56
+                                 56  0.25
+                                100  0.21
                             </tableData>
                         </table>
             </function>
@@ -126,14 +126,14 @@
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
                         <tableData>
-                            0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
-                            0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
-                            0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
-                            0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
-                            0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
-                            0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
-                            0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
-                            0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                                0.000  0.001  0.009  0.020  0.030  0.040  0.050  0.060  0.070  0.080  0.100  0.120  0.140  0.160  0.200  0.240  0.320  0.400  0.560  0.800  0.984
+                           0.0      0    271    281    292    301    310    319    328    336    344    359    374    387    400    424    447    492    537    641    808    870
+                           0.2      0    268    277    288    297    307    315    324    332    340    355    369    383    395    419    442    486    531    633    798    860
+                           0.3      0    260    269    279    288    297    306    314    322    330    344    358    371    383    406    428    471    515    614    774    833
+                           0.5      0    249    257    267    276    285    293    301    308    316    330    343    355    367    389    410    451    493    588    741    798
+                           0.6      0    232    240    250    258    266    274    281    288    295    308    320    332    343    364    383    421    460    549    692    746
+                           0.8      0    216    223    232    240    247    254    261    268    274    286    298    308    319    338    356    391    428    510    643    693
+                           0.9      0    208    215    223    231    238    245    251    258    264    275    286    297    307    325    343    377    412    491    619    667
                         </tableData>
                     </table>
             </function>
@@ -151,23 +151,23 @@
                         <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                            0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                            0	1.10000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
-                            24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
-                            32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
-                            40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
-                            48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
-                            56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
-                            63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
-                            71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
-                            79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
-                            87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
-                            95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
-                            97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
-                            98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
-                            100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                                    0.00     0.20     0.30     0.45     0.60     0.80     0.90     3.00
+                              0  1.10000  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                              8  1.09966  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                             16  1.26926  0.97069  0.93186  0.93963  0.93963  0.93963  0.93963  0.93963
+                             24  1.37453  0.99197  0.95229  0.92944  0.93963  0.93963  0.93963  0.93963
+                             32  1.56636  1.00992  0.96952  0.92105  0.89341  0.93963  0.93963  0.93963
+                             40  1.87550  1.03223  0.99094  0.94140  0.91316  0.91316  0.93963  0.93963
+                             48  2.25353  1.06785  1.02514  0.95338  0.91524  0.91835  0.97369  0.97369
+                             56  2.61381  1.12695  1.08188  1.00614  0.96590  0.96918  0.97369  0.97369
+                             63  2.84760  1.22096  1.17212  1.09007  1.04647  1.05002  0.99630  0.99630
+                             71  2.98150  1.34177  1.28810  1.19793  1.15002  1.15392  1.09488  1.09488
+                             79  3.00594  1.53633  1.47488  1.37164  1.31677  1.32124  1.25365  1.25365
+                             87  3.07269  1.80555  1.73333  1.61200  1.54752  1.55278  1.47333  1.47333
+                             95  3.49481  2.16568  2.07905  1.93352  1.85618  1.86248  1.76719  1.76719
+                             97  3.71122  2.63418  2.52881  2.35179  2.25772  2.26539  2.14949  2.14949
+                             98  3.84257  2.77040  2.65959  2.47341  2.37448  2.38255  2.26065  2.26065
+                            100  4.15840  2.84159  2.72792  2.53697  2.43549  2.44376  2.31873  2.31873
                         </tableData>
                     </table>
             </function>
@@ -284,9 +284,9 @@
                     <table>
                         <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
                         <tableData>
-                            0.00	0
-                            1.00	86
-                            5.00	171
+                            0      0
+                            1     86
+                            5    171
                         </tableData>
                     </table>
             </function>
@@ -369,9 +369,9 @@
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
-                            0.0 	0.81807
-                            0.2235	0.81807
-                            1.0000	0.15248
+                            0.0000  0.81807
+                            0.2235  0.81807
+                            1.0000  0.15248
                         </tableData>
                     </table>
             </function>
@@ -398,6 +398,191 @@
             </traverse>
         </kinematic>
         <!-- a/b lighting envelope; use outside of this envelope will increase risk of blowout-->
+
+        <!-- calculate fuel and oil temp and pressure
+            Fuel temperature is mainly the temperature in the tank
+            Oil temperature is a function of fuel temperature but adjusted 
+            because the fuel is used for oil cooling.
+             -->
+        <fcs_function name="propulsion/engine[0]/fuel-pressure-0">
+            <function>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                    <tableData>
+                         0      0.00
+                         5      2.50
+                        10      6.25
+                        15     68.75
+                        20    100.00
+                        25    106.25
+                        28    112.50
+                        35    115.00
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <lag_filter name="propulsion/engine[0]/fuel-pressure-psi">
+            <input>propulsion/engine[0]/fuel-pressure-0</input>
+            <output>propulsion/engine[0]/fuel-pressure-psi</output>
+            <c1>0.92</c1>
+        </lag_filter>
+
+        <fcs_function name="propulsion/engine[0]/oil-temperature-base-R">
+            <description>base temperature of oil over fuel.  the fuel is used to cool the oil
+                and so we can adjust based on N2 (roughly how much heat is being generated)
+                and the fuel flow (the rate at which cooler fuel is arriving)
+                F(N2, fuel-flow)
+            </description>
+            <function> 
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                    <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-pps</independentVar>
+                    <tableData>
+                            0.139  0.694  1.250  1.806  2.361  4.167  4.861  5.556
+                         0      0      0      0      0      0      0      0      0
+                        10     35     13      9      7      6      4      4      4
+                        20     53     20     14     11      9      7      6      5
+                        30     68     25     18     14     12      8      8      7
+                        40     82     30     21     17     14     10      9      8
+                        50     94     35     24     19     16     12     11     10
+                        60    105     39     27     22     18     13     12     11
+                        70    115     43     30     24     20     14     13     12
+                        80    125     46     32     26     22     15     14     13
+                        90    135     50     35     28     24     17     15     14
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/oil-temperature-increment-n2-R">
+            <description>The amount by which the oil temperature will be increased due to heat generated and outside temperature</description>
+            <function>
+                <table>
+                    <independentVar lookup="row">atmosphere/T-R</independentVar>
+                    <independentVar lookup="column">propulsion/engine[0]/oil-temperature-base-R</independentVar>
+                    <independentVar lookup="table">propulsion/engine[0]/n2</independentVar>
+                    <tableData breakPoint="0">
+                              -32    27    58    90
+                        401     0     0     0     0
+                        563     0     0     0     0
+                    </tableData>
+                    <tableData breakPoint="50">        
+                               -32     27     58     90
+                        401     33     69     85    135
+                        563    155    201    212    240
+                    </tableData>
+                    <tableData breakPoint="93">        
+                               -32     27     58     90
+                        401    113    139    159    184
+                        455    136    157    177    197
+                        509    154    173    193    212
+                        545    162    182    201    218
+                        581    182    200    212    231
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[0]/oil-temperature-increment-mach-R">
+            <description>higher speeds change the inlet pressure and this also affects temperature; so model this 
+                         as simple increment based on mach number.
+            </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">atmosphere/T-R</independentVar>
+                    <independentVar lookup="column">propulsion/engine[0]/oil-temperature-base-R</independentVar>
+                    <independentVar lookup="table">velocities/mach</independentVar>
+                    <tableData breakPoint="0.0">        
+                              -32    27    58
+                        401     0     0     0
+                        527     0     0     0
+                    </tableData>
+                    <tableData breakPoint="0.80">       
+                        -32    27    58    90
+                        401    58    49    40    40
+                        527    67    65    60    54
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/oil-temperature-degrees-c-0">
+            <description>
+                Total temperature. We need this now because we will lag it and 
+                we need the lagged value for the oil pressure temperature factor
+                (i.e. to compensate for oil thinning as it heats).
+            </description>
+            <function>
+                <sum>
+                    <product>
+                        <product>
+                            <sum>
+                                <property>atmosphere/T-R</property>
+                                <property>propulsion/engine[0]/oil-temperature-base-R</property>
+                                <property>propulsion/engine[0]/oil-temperature-increment-mach-R</property>
+                                <property>propulsion/engine[0]/oil-temperature-increment-n2-R</property>
+                            </sum>
+                        </product>
+                        <value>0.55555</value>
+                    </product>
+                    <value>-273</value>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <lead_lag_filter name="propulsion/engine[0]/oil-temperature-degrees-c">
+            <input>propulsion/engine[0]/oil-temperature-degrees-c-0</input>
+            <output>propulsion/engine[0]/oil-temperature-degrees-c-0v</output>
+            <c1>propulsion/engine[0]/oil-temperature-degrees-c-c1</c1>
+            <c2>propulsion/engine[0]/oil-temperature-degrees-c-c2</c2>
+            <c3>propulsion/engine[0]/oil-temperature-degrees-c-c3</c3>
+            <c4>propulsion/engine[0]/oil-temperature-degrees-c-c4</c4>
+        </lead_lag_filter>
+
+        <fcs_function name="propulsion/engine[0]/oil-pressure-temperature-factor">
+            <function>
+                <table>
+                    <independentVar lookup="row">propulsion/engine[0]/oil-temperature-degrees-c</independentVar>
+                    <tableData>
+                        -23   1.2
+                          0   1.0
+                        135   1.0
+                        150   0.8
+                        210   0.3
+                        </tableData>
+                </table>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/oil-pressure-0">
+            <function>
+                <product>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                        <tableData>
+                             0   0.00
+                             5   1.07
+                            10   2.68
+                            15   6.96
+                            20  29.43
+                            23  42.80
+                            25  45.48
+                            28  48.15
+                            35  49.22
+                     </tableData>
+                    </table>
+                    <property>propulsion/engine[0]/oil-pressure-temperature-factor</property>
+                    <property>propulsion/engine[0]/engine-factor</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <lag_filter name="propulsion/engine[0]/oil-pressure-psi">
+            <input>propulsion/engine[0]/oil-pressure-0</input>
+            <output>propulsion/engine[0]/oil-pressure</output>
+            <c1>0.4217</c1>
+        </lag_filter>
+
     </channel>
 
     <channel name="F110-R">
@@ -407,12 +592,12 @@
                         <table>
                             <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                             <tableData>
-                                0	18.2
-                                10	12.7
-                                24	8.45
-                                42	5.25
-                                56	4.77
-                                100	4.4
+                                  0 18.20
+                                 10 12.70
+                                 24  8.45
+                                 42  5.25
+                                 56  4.77
+                                100  4.40
                             </tableData>
                         </table>
             </function>
@@ -423,12 +608,12 @@
                         <table>
                             <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                             <tableData>
-                                0	3.20
-                                10	2.15
-                                24	0.99
-                                42	0.56
-                                56	0.25
-                                100	0.21
+                                  0  3.20
+                                 10  2.15
+                                 24  0.99
+                                 42  0.56
+                                 56  0.25
+                                100  0.21
                             </tableData>
                         </table>
             </function>
@@ -455,14 +640,14 @@
                         <independentVar lookup="row">velocities/mach</independentVar>
                         <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
                         <tableData>
-                            0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
-                            0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
-                            0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
-                            0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
-                            0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
-                            0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
-                            0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
-                            0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                                0.000  0.001  0.009  0.020  0.030  0.040  0.050  0.060  0.070  0.080  0.100  0.120  0.140  0.160  0.200  0.240  0.320  0.400  0.560  0.800  0.984
+                           0.0      0    271    281    292    301    310    319    328    336    344    359    374    387    400    424    447    492    537    641    808    870
+                           0.2      0    268    277    288    297    307    315    324    332    340    355    369    383    395    419    442    486    531    633    798    860
+                           0.3      0    260    269    279    288    297    306    314    322    330    344    358    371    383    406    428    471    515    614    774    833
+                           0.5      0    249    257    267    276    285    293    301    308    316    330    343    355    367    389    410    451    493    588    741    798
+                           0.6      0    232    240    250    258    266    274    281    288    295    308    320    332    343    364    383    421    460    549    692    746
+                           0.8      0    216    223    232    240    247    254    261    268    274    286    298    308    319    338    356    391    428    510    643    693
+                           0.9      0    208    215    223    231    238    245    251    258    264    275    286    297    307    325    343    377    412    491    619    667
                         </tableData>
                     </table>
             </function>
@@ -480,23 +665,23 @@
                         <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
                         <independentVar lookup="column">velocities/mach</independentVar>
                         <tableData>
-                            0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                            0	1.10000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                            16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
-                            24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
-                            32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
-                            40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
-                            48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
-                            56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
-                            63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
-                            71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
-                            79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
-                            87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
-                            95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
-                            97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
-                            98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
-                            100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                                    0.00     0.20     0.30     0.45     0.60     0.80     0.90     3.00
+                              0  1.10000  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                              8  1.09966  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                             16  1.26926  0.97069  0.93186  0.93963  0.93963  0.93963  0.93963  0.93963
+                             24  1.37453  0.99197  0.95229  0.92944  0.93963  0.93963  0.93963  0.93963
+                             32  1.56636  1.00992  0.96952  0.92105  0.89341  0.93963  0.93963  0.93963
+                             40  1.87550  1.03223  0.99094  0.94140  0.91316  0.91316  0.93963  0.93963
+                             48  2.25353  1.06785  1.02514  0.95338  0.91524  0.91835  0.97369  0.97369
+                             56  2.61381  1.12695  1.08188  1.00614  0.96590  0.96918  0.97369  0.97369
+                             63  2.84760  1.22096  1.17212  1.09007  1.04647  1.05002  0.99630  0.99630
+                             71  2.98150  1.34177  1.28810  1.19793  1.15002  1.15392  1.09488  1.09488
+                             79  3.00594  1.53633  1.47488  1.37164  1.31677  1.32124  1.25365  1.25365
+                             87  3.07269  1.80555  1.73333  1.61200  1.54752  1.55278  1.47333  1.47333
+                             95  3.49481  2.16568  2.07905  1.93352  1.85618  1.86248  1.76719  1.76719
+                             97  3.71122  2.63418  2.52881  2.35179  2.25772  2.26539  2.14949  2.14949
+                             98  3.84257  2.77040  2.65959  2.47341  2.37448  2.38255  2.26065  2.26065
+                            100  4.15840  2.84159  2.72792  2.53697  2.43549  2.44376  2.31873  2.31873
                         </tableData>
                     </table>
             </function>
@@ -613,9 +798,9 @@
                     <table>
                         <independentVar lookup="row">propulsion/engine[1]/augmentation-stage</independentVar>
                         <tableData>
-                            0.00	0
-                            1.00	86
-                            5.00	171
+                            0      0
+                            1     86
+                            5    171
                         </tableData>
                     </table>
             </function>
@@ -698,9 +883,9 @@
                     <table>
                         <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
                         <tableData>
-                            0.0 	0.81807
-                            0.2235	0.81807
-                            1.0000	0.15248
+                            0.0000  0.81807
+                            0.2235  0.81807
+                            1.0000  0.15248
                         </tableData>
                     </table>
             </function>
@@ -727,7 +912,190 @@
             </traverse>
         </kinematic>
 
-    </channel>
+        <!-- calculate fuel and oil temp and pressure
+            Fuel temperature is mainly the temperature in the tank
+            Oil temperature is a function of fuel temperature but adjusted 
+            because the fuel is used for oil cooling.
+             -->
+             <fcs_function name="propulsion/engine[1]/fuel-pressure-0">
+                <function>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                        <tableData>
+                             0      0.00
+                             5      2.50
+                            10      6.25
+                            15     68.75
+                            20    100.00
+                            25    106.25
+                            28    112.50
+                            35    115.00
+                        </tableData>
+                    </table>
+                </function>
+            </fcs_function>
+    
+            <lag_filter name="propulsion/engine[1]/fuel-pressure-psi">
+                <input>propulsion/engine[1]/fuel-pressure-0</input>
+                <output>propulsion/engine[1]/fuel-pressure-psi</output>
+                <c1>0.72</c1>
+            </lag_filter>
+    
+            <fcs_function name="propulsion/engine[1]/oil-temperature-base-R">
+                <description>base temperature of oil over fuel.  the fuel is used to cool the oil
+                    and so we can adjust based on N2 (roughly how much heat is being generated)
+                    and the fuel flow (the rate at which cooler fuel is arriving)
+                    F(N2, fuel-flow)
+                </description>
+                <function>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                        <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-pps</independentVar>
+                        <tableData>
+                                0.139  0.694  1.250  1.806  2.361  4.167  4.861  5.556
+                             0      0      0      0      0      0      0      0      0
+                            10     35     13      9      7      6      4      4      4
+                            20     53     20     14     11      9      7      6      5
+                            30     68     25     18     14     12      8      8      7
+                            40     82     30     21     17     14     10      9      8
+                            50     94     35     24     19     16     12     11     10
+                            60    105     39     27     22     18     13     12     11
+                            70    115     43     30     24     20     14     13     12
+                            80    125     46     32     26     22     15     14     13
+                            90    135     50     35     28     24     17     15     14
+                        </tableData>
+                    </table>
+                </function>
+            </fcs_function>
+    
+            <fcs_function name="propulsion/engine[1]/oil-temperature-increment-n2-R">
+                <description>The amount by which the oil temperature will be increased due to heat generated and outside temperature</description>
+                <function>
+                    <table>
+                        <independentVar lookup="row">atmosphere/T-R</independentVar>
+                        <independentVar lookup="column">propulsion/engine[1]/oil-temperature-base-R</independentVar>
+                        <independentVar lookup="table">propulsion/engine[1]/n2</independentVar>
+                        <tableData breakPoint="0">
+                                  -32    27    58    90
+                            401     0     0     0     0
+                            563     0     0     0     0
+                        </tableData>
+                        <tableData breakPoint="50">        
+                                   -32     27     58     90
+                            401     33     69     85    135
+                            563    155    201    212    240
+                        </tableData>
+                        <tableData breakPoint="93">        
+                                   -32     27     58     90
+                            401    113    139    159    184
+                            455    136    157    177    197
+                            509    154    173    193    212
+                            545    162    182    201    218
+                            581    182    200    212    231
+                        </tableData>
+                    </table>
+                </function>
+            </fcs_function>
+            <fcs_function name="propulsion/engine[1]/oil-temperature-increment-mach-R">
+                <description>higher speeds change the inlet pressure and this also affects temperature; so model this 
+                             as simple increment based on mach number.
+                </description>
+                <function>
+                    <table>
+                        <independentVar lookup="row">atmosphere/T-R</independentVar>
+                        <independentVar lookup="column">propulsion/engine[1]/oil-temperature-base-R</independentVar>
+                        <independentVar lookup="table">velocities/mach</independentVar>
+                        <tableData breakPoint="0.0">        
+                                  -32    27    58
+                            401     0     0     0
+                            527     0     0     0
+                        </tableData>
+                        <tableData breakPoint="0.80">        
+                                  -32    27    58    90
+                            401    58    49    40    40
+                            527    67    65    60    54
+                        </tableData>
+                    </table>
+                </function>
+            </fcs_function>
+    
+            <fcs_function name="propulsion/engine[1]/oil-temperature-degrees-c-0">
+                <description>
+                    Total temperature. We need this now because we will lag it and 
+                    we need the lagged value for the oil pressure temperature factor
+                    (i.e. to compensate for oil thinning as it heats).
+                </description>
+                <function>
+                    <sum>
+                        <product>
+                            <product>
+                                <sum>
+                                    <property>atmosphere/T-R</property>
+                                    <property>propulsion/engine[1]/oil-temperature-base-R</property>
+                                    <property>propulsion/engine[1]/oil-temperature-increment-mach-R</property>
+                                    <property>propulsion/engine[1]/oil-temperature-increment-n2-R</property>
+                                </sum>
+                            </product>
+                            <value>0.55555</value>
+                        </product>
+                        <value>-273</value>
+                    </sum>
+                </function>
+            </fcs_function>
+    
+            <lead_lag_filter name="propulsion/engine[1]/oil-temperature-degrees-c">
+                <input>propulsion/engine[1]/oil-temperature-degrees-c-0</input>
+                <output>propulsion/engine[1]/oil-temperature-degrees-c-0v</output>
+                <c1>propulsion/engine[1]/oil-temperature-degrees-c-c1</c1>
+                <c2>propulsion/engine[1]/oil-temperature-degrees-c-c2</c2>
+                <c3>propulsion/engine[1]/oil-temperature-degrees-c-c3</c3>
+                <c4>propulsion/engine[1]/oil-temperature-degrees-c-c4</c4>
+            </lead_lag_filter>
+    
+            <fcs_function name="propulsion/engine[1]/oil-pressure-temperature-factor">
+                <function>
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[1]/oil-temperature-degrees-c</independentVar>
+                        <tableData>
+                            -23   1.2
+                              0   1.0
+                            135   1.0
+                            150   0.8
+                            210   0.3
+                            </tableData>
+                    </table>
+                </function>
+            </fcs_function>
+    
+            <fcs_function name="propulsion/engine[1]/oil-pressure-0">
+                <function>
+                    <product>
+                        <table>
+                            <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                            <tableData>
+                                 0   0.00
+                                 5   1.07
+                                10   2.68
+                                15   6.96
+                                20  29.43
+                                23  42.80
+                                25  45.48
+                                28  48.15
+                                35  49.22
+                         </tableData>
+                        </table>
+                        <property>propulsion/engine[1]/oil-pressure-temperature-factor</property>
+                        <property>propulsion/engine[1]/engine-factor</property>
+                    </product>
+                </function>
+            </fcs_function>
+    
+            <lag_filter name="propulsion/engine[1]/oil-pressure-psi">
+                <input>propulsion/engine[1]/oil-pressure-0</input>
+                <output>propulsion/engine[1]/oil-pressure</output>
+                <c1>0.4217</c1>
+            </lag_filter>
+        </channel>
 </system>
 
 <!-- rudimentary figures based of N2 and using values from NAVAIR 01-F14AAD-1 -->
@@ -738,15 +1106,15 @@
         <table>
             <independentVar>propulsion/engine[0]/n1</independentVar>
             <tableData>
-                0.0	0.0
-                20.0	0.0
-                30.0	541.7
-                49.0	541.7
-                62.0	631.7
-                78.0	1171.7
-                95.0	1405.7
-                99.9	1684.7
-                104.0	1684.7
+                  0.0      0.0
+                 20.0      0.0
+                 30.0    541.7
+                 49.0    541.7
+                 62.0    631.7
+                 78.0   1171.7
+                 95.0   1405.7
+                 99.9   1684.7
+                104.0   1684.7
             </tableData>
         </table>
     </sum>
@@ -757,15 +1125,15 @@
         <table>
             <independentVar>propulsion/engine[1]/n1</independentVar>
             <tableData>
-                0	0.0
-                20	0.0
-                30	541.7
-                49	541.7
-                62	631.7
-                78	1171.7
-                95	1405.7
-                99.9  1684.7
-                104	1684.7
+                  0.0      0.0
+                 20.0      0.0
+                 30.0    541.7
+                 49.0    541.7
+                 62.0    631.7
+                 78.0   1171.7
+                 95.0   1405.7
+                 99.9   1684.7
+                104.0   1684.7
             </tableData>
         </table>
 </function>-->
