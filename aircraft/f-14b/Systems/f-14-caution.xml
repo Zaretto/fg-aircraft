@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+        Title: F-14 CAUTION WARNING SYSTEM
+        Author: Richard Harrison (rjh@zaretto.com)
+        References:  NAVAIR-01-F14AAP-1 (NATOPS)
+        __________________________________________
+        
+        Implement the caution warning lights and 
+        the master caution button.
+
+        Each warning light is contained in a logic block
+        and sets the appropriate property.
+
+        The active properties are counted. Whenever there
+        is a non-zero number of active warning lights 
+        master caution will be active.
+
+        However it is possible to suppress the master caution
+        light by pushing it; so we use a state machine to simulate
+        this.
+        _____________________________________________________
+        The state machine has the following transitions
+
+        Off  to On      master caution active
+        On   to Pressed button pressed
+        On   to Off     master caution inactive
+        Pressed to On   Count increased
+        Pressed to Off  Master caution becomes inactive.
+-->
+<PropertyList>
+    <logic>
+        <input>
+            <or>
+                <less-than>
+                    <property>fdm/jsbsim/systems/hydraulics/combined-system-psi</property>
+                    <value>2100</value>
+                </less-than>
+                <less-than>
+                    <property>fdm/jsbsim/systems/hydraulics/flight-system-psi</property>
+                    <value>2100</value>
+                </less-than>
+            </or>
+        </input>
+        <output>sim/model/f-14b/lights/ca-hyd-press</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>sim/model/f-14b/instrumentation/fuel-gauges/total</property>
+                <property>sim/model/f-14b/controls/fuel/bingo</property>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-bingo</output>
+    </logic>
+    <logic>
+        <input>
+            <greater-than>
+                <expression>
+                    <difference>
+                        <property>fdm/jsbsim/fcs/flap-pos-deg</property>
+                        <property>fdm/jsbsim/fcs/flap-pos-deg-effective</property>
+                    </difference>
+                </expression>
+                <value>1</value>
+            </greater-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-flap</output>
+    </logic>
+    <logic>
+        <input>
+            <greater-than>
+                <property>canopy/position-norm</property>
+                <value>0</value>
+            </greater-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-lad-canopy</output>
+    </logic>
+    <logic>
+        <input>
+            <or>
+                <less-than>
+                    <property>fdm/jsbsim/propulsion/engine[0]/oil-pressure-psi</property>
+                    <value>23</value>
+                </less-than>
+                <less-than>
+                    <property>fdm/jsbsim/propulsion/engine[1]/oil-pressure-psi</property>
+                    <value>23</value>
+                </less-than>
+            </or>
+        </input>
+        <output>sim/model/f-14b/lights/ca-oil-press</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>/fdm/jsbsim/systems/electrics/lgenerator-kva</property>
+                <value>50</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-l-gen</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>/fdm/jsbsim/systems/electrics/rgenerator-kva</property>
+                <value>50</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-r-gen</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>fdm/jsbsim/propulsion/engine[0]/fuel-pressure-psi</property>
+                <value>110</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-l-fuel-press</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>fdm/jsbsim/propulsion/engine[0]/fuel-pressure-psi</property>
+                <value>110</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-r-fuel-press</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>sim/model/f-14b/instrumentation/fuel-gauges/total-left</property>
+                <value>1000</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-l-fuel-low</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>sim/model/f-14b/instrumentation/fuel-gauges/total-right</property>
+                <value>1000</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-r-fuel-low</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>/fdm/jsbsim/systems/electrics/lgenerator-kva</property>
+                <value>50</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-l-gen</output>
+    </logic>
+    <logic>
+        <input>
+            <less-than>
+                <property>/fdm/jsbsim/systems/electrics/transrect-online</property>
+                <value>2</value>
+            </less-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-trans-rect</output>
+    </logic>
+    <logic>
+        <input>
+            <and>
+                <not-equals>
+                    <property>gear/launchbar/position-norm</property>
+                    <value>0</value>
+                </not-equals>
+                <or>
+                    <less-than>
+                        <property>controls/engines/engine[0]/throttle</property>
+                        <value>0.9</value>
+                    </less-than>
+                    <less-than>
+                        <property>controls/engines/engine[1]/throttle</property>
+                        <value>0.9</value>
+                    </less-than>
+                </or>
+            </and>
+        </input>
+        <output>sim/model/f-14b/lights/ca-launch-bar</output>
+    </logic>
+    <logic>
+        <input>
+            <greater-than>
+                <property>fdm/jsbsim/systems/ecs/windscreen-temperature-k</property>
+                <value>338</value>
+            </greater-than>
+        </input>
+        <output>sim/model/f-14b/lights/ca-wndshld-hot</output>
+    </logic>
+    <logic>
+        <input>
+            <or>
+                <not-equals>
+                    <property>controls/armament/station[2]/jettison-all</property>
+                    <value>0</value>
+                </not-equals>
+                <not-equals>
+                    <property>controls/armament/station[7]/jettison-all</property>
+                    <value>0</value>
+                </not-equals>
+            </or>
+        </input>
+        <output>sim/model/f-14b/lights/ca-jettision</output>
+    </logic>
+    <logic>
+        <input>
+            <or>
+                <not-equals>
+                    <property>controls/engines/engine[0]/starter</property>
+                    <value>0</value>
+                </not-equals>
+                <not-equals>
+                    <property>controls/engines/engine[1]/starter</property>
+                    <value>0</value>
+                </not-equals>
+            </or>
+        </input>
+        <output>sim/model/f-14b/lights/ca-start-valve</output>
+    </logic>
+    <filter>
+        <name>master-caution-count</name>
+        <debug>false</debug>
+        <type>gain</type>
+        <gain>1.0</gain>
+        <input>
+            <expression>
+                <sum>
+                    <property>sim/model/f-14b/lights/ca-hyd-press</property>
+                    <property>sim/model/f-14b/lights/ca-bingo</property>
+                    <property>sim/model/f-14b/lights/ca-flap</property>
+                    <property>sim/model/f-14b/lights/ca-lad-canopy</property>
+                    <property>sim/model/f-14b/lights/ca-oil-press</property>
+                    <property>sim/model/f-14b/lights/ca-l-gen</property>
+                    <property>sim/model/f-14b/lights/ca-r-gen</property>
+                    <property>sim/model/f-14b/lights/ca-l-fuel-press</property>
+                    <property>sim/model/f-14b/lights/ca-r-fuel-press</property>
+                    <property>sim/model/f-14b/lights/ca-l-fuel-low</property>
+                    <property>sim/model/f-14b/lights/ca-r-fuel-low</property>
+                    <property>sim/model/f-14b/lights/ca-l-gen</property>
+                    <property>sim/model/f-14b/lights/ca-trans-rect</property>
+                    <property>sim/model/f-14b/lights/ca-launch-bar</property>
+                    <property>sim/model/f-14b/lights/ca-wndshld-hot</property>
+                    <property>sim/model/f-14b/lights/ca-jettision</property>
+                    <property>sim/model/f-14b/lights/ca-start-valve</property>
+                </sum>
+            </expression>
+        </input>
+        <output>
+            <property>sim/model/f-14b/lights/num-warns</property>
+        </output>
+    </filter>
+    <logic>
+        <inverted>false</inverted>
+        <input>
+            <greater-than>
+                <property>sim/model/f-14b/lights/num-warns</property>
+                <value>0</value>
+            </greater-than>
+        </input>
+        <output>sim/model/f-14b/lights/master-caution-active</output>
+    </logic>
+    <!-- state machine for the MASTER CAUTION button -->
+    <state-machine>
+        <branch>sim/model/f-14b/lights/master-caution-sm</branch>
+
+        <state>
+            <name>Off</name>
+        </state>
+
+        <state>
+            <name>On</name>
+            <enter>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/lights/warn-count</property>
+                <property>sim/model/f-14b/lights/num-warns</property>
+            </enter>
+        </state>
+
+        <state>
+            <name>Pressed</name>
+        </state>
+
+        <transition>
+            <source>Off</source>
+            <target>On</target>
+            <condition>
+                <property>sim/model/f-14b/lights/master-caution-active</property>
+            </condition>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/lights/warn-count</property>
+                <property>sim/model/f-14b/lights/num-warns</property>
+            </binding>
+        </transition>
+
+        <transition>
+            <source>On</source>
+            <target>Off</target>
+            <condition>
+                <or>
+                    <not>
+                        <property>sim/model/f-14b/lights/master-caution-active</property>
+                    </not>
+                </or>
+            </condition>
+        </transition>
+
+        <transition>
+            <source>On</source>
+            <target>Pressed</target>
+            <condition>
+                <property>sim/model/f-14b/lights/master-caution-reset</property>
+            </condition>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/lights/master-caution-reset</property>
+                <value>false</value>
+            </binding>
+        </transition>
+        <transition>
+            <source>Pressed</source>
+            <target>Off</target>
+            <condition>
+                <or>
+                    <not>
+                        <property>sim/model/f-14b/lights/master-caution-active</property>
+                    </not>
+                </or>
+            </condition>
+        </transition>
+        <transition>
+            <source>Pressed</source>
+            <target>On</target>
+            <condition>
+                <not-equals>
+                    <property>sim/model/f-14b/lights/num-warns</property>
+                    <property>sim/model/f-14b/lights/warn-count</property>
+                </not-equals>
+            </condition>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/lights/master-caution-reset</property>
+                <value>false</value>
+            </binding>
+        </transition>
+    </state-machine>
+
+    <logic>
+        <input>
+            <equals>
+                <property>sim/model/f-14b/lights/master-caution-sm/current-name</property>
+                <value>On</value>
+            </equals>
+        </input>
+        <output>sim/model/f-14b/instrumentation/warnings/master-caution</output>
+    </logic>
+</PropertyList>

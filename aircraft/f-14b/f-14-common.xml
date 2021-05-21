@@ -31,11 +31,17 @@
 
         <systems>
              <autopilot>
+                 <name>F-14 automatic flight control system</name>
                 <path>Aircraft/f-14b/f-14b-AFCS.xml</path>
             </autopilot>
             <autopilot>
+                <name>F-14 canopy simulation</name>
                 <path>Aircraft/f-14b/Systems/canopy.xml</path>
             </autopilot>
+            <property-rule n="100">
+                <name>F-14 Master Caution</name>
+                <path>Systems/f-14-caution.xml</path>
+            </property-rule>
         </systems>
 
         <flight-recorder>

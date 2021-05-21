@@ -138,8 +138,8 @@ var init = func {
     setprop("/fdm/jsbsim/systems/electrics/transrect-online",2);
     setprop("fdm/jsbsim/systems/hydraulics/combined-system-psi",2398);
     setprop("fdm/jsbsim/systems/hydraulics/flight-system-psi",2396);
-    setprop("engines/engine[0]/oil-pressure-psi", 28);
-    setprop("engines/engine[1]/oil-pressure-psi", 28);
+    setprop("fdm/jsbsim/propulsion/engine[0]/oil-pressure-psi", 28);
+    setprop("fdm/jsbsim/propulsion/engine[1]/oil-pressure-psi", 28);
 
 	# launch
 	check_pilot_callsign();
