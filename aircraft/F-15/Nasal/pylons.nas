@@ -24,7 +24,7 @@ var msgA = "If you need to repair now, then use Menu-Location-SelectAirport inst
 var msgB = "Please land before changing payload.";
 var msgC = "Please land before refueling.";
 
-var cannon = stations.SubModelWeapon.new("20mm Cannon", 0.254, 135, [4], [3], props.globals.getNode("sim/model/f15/systems/gun/running",1), 0, func{return getprop("sim/model/f15/systems/gun/ready");},0);
+var cannon = stations.SubModelWeapon.new("20mm Cannon", 0.254, 135, [4], [3], props.globals.getNode("sim/model/f15/systems/gun/running",1), 0, func{return getprop("sim/model/f15/systems/gun/ready") and getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>20;},0);
 cannon.typeShort = "GUN";
 cannon.brevity = "Guns guns";
 

@@ -572,7 +572,11 @@ var az_scan = func() {
                   if (u.airbone) {
                       if (active_u_callsign != nil and u.Callsign != nil and u.Callsign.getValue() == active_u_callsign) {
                           active_u = u; armament.contact = active_u;
-                          setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+                          if (u.get_display() and getprop("controls/armament/master-arm")) {
+                            setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+                          } else {
+                            setprop("sim/multiplay/generic/string[6]", "");
+                          }
                       }
                   }
                   idx=idx+1;
@@ -675,7 +679,7 @@ var az_scan = func() {
 
             if (tmp_nearest_u.Callsign != nil) {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
-                setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+                setprop("sim/multiplay/generic/string[6]", getprop("controls/armament/master-arm")?left(md5(active_u_callsign), 4):"");
             } else {
                 active_u_callsign = nil;
                 setprop("sim/multiplay/generic/string[6]", "");
@@ -732,7 +736,7 @@ var az_scan = func() {
             active_u = nearest_u = tmp_nearest_u = nxt; armament.contact = active_u;
             if (tmp_nearest_u.Callsign != nil) {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
-                setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+                setprop("sim/multiplay/generic/string[6]", getprop("controls/armament/master-arm")?left(md5(active_u_callsign), 4):"");
             } else {
                 active_u_callsign = nil;
                 setprop("sim/multiplay/generic/string[6]", "");
