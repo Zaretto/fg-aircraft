@@ -429,84 +429,50 @@
         </lag_filter>
 
         <fcs_function name="propulsion/engine[0]/oil-temperature-base-R">
-            <description>base temperature of oil over fuel.  the fuel is used to cool the oil
-                and so we can adjust based on N2 (roughly how much heat is being generated)
-                and the fuel flow (the rate at which cooler fuel is arriving)
-                F(N2, fuel-flow)
+            <description>
+                Oil temperature (increment over external in degrees R). 
+                This is a function of altitude (density) and fuel flow because fuel
+                is used to cool the oil. We end up with OilTemp = (alt, fuel-flow)
+
+                When the engine is not alight we use a different table.
             </description>
             <function> 
-                <table>
-                    <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
-                    <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-pps</independentVar>
-                    <tableData>
-                            0.139  0.694  1.250  1.806  2.361  4.167  4.861  5.556
-                         0      0      0      0      0      0      0      0      0
-                        10     35     13      9      7      6      4      4      4
-                        20     53     20     14     11      9      7      6      5
-                        30     68     25     18     14     12      8      8      7
-                        40     82     30     21     17     14     10      9      8
-                        50     94     35     24     19     16     12     11     10
-                        60    105     39     27     22     18     13     12     11
-                        70    115     43     30     24     20     14     13     12
-                        80    125     46     32     26     22     15     14     13
-                        90    135     50     35     28     24     17     15     14
-                    </tableData>
-                </table>
+                <ifthen>
+                    <gt>
+                        <property>propulsion/engine[0]/fuel-flow-rate-pps</property>
+                        <value>0.001</value>
+                    </gt>
+                    <table>
+                        <independentVar lookup="row">position/h-sl-ft</independentVar>
+                        <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-pps</independentVar>
+                        <tableData>
+                                     0.14    0.69    1.25    1.81    2.36    4.17    4.86    5.56
+                                0   150.3   161.8   173.3   184.8   196.4   233.8   248.2   262.6
+                            37500   179.1   190.3   201.5   212.6   223.8   260.1   274.1   288.1
+                        </tableData>
+                    </table>
+                    <!-- else engine not alight so use simple linear function of N2, 
+                         gradient 5.4 degrees per percent N2 from 0 to 30 at which point it 
+                         is limited.
+                         This is derived from the value from the above table at sea level.
+                         It may not be correct but it does give reasonable looking results
+                    -->
+                    <table>
+                        <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                        <tableData>
+                             0      0
+                             6     30
+                            12     60
+                            18     91
+                            24    120
+                            30    150
+                        </tableData>
+                    </table>
+                </ifthen>
             </function>
         </fcs_function>
 
-        <fcs_function name="propulsion/engine[0]/oil-temperature-increment-n2-R">
-            <description>The amount by which the oil temperature will be increased due to heat generated and outside temperature</description>
-            <function>
-                <table>
-                    <independentVar lookup="row">atmosphere/T-R</independentVar>
-                    <independentVar lookup="column">propulsion/engine[0]/oil-temperature-base-R</independentVar>
-                    <independentVar lookup="table">propulsion/engine[0]/n2</independentVar>
-                    <tableData breakPoint="0">
-                              -32    27    58    90
-                        401     0     0     0     0
-                        563     0     0     0     0
-                    </tableData>
-                    <tableData breakPoint="50">        
-                               -32     27     58     90
-                        401     33     69     85    135
-                        563    155    201    212    240
-                    </tableData>
-                    <tableData breakPoint="93">        
-                               -32     27     58     90
-                        401    113    139    159    184
-                        455    136    157    177    197
-                        509    154    173    193    212
-                        545    162    182    201    218
-                        581    182    200    212    231
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
-        <fcs_function name="propulsion/engine[0]/oil-temperature-increment-mach-R">
-            <description>higher speeds change the inlet pressure and this also affects temperature; so model this 
-                         as simple increment based on mach number.
-            </description>
-            <function>
-                <table>
-                    <independentVar lookup="row">atmosphere/T-R</independentVar>
-                    <independentVar lookup="column">propulsion/engine[0]/oil-temperature-base-R</independentVar>
-                    <independentVar lookup="table">velocities/mach</independentVar>
-                    <tableData breakPoint="0.0">        
-                              -32    27    58
-                        401     0     0     0
-                        527     0     0     0
-                    </tableData>
-                    <tableData breakPoint="0.80">       
-                        -32    27    58    90
-                        401    58    49    40    40
-                        527    67    65    60    54
-                    </tableData>
-                </table>
-            </function>
-        </fcs_function>
-
-        <fcs_function name="propulsion/engine[0]/oil-temperature-degrees-c-0">
+        <fcs_function name="propulsion/engine[0]/oil-temperature-degrees-R-0">
             <description>
                 Total temperature. We need this now because we will lag it and 
                 we need the lagged value for the oil pressure temperature factor
@@ -514,15 +480,55 @@
             </description>
             <function>
                 <sum>
+                    <property>atmosphere/T-R</property>
+                    <!-- include the calculated oil temp after 1 second so that we still get the 
+                         ramp up from the ambient
+                         This is matched with a high value in the lag constant to ensure rapid change.
+                    -->
+                    <ifthen>
+                        <gt>
+                            <property>sim-time-sec</property>
+                            <value>1</value>
+                        </gt>
+                        <property>propulsion/engine[0]/oil-temperature-base-R</property>
+                        <value>0</value>
+                    </ifthen>
+                </sum>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/engine[0]/oil-temperature-lagv">
+            <!-- Normal value for engine running  -->
+            <default value="0.00554015199510327" />
+
+            <!-- Starting -->
+            <test value="0.00399201065600852">
+                propulsion/engine[0]/n2 lt 60
+                propulsion/engine[0]/fuel-flow-rate-gph gt 0
+            </test>
+
+            <!-- Shutdown -->
+            <test value="0.00285306510898398">
+                propulsion/engine[0]/n2 lt 60
+            </test>
+
+            <!-- special value to ramp to ambient on sim start -->
+            <test value="333">
+                sim-time-sec lt 1
+            </test>
+        </switch>
+        
+        <lag_filter name="propulsion/engine[0]/oil-temperature-degrees-R">
+            <input>propulsion/engine[0]/oil-temperature-degrees-R-0</input>
+            <output>propulsion/engine[0]/oil-temperature-degrees-Rv</output>
+            <c1>propulsion/engine[0]/oil-temperature-lagv</c1>
+        </lag_filter>
+
+        <fcs_function name="propulsion/engine[0]/oil-temperature-degrees-c">
+            <function>
+                <sum>
                     <product>
-                        <product>
-                            <sum>
-                                <property>atmosphere/T-R</property>
-                                <property>propulsion/engine[0]/oil-temperature-base-R</property>
-                                <property>propulsion/engine[0]/oil-temperature-increment-mach-R</property>
-                                <property>propulsion/engine[0]/oil-temperature-increment-n2-R</property>
-                            </sum>
-                        </product>
+                        <property>propulsion/engine[0]/oil-temperature-degrees-R</property>
                         <value>0.55555</value>
                     </product>
                     <value>-273</value>
@@ -530,56 +536,53 @@
             </function>
         </fcs_function>
 
-        <lead_lag_filter name="propulsion/engine[0]/oil-temperature-degrees-c">
-            <input>propulsion/engine[0]/oil-temperature-degrees-c-0</input>
-            <output>propulsion/engine[0]/oil-temperature-degrees-c-0v</output>
-            <c1>propulsion/engine[0]/oil-temperature-degrees-c-c1</c1>
-            <c2>propulsion/engine[0]/oil-temperature-degrees-c-c2</c2>
-            <c3>propulsion/engine[0]/oil-temperature-degrees-c-c3</c3>
-            <c4>propulsion/engine[0]/oil-temperature-degrees-c-c4</c4>
-        </lead_lag_filter>
-
-        <fcs_function name="propulsion/engine[0]/oil-pressure-temperature-factor">
+        <fcs_function name="propulsion/engine[0]/oil-pressure-0-norm">
+            <description>
+                The oil pressure is a function of oil temperature and N2.
+            </description>
             <function>
-                <table>
-                    <independentVar lookup="row">propulsion/engine[0]/oil-temperature-degrees-c</independentVar>
-                    <tableData>
-                        -23   1.2
-                          0   1.0
-                        135   1.0
-                        150   0.8
-                        210   0.3
-                        </tableData>
-                </table>
-            </function>
-        </fcs_function>
-
-        <fcs_function name="propulsion/engine[0]/oil-pressure-0">
-            <function>
-                <product>
                     <table>
-                        <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
+                        <independentVar lookup="row">propulsion/engine[0]/oil-temperature-degrees-R</independentVar>
+                        <independentVar lookup="column">propulsion/engine[0]/n2</independentVar>
                         <tableData>
-                             0   0.00
-                             5   1.07
-                            10   2.68
-                            15   6.96
-                            20  29.43
-                            23  42.80
-                            25  45.48
-                            28  48.15
-                            35  49.22
+                                         5       10       15       20       60       70       80       90       95
+                            491.4  0.09731  0.24000  0.41093  0.55114  1.00000  1.00000  1.00000  1.00000  1.00000
+                            500.4  0.09868  0.19745  0.33897  0.45016  1.00000  1.00000  1.00000  1.00000  1.00000
+                            509.4  0.08264  0.16497  0.27726  0.36880  1.00000  1.00000  1.00000  1.00000  1.00000
+                            518.4  0.05971  0.11875  0.22497  0.30377  1.00000  1.00000  1.00000  1.00000  1.00000
+                            527.4  0.03756  0.07443  0.18128  0.25218  1.00000  1.00000  1.00000  1.00000  1.00000
+                            536.4  0.02104  0.04172  0.14538  0.21150  1.00000  1.00000  1.00000  1.00000  1.00000
+                            545.4  0.01216  0.02439  0.11646  0.17959  1.00000  1.00000  1.00000  1.00000  1.00000
+                            554.4  0.01012  0.02030  0.09369  0.15460  1.00000  1.00000  1.00000  1.00000  1.00000
+                            558.0  0.01000  0.02000  0.08612  0.14619  0.88500  1.00000  1.00000  1.00000  1.00000
+                            576.0  0.01000  0.02000  0.05926  0.11425  0.75278  0.90100  1.00000  1.00000  1.00000
+                            594.0  0.01000  0.02000  0.04590  0.09358  0.64737  0.80588  1.00000  1.00000  1.00000
+                            612.0  0.01000  0.02000  0.03952  0.07912  0.56822  0.70637  0.88225  1.00000  1.00000
+                            630.0  0.01000  0.02000  0.03356  0.06831  0.50798  0.63048  0.78790  1.00000  1.00000
+                            648.0  0.01000  0.02000  0.03000  0.06025  0.46169  0.57201  0.71105  0.91598  1.00000
+                            666.0  0.01000  0.02000  0.03000  0.05482  0.42591  0.52668  0.64932  0.83943  1.00000
+                            684.0  0.01000  0.02000  0.03000  0.05189  0.39824  0.49144  0.60035  0.77789  0.96200
+                            702.0  0.01000  0.02000  0.03000  0.05000  0.37693  0.46414  0.56176  0.72818  0.91531
+                            720.0  0.01000  0.02000  0.03000  0.05000  0.36073  0.44317  0.53119  0.68793  0.86360
+                            738.0  0.01000  0.02000  0.03000  0.05000  0.34871  0.42739  0.50626  0.65538  0.82903
+                            756.0  0.01000  0.02000  0.03000  0.05000  0.34019  0.41593  0.48459  0.62915  0.81160
                      </tableData>
                     </table>
-                    <property>propulsion/engine[0]/oil-pressure-temperature-factor</property>
-                    <property>propulsion/engine[0]/engine-factor</property>
+            </function>
+        </fcs_function>
+        
+        <fcs_function name="propulsion/engine[0]/oil-pressure-1-psi">
+            <function>
+                <product>
+                    <property>propulsion/engine[0]/oil-pressure-0-norm</property>
+                    <property>propulsion/engine[0]/oil-pressure-denormalisation-factor</property>
                 </product>
             </function>
         </fcs_function>
 
         <lag_filter name="propulsion/engine[0]/oil-pressure-psi">
-            <input>propulsion/engine[0]/oil-pressure-0</input>
-            <output>propulsion/engine[0]/oil-pressure</output>
+            <input>propulsion/engine[0]/oil-pressure-1-psi</input>
+            <output>propulsion/engine[0]/oil-pressure-psi</output>
             <c1>0.4217</c1>
         </lag_filter>
 
@@ -912,7 +915,7 @@
             </traverse>
         </kinematic>
 
-        <!-- calculate fuel and oil temp and pressure
+  <!-- calculate fuel and oil temp and pressure
             Fuel temperature is mainly the temperature in the tank
             Oil temperature is a function of fuel temperature but adjusted 
             because the fuel is used for oil cooling.
@@ -938,88 +941,54 @@
             <lag_filter name="propulsion/engine[1]/fuel-pressure-psi">
                 <input>propulsion/engine[1]/fuel-pressure-0</input>
                 <output>propulsion/engine[1]/fuel-pressure-psi</output>
-                <c1>0.72</c1>
+                <c1>0.92</c1>
             </lag_filter>
     
             <fcs_function name="propulsion/engine[1]/oil-temperature-base-R">
-                <description>base temperature of oil over fuel.  the fuel is used to cool the oil
-                    and so we can adjust based on N2 (roughly how much heat is being generated)
-                    and the fuel flow (the rate at which cooler fuel is arriving)
-                    F(N2, fuel-flow)
+                <description>
+                    Oil temperature (increment over external in degrees R). 
+                    This is a function of altitude (density) and fuel flow because fuel
+                    is used to cool the oil. We end up with OilTemp = (alt, fuel-flow)
+    
+                    When the engine is not alight we use a different table.
                 </description>
-                <function>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
-                        <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-pps</independentVar>
-                        <tableData>
-                                0.139  0.694  1.250  1.806  2.361  4.167  4.861  5.556
-                             0      0      0      0      0      0      0      0      0
-                            10     35     13      9      7      6      4      4      4
-                            20     53     20     14     11      9      7      6      5
-                            30     68     25     18     14     12      8      8      7
-                            40     82     30     21     17     14     10      9      8
-                            50     94     35     24     19     16     12     11     10
-                            60    105     39     27     22     18     13     12     11
-                            70    115     43     30     24     20     14     13     12
-                            80    125     46     32     26     22     15     14     13
-                            90    135     50     35     28     24     17     15     14
-                        </tableData>
-                    </table>
+                <function> 
+                    <ifthen>
+                        <gt>
+                            <property>propulsion/engine[1]/fuel-flow-rate-pps</property>
+                            <value>0.001</value>
+                        </gt>
+                        <table>
+                            <independentVar lookup="row">position/h-sl-ft</independentVar>
+                            <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-pps</independentVar>
+                            <tableData>
+                                         0.14    0.69    1.25    1.81    2.36    4.17    4.86    5.56
+                                    0   150.3   161.8   173.3   184.8   196.4   233.8   248.2   262.6
+                                37500   179.1   190.3   201.5   212.6   223.8   260.1   274.1   288.1
+                            </tableData>
+                        </table>
+                        <!-- else engine not alight so use simple linear function of N2, 
+                             gradient 5.4 degrees per percent N2 from 0 to 30 at which point it 
+                             is limited.
+                             This is derived from the value from the above table at sea level.
+                             It may not be correct but it does give reasonable looking results
+                        -->
+                        <table>
+                            <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                            <tableData>
+                                 0      0
+                                 6     30
+                                12     60
+                                18     91
+                                24    120
+                                30    150
+                            </tableData>
+                        </table>
+                    </ifthen>
                 </function>
             </fcs_function>
     
-            <fcs_function name="propulsion/engine[1]/oil-temperature-increment-n2-R">
-                <description>The amount by which the oil temperature will be increased due to heat generated and outside temperature</description>
-                <function>
-                    <table>
-                        <independentVar lookup="row">atmosphere/T-R</independentVar>
-                        <independentVar lookup="column">propulsion/engine[1]/oil-temperature-base-R</independentVar>
-                        <independentVar lookup="table">propulsion/engine[1]/n2</independentVar>
-                        <tableData breakPoint="0">
-                                  -32    27    58    90
-                            401     0     0     0     0
-                            563     0     0     0     0
-                        </tableData>
-                        <tableData breakPoint="50">        
-                                   -32     27     58     90
-                            401     33     69     85    135
-                            563    155    201    212    240
-                        </tableData>
-                        <tableData breakPoint="93">        
-                                   -32     27     58     90
-                            401    113    139    159    184
-                            455    136    157    177    197
-                            509    154    173    193    212
-                            545    162    182    201    218
-                            581    182    200    212    231
-                        </tableData>
-                    </table>
-                </function>
-            </fcs_function>
-            <fcs_function name="propulsion/engine[1]/oil-temperature-increment-mach-R">
-                <description>higher speeds change the inlet pressure and this also affects temperature; so model this 
-                             as simple increment based on mach number.
-                </description>
-                <function>
-                    <table>
-                        <independentVar lookup="row">atmosphere/T-R</independentVar>
-                        <independentVar lookup="column">propulsion/engine[1]/oil-temperature-base-R</independentVar>
-                        <independentVar lookup="table">velocities/mach</independentVar>
-                        <tableData breakPoint="0.0">        
-                                  -32    27    58
-                            401     0     0     0
-                            527     0     0     0
-                        </tableData>
-                        <tableData breakPoint="0.80">        
-                                  -32    27    58    90
-                            401    58    49    40    40
-                            527    67    65    60    54
-                        </tableData>
-                    </table>
-                </function>
-            </fcs_function>
-    
-            <fcs_function name="propulsion/engine[1]/oil-temperature-degrees-c-0">
+            <fcs_function name="propulsion/engine[1]/oil-temperature-degrees-R-0">
                 <description>
                     Total temperature. We need this now because we will lag it and 
                     we need the lagged value for the oil pressure temperature factor
@@ -1027,15 +996,55 @@
                 </description>
                 <function>
                     <sum>
+                        <property>atmosphere/T-R</property>
+                        <!-- include the calculated oil temp after 1 second so that we still get the 
+                             ramp up from the ambient
+                             This is matched with a high value in the lag constant to ensure rapid change.
+                        -->
+                        <ifthen>
+                            <gt>
+                                <property>sim-time-sec</property>
+                                <value>1</value>
+                            </gt>
+                            <property>propulsion/engine[1]/oil-temperature-base-R</property>
+                            <value>0</value>
+                        </ifthen>
+                    </sum>
+                </function>
+            </fcs_function>
+    
+            <switch name="propulsion/engine[1]/oil-temperature-lagv">
+                <!-- Normal value for engine running  -->
+                <default value="0.00554015199510327" />
+    
+                <!-- Starting -->
+                <test value="0.00399201065600852">
+                    propulsion/engine[1]/n2 lt 60
+                    propulsion/engine[1]/fuel-flow-rate-gph gt 0
+                </test>
+    
+                <!-- Shutdown -->
+                <test value="0.00285306510898398">
+                    propulsion/engine[1]/n2 lt 60
+                </test>
+    
+                <!-- special value to ramp to ambient on sim start -->
+                <test value="333">
+                    sim-time-sec lt 1
+                </test>
+            </switch>
+            
+            <lag_filter name="propulsion/engine[1]/oil-temperature-degrees-R">
+                <input>propulsion/engine[1]/oil-temperature-degrees-R-0</input>
+                <output>propulsion/engine[1]/oil-temperature-degrees-Rv</output>
+                <c1>propulsion/engine[1]/oil-temperature-lagv</c1>
+            </lag_filter>
+    
+            <fcs_function name="propulsion/engine[1]/oil-temperature-degrees-c">
+                <function>
+                    <sum>
                         <product>
-                            <product>
-                                <sum>
-                                    <property>atmosphere/T-R</property>
-                                    <property>propulsion/engine[1]/oil-temperature-base-R</property>
-                                    <property>propulsion/engine[1]/oil-temperature-increment-mach-R</property>
-                                    <property>propulsion/engine[1]/oil-temperature-increment-n2-R</property>
-                                </sum>
-                            </product>
+                            <property>propulsion/engine[1]/oil-temperature-degrees-R</property>
                             <value>0.55555</value>
                         </product>
                         <value>-273</value>
@@ -1043,56 +1052,53 @@
                 </function>
             </fcs_function>
     
-            <lead_lag_filter name="propulsion/engine[1]/oil-temperature-degrees-c">
-                <input>propulsion/engine[1]/oil-temperature-degrees-c-0</input>
-                <output>propulsion/engine[1]/oil-temperature-degrees-c-0v</output>
-                <c1>propulsion/engine[1]/oil-temperature-degrees-c-c1</c1>
-                <c2>propulsion/engine[1]/oil-temperature-degrees-c-c2</c2>
-                <c3>propulsion/engine[1]/oil-temperature-degrees-c-c3</c3>
-                <c4>propulsion/engine[1]/oil-temperature-degrees-c-c4</c4>
-            </lead_lag_filter>
-    
-            <fcs_function name="propulsion/engine[1]/oil-pressure-temperature-factor">
+            <fcs_function name="propulsion/engine[1]/oil-pressure-0-norm">
+                <description>
+                    The oil pressure is a function of oil temperature and N2.
+                </description>
                 <function>
-                    <table>
-                        <independentVar lookup="row">propulsion/engine[1]/oil-temperature-degrees-c</independentVar>
-                        <tableData>
-                            -23   1.2
-                              0   1.0
-                            135   1.0
-                            150   0.8
-                            210   0.3
-                            </tableData>
-                    </table>
-                </function>
-            </fcs_function>
-    
-            <fcs_function name="propulsion/engine[1]/oil-pressure-0">
-                <function>
-                    <product>
                         <table>
-                            <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                            <independentVar lookup="row">propulsion/engine[1]/oil-temperature-degrees-R</independentVar>
+                            <independentVar lookup="column">propulsion/engine[1]/n2</independentVar>
                             <tableData>
-                                 0   0.00
-                                 5   1.07
-                                10   2.68
-                                15   6.96
-                                20  29.43
-                                23  42.80
-                                25  45.48
-                                28  48.15
-                                35  49.22
+                                             5       10       15       20       60       70       80       90       95
+                                491.4  0.09731  0.24000  0.41093  0.55114  1.00000  1.00000  1.00000  1.00000  1.00000
+                                500.4  0.09868  0.19745  0.33897  0.45016  1.00000  1.00000  1.00000  1.00000  1.00000
+                                509.4  0.08264  0.16497  0.27726  0.36880  1.00000  1.00000  1.00000  1.00000  1.00000
+                                518.4  0.05971  0.11875  0.22497  0.30377  1.00000  1.00000  1.00000  1.00000  1.00000
+                                527.4  0.03756  0.07443  0.18128  0.25218  1.00000  1.00000  1.00000  1.00000  1.00000
+                                536.4  0.02104  0.04172  0.14538  0.21150  1.00000  1.00000  1.00000  1.00000  1.00000
+                                545.4  0.01216  0.02439  0.11646  0.17959  1.00000  1.00000  1.00000  1.00000  1.00000
+                                554.4  0.01012  0.02030  0.09369  0.15460  1.00000  1.00000  1.00000  1.00000  1.00000
+                                558.0  0.01000  0.02000  0.08612  0.14619  0.88500  1.00000  1.00000  1.00000  1.00000
+                                576.0  0.01000  0.02000  0.05926  0.11425  0.75278  0.90100  1.00000  1.00000  1.00000
+                                594.0  0.01000  0.02000  0.04590  0.09358  0.64737  0.80588  1.00000  1.00000  1.00000
+                                612.0  0.01000  0.02000  0.03952  0.07912  0.56822  0.70637  0.88225  1.00000  1.00000
+                                630.0  0.01000  0.02000  0.03356  0.06831  0.50798  0.63048  0.78790  1.00000  1.00000
+                                648.0  0.01000  0.02000  0.03000  0.06025  0.46169  0.57201  0.71105  0.91598  1.00000
+                                666.0  0.01000  0.02000  0.03000  0.05482  0.42591  0.52668  0.64932  0.83943  1.00000
+                                684.0  0.01000  0.02000  0.03000  0.05189  0.39824  0.49144  0.60035  0.77789  0.96200
+                                702.0  0.01000  0.02000  0.03000  0.05000  0.37693  0.46414  0.56176  0.72818  0.91531
+                                720.0  0.01000  0.02000  0.03000  0.05000  0.36073  0.44317  0.53119  0.68793  0.86360
+                                738.0  0.01000  0.02000  0.03000  0.05000  0.34871  0.42739  0.50626  0.65538  0.82903
+                                756.0  0.01000  0.02000  0.03000  0.05000  0.34019  0.41593  0.48459  0.62915  0.81160
                          </tableData>
                         </table>
-                        <property>propulsion/engine[1]/oil-pressure-temperature-factor</property>
-                        <property>propulsion/engine[1]/engine-factor</property>
+                </function>
+            </fcs_function>
+            
+            <fcs_function name="propulsion/engine[1]/oil-pressure-1-psi">
+                <function>
+                    <product>
+                        <property>propulsion/engine[1]/oil-pressure-0-norm</property>
+                        <property>propulsion/engine[1]/oil-pressure-denormalisation-factor</property>
                     </product>
                 </function>
             </fcs_function>
     
             <lag_filter name="propulsion/engine[1]/oil-pressure-psi">
-                <input>propulsion/engine[1]/oil-pressure-0</input>
-                <output>propulsion/engine[1]/oil-pressure</output>
+                <input>propulsion/engine[1]/oil-pressure-1-psi</input>
+                <output>propulsion/engine[1]/oil-pressure-psi</output>
                 <c1>0.4217</c1>
             </lag_filter>
         </channel>
