@@ -1,3 +1,10 @@
+# properties
+var consumables_fuel_total_fuel_lbs = props.globals.getNode("consumables/fuel/total-fuel-lbs",1);
+var controls_fuel_dump_switch = props.globals.getNode("sim/model/f-14b/controls/fuel/dump-switch",1);
+var sim_freeze_fuel = props.globals.getNode("sim/freeze/fuel",1);
+var sim_replay_time = props.globals.getNode("sim/replay/time",1);
+var surface_positions_speedbrake_pos_norm = props.globals.getNode("surface-positions/speedbrake-pos-norm",1);
+var systems_external_loads_external_tanks = props.globals.getNode("sim/model/f-14b/systems/external-loads/external-tanks",1);# Replacement for fuel.nas for the Grumman F-14b particular fuel system.
 # Replacement for fuel.nas for the Grumman F-14b particular fuel system.
 
 fuel.update = func{}; # disable the generic fuel updater
@@ -46,6 +53,8 @@ var total_fuel_l = 0;
 var total_fuel_r = 0;
 var qty_sel_switch = nil;
 var g_fuel_total   = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total", 1);
+var g_fuel_total_l = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total-left", 1);
+var g_fuel_total_r = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/total-right", 1);
 var g_fuel_WL      = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/left-wing-display", 1);
 var g_fuel_WR      = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/right-wing-display", 1);
 var g_fus_feed_L   = props.globals.getNode("sim/model/f-14b/instrumentation/fuel-gauges/left-fus-feed-display", 1);
@@ -193,7 +202,7 @@ var fuel_update = func {
 	neg_g.update();
 	calc_levels();
 
-	if ( getprop("/sim/freeze/fuel") or getprop("sim/replay/time") > 0 ) { return }
+	if ( sim_freeze_fuel.getValue() or sim_replay_time.getValue() > 0 ) { return }
 
 	LBS_HOUR2GALS_PERIOD = LBS_HOUR2GALS_SEC * fuel_dt;
 	max_flow85000 = 85000 * LBS_HOUR2GALS_PERIOD; 
@@ -612,11 +621,15 @@ var calc_levels = func() {
     total_fuel_l = aft + Lg + Lw + Le;
     total_fuel_r = fwd + Rg + Rw + Re;
  
-
+    g_fuel_total.setValue(total_fuel_l + total_fuel_r);
+    g_fuel_total_l.setValue(total_fuel_l);
+    g_fuel_total_r.setValue(total_fuel_r);
 
 	g_fus_feed_L.setDoubleValue( Lg + aft );
 	g_fus_feed_R.setDoubleValue( Rg + fwd );
+
 	qty_sel_switch = Qty_Sel_Switch.getValue();
+
 	if ( qty_sel_switch < 0 ) {
 		g_fuel_WL.setDoubleValue( Le );
 		g_fuel_WR.setDoubleValue( Re );
@@ -627,7 +640,6 @@ var calc_levels = func() {
 		g_fuel_WL.setDoubleValue( Lg );
 		g_fuel_WR.setDoubleValue( Rg );
 	}
-
 }
 
 
@@ -636,10 +648,10 @@ var calc_levels = func() {
 # --------
 
 var fuel_dump_switch_toggle = func() {
-	var sw = getprop("sim/model/f-14b/controls/fuel/dump-switch");
+	var sw = controls_fuel_dump_switch.getValue();
 	if ( !sw ) {
 		setprop("sim/model/f-14b/controls/fuel/dump-switch", 1);
-		if (( !wow ) and (getprop("surface-positions/speedbrake-pos-norm") == 0 )) {
+		if (( !wow ) and (surface_positions_speedbrake_pos_norm.getValue() == 0 )) {
 			fuel_dump_on();
 		} else { settimer(func { fuel_dump_off() }, 0.1) } 
 	} else { fuel_dump_off() }
@@ -654,10 +666,8 @@ var fuel_dump_off = func() {
 	setprop("sim/multiplay/generic/int[0]", 0);
 }
 
-
-
-
-
+#
+# Refuelling probe
 var r_probe = aircraft.door.new("sim/model/f-14b/refuel/", 1);
 var RprobePos        = props.globals.getNode("sim/model/f-14b/refuel/position-norm", 1);
 var RprobePosGeneric = props.globals.getNode("sim/multiplay/generic/float[6]");
@@ -1008,11 +1018,11 @@ Valve = {
 };
 
 var toggle_fuel_freeze = func() {
-    setprop("sim/freeze/fuel", 1-getprop("sim/freeze/fuel"));
+    sim_freeze_fuel.setValue( 1-getprop("sim/freeze/fuel"));
 }
 
 var set_fuel = func(total) {
-    var total_delta = (total - getprop("consumables/fuel/total-fuel-lbs"));
+    var total_delta = (total - consumables_fuel_total_fuel_lbs.getValue());
 
     var start = 0; 
     var end = size(Tank.list)-1;
@@ -1036,7 +1046,7 @@ var set_fuel = func(total) {
             #
 # only consider non external tanks; or external tanks when connected.
             print("Processing ",t.name," is ext ",t.is_external());
-            if (!t.is_external() or getprop("sim/model/f-14b/systems/external-loads/external-tanks"))
+            if (!t.is_external() or systems_external_loads_external_tanks.getValue())
             {
                 if (t.get_side() == i)
                 {
