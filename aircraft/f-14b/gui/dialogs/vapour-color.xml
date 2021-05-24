@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<PropertyList>
+	
+	<name>vapour-color</name>
+	<layout>vbox</layout>
+	
+	<group>
+		<layout>hbox</layout>
+		<text>
+			<halign>left</halign>
+			<label>Vapour Color</label>
+		</text>
+		<empty><stretch>1</stretch></empty>
+		<button>
+			<halign>right</halign>
+			<pref-width>20</pref-width>
+			<pref-height>20</pref-height>
+			<legend>X</legend>
+			<key>Esc</key>
+			<binding>
+				<command>dialog-close</command>
+			</binding>
+		</button>
+	</group>
+	
+	<hrule/>
+	
+	<group>
+		<layout>vbox</layout>
+
+		<text>
+			<halign>left</halign>
+			<label>Vapour Color:</label>
+		</text>
+		
+		<group>
+			<layout>hbox</layout>
+			<text>
+				<label>Left</label>
+			</text>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<label>Red</label>
+				</text>
+				<slider>
+					<halign>right</halign>
+					<pref-width>150</pref-width>
+					<property>/sim/model/f-14b/vapour-color[0]/r</property>
+					<min>0.0</min>
+					<max>1.0</max>
+					<binding>
+						<command>dialog-apply</command>
+					</binding>
+					<live>true</live>
+				</slider>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<label>Green</label>
+				</text>
+				<slider>
+					<halign>right</halign>
+					<pref-width>150</pref-width>
+					<property>/sim/model/f-14b/vapour-color[0]/g</property>
+					<min>0.0</min>
+					<max>1.0</max>
+					<binding>
+						<command>dialog-apply</command>
+					</binding>
+					<live>true</live>
+				</slider>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<label>Blue</label>
+				</text>
+				<slider>
+					<halign>right</halign>
+					<pref-width>150</pref-width>
+					<property>/sim/model/f-14b/vapour-color[0]/b</property>
+					<min>0.0</min>
+					<max>1.0</max>
+					<binding>
+						<command>dialog-apply</command>
+					</binding>
+					<live>true</live>
+				</slider>
+			</group>
+		</group>
+		<group>
+			<layout>hbox</layout>
+			<text>
+				<label>Right</label>
+			</text>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<label>Red</label>
+				</text>
+				<slider>
+					<halign>right</halign>
+					<pref-width>150</pref-width>
+					<property>/sim/model/f-14b/vapour-color[1]/r</property>
+					<min>0.0</min>
+					<max>1.0</max>
+					<binding>
+						<command>dialog-apply</command>
+					</binding>
+					<live>true</live>
+				</slider>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<label>Green</label>
+				</text>
+				<slider>
+					<halign>right</halign>
+					<pref-width>150</pref-width>
+					<property>/sim/model/f-14b/vapour-color[1]/g</property>
+					<min>0.0</min>
+					<max>1.0</max>
+					<binding>
+						<command>dialog-apply</command>
+					</binding>
+					<live>true</live>
+				</slider>
+			</group>
+			<group>
+				<layout>vbox</layout>
+				<text>
+					<label>Blue</label>
+				</text>
+				<slider>
+					<halign>right</halign>
+					<pref-width>150</pref-width>
+					<property>/sim/model/f-14b/vapour-color[1]/b</property>
+					<min>0.0</min>
+					<max>1.0</max>
+					<binding>
+						<command>dialog-apply</command>
+					</binding>
+					<live>true</live>
+				</slider>
+			</group>
+		</group>
+		
+	</group>
+	
+</PropertyList>
