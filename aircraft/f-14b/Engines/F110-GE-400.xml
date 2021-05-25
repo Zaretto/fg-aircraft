@@ -4,6 +4,8 @@
   File:     F110-GE-400.xml
   Author:   Richard Harrison (rjh@zaretto.com)
   Date:     20 September 2014
+            23 May 2021 - revised thrust tables for new data.
+
   Description:
     Two-shaft turbofan engine with afterburner and convergent/divergent nozzle
     Type: Afterburning turbofan
@@ -16,25 +18,26 @@
     Maximum thrust: F110-GE-400: 
     Turbine inlet temperature: 2750F (1510C)[4]
 
-  Engine Thrust tables are based on NASA-TM-104326 tables 4-6 normalized and adjusted 
-  for altitude. These figures are derived mainly from table 6 (as the altitude is constant)
-  normalized throttle position against mach (to give max thrust) and then altitude factor added
-  using a basic atmosphere model.
-  
-  Augmentation figures the same as mil thrust - it is just the difference between milthrust and maxthrust 
-  in the definition that defines the thrust. I believe this is correct as the mass flow / gas characteristics 
-  of the turbine aren't  altered when augmented so the assumption is that the values will be close in shape to the milthrust ones.
-  See the table here: http://adg.stanford.edu/aa241/propulsion/images/tvsv.gif - the ratio of Thrust to AB increases by 
-  0.26 from 0 to mach 1.0 - which in the abscence of F110 AB performance figures means that it is close enough to the trend.
-  
-  The values for Mach > 0.955 are constant as the airframe has inlet ramps to slow the incoming air and this is
-  a simple way to model it; for a more complete model there should be a data table that takes into account ramp
-  position and mach to provide inlet airflow.
-  
+  Engine Thrust tables are based on a version of the engine simulation from the F-16 model in NASA/TM-2003-212145.
+  The engine model is located in a file "f16.tar" that I downloaded on 24 August 2014 - which itself appears to be
+  based on the data in NASA-TP-1538
+  I converted the Fortran code for ENGINE_THRUST into C# and then normalized the tables based on the maximum
+  values in the table; adjusted to take into account the difference between a F-100-PW-100 and an F-100-GE-400
+  using the values from the SAC
+     var f100_to_f110_factor = 16333.0/14370.0; // based on F-15C SAC F-100-PW-220 and F-14D-SAC NAVAIR 00-110AF14-2 
+
+  There is also file in Systems/f-14b-engines.xml that is a companion to this simulation and provides
+  detailed models for
+  * EGT
+  * Afterburner (pressure dynamics, 5 stage)
+  * Fuel pressure and temperature
+  * Oil pressure and temperature
+
   Future enhancements of the model would be to
   1. Model inlet airflow rate
   2. Flameout engines when insufficient air mass
   3. Adverse effects when inlet airflow too high and would compressor stalls,  and/or stagnation and/or 
+
   Refs: 
         Flight and Static Exhaust Flow  Properties of an F110-GE-129  Engine in an F-16XL Airplane  During Acoustic Tests
         Jon K. Holzman, Lannie D. Webb, and Frank W. Burcham, 
@@ -69,29 +72,25 @@
     <n1spinup>1</n1spinup>
     <n2spinup>3</n2spinup>
 
-    <injected>          0 </injected>
+    <injected>0 </injected>
 
     <function name="IdleThrust">
         <table>
             <independentVar lookup="row">velocities/mach</independentVar>
             <independentVar lookup="column">atmosphere/density-altitude</independentVar>
             <tableData>
-                		       0	    5000	   10000	   15000	   20000	   25000	   30000	   35000	   40000	   45000	   50000	   55000	   60000	   65000	   70000	   75000
-                0.0000	0.028890	0.024852	0.021241	0.018029	0.015191	0.012699	0.010526	0.008644	0.006815	0.005359	0.004214	0.003314	0.002606	0.002049	0.001611	0.001267
-                0.2820	0.028890	0.024852	0.021241	0.018029	0.015191	0.012699	0.010526	0.008644	0.006815	0.005359	0.004214	0.003314	0.002606	0.002049	0.001611	0.001267
-                0.3000	0.028746	0.024728	0.021134	0.017939	0.015115	0.012636	0.010473	0.008601	0.006781	0.005332	0.004193	0.003297	0.002593	0.002039	0.001603	0.001261
-                0.3080	0.028453	0.024476	0.020919	0.017756	0.014961	0.012507	0.010367	0.008513	0.006711	0.005278	0.004150	0.003264	0.002566	0.002018	0.001587	0.001248
-                0.6010	0.042800	0.036818	0.031467	0.026710	0.022506	0.018814	0.015594	0.012806	0.010096	0.007939	0.006243	0.004909	0.003861	0.003036	0.002387	0.001877
-                0.6030	0.042714	0.036743	0.031404	0.026656	0.022460	0.018776	0.015562	0.012780	0.010075	0.007923	0.006230	0.004899	0.003853	0.003030	0.002383	0.001874
-                0.6050	0.042658	0.036695	0.031363	0.026621	0.022431	0.018751	0.015542	0.012764	0.010062	0.007913	0.006222	0.004893	0.003848	0.003026	0.002379	0.001871
-                0.7930	0.054850	0.047183	0.040327	0.034230	0.028842	0.024110	0.019984	0.016412	0.012938	0.010174	0.008001	0.006292	0.004947	0.003891	0.003059	0.002406
-                0.8040	0.055525	0.047763	0.040822	0.034651	0.029196	0.024407	0.020230	0.016614	0.013097	0.010299	0.008099	0.006369	0.005008	0.003938	0.003097	0.002435
-                0.8140	0.056021	0.048190	0.041187	0.034960	0.029457	0.024625	0.020410	0.016762	0.013214	0.010391	0.008171	0.006426	0.005053	0.003974	0.003125	0.002457
-                0.9460	0.065140	0.056034	0.047891	0.040651	0.034252	0.028633	0.023733	0.019490	0.015365	0.012083	0.009501	0.007472	0.005876	0.004620	0.003633	0.002857
-                0.9550	0.065976	0.056754	0.048506	0.041173	0.034692	0.029001	0.024038	0.019741	0.015562	0.012238	0.009623	0.007568	0.005951	0.004680	0.003680	0.002894
-                1.2000	0.065976	0.056754	0.048506	0.041173	0.034692	0.029001	0.024038	0.019741	0.015562	0.012238	0.009623	0.007568	0.005951	0.004680	0.003680	0.002894
-                1.6000	0.065976	0.056754	0.048506	0.041173	0.034692	0.029001	0.024038	0.019741	0.015562	0.012238	0.009623	0.007568	0.005951	0.004680	0.003680	0.002894
-                1.8000	0.065976	0.056754	0.048506	0.041173	0.034692	0.029001	0.024038	0.019741	0.015562	0.012238	0.009623	0.007568	0.005951	0.004680	0.003680	0.002894
+                               0        10000        20000        30000        35000        40000        50000        61000
+                0.0      0.06310      0.03988      0.05238      0.06786      0.07857      0.08929      0.11071      0.00000
+                0.2      0.03780      0.02530      0.04107      0.06012      0.06964      0.07917      0.10119      0.00000
+                0.4      0.00357      0.00149      0.02054      0.04494      0.05610      0.06726      0.09077      0.00000
+                0.6     -0.06071     -0.04226     -0.01786      0.02083      0.03750      0.05417      0.08095      0.00000
+                0.8     -0.16071     -0.11310     -0.07738     -0.01470      0.01051      0.03571      0.06548      0.00000
+                1.0     -0.21429     -0.08333     -0.03542     -0.02036     -0.01613     -0.01190      0.04167      0.00000
+                1.2     -0.26786     -0.05357      0.00655     -0.02601     -0.04277     -0.05952      0.01786      0.00000
+                1.4     -0.32143     -0.02381      0.04851     -0.03167     -0.06940     -0.10714     -0.00595      0.00000
+                1.6     -0.37500      0.00595      0.09048     -0.03732     -0.09604     -0.15476     -0.02976      0.00000
+                1.8     -0.42857      0.03571      0.13244     -0.04298     -0.12268     -0.20238     -0.05357      0.00000
+                2.0     -0.48214      0.06548      0.17440     -0.04863     -0.14932     -0.25000     -0.07738      0.00000
             </tableData>
         </table>
     </function>
@@ -101,20 +100,18 @@
             <independentVar lookup="row">velocities/mach</independentVar>
             <independentVar lookup="column">atmosphere/density-altitude</independentVar>
             <tableData>
-                0	10000	20000	30000	35000	40000	50000
-                0.0	0.8796	0.6707	0.4718	0.2957	0.2267	0.1631	0.0867
-                0.2	0.9121	0.7006	0.4859	0.3051	0.2281	0.1699	0.0957
-                0.4	1.0257	0.7917	0.5505	0.3561	0.2651	0.2018	0.1172
-                0.6	1.1440	0.8848	0.6397	0.4286	0.3259	0.2429	0.1465
-                0.8	1.1415	0.8974	0.6591	0.4435	0.3612	0.2706	0.1597
-                1.0	1.1322	0.9874	0.7411	0.5218	0.4228	0.3247	0.1869
-                1.2	1.1338	1.0588	0.8190	0.5955	0.4919	0.3866	0.2203
-                1.4	1.1352	1.0385	0.8730	0.6580	0.5512	0.4330	0.2550
-                1.6	1.2410	1.1163	0.9460	0.7770	0.6659	0.5311	0.3058
-                1.8	1.3834	1.2941	1.0320	0.8447	0.7629	0.6113	0.3538
-                2.0	1.5262	1.4735	1.1181	0.9120	0.8598	0.6914	0.4018
-                
-                                
+                               0        10000        20000        30000        35000        40000        50000        61000
+                0.0      1.13660      0.82018      0.55575      0.35407      0.28684      0.21961      0.12549      0.00000
+                0.2      1.13660      0.82018      0.56588      0.36214      0.29177      0.22140      0.12549      0.00000
+                0.4      1.13033      0.83470      0.59250      0.38455      0.30880      0.23306      0.13983      0.00000
+                0.6      1.13302      0.88194      0.63553      0.41771      0.33614      0.25457      0.14880      0.00000
+                0.8      1.11061      0.91215      0.69469      0.47687      0.38410      0.29132      0.17300      0.00000
+                1.0      1.04697      0.88275      0.72158      0.54679      0.44371      0.34062      0.20706      0.00000
+                1.2      0.98332      0.85335      0.74847      0.61671      0.50331      0.38992      0.24112      0.00000
+                1.4      0.91968      0.82395      0.77536      0.68662      0.56292      0.43922      0.27519      0.00000
+                1.6      0.85604      0.79455      0.80226      0.75654      0.62253      0.48852      0.30925      0.00000
+                1.8      0.79240      0.76515      0.82915      0.82646      0.68214      0.53783      0.34331      0.00000
+                2.0      0.72875      0.73574      0.85604      0.89638      0.74175      0.58713      0.37737      0.00000
             </tableData>
         </table>
     </function>
@@ -124,20 +121,18 @@
             <independentVar lookup="row">velocities/mach</independentVar>
             <independentVar lookup="column">atmosphere/density-altitude</independentVar>
             <tableData>
-                0	10000	20000	30000	35000	40000	50000
-                0.0	0.8796	0.6707	0.4718	0.2957	0.2267	0.1631	0.0867
-                0.2	0.9121	0.7006	0.4859	0.3051	0.2281	0.1699	0.0957
-                0.4	1.0257	0.7917	0.5505	0.3561	0.2651	0.2018	0.1172
-                0.6	1.1440	0.8848	0.6397	0.4286	0.3259	0.2429	0.1465
-                0.8	1.1415	0.8974	0.6591	0.4435	0.3612	0.2706	0.1597
-                1.0	1.1460	0.9995	0.7501	0.5281	0.4280	0.3287	0.1892
-                1.2	1.1189	1.0449	0.8082	0.5877	0.4854	0.3816	0.2174
-                1.4	1.1352	1.0385	0.8730	0.6580	0.5512	0.4330	0.2550
-                1.6	1.1511	1.0354	0.8775	0.7207	0.6176	0.4926	0.2836
-                1.8	1.2831	1.2003	0.9572	0.7835	0.7076	0.5670	0.3282
-                2.0	1.4156	1.3667	1.0371	0.8459	0.7975	0.6413	0.3727
-                                
-                
+                               0        10000        20000        30000        35000        40000        50000        61000
+                0.0      1.05970      0.79478      0.57224      0.37090      0.29142      0.21194      0.13246      0.00000
+                0.2      1.13494      0.83187      0.59476      0.38801      0.31150      0.23499      0.13776      0.00000
+                0.4      1.20276      0.89333      0.64907      0.43204      0.34848      0.26493      0.15021      0.00000
+                0.6      1.28436      1.00195      0.72907      0.49197      0.39699      0.30201      0.17035      0.00000
+                0.8      1.38132      1.11666      0.84644      0.58893      0.47620      0.36348      0.20929      0.00000
+                1.0      1.53053      1.23556      0.96963      0.71445      0.58617      0.45790      0.26795      0.00000
+                1.2      1.67973      1.35446      1.09282      0.83997      0.69614      0.55232      0.32660      0.00000
+                1.4      1.82894      1.47336      1.21601      0.96549      0.80611      0.64674      0.38525      0.00000
+                1.6      1.97814      1.59225      1.33920      1.09102      0.91609      0.74116      0.44391      0.00000
+                1.8      2.12735      1.71115      1.46239      1.21654      1.02606      0.83557      0.50256      0.00000
+                2.0      2.27656      1.83005      1.58558      1.34206      1.13603      0.92999      0.56122      0.00000
             </tableData>
         </table>
     </function>
