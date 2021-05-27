@@ -2000,35 +2000,6 @@
 
     <animation>
         <type>select</type>
-        <object-name>CFT-right</object-name>
-        <object-name>CFT-left</object-name>
-        <condition>
-            <not-equals>
-                <property>fdm/jsbsim/propulsion/cft</property>
-                <value>0</value>
-            </not-equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>CFT-left-pylons</object-name>
-        <object-name>CFT-right-pylons</object-name>
-        <condition>
-            <not-equals>
-                <property>fdm/jsbsim/propulsion/cft</property>
-                <value>0</value>
-            </not-equals>
-            <or>
-                <property>payload/weight[3]/weight-lb</property>
-                <property>payload/weight[4]/weight-lb</property>
-                <property>payload/weight[6]/weight-lb</property>
-                <property>payload/weight[7]/weight-lb</property>
-            </or>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
         <object-name>aircraft-ladder</object-name>
         <condition>
             <and>
@@ -2665,6 +2636,8 @@
         <nopreview />
         <object-name>CFT-pylon-l</object-name>
         <object-name>CFT-pylon-r</object-name>
+        <object-name>CFT-right</object-name>
+        <object-name>CFT-left</object-name>
         <condition>
             <property>sim/multiplay/generic/bool[70]</property>
         </condition>
@@ -3003,7 +2976,7 @@
     <animation>
         <type>rotate</type>
         <factor>-25</factor>
-        <property>sim/model/F15/payload/selected/CFT-pylon-l-CFT-pylon-r</property>
+        <property>sim/multiplay/generic/bool[70]</property>
         <axis>
             <object-name>CFT-axis-l</object-name>
         </axis>
@@ -3017,7 +2990,7 @@
     <animation>
         <type>translate</type>
         <factor>0.36</factor>
-        <property>sim/model/F15/payload/selected/CFT-pylon-l-CFT-pylon-r</property>
+        <property>sim/multiplay/generic/bool[70]</property>
         <axis>
             <x>0</x>
             <y>-2.19</y>
@@ -3033,7 +3006,7 @@
     <animation>
         <type>rotate</type>
         <factor>12</factor>
-        <property>sim/model/F15/payload/selected/CFT-pylon-l-CFT-pylon-r</property>
+        <property>sim/multiplay/generic/bool[70]</property>
         <axis>
             <object-name>CFT-axis-r</object-name>
         </axis>
@@ -3047,7 +3020,7 @@
     <animation>
         <type>translate</type>
         <factor>0.36</factor>
-        <property>sim/model/F15/payload/selected/CFT-pylon-l-CFT-pylon-r</property>
+        <property>sim/multiplay/generic/bool[70]</property>
         <axis>
             <x>0</x>
             <y>1.79</y>
