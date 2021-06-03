@@ -222,6 +222,7 @@ var rdr_loop = func() {
 		if ( we_are_bs == 0) {
 			RadarStandbyMP.setIntValue(our_radar_stanby); # Tell over MP if
 			# our radar is scaning or is in stanby. Don't if we are a back-seater.
+            if (our_radar_stanby) setprop("sim/multiplay/generic/string[6]", "");
 		}
 	} elsif ( size(tgts_list) > 0 ) {
 		foreach( u; tgts_list ) {
@@ -346,7 +347,11 @@ var az_scan = func() {
             if (active_u == nil or active_u.Callsign == nil or active_u.Callsign.getValue() == nil or active_u.Callsign.getValue() != active_u_callsign)
             {
                 if (active_u != nil)
+                {
                     active_u = nil;
+                    active_u_callsign = nil;
+                    setprop("sim/multiplay/generic/string[6]", "");
+                }
                 armament.contact = active_u;
             }
 
@@ -358,7 +363,7 @@ var az_scan = func() {
                     continue;
                 }
                 if (type == "multiplayer" or type == "tanker" or type == "aircraft" 
-                    or type == "ship" or type == "groundvehicle" or type == "aim-120" or type == "aim-7" or type == "aim-9") 
+                    or type == "ship" or type == "groundvehicle") # or type == "aim-120" or type == "aim-7" or type == "aim-9"
                 {
                     append(tgts_list, Target.new(c));
                 }
@@ -567,6 +572,11 @@ var az_scan = func() {
                   if (u.airbone) {
                       if (active_u_callsign != nil and u.Callsign != nil and u.Callsign.getValue() == active_u_callsign) {
                           active_u = u; armament.contact = active_u;
+                          if (u.get_display() and getprop("controls/armament/master-arm")) {
+                            setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+                          } else {
+                            setprop("sim/multiplay/generic/string[6]", "");
+                          }
                       }
                   }
                   idx=idx+1;
@@ -667,10 +677,13 @@ var az_scan = func() {
         {
             active_u = nearest_u = tmp_nearest_u = prv; armament.contact = active_u;
 
-            if (tmp_nearest_u.Callsign != nil)
+            if (tmp_nearest_u.Callsign != nil) {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
-            else
+                setprop("sim/multiplay/generic/string[6]", getprop("controls/armament/master-arm")?left(md5(active_u_callsign), 4):"");
+            } else {
                 active_u_callsign = nil;
+                setprop("sim/multiplay/generic/string[6]", "");
+            }
                 
         }
         awg_9.sel_prev_target =0;
@@ -721,10 +734,13 @@ var az_scan = func() {
         if (nxt != nil)
         {
             active_u = nearest_u = tmp_nearest_u = nxt; armament.contact = active_u;
-            if (tmp_nearest_u.Callsign != nil)
+            if (tmp_nearest_u.Callsign != nil) {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
-            else
+                setprop("sim/multiplay/generic/string[6]", getprop("controls/armament/master-arm")?left(md5(active_u_callsign), 4):"");
+            } else {
                 active_u_callsign = nil;
+                setprop("sim/multiplay/generic/string[6]", "");
+            }
         }
         awg_9.sel_next_target =0;
     }
@@ -734,7 +750,8 @@ var az_scan = func() {
 
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
-        active_u = nil; armament.contact = active_u;
+        active_u = nil; armament.contact = active_u; active_u_callsign = nil;
+        setprop("sim/multiplay/generic/string[6]", "");
     }
 }
 
@@ -1157,6 +1174,9 @@ var Target = {
 		obj.Heading = c.getNode("orientation/true-heading-deg");
         obj.pitch   = c.getNode("orientation/pitch-deg");
         obj.roll   = c.getNode("orientation/roll-deg");
+        obj.ubody           = c.getNode("velocities/uBody-fps");
+        obj.vbody           = c.getNode("velocities/vBody-fps");
+        obj.wbody           = c.getNode("velocities/wBody-fps");
 		obj.Alt = c.getNode("position/altitude-ft");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
@@ -1579,10 +1599,18 @@ var Target = {
         return me.unique;
     },
     get_type: func {
+        # These two lines fixes the issue of not being able to shoot an aircraft this radar has seen on ground, or opposite:
+        if    (me.target_classification != AIR and me.get_Speed() > 60) me.target_classification = AIR;
+        elsif (me.target_classification == AIR and me.get_Speed() < 60) me.target_classification = SURFACE;
         return me.target_classification;
     },
     isPainted: func {
-        return 1;
+        # AIM-7 require continuing lock of target during flight:
+        return active_u != nil and me.get_Callsign() == active_u_callsign;
+    },
+    isLaserPainted: func{
+        # should really check if the laser is armed here
+        return me.isPainted();
     },
     getFlareNode: func {
         return me.propNode.getNode("rotors/main/blade[3]/flap-deg");
@@ -1623,6 +1651,57 @@ var Target = {
     },
     get_model: func {
         return me.ModelType;
+    },
+    get_uBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.ubody.getValue();
+      }
+      if(body == nil) {
+        body = me.get_Speed()*KT2FPS;
+      }
+      return body;
+    },    
+    get_vBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.vbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
+    },    
+    get_wBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.wbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
+    },
+    isVirtual: func(){
+        return 0;
+    },
+    isRadiating: func (coord) {
+        # If this Target is transmitting radar in direction of coord:
+        me.rn = me.get_range();
+        if (me.get_model() != "gci" and me.get_model() != "S-75" and me.get_model() != "buk-m2" and me.get_model() != "MIM104D" and me.get_model() != "missile_frigate" and me.get_model() != "s-300" and me.get_model() != "ZSU-23-4M" and me.get_type()!=armament.MARINE) {
+            me.bearingR = coord.course_to(me.get_Coord());
+            me.headingR = me.get_heading();
+            me.inv_bearingR =  me.bearingR+180;
+            me.deviationRd = me.inv_bearingR - me.headingR;
+        } else {
+            me.deviationRd = 0;
+        }
+        me.rdrAct = me.propNode.getNode("sim/multiplay/generic/int[2]");
+        if (me.rn < 70 and ((me.rdrAct != nil and me.rdrAct.getValue()!=1) or me.rdrAct == nil) and math.abs(geo.normdeg180(me.deviationRd)) < 60) {
+            # our radar is active and pointed at coord.
+            return 1;
+        }
+        return 0;
     },
 	list : [],
 };

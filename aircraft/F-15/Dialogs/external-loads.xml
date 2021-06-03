@@ -634,8 +634,7 @@
                     <binding>
                         <command>nasal</command>
                         <script>
-                            setprop("/ai/submodels/submodel[3]/count",135);
-                            setprop("sim/model/f15/systems/gun/rounds",675);
+                            pylons.cannon_load();
                         </script>
                     </binding>
                 </button>
@@ -795,12 +794,16 @@
                         <property>sim/model/f15/systems/armament/mp-messaging</property>
 					<live>true</live>
 					<binding>
-						<command>property-toggle</command>
-						<property>sim/model/f15/systems/armament/mp-messaging</property>
+					  <command>nasal</command>
+					  <script>
+					    if(getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+					      setprop("sim/model/f15/systems/armament/mp-messaging", !getprop("sim/model/f15/systems/armament/mp-messaging"));
+					    }
+					    #screen.log.write("Weapons MP damage " ~ (getprop("sim/model/f15/systems/armament/mp-messaging") ? "ON" : "OFF")  , 0.5, 0.5, 1);</script>
 					</binding>
 				</checkbox>
                 <text>
-                    <label>Weapons MP messaging:</label>
+                    <label>Weapons MP damage: (wheels on ground to toggle)</label>
                 </text>
 
             </group>

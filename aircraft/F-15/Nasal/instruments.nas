@@ -322,14 +322,16 @@ var common_init = func
 }
 
 # Init ####################
+var prop = nil;
 var init = func {
 	print("Initializing f15 Systems");
     var modelNotification = emesary.Notification.new("F15Model", nil, 0);
     modelNotification.root_node = props.globals;
     emesary.GlobalTransmitter.NotifyAll(modelNotification);
     emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Init", 1, 0));
-	ext_loads_init();
 	init_fuel_system();
+  ext_loads_init();
+	
 	aircraft.data.load();
 	f15_net.mp_network_init(1);
 	weapons_init();
@@ -344,9 +346,16 @@ var init = func {
 
     common_init();
      main_loop_launched = 1;
-    var prop = "/instrumentation/radar";
+
+
+    if (prop != nil) return;#the code below must only be run once:
+    prop = "/instrumentation/radar";
     var actuator_radar = compat_failure_modes.set_unserviceable(prop);
     FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
+
+    prop = "/payload/armament/fire-control";
+    var actuator_Fire_control = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Fire control", actuator_Fire_control);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
@@ -371,6 +380,8 @@ setlistener("sim/position-finalized", func (is_done) {
 });
 setlistener("sim/signals/reinit", func (reinit) {
     if (reinit.getValue()) {
+        setprop("ai/submodels/submodel[5]/count", 100);#replenish chaff and flares
+        setprop("ai/submodels/submodel[6]/count", 100);
         internal_save_fuel();
     } else {
         settimer(func { internal_restore_fuel() }, 0.6);
@@ -426,6 +437,7 @@ var INSTRUMENTS_Recipient =
                         if ( notification.ArmSysRunning ) {
                             armament_update();
                         }
+                        armament_update2();
                     }
                     if (frame_count == 3) {
                         afcs_filters();

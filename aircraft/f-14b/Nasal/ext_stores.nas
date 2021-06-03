@@ -108,7 +108,7 @@ var droptanks = func(n) {
 
 setlistener( "sim/ai/aircraft/impact/droptank", droptanks );
 
-Station = {
+Station = {#not used anymore
 	new : func (number, weight_number){
 		var obj = {parents : [Station] };
 		obj.prop = props.globals.getNode("sim/model/f-14b/systems/external-loads/").getChild ("station", number , 1);

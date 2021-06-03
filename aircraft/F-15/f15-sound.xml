@@ -1845,6 +1845,44 @@
                 <max>1</max>
             </volume>
         </missile3>
+        <missile>
+            <name>missile4</name>
+            <path>Aircraft/F-15/Sounds/bomb_release.wav</path>
+            <mode>once</mode>
+            <condition>
+                <property>payload/armament/mk-84/sound-fire-on-off</property>
+            </condition>
+            <reference-dist>25</reference-dist>
+            <max-dist>10000</max-dist>
+            <position>
+                <x> 4 </x>
+                <y> 0 </y>
+                <z> -2 </z>
+            </position>
+            <volume>
+                <factor>0.75</factor>
+                <max>1</max>
+            </volume>
+        </missile>
+        <missile>
+            <name>missile5</name>
+            <path>Aircraft/F-15/Sounds/bomb_release.wav</path>
+            <mode>once</mode>
+            <condition>
+                <property>payload/armament/gbu-10/sound-fire-on-off</property>
+            </condition>
+            <reference-dist>25</reference-dist>
+            <max-dist>10000</max-dist>
+            <position>
+                <x> 4 </x>
+                <y> 0 </y>
+                <z> -2 </z>
+            </position>
+            <volume>
+                <factor>0.75</factor>
+                <max>1</max>
+            </volume>
+        </missile>
 
         <flare>
             <name>flare</name>
@@ -1875,5 +1913,139 @@
                 <max>1</max>
             </volume>
         </flare>
+
+        <rwr>
+            <name>rwr-spike-air</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-lock-01.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-air</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
+        <rwr>
+            <name>rwr-spike-02</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-rf-otorsi.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-gnd-02</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
+        <rwr>
+            <name>rwr-spike-11</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-rf-demma.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-gnd-11</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
+        <rwr>
+            <name>rwr-spike-20</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-rf-aggrit.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-gnd-20</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
+        <rwr>
+            <name>rwr-spike-23</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-rf-shemx4.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-gnd-23</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
+        <rwr>
+            <name>rwr-spike-p2</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-rf-sliph.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-gnd-p2</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
+        <rwr>
+            <name>rwr-spike-nk</name>
+            <path>Aircraft/F-15/Sounds/rwr/rwr-rf-zheta.wav</path>
+            <mode>looped</mode>
+            <type>avionics</type>
+            <condition>
+                <equals>
+                    <property>payload/armament/spike-gnd-nk</property>
+                    <value>1</value>
+                </equals>
+            </condition>
+            <volume>
+                <property>/sim/current-view/internal</property>
+                <factor>0.70</factor>
+            </volume>
+            <!--volume>
+                <property>f15/avionics/rwr-volume</property>
+            </volume-->
+        </rwr>
     </fx>
 </PropertyList>

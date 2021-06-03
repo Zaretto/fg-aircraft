@@ -25,7 +25,6 @@ var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right",
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
-#var SwSoundVol = AcModel.getNode("systems/armament/aim9/sound-volume");
 
 var aim9_count = 0;
 

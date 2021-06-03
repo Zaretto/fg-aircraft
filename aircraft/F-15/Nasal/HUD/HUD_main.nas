@@ -184,6 +184,30 @@ obj.dlzY = 70;
                            .setColor(0,1,0)
                            .setStrokeLineWidth(obj.dlzLW);
 
+            hudmath.HudMath.init([-5.63907,-0.08217,1.41853], [-5.7967,0.10206,1.2481], [256,296], [0.124048, 0.586015], [0.879649,0.045312], 0);
+            obj.ccipGrp = obj.canvas.createGroup();
+            obj.centerOrigin = hudmath.HudMath.getCenterOrigin();
+            obj.ccipGrp.setTranslation(obj.centerOrigin);
+            obj.pipperRadius = 10;
+            obj.ccipPipper = obj.ccipGrp.createChild("path")
+                          .moveTo(-obj.pipperRadius,0)
+                          .arcSmallCW(obj.pipperRadius,obj.pipperRadius, 0, obj.pipperRadius*2, 0)
+                          .arcSmallCW(obj.pipperRadius,obj.pipperRadius, 0, -obj.pipperRadius*2, 0)
+                          .moveTo(-1,0)
+                          .arcSmallCW(1,1, 0, 1*2, 0)
+                          .arcSmallCW(1,1, 0, -1*2, 0)                   
+                          .setStrokeLineWidth(1)
+                          .setColor(0,1,0);
+            obj.ccipCross = obj.ccipGrp.createChild("path")
+                          .moveTo(-obj.pipperRadius, -obj.pipperRadius)
+                           .lineTo(obj.pipperRadius, obj.pipperRadius)
+                           .moveTo(-obj.pipperRadius, obj.pipperRadius)
+                           .lineTo( obj.pipperRadius, -obj.pipperRadius)                  
+                          .setStrokeLineWidth(1)
+                          .hide()
+                          .setColor(0,1,0);
+            obj.ccipLine = obj.ccipGrp.createChild("group");
+
         #
         #
         # using the new property manager to update items on the HUD.
@@ -336,6 +360,13 @@ obj.dlzY = 70;
                                                                                  }
                                                                                  obj.window6.setText(model);
                                                                                  obj.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
+                                                                             } else {
+                                                                                  # this else added by Leto
+                                                                                 obj.window3.setText("");
+                                                                                 obj.window4.setText("");
+                                                                                 obj.window5.setText("");
+                                                                                 obj.window6.setText("");
+                                                                                 obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
                                                                              }
                                                                          } else {
                                                                              obj.window2.setVisible(0);
@@ -424,6 +455,7 @@ return obj;
         }
         
         
+        
         if(me.FocusAtInfinity)
           {
               # parallax correction
@@ -462,6 +494,34 @@ return obj;
         foreach(var update_item; me.update_items)
         {
             update_item.update(notification);
+        }
+
+        # CCIP is after update_item so it can get VV up-to-date location
+        me.ccipInfo = pylons.getCCIP();
+        if (me.ccipInfo == nil or notification.ControlsArmamentWeaponSelector != 5) {
+            me.ccipGrp.hide();
+        } else {
+            hudmath.HudMath.reCalc();
+            var poscc = hudmath.HudMath.getPosFromCoord(me.ccipInfo[0]);
+            me.ccipPipper.setTranslation(poscc[0],poscc[1]);
+            if (me.ccipInfo[1] == 0) {
+                me.ccipCross.show();
+                me.ccipCross.setTranslation(poscc[0],poscc[1]);
+            } else {
+                me.ccipCross.hide();
+            }
+            me.ccipPipper.update();
+            me.ccipLine.removeAllChildren();
+            # 117.817 is VV location in SVG, 0.8 is x scale of SVG. 92.593 is VV location in SVG and 1.18 is y scale of SVG
+            me.ccipVVPos = [0.8*me.VV_x-me.centerOrigin[0]+117.817*0.8+me.baseTranslation[0], 1.18*me.VV_y-me.centerOrigin[1]+92.593*1.18+me.baseTranslation[1]];
+            me.ccipLineDist = math.sqrt(math.pow(me.ccipVVPos[0]-poscc[0],2)+math.pow(me.ccipVVPos[1]-poscc[1],2));
+            me.ccipLine.createChild("path")
+                .moveTo(poscc[0],poscc[1])
+                .lineTo(me.ccipVVPos)
+                .setStrokeDashArray([0,me.pipperRadius,me.ccipLineDist-3.5-me.pipperRadius,3.5*10])#3.5 is radius of VV. 
+                .setStrokeLineWidth(1)
+                .setColor(0,1,0);
+            me.ccipGrp.show();
         }
 
         if (me.svg.getVisible() == 0)
