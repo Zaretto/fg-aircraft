@@ -210,65 +210,6 @@
         <texture>livery.AF80-0007.png</texture>
     </animation>
 
-    <animation>
-        <type>translate</type>
-        <object-name>aim-7-r3</object-name>
-        <object-name>aim-7-r4</object-name>
-        <object-name>aim120-r3</object-name>
-        <object-name>aim120-r4</object-name>
-        <factor>0.36</factor>
-        <property>fdm/jsbsim/propulsion/cft</property>
-        <axis>
-            <x>0</x>
-            <y>0.93</y>
-            <z>-1</z>
-        </axis>
-    </animation>
-    <animation>
-        <type>translate</type>
-
-        <object-name>aim120-l3</object-name>
-        <object-name>aim120-l4</object-name>
-        <object-name>aim-7-l3</object-name>
-        <object-name>aim-7-l4</object-name>
-        <factor>0.36</factor>
-        <property>fdm/jsbsim/propulsion/cft</property>
-        <axis>
-            <x>0</x>
-            <y>-0.93</y>
-            <z>-1</z>
-        </axis>
-    </animation>
-    <!-- adjust missile positions tanks to take account of conformal tanks (FAST PACK) hardpoints -->
-    <!--<animation>
-        <type>rotate</type>
-        <object-name>aim-7-r3</object-name>
-        <object-name>aim-7-r4</object-name>
-        <object-name>aim120-r3</object-name>
-        <object-name>aim120-r4</object-name>
-        <object-name>aim120-l3</object-name>
-        <object-name>aim120-l4</object-name>
-        <object-name>aim-7-l3</object-name>
-        <object-name>aim-7-l4</object-name>
-        <factor>45</factor>
-        <property>fdm/jsbsim/propulsion/cft</property>
-        <axis>
-            <object>pylon-axis-r</object>
-        </axis>
-    </animation>
-    <animation>
-        <type>rotate</type>
-        <object-name>aim120-l3</object-name>
-        <object-name>aim120-l4</object-name>
-        <object-name>aim-7-l3</object-name>
-        <object-name>aim-7-l4</object-name>
-        <factor>45</factor>
-        <property>fdm/jsbsim/propulsion/cft</property>
-        <axis>
-            <object>pylon-axis-l</object>
-        </axis>
-    </animation>-->
-
     <!-- Fuel Slipway -->
     <animation>
         <type>translate</type>
@@ -2059,35 +2000,6 @@
 
     <animation>
         <type>select</type>
-        <object-name>CFT-right</object-name>
-        <object-name>CFT-left</object-name>
-        <condition>
-            <not-equals>
-                <property>fdm/jsbsim/propulsion/cft</property>
-                <value>0</value>
-            </not-equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>CFT-left-pylons</object-name>
-        <object-name>CFT-right-pylons</object-name>
-        <condition>
-            <not-equals>
-                <property>fdm/jsbsim/propulsion/cft</property>
-                <value>0</value>
-            </not-equals>
-            <or>
-                <property>payload/weight[3]/weight-lb</property>
-                <property>payload/weight[4]/weight-lb</property>
-                <property>payload/weight[6]/weight-lb</property>
-                <property>payload/weight[7]/weight-lb</property>
-            </or>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
         <object-name>aircraft-ladder</object-name>
         <condition>
             <and>
@@ -2398,362 +2310,727 @@
         <object-name>WindscreenGlass</object-name>
         <object-name>CanopyGlass</object-name>
     </effect>
-    <!-- Pylons -->
-    <!-- Left Wing -->
+<!-- Armament and payloads -->
     <animation>
         <type>select</type>
-        <nopreview/>
+        <nopreview />
         <object-name>su59-l</object-name>
         <condition>
-            <or>
-                <property>payload/weight[0]/weight-lb</property>
-                <property>payload/weight[1]/weight-lb</property>
-                <property>payload/weight[2]/weight-lb</property>
-                <property>payload/weight[5]/weight-lb</property>
-            </or>
+            <property>sim/multiplay/generic/bool[30]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
+        <nopreview />
         <object-name>adu552-l1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[31]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
         <object-name>lau128-l1</object-name>
         <condition>
-            <or>
-                <equals>
-                    <property>payload/weight[0]/selected</property>
-                    <value>AIM-9</value>
-                </equals>
-                <equals>
-                    <property>payload/weight[0]/selected</property>
-                    <value>AIM-120</value>
-                </equals>
-            </or>
+            <property>sim/multiplay/generic/bool[32]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
+        <nopreview />
         <object-name>aim9-l1</object-name>
         <condition>
-            <equals>
-                <property>payload/weight[0]/selected</property>
-                <value>AIM-9</value>
-            </equals>
+            <property>sim/multiplay/generic/bool[33]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
+        <nopreview />
         <object-name>aim120-l1</object-name>
         <condition>
-            <equals>
-                <property>payload/weight[0]/selected</property>
-                <value>AIM-120</value>
-            </equals>
+            <property>sim/multiplay/generic/bool[34]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-l3</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[3]/selected</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-l4</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[4]/selected</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-l3</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[3]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-l4</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[4]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>adu552-l2</object-name>
-        <object-name>lau128-l2</object-name>
-        <condition>
-            <or>
-                <equals>
-                    <property>payload/weight[2]/selected</property>
-                    <value>AIM-9</value>
-                </equals>
-                <equals>
-                    <property>payload/weight[2]/selected</property>
-                    <value>AIM-120</value>
-                </equals>
-            </or>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim9-l2</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[2]/selected</property>
-                <value>AIM-9</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-l2</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[2]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
+        <nopreview />
         <object-name>tank-l</object-name>
         <condition>
-            <equals>
-                <property>payload/weight[1]/selected</property>
-                <value>Droptank</value>
-            </equals>
+            <property>sim/multiplay/generic/bool[35]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
-        <object-name>tank-r</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[9]/selected</property>
-                <value>Droptank</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>su59-c</object-name>
-        <condition>
-            <property>payload/weight[5]/weight-lb</property>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>tank-c</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[5]/selected</property>
-                <value>Droptank</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <!-- Right Wing -->
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>su59-r</object-name>
-        <condition>
-            <or>
-                <property>payload/weight[8]/weight-lb</property>
-                <property>payload/weight[9]/weight-lb</property>
-                <property>payload/weight[10]/weight-lb</property>
-            </or>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>adu552-r1</object-name>
-        <object-name>lau128-r1</object-name>
-        <condition>
-            <or>
-                <equals>
-                    <property>payload/weight[8]/selected</property>
-                    <value>AIM-9</value>
-                </equals>
-                <equals>
-                    <property>payload/weight[8]/selected</property>
-                    <value>AIM-120</value>
-                </equals>
-            </or>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim9-r1</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[8]/selected</property>
-                <value>AIM-9</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-r1</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[8]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-r3</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[6]/selected</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-r4</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[7]/selected</property>
-                <value>AIM-7</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-r3</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[6]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-r4</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[7]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>adu552-r2</object-name>
-        <object-name>lau128-r2</object-name>
-        <condition>
-            <or>
-                <equals>
-                    <property>payload/weight[10]/selected</property>
-                    <value>AIM-9</value>
-                </equals>
-                <equals>
-                    <property>payload/weight[10]/selected</property>
-                    <value>AIM-120</value>
-                </equals>
-            </or>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim9-r2</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[10]/selected</property>
-                <value>AIM-9</value>
-            </equals>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim120-r2</object-name>
-        <condition>
-            <equals>
-                <property>payload/weight[10]/selected</property>
-                <value>AIM-120</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
+        <nopreview />
         <object-name>mk84-l</object-name>
         <condition>
-            <equals>
-                <property>payload/weight[1]/selected</property>
-                <value>MK-84</value>
-            </equals>
+            <property>sim/multiplay/generic/bool[36]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
+        <nopreview />
+        <object-name>gbu10-l</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[37]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[38]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[39]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[40]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[41]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-l3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[42]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[43]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-l3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[44]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-l4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[45]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[46]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-l4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[47]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>su59-c</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[48]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>tank-c</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[49]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
         <object-name>mk84-c</object-name>
         <condition>
-            <equals>
-                <property>payload/weight[5]/selected</property>
-                <value>MK-84</value>
-            </equals>
+            <property>sim/multiplay/generic/bool[50]</property>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <nopreview/>
-        <object-name>mk84-r</object-name>
+        <nopreview />
+        <object-name>gbu10-c</object-name>
         <condition>
-            <equals>
-                <property>payload/weight[9]/selected</property>
-                <value>MK-84</value>
-            </equals>
+            <property>sim/multiplay/generic/bool[51]</property>
         </condition>
     </animation>
-
-
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-r4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[52]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[53]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-r4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[54]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-r3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[55]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[56]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-r3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[57]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>su59-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[58]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[59]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[60]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[61]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[62]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>tank-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[63]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[64]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>gbu10-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[65]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[66]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[67]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[68]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[69]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>CFT-pylon-l</object-name>
+        <object-name>CFT-pylon-r</object-name>
+        <object-name>CFT-right</object-name>
+        <object-name>CFT-left</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[70]</property>
+        </condition>
+    </animation>
+    <!--adjust missile and tank positions to take account of conformal tanks (FAST PACK) hardpoints-->
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>su59-l</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[30]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-l1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[31]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-l1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[32]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-l1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[33]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[34]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>tank-l</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[35]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-l</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[36]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>gbu10-l</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[37]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[38]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[39]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[40]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-l2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[41]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-l3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[42]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[43]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-l3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[44]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-l4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[45]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-l4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[46]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-l4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[47]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>su59-c</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[48]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>tank-c</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[49]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-c</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[50]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>gbu10-c</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[51]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-r4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[52]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[53]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-r4</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[54]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-r3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[55]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[56]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim7-r3</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[57]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>su59-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[58]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[59]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[60]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[61]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-r1</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[62]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>tank-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[63]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk84-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[64]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>gbu10-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[65]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>adu552-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[66]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>lau128-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[67]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim120-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[68]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim9-r2</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[69]</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>CFT-pylon-l</object-name>
+        <object-name>CFT-pylon-r</object-name>
+        <condition>
+            <property>sim/multiplay/generic/bool[70]</property>
+        </condition>
+    </animation>
+    <!--adjust missile and tank positions to take account of conformal tanks (FAST PACK) hardpoints-->
+    <animation>
+        <type>rotate</type>
+        <factor>-25</factor>
+        <property>sim/multiplay/generic/bool[70]</property>
+        <axis>
+            <object-name>CFT-axis-l</object-name>
+        </axis>
+        <object-name>mk84-l3</object-name>
+        <object-name>aim120-l3</object-name>
+        <object-name>aim7-l3</object-name>
+        <object-name>mk84-l4</object-name>
+        <object-name>aim120-l4</object-name>
+        <object-name>aim7-l4</object-name>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <factor>0.36</factor>
+        <property>sim/multiplay/generic/bool[70]</property>
+        <axis>
+            <x>0</x>
+            <y>-2.19</y>
+            <z>-1.00</z>
+        </axis>
+        <object-name>mk84-l3</object-name>
+        <object-name>aim120-l3</object-name>
+        <object-name>aim7-l3</object-name>
+        <object-name>mk84-l4</object-name>
+        <object-name>aim120-l4</object-name>
+        <object-name>aim7-l4</object-name>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <factor>12</factor>
+        <property>sim/multiplay/generic/bool[70]</property>
+        <axis>
+            <object-name>CFT-axis-r</object-name>
+        </axis>
+        <object-name>mk84-r4</object-name>
+        <object-name>aim120-r4</object-name>
+        <object-name>aim7-r4</object-name>
+        <object-name>mk84-r3</object-name>
+        <object-name>aim120-r3</object-name>
+        <object-name>aim7-r3</object-name>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <factor>0.36</factor>
+        <property>sim/multiplay/generic/bool[70]</property>
+        <axis>
+            <x>0</x>
+            <y>1.79</y>
+            <z>-1.00</z>
+        </axis>
+        <object-name>mk84-r4</object-name>
+        <object-name>aim120-r4</object-name>
+        <object-name>aim7-r4</object-name>
+        <object-name>mk84-r3</object-name>
+        <object-name>aim120-r3</object-name>
+        <object-name>aim7-r3</object-name>
+    </animation>
 </PropertyList>
