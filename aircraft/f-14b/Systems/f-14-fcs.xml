@@ -1461,7 +1461,8 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <property>sas/roll-sas-1-stkr-limit</property>
-                    <value>-2</value>
+                    <!--  value from Figure 15 "Schematic diagram of roll channel of control system C."  -->
+                    <value>0.7874</value>
                 </product>
             </function>
             <clipto>
@@ -1508,11 +1509,16 @@ Figure 2-54.  Longitudinal System Authority
             </function>
         </fcs_function>
 
-        <!-- sas-2-v3..4 Normal alpha roll augment  -->
+        <!-- sas-2-v3..4 Normal alpha roll augment 
+             2021-07-09 : Changed this from -1.685 to 1.685 because NASA-TM-81972 page 18 (pdf 22)
+             Figure 7. "Schematic diagram of roll channel of control system A" 
+             has this value.
+             Also Figure 15 "Schematic diagram of roll channel of control system C." has the same value
+         -->
         <lead_lag_filter name="sas/roll-sas-2-v3">
             <input>sas/roll-sas-1-stkr-limit</input>
             <c1>0</c1>
-            <c2>-1.685</c2>
+            <c2>1.685</c2>
             <c3>0.5</c3>
             <c4>1</c4>
             <clipto>
@@ -1569,10 +1575,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property>sas/roll-sas-2-ha-v2</property>
                         <value>-1</value>
                     </product>
-                    <product>
-                        <property>sas/roll-sas-2-v4</property>
-                        <value>-1</value>
-                    </product>
+                    <property>sas/roll-sas-2-v4</property>
                 </sum>
             </function>
         </fcs_function>
