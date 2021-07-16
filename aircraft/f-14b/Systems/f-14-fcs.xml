@@ -2071,10 +2071,23 @@ Figure 2-54.  Longitudinal System Authority
 
     </channel>
 
-    <channel name="extra-aero">
+    <channel name="alpha-probe">
+    <!-- 
+        Simulation of the alpha measurement devices,
+            The aircraft has 3 of these; one on each side near the cockpit and one on the nose boom.
+            As of 2021-07-14 I have not managed to find any indication of how these are handled so
+            in abscence of real data I have devised a plausible system based in part on data from 
+            the F-18 
+            * alpha-indicated-deg-0 - alpha units (y=mx+c)
+            * alpha-indicated-deg-1 - lead lag compensator
+                                    _______1_______ 
+                                        0.073s + 1
 
-        <fcs_function name="aero/alpha-indicated-deg">
-            <description>NASA TM-81833, page 56, Figure 17; converted to linear function, tuned based on flight tests</description>
+            * alpha-indicated-deg  - adjusted to take airflow into account
+         -->
+
+        <fcs_function name="aero/alpha-indicated-deg-0">
+            <description>NASA TM-81833, page 56, Figure 17; converted to linear function (y=mx+c), tuned based on flight tests, clamped to plausible range.</description>
             <function>
                 <product>
                     <sum>
@@ -2082,11 +2095,58 @@ Figure 2-54.  Longitudinal System Authority
                         <value> 0.1 </value>
                     </sum>
                     <property> tuning/alpha-mx </property>
+                </product>
+            </function>
+            <clipto>
+                <min>-20</min>
+                <max>60</max>
+            </clipto>
+        </fcs_function>
 
+        <lead_lag_filter name="aero/alpha-indicated-deg-1">
+            <description>NASA TM-107601, 7.5 Angle of Attack Measurements - filter</description>
+            <input>aero/alpha-indicated-deg-0</input>
+            <c1>0</c1>
+            <c2>1</c2>
+            <c3>0.073</c3>
+            <c4>1</c4>
+        </lead_lag_filter>
+
+        <!-- <fcs_function name="aero/alpha-indicated-bias-deg">
+            <description>
+                Alpha adjustment due to refuel probe (I'm sure I've read that this happens but I can't find the reference
+                so I'm leaving this bit out for now.
+            </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">propulsion/refuel-probe-pos-norm</independentVar>
+                    <tableData>
+                             0  0.0000
+                             1 -2.7
+                        </tableData>
+                </table>
+            </function>
+        </fcs_function> -->
+
+        <fcs_function name="aero/alpha-indicated-deg">
+            <description>all of the alpha measurement devices require airflow; otherwise they will return 0</description>
+            <function>
+                <product>
+                    <table>
+                        <independentVar lookup="row">aero/qbar-psf</independentVar>
+                        <tableData>
+                             0    0
+                             0.5  0
+                             1.2  1
+                        </tableData>
+                    </table>
+                    <property>aero/alpha-indicated-deg-1</property>
                 </product>
             </function>
         </fcs_function>
+    </channel>
 
+    <channel name="extra-aero">
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach and wingsweep angle</description>
