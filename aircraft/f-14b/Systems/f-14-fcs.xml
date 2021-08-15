@@ -1335,14 +1335,15 @@ Figure 2-54.  Longitudinal System Authority
         <actuator name="fcs/rudder-actuator-deg">
             <input>fcs/rudder-actuator-0</input>
             <rate_limit>106</rate_limit>
-            <output>fcs/rudder-actuator-v</output>
+            <output>fcs/rudder-actuator-deg-v</output>
         </actuator> 
 
         <switch name="fcs/rudder-pos-deg">
-            <default value="fcs/rudder-actuator-deg" />
+            <default value="fcs/rudder-actuator-deg-v" />
             <test value="fcs/rudder-pos-deg">
-                systems/hydraulics/flight-system-pressure ne 1
+                systems/hydraulics/flight-system-psi lt 1
             </test>
+            <output>fcs/rudder-pos-deg</output>
         </switch>
         <fcs_function name="fcs/rudder-pos-norm">
             <function>
@@ -1354,7 +1355,8 @@ Figure 2-54.  Longitudinal System Authority
             <clipto>
                 <min> -1 </min>
                 <max>  1 </max>
-        </clipto>
+            </clipto>
+            <output>fcs/rudder-pos-norm</output>
         </fcs_function>
     </channel>
 
@@ -2094,7 +2096,7 @@ Figure 2-54.  Longitudinal System Authority
                         <property> aero/alpha-deg </property>
                         <value> 0.1 </value>
                     </sum>
-                    <property> tuning/alpha-mx </property>
+                    <property> systems/flyt/alpha-mx </property>
                 </product>
             </function>
             <clipto>
