@@ -2203,7 +2203,7 @@
                     <script>
                         if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
                         {
-                            logprint(LOG_INFO,print("Catapult launch");
+                            logprint(3,print("Catapult launch");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
                         }
@@ -2240,14 +2240,14 @@
                     <script>
                         if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
                         {
-                        logprint(LOG_INFO, "Disengage launchbar");
+                        logprint(3, "Disengage launchbar");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
                         setprop("controls/gear/brake-parking",1);
                         }
                         else
                         {
-                        logprint(LOG_INFO, "Engage launchbar");
+                        logprint(3, "Engage launchbar");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
                         setprop("controls/gear/brake-parking",0);

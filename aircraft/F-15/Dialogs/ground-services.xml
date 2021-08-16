@@ -195,7 +195,7 @@
                     var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
                     np.apply_course_distance(aircraft.carrier_ara_63_heading,-dist_m);
                     var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
-                    print("Position to ",dist_m," height ",gs_height);
+                    logprint(3, "Position to ",dist_m," height ",gs_height);
                     setprop("sim/presets/latitude-deg",np.lat());
                     setprop("sim/presets/longitude-deg",np.lon());
                     setprop("sim/presets/altitude-ft",gs_height);

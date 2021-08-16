@@ -17,19 +17,19 @@ var MPCD_Station =
 
         obj.status = svg.getElementById("PACS_L_"~ident);
         if (obj.status == nil)
-            print("Failed to load PACS_L_"~ident);
+            logprint(3, "Failed to load PACS_L_"~ident);
 
         obj.label = svg.getElementById("PACS_V_"~ident);
         if (obj.label == nil)
-            print("Failed to load PACS_V_"~ident);
+            logprint(3, "Failed to load PACS_V_"~ident);
 
         obj.selected = svg.getElementById("PACS_R_"~ident);
         if (obj.selected == nil)
-            print("Failed to load PACS_R_"~ident);
+            logprint(3, "Failed to load PACS_R_"~ident);
 
         obj.selected1 = svg.getElementById("PACS_R1_"~ident);
         if (obj.selected1 == nil)
-            print("Failed to load PACS_R1_"~ident);
+            logprint(3, "Failed to load PACS_R1_"~ident);
 
         obj.prop = "payload/weight["~ident~"]";
         obj.ident = ident;
@@ -137,19 +137,19 @@ var MPCD_GroundStation =
 
         obj.status = svg.getElementById("PACS_L_"~ident~"-g");
         if (obj.status == nil)
-            print("Failed to load PACS_L_"~ident~"-g");
+            logprint(3, "Failed to load PACS_L_"~ident~"-g");
 
         obj.label = svg.getElementById("PACS_V_"~ident~"-g");
         if (obj.label == nil)
-            print("Failed to load PACS_V_"~ident~"-g");
+            logprint(3, "Failed to load PACS_V_"~ident~"-g");
 
         obj.selected = svg.getElementById("PACS_R_"~ident~"-g");
         if (obj.selected == nil)
-            print("Failed to load PACS_R_"~ident~"-g");
+            logprint(3, "Failed to load PACS_R_"~ident~"-g");
 
         obj.selected1 = svg.getElementById("PACS_R1_"~ident~"-g");
         if (obj.selected1 == nil)
-            print("Failed to load PACS_R1_"~ident~"-g");
+            logprint(3, "Failed to load PACS_R1_"~ident~"-g");
 
         obj.prop = "payload/weight["~ident~"]";
         obj.ident = ident;
@@ -320,7 +320,7 @@ var MPCD_Device =
         #svg.holeTopFromMyPos_y = svg.myPos_y-svg.holeTop_y;
         
         svg.p_HSD = me.PFD._canvas.createGroup();
-        #print("h "~svg.holeHeight);#339
+        #logprint(3, "h "~svg.holeHeight);#339
         svg.hole = svg.p_HSD.createChild("path")
             .moveTo(svg.holeRadius,0)
             .arcSmallCW(svg.holeRadius,svg.holeRadius, 0, -svg.holeRadius*2, 0)
@@ -982,7 +982,7 @@ var MPCD_Device =
         var oo = me;
         var update_flares = func(o) {
             v = getprop("/ai/submodels/submodel[5]/count");
-            print("submodel [5]",v);
+            logprint(3, "submodel [5]",v);
             
             o.p1_3.LBL_CHAFF.setText(sprintf("CHF %3d",v));
             o.p1_3.LBL_FLARE.setText(sprintf(" FLR %2d",v));
@@ -1090,7 +1090,7 @@ var MPCD_Device =
                     {
                         if (v != nil) {
                             me.mfd_device_status = v.getValue();
-                            print("MFD Mode ",me.designation," ",me.mfd_device_status);
+                            logprint(3, "MFD Mode ",me.designation," ",me.mfd_device_status);
                             if (!me.mfd_device_status)
                                 me.PFDsvg.setVisible(0);
                             else

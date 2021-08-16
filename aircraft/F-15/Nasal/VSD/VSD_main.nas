@@ -42,7 +42,7 @@ calc_groundspeed_kt = func(node) {
         var nvy = vy - lvy;
         var nvz = vz - lvz;
         var vv = math.sqrt(nvx*nvx + nvy*nvy + nvz*nvz)/nvtime;
-#        print("nvx ",nvx, " nvy ",nvy, " vv ",vv*1.94384, " (",nvtime,")");
+#        logprint(3, "nvx ",nvx, " nvy ",nvy, " vv ",vv*1.94384, " (",nvtime,")");
         if (node != nil)
           node.getNode("velocities/groundspeed-kt",1).setDoubleValue(vv*1.94384);
     }
@@ -62,7 +62,7 @@ var VSD_Device =
 # - model_element - name of the 3d model element that is to be used for drawing
     new : func(designation, model_element, target_module_id, root_node)
     {
-#print(designation," root ",root_node.getPath());
+#logprint(3, designation," root ",root_node.getPath());
         var obj = {parents : [VSD_Device] };
         obj.designation = designation;
         obj.model_element = model_element;
@@ -125,15 +125,17 @@ var VSD_Device =
                 tgt.setVisible(0);
             }
             else
-              print("F-15: VSD: Missing symbol from VSD.svg: "~name);
+              logprint(3, "F-15: VSD: Missing symbol from VSD.svg: "~name);
         }
 
         obj.vsd_on = 1;
         obj.process_targets = frame_utils.PartitionProcessor.new("VSD-radar", 20, nil);
-        obj.process_targets.set_max_time_usec(500);
+        if (defined("obj.process_targets.set_max_time_usec"))
+            obj.process_targets.set_max_time_usec(500);
 
         obj.process_display = frame_utils.PartitionProcessor.new("VSD-display", 100, nil);
-        obj.process_display.set_max_time_usec(500);
+        if (defined("obj.process_display.set_max_time_usec"))
+            obj.process_display.set_max_time_usec(500);
 
         var pitch_offset = 12;
         var pitch_factor = 1.98;
@@ -195,7 +197,7 @@ var VSD_Device =
                vc_kts                 : "instrumentation/airspeed-indicator/true-speed-kt",
                 };
 
-        print("F-15VSD: new, using root ",root_node.getPath());
+        logprint(3, "F-15VSD: new, using root ",root_node.getPath());
         foreach (var name; keys(input)) {
             emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(designation, name, input[name], root_node));
         }
@@ -204,19 +206,19 @@ var VSD_Device =
         if (me.placement != nil){
             var pnode = me.placement.getNode("module-id");
 if (pnode == nil) return;
-#            print("VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
+#            logprint(3, "VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
             pnode.setValue(target_module_id);
             return;
           }
         if (target_module_id != nil){
-            print("Backseat VSD ",target_module_id);
+            logprint(3, "Backseat VSD ",target_module_id);
             me.placement = me.dev_canvas.addPlacement({
                                      "module-id": target_module_id,
                                    type: "scenery-object",
                                      "node": model_element
                                     });
         } else {
-            print("Front seat VSD");
+            logprint(3, "Front seat VSD");
             me.placement = me.dev_canvas.addPlacement({
                                      "node": model_element
                                     });
@@ -268,7 +270,7 @@ if (pnode == nil) return;
                                                       #                   w1 = sprintf("%4d %2d%s %2d %d", u.get_TAS(), aspect, aspect < 180 ? "r" : "l", u.get_heading(), u.get_altitude());
                                                   }
                                                 if (notification.OrientationHeadingDeg == nil or notification.OrientationPitchDeg == nil)
-                                                  print("VSD: can't display target (a) h=",notification.OrientationHeadingDeg, " p=",notification.OrientationPitchDeg);
+                                                  logprint(3, "VSD: can't display target (a) h=",notification.OrientationHeadingDeg, " p=",notification.OrientationPitchDeg);
                                                 else {
                                                     obj._xc = u.get_deviation(notification.OrientationHeadingDeg) or 0;
                                                     obj._yc = -u.get_total_elevation(notification.OrientationPitchDeg) or 0;
@@ -286,7 +288,7 @@ if (pnode == nil) return;
                                         obj.designated = 0;
                                     }
                                     if (obj.target_idx >= obj.max_symbols and (obj.searchCallsign == nil or obj.active_found)) { 
-#                                        print("VSD: break before end of list");
+#                                        logprint(3, "VSD: break before end of list");
                                         return 0;
                                     }
                                     return 1;
@@ -392,9 +394,9 @@ var ModelEventsRecipient =
             else if (notification.NotificationType == "F15Model")
             {
                 root_node = props.globals;
-                print("F15D receive model notification",notification.NotificationType," V=",notification.Ident);
+                logprint(3, "F15D receive model notification",notification.NotificationType," V=",notification.Ident);
                 if (notification.root_node != nil and notification.root_node != "") {
-                    print("F-15VSD: Using path ",notification.root_node.getPath());
+                    logprint(3, "F-15VSD: Using path ",notification.root_node.getPath());
                     root_node = notification.root_node;
                 }
                 #
@@ -407,7 +409,7 @@ var ModelEventsRecipient =
                 if (!size(VSD_array)) {
                     VSD = VSD_Device.new(designation, textureImage, notification.Ident, root_node);
                     append(VSD_array, VSD);
-                    print("VSD initialization finished ",notification.Ident);
+                    logprint(3, "VSD initialization finished ",notification.Ident);
                 }
                 else  {
                     foreach (var vsd; VSD_array) {

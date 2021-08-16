@@ -30,10 +30,10 @@ var TEWSSymbol = {
                 obj.setVisible(0);
             }
             else
-                print("Cannot find "~label_name);
+                logprint(3, "Cannot find "~label_name);
         }
         else
-            print("Cannot find "~name);
+            logprint(3, "Cannot find "~name);
         obj.id = id;
 		return obj;
 	},
@@ -100,16 +100,16 @@ var TEWSDisplay = {
         obj.TEWSsvg = obj.canvas.createGroup();
  
         # Parse an SVG file and add the parsed elements to the given group
-        print("TEWS : Load SVG ",canvas.parsesvg(obj.TEWSsvg, svgname));
+        logprint(3, "TEWS : Load SVG ",canvas.parsesvg(obj.TEWSsvg, svgname));
         #obj.TEWSsvg.setTranslation (-20.0, 37.0);
-        #print("TEWS INIT");
+        #logprint(3, "TEWS INIT");
         obj.tews_on = 1;
         setlistener("sim/model/f15/controls/TEWS/brightness", func(v)
             {
                 if (v != nil)
                 {
                     obj.tews_on = v.getValue();
-                    #print("TEWS On ",tews_on);
+                    #logprint(3, "TEWS On ",tews_on);
                 }
             });
 
@@ -186,7 +186,7 @@ return;
             }
         }
         if (target_idx >= me.max_symbols){ 
-#            print("TEWS: break before end of list");
+#            logprint(3, "TEWS: break before end of list");
             break;
         }
     }

@@ -26,8 +26,12 @@ var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-am
 # 2018.3 has improved stores handling - but this is turned 
 gui.external_stores_2018_1_compat = 0;
 
+LOG_INFO = 3;
+LOG_WARN = 4;
+LOG_ALERT = 5;
+
 var payload_dialog_reload = func(from) { 
-#    print("payload_dialog_reload: ",from);    
+#    logprint(3, "payload_dialog_reload: ",from);    
     setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
 }
 
@@ -476,12 +480,12 @@ var startProcess = func {
 
 var two_seater = getprop("fdm/jsbsim/metrics/two-place-canopy");
 if (two_seater)
-print("F-15 two seat variant (B,D,E)");
+logprint(3, "F-15 two seat variant (B,D,E)");
 
 setlistener("/sim/signals/fdm-initialized", startProcess);
 
 setlistener("sim/model/f15/controls/AFCS/cas-takeoff-trim", func(v) {
-print("Takeoff trim");
+logprint(3, "Takeoff trim");
 setprop("controls/flight/elevator-trim", -0.43);
 });
 #----------------------------------------------------------------------------
