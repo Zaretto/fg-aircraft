@@ -19,7 +19,52 @@
     </gear>
     <fdm>
         <jsbsim>
-            <fcs>
+            <autoflight>
+                <input>
+                  <hdg-active>0</hdg-active>
+                  <pitch-switch>0</pitch-switch>
+                  <!-- autoflight-rules.xml -->
+                  <roll-switch>0</roll-switch>
+                  <vs-active>0</vs-active>
+                </input>
+                <pitch>
+                  <altitude-2-sec-ahead>0</altitude-2-sec-ahead>
+                  <d-gain>0</d-gain>
+                  <i-gain>0</i-gain>
+                  <master-pid>0</master-pid>
+                  <p-gain>0</p-gain>
+                  <vs>
+                    <pid>0</pid>
+                  </vs>
+                </pitch>
+                <roll>
+                  <d-gain>0</d-gain>
+                  <heading>
+                    <pi>0</pi>
+                  </heading>
+                  <i-gain>0</i-gain>
+                  <master-pid>0</master-pid>
+                  <p-gain>0</p-gain>
+                </roll>
+              </autoflight>
+
+              <cas>
+                <ari-input>0</ari-input>
+                <beta-d-gain>0</beta-d-gain>
+                <beta-pd>0</beta-pd>
+                <beta-p-gain>0</beta-p-gain>
+                <ptc-i-gain>0.14</ptc-i-gain>
+                <ptc-nz-accelerometer-c1>102</ptc-nz-accelerometer-c1>
+                <ptc-nz-accelerometer-limit>1</ptc-nz-accelerometer-limit>
+                <ptc-p-gain>0.4</ptc-p-gain>
+              </cas>
+          
+              <fcs>
+                <aim-fitted>0</aim-fitted>
+                <flap-cmd-sum />
+                <hook-engage />
+                <steer-maneuver>0</steer-maneuver>
+          
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
                 <rudder-deadzone alias="/autopilot/settings/rudder-deadzone"/>
@@ -31,7 +76,12 @@
                 <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable"/>
                 <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable"/>
             </fcs>
+
             <gear>
+                <damage-reset>0</damage-reset>
+                <gear-asym>0</gear-asym>
+                <serviceable>1</serviceable>
+          
                 <emergency-handle type="double">0</emergency-handle>
                 <emerg-pos type="double">0</emerg-pos>
                 <emerg-pos-dmd type="double">0</emerg-pos-dmd>
@@ -51,6 +101,10 @@
                 <two-place-canopy type="int">0</two-place-canopy>
             </metrics>
 
+            <position>
+                <aircraft-on-ground-last-value>2</aircraft-on-ground-last-value>
+              </position>
+          
             <propulsion>
                 <engine n="0">
                     <augmentation-alight type="bool">false</augmentation-alight>
@@ -59,25 +113,117 @@
                     <augmentation-alight type="bool">false</augmentation-alight>
                 </engine>
                 <cft alias="/sim/model/f15/cft"/>
+                <inlet>
+                    <l-inlet-ramp-emerg>0</l-inlet-ramp-emerg>
+                    <r-inlet-ramp-emerg>0</r-inlet-ramp-emerg>
+                </inlet>
+                <jfs-running>0</jfs-running>
             </propulsion>
+
             <simulation>
                 <channel-dt type="double">0.00833333333</channel-dt>
             </simulation>
+ 
             <systems>
-                <hydraulics>
-                    <combined-system-psi type="int">2200</combined-system-psi>
-                    <flight-system-psi type="int">2200</flight-system-psi>
-                </hydraulics>
-                <electrics>
-                    <ac-right-main-bus type="int">24</ac-right-main-bus>
-                </electrics>
-                <afcs>
-                    <altitude-hold-alt-diff-feet type="int">0</altitude-hold-alt-diff-feet>
-                </afcs>
+                <cadc>
+                    <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
+                    <pitch-ratio-emergency>0</pitch-ratio-emergency>
+                    <roll-ratio-emergency>0</roll-ratio-emergency>
+                </cadc>
+
+
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
                 </catapult>
+
+                <ecs>
+                    <anti-fog>0</anti-fog>
+                    <!-- ECS bleed air source: 
+                    0 : BOTH
+                    1 : Right
+                    2 : Off
+                    3 : Left
+                    -->
+                    <bleed-air-source>0</bleed-air-source>
+                    <cabin-altitude-ft />
+                    <canopy-position-dmd>0</canopy-position-dmd>
+                    <emerg-vent>0</emerg-vent>
+                    <liquid-oxygen-activated>0</liquid-oxygen-activated>
+                    <oxygen-pressure-psi />
+                    <!-- oxygen qty; 0 off, 1 normal, 2 emerg-->
+                    <oxygen-qty-test>0</oxygen-qty-test>
+                    <oxygen-quantity-liters />
+                    <oxygen-supply-mode>0</oxygen-supply-mode>
+                    <pressurisation-active>1</pressurisation-active>
+                    <!--Windscreen Heating-->
+                    <windscreen-factor1>6750</windscreen-factor1>
+                    <windscreen-frost-amount-dmd-rate>0.1</windscreen-frost-amount-dmd-rate>
+                    <windscreen-heater-power-watts />
+                    <windscreen-heater-watts-second>46</windscreen-heater-watts-second>
+                    <!--Watts per second ramp up on heater input consumption-->
+                    <windscreen-temperature-k>290</windscreen-temperature-k>
+                    <windshield-heat>0</windshield-heat>
+                </ecs>
+                <electrics>
+                    <ground-power>0</ground-power>
+                    <!-- switches / controls -->
+                    <lgenerator-status>1</lgenerator-status>
+                    <rgenerator-status>1</rgenerator-status>
+                    <ac-right-main-bus type="int">24</ac-right-main-bus>
+                </electrics>
+
+                <flyt>
+                    <!-- 0.16 / MaxG -->
+                    <distortion-factor-per-g>0.0213</distortion-factor-per-g>
+                    <max-g>7.5</max-g>
+                    <min-g>-3.0</min-g>
+                    <!--MaxBend / max-g * 2-->
+                    <permanent-bend-factor>0.02</permanent-bend-factor>
+                    <stress-run>0</stress-run>
+                </flyt>
+
+                <holdback>
+                    <holdback-cmd>0</holdback-cmd>
+                    <launchbar-engaged />
+                </holdback>
+            
+                <hook>
+                    <tailhook-length-ft>10.1</tailhook-length-ft>
+                    <tailhook-offset-x-in>646</tailhook-offset-x-in>
+                    <tailhook-offset-y-in>0.0</tailhook-offset-y-in>
+                    <tailhook-offset-z-in>0</tailhook-offset-z-in>
+                    <tailhook-pos-deg>0</tailhook-pos-deg>
+                    <tailhook-pos-max-deg>52.369</tailhook-pos-max-deg>
+                    <tailhook-pos-min-deg>0</tailhook-pos-min-deg>
+                </hook>
+
+                <hydraulics>
+                    <bidi-activation>2100</bidi-activation>
+                    <!-- the min pressure is really for when no hydraulic fluid and the pressure has been at that level
+                     for more than 10 seconds, so for now we will not model this as there is no way for fluid to be depleted -->
+                    <bidi-cutoff-min-pressure>-500</bidi-cutoff-min-pressure>
+                    <bidi-normal-pressure>2500</bidi-normal-pressure>
+                    <combined-system-pump-failed>0</combined-system-pump-failed>
+                    <combined-system-psi type="int">2200</combined-system-psi>
+                    <emerg-flyt-hyd-switch>0</emerg-flyt-hyd-switch>
+                    <emerg-gear-bleed>0</emerg-gear-bleed>
+                    <emerg-pump-auto-activation>2100</emerg-pump-auto-activation>
+                    <emerg-pump-auto-deactivation>2400</emerg-pump-auto-deactivation>
+                    <emerg-system-pump-failed>0</emerg-system-pump-failed>
+                    <flight-system-pump-failed>0</flight-system-pump-failed>
+                    <flight-system-psi type="int">2200</flight-system-psi>
+                    <hyd-transfer-pump-switch>1</hyd-transfer-pump-switch>
+                    <jfs-bleed>0</jfs-bleed>
+                    <normal-pressure>3022</normal-pressure>
+                    <reservoir-quantity>25</reservoir-quantity>
+                    <!-- This is used to ensure the sim starts with util hyds by setting to -ve number -->
+                    <util-system-preload-input>0</util-system-preload-input>
+                </hydraulics>
+                <NWS>
+                    <engaged />
+                </NWS>
             </systems>
+            <tuning1>1.0</tuning1>
         </jsbsim>
     </fdm>
 
@@ -2055,7 +2201,7 @@
                     <script>
                         if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
                         {
-                        print("Catapult launch");
+                            logprint(LOG_INFO,print("Catapult launch");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
                         }
@@ -2092,14 +2238,14 @@
                     <script>
                         if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
                         {
-                        print("Disengage launchbar");
+                        logprint(LOG_INFO, "Disengage launchbar");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
                         setprop("controls/gear/brake-parking",1);
                         }
                         else
                         {
-                        print("Engage launchbar");
+                        logprint(LOG_INFO, "Engage launchbar");
                         setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",0);
                         setprop("fdm/jsbsim/systems/holdback/holdback-cmd",1);
                         setprop("controls/gear/brake-parking",0);
