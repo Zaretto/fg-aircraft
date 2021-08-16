@@ -1282,13 +1282,15 @@
                 <znear type="double">0.20</znear>
             </camera-group>
             <redout>
-                <enabled type="bool">true</enabled>
+                <enabled type="bool" userarchive="y">true</enabled>
+                <new type="bool">false</new>
                 <parameters>
+                    <locked-by-airframe type="bool">true</locked-by-airframe>
                     <blackout-onset-g type="double">5</blackout-onset-g>
                     <blackout-complete-g type="double">8</blackout-complete-g>
                     <onset-blackout-sec type="double">300</onset-blackout-sec>
                     <fast-blackout-sec type="double">30</fast-blackout-sec>
-                    <redout-onset-g type="double">-1.5</redout-onset-g>
+                    <redout-onset-g type="double">-2</redout-onset-g>
                     <redout-complete-g type="double">-4</redout-complete-g>
                     <onset-redout-sec type="double">45</onset-redout-sec>
                     <fast-redout-sec type="double">3.5</fast-redout-sec>
@@ -2594,9 +2596,6 @@
         <environment>
             <file>Nasal/environment.nas</file>
         </environment>
-        <blackout>
-            <file>Aircraft/F-15/Nasal/blackout.nas</file>
-        </blackout>
         <armament>
             <file>Aircraft/F-15/Nasal/fox2.nas</file>
         </armament>
