@@ -990,6 +990,58 @@
         <halign>left</halign>
     </label>
 
+    <label>
+        <name>SAS - Overall</name>
+		<condition>
+            <property>sim/hud/extended-mode</property>
+            <or>
+                <not><property>sim/model/f-14b/controls/SAS/pitch</property></not>
+                <not><property>sim/model/f-14b/controls/SAS/roll</property></not>
+                <not><property>sim/model/f-14b/controls/SAS/yaw</property></not>
+                </or>
+            </condition>
+        <x>25</x>
+        <y>-70</y>
+        <format>SAS:</format>
+        <halign>left</halign>
+    </label>
+
+
+    <label>
+        <name>SAS - PITCH</name>
+		<condition>
+            <property>sim/hud/extended-mode</property>
+            <not><property>sim/model/f-14b/controls/SAS/pitch</property></not>
+        </condition>
+        <x>46</x>
+        <y>-70</y>
+        <format>-P</format>
+        <halign>left</halign>
+    </label>
+
+    <label>
+        <name>SAS - ROLL</name>
+		<condition>
+            <property>sim/hud/extended-mode</property>
+            <not><property>sim/model/f-14b/controls/SAS/roll</property></not>
+        </condition>
+        <x>56</x>
+        <y>-70</y>
+        <format>-R</format>
+        <halign>left</halign>
+    </label>
+    
+    <label>
+        <name>SAS - YAW</name>
+		<condition>
+            <property>sim/hud/extended-mode</property>
+            <not><property>sim/model/f-14b/controls/SAS/yaw</property></not>
+        </condition>
+        <x>70</x>
+        <y>-70</y>
+        <format>-Y</format>
+        <halign>left</halign>
+    </label>
     <!--DLC - Direct Lift Control-->
     <label>
         <name>DLC - Direct Lift Control</name>

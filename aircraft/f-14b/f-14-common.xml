@@ -306,20 +306,20 @@
                 <desc>Raise flaps</desc>
             </key>
             <key>
-                <name>E</name>
+                <name>Shift-E</name>
                 <desc>Decrease Radar Range</desc>
             </key>
             <key>
-                <name>y Shift-y</name>
+                <name>Shift-R</name>
+                <desc>Increase Radar Range</desc>
+            </key>
+            <key>
+                <name>y / Shift-y</name>
                 <desc>Next / Previous target</desc>
             </key>
             <key>
                 <name>o</name>
                 <desc>toggle arrester hook</desc>
-            </key>
-            <key>
-                <name>R</name>
-                <desc>Increase Radar Range</desc>
             </key>
             <key>
                 <name>Ctrl-y</name>
@@ -337,7 +337,6 @@
                 <name>Ctrl-o</name>
                 <desc>Toggle Wing Oversweep (on ground only)</desc>
             </key>
-            <line>__________________________________________________</line>
             <key>
                 <name>Ctrl-S</name>
                 <desc>Toggle APC (Landing Automatic Power control)</desc>
@@ -363,16 +362,25 @@
                 <desc>Enable AFCS Altitude Mode</desc>
             </key>
             <key>
-                <name>Ctrl-e</name>
-                <desc>Ignore selected MP pilots</desc>
-            </key>
-            <key>
-                <name>*</name>
-                <desc>Engage AFCS Altitude Mode</desc>
-            </key>
-            <key>
                 <name>Ctrl-h</name>
                 <desc>Enable AFCS Heading Mode</desc>
+            </key>
+            <key>
+                <name>Ctrl-p</name>
+                <desc>Toggle Pitch SAS</desc>
+            </key>
+            <key>
+                <name>Ctrl-k</name>
+                <desc>Toggle Roll SAS</desc>
+            </key>
+            <key>
+                <name>Ctrl-l</name>
+                <desc>Toggle Yaw SAS</desc>
+            </key>
+
+            <key>
+                <name>Ctrl-e</name>
+                <desc>Ignore selected MP pilots</desc>
             </key>
             <key>
                 <name>h</name>
@@ -450,51 +458,56 @@
                 <name>F6</name>
                 <desc>Eject</desc>
             </key>
-            <line>The menu Fuel and Sores is located in Menu > Tomcat Controls dropdown. (Hit F10 if needed)</line>
-            <line>__________________________________________________</line>
-            <line>Engine start: Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine.</line>
-            <line>              Repeat procedure for L engine, you can use quickstart from the menu once you have fuel loaded.</line>
-            <line>Take off: MILthrust, rotate at 130-160Kts depending on configuration. Do not exceed 10 degrees of pitch</line>
-            <line>__________________________________________________</line>
-            <line>Autopilot:</line>
-            <line>SAS: Pitch, Roll, Yaw damping controlled by AFCS STAB AUG switches underneath engine controls</line>
-            <line>     Yaw damper must be on over Mach 0.8; Roll damper usually off when maneouvering. All dampers only active at AOA less than +/- 15 deg</line>
-            <line>Main AFCS mode is Attitude Hold Mode (Ctrl-t). Other Modes need this main mode activated before being selected. Switching off Attitude Mode disables all other modes. </line>
-            <line>When in Attitude Mode, the autopilot disengages whenever a certain pressure is put on the stick and it reengages when the stick is back in the center position. Attitude Hold Mode will hold pitch</line>
-            <line>attitudes up to +/- 30&#x2103; and bank angles up to +/- 60&#x2103;;</line>
-            <line></line>
-            <line>Altitude Mode (keyboard CTRL-A):</line>
-            <line>     Once in Attitude Mode the AP REF indicator (left of the VDI) illuminates engage at desired altitude keybaord  *. The autopilot will then maintain your altitude.</line>
-            <line></line>
-            <line>Heading Mode:</line>
-            <line>     Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h. After manoeuvering the aircraft to the desired reference heading,</line>
-            <line>     release the control stick at a bank angle of less than +/- 5°. The autopilot will then hold the aircraft on the desired Heading.</line>
-            <line></line>
-            <line>     Autopilot need SAS channels to be engaged (which is the default). SAS Pitch and Roll channels may be disengaged by actuating switches</line>
-            <line>     located on the AFCS panel. With frame rates lower than 17fps you might experience jitter and autopilot may go haywire. In order avoid most</line>
-            <line>     catastrophic cases, parts of pitch SAS will be automatically and temporarely disengaged under 15fps, the same for Autopilot under 10fps.</line>
-            <line>__________________________________________________</line>
-            <line>Automatic Power Control (APC) (keyboard "ctrl-s" toggle):</line>
-            <line>     APC regulates engine thrust to maintain thean optimum approach angle of attack for landing. </line>
-            <line>     To engage APC, gear must be down, in air, throttles between 98% and 68% rpm (as shown on the panel gauges)</line>
-            <line>     Abnormal disengagement will cause the AUTO THROT caution light on the left side of the HUD to illuminate for 10 seconds.</line>
-            <line>__________________________________________________</line>
-            <line>Wing sweep</line>
-            <line>     Wing sweep can be control automatically or manually with the CADC. When using manual control the auto control be</line>
-            <line>     reactivated when CADC values require more sweep than is demanded by the pilot. Keys: "&gt;" "&lt;" manual sweep; '=' for</line>
-            <line>     auto mode. The mode can be selected by clicking on the indicator on the gauge and position by using the mouse wheel over</line>
-            <line>     the indicator. The wing sweep control on the throttle quadrant is also active, use middle button to unlock the oversweep guard.</line>
-            <line>__________________________________________________</line>
-            <line>VHF: Located on the RIO's left console, 3 bands: 30-88 Mhz, 108-174 Mhz, 225-400 Mhz. Modes TR and TR-G set COMM1. Mode DF sets NAV1,</line>
-            <line>that is Direction Finder displayed with the single needle in both BDHIs. You have Comm *or* DF. Storing frequencies (up to 20 channels) a- PRESET</line>
-            <line>select the desired chan, b- READ tune the desired frequency, c- LOAD stores the frequency in the previously selected chan.</line>
-            <line>UHF: Located on the pilot's left console, 225-400 Mhz. ADF is not enabled on this radio.</line>
-            <line>__________________________________________________</line>
-            <line>Displays: HUD: Take Off and Landing mode, Air to Air mode, Cruise mode selectable from the Pilot's Display Panel, down to the right, </line>
-            <line>buttons in column.</line>
-            <line>HUD, VDI (Vertical Display Indicator) and HSD (Horisontal Situation Display) turned ON/OFF from the same panel, lowest switches row.</line>
-            <line>__________________________________________________</line>
+        <text>
+Engine start: 
+-------------
+Ensure sufficient fuel and both engines cut off (glare panel), select R Crank from engine control panel (Next to throttles). At 20% RPM push in cut off for R engine. Repeat procedure for Left engine, you can use quickstart from the menu once you have fuel loaded.
 
+Take off: 
+---------
+Shore based: MILthrust, flaps as preferred. rotate at 130-160Kts depending on configuration. Do not exceed 10 degrees of pitch.
+Carrier based: position aircraft onto cat. 
+               Kneel nosegear using cockpit switch.
+               Use Shift L to engage launchbar.
+               Set power to MIL, Flaps down.
+               Use Shift C to catapult launch launch.
+               Control pitch after leaving deck, retract gear. Turn to the right or left depending on cat in use.
+                   
+--------------------------------------------------------------------------------
+Autopilot / SAS:
+----------------
+Autopilot can only be enaged when all SAS channels are active
+
+SAS: Pitch(CTRL-P), Roll (CTRL-K), YAW (CTRL-L) damping controlled by AFCS STAB AUG switches underneath engine controls
+
+Main AFCS mode is Attitude Hold Mode (Ctrl-t). Other Modes need this main mode activated before being selected. Switching off Attitude Mode disables all other modes. 
+
+When in Attitude Mode, the autopilot disengages whenever a certain pressure is put on the stick and it reengages when the stick is back in the center position.
+
+Altitude Mode (keyboard CTRL-A): Once in Attitude Mode the AP REF indicator (left of the VDI) illuminates you can switch to altitude by using CTRL-A.
+
+Heading Mode: Once in Attitude Mode, you can select Heading Mode by hitting Ctrl-h. After manoeuvering the aircraft to the desired reference heading, a second selection of CTRL-H will active ground track - which is simulated as following flight plan
+--------------------------------------------------------------------------------
+
+Automatic Power Control (APC) (keyboard "ctrl-s" toggle):
+
+APC regulates engine thrust to maintain thean optimum approach angle of attack for landing.  To engage APC, gear must be down, in air, throttles between 98% and 68% rpm (as shown on the panel gauges). Abnormal disengagement will cause the AUTO THROT caution light on the left side of the HUD to illuminate for 10 seconds.
+--------------------------------------------------------------------------------
+Wing sweep automatic following CADC scehdule. Only possible to sweep wings back outside of schedule. Keys: "&gt;" "&lt;" and the wing sweep control on the throttle quadrant permit manual sweep (middle button to unlock the oversweep guard). '=' to select auto mode.
+
+--------------------------------------------------------------------------------
+VHF:   RIO left console, 3 bands: 30-88 Mhz, 108-174 Mhz, 225-400 Mhz. Modes TR and TR-G set COMM1. Mode DF sets NAV1 direction finder needle in both BDHIs. Only Comm *or* DF.          Storing frequencies (up to 20 channels) a- PRESET select the desired chan, b- READ tune the desired frequency, c- LOAD stores the frequency in the previously selected chan.
+
+UHF:   Pilot left console 225-400 Mhz. ADF is not enabled on this radio.
+
+TACAN: Pilot left console: ensure mode T/R for DME. R for direction finding only
+
+HUD:   Pilot right Front Panel: controls mode and power. multikey :AH followed by (a)ir to air s(on/off) (t)akeoff (l)landing (c)ruise air/(g)round
+
+VDI:   Vertical Display Indicator: Pilot right Front Panel: controls mode and power
+
+HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and power. Key H to toggle modes
+        </text>
         </help>
 
         <hud>
@@ -1685,6 +1698,33 @@
                 </binding>
             </key>
 
+            <key n="8">
+                <name>CTRL-h</name>
+                <desc>Toggle autopilot heading mode.</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14_afcs.afcs_heading_switch(0);</script>
+                </binding>
+            </key>
+
+           <key n="11">
+                <name>CTRL-k</name>
+                <desc>Toggle Roll SAS.</desc>
+                <binding>
+                  <command>property-toggle</command>
+                  <property>sim/model/f-14b/controls/SAS/roll</property>
+                </binding>
+            </key>
+ 
+           <key n="12">
+                <name>CTRL-l</name>
+                <desc>Toggle Yaw SAS.</desc>
+                <binding>
+                  <command>property-toggle</command>
+                  <property>sim/model/f-14b/controls/SAS/yaw</property>
+                </binding>
+            </key>
+ 
             <key n="14">
                 <name>Ctrl-n</name>
                 <desc>Toggle Radar PULSE SRCH / TWS AUTO Modes</desc>
@@ -1700,6 +1740,15 @@
                 <binding>
                     <command>nasal</command>
                     <script>f14.toggleOversweep();</script>
+                </binding>
+            </key>
+
+            <key n="16">
+                <name>CTRL-p</name>
+                <desc>Toggle Pitch SAS.</desc>
+                <binding>
+                  <command>property-toggle</command>
+                  <property>sim/model/f-14b/controls/SAS/pitch</property>
                 </binding>
             </key>
 
