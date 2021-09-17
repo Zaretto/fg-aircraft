@@ -415,18 +415,48 @@ Figure 2-54.  Longitudinal System Authority
             <rate_limit>fcs/spoiler-differential-active-rate</rate_limit>
             <output>fcs/spoiler-differential-active-v</output>
         </actuator>
-
+        <!--
+        Currently we do not simulate the lateral stops which are a function of 
+        dynamic pressure - because we don't know what the dynamic pressure ranges
+        are.
+        
+        NATOPS Figure 2-58. Lateral System Authority
+        _____________________________________________________________________________________
+        Control              Cockpit Control                      Surface
+        Surface     Actuation    Mode    Motion        Authority                  Rate
+        _____________________________________________________________________________________
+        *Lateral    Control      Manual  1.75 inches   +/- 3.5 deg diff stab       36 deg/sec
+        Stops       Stick                left          +/- **28deg spoiler        250 deg/sec
+                    Restricted           1.75 inches
+        _____________________________________________________________________________________
+        *Programmed by CADC (Horizontal Tail Authority) as a function of dynamic pressure.
+        ** Maximum SAS off deflection limits with full lateral stops engaged.
+        -->
         <fcs_function name="fcs/spoiler-differential-stick-cmd">
-            <description>Differential spoiler due to stick deflection</description>
+            <description>Differential spoiler due to stick deflection - NATOPS Figure 2-60. Spoiler Gearing Schedule</description>
             <function>
                 <product>
                     <property>fcs/spoiler-differential-active</property>
-                    <property>fcs/roll-trim-actuator</property>
+                    <table  name="fcs/roll-control-to-spoiler-demand">
+                        <description>roll control to spoiler curves. </description>
+                        <independentVar lookup="row">fcs/roll-trim-actuator</independentVar>
+                        <tableData>
+                            -1.0002    -1.0000
+                            -0.7025    -1.0000
+                            -0.4572    -0.0269
+                            -0.1551     0.0000
+                             0.0000     0.0000
+                             0.1551     0.0000
+                             0.4572     0.0269
+                             0.7025     1.0000
+                             1.0002     1.0000
+                        </tableData>
+                    </table>
                 </product>
             </function>
-        </fcs_function>
+        </fcs_function> 
 
-         <switch name="fcs/spoiler-ground-brake-deployed">
+        <switch name="fcs/spoiler-ground-brake-deployed">
             <description>Ground braking spoilers</description>
             <default value="0" />
 
