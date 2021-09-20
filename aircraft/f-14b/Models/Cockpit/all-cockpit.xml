@@ -1212,7 +1212,7 @@
     </effect>
 
     <!-- ASI ; originally merged from Aircraft/f-14b/Models/Cockpit/asi.xml-->
-    <name>ASI</name>
+    
     <!-- <animation>
         <type>select</type>
         <object-name>off-flag</object-name>
@@ -1390,10 +1390,6 @@
         </axis>
     </animation>
     <animation>
-        <type>select</type>
-        <object-name>asi-mach-safe-speed-bug</object-name>
-    </animation>
-    <animation>
         <type>rotate</type>
         <object-name>asi-mach-safe-speed-bug</object-name>
         <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug-mach</property>
@@ -1463,6 +1459,11 @@
             <object-name>a_face-axis</object-name>
         </axis>
     </animation>
+    <animation>
+        <!-- hide mach bug for now - until we can connect the button -->
+        <type>select</type>
+        <object-name>asi-mach-safe-speed-bug</object-name>
+    </animation>
 
     <animation>
         <type>rotate</type>
@@ -1515,7 +1516,7 @@
             </entry>
             <entry>
                 <ind>850</ind>
-                <dep>353</dep>
+                <dep>352</dep>
             </entry>
         </interpolation>
         <axis>
@@ -1659,15 +1660,11 @@
             </entry>
         </interpolation>
         <axis>
-            <object-name>mach-scale-axis</object-name>
+            <object-name>a_face-axis</object-name>
         </axis>
     </animation>
-    <!-- Air Speed Indicator's Bug Setting 
-        
-    
 
-    -->
-
+    <!-- ASI knots limit marker  Setting -->
     <animation>
         <type>knob</type>
         <object-name>asi-mach-limit-knob</object-name>
@@ -1702,8 +1699,8 @@
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
-        <object-name>asi_mount</object-name>
-        <object-name>asi_instrument</object-name>
+        <object-name>asi-mount-group</object-name>
+        <object-name>asi-instrument-group</object-name>
     </effect>
 <!-- END ASI -->
 
@@ -21756,41 +21753,11 @@
       mm_radios-display: A1d12_mm_radios-display
       dim-knob: A1d12_dim-knob
       test-button: A1d12_test-button-->
-    <!--Merged from Aircraft/f-14b/Models/Cockpit/asi2.xml-->
-    <name>ASI</name>
-    <animation>
-        <type>select</type>
-        <object-name>a_off-flag</object-name>
-        <condition>
-            <not>
-                <greater-than>
-                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                    <value>0</value>
-                </greater-than>
-            </not>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>a_mach-flag</object-name>
-        <condition>
-            <or>
-                <not>
-                    <greater-than>
-                        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                        <value>0</value>
-                    </greater-than>
-                </not>
-                <less-than>
-                    <property>velocities/mach</property>
-                    <value>0.4</value>
-                </less-than>
-            </or>
-        </condition>
-    </animation>
+
+    <!-- RIO Airspeed / Mach indicator -->
     <animation>
         <type>rotate</type>
-        <object-name>a_face_1</object-name>
+        <object-name>asi-rio-inner-pointer-dial</object-name>
         <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
         <condition>
             <greater-than>
@@ -21798,6 +21765,64 @@
                 <value>0</value>
             </greater-than>
         </condition>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>80</ind>
+                <dep>28</dep>
+            </entry>
+            <entry>
+                <ind>100</ind>
+                <dep>46</dep>
+            </entry>
+            <entry>
+                <ind>120</ind>
+                <dep>64</dep>
+            </entry>
+            <entry>
+                <ind>150</ind>
+                <dep>93</dep>
+            </entry>
+            <entry>
+                <ind>200</ind>
+                <dep>134</dep>
+            </entry>
+            <entry>
+                <ind>300</ind>
+                <dep>201</dep>
+            </entry>
+            <entry>
+                <ind>400</ind>
+                <dep>249</dep>
+            </entry>
+            <entry>
+                <ind>500</ind>
+                <dep>279</dep>
+            </entry>
+            <entry>
+                <ind>600</ind>
+                <dep>304</dep>
+            </entry>
+            <entry>
+                <ind>700</ind>
+                <dep>326</dep>
+            </entry>
+            <entry>
+                <ind>850</ind>
+                <dep>353</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>asi-rio-centre-axis</object-name>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>asi-rio-mach-safe-speed-bug</object-name>
+        <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
         <interpolation>
             <entry>
                 <ind>0</ind>
@@ -21860,17 +21885,101 @@
                 <dep>251</dep>
             </entry>
             <entry>
+                <ind>600</ind>
+                <dep>280</dep>
+            </entry>
+            <entry>
+                <ind>500</ind>
+                <dep>251</dep>
+            </entry>
+            <entry>
                 <ind>1050</ind>
                 <dep>345</dep>
             </entry>
         </interpolation>
         <axis>
-            <object-name>a_face_1-axis</object-name>
+            <object-name>asi-rio-centre-axis</object-name>
         </axis>
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>a_safe-speed-bug</object-name>
+        <object-name>asi-rio-mach-safe-speed-bug</object-name>
+        <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug-mach</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>0.4</ind>
+                <dep>90</dep>
+            </entry>
+            <entry>
+                <ind>0.5</ind>
+                <dep>56</dep>
+            </entry>
+            <entry>
+                <ind>0.6</ind>
+                <dep>23</dep>
+            </entry>
+            <entry>
+                <ind>0.7</ind>
+                <dep>10</dep>
+            </entry>
+            <entry>
+                <ind>0.8</ind>
+                <dep>-10</dep>
+            </entry>
+            <entry>
+                <ind>0.9</ind>
+                <dep>-26</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>-42</dep>
+            </entry>
+            <entry>
+                <ind>1.4</ind>
+                <dep>-97</dep>
+            </entry>
+            <entry>
+                <ind>1.5</ind>
+                <dep>-114</dep>
+            </entry>
+            <entry>
+                <ind>1.6</ind>
+                <dep>-124</dep>
+            </entry>
+            <entry>
+                <ind>1.8</ind>
+                <dep>-144</dep>
+            </entry>
+            <entry>
+                <ind>2.0</ind>
+                <dep>-162</dep>
+            </entry>
+            <entry>
+                <ind>2.0</ind>
+                <dep>-174</dep>
+            </entry>
+            <entry>
+                <ind>2.4</ind>
+                <dep>-186</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>asi-rio-centre-axis</object-name>
+        </axis>
+    </animation>
+    <animation>
+        <!-- hide mach bug for now - until we can connect the button -->
+        <type>select</type>
+        <object-name>asi-rio-mach-safe-speed-bug</object-name>
+    </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>asi-rio-safe-speed-bug</object-name>
         <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
         <interpolation>
             <entry>
@@ -21878,81 +21987,57 @@
                 <dep>0</dep>
             </entry>
             <entry>
-                <ind>40</ind>
-                <dep>16</dep>
-            </entry>
-            <entry>
-                <ind>75</ind>
-                <dep>31</dep>
+                <ind>80</ind>
+                <dep>28</dep>
             </entry>
             <entry>
                 <ind>100</ind>
-                <dep>45</dep>
+                <dep>46</dep>
             </entry>
             <entry>
-                <ind>117</ind>
-                <dep>61</dep>
-            </entry>
-            <entry>
-                <ind>135</ind>
-                <dep>75</dep>
+                <ind>120</ind>
+                <dep>64</dep>
             </entry>
             <entry>
                 <ind>150</ind>
-                <dep>90</dep>
-            </entry>
-            <entry>
-                <ind>170</ind>
-                <dep>104</dep>
-            </entry>
-            <entry>
-                <ind>185</ind>
-                <dep>120</dep>
+                <dep>93</dep>
             </entry>
             <entry>
                 <ind>200</ind>
                 <dep>134</dep>
             </entry>
             <entry>
-                <ind>250</ind>
-                <dep>156</dep>
-            </entry>
-            <entry>
                 <ind>300</ind>
-                <dep>180</dep>
-            </entry>
-            <entry>
-                <ind>350</ind>
-                <dep>204</dep>
+                <dep>201</dep>
             </entry>
             <entry>
                 <ind>400</ind>
-                <dep>224</dep>
+                <dep>249</dep>
             </entry>
             <entry>
                 <ind>500</ind>
-                <dep>251</dep>
+                <dep>279</dep>
             </entry>
             <entry>
                 <ind>600</ind>
-                <dep>280</dep>
+                <dep>304</dep>
             </entry>
             <entry>
-                <ind>500</ind>
-                <dep>251</dep>
+                <ind>700</ind>
+                <dep>326</dep>
             </entry>
             <entry>
-                <ind>1050</ind>
-                <dep>345</dep>
+                <ind>850</ind>
+                <dep>352</dep>
             </entry>
         </interpolation>
         <axis>
-            <object-name>a_face_1-axis</object-name>
+            <object-name>asi-rio-centre-axis</object-name>
         </axis>
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>a_mach-scale</object-name>
+        <object-name>asi-rio-mach-scale</object-name>
         <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
         <condition>
             <greater-than>
@@ -21961,90 +22046,62 @@
             </greater-than>
         </condition>
         <interpolation>
-            <entry>
+            <!-- <entry>
                 <ind>0</ind>
                 <dep>0</dep>
             </entry>
             <entry>
-                <ind>40</ind>
-                <dep>16</dep>
-            </entry>
-            <entry>
-                <ind>75</ind>
-                <dep>31</dep>
+                <ind>80</ind>
+                <dep>28</dep>
             </entry>
             <entry>
                 <ind>100</ind>
-                <dep>45</dep>
+                <dep>46</dep>
             </entry>
             <entry>
-                <ind>117</ind>
-                <dep>61</dep>
-            </entry>
-            <entry>
-                <ind>135</ind>
-                <dep>75</dep>
+                <ind>120</ind>
+                <dep>64</dep>
             </entry>
             <entry>
                 <ind>150</ind>
-                <dep>90</dep>
-            </entry>
+                <dep>93</dep>
+            </entry> -->
             <entry>
-                <ind>170</ind>
-                <dep>104</dep>
-            </entry>
-            <entry>
-                <ind>185</ind>
-                <dep>120</dep>
-            </entry>
-            <entry>
-                <ind>200</ind>
+                <ind>190</ind>
                 <dep>134</dep>
             </entry>
             <entry>
-                <ind>250</ind>
-                <dep>156</dep>
-            </entry>
-            <entry>
                 <ind>300</ind>
-                <dep>180</dep>
-            </entry>
-            <entry>
-                <ind>350</ind>
-                <dep>204</dep>
+                <dep>201</dep>
             </entry>
             <entry>
                 <ind>400</ind>
-                <dep>224</dep>
+                <dep>249</dep>
             </entry>
             <entry>
                 <ind>500</ind>
-                <dep>251</dep>
+                <dep>279</dep>
             </entry>
             <entry>
                 <ind>600</ind>
-                <dep>280</dep>
+                <dep>304</dep>
             </entry>
             <entry>
                 <ind>700</ind>
-                <dep>305</dep>
+                <dep>326</dep>
             </entry>
             <entry>
-                <ind>500</ind>
-                <dep>251</dep>
-            </entry>
-            <entry>
-                <ind>1050</ind>
-                <dep>345</dep>
+                <ind>850</ind>
+                <dep>353</dep>
             </entry>
         </interpolation>
         <axis>
-            <object-name>a_face_1-axis</object-name>
+            <object-name>asi-rio-centre-axis</object-name>
         </axis>
     </animation>
     <animation>
         <type>rotate</type>
-        <object-name>a_mach-scale</object-name>
+        <object-name>asi-rio-mach-scale</object-name>
         <property>velocities/mach</property>
         <condition>
             <greater-than>
@@ -22054,123 +22111,110 @@
         </condition>
         <interpolation>
             <entry>
-                <ind>0</ind>
-                <dep>0</dep>
+                <ind>0.3</ind>
+                <dep>133</dep>
             </entry>
             <entry>
-                <ind>0.8</ind>
+                <ind>0.4</ind>
                 <dep>90</dep>
             </entry>
             <entry>
+                <ind>0.5</ind>
+                <dep>56</dep>
+            </entry>
+            <entry>
+                <ind>0.6</ind>
+                <dep>23</dep>
+            </entry>
+            <entry>
+                <ind>0.7</ind>
+                <dep>10</dep>
+            </entry>
+            <entry>
+                <ind>0.8</ind>
+                <dep>-10</dep>
+            </entry>
+            <entry>
+                <ind>0.9</ind>
+                <dep>-26</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>-42</dep>
+            </entry>
+            <entry>
                 <ind>1.4</ind>
-                <dep>180</dep>
+                <dep>-97</dep>
             </entry>
             <entry>
-                <ind>2.2</ind>
-                <dep>270</dep>
+                <ind>1.5</ind>
+                <dep>-114</dep>
             </entry>
             <entry>
-                <ind>2.6</ind>
-                <dep>315</dep>
+                <ind>1.6</ind>
+                <dep>-124</dep>
+            </entry>
+            <entry>
+                <ind>1.8</ind>
+                <dep>-144</dep>
+            </entry>
+            <entry>
+                <ind>2.0</ind>
+                <dep>-162</dep>
+            </entry>
+            <entry>
+                <ind>2.0</ind>
+                <dep>-174</dep>
+            </entry>
+            <entry>
+                <ind>2.4</ind>
+                <dep>-186</dep>
             </entry>
         </interpolation>
         <axis>
-            <object-name>a_mach-scale-axis</object-name>
+            <object-name>asi-rio-centre-axis</object-name>
         </axis>
     </animation>
-    <!-- Air Speed Indicator's Bug Setting -->
+
+    <!-- ASI knots limit marker  Setting -->
     <animation>
-        <name>asi-bug-left-fine</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>a_asi-bug-left</object-name>
+        <type>knob</type>
+        <object-name>asi-rio-mach-limit-knob</object-name>
+        <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
+        <factor>0</factor>
+        <axis>
+            <object-name>asi-rio-mach-limit-knob-axis</object-name>
+        </axis>
         <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
             <binding>
                 <command>property-adjust</command>
                 <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>-10</step>
-                <min>225</min>
+                <factor>5</factor>
+                <min>0</min>
+                <max>850</max>
             </binding>
         </action>
-    </animation>
-    <animation>
-        <name>asi-bug-left-coarse</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>a_asi-bug-left</object-name>
         <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
             <binding>
+                <button>1</button>
                 <command>property-adjust</command>
-                <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>-50</step>
-                <min>225</min>
+                <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug-mach</property>
+                <factor>5</factor>
+                <min>0.4</min>
+                <max>2.4</max>
             </binding>
         </action>
     </animation>
-    <animation>
-        <name>asi-bug-right-fine</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>a_asi-bug-right</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>10</step>
-                <max>1000</max>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <name>asi-bug-right-coarse</name>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>a_asi-bug-right</object-name>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug</property>
-                <step>50</step>
-                <max>1000</max>
-            </binding>
-        </action>
-    </animation>
-    <!-- Lightning -->
-    
-    
-    
+ 
+    <!-- RIO ASI Lightning -->
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
-        <object-name>a_mount_4</object-name>
-        <object-name>a_instrument_3</object-name>
+        <object-name>asi-rio-mount-group</object-name>
+        <object-name>asi-rio-instrument-group</object-name>
     </effect>
-    <!--Renamed objects: 
-      off-flag: a_off-flag
-      mach-flag: a_mach-flag
-      face: a_face_1
-      safe-speed-bug: a_safe-speed-bug
-      mach-scale: a_mach-scale
-      asi-bug-left: a_asi-bug-left
-      asi-bug-right: a_asi-bug-right
-      mount: a_mount_4
-      instrument: a_instrument_3
-      mm_asi: A1_mm_asi
-      knob: A1_knob
-      bkg: A1_bkg
-      main-scale: A1_main-scale-->
+    <!-- END RIO Airspeed / Mach  -->
+
     <!--Merged from Aircraft/f-14b/Models/Cockpit/f14-altimeter.xml-->
     <animation>
         <type>rotate</type>
@@ -32469,11 +32513,11 @@
       switches: A1ed_switches-->
 <animation>
 		<type>material</type>
-        <object-name>a_mount</object-name>
+        <object-name>asi-mount-group</object-name>
         <object-name>a_mount_1</object-name>
         <object-name>a_mount_2</object-name>
         <object-name>a_mount_3</object-name>
-        <object-name>a_mount_4</object-name>
+        <object-name>asi-rio-mount-group</object-name>
         <object-name>a6p_mount</object-name>
         <object-name>aa1_mount</object-name>
         <object-name>aa1_mount_1</object-name>
@@ -32562,16 +32606,16 @@
 	      <green-prop>controls/lighting/dome-green</green-prop>
 	      <blue-prop>controls/lighting/dome-blue</blue-prop>
 	    </emission>
-	</animation><animation>
+	</animation>
+    
+    <animation>
 	    <type>material</type>
-	        <object-name>a_instrument</object-name>
+        <object-name>asi-instrument-group</object-name>
+        <object-name>asi-rio-instrument-group</object-name>
         <object-name>a_instrument</object-name>
         <object-name>a_instrument_1</object-name>
         <object-name>a_instrument_1</object-name>
         <object-name>a_instrument_2</object-name>
-        <object-name>a_instrument_2</object-name>
-        <object-name>a_instrument_3</object-name>
-        <object-name>a_instrument_3</object-name>
         <object-name>b_instrument</object-name>
         <object-name>b_instrument</object-name>
         <object-name>b_instrument_1</object-name>
