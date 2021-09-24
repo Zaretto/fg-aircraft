@@ -16,7 +16,7 @@ aircraft.light.new("sim/model/f-14b/lighting/anti-collision", [0.09, 1.20], anti
 var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting/position-flash-switch");
 var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.15]);
 setprop("/sim/model/f-14b/lighting/position/enabled", 1);
-setprop("sim/model/f-14b/fx/smoke",0);
+#setprop("sim/model/f-14b/fx/smoke-colors-demand",0);
 
 var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
 
@@ -70,6 +70,52 @@ red_flood_switch = func{
 setlistener("controls/lighting/instruments-norm", func(v){
     set_flood_lighting_colour();
 },0,0);
+var color_encode_factors = [
+    1073741824, # 0
+    33554432,   # 1
+    1048576,    # 2
+    32768,      # 3
+    1024,       # 4
+    32,         # 5
+    1           # 6  
+];
+
+var color_encode_props = [
+    props.getNode("sim/model/f-14b/fx/vapour-color-left-r" , 1),
+    props.getNode("sim/model/f-14b/fx/vapour-color-left-g" , 1),
+    props.getNode("sim/model/f-14b/fx/vapour-color-left-b" , 1),
+    props.getNode("sim/model/f-14b/fx/vapour-color-right-r", 1),
+    props.getNode("sim/model/f-14b/fx/vapour-color-right-g", 1),
+    props.getNode("sim/model/f-14b/fx/vapour-color-right-b", 1)
+];
+smoke_vv = 0;
+smoke_v = 0;
+var smokeNode = props.getNode("/sim/model/f-14b/fx/smoke-colors-demand",1);
+set_smoke_color = func{
+
+    #r1 << 25 | g1 << 20 | b1 << 15  | r2 << 10 | g2 << 5 | b2
+    smoke_v = 0;
+    print("set_smoke_color");
+    for (var i = 0; i < 6; i = i+1)
+    {
+        smoke_v0 = int(math.min(color_encode_props[i].getDoubleValue()*31,31));
+        smoke_vv = int(smoke_v0 * color_encode_factors[i+1]);
+        printf(" -- %d => %2d %8x",i,smoke_v0,smoke_vv);
+        smoke_v = smoke_v + smoke_vv;
+    }
+    printf("set smoke colour to %x",smoke_v);
+    smokeNode.setIntValue(smoke_v);
+}
+
+setlistener("sim/model/f-14b/fx/vapour-color-left-r" , func(n) {set_smoke_color();});
+setlistener("sim/model/f-14b/fx/vapour-color-left-g" , func(n) {set_smoke_color();});
+setlistener("sim/model/f-14b/fx/vapour-color-left-b" , func(n) {set_smoke_color();});
+setlistener("sim/model/f-14b/fx/vapour-color-right-r", func(n) {set_smoke_color();});
+setlistener("sim/model/f-14b/fx/vapour-color-right-g", func(n) {set_smoke_color();});
+setlistener("sim/model/f-14b/fx/vapour-color-right-b", func(n) {set_smoke_color();});
+
+# now ensure that the initial colour for smoke is set.
+set_smoke_color ();
 
 # sets the flood lighting and instrument lighting illuminations
 # based on the setting of

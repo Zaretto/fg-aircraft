@@ -16,7 +16,8 @@ var WeaponsWeight = props.globals.getNode("sim/model/f-14b/systems/external-load
 var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/pylons-weight", 1);
 
 # smoke stuff:
-var Smoke = props.globals.getNode("sim/model/f-14b/fx/smoke", 1);#double
+var SmokeActive = props.globals.getNode("sim/model/f-14b/fx/smoke-colors", 1);#double
+var SmokeColor = props.globals.getNode("sim/model/f-14b/fx/smoke-colors-demand", 1);#double
 var SmokeCmd = props.globals.initNode("sim/model/f-14b/fx/smoke-cmd", 0,"BOOL");
 var SmokeMountedL = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-left", 0,"BOOL");
 var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right", 0,"BOOL");
@@ -126,9 +127,9 @@ var armament_update2 = func {
 	
 	# manage smoke
     if (SmokeCmd.getValue() and (SmokeMountedR.getValue() or SmokeMountedL.getValue())) {
-    	Smoke.setDoubleValue(1);
+    	SmokeActive.setIntValue(SmokeColor.getIntValue());
 	} else {
-		Smoke.setDoubleValue(0);
+		SmokeActive.setIntValue(0);
 	}
 }
 

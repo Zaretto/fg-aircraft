@@ -715,9 +715,19 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                     </VDI>
                 </controls>
                 <fx>
-                    <smoke type="double">0</smoke>
+                    <smoke type="int">0</smoke>
                     <burner type="int">0</burner>
                     <heat-blur-on type="bool">false</heat-blur-on>
+                    <smoke-colors-demand type="int"/>
+                    <!--the following properties are used to set the vapor color - and packed into
+                        smoke-colors-demand. smoke-colors will be set dynamically based on the
+                        fitting of smoke winders -->
+                    <vapour-color-left-r  type="double">0.563</vapour-color-left-r>
+                    <vapour-color-left-g  type="double">0.063</vapour-color-left-g>
+                    <vapour-color-left-b  type="double">0</vapour-color-left-b>
+                    <vapour-color-right-r type="double">0</vapour-color-right-r>
+                    <vapour-color-right-g type="double">0.52819</vapour-color-right-g>
+                    <vapour-color-right-b type="double">0.063</vapour-color-right-b>
                 </fx>
                 <instrumentation>
                     <airspeed-indicator>
@@ -1031,8 +1041,6 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <bool n="30" type="bool"/> <!-- aoa indexer fast -->
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
-                <float n="1" alias="/sim/model/f-14b/fx/smoke"/>
-                <!--smoke-->
                 <float n="2">0</float>
                 <!-- aux flaps      -->
                 <float n="3">0</float>
@@ -1050,6 +1058,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <float n="10">0</float>
                 <!-- /fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" -->
                 <float n="11">0</float>
+                
                 <!-- /fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" -->
                 <int n="0" type="int">0</int>
                 <!-- fuel dump      -->
@@ -1072,7 +1081,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <!--afterburner right-->
                 <int n="9" type="int">0</int>
                 <!--free-->
-                <!--<int n="10" alias="/sim/model/f-14b/fx/smoke"/>-->
+                <int n="10" alias="/sim/model/f-14b/fx/smoke-colors"/>
                 <!-- external weapons layout and pylons details -->
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
@@ -1206,6 +1215,14 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                             <dialog-name>flightlog</dialog-name>
                         </binding>
                     </item>
+                    <item n="12">
+                        <label>Vapour Color Dialog</label>
+                        <binding>
+                            <command>dialog-show</command>
+			                <dialog-name>vapour-color</dialog-name>
+                        </binding>
+                    </item>
+
                 </menu>
             </default>
         </menubar>

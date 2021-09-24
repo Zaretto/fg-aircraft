@@ -374,7 +374,13 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount",
 	"fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount",
 	"fdm/jsbsim/propulsion/engine[0]/mcb-failed",
-	"fdm/jsbsim/propulsion/engine[1]/mcb-failed"
+	"fdm/jsbsim/propulsion/engine[1]/mcb-failed",
+    "sim/model/f-14b/fx/vapour-color-left-r" ,
+    "sim/model/f-14b/fx/vapour-color-left-g" ,
+    "sim/model/f-14b/fx/vapour-color-left-b" ,
+    "sim/model/f-14b/fx/vapour-color-right-r",
+    "sim/model/f-14b/fx/vapour-color-right-g",
+    "sim/model/f-14b/fx/vapour-color-right-b",
 );
 
 var inc_ticker = func {
