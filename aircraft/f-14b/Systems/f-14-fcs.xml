@@ -437,6 +437,16 @@ Figure 2-54.  Longitudinal System Authority
             <function>
                 <product>
                     <property>fcs/spoiler-differential-active</property>
+                    <table  name="fcs/roll-control-spoiler-effectivity-factor">
+                        <description>See (1) above; function of dynamic pressure. </description>
+                        <independentVar lookup="row">aero/qbar-psf</independentVar>
+                        <tableData>
+                              0  1.0
+                            300  1.0
+                            450  0.5
+                            600  0.3
+                        </tableData>
+                    </table>
                     <table  name="fcs/roll-control-to-spoiler-demand">
                         <description>roll control to spoiler curves. </description>
                         <independentVar lookup="row">fcs/roll-trim-actuator</independentVar>
