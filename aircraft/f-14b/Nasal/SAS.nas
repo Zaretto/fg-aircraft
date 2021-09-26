@@ -62,13 +62,10 @@ var w_sweep        = 0;
 var steering       = 0;
 var dt_mva_vec     = [0,0,0,0,0,0,0];
 
-
 # Sets move qty for the stick to disengage the Autopilot Attitude Hold Mode.
 var deadZ_pitch    = DeadZPitch.getValue();
 var deadZ_roll     = DeadZRoll.getValue();
 aircraft.data.add(DeadZPitch,DeadZRoll);
-
-var AP_steering_deadZ_dlg = gui.Dialog.new("dialog[1]","Aircraft/f-14b/Dialogs/AP-steering-dead-zone.xml");
 
 var update_steering_deadZ = func {
 	deadZ_pitch = DeadZPitch.getValue();

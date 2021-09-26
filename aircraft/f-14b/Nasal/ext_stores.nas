@@ -5,11 +5,9 @@ var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads
 
 var droptank_node = props.globals.getNode("sim/ai/aircraft/impact/droptank", 1);
 
-var ext_loads_dlg = gui.Dialog.new("dialog","Aircraft/f-14b/Dialogs/external-loads.xml");
-
-
 var ext_loads_init = func() {
-	gui.menuBind("fuel-and-payload", "f14.ext_loads_dlg.open()");
+	gui.menuBind("fuel-and-payload", "gui.showDialog(\"external-loads\");");
+#    fgcommand("dialog-show", props.Node.new({ "dialog-name" : name }));
     gui.menuEnable("fuel-and-payload", 1);
 }
 

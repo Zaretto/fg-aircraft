@@ -1139,8 +1139,8 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                     <item n="1">
                         <label>Fuel and Stores</label>
                         <binding>
-                            <command>nasal</command>
-                            <script>f14.ext_loads_dlg.open()</script>
+                            <command>dialog-show</command>
+                            <dialog-name>external-loads</dialog-name>
                         </binding>
                     </item>
                     <item n="2">
@@ -1169,8 +1169,8 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                     <!--<item n="5">
                         <label>Auto Pilot steering dead zone</label>
                         <binding>
-                            <command>nasal</command>
-                            <script>f14.AP_steering_deadZ_dlg.open()</script>
+                            <command>dialog-show</command>
+                            <dialog-name>AP-steering-dead-zone</dialog-name>
                         </binding>
                     </item>-->
                     <item n="6">
@@ -1183,15 +1183,15 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                     <item n="7">
                         <label>Ground Services</label>
                         <binding>
-                            <command>nasal</command>
-                            <script>f14.dlg_ground_services.open()</script>
+                            <command>dialog-show</command>
+                            <dialog-name>ground-services</dialog-name>
                         </binding>
                     </item>
                     <item n="8">
                         <label>Malfunctions and Damage</label>
                         <binding>
-                            <command>nasal</command>
-                            <script>f14.dlg_malfunctions.open()</script>
+                            <command>dialog-show</command>
+                            <dialog-name>malfunctions</dialog-name>
                         </binding>
                     </item>
                     <item n="9">
@@ -1212,17 +1212,9 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                         <label>Event Log</label>
                         <binding>
                             <command>dialog-show</command>
-                            <dialog-name>flightlog</dialog-name>
+                            <dialog-name>event-log</dialog-name>
                         </binding>
                     </item>
-                    <item n="12">
-                        <label>Vapour Color Dialog</label>
-                        <binding>
-                            <command>dialog-show</command>
-			                <dialog-name>vapour-color</dialog-name>
-                        </binding>
-                    </item>
-
                 </menu>
             </default>
         </menubar>
