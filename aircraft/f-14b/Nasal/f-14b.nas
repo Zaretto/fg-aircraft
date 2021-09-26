@@ -94,15 +94,15 @@ set_smoke_color = func{
 
     #r1 << 25 | g1 << 20 | b1 << 15  | r2 << 10 | g2 << 5 | b2
     smoke_v = 0;
-    print("set_smoke_color");
+#    print("set_smoke_color");
     for (var i = 0; i < 6; i = i+1)
     {
         smoke_v0 = int(math.min(color_encode_props[i].getDoubleValue()*31,31));
         smoke_vv = int(smoke_v0 * color_encode_factors[i+1]);
-        printf(" -- %d => %2d %8x",i,smoke_v0,smoke_vv);
+#        printf(" -- %d => %2d %8x",i,smoke_v0,smoke_vv);
         smoke_v = smoke_v + smoke_vv;
     }
-    printf("set smoke colour to %x",smoke_v);
+#    printf("set smoke colour to %x",smoke_v);
     smokeNode.setIntValue(smoke_v);
 }
 
