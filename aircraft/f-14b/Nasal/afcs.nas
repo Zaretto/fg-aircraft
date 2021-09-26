@@ -143,28 +143,19 @@ var afcs_heading_switch = func(n) {
 }
 
 var afcs_altitude_engage_toggle = func() {
-	# Two step mode. This is step #1
-	if (alt_switch.getBoolValue()) {
-		alt_switch.setBoolValue(0);
-#		alt_enable.setBoolValue(0);
-#		afcs_altitude_disengage();
-        ap_alt_lock.setValue("pitch-hold");
-#        print("Alt disengage");
-	} else {
-		alt_switch.setBoolValue(1);
-		alt_enable.setBoolValue(1);
-#        print("Alt engage");
-#        if (f14.usingJSBSim)
-#        {
-            target_alt.setValue(press_alt_ft.getValue());
-#setprop("fdm/jsbsim/systems/afcs/altitude-hold-ft",press_alt_ft.getValue());
-#etprop("fdm/jsbsim/systems/afcs/target-altitude-ft", press_alt_ft.getValue());
-            ap_alt_lock.setValue("altitude-hold");
-#        }
+# cannot engage altitude unless autopilot engaged.
+	if (main_ap_engaged.getBoolValue()){
+		if (alt_switch.getBoolValue()) {
+			alt_switch.setBoolValue(0);
+			ap_alt_lock.setValue("pitch-hold");
+		} else {
+			alt_switch.setBoolValue(1);
+			alt_enable.setBoolValue(1);
+				target_alt.setValue(press_alt_ft.getValue());
+				ap_alt_lock.setValue("altitude-hold");
+		}
 	}
 }
-
-
 
 
 
