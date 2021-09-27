@@ -1237,7 +1237,7 @@
                     </greater-than>
                 </not>
                 <less-than>
-                    <property>velocities/mach</property>
+                    <property>instrumentation/airspeed-indicator/indicated-mach</property>
                     <value>0.4</value>
                 </less-than>
             </or>
@@ -1317,72 +1317,48 @@
                 <dep>0</dep>
             </entry>
             <entry>
-                <ind>40</ind>
-                <dep>16</dep>
-            </entry>
-            <entry>
-                <ind>75</ind>
-                <dep>31</dep>
+                <ind>80</ind>
+                <dep>28</dep>
             </entry>
             <entry>
                 <ind>100</ind>
-                <dep>45</dep>
+                <dep>46</dep>
             </entry>
             <entry>
-                <ind>117</ind>
-                <dep>61</dep>
-            </entry>
-            <entry>
-                <ind>135</ind>
-                <dep>75</dep>
+                <ind>120</ind>
+                <dep>64</dep>
             </entry>
             <entry>
                 <ind>150</ind>
-                <dep>90</dep>
-            </entry>
-            <entry>
-                <ind>170</ind>
-                <dep>104</dep>
-            </entry>
-            <entry>
-                <ind>185</ind>
-                <dep>120</dep>
+                <dep>93</dep>
             </entry>
             <entry>
                 <ind>200</ind>
                 <dep>134</dep>
             </entry>
             <entry>
-                <ind>250</ind>
-                <dep>156</dep>
-            </entry>
-            <entry>
                 <ind>300</ind>
-                <dep>180</dep>
-            </entry>
-            <entry>
-                <ind>350</ind>
-                <dep>204</dep>
+                <dep>201</dep>
             </entry>
             <entry>
                 <ind>400</ind>
-                <dep>224</dep>
+                <dep>249</dep>
             </entry>
             <entry>
                 <ind>500</ind>
-                <dep>251</dep>
+                <dep>279</dep>
             </entry>
             <entry>
                 <ind>600</ind>
-                <dep>280</dep>
+                <dep>304</dep>
             </entry>
             <entry>
-                <ind>500</ind>
-                <dep>251</dep>
+                <ind>700</ind>
+                <dep>326</dep>
             </entry>
             <entry>
-                <ind>1050</ind>
-                <dep>345</dep>
+                <ind>850</ind>
+                <dep>353</dep>
             </entry>
         </interpolation>
         <axis>
@@ -1516,7 +1492,7 @@
             </entry>
             <entry>
                 <ind>850</ind>
-                <dep>352</dep>
+                <dep>353</dep>
             </entry>
         </interpolation>
         <axis>
@@ -1534,28 +1510,8 @@
             </greater-than>
         </condition>
         <interpolation>
-            <!-- <entry>
-                <ind>0</ind>
-                <dep>0</dep>
-            </entry>
             <entry>
-                <ind>80</ind>
-                <dep>28</dep>
-            </entry>
-            <entry>
-                <ind>100</ind>
-                <dep>46</dep>
-            </entry>
-            <entry>
-                <ind>120</ind>
-                <dep>64</dep>
-            </entry>
-            <entry>
-                <ind>150</ind>
-                <dep>93</dep>
-            </entry> -->
-            <entry>
-                <ind>190</ind>
+                <ind>200</ind>
                 <dep>134</dep>
             </entry>
             <entry>
@@ -1590,7 +1546,7 @@
     <animation>
         <type>rotate</type>
         <object-name>asi-mach-scale</object-name>
-        <property>velocities/mach</property>
+        <property>instrumentation/airspeed-indicator/indicated-mach</property>
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -1604,55 +1560,47 @@
             </entry>
             <entry>
                 <ind>0.4</ind>
-                <dep>90</dep>
+                <dep>87</dep>
             </entry>
             <entry>
                 <ind>0.5</ind>
-                <dep>56</dep>
+                <dep>58</dep>
             </entry>
             <entry>
                 <ind>0.6</ind>
-                <dep>23</dep>
+                <dep>34</dep>
             </entry>
             <entry>
                 <ind>0.7</ind>
-                <dep>10</dep>
+                <dep>12</dep>
             </entry>
             <entry>
                 <ind>0.8</ind>
-                <dep>-10</dep>
+                <dep>-6</dep>
             </entry>
             <entry>
                 <ind>0.9</ind>
-                <dep>-26</dep>
+                <dep>-23</dep>
             </entry>
             <entry>
                 <ind>1.0</ind>
-                <dep>-42</dep>
+                <dep>-40</dep>
             </entry>
             <entry>
                 <ind>1.4</ind>
-                <dep>-97</dep>
-            </entry>
-            <entry>
-                <ind>1.5</ind>
-                <dep>-114</dep>
+                <dep>-98</dep>
             </entry>
             <entry>
                 <ind>1.6</ind>
-                <dep>-124</dep>
+                <dep>-121</dep>
             </entry>
             <entry>
                 <ind>1.8</ind>
-                <dep>-144</dep>
+                <dep>-142</dep>
             </entry>
             <entry>
                 <ind>2.0</ind>
-                <dep>-162</dep>
-            </entry>
-            <entry>
-                <ind>2.0</ind>
-                <dep>-174</dep>
+                <dep>-160</dep>
             </entry>
             <entry>
                 <ind>2.4</ind>
@@ -21819,6 +21767,120 @@
             <object-name>asi-rio-centre-axis</object-name>
         </axis>
     </animation>
+
+    <animation>
+        <type>rotate</type>
+        <object-name>asi-rio-mach-scale</object-name>
+        <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <interpolation>
+            <entry>
+                <ind>200</ind>
+                <dep>134</dep>
+            </entry>
+            <entry>
+                <ind>300</ind>
+                <dep>201</dep>
+            </entry>
+            <entry>
+                <ind>400</ind>
+                <dep>249</dep>
+            </entry>
+            <entry>
+                <ind>500</ind>
+                <dep>279</dep>
+            </entry>
+            <entry>
+                <ind>600</ind>
+                <dep>304</dep>
+            </entry>
+            <entry>
+                <ind>700</ind>
+                <dep>326</dep>
+            </entry>
+            <entry>
+                <ind>850</ind>
+                <dep>353</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>asi-rio-centre-axis</object-name>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>asi-rio-mach-scale</object-name>
+        <property>instrumentation/airspeed-indicator/indicated-mach</property>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <interpolation>
+            <entry>
+                <ind>0.3</ind>
+                <dep>133</dep>
+            </entry>
+            <entry>
+                <ind>0.4</ind>
+                <dep>87</dep>
+            </entry>
+            <entry>
+                <ind>0.5</ind>
+                <dep>58</dep>
+            </entry>
+            <entry>
+                <ind>0.6</ind>
+                <dep>34</dep>
+            </entry>
+            <entry>
+                <ind>0.7</ind>
+                <dep>12</dep>
+            </entry>
+            <entry>
+                <ind>0.8</ind>
+                <dep>-6</dep>
+            </entry>
+            <entry>
+                <ind>0.9</ind>
+                <dep>-23</dep>
+            </entry>
+            <entry>
+                <ind>1.0</ind>
+                <dep>-40</dep>
+            </entry>
+            <entry>
+                <ind>1.4</ind>
+                <dep>-98</dep>
+            </entry>
+            <entry>
+                <ind>1.6</ind>
+                <dep>-121</dep>
+            </entry>
+            <entry>
+                <ind>1.8</ind>
+                <dep>-142</dep>
+            </entry>
+            <entry>
+                <ind>2.0</ind>
+                <dep>-160</dep>
+            </entry>
+            <entry>
+                <ind>2.4</ind>
+                <dep>-186</dep>
+            </entry>
+        </interpolation>
+        <axis>
+            <object-name>asi-rio-centre-axis</object-name>
+        </axis>
+    </animation>
+
     <animation>
         <type>rotate</type>
         <object-name>asi-rio-mach-safe-speed-bug</object-name>
@@ -21829,72 +21891,48 @@
                 <dep>0</dep>
             </entry>
             <entry>
-                <ind>40</ind>
-                <dep>16</dep>
-            </entry>
-            <entry>
-                <ind>75</ind>
-                <dep>31</dep>
+                <ind>80</ind>
+                <dep>28</dep>
             </entry>
             <entry>
                 <ind>100</ind>
-                <dep>45</dep>
+                <dep>46</dep>
             </entry>
             <entry>
-                <ind>117</ind>
-                <dep>61</dep>
-            </entry>
-            <entry>
-                <ind>135</ind>
-                <dep>75</dep>
+                <ind>120</ind>
+                <dep>64</dep>
             </entry>
             <entry>
                 <ind>150</ind>
-                <dep>90</dep>
-            </entry>
-            <entry>
-                <ind>170</ind>
-                <dep>104</dep>
-            </entry>
-            <entry>
-                <ind>185</ind>
-                <dep>120</dep>
+                <dep>93</dep>
             </entry>
             <entry>
                 <ind>200</ind>
                 <dep>134</dep>
             </entry>
             <entry>
-                <ind>250</ind>
-                <dep>156</dep>
-            </entry>
-            <entry>
                 <ind>300</ind>
-                <dep>180</dep>
-            </entry>
-            <entry>
-                <ind>350</ind>
-                <dep>204</dep>
+                <dep>201</dep>
             </entry>
             <entry>
                 <ind>400</ind>
-                <dep>224</dep>
+                <dep>249</dep>
             </entry>
             <entry>
                 <ind>500</ind>
-                <dep>251</dep>
+                <dep>279</dep>
             </entry>
             <entry>
                 <ind>600</ind>
-                <dep>280</dep>
+                <dep>304</dep>
             </entry>
             <entry>
-                <ind>500</ind>
-                <dep>251</dep>
+                <ind>700</ind>
+                <dep>326</dep>
             </entry>
             <entry>
-                <ind>1050</ind>
-                <dep>345</dep>
+                <ind>850</ind>
+                <dep>353</dep>
             </entry>
         </interpolation>
         <axis>
@@ -21907,60 +21945,52 @@
         <property>sim/model/f-14b/instrumentation/airspeed-indicator/safe-speed-limit-bug-mach</property>
         <interpolation>
             <entry>
-                <ind>0</ind>
-                <dep>0</dep>
+                <ind>0.3</ind>
+                <dep>133</dep>
             </entry>
             <entry>
                 <ind>0.4</ind>
-                <dep>90</dep>
+                <dep>87</dep>
             </entry>
             <entry>
                 <ind>0.5</ind>
-                <dep>56</dep>
+                <dep>58</dep>
             </entry>
             <entry>
                 <ind>0.6</ind>
-                <dep>23</dep>
+                <dep>34</dep>
             </entry>
             <entry>
                 <ind>0.7</ind>
-                <dep>10</dep>
+                <dep>12</dep>
             </entry>
             <entry>
                 <ind>0.8</ind>
-                <dep>-10</dep>
+                <dep>-6</dep>
             </entry>
             <entry>
                 <ind>0.9</ind>
-                <dep>-26</dep>
+                <dep>-23</dep>
             </entry>
             <entry>
                 <ind>1.0</ind>
-                <dep>-42</dep>
+                <dep>-40</dep>
             </entry>
             <entry>
                 <ind>1.4</ind>
-                <dep>-97</dep>
-            </entry>
-            <entry>
-                <ind>1.5</ind>
-                <dep>-114</dep>
+                <dep>-98</dep>
             </entry>
             <entry>
                 <ind>1.6</ind>
-                <dep>-124</dep>
+                <dep>-121</dep>
             </entry>
             <entry>
                 <ind>1.8</ind>
-                <dep>-144</dep>
+                <dep>-142</dep>
             </entry>
             <entry>
                 <ind>2.0</ind>
-                <dep>-162</dep>
-            </entry>
-            <entry>
-                <ind>2.0</ind>
-                <dep>-174</dep>
+                <dep>-160</dep>
             </entry>
             <entry>
                 <ind>2.4</ind>
@@ -22028,147 +22058,7 @@
             </entry>
             <entry>
                 <ind>850</ind>
-                <dep>352</dep>
-            </entry>
-        </interpolation>
-        <axis>
-            <object-name>asi-rio-centre-axis</object-name>
-        </axis>
-    </animation>
-    <animation>
-        <type>rotate</type>
-        <object-name>asi-rio-mach-scale</object-name>
-        <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-        </condition>
-        <interpolation>
-            <!-- <entry>
-                <ind>0</ind>
-                <dep>0</dep>
-            </entry>
-            <entry>
-                <ind>80</ind>
-                <dep>28</dep>
-            </entry>
-            <entry>
-                <ind>100</ind>
-                <dep>46</dep>
-            </entry>
-            <entry>
-                <ind>120</ind>
-                <dep>64</dep>
-            </entry>
-            <entry>
-                <ind>150</ind>
-                <dep>93</dep>
-            </entry> -->
-            <entry>
-                <ind>190</ind>
-                <dep>134</dep>
-            </entry>
-            <entry>
-                <ind>300</ind>
-                <dep>201</dep>
-            </entry>
-            <entry>
-                <ind>400</ind>
-                <dep>249</dep>
-            </entry>
-            <entry>
-                <ind>500</ind>
-                <dep>279</dep>
-            </entry>
-            <entry>
-                <ind>600</ind>
-                <dep>304</dep>
-            </entry>
-            <entry>
-                <ind>700</ind>
-                <dep>326</dep>
-            </entry>
-            <entry>
-                <ind>850</ind>
                 <dep>353</dep>
-            </entry>
-        </interpolation>
-        <axis>
-            <object-name>asi-rio-centre-axis</object-name>
-        </axis>
-    </animation>
-    <animation>
-        <type>rotate</type>
-        <object-name>asi-rio-mach-scale</object-name>
-        <property>velocities/mach</property>
-        <condition>
-            <greater-than>
-                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
-            </greater-than>
-        </condition>
-        <interpolation>
-            <entry>
-                <ind>0.3</ind>
-                <dep>133</dep>
-            </entry>
-            <entry>
-                <ind>0.4</ind>
-                <dep>90</dep>
-            </entry>
-            <entry>
-                <ind>0.5</ind>
-                <dep>56</dep>
-            </entry>
-            <entry>
-                <ind>0.6</ind>
-                <dep>23</dep>
-            </entry>
-            <entry>
-                <ind>0.7</ind>
-                <dep>10</dep>
-            </entry>
-            <entry>
-                <ind>0.8</ind>
-                <dep>-10</dep>
-            </entry>
-            <entry>
-                <ind>0.9</ind>
-                <dep>-26</dep>
-            </entry>
-            <entry>
-                <ind>1.0</ind>
-                <dep>-42</dep>
-            </entry>
-            <entry>
-                <ind>1.4</ind>
-                <dep>-97</dep>
-            </entry>
-            <entry>
-                <ind>1.5</ind>
-                <dep>-114</dep>
-            </entry>
-            <entry>
-                <ind>1.6</ind>
-                <dep>-124</dep>
-            </entry>
-            <entry>
-                <ind>1.8</ind>
-                <dep>-144</dep>
-            </entry>
-            <entry>
-                <ind>2.0</ind>
-                <dep>-162</dep>
-            </entry>
-            <entry>
-                <ind>2.0</ind>
-                <dep>-174</dep>
-            </entry>
-            <entry>
-                <ind>2.4</ind>
-                <dep>-186</dep>
             </entry>
         </interpolation>
         <axis>
@@ -22205,7 +22095,7 @@
             </binding>
         </action>
     </animation>
- 
+
     <!-- RIO ASI Lightning -->
     <effect>
         <name>f14-interior</name>
