@@ -38,9 +38,13 @@
                 <name>F-14 canopy simulation</name>
                 <path>Aircraft/f-14b/Systems/canopy.xml</path>
             </autopilot>
-            <property-rule n="100">
+           <property-rule n="100">
                 <name>F-14 Master Caution</name>
                 <path>Systems/f-14-caution.xml</path>
+            </property-rule>
+            <property-rule n="101">
+                <name>F-14 external stores rules</name>
+                <path>Systems/f-14b-rules-external-stores.xml</path>
             </property-rule>
         </systems>
 
@@ -1039,6 +1043,35 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <bool n="28" type="bool"/> <!-- aoa indexer slow -->
                 <bool n="29" type="bool"/> <!-- aoa indexer onspeed -->
                 <bool n="30" type="bool"/> <!-- aoa indexer fast -->
+
+                <!-- external stores -->
+                <bool n="31" alias="/sim/model/f-14b/payload/selected/exttank-left" />
+                <bool n="32" alias="/sim/model/f-14b/payload/selected/exttank-right" />
+                <bool n="33" alias="/sim/model/f-14b/payload/selected/wings-pylons" />
+                <bool n="34" alias="/sim/model/f-14b/payload/selected/central-pylons" />
+                <bool n="35" alias="/sim/model/f-14b/payload/selected/aim-9-1-launcher-aim-9-8-launcher" />
+                <bool n="36" alias="/sim/model/f-14b/payload/selected/aim-54-1-launcher-aim-54-8-launcher" />
+                <bool n="37" alias="/sim/model/f-14b/payload/selected/aim-7-1" />
+                <bool n="38" alias="/sim/model/f-14b/payload/selected/aim-7-3" />
+                <bool n="39" alias="/sim/model/f-14b/payload/selected/aim-7-4" />
+                <bool n="40" alias="/sim/model/f-14b/payload/selected/aim-7-5" />
+                <bool n="41" alias="/sim/model/f-14b/payload/selected/aim-7-6" />
+                <bool n="42" alias="/sim/model/f-14b/payload/selected/aim-7-8" />
+                <bool n="43" alias="/sim/model/f-14b/payload/selected/aim-54-1" />
+                <bool n="44" alias="/sim/model/f-14b/payload/selected/aim-54-3" />
+                <bool n="45" alias="/sim/model/f-14b/payload/selected/aim-54-4" />
+                <bool n="46" alias="/sim/model/f-14b/payload/selected/aim-54-5" />
+                <bool n="47" alias="/sim/model/f-14b/payload/selected/aim-54-6" />
+                <bool n="48" alias="/sim/model/f-14b/payload/selected/aim-54-8" />
+                <bool n="49" alias="/sim/model/f-14b/payload/selected/aim-9-0" />
+                <bool n="50" alias="/sim/model/f-14b/payload/selected/aim-9-1" />
+                <bool n="51" alias="/sim/model/f-14b/payload/selected/aim-9-8" />
+                <bool n="52" alias="/sim/model/f-14b/payload/selected/aim-9-9" />
+                <bool n="53" alias="/sim/model/f-14b/payload/selected/mk-83-3" />
+                <bool n="54" alias="/sim/model/f-14b/payload/selected/mk-83-4" />
+                <bool n="55" alias="/sim/model/f-14b/payload/selected/mk-83-5" />
+                <bool n="56" alias="/sim/model/f-14b/payload/selected/mk-83-6" />
+
                 <float alias="/fdm/jsbsim/fcs/wing-sweep-norm" n="0">0</float>
                 <!-- wing-sweep     -->
                 <float n="2">0</float>
@@ -1086,7 +1119,6 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <string n="0" type="string"></string>
                 <!-- mp-network -->
                 <string n="1" type="string">xxx</string>
-                <string n="5" type="string">00--++00--Empty</string><!-- mp stores -->
                 <string n="6" type="string"></string><!-- mp radar spike -->
                 <string n="13" type="string"></string>
                 <!-- instruments -->
@@ -2716,9 +2748,6 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         <fc>
             <file>Aircraft/f-14b/Nasal/fire-control.nas</file><!-- must be before pylons -->
         </fc>
-        <mps>
-            <file>Aircraft/f-14b/Nasal/mp-stores.nas</file>
-        </mps>
         <pylons>
             <file>Aircraft/f-14b/Nasal/pylons.nas</file>
         </pylons>

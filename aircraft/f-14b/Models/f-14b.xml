@@ -43,48 +43,12 @@
             #io.load_nasal(fn_net, "f14_net");
 			#	f14_net.mp_network_init(0);
 			#}
-            
-            # Stores visible over MP:
-            var looping = 1;
-            var str5 = "";
-            var split1 = nil;
-            var split2 = nil;
-            var split3 = nil;
-            var pylon = nil;
-            var type = nil;
-            var count = nil;
-            var set = nil;
-            
-            var loop = func {
-              #print("loop");
-              str5 = self.getNode("sim/multiplay/generic/string[5]");
-              if (str5 != nil and str5.getValue() != nil and size(str5.getValue()) > 10) {#print("pass1 "~str5.getValue());
-                split1 = split("++", str5.getValue());
-                if (size(split1) > 1) {#print("pass2");
-                  split2 = split("--", split1[0]);
-                  split3 = split("--", split1[1]);
-                  if (split2 != nil and size(split2)> 1 and split3 != nil and size(split3)> 1) {#print("pass3");
-                    pylon = num(split2[0]);
-                    type = split2[1];
-                    count = num(split3[0]);
-                    set = split3[1];
-                    self.getNode("payload/armament/station/id-"~pylon~"-type",1).setValue(type);
-                    self.getNode("payload/armament/station/id-"~pylon~"-count",1).setIntValue(count);
-                    self.getNode("payload/armament/station/id-"~pylon~"-set",1).setValue(set);
-                  }
-                }
-              }
-              if (looping) settimer(loop, 0.10);
-            }
-            
-            loop();
           ]]>
         </load>
         <unload>
             <![CDATA[ 
 			print("UNLOAD f-14b ", self.getPath());
 			cmdarg().getNode("sim/model/ac-type", 1).setValue(""); # Dual-control
-            looping = 0;
 			livery_update.stop();
         ]]>
         </unload>
@@ -694,496 +658,7 @@
             <z-m>-0.4889</z-m>
         </bottom-right>
     </panel>
-    <!-- ******************************************************************* -->
-    <!-- External loads                                                      -->
-    <!-- ******************************************************************* -->
-    <!--Merged from Aircraft/f-14b/Models/Stores/stores-model.xml-->
-  <animation>
-    <type>select</type>
-    <nopreview />
-    <object-name>exttank-left</object-name>
-    <condition>
-      <equals>
-        <property>payload/armament/station/id-2-set</property>
-        <value>267 Gal Fuel tank</value>
-      </equals>
-      <equals>
-        <property>payload/armament/station/id-2-count</property>
-        <value>1</value>
-      </equals>
-    </condition>
-  </animation>
 
-  <animation>
-    <type>select</type>
-    <nopreview />
-    <object-name>exttank-right</object-name>
-    <condition>
-      <equals>
-        <property>payload/armament/station/id-7-set</property>
-        <value>267 Gal Fuel tank</value>
-      </equals>
-      <equals>
-        <property>payload/armament/station/id-7-count</property>
-        <value>1</value>
-      </equals>
-    </condition>
-  </animation>
-    <!-- Pylons -->
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>wings-pylons</object-name>
-        <condition>
-            <not>
-                <and>
-                    <equals>
-                        <property>payload/armament/station/id-0-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-1-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-8-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-9-set</property>
-                        <value>Empty</value>
-                    </equals>
-                </and>
-            </not>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>central-pylons</object-name>
-        <condition>
-            <not>
-                <and>
-                    <equals>
-                        <property>payload/armament/station/id-3-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-4-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-5-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-6-set</property>
-                        <value>Empty</value>
-                    </equals>
-                </and>
-            </not>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-9-1-launcher</object-name>
-        <object-name>aim-9-8-launcher</object-name>
-        <condition>  
-            <not>
-                <and>
-                    <equals>
-                        <property>payload/armament/station/id-1-set</property>
-                        <value>Empty</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-8-set</property>
-                        <value>Empty</value>
-                    </equals>
-                </and>
-            </not>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-1-launcher</object-name>
-        <object-name>aim-54-8-launcher</object-name>
-        <condition>
-                <or>
-                    <equals>
-                        <property>payload/armament/station/id-1-set</property>
-                        <value>AIM-54</value>
-                    </equals>
-                    <equals>
-                        <property>payload/armament/station/id-8-set</property>
-                        <value>AIM-54</value>
-                    </equals>
-                </or>
-        </condition>
-    </animation>
-
-    <!-- AIM-7 -->
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-1</object-name>
-        <condition>     
-            <equals>
-                <property>payload/armament/station/id-1-set</property>
-                <value>AIM-7</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-1-count</property>
-                <value>1</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-3</object-name>
-        <condition>     
-            <equals>
-                <property>payload/armament/station/id-3-set</property>
-                <value>AIM-7</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-3-count</property>
-                <value>1</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-4</object-name>
-        <condition>     
-            <equals>
-                <property>payload/armament/station/id-4-set</property>
-                <value>AIM-7</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-4-count</property>
-                <value>1</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-5</object-name>
-        <condition>     
-            <equals>
-                <property>payload/armament/station/id-5-set</property>
-                <value>AIM-7</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-5-count</property>
-                <value>1</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-6</object-name>
-        <condition>     
-            <equals>
-                <property>payload/armament/station/id-6-set</property>
-                <value>AIM-7</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-6-count</property>
-                <value>1</value>
-            </equals>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-7-8</object-name>
-        <condition>   
-            <equals>
-                <property>payload/armament/station/id-8-set</property>
-                <value>AIM-7</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-8-count</property>
-                <value>1</value>
-            </equals>  
-        </condition>
-    </animation>
-
-
-    <!-- AIM-54 -->
-    <animation>
-        <type>select</type><!-- why is this select done twice? -->
-        <nopreview/>
-        <object-name>aim-54-1-launcher</object-name>
-        <object-name>aim-54-8-launcher</object-name>
-        <condition>
-            <or>
-                <equals>
-                    <property>payload/armament/station/id-1-set</property>
-                    <value>AIM-54</value>
-                </equals>
-                <equals>
-                    <property>payload/armament/station/id-8-set</property>
-                    <value>AIM-54</value>
-                </equals>
-            </or>
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-1</object-name>
-        <condition>   
-            <equals>
-                <property>payload/armament/station/id-1-set</property>
-                <value>AIM-54</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-1-count</property>
-                <value>1</value>
-            </equals>  
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-3</object-name>
-        <condition>   
-            <equals>
-                <property>payload/armament/station/id-3-set</property>
-                <value>AIM-54</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-3-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-4</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-4-set</property>
-                <value>AIM-54</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-4-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-5</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-5-set</property>
-                <value>AIM-54</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-5-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-6</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-6-set</property>
-                <value>AIM-54</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-6-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-54-8</object-name>
-        <condition>   
-            <equals>
-                <property>payload/armament/station/id-8-set</property>
-                <value>AIM-54</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-8-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-
-    <!-- AIM-9 -->
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-9-0</object-name>
-        <condition>
-            <or>
-                <equals>
-                    <property>payload/armament/station/id-0-set</property>
-                    <value>AIM-9</value>
-                </equals>
-                <equals>
-                    <property>payload/armament/station/id-0-set</property>
-                    <value>Smokewinder White</value>
-                </equals>
-            </or>
-            <equals>
-                <property>payload/armament/station/id-0-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-9-1</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-1-set</property>
-                <value>AIM-9</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-1-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-9-8</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-8-set</property>
-                <value>AIM-9</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-8-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>aim-9-9</object-name>
-        <condition>  
-            <or>
-                <equals>
-                    <property>payload/armament/station/id-9-set</property>
-                    <value>AIM-9</value>
-                </equals>
-                <equals>
-                    <property>payload/armament/station/id-9-set</property>
-                    <value>Smokewinder White</value>
-                </equals>
-            </or>
-            <equals>
-                <property>payload/armament/station/id-9-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <!-- MK-83 -->
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>mk-83-3</object-name>
-        <condition>   
-            <equals>
-                <property>payload/armament/station/id-3-set</property>
-                <value>MK-83</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-3-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>mk-83-4</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-4-set</property>
-                <value>MK-83</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-4-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>mk-83-5</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-5-set</property>
-                <value>MK-83</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-5-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    <animation>
-        <type>select</type>
-        <nopreview/>
-        <object-name>mk-83-6</object-name>
-        <condition>  
-            <equals>
-                <property>payload/armament/station/id-6-set</property>
-                <value>MK-83</value>
-            </equals>
-            <equals>
-                <property>payload/armament/station/id-6-count</property>
-                <value>1</value>
-            </equals> 
-        </condition>
-    </animation>
-
-    
     <!-- AOA Index lights on the nose strut -->
     <animation>
         <object-name>gear-indexer-slow</object-name>
@@ -4866,6 +4341,220 @@
             </greater-than>
         </condition>
     </animation>
+
+    <!-- Payload and armament -->
+    <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>exttank-left</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[31]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>exttank-right</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[32]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>wings-pylons</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[33]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>central-pylons</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[34]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-9-1-launcher</object-name>
+        <object-name>aim-9-8-launcher</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[35]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-1-launcher</object-name>
+        <object-name>aim-54-8-launcher</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[36]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-7-1</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[37]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-7-3</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[38]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-7-4</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[39]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-7-5</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[40]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-7-6</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[41]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-7-8</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[42]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-1</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[43]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-3</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[44]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-4</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[45]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-5</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[46]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-6</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[47]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-54-8</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[48]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-9-0</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[49]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-9-1</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[50]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-9-8</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[51]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>aim-9-9</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[52]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk-83-3</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[53]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk-83-4</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[54]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk-83-5</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[55]</property>
+        </condition>
+      </animation>
+      <animation>
+        <type>select</type>
+        <nopreview />
+        <object-name>mk-83-6</object-name>
+        <condition>
+          <property>sim/multiplay/generic/bool[56]</property>
+        </condition>
+      </animation>
+    
+    <!-- END Payload and armament -->
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
