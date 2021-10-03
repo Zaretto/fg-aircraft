@@ -914,8 +914,6 @@ var initOnce = func {
 	if (getprop("sim/signals/fdm-initialized")) {
 		# this method will be run once when the FDM is ready, and will never be run again. (unless the FG Reset option is used)
 		removelistener(initOnceListen);
-		
-		mps.loop();#TODO: there probably is a central place this could be run from and convert it to maketimer.
 	    
 	    # make failure mode for radar and fire-control, so that when aircraft is hit missiles cannot still be fired off:
 	    var prop = "/instrumentation/radar";
