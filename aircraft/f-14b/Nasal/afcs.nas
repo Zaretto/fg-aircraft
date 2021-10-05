@@ -224,11 +224,15 @@ if (hdg_gt_switch.getValue() > 0)
 {
 		target_hdg.setValue(course_demand.getValue());
 			ap_hdg_lock.setValue("dg-heading-hold");
+	setprop("sim/model/f-14b/controls/pilots-displays/mode/steer/tacan-bt",1);
+	setprop("sim/model/f-14b/controls/pilots-displays/mode/steer/dest-bt",0);
 }
 else
 {
 	target_hdg.setValue(course_demand.getValue());
 	ap_hdg_lock.setValue("true-heading-hold");
+	setprop("sim/model/f-14b/controls/pilots-displays/mode/steer/tacan-bt",0);
+	setprop("sim/model/f-14b/controls/pilots-displays/mode/steer/dest-bt",1);
 }
 
 	} else {

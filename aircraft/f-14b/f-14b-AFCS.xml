@@ -3,6 +3,90 @@
 	 Richard Harrison; April 2020.  -->
 <PropertyList>
 
+	<!-- Support functions. -->
+	<filter>
+		<name>HSD Course display</name>
+		<debug>false</debug>
+		<type>gain</type>
+		<enable>
+			<property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+		</enable>
+		<gain>1.0</gain>
+		<input>
+			<property>instrumentation/nav[1]/radials/selected-deg</property>
+		</input>
+		<output>instrumentation/HSD/course-selected-deg</output>
+	</filter>
+	<filter>
+		<name>HSD Course display - Ground Track</name>
+		<debug>false</debug>
+		<type>gain</type>
+		<enable>
+			<property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+		</enable>
+		<gain>1.0</gain>
+		<input>
+			<expression>
+				<floor>
+					<property>autopilot/route-manager/wp/true-bearing-deg</property>
+				</floor>
+			</expression>
+		</input>
+		<output>instrumentation/HSD/course-selected-deg</output>
+	</filter>
+	
+	<filter>
+		<name>HSD distance display</name>
+		<debug>false</debug>
+		<type>gain</type>
+		<enable>
+			<property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+		</enable>
+		<gain>1.0</gain>
+		<input>
+			<property>instrumentation/tacan/indicated-distance-nm</property>
+		</input>
+		<output>instrumentation/HSD/distance-nm</output>
+	</filter>
+	<filter>
+		<name>HSD distance display - Ground Track</name>
+		<debug>false</debug>
+		<type>gain</type>
+		<enable>
+			<property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+		</enable>
+		<gain>1.0</gain>
+		<input>
+			<expression>
+				<floor>
+					<sum>
+						<property>autopilot/route-manager/wp/dist</property>
+						<value>0.5</value>
+					</sum>
+				</floor>
+			</expression>
+		</input>
+		<output>instrumentation/HSD/distance-nm</output>
+	</filter>
+	
+	<!-- <filter>
+		<name>HSD Course display</name>
+		<debug>false</debug>
+		<type>gain</type>
+		<enable>
+			<not>
+				<property>autopilot/route-manager/active</property>
+			</not>
+		</enable>
+		<input>
+			<property>instrumentation/nav[1]/radials/selected-deg</property>
+		</input>
+		<output>instrumentation/HSD/course-selected-deg</output>
+		<gain>1.0</gain>
+	</filter>
+	instrumentation/nav[1]/radials/selected-deg
+	<property>autopilot/route-manager/wp/true-bearing-deg</property> -->
+
 	<!-- =============================================================== -->
 	<!-- Roll Axis Modes                                                 -->
 	<!-- =============================================================== -->

@@ -1668,7 +1668,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
 
         </lighting>
         <flight>
-            <ground-spoilers-armed type="bool"> false </ground-spoilers-armed>
+            <ground-spoilers-armed type="int">0</ground-spoilers-armed>
             <fake>0.0</fake>
             <DLC-engaged alias="/fdm/jsbsim/fcs/dlc-active"/>
             <DLC alias="/fdm/jsbsim/fcs/stick-thumbwheel-norm"/>
@@ -1678,6 +1678,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         <gear>
             <!-- Start with the Parking Brake on -->
             <!--			<brake-parking type="double">1.0</brake-parking> -->
+            <tailhook alias="fdm/jsbsim/systems/hook/tailhook-cmd-norm"/>
         </gear>
     </controls>
 
@@ -1727,15 +1728,6 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <binding>
                       <command>dialog-show</command>
                       <dialog-name>ignore</dialog-name>
-                </binding>
-            </key>
-
-            <key n="8">
-                <name>CTRL-h</name>
-                <desc>Toggle autopilot heading mode.</desc>
-                <binding>
-                    <command>nasal</command>
-                    <script>f14_afcs.afcs_heading_switch(0);</script>
                 </binding>
             </key>
 

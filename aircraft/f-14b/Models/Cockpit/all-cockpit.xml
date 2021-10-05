@@ -2744,6 +2744,21 @@
             <z>0.0281203137968064</z>
         </axis>
     </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>brake-handle</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>controls/gear/brake-parking</property>
+            </binding>
+    </action>
+    </animation>
+
     <animation>
         <type>rotate</type>
         <object-name>ld-gear-handle</object-name>
@@ -2766,6 +2781,21 @@
             <object-name>ld-gear-handle-axis</object-name>
         </axis>
     </animation>
+    
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>ld-gear-handle</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>controls.gearToggle()</script>
+            </binding>
+    </action>
+    </animation>
+
     <animation>
         <type>rotate</type>
         <object-name>hyd-isol-switch</object-name>
@@ -3190,6 +3220,9 @@
     <!---->
     <animation>
         <type>rotate</type>
+    </animation>
+    <animation>
+        <type>knob</type>
         <object-name>refuel-probe-switch</object-name>
         <property>sim/model/f-14b/controls/fuel/refuel-probe-switch</property>
         <offset>20</offset>
@@ -3197,48 +3230,23 @@
         <axis>
             <object-name>refuel-probe-switch-axis</object-name>
         </axis>
-    </animation>
-    <!-- AntiSkid / Spoiler braking -->
-    <animation>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>hotspot-spoiler-brake-both</object-name>
         <action>
             <button>0</button>
+            <repeatable>false</repeatable>
             <binding>
-                <command>nasal</command>
-                <script>f14.set_spoiler_brake(2)</script>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/fuel/refuel-probe-switch</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
             </binding>
         </action>
     </animation>
+
     <animation>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>hotspot-spoiler-brake-off</object-name>
-        <action>
-            <button>0</button>
-            <binding>
-                <command>nasal</command>
-                <script>f14.set_spoiler_brake(0)</script>
-            </binding>
-        </action>
-    </animation>
-    <!-- hotspot-spoiler-brake-both -->
-    <animation>
-        <type>pick</type>
-        <visible>false</visible>
-        <object-name>hotspot-spoiler-brake-spoilers</object-name>
-        <action>
-            <button>0</button>
-            <binding>
-                <command>nasal</command>
-                <script>f14.set_spoiler_brake(1)</script>
-            </binding>
-        </action>
-    </animation>
-    <animation>
+        <type>knob</type>
         <object-name>antiskid-spoiler-switch</object-name>
-        <type>rotate</type>
         <property>controls/flight/ground-spoilers-armed</property>
         <interpolation>
             <entry>
@@ -3253,7 +3261,32 @@
         <axis>
             <object-name>antiskid-spoiler-switch-axis</object-name>
         </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/flight/ground-spoilers-armed</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
     </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>emerg-stores-jett-button-off</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>nasal</command>
+                <script>f14.emerg_jettison()</script>
+            </binding>
+                </action>
+    </animation>
+
     <!-- lighting -->
     
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
@@ -4594,11 +4627,108 @@
             </binding>
         </action>
     </animation>
+    
+    <animation>
+        <type>knob</type>
+        <object-name>hud-brt-knob</object-name>
+        <property>sim/model/f-14b/controls/hud/intens</property>
+        <axis>
+            <object-name>hud-brt-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/hud/intens</property>
+                <factor>0.05</factor>
+                <min>0.0</min>
+                <max>1.0</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>vdi-brt-knob</object-name>
+        <property>sim/model/f-14b/controls/VDI/brightness</property>
+        <axis>
+            <object-name>vdi-brt-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/VDI/brightness</property>
+                <factor>0.05</factor>
+                <min>0</min>
+                <max>1</max>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>vdi-cont-knob</object-name>
+        <property>sim/model/f-14b/controls/VDI/contrast</property>
+        <axis>
+            <object-name>vdi-cont-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/VDI/contrast</property>
+                <factor>0.05</factor>
+                <min>0</min>
+                <max>1</max>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>filter-knob</object-name>
+        <property>sim/model/f-14b/controls/hud/intens</property>
+        <axis>
+            <object-name>filter-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/hud/current-color</property>
+                <step>1</step>
+                <min>0</min>
+                <max>2</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>fg-bingo-knob</object-name>
+        <property>sim/model/f-14b/controls/fuel/bingo</property>
+        <axis>
+            <object-name>fg-bingo-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/fuel/bingo</property>
+                <factor>100</factor>
+                <min>0</min>
+                <max>19000</max>
+                <wrap>false</wrap>
+            </binding>
+                </action>
+    </animation>
+    A1_knob
+
     <!-- Master Caution Button -->
     <animation>
         <type>pick</type>
         <visible>true</visible>
-        <object-name>hotspot-master-caution-pick</object-name>
+        <object-name>master-caution-on</object-name>
         <action>
             <button>0</button>
             <repeatable>false</repeatable>
@@ -6458,9 +6588,26 @@
         </axis>
     </animation>
     <animation>
+        <type>select</type>
+        <object-name>course-group</object-name>
+        <object-name>miles-drum-0</object-name>
+        <object-name>miles-drum-decimal-point</object-name>
+        <object-name>aircraft-symbol</object-name>
+        <condition>
+            <property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>hsd-dest-group</object-name>
+        <condition>
+            <property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+        </condition>
+    </animation>
+    <animation>
         <type>rotate</type>
         <object-name>course-group</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <axis>
             <object-name>tid-axis</object-name>
         </axis>
@@ -6512,9 +6659,190 @@
         </condition>
     </animation>
     <animation>
+        <type>rotate</type>
+        <object-name>dest-bearing</object-name>
+        <property>orientation/heading-magnetic-deg</property>
+        <factor>-1</factor>
+        <axis>
+            <object-name>tid-axis</object-name>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>dest-bearing</object-name>
+        <property>instrumentation/HSD/course-selected-deg</property>
+        <axis>
+            <object-name>tid-axis</object-name>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>windspeed-1-drum-0</object-name>
+        <property>environment/wind-from-heading-deg</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>windspeed-1-drum-1</object-name>
+        <property>environment/wind-from-heading-deg</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>windspeed-1-drum-2</object-name>
+        <property>environment/wind-from-heading-deg</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>windspeed-2-drum-0</object-name>
+        <property>environment/wind-speed-kt</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>windspeed-2-drum-1</object-name>
+        <property>environment/wind-speed-kt</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>windspeed-2-drum-2</object-name>
+        <property>environment/wind-speed-kt</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>tas-drum-0</object-name>
+        <property>instrumentation/airspeed-indicator/true-speed-kt</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>tas-drum-1</object-name>
+        <property>instrumentation/airspeed-indicator/true-speed-kt</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>tas-drum-2</object-name>
+        <property>instrumentation/airspeed-indicator/true-speed-kt</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>tas-drum-3</object-name>
+        <property>instrumentation/airspeed-indicator/true-speed-kt</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>gs-drum-0</object-name>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>gs-drum-1</object-name>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>gs-drum-2</object-name>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>gs-drum-3</object-name>
+        <property>velocities/groundspeed-kt</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
         <type>textranslate</type>
         <object-name>miles-drum-0</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>1</factor>
         <offset>-0.1</offset>
         <step>0.1</step>
@@ -6525,7 +6853,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>miles-drum-1</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -6537,7 +6865,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>miles-drum-2</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -6548,7 +6876,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>miles-drum-3</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -6560,7 +6888,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>course-drum-1</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <axis>
@@ -6570,7 +6898,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>course-drum-2</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -6581,7 +6909,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>course-drum-3</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -6946,6 +7274,7 @@
             </equals>
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
         <object-name>hr_miles-drum-0</object-name>
@@ -14406,6 +14735,61 @@
             <blue>0.0</blue>
         </emission>
     </animation>
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>hdg-knob</object-name>
+        <property>sim/model/f-14b/instrumentation/hsd/selected-heading</property>
+        <axis>
+            <object-name>hdg-knob-axis</object-name>
+        </axis>
+        
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/instrumentation/hsd/selected-heading</property>
+                <step>-1</step>
+                <min>-180</min>
+                <max>180</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    
+    <animation>
+        <type>knob</type>
+        <object-name>crs-knob</object-name>
+        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <axis>
+            <object-name>crs-knob-axis</object-name>
+        </axis>
+        
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/nav[1]/radials/selected-deg</property>
+                <step>-1</step>
+                <min>0</min>
+                <max>360</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/nav[2]/radials/selected-deg</property>
+                <step>-1</step>
+                <min>0</min>
+                <max>360</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>setprop("autopilot/settings/heading-bug-deg", getprop("instrumentation/nav[1]/radials/selected-deg"));</script>
+            </binding>
+        </action>
+    </animation>
+
     <!--Renamed objects: 
       tid: hr_tid
       rng-label: hr_rng-label
@@ -14927,9 +15311,28 @@
         </axis>
     </animation>
     <!-- Lighting -->
-    
-    
-    
+    <animation>
+        <name>reset-knob</name>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>reset-knob</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>true</repeatable>
+            <interval-sec>0.2</interval-sec>
+            <binding> 
+                <command>property-assign</command>
+                <property>sim/model/f-14b/instrumentation/g-meter/g-max</property>
+                <value>1</value>
+            </binding>
+            <binding> 
+                <command>property-assign</command>
+                <property>sim/model/f-14b/instrumentation/g-meter/g-min</property>
+                <value>1</value>
+            </binding>
+        </action>
+    </animation>
+
     <effect>
         <name>f14-interior</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14interior</inherits-from>
@@ -15099,7 +15502,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>range-drum-1</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -15110,7 +15513,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>range-drum-2</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -15121,7 +15524,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>range-drum-3</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -15132,7 +15535,7 @@
     <animation>
         <type>rotate</type>
         <object-name>range-deci</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>-360</factor>
         <axis>
             <object-name>range-deci-axis</object-name>
@@ -15806,75 +16209,29 @@
     </animation>
     <!-- Clock Setting Knob -->
     <animation>
-        <name>time-offset-left-fine</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>time-offset-left</object-name>
+        <type>knob</type>
+        <object-name>time-offset-knob</object-name>
+        <property>instrumentation/clock/offset-sec</property>
+        <factor>0</factor>
+        <axis>
+            <object-name>time-offset-knob-axis</object-name>
+        </axis>
         <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
             <binding>
                 <command>property-adjust</command>
                 <property>instrumentation/clock/offset-sec</property>
-                <step>-60</step>
+                <factor>60</factor>
             </binding>
         </action>
     </animation>
-    <animation>
-        <name>time-offset-left-hours</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>time-offset-left</object-name>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/clock/offset-sec</property>
-                <step>-3600</step>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <name>time-offset-right-fine</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>time-offset-right</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/clock/offset-sec</property>
-                <step>60</step>
-            </binding>
-        </action>
-    </animation>
-    <animation>
-        <name>time-offset-right-hours</name>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>time-offset-right</object-name>
-        <action>
-            <button>1</button>
-            <repeatable>true</repeatable>
-            <interval-sec>0.2</interval-sec>
-            <binding>
-                <command>property-adjust</command>
-                <property>instrumentation/clock/offset-sec</property>
-                <step>3600</step>
-            </binding>
-        </action>
-    </animation>
-    <!-- Chronometer Start Stop Button -->
+
+
+        <!-- Chronometer Start Stop Button -->
     <animation>
         <name>start-stop-reset</name>
         <type>pick</type>
         <visible>true</visible>
-        <object-name>chronometer-button</object-name>
+        <object-name>clock_top_button</object-name>
         <action>
             <button>0</button>
             <repeatable>false</repeatable>
@@ -15952,6 +16309,19 @@
             <object-name>hook-handle-axis</object-name>
         </axis>
     </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>hook-handle</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+            </binding>
+        </action>
+    </animation>
     <!-- Hook Light -->
     <animation>
         <type>select</type>
@@ -16020,6 +16390,19 @@
         </axis>
     </animation>
     <animation>
+        <object-name>mode-to-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "to-bt")</script>
+            </binding>
+        </action>
+    </animation>
+    
+    <animation>
         <object-name>mode-cruise-bt</object-name>
         <type>translate</type>
         <property>sim/model/f-14b/controls/pilots-displays/mode/cruise-bt</property>
@@ -16030,6 +16413,19 @@
             <z>-0.292371704722737</z>
         </axis>
     </animation>
+    <animation>
+        <object-name>mode-cruise-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "cruise-bt")</script>
+            </binding>
+        </action>
+    </animation>
+
     <animation>
         <object-name>mode-aa-bt</object-name>
         <type>translate</type>
@@ -16042,6 +16438,19 @@
         </axis>
     </animation>
     <animation>
+        <object-name>mode-aa-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "aa-bt")</script>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
         <object-name>mode-ag-bt</object-name>
         <type>translate</type>
         <property>sim/model/f-14b/controls/pilots-displays/mode/ag-bt</property>
@@ -16053,6 +16462,19 @@
         </axis>
     </animation>
     <animation>
+        <object-name>mode-ag-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "ag-bt")</script>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
         <object-name>mode-ldg-bt</object-name>
         <type>translate</type>
         <property>sim/model/f-14b/controls/pilots-displays/mode/ldg-bt</property>
@@ -16062,6 +16484,18 @@
             <y>0.373658036477096</y>
             <z>-0.292371704722737</z>
         </axis>
+    </animation>
+    <animation>
+        <object-name>mode-ldg-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.sel_displays_main_mode("sim/model/f-14b/controls/pilots-displays/mode", "ldg-bt")</script>
+            </binding>
+        </action>
     </animation>
     <!-- HSD Mode Switch -->
     <animation>
@@ -16089,6 +16523,23 @@
             <object-name>hsd-mode-switch-axis</object-name>
         </axis>
     </animation>
+    <animation>
+        <object-name>hsd-mode-switch</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
+                <step>1</step>
+                <min>-1</min>
+                <max>2</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    
     <!-- VDI on/off Switch -->
     <animation>
         <type>rotate</type>
@@ -16099,6 +16550,19 @@
             <object-name>power-vdi-switch-axis</object-name>
         </axis>
     </animation>
+    <animation>
+        <object-name>power-vdi-switch</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/VDI/on-off</property>
+            </binding>
+        </action>
+    </animation>
+
     <!-- HUD on/off Switch -->
     <animation>
         <type>rotate</type>
@@ -16108,6 +16572,23 @@
         <axis>
             <object-name>power-vdi-switch-axis</object-name>
         </axis>
+    </animation>
+    <animation>
+        <object-name>power-hud-switch</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/hud/visibility[0]</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/hud/on-off</property>
+            </binding>
+        </action>
     </animation>
     <!-- HSD on/off Switch -->
     <animation>
@@ -16119,6 +16600,111 @@
             <object-name>power-vdi-switch-axis</object-name>
         </axis>
     </animation>
+
+    <animation>
+        <object-name>power-hsd-switch</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/HSD/on-off</property>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <object-name>steer-tacan-bt</object-name>
+        <type>translate</type>
+        <property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+        <factor>0.0073</factor>
+        <axis>
+            <x>-0.880283169243626</x>
+            <y>0.373658036477096</y>
+            <z>-0.292371704722737</z>
+        </axis>
+    </animation>
+    <animation>
+        <object-name>steer-tacan-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/awl-bt</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/man-bt</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+                <value>1</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/vec-bt</property>
+                <value>0</value>
+            </binding>
+        </action>
+    </animation>
+
+    
+    <animation>
+        <object-name>steer-dest-bt</object-name>
+        <type>translate</type>
+        <property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+        <factor>0.0073</factor>
+        <axis>
+            <x>-0.880283169243626</x>
+            <y>0.373658036477096</y>
+            <z>-0.292371704722737</z>
+        </axis>
+    </animation>
+    <animation>
+        <object-name>steer-dest-bt</object-name>
+        <type>pick</type>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/awl-bt</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+                <value>1</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/man-bt</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+                <value>0</value>
+            </binding>
+            <binding>
+                <command>property-assign</command>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/vec-bt</property>
+                <value>0</value>
+            </binding>
+        </action>
+    </animation>
+    
     <animation>
         <object-name>hook-lamp-off</object-name>
         <type>material</type>
@@ -31407,7 +31993,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>b_range-drum-1</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -31418,7 +32004,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>b_range-drum-2</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -31429,7 +32015,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>b_range-drum-3</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -31440,7 +32026,7 @@
     <animation>
         <type>rotate</type>
         <object-name>b_range-deci</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>-360</factor>
         <axis>
             <object-name>b_range-deci-axis</object-name>
@@ -31629,7 +32215,7 @@
     <animation>
         <type>rotate</type>
         <object-name>h_course-group</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <axis>
             <object-name>h_compass-rose-axis</object-name>
         </axis>
@@ -31683,7 +32269,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_miles-drum-0</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>1</factor>
         <offset>-0.1</offset>
         <step>0.1</step>
@@ -31694,7 +32280,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_miles-drum-1</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -31706,7 +32292,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_miles-drum-2</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -31717,7 +32303,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_miles-drum-3</object-name>
-        <property>instrumentation/tacan/indicated-distance-nm</property>
+        <property>instrumentation/HSD/distance-nm</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -31729,7 +32315,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_course-drum-1</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <axis>
@@ -31739,7 +32325,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_course-drum-2</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -31750,7 +32336,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>h_course-drum-3</object-name>
-        <property>instrumentation/nav[1]/radials/selected-deg</property>
+        <property>instrumentation/HSD/course-selected-deg</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
