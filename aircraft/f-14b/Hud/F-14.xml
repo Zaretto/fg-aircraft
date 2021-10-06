@@ -1063,17 +1063,18 @@
     <label>
         <name>Ground Spoilers</name>
         <condition>
-            <equals>
-                <property>controls/flight/ground-spoilers-armed</property>
-                <value>true</value>
-            </equals>
+            <not>
+                <equals>
+                    <property>controls/flight/ground-spoilers-armed</property>
+                    <value>0</value>
+                </equals>
+            </not>
         </condition>
         <x>50</x>
         <y>-125</y>
         <format>GS</format>
         <halign>left</halign>
     </label>
-
 
     <!--Hud mode: to,cr,aa,ag,ld-->
     <label>
