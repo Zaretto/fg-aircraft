@@ -539,7 +539,11 @@ systems/flyt/distortion-factor-per-g = 0.16 / MaxG  -->
 
 Prohibited:  AIM−9 launch with flaps/slats extended.
 
-(Figure 2-42. NAVAIR 01-F14AAP-1) * REDUCE SPEED LIGHT WILL ILLUMINATE IF AIRSPEED >225 KIAS AND FLAPS ARE GREATER THAN 4!
+(Figure 2-42. NAVAIR 01-F14AAP-1) * REDUCE SPEED LIGHT WILL ILLUMINATE 
+IF AIRSPEED >225 KIAS AND FLAPS ARE GREATER THAN 4 degrees
+
+The main flaps can be extended to 10 degrees with the slats extended
+to 7 degrees within the altitude and Mach envelope shown in NAVAIR 01-F14AAP-1 Figure 2-48
 
 2.21.1.1.1 Emergency Flaps
 EMER UP enables the pilot to override any electromechanical  commands  
@@ -562,7 +566,8 @@ asymmetry lockout (3-second light).
                     <independentVar lookup="row">fcs/flap-pos-deg-effective</independentVar>
                     <tableData>
                              0     9999
-                            14.9   9999
+                            10      390
+                            14.9    390
                             15      300
                             35      270
                         </tableData>
