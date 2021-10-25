@@ -1629,8 +1629,6 @@
                 <min>0</min>
                 <max>850</max>
             </binding>
-        </action>
-        <action>
             <binding>
                 <button>1</button>
                 <command>property-adjust</command>
@@ -3299,8 +3297,8 @@
         <name>f14panel-knob</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
     </effect>
-    
-    
+ 
+
     <!--Renamed objects: 
       mount: fp_mount
       switches: fp_switches
@@ -22961,46 +22959,32 @@
         </action>
     </animation>
     <animation>
-        <type>rotate</type>
+        <type>knob</type>
         <object-name>sta-1-sw</object-name>
         <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
         <factor>35</factor>
         <axis>
             <object-name>sta-1-sw-axis</object-name>
         </axis>
-    </animation>
-    <animation>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>hotspot-sta-1-up</object-name>
         <action>
-            <button>0</button>
-            <repeatable>false</repeatable>
-            <interval-sec>0.05</interval-sec>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
+                <factor>1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(0, -1);
+                f14.station_selector(0, 0);
                 </script>
             </binding>
         </action>
     </animation>
-    <animation>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>hotspot-sta-1-down</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>false</repeatable>
-            <interval-sec>0.05</interval-sec>
-            <binding>
-                <command>nasal</command>
-                <script>
-                    f14.station_selector(0, 1);
-                </script>
-            </binding>
-        </action>
-    </animation>
+   
     <animation>
         <type>knob</type>
         <object-name>sta-3-sw</object-name>
@@ -23090,42 +23074,27 @@
         </action>
     </animation>
     <animation>
-        <type>rotate</type>
+        <type>knob</type>
         <object-name>sta-8-sw</object-name>
         <property>sim/model/f-14b/controls/armament/station-selector[7]</property>
         <factor>35</factor>
         <axis>
             <object-name>sta-8-sw-axis</object-name>
         </axis>
-    </animation>
-    <animation>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>hotspot-sta-8-up</object-name>
         <action>
-            <button>0</button>
-            <repeatable>false</repeatable>
-            <interval-sec>0.05</interval-sec>
             <binding>
-                <command>nasal</command>
-                <script>
-                    f14.station_selector(7, -1);
-                </script>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/armament/station-selector[7]</property>
+                <factor>1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
             </binding>
-        </action>
-    </animation>
-    <animation>
-        <type>pick</type>
-        <visible>true</visible>
-        <object-name>hotspot-sta-8-down</object-name>
-        <action>
-            <button>0</button>
-            <repeatable>false</repeatable>
-            <interval-sec>0.05</interval-sec>
+        
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(7, 1);
+                f14.station_selector(7, 0);
                 </script>
             </binding>
         </action>
@@ -33007,8 +32976,874 @@
             </binding>
         </action>
     </animation>
-    <!-- Lightning -->
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-instrument-wheel</object-name>
+        <property>controls/lighting/instruments-norm</property>
+        <factor>-337</factor>
+        <axis>
+            <object-name>rio-lighting-wheel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/instruments-norm</property>
+                <factor>0.07142857142857142857142857142857</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-console-wheel</object-name>
+        <property>controls/lighting/panel-norm</property>
+        <factor>-337</factor>
+        <axis>
+            <object-name>rio-lighting-wheel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>controls/lighting/panel-norm</property>
+                <factor>0.07142857142857142857142857142857</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-white-flood-switch</object-name>
+        <property>sim/model/f-14b/controls/lighting/white-flood-light-switch</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <axis>
+            <object-name>rio-white-flood-switch-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/lighting/white-flood-light-switch</property>
+                <factor>-1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>f14.white_flood_switch()</script>
+            </binding>
+        </action>
+    </animation>
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-red-flood-switch</object-name>
+        <property>sim/model/f-14b/controls/lighting/red-flood-light-switch</property>
+        <factor>-30</factor>
+        <offset-deg>30</offset-deg>
+        <axis>
+            <object-name>rio-red-flood-switch-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/lighting/red-flood-light-switch</property>
+                <factor>-1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>f14.red_flood_switch()</script>
+            </binding>
+        </action>
+    </animation>
+<!-- IFF Panel -->
+<animation>
+    <type>knob</type>
+    <object-name>rio-iff-code-knob</object-name>
+    <property>instrumentation/iff/code-hold-zero</property>
+    <interpolation>
+        <entry>
+            <ind>0</ind>
+            <dep>0</dep>
+        </entry>
+        <entry>
+            <ind>1</ind>
+            <dep>-97</dep>
+        </entry>
+        <entry>
+            <ind>2</ind>
+            <dep>-150</dep>
+        </entry>
+    </interpolation>
+<axis>
+        <object-name>rio-iff-code-knob-axis</object-name>
+    </axis>
+    <action>
+        <binding>
+            <command>property-adjust</command>
+            <property>instrumentation/iff/code-hold-zero</property>
+            <factor>1</factor>
+            <min>0</min>
+            <max>2</max>
+            <wrap>false</wrap>
+        </binding>
+    </action>
+</animation>
+
+    <!-- test and test lights -->
+    <animation>
+        <object-name>rio-iff-test-reply-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/iff-test-reply-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>rio-iff-test-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/iff-test-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>rio-aai-fault-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/aai-fault-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>rio-aai-chal-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/aai-chal-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>rio-aai-test-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/aai-test-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rio-iff-test-reply-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>instrumentation/iff/iff-test-reply-button</property>
+                <value>1</value>
+            </binding>
+            <mod-up>
+                <binding>
+                    <command>property-assign</command>
+                    <property>instrumentation/iff/iff-test-reply-button</property>
+                    <value>0</value>
+                </binding>
+            </mod-up>
+
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rio-iff-test-reply-button</object-name>
+        <property>instrumentation/iff/iff-test-reply-button</property>
+        <factor>0.01</factor>
+        <axis>
+            <x>0</x>
+            <y>0.3</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rio-iff-test-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>instrumentation/iff/iff-test-button</property>
+                <value>1</value>
+            </binding>
+            <mod-up>
+                <binding>
+                    <command>property-assign</command>
+                    <property>instrumentation/iff/iff-test-button</property>
+                    <value>0</value>
+                </binding>
+            </mod-up>
+
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rio-iff-test-button</object-name>
+        <property>instrumentation/iff/iff-test-button</property>
+        <factor>0.01</factor>
+        <axis>
+            <x>0</x>
+            <y>0.3</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rio-aai-fault-button</object-name>
+        <object-name>rio-aai-fault-light</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>instrumentation/iff/aai-fault-button</property>
+                <value>1</value>
+            </binding>
+            <mod-up>
+                <binding>
+                    <command>property-assign</command>
+                    <property>instrumentation/iff/aai-fault-button</property>
+                    <value>0</value>
+                </binding>
+            </mod-up>
+
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rio-aai-fault-button</object-name>
+        <object-name>rio-aai-fault-light</object-name>
+        <property>instrumentation/iff/aai-fault-button</property>
+        <factor>0.01</factor>
+        <axis>
+            <x>0</x>
+            <y>0.3</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rio-aai-chal-button</object-name>
+        <object-name>rio-aai-chal-light</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>instrumentation/iff/aai-chal-button</property>
+                <value>1</value>
+            </binding>
+            <mod-up>
+                <binding>
+                    <command>property-assign</command>
+                    <property>instrumentation/iff/aai-chal-button</property>
+                    <value>0</value>
+                </binding>
+            </mod-up>
+
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rio-aai-chal-button</object-name>
+        <object-name>rio-aai-chal-light</object-name>
+        <property>instrumentation/iff/aai-chal-button</property>
+        <factor>0.01</factor>
+        <axis>
+            <x>0</x>
+            <y>0.3</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rio-aai-test-button</object-name>
+        <object-name>rio-aai-test-light</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-assign</command>
+                <property>instrumentation/iff/aai-test-button</property>
+                <value>1</value>
+            </binding>
+            <mod-up>
+                <binding>
+                    <command>property-assign</command>
+                    <property>instrumentation/iff/aai-test-button</property>
+                    <value>0</value>
+                </binding>
+            </mod-up>
+
+        </action>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rio-aai-test-button</object-name>
+        <object-name>rio-aai-test-light</object-name>
+        <property>instrumentation/iff/aai-test-button</property>
+        <factor>0.01</factor>
+        <axis>
+            <x>0</x>
+            <y>0.3</y>
+            <z>-1</z>
+        </axis>
+    </animation>
+    <animation>
+        <object-name>rio-iff-m1-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/iff-m1-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>rio-iff-m2-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/iff-m2-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>rio-iff-mc-light</object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/lights/iff/iff-mc-test</factor-prop>
+            <red>0</red>
+            <green>0.6</green>
+            <blue>0</blue>
+        </emission>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-m1-switch</object-name>
+        <property>instrumentation/iff/iff-m1-switch</property>
+        <factor>-35</factor>
+        <axis>
+            <object-name>rio-iff-switch-axis</object-name>
+        </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-m1-switch</property>
+                <factor>-1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <!-- this simulates the spring loaded return to ON
+            by having the min value at zero and a step of 0
+            it will effectively force the value into the min/max range -->
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-m1-switch</property>
+                <step>0</step>
+                <min>-1</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-m2-switch</object-name>
+        <property>instrumentation/iff/iff-m2-switch</property>
+        <factor>-35</factor>
+        <axis>
+            <object-name>rio-iff-switch-axis</object-name>
+        </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-m2-switch</property>
+                <factor>-1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <!-- this simulates the spring loaded return to ON
+            by having the min value at zero and a step of 0
+            it will effectively force the value into the min/max range -->
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-m2-switch</property>
+                <step>0</step>
+                <min>-1</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-m3-switch</object-name>
+        <property>instrumentation/iff/iff-m3-switch</property>
+        <factor>-35</factor>
+        <axis>
+            <object-name>rio-iff-switch-axis</object-name>
+        </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-m3-switch</property>
+                <factor>-1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <!-- this simulates the spring loaded return to ON
+            by having the min value at zero and a step of 0
+            it will effectively force the value into the min/max range -->
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-m3-switch</property>
+                <step>0</step>
+                <min>-1</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-mc-switch</object-name>
+        <property>instrumentation/iff/iff-mc-switch</property>
+        <factor>-35</factor>
+        <axis>
+            <object-name>rio-iff-switch-axis</object-name>
+        </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-mc-switch</property>
+                <factor>-1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <!-- this simulates the spring loaded return to ON
+            by having the min value at zero and a step of 0
+            it will effectively force the value into the min/max range -->
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-mc-switch</property>
+                <step>0</step>
+                <min>-1</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-rad-test-switch</object-name>
+        <property>instrumentation/iff/iff-rad-switch</property>
+        <factor>-35</factor>
+        <axis>
+            <object-name>rio-iff-switch-axis</object-name>
+        </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-rad-switch</property>
+                <factor>-1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <!-- this simulates the spring loaded return to ON
+            by having the min value at zero and a step of 0
+            it will effectively force the value into the min/max range -->
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/iff-rad-switch</property>
+                <step>0</step>
+                <min>-1</min>
+                <max>0</max>
+            </binding>
+        </release>
+    </animation>
+
+    <!--- end IFF test and lights -->
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-mode3-chan-wheel-1</object-name>
+        <property>instrumentation/iff/channel-digit-1</property>
+        <factor>-36</factor>
+        <axis>
+            <object-name>rio-iff-code-wheel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/channel-digit-1</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var v = math.min(4096, int(getprop("instrumentation/iff/channel-digit-4") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-3") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-2") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-1") or "0"));
+                    setprop("instrumentation/iff/channel",v );
+                    v = sprintf("%04d",v);
+                    setprop("instrumentation/iff/channel-digit-4", substr(v,0,1));
+                    setprop("instrumentation/iff/channel-digit-3", substr(v,1,1));
+                    setprop("instrumentation/iff/channel-digit-2", substr(v,2,1));
+                    setprop("instrumentation/iff/channel-digit-1", substr(v,3,1));
+                </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-mode3-chan-wheel-10</object-name>
+        <property>instrumentation/iff/channel-digit-2</property>
+        <factor>-36</factor>
+        <axis>
+            <object-name>rio-iff-code-wheel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/channel-digit-2</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var v = math.min(4096, int(getprop("instrumentation/iff/channel-digit-4") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-3") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-2") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-1") or "0"));
+                    setprop("instrumentation/iff/channel",v );
+                    v = sprintf("%04d",v);
+                    setprop("instrumentation/iff/channel-digit-4", substr(v,0,1));
+                    setprop("instrumentation/iff/channel-digit-3", substr(v,1,1));
+                    setprop("instrumentation/iff/channel-digit-2", substr(v,2,1));
+                    setprop("instrumentation/iff/channel-digit-1", substr(v,3,1));
+                </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-mode3-chan-wheel-100</object-name>
+        <property>instrumentation/iff/channel-digit-3</property>
+        <factor>-36</factor>
+        <axis>
+            <object-name>rio-iff-code-wheel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/channel-digit-3</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var v = math.min(4096, int(getprop("instrumentation/iff/channel-digit-4") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-3") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-2") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-1") or "0"));
+                    setprop("instrumentation/iff/channel",v );
+                    v = sprintf("%04d",v);
+                    setprop("instrumentation/iff/channel-digit-4", substr(v,0,1));
+                    setprop("instrumentation/iff/channel-digit-3", substr(v,1,1));
+                    setprop("instrumentation/iff/channel-digit-2", substr(v,2,1));
+                    setprop("instrumentation/iff/channel-digit-1", substr(v,3,1));
+                </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-mode3-chan-wheel-1000</object-name>
+        <property>instrumentation/iff/channel-digit-4</property>
+        <factor>-36</factor>
+        <axis>
+            <object-name>rio-iff-code-wheel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/channel-digit-4</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>5</max>
+                <wrap>false</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    var v = math.min(4096, int(getprop("instrumentation/iff/channel-digit-4") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-3") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-2") or "0")
+                    ~int(getprop("instrumentation/iff/channel-digit-1") or "0"));
+                    setprop("instrumentation/iff/channel",v );
+                    v = sprintf("%04d",v);
+                    setprop("instrumentation/iff/channel-digit-4", substr(v,0,1));
+                    setprop("instrumentation/iff/channel-digit-3", substr(v,1,1));
+                    setprop("instrumentation/iff/channel-digit-2", substr(v,2,1));
+                    setprop("instrumentation/iff/channel-digit-1", substr(v,3,1));
+                </script>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-master-knob</object-name>
+        <property>instrumentation/iff/master-mode</property>
+        <factor>-45</factor>
+        <offset-deg>125</offset-deg> -->
+        <axis>
+            <object-name>rio-iff-master-knob-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/master-mode</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>4</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>knob</type>
+        <object-name>rio-datalink-tac-channel-1</object-name>
+        <property>instrumentation/datalink/channel-digit-1</property>
+        <factor>-36</factor>
+        <axis>
+            <object-name>rio-datalink-tac-channel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/datalink/channel-digit-1</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    setprop("instrumentation/datalink/channel",
+                        (getprop("instrumentation/datalink/channel-digit-2") or "0") ~ 
+                        (getprop("instrumentation/datalink/channel-digit-1") or "0"));
+                </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>rio-datalink-tac-channel-10</object-name>
+        <property>instrumentation/datalink/channel-digit-2</property>
+        <factor>-36</factor>
+        <axis>
+            <object-name>rio-datalink-tac-channel-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/datalink/channel-digit-2</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>10</max>
+                <wrap>true</wrap>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    setprop("instrumentation/datalink/channel",
+                        (getprop("instrumentation/datalink/channel-digit-2") or "0") ~ 
+                        (getprop("instrumentation/datalink/channel-digit-1") or "0"));
+                </script>
+            </binding>
+        </action>
+    </animation>
     
+    <animation>
+        <type>knob</type>
+        <object-name>rio-iff-mode4-switch</object-name>
+        <property>instrumentation/iff/power</property>
+        <factor>-70</factor>
+        <offset-deg>35</offset-deg>
+        <axis>
+            <object-name>rio-iff-mode4-switch-axis</object-name>
+        </axis>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/iff/power</property>
+                <factor>-1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+    
+<!-- RIO TEST PANEL -->    
+
+<animation>
+    <type>knob</type>
+    <object-name>rio-gnd-clc-switch</object-name>
+    <property>instrumentation/iff/gnd-clc-switch</property>
+    <factor>-35</factor>
+    <axis>
+        <object-name>rio-test-switch-axis</object-name>
+    </axis>
+    <action>
+        <button>0</button>
+        <repeatable>false</repeatable>
+        <binding>
+            <command>property-adjust</command>
+            <property>instrumentation/iff/gnd-clc-switch</property>
+            <factor>-1</factor>
+            <min>0</min>
+            <max>1</max>
+            <wrap>false</wrap>
+        </binding>
+    </action>
+</animation>
+<animation>
+    <type>knob</type>
+    <object-name>rio-test-lt-switch</object-name>
+    <property>instrumentation/iff/test-lt-switch</property>
+    <factor>-35</factor>
+    <axis>
+        <object-name>rio-test-switch-axis</object-name>
+    </axis>
+    <action>
+        <button>0</button>
+        <repeatable>false</repeatable>
+        <binding>
+            <command>property-adjust</command>
+            <property>instrumentation/iff/test-lt-switch</property>
+            <factor>-1</factor>
+            <min>-1</min>
+            <max>1</max>
+            <wrap>false</wrap>
+        </binding>
+    </action>
+
+</animation>
+<animation>
+    <type>knob</type>
+    <object-name>rio-iff-ant-switch</object-name>
+    <property>instrumentation/iff/iff-ant-switch</property>
+    <factor>35</factor>
+    <axis>
+        <object-name>rio-test-switch-axis</object-name>
+    </axis>
+    <action>
+        <button>0</button>
+        <repeatable>false</repeatable>
+        <binding>
+            <command>property-adjust</command>
+            <property>instrumentation/iff/iff-ant-switch</property>
+            <factor>1</factor>
+            <min>0</min>
+            <max>1</max>
+            <wrap>false</wrap>
+        </binding>
+    </action>
+</animation>
+
+
+    <!-- Lightning -->
+    <effect>
+        <name>f14panel</name>
+        <inherits-from>Aircraft/f-14b/Models/Effects/f14panel</inherits-from>
+        <object-name>rio-test-panel</object-name>
+        <object-name>rio-aai-panel</object-name>
+        <object-name>rio-iff-panel</object-name>
+        <object-name>rio-interior-lights-panel-mount</object-name>
+        <object-name>rio-datalink-panel-mount</object-name>
+        <object-name>rio-ddi-panel</object-name>
+    </effect>
+   
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -33061,7 +33896,7 @@
         <object-name>opgR_mount</object-name>
         <object-name>ra_mount</object-name>
         <object-name>rddp_mount</object-name>
-        <object-name>red_mount</object-name>
+        <object-name>mm_rio-ecm-display</object-name>
         <object-name>rt_mount</object-name>
         <object-name>rvc_mount</object-name>
         <object-name>sa_mount</object-name>
@@ -33073,6 +33908,13 @@
         <object-name>v_mount</object-name>
         <object-name>wpp_mount</object-name>
         <object-name>bathtub-sides</object-name>
+
+        <object-name>rio-test-panel</object-name>
+        <object-name>rio-aai-panel</object-name>
+        <object-name>rio-iff-panel</object-name>
+        <object-name>rio-interior-lights-panel-mount</object-name>
+        <object-name>rio-datalink-panel-mount</object-name>
+        <object-name>rio-ddi-panel</object-name>
 
         <object-name>fire-handle-l</object-name>
         <object-name>fire-handle-r</object-name>
@@ -33097,6 +33939,7 @@
         <object-name>switches-and-buttons</object-name>
         <object-name>switches-and-knobs</object-name>
         <object-name>switches-and-levers</object-name>
+        <object-name>rio-interior-lights-switches</object-name>
 
           <condition>
 	      <greater-than>
@@ -33189,7 +34032,9 @@
         <object-name>v_instrument</object-name>
         <object-name>v_instrument</object-name>
         <object-name>wheels</object-name>
-        <object-name>wheels</object-name>    <condition>
+        <object-name>rio-drums-wheels</object-name>
+
+        <condition>
 	      <greater-than>
 	        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
 	        <value>0</value>
@@ -33206,4 +34051,5 @@
 	      <green-prop>controls/lighting/instrument-green</green-prop>
 	      <blue-prop>controls/lighting/instrument-blue</blue-prop>
 	    </emission>
-  </animation></PropertyList>
+  </animation>
+</PropertyList>

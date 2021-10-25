@@ -38,6 +38,10 @@
                 <name>F-14 canopy simulation</name>
                 <path>Aircraft/f-14b/Systems/canopy.xml</path>
             </autopilot>
+            <autopilot n="100">
+                <name>F-14 IFF Lights</name>
+                <path>Systems/f-14-iff-lights.xml</path>
+            </autopilot>
            <property-rule n="100">
                 <name>F-14 Master Caution</name>
                 <path>Systems/f-14-caution.xml</path>
@@ -1234,13 +1238,6 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                         </binding>
                     </item>
                     <item n="10">
-                        <label>IFF and DataLink</label>
-                        <binding>
-                            <command>dialog-show</command>
-                            <dialog-name>iff-datalink</dialog-name>
-                        </binding>
-                    </item>
-                    <item n="11">
                         <label>Event Log</label>
                         <binding>
                             <command>dialog-show</command>
@@ -2292,6 +2289,29 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
             <channel_prop type="string">instrumentation/iff/channel</channel_prop>
             <power type="bool">true</power>
             <channel type="int">0</channel>
+            <!-- F-14 panel -->
+            <aai-chal-button type="int">0</aai-chal-button>
+            <aai-fault-button type="int">0</aai-fault-button>
+            <aai-test-button type="int">0</aai-test-button>
+            <code-hold-zero type="int">0</code-hold-zero>
+            <gnd-clc-switch type="int">0</gnd-clc-switch>
+            <iff-ant-switch type="int">0</iff-ant-switch>
+            <iff-m1-switch type="int">0</iff-m1-switch>
+            <iff-m2-switch type="int">0</iff-m2-switch>
+            <iff-m3-switch type="int">0</iff-m3-switch>
+            <iff-mc-switch type="int">0</iff-mc-switch>
+            <iff-rad-switch type="int">0</iff-rad-switch>
+            <iff-test-button type="int">0</iff-test-button>
+            <iff-test-reply-button type="int">0</iff-test-reply-button>
+            <master-mode type="int">0</master-mode>
+            <test-lt-switch type="int">0</test-lt-switch>
+            <channel type="int">0</channel>
+
+            <channel-digit-1 type="int">0</channel-digit-1>
+            <channel-digit-2 type="int">0</channel-digit-2>
+            <channel-digit-3 type="int">0</channel-digit-3>
+            <channel-digit-4 type="int">0</channel-digit-4>
+            
         </iff>
 
         <datalink>
