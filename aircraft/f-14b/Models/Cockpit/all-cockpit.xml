@@ -4658,7 +4658,7 @@
                 <command>property-adjust</command>
                 <property>sim/model/f-14b/controls/VDI/brightness</property>
                 <factor>0.05</factor>
-                <min>0</min>
+                <min>0.2</min>
                 <max>1</max>
             </binding>
         </action>
@@ -5763,6 +5763,7 @@
     <!-- lighting -->
     <animation>
         <object-name>display</object-name>
+        <!-- <object-name>pitch-ladder</object-name> -->
         <type>material</type>
         <emission>
             <factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
@@ -6639,10 +6640,16 @@
         <object-name>miles-drums-off</object-name>
         <condition>
             <not>
-                <equals>
-                    <property>sim/model/f-14b/instrumentation/tacan/mode</property>
-                    <value>2</value>
-                </equals>
+                <or>
+                    <property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+                    <and>
+                    <property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+                    <equals>
+                        <property>sim/model/f-14b/instrumentation/tacan/mode</property>
+                        <value>2</value>
+                    </equals>
+                </and>
+            </or>
             </not>
         </condition>
     </animation>
@@ -6650,10 +6657,16 @@
         <type>select</type>
         <object-name>miles-drums-on</object-name>
         <condition>
-            <equals>
-                <property>sim/model/f-14b/instrumentation/tacan/mode</property>
-                <value>2</value>
-            </equals>
+            <or>
+                <and>
+                    <property>sim/model/f-14b/controls/pilots-displays/steer/tacan-bt</property>
+                    <equals>
+                        <property>sim/model/f-14b/instrumentation/tacan/mode</property>
+                        <value>2</value>
+                    </equals>
+                </and>
+                <property>sim/model/f-14b/controls/pilots-displays/steer/dest-bt</property>
+            </or>
         </condition>
     </animation>
     <animation>
@@ -6927,7 +6940,7 @@
             </greater-than>
         </condition>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/VDI/brightness</factor-prop>
+            <factor-prop>sim/model/f-14b/controls/HSD/brightness</factor-prop>
             <red>0.0</red>
             <green>0.7</green>
             <blue>0.0</blue>
@@ -14787,7 +14800,73 @@
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>A1m_brt-knob</object-name>
+        <property>sim/model/f-14b/controls/HSD/brightness</property>
+        <axis>
+            <object-name>A1m_brt-knob-axis</object-name>
+        </axis>
+        
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/HSD/brightness</property>
+                <factor>0.05</factor>
+                <min>0.2</min>
+                <max>1</max>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>slider</type>
+        <object-name>A1m_test-button</object-name>
+        <property>sim/model/f-14b/controls/HSD/test</property>
+        <factor>0</factor>
+        
+        <action>
+          <binding>
+            <command>property-adjust</command>
+            <property>sim/model/f-14b/controls/HSD/test</property>
+            <factor>0.2</factor>
+            <min>0</min>
+            <max>1</max>
+            <wrap>false</wrap>
+          </binding>
+        </action>
+        <release>
+          <binding>
+            <command>property-adjust</command>
+            <property>sim/model/f-14b/controls/HSD/test</property>
+            <step>0</step>
+            <min>0</min>
+            <max>0</max>
+          </binding>
+        </release>
+      </animation>
+     
+    <animation>
+        <type>translate</type>
+        <object-name>A1m_test-button</object-name>
+        <property>sim/model/f-14b/controls/HSD/test</property>
+        <factor>-1</factor>
+        <offset>-1</offset>
+        <axis>
+            <object-name>A1m_test-button-axis</object-name>
+        </axis>
+    </animation>
 
+    <animation>
+        <type>rotate</type>
+        <object-name>test-indicator</object-name>
+        <property>sim/model/f-14b/controls/HSD/test</property>
+        <factor>30</factor>
+        <axis>
+            <object-name>test-case-axis</object-name>
+        </axis>
+    </animation>
+    
+    
     <!--Renamed objects: 
       tid: hr_tid
       rng-label: hr_rng-label
@@ -14813,12 +14892,24 @@
         <object-name>screen-bkg</object-name>
         <type>material</type>
         <emission>
-            <factor-prop>sim/model/f-14b/controls/VDI/contrast</factor-prop>
+            <factor-prop>sim/model/f-14b/controls/HSD/contrast</factor-prop>
             <red>0.0</red>
             <green>0.7</green>
             <blue>0.0</blue>
         </emission>
     </animation>
+    
+    <!-- For VDI do not really have a way to animate contrast currently.
+        <animation>
+        <object-name></object-name>
+        <type>material</type>
+        <emission>
+            <factor-prop>sim/model/f-14b/controls/VDI/contrast</factor-prop>
+            <red>0.0</red>
+            <green>0.7</green>
+            <blue>0.0</blue>
+        </emission>
+    </animation> -->
     
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
