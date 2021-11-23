@@ -1880,16 +1880,6 @@
       face: A1a_face-->
     <!--Merged from Aircraft/f-14b/Models/Cockpit/radar-altimeter.xml-->
     <animation>
-        <type>select</type>
-        <object-name>ra_needle</object-name>
-        <condition>
-            <less-than>
-                <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
-                <value>5100</value>
-            </less-than>
-        </condition>
-    </animation>
-    <animation>
         <name>needle</name>
         <type>rotate</type>
         <condition>
@@ -1949,8 +1939,8 @@
                 <dep>138</dep>
             </entry>
             <entry>
-                <ind>6000</ind>
-                <dep>150</dep>
+                <ind>5002</ind>
+                <dep>168</dep>
             </entry>
         </interpolation>
         <axis>
@@ -1972,16 +1962,6 @@
                     <value>5000</value>
                 </greater-than>
             </or>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>stowed-needle</object-name>
-        <condition>
-            <greater-than>
-                <property>instrumentation/radar-altimeter/radar-altitude-ft</property>
-                <value>5000</value>
-            </greater-than>
         </condition>
     </animation>
     <!-- low-altitude limit bug -->
