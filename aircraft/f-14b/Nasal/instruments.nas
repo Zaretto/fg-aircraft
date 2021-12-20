@@ -403,7 +403,9 @@ aircraft.data.add(
 	"controls/lighting/panel-norm",
 	"sim/model/f-14b/controls/lighting/anti-collision-switch",
 	"sim/model/f-14b/controls/lighting/position-flash-switch",
-	"sim/model/f-14b/controls/lighting/position-wing-switch");
+	"sim/model/f-14b/controls/lighting/position-wing-switch",
+    "sim/model/f-14b/controls/lighting/red-flood-light-switch",
+    "sim/model/f-14b/controls/lighting/white-flood-light-switch");
 
 # HSD #####################
 var hsd_mode_node = props.globals.getNode("sim/model/f-14b/controls/pilots-displays/hsd-mode-nav");
