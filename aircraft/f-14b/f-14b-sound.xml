@@ -583,15 +583,15 @@
             <mode>looped</mode>
             <condition>
                 <property>sim/current-view/internal-canopy-closed</property>
-                <property>engines/engine[0]/augmentation</property>
+                <property>engines/engine[0]/afterburner</property>
                 <property>engines/engine[0]/running</property>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
             </condition>
             <volume>
-                <property>engines/engine[0]/augmentation</property>
-                <factor>0.8</factor>
+                <property>engines/engine[0]/afterburner</property>
+                <factor>0.16</factor>
             </volume>
             <position>
                 <x>3</x>
@@ -616,15 +616,15 @@
             <mode>looped</mode>
             <condition>
                 <property>sim/current-view/internal-canopy-closed</property>
-                <property>engines/engine[1]/augmentation</property>
+                <property>engines/engine[1]/afterburner</property>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
                 <property>engines/engine[1]/running</property>
             </condition>
             <volume>
-                <property>engines/engine[1]/augmentation</property>
-                <factor>0.8</factor>
+                <property>engines/engine[1]/afterburner</property>
+                <factor>0.16</factor>
             </volume>
             <position>
                 <x>3</x>
@@ -651,15 +651,15 @@
                 <not>
                     <property>sim/current-view/internal-canopy-closed</property>
                 </not>
-                <property>engines/engine[0]/augmentation</property>
+                <property>engines/engine[0]/afterburner</property>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
                 <property>engines/engine[0]/running</property>
             </condition>
             <volume>
-                <property>engines/engine[0]/augmentation</property>
-                <factor>0.5</factor>
+                <property>engines/engine[0]/afterburner</property>
+                <factor>0.1</factor>
             </volume>
 <!--
             <volume>
@@ -693,15 +693,15 @@
                 <not>
                     <property>sim/current-view/internal-canopy-closed</property>
                 </not>
-                <property>engines/engine[1]/augmentation</property>
+                <property>engines/engine[1]/afterburner</property>
                 <not>
                     <property>sim/model/f-14b/engine-sound-freeze</property>
                 </not>
                 <property>engines/engine[1]/running</property>
             </condition>
             <volume>
-                <property>engines/engine[1]/augmentation</property>
-                <factor>0.5</factor>
+                <property>engines/engine[1]/afterburner</property>
+                <factor>0.1</factor>
             </volume>
             <position>
                 <x>3</x>
@@ -1214,16 +1214,7 @@
                     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
                     <value>10</value>
                 </greater-than>
-                <or>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>Cockpit View</value>
-                    </equals>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>RIO View</value>
-                    </equals>
-                </or>
+                <property>sim/current-view/internal</property>
             </condition>
             <volume>
                 <factor>0.4</factor>
@@ -1243,16 +1234,7 @@
                     <property>instrumentation/airspeed-indicator/indicated-speed-kt</property>
                     <value>10</value>
                 </greater-than>
-                <or>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>Cockpit View</value>
-                    </equals>
-                    <equals>
-                        <property>sim/current-view/name</property>
-                        <value>RIO View</value>
-                    </equals>
-                </or>
+                <property>sim/current-view/internal</property>
             </condition>
             <volume>
                 <factor>0.6</factor>
