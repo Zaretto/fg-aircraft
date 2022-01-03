@@ -12,11 +12,6 @@ based on standard FG wingtip contrail example; but modified condition params
  
    <condition>
      <and>
-       <less-than>
-         <property>surface-positions/wing-pos-norm</property>
-         <value>0.4</value>
-       </less-than>
-
        <greater-than>
          <property>velocities/airspeed-kt</property>
          <value>60</value>
@@ -25,30 +20,14 @@ based on standard FG wingtip contrail example; but modified condition params
           <property>/environment/relative-humidity</property>
          <value>50</value>
        </greater-than>
-         <!-- 2015-09-20: RJH I've removed this as I'm not sure it is a valid condition. -->
-       <!--<or> 
-         <less-than>
-           <property>position/altitude-ft</property>
-           <value>33800</value>
-         </less-than>
-       </or>-->
        <less-than>
          <property>/environment/temperature-degc</property>
          <value>20</value>
        </less-than>
        <greater-than>
            <property>orientation/alpha-indicated-deg</property>
-           <value>15</value>
+           <value>12</value>
        </greater-than>
-       <!-- no vapour trails if a wing is torn -->
-       <equals>
-            <property>sim/model/f-14b/wings/left-wing-torn</property>
-			<value>0</value>
-		</equals>
-		<equals>
-            <property>sim/model/f-14b/wings/right-wing-torn</property>
-			<value>0</value>
-		</equals>
      </and>
    </condition>
  
