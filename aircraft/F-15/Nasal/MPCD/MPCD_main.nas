@@ -996,10 +996,6 @@ var MPCD_Device =
             update_flares(oo);
         });
 
-
-        me.pjitds_1 =  PFD_NavDisplay.new(me.PFD,"Situation", "mpcd-sit", "pjitds_1", "jtids_main");
-        # use the radar range as the ND range.
-
         me.p_spin_recovery = me.PFD.addPage("Spin recovery", "p_spin_recovery");
         me.p_spin_recovery.cur_page = nil;
 
@@ -1121,10 +1117,10 @@ var MPCD_Device =
 
         me.p1_1.addMenuItem(0, "ARMT", me.p1_2);
         me.p1_1.addMenuItem(1, "BIT", me.p1_2);
-        me.p1_1.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_1.addMenuItem(2, "SIT", me.p_HSD);
         me.p1_1.addMenuItem(3, "WPN", me.p1_2);
         me.p1_1.addMenuItem(4, "DTM", me.p1_2);
-        me.p1_1.addMenuItem(8, "SIT2", me.p_HSD);#added by niko
+        #//me.p1_1.addMenuItem(8, "SIT2", me.p_HSD);#added by niko
         
         me.p_HSD.addMenuItem(9, "M", me.p1_1);#added by niko
         me.p_HSD.addMenuItem(0, "DAT", me.p_HSD);#added by niko
@@ -1140,7 +1136,7 @@ var MPCD_Device =
         me.p1_2.addMenuItem(4, "WPN LOAD", me.p1_3);
         me.p1_2.addMenuItem(9, "M", me.p1_1);
 
-        me.p1_3.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_3.addMenuItem(2, "SIT", me.p_HSD);
         me.p1_3.addMenuItem(3, "A/G", me.p1_4);
         me.p1_3.addMenuItem(4, "2/2", me.p1_3);
         me.p1_3.addMenuItem(8, "TM\nPWR", me.p1_3);
@@ -1150,7 +1146,7 @@ var MPCD_Device =
         me.p1_3.addMenuItem(14, "PYLON", me.p1_3);
         me.p1_3.addMenuItem(15, "MODE S", me.p1_3);
 
-        me.p1_4.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_4.addMenuItem(2, "SIT", me.p_HSD);
         me.p1_4.addMenuItem(3, "A/A", me.p1_3);
 #        me.p1_4.addMenuItem(4, "2/2", me.p1_3);
 #        me.p1_4.addMenuItem(8, "TM\nPWR", me.p1_3);
@@ -1161,7 +1157,6 @@ var MPCD_Device =
 #        me.p1_4.addMenuItem(15, "MODE S", me.p1_3);
 
 
-        me.pjitds_1.addMenuItem(9, "M", me.p1_1);
     },
 
     update : func(notification)
