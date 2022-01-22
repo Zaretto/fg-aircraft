@@ -394,6 +394,13 @@ var az_scan = func() {
             scan_update_visibility = 1;
         }
 
+        # always clear the MP locked callsign and it will be reselected in the inner loop only 
+        # if the conditions are met
+        # - airbone
+        # - displayed (visible and on display)
+        # - master arm active
+        setprop("sim/multiplay/generic/string[6]", "");
+
         #
         # clear the values ready for the new scan
         u_ecm_signal      = 0;
@@ -574,8 +581,6 @@ var az_scan = func() {
                           active_u = u; armament.contact = active_u;
                           if (u.get_display() and getprop("controls/armament/master-arm")) {
                             setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
-                          } else {
-                            setprop("sim/multiplay/generic/string[6]", "");
                           }
                       }
                   }
@@ -588,7 +593,7 @@ var az_scan = func() {
                       }
                   }
               }
-          }
+            }
         u.set_fading(u_fading);
 
         if (active_u != nil) {

@@ -326,7 +326,7 @@ if (pnode == nil) return;
                                     obj._w3_7 = sprintf("T %1.0f",obj.notification.vc_kts);
                                     obj._w2 = "";
 
-                                    if (awg_9.active_u != nil) {
+                                    if (awg_9.active_u != nil and awg_9.active_u.get_display()) {
                                         if (awg_9.active_u.Callsign != nil)
                                           obj._callsign = awg_9.active_u.Callsign.getValue();
                                         
