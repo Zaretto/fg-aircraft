@@ -105,7 +105,9 @@ RightEngine.getNode("out-of-fuel", 1);
 var DumpValve         = props.globals.getNode("sim/model/f-14b/controls/fuel/dump-valve", 1);
 var RprobeSw = props.globals.getNode("sim/model/f-14b/controls/fuel/refuel-probe-switch");
 var TotalFuelLbs  = props.globals.getNode("consumables/fuel/total-fuel-lbs", 1);
+var TotalFuelLbsForRestore = props.globals.getNode("consumables/fuel/total-fuel-lbs-for-restore", 1);
 var TotalFuelGals = props.globals.getNode("consumables/fuel/total-fuel-gals", 1);
+var fuel_debug = props.globals.getNode("sim/model/f-14b/controls/fuel/debug",1);
 
 var max_refuel_flow           = 0;
 var remaining_max_flow        = 0;
@@ -156,7 +158,11 @@ var init_fuel_system = func {
 	DumpValve = Valve.new("dump_valve","sim/model/f-14b/controls/fuel/dump-valve",0);
 
 	neg_g = Neg_g.new(0);
-
+	var fuel_level = getprop("consumables/fuel/total-fuel-lbs-for-restore");
+	if (fuel_level != nil)
+	{
+		set_fuel(fuel_level);
+	}
 	setlistener("sim/ai/enabled", func(n) { ai_enabled = n.getBoolValue() }, 1);
 	refuelingN = props.globals.initNode("/systems/refuel/contact", 0, "BOOL");
 	aimodelsN = props.globals.getNode("ai/models", 1);
@@ -166,7 +172,7 @@ var init_fuel_system = func {
 
 	PPG = FWD_Fuselage.ppg.getValue();
 	LBS_HOUR2GALS_SEC = (1 / PPG) / 3600;
-
+    update_ext_tanks_selected();
 }
 
 
@@ -617,6 +623,7 @@ var calc_levels = func() {
 	Re  = Right_External.get_level_lbs();
 	g_fuel_total.setDoubleValue( total_lbs );
 	TotalFuelLbs.setValue(total_lbs);
+	TotalFuelLbsForRestore.setValue(total_lbs);
 
     total_fuel_l = aft + Lg + Lw + Le;
     total_fuel_r = fwd + Rg + Rw + Re;
@@ -705,18 +712,19 @@ var refuel_probe_switch_cycle = func() {
 var level_list = [];
 
 var internal_save_fuel = func() {
-#	print("Saving F-14B fuel levels");
+	print("Saving F-14B fuel levels");
 	level_list = [];
 	foreach (var t; Tank.list) {
     print(" -- ",t.name," = ",t.level_lbs.getValue());
 		append(level_list, t.get_level());
 	}
+
 }
 var internal_restore_fuel = func() {
-#	print("Restoring F-14B fuel levels");
+	print("Restoring F-14B fuel levels");
 	var i = 0;
 	foreach (var t; Tank.list) {
-#    print(" -- ",t.name," = ",t.level_lbs.getValue());
+    print(" -- ",t.name," = ",t.level_lbs.getValue());
 		t.set_level(level_list[i]);
 		i += 1;
 	}
@@ -1033,19 +1041,21 @@ var set_fuel = func(total) {
         end = -1;
         inc = -1;
     }
-
-    print("\n set_fuel to ",total," delta ",total_delta);
+	if (fuel_debug.getValue())
+    	print("\n set_fuel to ",total," delta ",total_delta);
     for (var i=0; i < 2; i = i+1)
     {
         var delta = total_delta / 2;
-        print ("\nDoing side ",i, " adjust by ",delta);
+		if (fuel_debug.getValue())
+    	    print ("\nDoing side ",i, " adjust by ",delta);
 #	foreach (var t; Tank.list)
         for (var tank_idx=start; tank_idx != end+1; tank_idx = tank_idx + inc)
         {
             var t = Tank.list[tank_idx];
             #
 # only consider non external tanks; or external tanks when connected.
-            print("Processing ",t.name," is ext ",t.is_external());
+			if (fuel_debug.getValue())
+        	    print("Processing ",t.name," is ext ",t.is_external());
             if (!t.is_external() or systems_external_loads_external_tanks.getValue())
             {
                 if (t.get_side() == i)
@@ -1056,14 +1066,16 @@ var set_fuel = func(total) {
                         if (tdelta < 0)
                         {
                             delta = delta + t.get_level_lbs();
-                            print("Tank ",t.name," empty : new_delta ", delta);
+							if (fuel_debug.getValue())
+								print("Tank ",t.name," empty : new_delta ", delta);
                             t.set_level_lbs(0);
                         }
                         else
                         {
                             if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
                             t.set_level_lbs(tdelta);
-                            print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
+                            if (fuel_debug.getValue())
+								print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
                             delta = delta - tdelta;
                         }
                     }
@@ -1075,7 +1087,8 @@ var set_fuel = func(total) {
 
                         delta = delta - tdelta;
                         t.set_level_lbs(t.get_level_lbs() + tdelta);
-                        print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
+                        if (fuel_debug.getValue())
+							print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
                     }
                 }
             }
