@@ -619,6 +619,8 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                             <hot-trig-light type="bool">false</hot-trig-light>
                             <gun-rate-high-light type="bool">false</gun-rate-high-light>
                             <gun-rate-low-light type="bool">false</gun-rate-low-light>
+                            <sw-temp-time type="double">0</sw-temp-time>
+                            <sw-temp-time-remaining type="double">7200</sw-temp-time-remaining>
                             <sw-cool-on-light type="bool">false</sw-cool-on-light>
                             <sw-cool-off-light type="bool">false</sw-cool-off-light>
                             <msl-prep-on-light type="bool">false</msl-prep-on-light>
@@ -630,7 +632,16 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                         <gun-rate-switch type="bool">true</gun-rate-switch>
                         <master-arm-lever type="bool">0</master-arm-lever>
                         <master-arm-switch type="int">1</master-arm-switch>
-                        <station-selector n="0" type="int">0</station-selector>
+                        <sel-jett type="int">0</sel-jett>
+                        <sel-jett-guard type="int">0</sel-jett-guard>
+                        <!-- 
+                            the station selectors are numbered as per the aircraft
+                            however these map to specific entries in the payloads
+                            so that STA-1 is either 0 or 1 and STA-8 is either 8 or 9.
+                            This way most of the numbers are identical
+                            STA-1 and STA-8 are different because they are the only stations
+                            that can have either Sidewinders or Sparrows
+                        -->
                         <station-selector n="1" type="int">0</station-selector>
                         <station-selector n="2" type="int">0</station-selector>
                         <station-selector n="3" type="int">0</station-selector>
@@ -638,6 +649,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                         <station-selector n="5" type="int">0</station-selector>
                         <station-selector n="6" type="int">0</station-selector>
                         <station-selector n="7" type="int">0</station-selector>
+                        <station-selector n="8" type="int">0</station-selector>
                         <stick-selector type="int">0</stick-selector>
                         <!-- 0=OFF, 1=GUN, 2=SW, 3=SP-PH -->
                         <system-on-off type="bool">false</system-on-off>
@@ -1476,6 +1488,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
 
     <consumables>
         <fuel>
+            <total-fuel-lbs-for-restore type="double">17000</total-fuel-lbs-for-restore>
             <tank n="0">
                 <name>FWD fuselage</name>
                 <kill-when-empty type="bool">false</kill-when-empty>

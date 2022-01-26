@@ -41,17 +41,46 @@ var ext_loads_set = func(s) {
 # external tanks in the External Loads Menu, or when jettisoning external tanks.
 # See fuel-system.nas for Left_External.set_level(), Left_External.set_selected()
 # and such.
+var ExtTankLeft =  props.globals.getNode("consumables/fuel/tank[8]/selected", 1);
+var ExtTankRight =  props.globals.getNode("consumables/fuel/tank[9]/selected", 1);
 
-var toggle_ext_tank_selected = func() {
-	var ext_tanks = ! ExtTanks.getBoolValue();
-	ExtTanks.setBoolValue( ext_tanks );
-	if ( ext_tanks ) {
+var update_ext_tanks_selected = func {
+	ExtTanks.setBoolValue(ExtTankLeft.getBoolValue() and ExtTankRight.getBoolValue());
+}
+
+# set the external tanks
+var set_ext_tank_selected = func(v) {
+	var ext_tank_left=ExtTankLeft.getBoolValue();
+	var ext_tank_right=ExtTankRight.getBoolValue();
+	if (!v){
+		var ext_tanks = ! ExtTanks.getBoolValue();
+		ExtTanks.setBoolValue( ext_tanks );
+		if (ext_tanks){
+			ext_tank_left = 1;
+			ext_tank_right = 1;
+		}
+		else {
+			ext_tank_left = 0;
+			ext_tank_right = 0;
+		}
+	} else if (v == 2){
+		ext_tank_left = !ext_tank_left;
+	} else if (v == 7) {
+		ext_tank_right = !ext_tank_right;
+	}
+	if ( ext_tank_left ) {
 		pylons.pylon3.loadSet(pylons.pylonSets.fuel26L);
-		pylons.pylon8.loadSet(pylons.pylonSets.fuel26R);
 	} else {
 		pylons.pylon3.loadSet(pylons.pylonSets.empty);
+	}
+	if ( ext_tank_right ) {
+		pylons.pylon8.loadSet(pylons.pylonSets.fuel26R);
+	} else {
 		pylons.pylon8.loadSet(pylons.pylonSets.empty);
 	}
+	ExtTankLeft.setValue(ext_tank_left);
+	ExtTankRight.setValue(ext_tank_right);
+	update_ext_tanks_selected();
 }
 
 # Emergency jettison:
@@ -74,19 +103,57 @@ var emerg_jettison = func {
 
 # Air combat maneuver jettison:
 # -----------------------------
+# Pushbutton is under ACM switch cover. In order to activate this
+# jettison mode, landing gear handle and ACM guard must be up.  When
+# pressed, only those stores selected on the armament control panel are
+# jettisoned. To ensure release of all selected stores the ACM JETT push
+# button must be depressed and held for at least 2 seconds. ACM jettison
+# will not release any Sidewinder missiles even if their stations are
+# selected.
 
-var acm_jettison = func {
+var do_acm_jettison = func {
+	    backseatUpdateTimer.stop(2);
 	# will jettison all selected weapon pylons but never sidewinders.
-	# TODO: require landing gear lever up.
-	# TODO: Figure out how the TANK JETT switches in RIO seat work.
+	# landing gear handle up 
+	if (getprop("controls/gear/gear-down"))
+		return;
+	var fuel_tanks = 0;
 	var list = [];
 	for (var i = 0;i<10;i+=1) {
-		if (i != 2 and i != 7 and getprop("sim/model/f-14b/systems/external-loads/station["~i~"]/selected")) {
+		var station_selector_value = getprop("sim/model/f-14b/systems/external-loads/station["~i~"]/selected");
+		var payload_selector_value = getprop("payload/weight["~i~"]/selected");
+		if (payload_selector_value != "Empty" and payload_selector_value != "Released" and station_selector_value != 0) {
 			append(list, i);
+			if (i==2 or i==7)
+			    fuel_tanks = 1;
+			printf(" ++ jettison %-30s",payload_selector_value);
 		}
+		else
+			printf(" --          %-30s",payload_selector_value);
 	}
 	pylons.fcs.jettisonSpecificPylons(list, 0);
+	if (fuel_tanks){
+		ExtTanks.setBoolValue(0);
+	}
 }
+backseatUpdateTimer = maketimer(2, do_acm_jettison);
+backseatUpdateTimer.simulatedTime = 1;
+
+#callback from model
+var acm_jettison = func {
+	    backseatUpdateTimer.restart(2);
+}
+#RIO selective jettisoning
+
+setlistener("sim/model/f-14b/controls/armament/sel-jett", func(v) {
+    var val = v.getValue();
+	if (val == 1)
+	    backseatUpdateTimer.restart(2);
+	else if (val == -1)
+	    backseatUpdateTimer.restart(2);
+	else
+	    backseatUpdateTimer.stop();
+}, 1, 0);
 
 # Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
 
@@ -105,73 +172,3 @@ var droptanks = func(n) {
 }
 
 setlistener( "sim/ai/aircraft/impact/droptank", droptanks );
-
-Station = {#not used anymore
-	new : func (number, weight_number){
-		var obj = {parents : [Station] };
-		obj.prop = props.globals.getNode("sim/model/f-14b/systems/external-loads/").getChild ("station", number , 1);
-		obj.index = number;
-		obj.type = obj.prop.getNode("type", 1);
-		obj.display = obj.prop.initNode("display", 0, "INT");
-
-        if(usingJSBSim)
-        {
-            # the jsb external loads from 0-9 match the indexes used here incremented by 1 as the first element
-            # in jsb sim doesn't have [0]
-            var propname = sprintf( "fdm/jsbsim/inertia/pointmass-weight-lbs[%d]",number);
-
-    		obj.weight_lb = props.globals.getNode(propname , 1);
-        }
-        else
-        {
-		    obj.weight = props.globals.getNode("sim").getChild ("weight", weight_number , 1);
-    		obj.weight_lb = obj.weight.getNode("weight-lb");
-        }
-		obj.bcode = 0;
-		obj.selected = obj.prop.getNode("selected");
-
-		append(Station.list, obj);
-		return obj;
-	},
-	set_type : func (t) {
-		me.type.setValue(t);
-		me.bcode = 0;
-		if ( t == "AIM-9" ) {
-			me.bcode = 1;
-		} elsif ( t == "AIM-7" ) {
-			me.bcode = 2;
-		} elsif ( t == "AIM-54" ) {
-			me.bcode = 3;
-		} elsif ( t == "MK-83" ) {
-			me.bcode = 4;
-		} elsif ( t == "external tank" ) {
-			me.bcode = 1;
-		}
-	},
-	get_type : func () {
-		return me.type.getValue();	
-	},
-	set_display : func (n) {
-		me.display.setValue(n);
-	},
-	add_weight_lb : func (t) {
-		w = me.weight_lb.getValue();
-		me.weight_lb.setValue( w + t );
-	},
-	set_weight_lb : func (t) {
-		me.weight_lb.setValue(t);	
-	},
-	get_weight_lb : func () {
-		return me.weight_lb.getValue();	
-	},
-	get_selected : func () {
-		return me.selected.getBoolValue();	
-	},
-	set_selected : func (n) {
-		me.selected.setBoolValue(n);
-	},
-	toggle_selected : func () {
-		me.selected.setBoolValue( !me.get_selected() );
-	},
-	list : [],
-};

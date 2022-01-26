@@ -2723,6 +2723,91 @@
         </axis>
     </animation>
 
+        <!-- RIO jettison -->
+<!-- SEL JETT switch:
+With Master Arm on and gear handle up, allows RIO to jettison from selective stations.
+It is a three−position lever−locked switch with guarded selective stations. 
+JETT - Releases weapons from all stations selected according to established outboard to inboard aft to forward sequence established outboard to inboard, aft to forward sequence,
+with a 100 ms interval automatically set between releases with a 100−ms interval automatically set between releases.
+SAFE - Inhibits jettison in selective mode. This is normal switch position.
+AUX  - Backup nonejection mode used when selective jettison has failed. Guarded position that provides for free−fall release from parent racks of stores from selected stations.
+
+To prevent store−to store collisions, only one station should be selected at a time for AUX jettison.
+Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
+
+    sel-jett-sw (aux=-1, safe = 0, jett = 1)
+    sel-jet-guard-axis(for aux)
+    sta-2-sw (Tank L)
+    sta-7-sw (Tank R) -->
+    <animation>
+        <type>pick</type>
+        <object-name>sel-jett-guard</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/armament/sel-jett-guard</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>sel-jett-guard</object-name>
+        <property>sim/model/f-14b/controls/armament/sel-jett-guard</property>
+        <factor>-70</factor>
+        <axis>
+            <object-name>sel-jett-guard-axis</object-name>
+        </axis>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>sel-jett-sw</object-name>
+        <property>sim/model/f-14b/controls/armament/sel-jett</property>
+        <factor>-40</factor>
+        <axis>
+            <object-name>sel-jett-sw-axis</object-name>
+        </axis>
+        <action>
+            <binding>
+                <condition>
+                    <equals>
+                        <property>sim/model/f-14b/controls/armament/sel-jett-guard</property>
+                        <value>1</value>
+                    </equals>
+                </condition>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/armament/sel-jett</property>
+                <factor>-1</factor>
+                <min>-1</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+            <binding>
+                <condition>
+                    <not>
+                        <equals>
+                            <property>sim/model/f-14b/controls/armament/sel-jett-guard</property>
+                            <value>1</value>
+                        </equals>
+                    </not>
+                </condition>
+                <command>property-adjust</command>
+                <property>sim/model/f-14b/controls/armament/sel-jett</property>
+                <factor>-1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+        <release>
+            <binding>
+              <command>property-assign</command>
+              <property>sim/model/f-14b/controls/armament/sel-jett</property>
+              <value>0</value>
+            </binding>
+          </release>
+    </animation>
     <animation>
         <type>pick</type>
         <visible>true</visible>
@@ -2734,7 +2819,7 @@
                 <command>property-toggle</command>
                 <property>controls/gear/brake-parking</property>
             </binding>
-    </action>
+        </action>
     </animation>
 
     <animation>
@@ -2771,7 +2856,7 @@
                 <command>nasal</command>
                 <script>controls.gearToggle()</script>
             </binding>
-    </action>
+        </action>
     </animation>
 
     <animation>
@@ -4605,7 +4690,7 @@
             </binding>
         </action>
     </animation>
-    
+
     <animation>
         <type>knob</type>
         <object-name>hud-brt-knob</object-name>
@@ -4944,10 +5029,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[0]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[0]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -4958,10 +5040,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[1]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[1]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -4972,10 +5051,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[3]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[3]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -4986,10 +5062,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[4]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[4]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -5000,10 +5073,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[5]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[5]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -5014,10 +5084,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[6]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[6]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -5028,10 +5095,7 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[8]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[8]/selected</property>
         </condition>
     </animation>
     <animation>
@@ -5042,12 +5106,10 @@
                 <property>fdm/jsbsim/systems/electrics/dc-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <equals>
-                <property>sim/model/f-14b/systems/external-loads/station[9]/display</property>
-                <value>1</value>
-            </equals>
+            <property>sim/model/f-14b/systems/external-loads/station[9]/selected</property>
         </condition>
     </animation>
+
     <animation>
         <type>select</type>
         <object-name>sta-disp-rdy-1a</object-name>
@@ -23038,101 +23100,209 @@
             </mod-up>
         </action>
     </animation>
+    <!-- Armament selector switches -->
     <animation>
-        <type>knob</type>
+        <type>pick</type>
         <object-name>sta-1-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
-        <factor>35</factor>
-        <axis>
-            <object-name>sta-1-sw-axis</object-name>
-        </axis>
+        <visible>true</visible>
         <action>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f-14b/controls/armament/station-selector[0]</property>
-                <factor>1</factor>
-                <min>-1</min>
-                <max>1</max>
-                <wrap>false</wrap>
-            </binding>
-        
+            <button>0</button>
+            <repeatable>false</repeatable>
             <binding>
                 <command>nasal</command>
                 <script>
-                f14.station_selector(0, 0);
-                </script>
+            f14.station_selector(f14.STATION_ID_1);
+            </script>
             </binding>
         </action>
     </animation>
-   
     <animation>
-        <type>knob</type>
+        <type>rotate</type>
+        <object-name>sta-1-sw</object-name>
+        <property>sim/model/f-14b/controls/armament/station-selector[1]</property>
+        <factor>30</factor>
+        <axis>
+            <object-name>sta-1-sw-axis</object-name>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-2-sw</object-name>
+        <visible>true</visible>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>
+            f14.station_selector(f14.STATION_ID_2);
+            </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>sta-2-sw</object-name>
+        <property>sim/model/f-14b/controls/armament/station-selector[2]</property>
+        <factor>30</factor>
+        <axis>
+            <object-name>sta-2-sw-axis</object-name>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-3-sw</object-name>
+        <visible>true</visible>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>
+            f14.station_selector(f14.STATION_ID_3);
+            </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
         <object-name>sta-3-sw</object-name>
         <property>sim/model/f-14b/controls/armament/station-selector[3]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-3-sw-axis</object-name>
         </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-4-sw</object-name>
+        <visible>true</visible>
         <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(3, -1000);
-                </script>
+            f14.station_selector(f14.STATION_ID_4);
+            </script>
             </binding>
         </action>
     </animation>
     <animation>
-        <type>knob</type>
+        <type>rotate</type>
         <object-name>sta-4-sw</object-name>
         <property>sim/model/f-14b/controls/armament/station-selector[4]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-4-sw-axis</object-name>
         </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-5-sw</object-name>
+        <visible>true</visible>
         <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(4, -1000);
-                </script>
+            f14.station_selector(f14.STATION_ID_5);
+            </script>
             </binding>
         </action>
     </animation>
     <animation>
-        <type>knob</type>
+        <type>rotate</type>
         <object-name>sta-5-sw</object-name>
         <property>sim/model/f-14b/controls/armament/station-selector[5]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-5-sw-axis</object-name>
         </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-6-sw</object-name>
+        <visible>true</visible>
         <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(5, -1000);
-                </script>
+            f14.station_selector(f14.STATION_ID_6);
+            </script>
             </binding>
         </action>
     </animation>
     <animation>
-        <type>knob</type>
+        <type>rotate</type>
         <object-name>sta-6-sw</object-name>
         <property>sim/model/f-14b/controls/armament/station-selector[6]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-6-sw-axis</object-name>
         </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-7-sw</object-name>
+        <visible>true</visible>
         <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
             <binding>
                 <command>nasal</command>
                 <script>
-                    f14.station_selector(6, -1000);
-                </script>
+            f14.station_selector(f14.STATION_ID_7);
+            </script>
             </binding>
         </action>
     </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>sta-7-sw</object-name>
+        <property>sim/model/f-14b/controls/armament/station-selector[7]</property>
+        <factor>30</factor>
+        <axis>
+            <object-name>sta-7-sw-axis</object-name>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>pick</type>
+        <object-name>sta-8-sw</object-name>
+        <visible>true</visible>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>
+            f14.station_selector(f14.STATION_ID_8);
+            </script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>sta-8-sw</object-name>
+        <property>sim/model/f-14b/controls/armament/station-selector[8]</property>
+        <factor>30</factor>
+        <axis>
+            <object-name>sta-8-sw-axis</object-name>
+        </axis>
+    </animation>
+
+<!-- END Armament selector switches -->
+
     <animation>
         <type>knob</type>
         <object-name>msl-option-sw</object-name>
@@ -23153,32 +23323,7 @@
             </binding>
         </action>
     </animation>
-    <animation>
-        <type>knob</type>
-        <object-name>sta-8-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[7]</property>
-        <factor>35</factor>
-        <axis>
-            <object-name>sta-8-sw-axis</object-name>
-        </axis>
-        <action>
-            <binding>
-                <command>property-adjust</command>
-                <property>sim/model/f-14b/controls/armament/station-selector[7]</property>
-                <factor>1</factor>
-                <min>-1</min>
-                <max>1</max>
-                <wrap>false</wrap>
-            </binding>
-        
-            <binding>
-                <command>nasal</command>
-                <script>
-                f14.station_selector(7, 0);
-                </script>
-            </binding>
-        </action>
-    </animation>
+ 
     <!-- Lightning -->
     
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->

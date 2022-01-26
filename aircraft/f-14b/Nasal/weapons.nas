@@ -1,6 +1,9 @@
 var AcModel = props.globals.getNode("sim/model/f-14b");
 var SwCoolOffLight   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
+var SwTempTime       = AcModel.getNode("controls/armament/acm-panel-lights/sw-temp-time");
+var SwTempTimeLeft   = AcModel.getNode("controls/armament/acm-panel-lights/sw-temp-time-remaining");
 var MslPrepOffLight  = AcModel.getNode("controls/armament/acm-panel-lights/msl-prep-off-light");
+var MslPrepOnLight   = AcModel.getNode("controls/armament/acm-panel-lights/msl-prep-on-light");
 var StickSelector    = AcModel.getNode("controls/armament/stick-selector");
 var ArmSwitch        = AcModel.getNode("controls/armament/master-arm-switch");
 var ArmLever         = AcModel.getNode("controls/armament/master-arm-lever");
@@ -26,22 +29,60 @@ var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right",
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
+var AgMode       = AcModel.getNode("/controls/pilots-displays/mode/ag-bt",1);
 
 var aim9_count = 0;
 
+var STATION_ID_1 = 1;
+var STATION_ID_2 = 2;
+var STATION_ID_3 = 3;
+var STATION_ID_4 = 4;
+var STATION_ID_5 = 5;
+var STATION_ID_6 = 6;
+var STATION_ID_7 = 7;
+var STATION_ID_8 = 8;
+
+var STICK_SELECTOR_ID_OFF = 0;
+var STICK_SELECTOR_ID_GUN = 2;
+var STICK_SELECTOR_ID_SW = 2;
+var STICK_SELECTOR_ID_SP_PH = 3;
+var mslPrep = 0;
+  
+# maps from selected stations to the internal payload array for the pylons.
+# map members:
+# - sel_type       : Stick Selector
+# - selector_index : index into sim/model/f-14b/controls/armament/station-selector[#]
+# - arm_index      : index into sim/model/f-14b/systems/external-loads/station[#]/selected
+# - selector_value : value to match in selector_index
+# - types          : string array to match against
+#-----------------
+# for the Sidewinders the outboard station must be the last in the list because this will be what is 
+# left selected when two sidewinders are loaded onto station-1
+var StationSel_map = [
+ { sel_type : STICK_SELECTOR_ID_SW,    selector_index : 1, arm_index : 1, selector_value : -1, valid_types : ["AIM-9"]},
+ { sel_type : STICK_SELECTOR_ID_SW,    selector_index : 1, arm_index : 0, selector_value :  1, valid_types : ["AIM-9"]},
+ { sel_type : STICK_SELECTOR_ID_SW,    selector_index : 8, arm_index : 8, selector_value : -1, valid_types : ["AIM-9"]},
+ { sel_type : STICK_SELECTOR_ID_SW,    selector_index : 8, arm_index : 9, selector_value :  1, valid_types : ["AIM-9"]},
+ { sel_type : STICK_SELECTOR_ID_SP_PH, selector_index : 1, arm_index : 1, selector_value :  -1, valid_types : ["AIM-7", "AIM-54"]},
+ { sel_type : STICK_SELECTOR_ID_SP_PH, selector_index : 3, arm_index : 3, selector_value :  -1, valid_types : ["AIM-7", "AIM-54"]},
+ { sel_type : STICK_SELECTOR_ID_SP_PH, selector_index : 4, arm_index : 4, selector_value :  -1, valid_types : ["AIM-7", "AIM-54"]},
+ { sel_type : STICK_SELECTOR_ID_SP_PH, selector_index : 5, arm_index : 5, selector_value :  -1, valid_types : ["AIM-7", "AIM-54"]},
+ { sel_type : STICK_SELECTOR_ID_SP_PH, selector_index : 6, arm_index : 6, selector_value :  -1, valid_types : ["AIM-7", "AIM-54"]},
+ { sel_type : STICK_SELECTOR_ID_SP_PH, selector_index : 8, arm_index : 8, selector_value :  -1, valid_types : ["AIM-7", "AIM-54"]},
+];
 
 aircraft.data.add( StickSelector, ArmLever, ArmSwitch );
 
 var FALSE = 0;
 var TRUE  = 1;
-
-
-
-
+var stick_s = StickSelector.getValue();
+var ag = 0;
 
 # Init
 var weapons_init = func() {
 	print("Initializing F-14B weapons system");
+	
+	SwTempTimeLeft.setValue(7200);
 	ArmSwitch.setValue(1);
 	ArmLever.setBoolValue(0);
 	system_stop();
@@ -50,15 +91,14 @@ var weapons_init = func() {
 	arm_selector();
 }
 
-
 # Main loop
 var armament_update = func {
 	# Trigered each 0.1 sec by instruments.nas main_loop() if Master Arm Engaged.
 
 	# Check AIM-9 selected with armament panel switches 1 and 8.
 	# Note in FAD light config, S1 and S8 also have AIM-9.
-	var stick_s = StickSelector.getValue();
-	var ag = getprop("sim/model/f-14b/controls/pilots-displays/mode/ag-bt");
+	stick_s = StickSelector.getValue();
+	ag = AgMode.getValue();
 	aim9_count = 0;
 	for (var i = 0;i<10;i+=1) {
 		#populate the payload dialog:
@@ -66,10 +106,10 @@ var armament_update = func {
 		# Pylon lights and count of ready weapons:
 		if (getprop("sim/model/f-14b/systems/external-loads/station["~i~"]/selected")) {
 			var weaps = pylons.pylons[i+1].getWeapons();
-			if (size(weaps) and weaps[0] != nil and weaps[0].type == "AIM-9" and stick_s == 2) {
+			if (size(weaps) and weaps[0] != nil and weaps[0].type == "AIM-9" and stick_s == STICK_SELECTOR_ID_SW) {
 				setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",1);
 				aim9_count += 1;
-			} elsif (size(weaps) and weaps[0] != nil and (weaps[0].type == "AIM-7" or weaps[0].type == "AIM-54") and stick_s == 3) {
+			} elsif (size(weaps) and weaps[0] != nil and (weaps[0].type == "AIM-7" or weaps[0].type == "AIM-54") and stick_s == STICK_SELECTOR_ID_SP_PH) {
 				setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",1);
 				aim9_count += 1;
 			} elsif (size(weaps) and weaps[0] != nil and weaps[0].type == "MK-83" and ag) {
@@ -83,18 +123,40 @@ var armament_update = func {
 		}
 	}
 	# Turn sidewinder cooling lights On/Off.
-	if (stick_s == 2 and !ag) {
+	if (stick_s ==  STICK_SELECTOR_ID_SW and !ag) {
+		# cool after 30 seconds
+		if ( SwTempTime.getValue() >= 30) 
+			mslPrep = 2;
+		else
+			mslPrep = 1;
+
 		if (aim9_count > 0) {
 			SWCoolOn.setBoolValue(1);
 			SWCoolOff.setBoolValue(0);
 		} else {
 			SWCoolOn.setBoolValue(0);
 			SWCoolOff.setBoolValue(1);
+			mslPrep = 1;
 		}
 	} else {
 		SWCoolOn.setBoolValue(0);
 		SWCoolOff.setBoolValue(0);
+		mslPrep = 0;
 	}
+
+	if (mslPrep == 1){
+		MslPrepOnLight.setBoolValue(0);
+		MslPrepOffLight.setBoolValue(1);
+	}
+	else if (mslPrep == 2){
+		MslPrepOnLight.setBoolValue(1);
+		MslPrepOffLight.setBoolValue(0);
+	}
+	else {
+		MslPrepOnLight.setBoolValue(0);
+		MslPrepOffLight.setBoolValue(0);
+	}
+
 	SwCount.setValue(aim9_count);
 	update_gun_ready();
 	setCockpitLights();
@@ -121,7 +183,19 @@ var armament_update2 = func {
 	}
 	WeaponsWeight.setDoubleValue(wWeight);
     PylonsWeight.setDoubleValue(pWeight);
-    
+
+	if (SysRunning.getBoolValue() and SwCount.getValue() > 0){
+		# SwTempTimeLeft is the amount of time left. this simulates the
+		# limited supply of coolant. Time based for simplicity.
+		SwTempTimeLeft.setValue(math.max(0,SwTempTimeLeft.getValue() - 0.1));
+		if (SwTempTimeLeft.getValue() > 0)
+			SwTempTime.setValue(math.min(30,  SwTempTime.getValue() + 0.1));
+	}
+	else{
+		# for simplicity we just count the time as it generally takes
+		# 30 seconds for the missiles to be cooled.
+		SwTempTime.setValue(math.max(0, SwTempTime.getValue() - 0.1));
+	}
 	# set internal master-arm.
 	setprop("controls/armament/master-arm",ArmSwitch.getValue()==2);
 	
@@ -191,7 +265,8 @@ var system_start = func {
 	update_gun_ready();
 	SysRunning.setBoolValue(1);
 	settimer (func { SwCoolOffLight.setBoolValue(1); }, 0.6);
-	settimer (func { MslPrepOffLight.setBoolValue(1); }, 2);
+	settimer (func { MslPrepOnLight.setBoolValue(1);MslPrepOffLight.setBoolValue(0);}, 30);
+	settimer (func { MslPrepOnLight.setBoolValue(0);MslPrepOffLight.setBoolValue(1); }, 0.1);
 }
 
 var system_stop = func {
@@ -199,7 +274,7 @@ var system_stop = func {
 	SysRunning.setBoolValue(0);
 	#SwSoundVol.setValue(0);
 	settimer (func { SwCoolOffLight.setBoolValue(0);SWCoolOn.setBoolValue(0); }, 0.6);
-	settimer (func { MslPrepOffLight.setBoolValue(0); }, 1.2);
+	settimer (func { MslPrepOnLight.setBoolValue(0);MslPrepOffLight.setBoolValue(0);}, 1.2);
 }
 
 
@@ -294,83 +369,155 @@ var arm_selector = func() {
 setlistener(StickSelector, arm_selector, nil, 0);
 setlistener("sim/model/f-14b/controls/pilots-displays/mode/aa-bt", arm_selector, nil, 0);
 setlistener("sim/model/f-14b/controls/pilots-displays/mode/ag-bt", arm_selector, nil, 0);
+var selector = "";
+var selector_state = 0;
+var get_armament_selector= func(station_number){
+	return "sim/model/f-14b/controls/armament/station-selector[" ~ station_number ~ "]";
+}
+# Station switches are sim/model/f-14b/controls/armament/station-selector[#] where # 1..8
+#
+# The station 1 and 8 switches have two positions which are mapped 
+# to external-loads/station[#]/selected
+#  1 : 0 and 1
+#  8:  8 and 9
+# the rest are a 1 to 1 mapping from 2..8 - so the numbers line up between stations and payload
+# because 0 is before and 9 after.
+#
+# so the full mapping expanded is:
+#
+# sim/model/f-14b/controls/armament/station-selector[1] = 0
+#   sim/model/f-14b/systems/external-loads/station[0]/selected -> 0
+#   sim/model/f-14b/systems/external-loads/station[1]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[2] = 0
+#   sim/model/f-14b/systems/external-loads/station[2]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[3] = 0
+#   sim/model/f-14b/systems/external-loads/station[3]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[4] = 0
+#   sim/model/f-14b/systems/external-loads/station[4]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[5] = 0
+#   sim/model/f-14b/systems/external-loads/station[5]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[6] = 0
+#   sim/model/f-14b/systems/external-loads/station[6]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[7] = 0
+#   sim/model/f-14b/systems/external-loads/station[7]/selected -> 0
+#
+# sim/model/f-14b/controls/armament/station-selector[8] = 0
+#   sim/model/f-14b/systems/external-loads/station[8]/selected -> 0
+#   sim/model/f-14b/systems/external-loads/station[9]/selected -> 0
 
-var station_selector = func(n, v) {
+var station_select = func(station_number, selector_state){
+	var selector = get_armament_selector(station_number);
+	if (station_number == STATION_ID_1)
+	{
+		if (selector_state <= -1)
+		{
+			setprop("sim/model/f-14b/systems/external-loads/station[0]/selected", 0);
+			setprop("sim/model/f-14b/systems/external-loads/station[1]/selected", 1);
+		}
+		else if (selector_state >= 1)
+		{
+			setprop("sim/model/f-14b/systems/external-loads/station[0]/selected", 1);
+			setprop("sim/model/f-14b/systems/external-loads/station[1]/selected", 0);
+		}
+		else
+		{
+			setprop("sim/model/f-14b/systems/external-loads/station[0]/selected", 0);
+			setprop("sim/model/f-14b/systems/external-loads/station[1]/selected", 0);
+		}
+	}
+	else if (station_number == STATION_ID_8)
+	{
+		if (selector_state <= -1)
+		{
+			setprop("sim/model/f-14b/systems/external-loads/station[8]/selected", 1);
+			setprop("sim/model/f-14b/systems/external-loads/station[9]/selected", 0);
+		}
+		else if (selector_state >= 1)
+		{
+			setprop("sim/model/f-14b/systems/external-loads/station[8]/selected", 0);
+			setprop("sim/model/f-14b/systems/external-loads/station[9]/selected", 1);
+		}
+		else
+		{
+			setprop("sim/model/f-14b/systems/external-loads/station[8]/selected", 0);
+			setprop("sim/model/f-14b/systems/external-loads/station[9]/selected", 0);
+		}
+	}
+	else
+	{
+		setprop("sim/model/f-14b/systems/external-loads/station[" ~ station_number ~ "]/selected", selector_state);
+	}
+	setprop(selector, selector_state);
+}
+
+var station_selector = func(station_number) {
 	# n = station number, v = up (-1) or down (1) or toggle (0) as there is two kinds of switches.
-	if ( n == 3 or n == 4 or n == 5 or n == 6 ) {
+	selector = get_armament_selector(station_number);
+	selector_state = getprop(selector) or 0;
+	if ( station_number == STATION_ID_1 or station_number == STATION_ID_8 ) {
+			# up/down/neutral
+			selector_state = selector_state + 1;
+			if (selector_state > 1)
+				selector_state = -1;
+	}
+	else {
 		# Only up/neutral allowed.
-		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
-		var state = getprop(selector);
-		if (state == -1000){
-			# toggle value between 0 and -1
-			state = -(-state - 1);
-		}
-		if (state != -1) {
-			state = -1;
-		} else {
-			state = 0;
-		}
-		setprop(selector, state);
-		if ( state == 0 ) {
-			setprop("sim/model/f-14b/systems/external-loads/station["~(n)~"]/selected",0);
-		} elsif ( state == -1 ) {
-			setprop("sim/model/f-14b/systems/external-loads/station["~(n)~"]/selected",1);
-		}
+		# toggle value between 0 and -1
+		selector_state = -(1-math.abs(selector_state));
 	}
-	if ( n == 0 or n == 7 ) {
-		# Only up/down allowed.
-		var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
-		var state = getprop(selector);
-		state += v;
-		if ( state < -1 ) {
-			state = -1;
-		} elsif ( state > 1 ) {
-			state = 1;
-		}
-		setprop(selector, state);
-		if ( state == -1 ) {
-			if ( n == 0 ) {
-				setprop("sim/model/f-14b/systems/external-loads/station[0]/selected",0);
-				setprop("sim/model/f-14b/systems/external-loads/station[1]/selected",1);
-			} else {
-				setprop("sim/model/f-14b/systems/external-loads/station[8]/selected",1);
-				setprop("sim/model/f-14b/systems/external-loads/station[9]/selected",0);
-			}
-		} elsif ( state == 0 ) {
-			if ( n == 0 ) {
-				setprop("sim/model/f-14b/systems/external-loads/station[0]/selected",0);
-				setprop("sim/model/f-14b/systems/external-loads/station[1]/selected",0);
-			} else {
-				setprop("sim/model/f-14b/systems/external-loads/station[8]/selected",0);
-				setprop("sim/model/f-14b/systems/external-loads/station[9]/selected",0);
-			}
-		} elsif ( state == 1 ) {
-			if ( n == 0 ) {
-				setprop("sim/model/f-14b/systems/external-loads/station[0]/selected",1);
-				setprop("sim/model/f-14b/systems/external-loads/station[1]/selected",0);
-			} else {
-				setprop("sim/model/f-14b/systems/external-loads/station[8]/selected",0);
-				setprop("sim/model/f-14b/systems/external-loads/station[9]/selected",1);
-			}
-		}
-	}
+#	print(selector," set to ",selector_state);
+	station_select(station_number, selector_state);
 	arm_selector();
 }
 
+var laststation_selector_cycle_stick_s = -1;
+
 var station_selector_cycle = func() {
-	# Fast selector, selects with one keyb shorcut all AIM-9 or nothing.
-	# Only to choices ATM.
-	var s = 0;
-	var p0 = getprop("sim/model/f-14b/controls/armament/station-selector[0]");
-	var p7 = getprop("sim/model/f-14b/controls/armament/station-selector[7]");
-	if ( p0 < 1 or p7 < 1 ) { s = 1; }
-	setprop("sim/model/f-14b/controls/armament/station-selector[0]", s);
-	setprop("sim/model/f-14b/controls/armament/station-selector[7]", s);
-	setprop("sim/model/f-14b/systems/external-loads/station[1]/selected",s);
-	setprop("sim/model/f-14b/systems/external-loads/station[2]/selected",0);
-	setprop("sim/model/f-14b/systems/external-loads/station[9]/selected",0);
-	setprop("sim/model/f-14b/systems/external-loads/station[10]/selected",s);
-	#armament_update();
+	stick_s = StickSelector.getValue();
+	var selected = -1;
+		# scan all and set to zero; but also if any switch in the map is selected then set state to 0 and exit.
+		# otherwise set all to selected
+		for (var n = 1;n<=8;n+=1) {
+			selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n ~ "]";
+			if (getprop(selector)){
+				print("changed to disable because of ",selector);
+				selected = 0;
+			}
+			if (n != STATION_ID_2 and n != STATION_ID_7)
+				station_select(n, 0);
+		}
+
+	# if the armament selector has changed or the logic have has detected that we need to 
+	# select then do this now.
+	if (laststation_selector_cycle_stick_s != stick_s or selected){
+		foreach (var n ; StationSel_map){
+			if (n.sel_type == stick_s){
+				#var selector = "sim/model/f-14b/controls/armament/station-selector[" ~ n.selector_index ~ "]";
+				var selected_type = getprop("payload/weight[" ~ n.arm_index ~ "]/selected");
+
+				foreach (vt ; n.valid_types){
+					var findV = find(vt, selected_type);
+					printf(" -- checking[%d] '%s' to start with '%s' %d",n.arm_index,selected_type,vt, findV);
+					
+					if (find(vt, selected_type) == 0){
+						printf("  ++ %s ", selected_type);
+						station_select(n.selector_index, n.selector_value);
+						# setprop(selector, n.selector_value);
+						# setprop("sim/model/f-14b/systems/external-loads/station["~n.arm_index~"]/selected", 1);
+					}
+				}
+			}
+		}
+	}
+	laststation_selector_cycle_stick_s = stick_s;
+
+	arm_selector();
 }
 
 ############ Cannon impact messages #####################

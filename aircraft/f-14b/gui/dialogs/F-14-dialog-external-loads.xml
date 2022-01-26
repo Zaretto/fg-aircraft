@@ -42,13 +42,33 @@
 
 				<checkbox>
 					<property>sim/model/f-14b/systems/external-loads/external-tanks</property>
+					<label>both</label>
 					<live>true</live>
 					<binding>
 						<command>nasal</command>
-						<script>f14.toggle_ext_tank_selected()</script>
+						<script>f14.set_ext_tank_selected(0)</script>
+					</binding>
+				</checkbox>
+				<checkbox>
+					<property>consumables/fuel/tank[8]/selected</property>
+					<live>true</live>
+					<label>left</label>
+					<binding>
+						<command>nasal</command>
+						<script>f14.set_ext_tank_selected(2)</script>
+					</binding>
+				</checkbox>
+				<checkbox>
+					<property>consumables/fuel/tank[9]/selected</property>
+					<live>true</live>
+					<label>right</label>
+					<binding>
+						<command>nasal</command>
+						<script>f14.set_ext_tank_selected(7)</script>
 					</binding>
 				</checkbox>
 			</group>
+			
       <group>
         <layout>hbox</layout>
         <button>
