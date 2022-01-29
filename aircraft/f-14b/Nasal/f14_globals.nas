@@ -205,7 +205,7 @@ print("F-14 override tyresmoke ",number);
 		       / (59175231 + math.pow(groundspeed_kts, 5.08271)) / 2.38105217250475)
                        ;
         },
-        update: func {
+	update: func {
 		me.rollspeed = me.get_rollspeed();
 		me.vert_speed = (me.vertical_speed) != nil ? me.vertical_speed.getValue() : -999;
 		me.groundspeed_kts = me.speed.getValue();
@@ -218,46 +218,53 @@ print("F-14 override tyresmoke ",number);
 		me.rollspeed_diff_norm = me.rollspeed_diff > 0 ? me.rollspeed_diff / me.rollspeed : 0;
 		me.spray_factor = me.calc_spray_factor(me.groundspeed_kts);
 
-                # touchdown
-                # - wow changed (previously false)
-                # - use a filter on touchdown and use this to determine if the smoke is active.
-                me.touchdown = 0;
-                if (me.wow != me.lastwow){
-                    if (me.wow){
-            		me.lpf_touchdown.set(math.abs(me.vert_speed));
-                    }
-                }
-                else me.filtered_touchdown = me.lpf_touchdown.filter(0);
+		# touchdown
+		# - wow changed (previously false)
+		# - use a filter on touchdown and use this to determine if the smoke is active.
+		me.touchdown = 0;
+		if (me.wow != me.lastwow){
+			if (me.wow){
+			me.lpf_touchdown.set(math.abs(me.vert_speed));
+			}
+			else me.filtered_touchdown = me.lpf_touchdown.filter(0);
+		}
+		else me.filtered_touchdown = me.lpf_touchdown.filter(0);
 
-                # touchdown smoke when
-                # * recently touched down
-                # * rollspeed must be over the limit
-                # * friction must be over a limit (no idea why this is 0.7)
-                # * moving at ground speed > 50kts (not sure about this)
-                # * not raining
-                # possibly using ground speed is somewhat irrelevant - but I'm leaving that here
-                # as it may filter out unwanted smoke.
+		# touchdown smoke when
+		# * recently touched down
+		# * rollspeed must be over the limit
+		# * friction must be over a limit (no idea why this is 0.7)
+		# * moving at ground speed > 50kts (not sure about this)
+		# * not raining
+		# possibly using ground speed is somewhat irrelevant - but I'm leaving that here
+		# as it may filter out unwanted smoke.
 		if (me.filtered_touchdown > 1.0
-                    and me.rollspeed_diff_norm > me.diff_norm
+            and me.rollspeed_diff_norm > me.diff_norm
 		    and me.friction_factor > 0.7
-                    and me.groundspeed_kts > 50
-                    and me.rain <me.rain_norm_trigger) {
+            and me.groundspeed_kts > 50
+            and me.rain <me.rain_norm_trigger) {
 			me.tyresmoke.setValue(1);
 			me.spray.setValue(0);
 			me.spraydensity.setValue(0);
+			me.active = 1;
 		} elsif (me.wow and me.rain >= me.rain_norm_trigger) {
 			me.tyresmoke.setValue(0);
 			me.spray.setValue(1);
 			me.sprayspeed.setValue(me.rollspeed * 6);
 			me.spraydensity.setValue(me.rain * me.spray_factor * me.groundspeed_kts);
+			me.active = 1;
 		} else {
+			me.active = 0;
 			me.tyresmoke.setValue(0);
 			me.spray.setValue(0);
 			me.sprayspeed.setValue(0);
 			me.spraydensity.setValue(0);
 		}
+		# if automatic smoke then when  we have weight on wheels
+		# or smoke is currently active we will need to update again next
+		# frame.
 		if (me.auto) {
-			if (me.wow) {
+			if (me.active or me.wow) {
 				settimer(func me.update(), 0);
 				if (me.listener != nil) {
 					removelistener(me.listener);
@@ -267,7 +274,7 @@ print("F-14 override tyresmoke ",number);
 				me.listener = setlistener(me.wow_node, func me._wowchanged_(), 0, 0);
 			}
 		}
-                me.lastwow = me.wow;
+		me.lastwow = me.wow;
 	},
 	_wowchanged_: func() {
 		if (me.wow_node.getValue()) {
