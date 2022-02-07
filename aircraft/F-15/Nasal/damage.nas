@@ -331,7 +331,7 @@ var DamageRecipient =
                   dynamics["noti_"~notification.Callsign~"_"~notification.UniqueIdentity] = [systime()-(time_before_delete-1.6), notification.Position.lat(), notification.Position.lon(), notification.Position.alt(), notification.u_fps, notification.Heading, notification.Pitch,-1]
                 }
                 
-                if (tacview_supported and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
+                if (tacview_supported and getprop("sim/multiplay/txhost") != "mpserver.opredflag.com") {
                   if (tacview.starttime) {
                     var tacID = left(md5(notification.Callsign~notification.UniqueIdentity),6);
                     if (notification.Kind == DESTROY) {
@@ -875,9 +875,6 @@ var flare_sorter = func(a, b) {
 
 var animate_flare = func {
   # Send out notifications about own flare positions every 0.4s
-  if (!getprop("payload/armament/msg")) {
-    return;
-  }
   var stime = systime();
   # old flares
   var old_flares = [];
@@ -940,9 +937,6 @@ var auto_flare_released = func {
 }
 
 var flare_released = func {
-    if (!getprop("payload/armament/msg")) {
-      return;
-    }
     # We released a flare. If you call this method manually, then make sure 'auto_flare_caller' is false.
     var stime = systime();
     var flare =[stime, stime,
@@ -950,7 +944,7 @@ var flare_released = func {
                 getprop("orientation/heading-deg"),
                 FT2M*getprop("velocities/speed-down-fps"),
                 FT2M*math.sqrt(getprop("velocities/speed-north-fps")*getprop("velocities/speed-north-fps")+getprop("velocities/speed-east-fps")*getprop("velocities/speed-east-fps")),
-                int(rand()*200)-100];
+                int(rand()*240)-120];
     append(flare_list, flare);
     var msg = notifications.ObjectInFlightNotification.new("ffly", flare[6], MOVE, 21+95);
     msg.Flags = 0;
@@ -1309,6 +1303,7 @@ var code_ct = func () {
       setprop("sim/freeze/fuel",0);
       setprop("/sim/speed-up", 1);
       setprop("/gui/map/draw-traffic", 0);
+      setprop("/sim/marker-pins/traffic", 0);
       setprop("/sim/gui/dialogs/map-canvas/draw-TFC", 0);
       #fgcommand("timeofday", props.Node.new({"timeofday": "real"}));
       #setprop("/sim/rendering/als-filters/use-filtering", 1);
@@ -1339,6 +1334,7 @@ var re_init = func (node) {
   foreach(var failure_mode_id; mode_list) {
     FailureMgr.set_failure_level(failure_mode_id, 0);
   }
+  stopLaunch();
   damageLog.push("Aircraft was repaired due to re-init.");
 }
 

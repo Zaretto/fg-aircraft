@@ -2,7 +2,7 @@ var Math = {
     #
     # Authors: Nikolai V. Chr, Axel Paccalin.
     #
-    # Version 1.95
+    # Version 1.97
     #
     # When doing euler coords. to cartesian: +x = forw, +y = left,  +z = up.
     # FG struct. coords:                     +x = back, +y = right, +z = up.
@@ -57,6 +57,22 @@ var Math = {
         return R2D * math.acos(me.value);
     },
 
+    # Rodrigues' rotation formula. Use unitVectorAxis as axis, and rotate around it.
+    rotateVectorAroundVector: func (a, unitVectorAxis, angle) {
+        return  me.plus(
+                    me.plus(
+                        me.product(math.cos(angle*D2R),a),
+                        me.product(math.sin(angle*D2R), me.crossProduct(unitVectorAxis,a))
+                    ),
+                    me.product((1-math.cos(angle*D2R))*me.dotProduct(unitVectorAxis,a), unitVectorAxis)
+                );
+    },
+
+    #Rotate a certain amound of degrees towards 'towardsMe'.
+    rotateVectorTowardsVector: func (a, towardsMe, angle) {
+        return me.rotateVectorAroundVector(a, me.normalize(me.crossProduct(a, towardsMe)), angle);
+    },
+
     # length of vector
     magnitudeVector: func (a) {
         me.mag = 1;
@@ -92,6 +108,14 @@ var Math = {
         me.pitchM = me.pitchMatrix(pitch);
         me.yawM   = me.yawMatrix(yaw);
         me.rotation = me.multiplyMatrices(me.pitchM, me.yawM);
+        return me.multiplyMatrixWithVector(me.rotation, vector);
+    },
+
+    # rotate a vector. Order: pitch, yaw
+    pitchYawVector: func (pitch, yaw, vector) {
+        me.pitchM = me.pitchMatrix(pitch);
+        me.yawM   = me.yawMatrix(yaw);
+        me.rotation = me.multiplyMatrices(me.yawM, me.pitchM);
         return me.multiplyMatrixWithVector(me.rotation, vector);
     },
 
@@ -262,6 +286,11 @@ var Math = {
     # supply a normal to the plane, and a vector. The vector will be projected onto the plane, and that projection is returned as a vector.
     projVectorOnPlane: func (planeNormal, vector) {
       return me.minus(vector, me.product(me.dotProduct(vector,planeNormal)/math.pow(me.magnitudeVector(planeNormal),2), planeNormal));
+    },
+
+    # Project a onto ontoMe.
+    projVectorOnVector: func (a, ontoMe) {
+      return me.product(me.dotProduct(a,ontoMe)/me.dotProduct(ontoMe,ontoMe), ontoMe);
     },
     
     # unary - vector
