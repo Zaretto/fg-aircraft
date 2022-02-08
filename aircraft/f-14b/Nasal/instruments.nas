@@ -883,6 +883,8 @@ return;
 		aircraft.data.add(f_tc);
 	}
 	setprop("f14/done",0);#reset ejection seat
+	view.setViewByIndex(0);
+	setprop("sim/view[115]/enabled", 0);
     common_init();
 }
 
