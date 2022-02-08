@@ -2159,12 +2159,14 @@ var WcsMode           = props.globals.getNode("sim/model/"~this_model~"/instrume
 var selectHookCheck = func {
     var tgt_cmd = SelectTargetCommand.getValue();
     SelectTargetCommand.setIntValue(0);
-	if (tgt_cmd != 0) awg9Radar.cycleDesignate();# for now only 1 direction
-	var prio = awg9Radar.getPriorityTarget();
-	if (prio != nil) {
-		screen.log.write("RIO: Selected "~prio.get_Callsign()~".", 1,1,0);
-	} else {
-		screen.log.write("RIO: Selected nothing.", 1,1,0);
+	if (tgt_cmd != 0) {
+		awg9Radar.cycleDesignate();# for now only 1 direction
+		var prio = awg9Radar.getPriorityTarget();
+		if (prio != nil) {
+			screen.log.write("RIO: Selected "~prio.get_Callsign()~".", 1,1,0);
+		} else {
+			screen.log.write("RIO: Selected nothing.", 1,1,0);
+		}
 	}
 }
 
@@ -2340,7 +2342,7 @@ var updateTgts = func {
 		if (active_dl["blue"] != 1) {
 			continue;
 		}
-		var discard = awg9Radar.containsVector(shown, active_t);
+		var discard = awg9Radar.containsVector(shown, active_dl);
 		if (discard) {
 			continue;
 		}
@@ -2594,8 +2596,9 @@ if (!we_are_bs) {
 #+ make dual seater not see each other on radar
 #+ hook target beside TWS
 #  show hook target on TID (Richard)
-#+ Pilot modes
-#  Ask Richard how/if ecm works.
+#+ Pilot mode(s)
+#+ Ask Richard how/if ecm works.
 #  Move most methods into classes
 #+ Datalink
 #  Ask about "closure-last-x"
+#  update pylon system.
