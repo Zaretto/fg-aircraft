@@ -2458,7 +2458,9 @@ var hud_nearest_tgt = func() {
 	# Computes nearest_u position in the HUD
 	var active_u = awg9Radar.getPriorityTarget();
 	if ( active_u != nil and (awg9Radar.currentMode.painter or awg9Radar.currentMode.shortName == "TWS") and active_u.getLastBlep() != nil) {
-		SWTgtRange.setValue(active_u.getLastRangeDirect()*M2NM);
+		var lstR = active_u.getLastRangeDirect();
+		if (lstR!=nil) SWTgtRange.setValue(lstR*M2NM);
+		else SWTgtRange.setValue(0);
 
 		#if(awg9_trace)
 		#	print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
@@ -2602,3 +2604,8 @@ if (!we_are_bs) {
 #+ Datalink
 #  Ask about "closure-last-x"
 #  update pylon system.
+#  PAL range range on TID
+#  aim9 non radar test
+#  STT auto switch
+#  DDD range buttons
+#  DDD elev setting and caret setting right of display
