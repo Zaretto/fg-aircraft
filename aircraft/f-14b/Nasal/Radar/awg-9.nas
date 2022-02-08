@@ -1106,9 +1106,17 @@ var AWG9 = {
 		
 		me.newMode = me.mainModes[me.rootMode][currentModeIndex];
 		me.oldMode = me.currentMode;
-		if (me.oldMode != 3 and me.oldMode != 4 and (currentModeIndex == 3 or currentModeIndex == 4)) {
+		if (me.currentModeIndex != 3 and me.currentModeIndex != 4 and (currentModeIndex == 3 or currentModeIndex == 4)) {
 			me.newMode.superMode  = me.oldMode;
 			me.newMode.superIndex = me.currentModeIndex;
+		}
+		if (me.oldMode.shortName == "PSTT" and me.newMode.shortName == "PDSTT") {
+			me.newMode.superMode  = me.oldMode["superMode"];
+			me.newMode.superIndex = me.oldMode["superIndex"];
+		}
+		if (me.oldMode.shortName == "PDSTT" and me.newMode.shortName == "PSTT") {
+			me.newMode.superMode  = me.oldMode["superMode"];
+			me.newMode.superIndex = me.oldMode["superIndex"];
 		}
 		me.currentModeIndex = currentModeIndex;
 		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
@@ -1148,6 +1156,8 @@ var AWG9 = {
 	checks: func {
 		cycleField();
 		selectHookCheck();
+		antennae_deg_prop.setValue(me.eulerY);
+		RangeActualRadar2.setValue(me.getRange());
 	},
 };
 
@@ -1275,6 +1285,7 @@ var RWSMode = {
 	},
 	designate: func (designate_contact) {
 		if (designate_contact == nil) return;
+		me.subMode.superIndex = me.radar.currentModeIndex;
 		me.radar.setCurrentMode(me.subMode, designate_contact);
 		me.subMode.radar = me.radar;# find some smarter way of setting it.
 	},
@@ -1341,6 +1352,7 @@ var PulseMode = {
 	designate: func (designate_contact) {
 		return;
 		if (designate_contact == nil) return;
+		me.subMode.superIndex = me.radar.currentModeIndex;
 		me.radar.setCurrentMode(me.subMode, designate_contact);
 		me.subMode.radar = me.radar;# find some smarter way of setting it.
 		me.radar.registerBlep(designate_contact, designate_contact.getDeviationStored(), 0);
@@ -1444,6 +1456,7 @@ var TWSMode = {
 	},
 	designate: func (designate_contact) {
 		if (designate_contact != nil) {
+			me.subMode.superIndex = me.radar.currentModeIndex;
 			me.radar.setCurrentMode(me.subMode, designate_contact);
 			me.subMode.radar = me.radar;# find some smarter way of setting it.
 		} else {
@@ -1692,6 +1705,7 @@ var PalMode = {
 			return;
 		}
 		acmLockSound.setBoolValue(1);
+		me.subMode.superIndex = me.radar.currentModeIndex;
 		me.radar.setCurrentMode(me.subMode, designate_contact);
 		me.subMode.radar = me.radar;
 	},
@@ -2048,23 +2062,24 @@ var RWR = {
 #                printf("%s ----", me.u.get_Callsign());
             }
         }
+        if (!we_are_bs) {
+	        me.launchClose = getprop("payload/armament/MLW-launcher") != "";
+	        me.incoming = getprop("payload/armament/MAW-active") or me.heatDefense > me.elapsed;
+	        me.spike = getprop("payload/armament/spike")*(getprop("ai/submodels/submodel[0]/count")>15);
+	        me.autoFlare = me.spike?math.max(me.closestThreat*0.25,0.05):0;
 
-        me.launchClose = getprop("payload/armament/MLW-launcher") != "";
-        me.incoming = getprop("payload/armament/MAW-active") or me.heatDefense > me.elapsed;
-        me.spike = getprop("payload/armament/spike")*(getprop("ai/submodels/submodel[0]/count")>15);
-        me.autoFlare = me.spike?math.max(me.closestThreat*0.25,0.05):0;
+	        if (0 and getprop("f16/avionics/ew-mode-knob") == 2)
+	        	print("wow: ", getprop("/fdm/jsbsim/gear/unit[0]/WOW"),"  spiked: ",me.spike,"  incoming: ",me.incoming, "  launch: ",me.launchClose,"  spikeResult:", me.autoFlare,"  aggresive:",me.launchClose * 0.85 + me.incoming * 0.85,"  total:",me.launchClose * 0.85 + me.incoming * 0.85+me.autoFlare);
 
-        if (0 and getprop("f16/avionics/ew-mode-knob") == 2)
-        	print("wow: ", getprop("/fdm/jsbsim/gear/unit[0]/WOW"),"  spiked: ",me.spike,"  incoming: ",me.incoming, "  launch: ",me.launchClose,"  spikeResult:", me.autoFlare,"  aggresive:",me.launchClose * 0.85 + me.incoming * 0.85,"  total:",me.launchClose * 0.85 + me.incoming * 0.85+me.autoFlare);
+	        me.autoFlare += me.launchClose * 0.85 + me.incoming * 0.85;
 
-        me.autoFlare += me.launchClose * 0.85 + me.incoming * 0.85;
+	        me.autoFlare *= 0.1 * 2.5 * !getprop("/fdm/jsbsim/gear/unit[0]/WOW");#0.1 being the update rate for flare dropping code.
 
-        me.autoFlare *= 0.1 * 2.5 * !getprop("/fdm/jsbsim/gear/unit[0]/WOW");#0.1 being the update rate for flare dropping code.
-
-        setprop("ai/submodels/submodel[0]/flare-auto-release-cmd", me.autoFlare * (getprop("ai/submodels/submodel[0]/count")>0));
-        if (me.autoFlare > 0.80 and rand()>0.99 and getprop("ai/submodels/submodel[0]/count") < 1) {
-            setprop("ai/submodels/submodel[0]/flare-release-out-snd", 1);
-        }
+	        setprop("ai/submodels/submodel[0]/flare-auto-release-cmd", me.autoFlare * (getprop("ai/submodels/submodel[0]/count")>0));
+	        if (me.autoFlare > 0.80 and rand()>0.99 and getprop("ai/submodels/submodel[0]/count") < 1) {
+	            setprop("ai/submodels/submodel[0]/flare-release-out-snd", 1);
+	        }
+	    }
 	},
 	del: func {
         emesary.GlobalTransmitter.DeRegister(me.RWRRecipient);
@@ -2141,20 +2156,25 @@ var HudTgtDistance = props.globals.getNode("sim/model/"~this_model~"/instrumenta
 var SWTgtRange        = props.globals.getNode("sim/model/"~this_model~"/systems/armament/aim9/target-range-nm",1);
 # Field
 var antennae_knob_prop = props.globals.getNode("controls/radar/antennae-knob",0);# tilt scan field up or down
+var antennae_deg_prop = props.globals.getNode("instrumentation/radar/antennae-deg",1);
 var antennae_az_knob_prop = props.globals.getNode("controls/radar/antennae-az-knob",0);# -60 to 60, tilt scan field left or right (when not 120). No controls mapped to this yet.
 # Radar
 var cycle_range       = getprop("instrumentation/radar/cycle-range");# if range should be cycled or only go up/down.
 var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range",1);
+var RangeActualRadar2 = props.globals.getNode("instrumentation/radar/radar2-range-actual",1);
 var DisplayRdr        = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/display-rdr",1);
 var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
 var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
 var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby",1);
 var SelectTargetCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 var BarsCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleBars",1);
-BarsCommand.setValue(0);
 var AzCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleAz",1);
-AzCommand.setValue(0);
 var WcsMode           = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode",1);
+RangeActualRadar2.setValue(50);
+antennae_deg_prop.setValue(0);
+SelectTargetCommand.setValue(0);
+BarsCommand.setValue(0);
+AzCommand.setValue(0);
 
 var selectHookCheck = func {
     var tgt_cmd = SelectTargetCommand.getValue();
@@ -2173,13 +2193,13 @@ var selectHookCheck = func {
 var cycleField = func {
 	var b_cmd = BarsCommand.getValue();
     BarsCommand.setIntValue(0);
-	if (b_cmd != 0) {
+	if (b_cmd != 0 and !awg9Radar.currentMode.painter) {
 		awg9Radar.cycleBars();
 		rioRadar();
 	}
 	var a_cmd = AzCommand.getValue();
     AzCommand.setIntValue(0);
-	if (a_cmd != 0) {
+	if (a_cmd != 0 and !awg9Radar.currentMode.painter) {
 		awg9Radar.cycleAZ();
 		rioRadar();
 	}
@@ -2301,6 +2321,7 @@ var updateTID = func {
 var ddd_m_per_deg = 0.5 * ddd_screen_width / AWG9.fieldOfRegardMaxAz;
 
 var updateTgts = func {
+	if (!size(tgts)) return;
 	var actives = awg9Radar.getActiveBleps();
 	var i = 0;
 	var shown = [];
@@ -2589,7 +2610,7 @@ var f14_rwr = RWR.new();
 if (!we_are_bs) {
 	initPilotTgts();
 }
-
+setprop("instrumentation/datalink/channel", int(rand()*33));#should probably not be in this file
 
 # TODO
 #+ Inputs/Controls
@@ -2602,13 +2623,15 @@ if (!we_are_bs) {
 #+ Ask Richard how/if ecm works.
 #  Move most methods into classes
 #+ Datalink
-#  Ask about "closure-last-x"
+#+ Ask Richard about "closure-last-x"
 #  update pylon system.
 #  PAL range range on TID
 #  aim9 non radar test
-#  STT auto switch
-#  DDD range buttons
-#  DDD elev setting and caret setting right of display
-#  datalink random startup
-#  rio setfile Nasal
+#+ STT auto switch error
+#+ DDD range buttons
+#+ DDD elev setting and caret setting right of display
+#+ datalink random startup
+#+ rio setfile Nasal
 #  ejection view
+#+ tons of rio errors
+#+ tab controls bars

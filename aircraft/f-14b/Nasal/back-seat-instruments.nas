@@ -92,7 +92,7 @@ var cnt = 0;
 var main_loop = func {
 	cnt += 1;
 	# done each 0.05 sec.
-	awg_9.rdr_loop();
+	#awg_9.rdr_loop();
 	var a = cnt / 2;
 	if ( ( a ) == int( a )) {
 		# done each 0.1 sec, cnt even.

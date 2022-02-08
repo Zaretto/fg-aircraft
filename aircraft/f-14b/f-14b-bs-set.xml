@@ -72,6 +72,18 @@
 			<radar-standby type="int">0</radar-standby>
 			<symbols-enabled type="bool">true</symbols-enabled>
 		</radar>
+		<iff><!-- todo: make iff and datalink be same as dual seater pilots setting -->
+            <power_prop type="string">instrumentation/iff/power</power_prop>
+            <channel_prop type="string">instrumentation/iff/channel</channel_prop>
+            <power type="bool">true</power>
+            <channel type="int">0</channel>            
+        </iff>
+        <datalink>
+            <power_prop type="string">instrumentation/datalink/receive_period</power_prop>
+            <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
+            <receive_period type="double">1</receive_period>
+            <channel type="int">0</channel>
+        </datalink>
 		<ecm>
 			<enabled type="bool">true</enabled>
 			<on-off type="bool">true</on-off>
@@ -578,7 +590,24 @@
 
 	</sim>
 
+	<payload>
+        <armament>
+            <MLW-bearing type="double">0</MLW-bearing>
+            <MLW-count type="int">0</MLW-count>
+            <MLW-launcher type="string"></MLW-launcher>
+            <MAW-bearing type="double">0</MAW-bearing>
+            <MAW-active type="bool">false</MAW-active>
+            <spike type="bool">false</spike>
+        </armament>
+    </payload>
+
 	<nasal>
+		<iff>
+            <file>Aircraft/f-14b/Nasal/iff.nas</file>
+        </iff>
+        <datalink>
+            <file>Aircraft/f-14b/Nasal/datalink.nas</file>
+        </datalink>
 		<radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
 		</radardist>
@@ -586,11 +615,14 @@
             <file>Aircraft/f-14b/Nasal/vector.nas</file>
         </vector>
         <rcs>
-            <file>Aircraft/f-14b/Nasal/rcs.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/rcs_mand.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/rcs.nas</file>
         </rcs>
 		<awg_9>
-			<file>Aircraft/f-14b/Nasal/awg_9.nas</file>
-		</awg_9>
+            <file>Aircraft/f-14b/Nasal/Radar/radar-system.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/awg-9.nas</file>
+            <!--file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file-->
+        </awg_9>
 		<dual_control_tools>
 			<file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
 		</dual_control_tools>
