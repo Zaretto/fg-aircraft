@@ -9,6 +9,10 @@
 # anti-cheat key 'a' binding do not get activated. Don't know why.
 # investigate how to differentiate between firing aim-54 and aim-7. Since they share knob position. Is it up to RIO's pylon switches?
 
+var ARM_SIM = 0;
+var ARM_OFF = 1;# these 3 are needed by fire-control.
+var ARM_ARM = 2;
+
 var fcs = nil;
 var pylonI = nil;
 var pylon1 = nil;
@@ -26,7 +30,7 @@ var msgA = "If you need to repair now, then use Menu-Location-SelectAirport inst
 var msgB = "Please land before changing payload.";
 var msgC = "Please land before refueling.";
 
-var cannon = stations.SubModelWeapon.new("20mm Cannon", 0.254, 135, [3], [2], props.globals.getNode("sim/model/f-14b/systems/gun/running",1), 0, func{return getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>=20 and getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1")>=70 and getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure") and getprop("payload/armament/fire-control/serviceable");},0);
+var cannon = stations.SubModelWeapon.new("20mm Cannon", 0.254, 135, [3], [2], props.globals.getNode("sim/model/f-14b/systems/gun/running",1), 0, func{return getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>=20 and getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1")>=70 and getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure") and getprop("payload/armament/fire-control/serviceable") and getprop("controls/armament/master-arm") == 1;},0);
 cannon.typeShort = "GUN";
 cannon.brevity = "Guns guns";
 var fuelTank267Left = stations.FuelTank.new("L External", "TK267", 8, 370, "sim/model/f-14b/wingtankL");

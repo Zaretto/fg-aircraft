@@ -2629,14 +2629,14 @@ setprop("instrumentation/datalink/channel", int(rand()*33));#should probably not
 #  Move most methods into classes
 #+ Datalink
 #+ Ask Richard about "closure-last-x"
-#  update pylon system.
-#  PAL range range on TID
+#+ Enable master-arm SIM
+#+ PAL range range on TID
 #  aim9 non radar test
 #+ STT auto switch error
 #+ DDD range buttons
 #+ DDD elev setting and caret setting right of display
 #+ datalink random startup
 #+ rio setfile Nasal
-#  ejection view
+#+ ejection view
 #+ tons of rio errors
 #+ tab controls bars
