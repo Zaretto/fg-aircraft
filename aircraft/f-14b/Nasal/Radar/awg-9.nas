@@ -2362,7 +2362,7 @@ var updateTgts = func {
 		tgts[i]["ddd-echo-fading"].setDoubleValue(0);# Don't show dlnk on ddd
 		tgts[i]["ddd-draw-range-nm"].setDoubleValue(0);
 		tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*active_dl.getRange()*M2NM);
-		tgts[i]["rounded-alt-ft"].setIntValue(active_dl.getAltitude());
+		tgts[i]["rounded-alt-ft"].setIntValue(math.round(active_dl.getAltitude()*0.001));
 		tgts[i]["closure-last-time"].setDoubleValue(awg9Radar.elapsed);#TODO
 		tgts[i]["closure-last-range-nm"].setDoubleValue(active_dl.getRange()*M2NM);#TODO
 		tgts[i]["closure-rate-kts"].setDoubleValue(0);
