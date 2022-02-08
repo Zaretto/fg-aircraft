@@ -2163,6 +2163,7 @@ var cycle_range       = getprop("instrumentation/radar/cycle-range");# if range 
 var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range",1);
 var RangeActualRadar2 = props.globals.getNode("instrumentation/radar/radar2-range-actual",1);
 var DisplayRdr        = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/display-rdr",1);
+var AntTrk            = props.globals.getNode("sim/model/f-14b/instrumentation/radar-awg-9/ant-trk-light",1);
 var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
 var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
 var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby",1);
@@ -2175,6 +2176,7 @@ antennae_deg_prop.setValue(0);
 SelectTargetCommand.setValue(0);
 BarsCommand.setValue(0);
 AzCommand.setValue(0);
+AntTrk.setBoolValue(0);
 
 var selectHookCheck = func {
     var tgt_cmd = SelectTargetCommand.getValue();
@@ -2260,10 +2262,13 @@ var modeSwitch = func (rdr) {
 	var md = rdr.currentMode;
 	if (md.shortName == "PDSTT") {
 		WcsMode.setValue(2);
+		AntTrk.setBoolValue(1);
 	} elsif (md.shortName == "PSTT") {
 		WcsMode.setValue(1);
+		AntTrk.setBoolValue(1);
 	} else {
 		WcsMode.setValue(mode2wcs[rdr.currentModeIndex]);
+		AntTrk.setBoolValue(0);
 	}
 }
 
