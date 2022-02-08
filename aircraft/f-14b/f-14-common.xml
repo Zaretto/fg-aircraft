@@ -322,8 +322,36 @@
                 <desc>Increase Radar Range</desc>
             </key>
             <key>
-                <name>y / Shift-y</name>
-                <desc>Next / Previous target</desc>
+                <name>y</name>
+                <desc>Next target</desc>
+            </key>
+            <key>
+                <name>Shift-y</name>
+                <desc>Radar az coverage</desc>
+            </key>
+            <key>
+                <name>i</name>
+                <desc>Radar up</desc>
+            </key>
+            <key>
+                <name>I</name>
+                <desc>Radar down</desc>
+            </key>
+            <key>
+                <name>Ctrl-i</name>
+                <desc>Radar elev coverage</desc>
+            </key>
+            <key>
+                <name>r</name>
+                <desc>STT Lock</desc>
+            </key>
+            <key>
+                <name>U</name>
+                <desc>Undesignate</desc>
+            </key>
+            <key>
+                <name>d</name>
+                <desc>Pilot automatic lockon mode</desc>
             </key>
             <key>
                 <name>o</name>
@@ -412,7 +440,7 @@
             </key>
             <key>
                 <name>Ctrl-n</name>
-                <desc>Toggle Radar PULSE SRCH / TWS AUTO Mode</desc>
+                <desc>Toggle Radar Mode</desc>
             </key>
             <key>
                 <name>e</name>
@@ -1564,9 +1592,17 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         </fuel>
     </consumables>
 
+    <debug-radar>
+        <debug-main type="int">0</debug-main>
+        <debug-stt type="int">0</debug-stt>
+    </debug-radar>
+
     <controls>
         <windshield-heat type="int">1</windshield-heat>
-
+        <radar>
+            <antennae-knob type="double">0</antennae-knob>
+            <antennae-az-knob type="double">0</antennae-az-knob>
+        </radar>
         <armament>
             <trigger type="bool">false</trigger>
             <!-- the station offsets is used by the fox2.nas to fire the missiles from their correct positions, some of them needs to be updated -->
@@ -1793,7 +1829,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
  
             <key n="14">
                 <name>Ctrl-n</name>
-                <desc>Toggle Radar PULSE SRCH / TWS AUTO Modes</desc>
+                <desc>Toggle Radar Modes</desc>
                 <binding>
                     <command>nasal</command>
                     <script>awg_9.wcs_mode_toggle()</script>
@@ -2157,6 +2193,26 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 </binding>
             </key>
 
+            <!-- radar keys BEGIN -->
+
+            <key n="114">
+                <name>r</name>
+                <desc>Radar STT lock</desc>
+                <binding n="1">
+                    <command>nasal</command>
+                    <script>awg_9.lock();</script>
+                </binding>
+            </key>
+
+            <key n="100">
+                <name>d</name>
+                <desc>Pilot automatic lockon</desc>
+                <binding n="1">
+                    <command>nasal</command>
+                    <script>awg_9.des();</script>
+                </binding>
+            </key>
+
             <key n="121">
                 <name>y</name>
                 <desc>Next target select</desc>
@@ -2169,13 +2225,69 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
 
             <key n="89">
                 <name>Y</name>
-                <desc>Previous target select</desc>
+                <desc>Cycle radar az field</desc>
                 <binding>
                     <command>property-assign</command>
-                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
-                    <value>-1</value>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/cycleAz</property>
+                    <value>1</value>
                 </binding>
             </key>
+
+            <key n="85">
+                <name>U</name>
+                <desc>Undesignate</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.awg9Radar.undesignate();</script>
+                </binding>
+            </key>
+
+            <key n="105">
+                <name>i</name>
+                <desc>Antennae up</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/radar/antennae-knob</property>
+                    <step>1.5</step>
+                    <min>-70</min>
+                    <max>50</max>
+                    <wrap>false</wrap>
+                </binding>
+                <binding>
+                    <command>nasal</command>
+                    <script>screen.log.write(sprintf("Antennae knob elev at %+.1f degrees",getprop("controls/radar/antennae-knob")));</script>
+                </binding>
+            </key>
+
+            <key n="73">
+                <name>I</name>
+                <desc>Antennae down</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/radar/antennae-knob</property>
+                    <step>-1.5</step>
+                    <min>-70</min>
+                    <max>50</max>
+                    <wrap>false</wrap>
+                </binding>
+                <binding>
+                    <command>nasal</command>
+                    <script>screen.log.write(sprintf("Antennae elev knob at %+.1f degrees",getprop("controls/radar/antennae-knob")));</script>
+                </binding>
+            </key>
+
+            <key n="9">
+                <name>ctrl-i</name>
+                <desc>Cycle radar bars</desc>
+                <binding n="2">
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/cycleBars</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <!-- radar keys END -->
+
             <key n="124">
                 <name>|</name>
                 <desc>Trim to elevator position</desc>
@@ -2738,7 +2850,8 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
             <file>Aircraft/f-14b/Nasal/vector.nas</file>
         </vector>
         <rcs>
-            <file>Aircraft/f-14b/Nasal/rcs.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/rcs_mand.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/rcs.nas</file>
         </rcs>
         <damage>
             <file>Aircraft/f-14b/Nasal/damage.nas</file>
@@ -2776,10 +2889,18 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
             <file>Aircraft/f-14b/Nasal/electrics.nas</file>
             <file>Aircraft/f-14b/Nasal/crash-and-stress.nas</file>
         </f14>
-        <awg_9>
-            <!-- needs to be after the f14 modules - as otherwise the recipient will be registered before
+
+        <!-- needs to be after the f14 modules - as otherwise the recipient will be registered before
                  the one that populates the aircraft fields in the notification -->
+        <!--awg_9>
+            
             <file>Aircraft/f-14b/Nasal/awg_9.nas</file>
+            <file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file>
+        </awg_9-->
+
+        <awg_9>
+            <file>Aircraft/f-14b/Nasal/Radar/radar-system.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/awg-9.nas</file>
             <file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file>
         </awg_9>
         <aircraft_dual_control>

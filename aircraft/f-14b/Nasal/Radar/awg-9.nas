@@ -1,0 +1,2601 @@
+
+
+
+
+
+############# BEGIN SOMEWHAT GENERIC CLASSES ###########################################
+
+
+
+# Field of regard requests
+var FOR_ROUND  = 0;# TODO: be able to ask noseradar for round field of regard.
+var FOR_SQUARE = 1;
+#Pulses
+var DOPPLER = 1;
+var MONO = 0;
+
+var overlapHorizontal = 1.5;
+
+
+#   █████  ██ ██████  ██████   ██████  ██████  ███    ██ ███████     ██████   █████  ██████   █████  ██████  
+#  ██   ██ ██ ██   ██ ██   ██ ██    ██ ██   ██ ████   ██ ██          ██   ██ ██   ██ ██   ██ ██   ██ ██   ██ 
+#  ███████ ██ ██████  ██████  ██    ██ ██████  ██ ██  ██ █████       ██████  ███████ ██   ██ ███████ ██████  
+#  ██   ██ ██ ██   ██ ██   ██ ██    ██ ██   ██ ██  ██ ██ ██          ██   ██ ██   ██ ██   ██ ██   ██ ██   ██ 
+#  ██   ██ ██ ██   ██ ██████   ██████  ██   ██ ██   ████ ███████     ██   ██ ██   ██ ██████  ██   ██ ██   ██ 
+#                                                                                                            
+#                                                                                                            
+var AirborneRadar = {
+	#
+	# This is an base class for an airborne forward looking radar
+	# The class RadarMode uses this. Subclass as needed.
+	#
+	# TODO: Cleaner calls to optional ground mapper
+	#
+	fieldOfRegardType: FOR_SQUARE,
+	fieldOfRegardMaxAz: 60,
+	fieldOfRegardMaxElev: 60,
+	fieldOfRegardMinElev: -60,
+	currentMode: nil, # vector of cascading modes ending with current submode
+	currentModeIndex: 0,
+	rootMode: 0,
+	mainModes: nil,
+	instantFoVradius: 2.0,#average of horiz/vert radius
+	instantVertFoVradius: 2.5,# real vert radius (could be used by ground mapper)
+	instantHoriFoVradius: 1.5,# real hori radius (not used)
+	rcsRefDistance: 70,
+	rcsRefValue: 3.2,
+	#closureReject: -1, # The minimum kt closure speed it will pick up, else rejected.
+	#positionEuler: [0,0,0,0],# euler direction
+	positionDirection: [1,0,0],# vector direction
+	positionCart: [0,0,0,0],
+	eulerX: 0,
+	eulerY: 0,
+	horizonStabilized: 1, # When true antennae ignore roll (and pitch until its high)
+	vector_aicontacts_for: [],# vector of contacts found in field of regard
+	vector_aicontacts_bleps: [],# vector of not timed out bleps
+	chaffList: [],
+	chaffSeenList: [],
+	chaffFilter: 0.60,# 1=filters all chaff, 0=sees all chaff all the time
+	timer: nil,
+	timerMedium: nil,
+	timerSlow: nil,
+	timeToKeepBleps: 13,
+	elapsed: elapsedProp.getValue(),
+	lastElapsed: elapsedProp.getValue(),
+	debug: 0,
+	newAirborne: func (mainModes, child) {
+		var rdr = {parents: [child, AirborneRadar, Radar]};
+
+		rdr.mainModes = mainModes;
+		
+		foreach (modes ; mainModes) {
+			foreach (mode ; modes) {
+				# this needs to be set on submodes also...hmmm
+				mode.radar = rdr;
+			}
+		}
+
+		rdr.setCurrentMode(rdr.mainModes[0][0], nil);
+
+		rdr.SliceNotification = SliceNotification.new();
+		rdr.ContactNotification = VectorNotification.new("ContactNotification");
+		rdr.ActiveDiscRadarRecipient = emesary.Recipient.new("ActiveDiscRadarRecipient");
+		rdr.ActiveDiscRadarRecipient.radar = rdr;
+		rdr.ActiveDiscRadarRecipient.Receive = func(notification) {
+	        if (notification.NotificationType == "FORNotification") {
+	        	#printf("DiscRadar recv: %s", notification.NotificationType);
+	            #if (rdr.enabled == 1) { no, lets keep this part running, so we have fresh data when its re-enabled
+	    		    rdr.vector_aicontacts_for = notification.vector;
+	    		    rdr.purgeBleps();
+	    		    #print("size(rdr.vector_aicontacts_for)=",size(rdr.vector_aicontacts_for));
+	    	    #}
+	            return emesary.Transmitter.ReceiptStatus_OK;
+	        }
+	        if (notification.NotificationType == "ChaffReleaseNotification") {
+	    		rdr.chaffList ~= notification.vector;
+	            return emesary.Transmitter.ReceiptStatus_OK;
+	        }
+	        return emesary.Transmitter.ReceiptStatus_NotProcessed;
+	    };
+		emesary.GlobalTransmitter.Register(rdr.ActiveDiscRadarRecipient);
+		rdr.timer = maketimer(scanInterval, rdr, func rdr.loop());
+		rdr.timerSlow = maketimer(0.75, rdr, func rdr.loopSlow());
+		rdr.timerMedium = maketimer(0.25, rdr, func rdr.loopMedium());
+		rdr.timerMedium.start();
+		rdr.timerSlow.start();
+		rdr.timer.start();
+    	return rdr;
+	},
+	getTiltKnob: func {
+		me.theKnob = antennae_knob_prop.getValue();
+		if (math.abs(me.theKnob) < 0.01) {
+			antennae_knob_prop.setValue(0);
+			me.theKnob = 0;
+		}
+		return me.theKnob*60;
+	},
+	increaseRange: func {
+		if (me["gmapper"] != nil) me.gmapper.clear();
+		me.currentMode.increaseRange();
+	},
+	decreaseRange: func {
+		if (me["gmapper"] != nil) me.gmapper.clear();
+		me.currentMode.decreaseRange();
+	},
+	designate: func (designate_contact) {
+		me.currentMode.designate(designate_contact);
+	},
+	designateRandom: func {
+		# Use this method mostly for testing
+		if (size(me.vector_aicontacts_bleps) > 0) {
+			me.designate(me.vector_aicontacts_bleps[size(me.vector_aicontacts_bleps)-1]);
+		}
+	},
+	undesignate: func {
+		me.currentMode.undesignate();
+	},
+	getPriorityTarget: func {
+		if (!me.enabled) return nil;
+		return me.currentMode.getPriority();
+	},
+	cycleDesignate: func {
+		me.currentMode.cycleDesignate();
+		if (me.getPriorityTarget() != nil) print("Hooked ",me.getPriorityTarget().getCallsign());
+		else print("Nothing designated");
+	},
+	cycleMode: func {
+		me.currentModeIndex += 1;
+		if (me.currentModeIndex >= size(me.mainModes[me.rootMode])) {
+			me.currentModeIndex = 0;
+		}
+		me.newMode = me.mainModes[me.rootMode][me.currentModeIndex];
+		me.newMode.setRange(me.currentMode.getRange());
+		me.oldMode = me.currentMode;
+		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
+		me.oldMode.leaveMode();
+	},
+	cycleRootMode: func {
+		me.rootMode += 1;
+		if (me.rootMode >= size(me.mainModes)) {
+			me.rootMode = 0;
+		}
+		me.currentModeIndex = 0;
+		me.newMode = me.mainModes[me.rootMode][me.currentModeIndex];
+		#me.newMode.setRange(me.currentMode.getRange());
+		me.oldMode = me.currentMode;
+		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
+		me.oldMode.leaveMode();
+	},
+	cycleAZ: func {
+		if (me["gmapper"] != nil) me.gmapper.clear();
+		me.clearShowScan();
+		me.currentMode.cycleAZ();
+	},
+	cycleBars: func {
+		me.currentMode.cycleBars();
+		me.clearShowScan();
+	},
+	getDeviation: func {
+		return me.currentMode.getDeviation();
+	},
+	setCursorDeviation: func (cursor_az) {
+		return me.currentMode.setCursorDeviation(cursor_az);
+	},
+	getCursorDeviation: func {
+		return me.currentMode.getCursorDeviation();
+	},
+	setCursorDistance: func (nm) {
+		# Return if the cursor should be distance zeroed.
+		return me.currentMode.setCursorDistance(nm);;
+	},
+	getCursorAltitudeLimits: func {
+		if (!me.enabled) return nil;
+		return me.currentMode.getCursorAltitudeLimits();
+	},	
+	getBars: func {
+		return me.currentMode.getBars();
+	},
+	getAzimuthRadius: func {
+		return me.currentMode.getAz();
+	},
+	getMode: func {
+		return me.currentMode.shortName;
+	},
+	setCurrentMode: func (new_mode, priority = nil) {
+		me.currentMode = new_mode;
+		new_mode.radar = me;
+		#new_mode.setCursorDeviation(me.currentMode.getCursorDeviation()); # no need since submodes don't overwrite this
+		new_mode.designatePriority(priority);
+		new_mode.enterMode();
+		modeSwitch(me);#F14 custom
+		settimer(func me.clearShowScan(), 0.5);
+	},
+	setRootMode: func (mode_number, priority = nil) {
+		me.rootMode = mode_number;
+		if (me.rootMode >= size(me.mainModes)) {
+			me.rootMode = 0;
+		}
+		me.currentModeIndex = 0;
+		me.newMode = me.mainModes[me.rootMode][me.currentModeIndex];
+		#me.newMode.setRange(me.currentMode.getRange());
+		me.oldMode = me.currentMode;
+		me.setCurrentMode(me.newMode, priority);
+		me.oldMode.leaveMode();
+	},
+	getRange: func {
+		return me.currentMode.getRange();
+	},
+	getCaretPosition: func {
+		if (me["eulerX"] == nil or me["eulerY"] == nil) {
+			return [0,0];
+		} elsif (me.horizonStabilized) {
+			return [me.eulerX/me.fieldOfRegardMaxAz,me.eulerY/me.fieldOfRegardMaxElev];
+		} else {
+			return [me.eulerX/me.fieldOfRegardMaxAz,me.eulerY/me.fieldOfRegardMaxElev];
+		}
+	},
+	setAntennae: func (local_dir) {
+		# remember to set horizonStabilized when calling this.
+
+		# convert from coordinates to polar
+		me.eulerDir = vector.Math.cartesianToEuler(local_dir);
+
+		# Make sure if pitch is 90 or -90 that heading gets set to something sensible
+		me.eulerX = me.eulerDir[0]==nil?0:geo.normdeg180(me.eulerDir[0]);
+		me.eulerY = me.eulerDir[1];
+
+		# Make array: [heading_degs, pitch_degs, heading_norm, pitch_norm], for convinience, not used atm.
+		#me.positionEuler = [me.eulerX,me.eulerDir[1],me.eulerX/me.fieldOfRegardMaxAz,me.eulerDir[1]/me.fieldOfRegardMaxElev];
+
+		# Make the antennae direction-vector be length 1.0
+		me.positionDirection = vector.Math.normalize(local_dir);
+
+		# Decompose the antennae direction-vector into seperate angles for Azimuth and Elevation
+		me.posAZDeg = -90+R2D*math.acos(vector.Math.normalize(vector.Math.projVectorOnPlane([0,0,1],me.positionDirection))[1]);
+		me.posElDeg = R2D*math.asin(vector.Math.normalize(vector.Math.projVectorOnPlane([0,1,0],me.positionDirection))[2]);
+
+		# Make an array that holds: [azimuth_norm, elevation_norm, azimuth_deg, elevation_deg]
+		me.positionCart = [me.posAZDeg/me.fieldOfRegardMaxAz, me.posElDeg/me.fieldOfRegardMaxElev,me.posAZDeg,me.posElDeg];
+		
+		# Note: that all these numbers can be either relative to aircraft or relative to scenery.
+		# Its the modes responsibility to call this method with antennae local_dir that is either relative to
+		# aircraft, or to landscape so that they match how scanFOV compares the antennae direction to target positions.
+		#
+		# Make sure that scanFOV() knows what coord system you are operating in. By setting me.horizonStabilized.
+	},
+	installMapper: func (gmapper) {
+		me.gmapper = gmapper;
+	},
+	isEnabled: func {
+		return 1;
+	},
+	loop: func {
+		me.enabled = me.isEnabled();
+		me.checks();#F14 custom
+		if (0) setprop("instrumentation/radar/radar-standby", !me.enabled); # F14 custom
+		# calc dt here, so we don't get a massive dt when going from disabled to enabled:
+		me.elapsed = elapsedProp.getValue();
+		me.dt = me.elapsed - me.lastElapsed;
+		me.lastElapsed = me.elapsed;
+		if (me.enabled) {
+			if (me.currentMode.painter and me.currentMode.detectAIR) {
+				# We need faster updates to not lose track of oblique flying locks close by when in STT.
+				me.ContactNotification.vector = [me.getPriorityTarget()];
+				emesary.GlobalTransmitter.NotifyAll(me.ContactNotification);
+			}
+
+			while (me.dt > 0.001) {
+				# mode tells us how to move disc and to scan
+				me.dt = me.currentMode.step(me.dt);# mode already knows where in pattern we are and AZ and bars.
+
+				# we then step to the new position, and scan for each step
+				me.scanFOV();
+				me.showScan();
+			}
+
+		} elsif (size(me.vector_aicontacts_bleps)) {
+			# So that when radar is restarted there is not old bleps.
+			me.purgeAllBleps();
+		}
+	},
+	loopMedium: func {
+		me.loopSpecific(); #F14 custom
+		if (we_are_bs) return; #F14 custom
+		#
+		# It send out what target we are Single-target-track locked onto if any so the target get RWR warning.
+		# It also sends out on datalink what we are STT/SAM/TWS locked onto.
+		# In addition it notifies the weapons what we have targeted.
+		# Plus it sets the MP property for radar standby so others can see us on RWR.
+		if (me.enabled) {
+			me.focus = me.getPriorityTarget();
+			if (me.focus != nil and me.focus.callsign != "") {
+				if (me.currentMode.painter) sttSend.setValue(left(md5(me.focus.callsign), 4));
+				else sttSend.setValue("");
+				#if (steerpoints.sending == nil) {#F14 custom
+			        datalink.send_data({"contacts":[{"callsign":me.focus.callsign,"iff":0}]});
+			    #}
+			} else {
+				sttSend.setValue("");
+				#if (steerpoints.sending == nil) {#F14 custom
+		            datalink.clear_data();
+		        #}
+			}
+			if (me.currentMode.painter or me.currentMode.shortName == "TWS") {#F14 custom
+				armament.contact = me.focus;
+			} else {
+				armament.contact = nil;
+			}
+			stbySend.setIntValue(0);
+		} else {
+			armament.contact = nil;
+			sttSend.setValue("");
+			stbySend.setIntValue(1);
+			#if (steerpoints.sending == nil) {#F14 custom
+	            datalink.clear_data();
+	        #}
+		}
+		
+		me.debug = getprop("debug-radar/debug-main");
+	},
+	loopSlow: func {
+		#
+		# Here we ask the NoseRadar for a slice of the sky once in a while.
+		#
+		if (me.debug > 0) setprop("debug-radar/mode",me.currentMode.longName);#F14 custom
+		if (me.enabled and !(me.currentMode.painter and me.currentMode.detectAIR)) {
+			emesary.GlobalTransmitter.NotifyAll(me.SliceNotification.slice(self.getPitch(), self.getHeading(), math.min(89.9,math.max(-me.fieldOfRegardMinElev, me.fieldOfRegardMaxElev)*1.414), math.min(89.9,me.fieldOfRegardMaxAz*1.414), me.getRange()*NM2M, !me.currentMode.detectAIR, !me.currentMode.detectSURFACE, !me.currentMode.detectMARINE));
+		}
+	},
+	scanFOV: func {
+		#
+		# Here we test for IFF and test the radar beam against targets to see if the radar picks them up.
+		#
+		# Note that this can happen in aircraft coords (ACM modes) or in landscape coords (the other modes).
+		me.doIFF = getprop("instrumentation/radar/iff");
+    	setprop("instrumentation/radar/iff",0);
+    	if (me.doIFF) iff.last_interogate = systime();
+    	if (me["gmapper"] != nil) me.gmapper.scanGM(me.eulerX, me.eulerY, me.instantVertFoVradius, me.instantFoVradius,
+    		 me.currentMode.bars == 1 or (me.currentMode.bars == 4 and me.currentMode["nextPatternNode"] == 0) or (me.currentMode.bars == 3 and me.currentMode["nextPatternNode"] == 7) or (me.currentMode.bars == 2 and me.currentMode["nextPatternNode"] == 1),
+    		 me.currentMode.bars == 1 or (me.currentMode.bars == 4 and me.currentMode["nextPatternNode"] == 2) or (me.currentMode.bars == 3 and me.currentMode["nextPatternNode"] == 3) or (me.currentMode.bars == 2 and me.currentMode["nextPatternNode"] == 3));# The last two parameter is hack
+
+    	# test for passive ECM (chaff)
+		# 
+		me.closestChaff = 1000000;# meters
+		if (size(me.chaffList)) {
+			if (me.horizonStabilized) {
+				me.globalAntennaeDir = vector.Math.yawVector(-self.getHeading(), me.positionDirection);
+			} else {
+				me.globalAntennaeDir = vector.Math.rollPitchYawVector(self.getRoll(), self.getPitch(), -self.getHeading(), me.positionDirection);
+			}
+			
+			foreach (me.chaff ; me.chaffList) {
+				if (rand() < me.chaffFilter or me.chaff.meters < 10000+10000*rand()) continue;# some chaff are filtered out.
+				me.globalToTarget = vector.Math.pitchYawVector(me.chaff.pitch, -me.chaff.bearing, [1,0,0]);
+				
+				# Degrees from center of radar beam to center of chaff cloud
+				me.beamDeviation = vector.Math.angleBetweenVectors(me.globalAntennaeDir, me.globalToTarget);
+
+				if (me.beamDeviation < me.instantFoVradius) {
+					if (me.chaff.meters < me.closestChaff) {
+						me.closestChaff = me.chaff.meters;
+					}
+					me.registerChaff(me.chaff);# for displays
+					#print("REGISTER CHAFF");
+				}# elsif(me.debug > -1) {
+					# This is too detailed for most debugging, remove later
+				#	setprop("debug-radar/main-beam-deviation-chaff", me.beamDeviation);
+				#}
+			}
+		}
+
+    	me.testedPrio = 0;
+		foreach(contact ; me.vector_aicontacts_for) {
+			if (me.doIFF == 1) {
+	            me.iffr = iff.interrogate(contact.prop);
+	            if (me.iffr) {
+	                contact.iff = me.elapsed;
+	            } else {
+	                contact.iff = -me.elapsed;
+	            }
+	        }
+			if (me.elapsed - contact.getLastBlepTime() < me.currentMode.minimumTimePerReturn) {
+				if(me.debug > 1 and me.currentMode.painter and contact == me.getPriorityTarget()) {
+					me.testedPrio = 1;
+				}
+				continue;# To prevent double detecting in overlapping beams
+			}
+
+			me.dev = contact.getDeviationStored();
+
+			if (me.horizonStabilized) {
+				# ignore roll and pitch
+
+				# Vector that points to target in radar coordinates as if aircraft it was not rolled or pitched.
+				me.globalToTarget = vector.Math.eulerToCartesian3X(-me.dev.bearing,me.dev.elevationGlobal,0);
+
+				# Vector that points to target in radar coordinates as if aircraft it was not yawed, rolled or pitched.
+				me.localToTarget = vector.Math.yawVector(self.getHeading(), me.globalToTarget);
+				#if (contact == me.vector_aicontacts_for[0]) print(math.round(self.getHeading())," vs ",math.round(me.dev.bearing)," at ",math.round(me.dev.elevationGlobal)," for ",contact.get_Callsign());
+			} else {
+				# Vector that points to target in local radar coordinates.
+				me.localToTarget = vector.Math.eulerToCartesian3X(-me.dev.azimuthLocal,me.dev.elevationLocal,0);
+			}
+
+			# Degrees from center of radar beam to target, note that positionDirection must match the coord system defined by horizonStabilized.
+			me.beamDeviation = vector.Math.angleBetweenVectors(me.positionDirection, me.localToTarget);
+
+			if(me.debug > 1 and me.currentMode.painter and contact == me.getPriorityTarget()) {
+				# This is too detailed for most debugging, remove later
+				setprop("debug-radar/main-beam-deviation", me.beamDeviation);
+				me.testedPrio = 1;
+			}
+			if (me.beamDeviation < me.instantFoVradius and (me.dev.rangeDirect_m < me.closestChaff or rand() < me.chaffFilter) ) {#  and (me.closureReject == -1 or me.dev.closureSpeed > me.closureReject)
+				# TODO: Refine the chaff conditional (ALOT)
+				me.registerBlep(contact, me.dev, me.currentMode.painter, me.currentMode.pulse);
+				#print("REGISTER BLEP");
+
+				# Return here, so that each instant FoV max gets 1 target:
+				# TODO: refine by testing angle between contacts seen in this FoV
+				break;
+			}
+			#if (contact == me.vector_aicontacts_for[0]) print(me.horizonStabilized," debug-radar/main-beam-deviation", me.beamDeviation);
+		}
+
+		if(me.debug > 1 and me.currentMode.painter and !me.testedPrio) {
+			setprop("debug-radar/main-beam-deviation", "--unseen-lock--");
+		}
+	},
+	registerBlep: func (contact, dev, stt, doppler = 1) {#F14 custom
+		if (!contact.isVisible()) {return 0;}
+		if (doppler) {
+			if (contact.isHiddenFromDoppler()) {
+				return 0;
+			}
+			if (math.abs(dev.closureSpeed) < me.currentMode.minClosure) {
+				return 0;
+			}
+		}
+
+		me.maxDistVisible = me.currentMode.rcsFactor * me.targetRCSSignal(self.getCoord(), dev.coord, contact.model, dev.heading, dev.pitch, dev.roll,me.rcsRefDistance*NM2M,me.rcsRefValue);
+
+		if (me.maxDistVisible > dev.rangeDirect_m) {
+			me.extInfo = me.currentMode.getSearchInfo(contact);# if the scan gives heading info etc..
+
+			if (me.extInfo == nil) {
+				return 0;
+			}
+			contact.blep(me.elapsed, me.extInfo, me.maxDistVisible, stt);
+			if (!me.containsVectorContact(me.vector_aicontacts_bleps, contact)) {
+				append(me.vector_aicontacts_bleps, contact);
+			}
+			return 1;
+		}
+		return 0;
+	},
+	registerChaff: func (chaff) {
+		chaff.seenTime = me.elapsed;
+		if (!me.containsVector(me.chaffSeenList, chaff)) {
+			append(me.chaffSeenList, chaff);
+		}
+	},
+	purgeBleps: func {
+		#ok, lets clean up old bleps:
+		me.vector_aicontacts_bleps_tmp = [];
+		me.elapsed = elapsedProp.getValue();
+		foreach(contact ; me.vector_aicontacts_bleps) {
+			me.bleps_cleaned = [];
+			foreach (me.blep;contact.getBleps()) {
+				if (me.elapsed - me.blep.getBlepTime() < math.max(me.timeToKeepBleps, me.currentMode.timeToFadeBleps)) {
+					append(me.bleps_cleaned, me.blep);
+				}
+			}
+			contact.setBleps(me.bleps_cleaned);
+			if (size(me.bleps_cleaned)) {
+				append(me.vector_aicontacts_bleps_tmp, contact);
+				me.currentMode.testContact(contact);# TODO: do this smarter
+			} else {
+				me.currentMode.prunedContact(contact);
+			}
+		}
+		#print("Purged ", size(me.vector_aicontacts_bleps) - size(me.vector_aicontacts_bleps_tmp), " bleps   remains:",size(me.vector_aicontacts_bleps_tmp), " orig ",size(me.vector_aicontacts_bleps));
+		me.vector_aicontacts_bleps = me.vector_aicontacts_bleps_tmp;
+
+		#lets purge the old chaff also, both seen and unseen
+		me.wnd = wndprop.getValue();
+		me.chaffLifetime = math.max(0, me.wnd==0?25:25*(1-me.wnd/50));
+		me.chaffList_tmp = [];
+		foreach(me.evilchaff ; me.chaffList) {
+			if (me.elapsed - me.evilchaff.releaseTime < me.chaffLifetime) {
+				append(me.chaffList_tmp, me.evilchaff);
+			}
+		}
+		me.chaffList = me.chaffList_tmp;
+
+		me.chaffSeenList_tmp = [];
+		foreach(me.evilchaff ; me.chaffSeenList) {
+			if (me.elapsed - me.evilchaff.releaseTime < me.chaffLifetime or me.elapsed - me.evilchaff.seenTime < me.timeToKeepBleps) {
+				append(me.chaffSeenList_tmp, me.evilchaff);
+			}
+		}
+		me.chaffSeenList = me.chaffSeenList_tmp;
+	},
+	purgeAllBleps: func {
+		#ok, lets delete all bleps:
+		foreach(contact ; me.vector_aicontacts_bleps) {
+			contact.setBleps([]);
+		}
+		me.vector_aicontacts_bleps = [];
+		me.chaffSeenList = [];
+	},
+	targetRCSSignal: func(aircraftCoord, targetCoord, targetModel, targetHeading, targetPitch, targetRoll, myRadarDistance_m = 74000, myRadarStrength_rcs = 3.2) {
+		#
+		# test method. Belongs in rcs.nas.
+		#
+	    me.target_front_rcs = nil;
+	    if ( contains(rcs.rcs_oprf_database,targetModel) ) {
+	        me.target_front_rcs = rcs.rcs_oprf_database[targetModel];
+	    } elsif ( contains(rcs.rcs_database,targetModel) ) {
+	        me.target_front_rcs = rcs.rcs_database[targetModel];
+	    } else {
+	        # GA/Commercial return most likely
+	        me.target_front_rcs = rcs.rcs_oprf_database["default"];
+	    }	    
+	    me.target_rcs = rcs.getRCS(targetCoord, targetHeading, targetPitch, targetRoll, aircraftCoord, me.target_front_rcs);
+
+	    # standard formula
+	    return myRadarDistance_m/math.pow(myRadarStrength_rcs/me.target_rcs, 1/4);
+	},
+	getActiveBleps: func {
+		return me.vector_aicontacts_bleps;
+	},
+	getActiveChaff: func {
+		return me.chaffSeenList;
+	},
+	showScan: func {
+		if (me.debug > 0) {
+			if (me["canvas2"] == nil) {
+	            me.canvas2 = canvas.Window.new([512,512],"dialog").set('title',"Scan").getCanvas(1);
+				me.canvas_root2 = me.canvas2.createGroup().setTranslation(256,256);
+				me.canvas2.setColorBackground(0.25,0.25,1);
+			}
+
+			if (me.elapsed - me.currentMode.lastFrameStart < 0.1) {
+				me.clearShowScan();
+			}
+			me.canvas_root2.createChild("path")
+				.setTranslation(256*me.eulerX/60, -256*me.eulerY/60)
+				.moveTo(0, 256*me.instantFoVradius/60)
+				.lineTo(0, -256*me.instantFoVradius/60)
+				.setColor(1,1,1);
+		}
+	},
+	clearShowScan: func {
+		if (me["canvas2"] == nil or me.debug < 1) return;
+		me.canvas_root2.removeAllChildren();
+		if (me.horizonStabilized) {
+			me.canvas_root2.createChild("path")
+				.moveTo(-250, 0)
+				.lineTo(250, 0)
+				.setColor(1,1,0)
+				.setStrokeLineWidth(4);
+		} else {
+			me.canvas_root2.createChild("path")
+				.moveTo(256*-5/60, 256*-1.5/60)
+				.lineTo(256*5/60, 256*-1.5/60)
+				.lineTo(256*5/60,  256*15/60)
+				.lineTo(256*-5/60,  256*15/60)
+				.lineTo(256*-5/60, 256*-1.5/60)
+				.setColor(1,1,0)
+				.setStrokeLineWidth(4);
+		}
+	},
+	containsVector: func (vec, item) {
+		foreach(test; vec) {
+			if (test == item) {
+				return 1;
+			}
+		}
+		return 0;
+	},
+
+	containsVectorContact: func (vec, item) {
+		foreach(test; vec) {
+			if (test.equals(item)) {
+				return 1;
+			}
+		}
+		return 0;
+	},
+
+	vectorIndex: func (vec, item) {
+		me.i = 0;
+		foreach(test; vec) {
+			if (test == item) {
+				return me.i;
+			}
+			me.i += 1;
+		}
+		return -1;
+	},
+	del: func {
+        emesary.GlobalTransmitter.DeRegister(me.ActiveDiscRadarRecipient);
+    },
+};
+
+
+
+
+
+
+
+
+
+
+var SPOT_SCAN = -1; # must be -1
+
+
+
+
+
+#  ██████   █████  ██████   █████  ██████      ███    ███  ██████  ██████  ███████ 
+#  ██   ██ ██   ██ ██   ██ ██   ██ ██   ██     ████  ████ ██    ██ ██   ██ ██      
+#  ██████  ███████ ██   ██ ███████ ██████      ██ ████ ██ ██    ██ ██   ██ █████   
+#  ██   ██ ██   ██ ██   ██ ██   ██ ██   ██     ██  ██  ██ ██    ██ ██   ██ ██      
+#  ██   ██ ██   ██ ██████  ██   ██ ██   ██     ██      ██  ██████  ██████  ███████ 
+#                                                                                  
+#                                                                                  
+var RadarMode = {
+	#
+	# Subclass and modify as needed.
+	#
+	radar: nil,
+	range: 40,
+	minRange: 5,
+	maxRange: 160,
+	az: 60,
+	bars: 1,
+	azimuthTilt: 0,# modes set these depending on where they want the pattern to be centered.
+	elevationTilt: 0,
+	barHeight: 0.80,# multiple of instantFoVradius
+	barPattern:  [ [[-1,0],[1,0]] ],     # The second is multitude of instantFoVradius, the first is multitudes of me.az
+	barPatternMin: [0],
+	barPatternMax: [0],
+	nextPatternNode: 0,
+	scanPriorityEveryFrame: 0,# Related to SPOT_SCAN.
+	timeToFadeBleps: 13,
+	rootName: "Base",
+	shortName: "",
+	longName: "",
+	superMode: nil,
+	minimumTimePerReturn: 0.5,
+	rcsFactor: 0.9,
+	lastFrameStart: -1,
+	lastFrameDuration: 5,
+	detectAIR: 1,
+	detectSURFACE: 0,
+	detectMARINE: 0,
+	pulse: DOPPLER, # MONO or DOPPLER
+	minClosure: 0, # kt
+	cursorAz: 0,
+	cursorNm: 20,
+	upperAngle: 10,
+	lowerAngle: 10,
+	painter: 0, # if the mode when having a priority target will produce a hard lock on target.
+	mapper: 0,
+	discSpeed_dps: 1,# current disc speed. Must never be zero.
+	setRange: func (range) {
+		me.testMulti = me.maxRange/range;
+		if (int(me.testMulti) != me.testMulti) {
+			# max range is not dividable by range, so we don't change range
+			return 0;
+		}
+		me.range = math.min(me.maxRange, range);
+		me.range = math.max(me.minRange, me.range);
+		return range == me.range;
+	},
+	getRange: func {
+		return me.range;
+	},
+	_increaseRange: func {
+		me.range*=2;
+		if (me.range>me.maxRange) {
+			me.range*=0.5;
+			return 0;
+		}
+		return 1;
+	},
+	_decreaseRange: func {
+		me.range *= 0.5;
+		if (me.range < me.minRange) {
+			me.range *= 2;
+			return 0;
+		}
+		return 1;
+	},
+	getDeviation: func {
+		# how much the pattern is deviated from straight ahead in azimuth
+		return me.azimuthTilt;
+	},
+	getBars: func {
+		return me.bars;
+	},
+	getAz: func {
+		return me.az;
+	},
+	constrainAz: func () {
+		# Convinience method that the modes can use.
+		if (me.az == me.radar.fieldOfRegardMaxAz) {
+			me.azimuthTilt = 0;
+		} elsif (me.azimuthTilt > me.radar.fieldOfRegardMaxAz-me.az) {
+			me.azimuthTilt = me.radar.fieldOfRegardMaxAz-me.az;
+		} elsif (me.azimuthTilt < -me.radar.fieldOfRegardMaxAz+me.az) {
+			me.azimuthTilt = -me.radar.fieldOfRegardMaxAz+me.az;
+		}
+	},
+	getPriority: func {
+		return me["priorityTarget"];
+	},
+	computePattern: func {
+		# Translate the normalized pattern nodes into degrees. Since me.az or maybe me.bars have tendency to change rapidly
+		# We do this every step. Its fast anyway.
+		me.currentPattern = [];
+		foreach (me.eulerNorm ; me.barPattern[me.bars-1]) {
+			me.patternNode = [me.eulerNorm[0]*me.az, me.eulerNorm[1]*me.radar.instantFoVradius*me.barHeight];
+			append(me.currentPattern, me.patternNode);
+		}
+		return me.currentPattern;
+	},
+	step: func (dt) {
+		me.radar.horizonStabilized = 1;# Might be unset inside preStep()
+
+		# Individual modes override this method and get ready for the step.
+		# Inside this they typically set 'azimuthTilt' and 'elevationTilt' for moving the pattern around.
+		me.preStep();
+		
+		# Lets figure out the desired antennae tilts
+	 	me.azimuthTiltIntern = me.azimuthTilt;
+	 	me.elevationTiltIntern = me.elevationTilt;
+		if (me.nextPatternNode == SPOT_SCAN and me.priorityTarget != nil) {
+			# We never do spot scans in ACM modes so no check for horizonStabilized here.
+			me.lastBlep = me.priorityTarget.getLastBlep();
+			if (me.lastBlep != nil) {
+				me.azimuthTiltIntern = me.lastBlep.getAZDeviation();
+				me.elevationTiltIntern = me.lastBlep.getElev();
+			} else {
+				me.priorityTarget = nil;
+				me.undesignate();
+				me.nextPatternNode == 0;
+			}
+		} elsif (me.nextPatternNode == SPOT_SCAN) {
+			# We cannot do spot scan on stuff we cannot see, reverting back to pattern
+			me.nextPatternNode = 0;
+		}
+
+		# now lets check where we want to move the disc to
+		me.currentPattern      = me.computePattern();
+		me.targetAzimuthTilt   = me.azimuthTiltIntern+(me.nextPatternNode!=SPOT_SCAN?me.currentPattern[me.nextPatternNode][0]:0);
+		me.targetElevationTilt = me.elevationTiltIntern+(me.nextPatternNode!=SPOT_SCAN?me.currentPattern[me.nextPatternNode][1]:0);
+
+		# The pattern min/max pitch when not tilted.
+		me.min = me.barPatternMin[me.bars-1]*me.barHeight*me.radar.instantFoVradius;
+		me.max = me.barPatternMax[me.bars-1]*me.barHeight*me.radar.instantFoVradius;
+
+		# We check if radar gimbal mount can turn enough.
+		me.gimbalInBounds = 1;
+		if (me.radar.horizonStabilized) {
+			# figure out if we reach the gimbal limit
+	 		me.actualMin = self.getPitch()+me.radar.fieldOfRegardMinElev;
+	 		me.actualMax = self.getPitch()+me.radar.fieldOfRegardMaxElev;
+	 		if (me.targetElevationTilt < me.actualMin) {
+	 			me.gimbalInBounds = 0;
+	 		} elsif (me.targetElevationTilt > me.actualMax) {
+	 			me.gimbalInBounds = 0;
+	 		}
+ 		}
+ 		if (!me.gimbalInBounds) {
+ 			# Don't move the antennae if it cannot reach whats requested.
+ 			# This basically stop the radar from working while still not on standby
+ 			# until better attitude is reached.
+ 			#
+ 			# It used to attempt to scan in edge of FoR but thats not really helpful to a pilot.
+ 			# If need to scan while extreme attitudes then the are specific modes for that (in some aircraft).
+ 			me.radar.setAntennae(me.radar.positionDirection);
+ 			#print("db-Out of gimbal bounds");
+	 		return 0;
+	 	}
+
+	 	# For help with cursor limits we need to compute these
+		if (me.radar.horizonStabilized and me.gimbalInBounds) {
+			me.lowerAngle = me.min+me.elevationTiltIntern;
+			me.upperAngle = me.max+me.elevationTiltIntern;
+		} else {
+			me.lowerAngle = 0;
+			me.upperAngle = 0;
+		}
+
+	 	# Lets get a status for where we are in relation to where we are going
+		me.targetDir = vector.Math.pitchYawVector(me.targetElevationTilt, -me.targetAzimuthTilt, [1,0,0]);# A vector for where we want the disc to go
+		me.angleToNextNode = vector.Math.angleBetweenVectors(me.radar.positionDirection, me.targetDir);# Lets test how far from the target tilts we are.
+		
+		# Move the disc
+		if (me.angleToNextNode < me.radar.instantFoVradius) {
+			# We have reached our target
+			me.radar.setAntennae(me.targetDir);
+			me.nextPatternNode += 1;
+			if (me.nextPatternNode >= size(me.currentPattern)) {
+				me.nextPatternNode = (me.scanPriorityEveryFrame and me.priorityTarget!=nil)?SPOT_SCAN:0;
+				me.frameCompleted();
+			}
+			#print("db-node:", me.nextPatternNode);
+			# Now the antennae has been moved and we return how much leftover dt there is to the main radar.
+			return dt-me.angleToNextNode/me.discSpeed_dps;# Since we move disc seperately in axes, this is not strictly correct, but close enough.
+		}
+
+		# Lets move each axis of the radar seperate, as most radars likely has 2 joints anyway.
+		me.maxMove = math.min(me.radar.instantFoVradius*overlapHorizontal, me.discSpeed_dps*dt);# 1.75 instead of 2 is because the FoV is round so we overlap em a bit
+
+		# Azimuth
+		me.distance_deg = me.targetAzimuthTilt - me.radar.eulerX;
+		if (me.distance_deg >= 0) {
+			me.moveX =  math.min(me.maxMove, me.distance_deg);
+		} else {
+			me.moveX = math.max(-me.maxMove, me.distance_deg);
+		}
+		me.newX = me.radar.eulerX + me.moveX;
+
+		# Elevation
+		me.distance_deg = me.targetElevationTilt - me.radar.eulerY;
+		if (me.distance_deg >= 0) {
+			me.moveY =  math.min(me.maxMove, me.distance_deg);
+		} else {
+			me.moveY =  math.max(-me.maxMove, me.distance_deg);
+		}
+		me.newY = me.radar.eulerY + me.moveY;
+
+		# Convert the angles to a vector and set the new antennae position
+		me.newPos = vector.Math.pitchYawVector(me.newY, -me.newX, [1,0,0]);
+		me.radar.setAntennae(me.newPos);
+
+		# As the two joins move at the same time, we find out which moved the most
+		me.movedMax = math.max(math.abs(me.moveX), math.abs(me.moveY));
+		if (me.movedMax == 0) {
+			# This should really not happen, we return 0 to make sure the while loop don't get infinite.
+			print("me.movedMax == 0");
+			return 0;
+		}
+		if (me.movedMax > me.discSpeed_dps) {
+			print("me.movedMax > me.discSpeed_dps");
+			return 0;
+		}
+		return dt-me.movedMax/me.discSpeed_dps;
+	},
+	frameCompleted: func {
+		if (me.lastFrameStart != -1) {
+			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
+		}
+		me.lastFrameStart = me.radar.elapsed;
+	},
+	setCursorDeviation: func (cursor_az) {
+		me.cursorAz = cursor_az;
+	},
+	getCursorDeviation: func {
+		return me.cursorAz;
+	},
+	setCursorDistance: func (nm) {
+		# Return if the cursor should be distance zeroed.
+		return 0;
+	},
+	getCursorAltitudeLimits: func {
+		# Used in F-16 with two numbers next to cursor that indicates min/max for radar pattern in altitude above sealevel.
+		# It needs: me.lowerAngle, me.upperAngle and me.cursorNm
+		me.vectorToDist = [math.cos(me.upperAngle*D2R), 0, math.sin(me.upperAngle*D2R)];
+		me.selfC = self.getCoord();
+		me.geo = vector.Math.vectorToGeoVector(me.vectorToDist, me.selfC);
+		me.geo = vector.Math.product(me.cursorNm*NM2M, vector.Math.normalize(me.geo.vector));
+		me.up = geo.Coord.new();
+		me.up.set_xyz(me.selfC.x()+me.geo[0],me.selfC.y()+me.geo[1],me.selfC.z()+me.geo[2]);
+		me.vectorToDist = [math.cos(me.lowerAngle*D2R), 0, math.sin(me.lowerAngle*D2R)];
+		me.geo = vector.Math.vectorToGeoVector(me.vectorToDist, me.selfC);
+		me.geo = vector.Math.product(me.cursorNm*NM2M, vector.Math.normalize(me.geo.vector));
+		me.down = geo.Coord.new();
+		me.down.set_xyz(me.selfC.x()+me.geo[0],me.selfC.y()+me.geo[1],me.selfC.z()+me.geo[2]);
+		return [me.up.alt()*M2FT, me.down.alt()*M2FT];
+	},
+	leaveMode: func {
+		# Warning: In this method do not set anything on me.radar only on me.
+		me.lastFrameStart = -1;
+	},
+	enterMode: func {
+		# Warning: This gets called BEFORE previous mode's leaveMode()
+	},
+	designatePriority: func (contact) {},
+	cycleDesignate: func {},
+	testContact: func (contact) {},
+	prunedContact: func (c) {
+		if (c.equalsFast(me["priorityTarget"])) {
+			me.priorityTarget = nil;
+		}
+	},
+};#                                    END Radar Mode class
+
+
+
+
+
+
+#  ██████   █████  ████████  █████  ██      ██ ███    ██ ██   ██ 
+#  ██   ██ ██   ██    ██    ██   ██ ██      ██ ████   ██ ██  ██  
+#  ██   ██ ███████    ██    ███████ ██      ██ ██ ██  ██ █████   
+#  ██   ██ ██   ██    ██    ██   ██ ██      ██ ██  ██ ██ ██  ██  
+#  ██████  ██   ██    ██    ██   ██ ███████ ██ ██   ████ ██   ██ 
+#                                                                
+#                                                                
+DatalinkRadar = {
+	# I check the sky 360 deg for anything on datalink
+	#
+	# I will set 'blue' and 'blueIndex' on contacts.
+	# blue==1: On our datalink
+	# blue==2: Targeted by someone on our datalink
+	#
+	# Direct line of sight required for ~1000MHz signal.
+	#
+	# This class is only semi generic!
+	new: func (rate, max_dist_nm) {
+		var dlnk = {parents: [DatalinkRadar, Radar]};
+		
+		dlnk.max_dist_nm = max_dist_nm;
+		dlnk.index = 0;
+		dlnk.vector_aicontacts = [];
+		dlnk.vector_aicontacts_for = [];
+		dlnk.timer          = maketimer(rate, dlnk, func dlnk.scan());
+
+		dlnk.DatalinkRadarRecipient = emesary.Recipient.new("DatalinkRadarRecipient");
+		dlnk.DatalinkRadarRecipient.radar = dlnk;
+		dlnk.DatalinkRadarRecipient.Receive = func(notification) {
+	        if (notification.NotificationType == "AINotification") {
+	        	#printf("DLNKRadar recv: %s", notification.NotificationType);
+    		    me.radar.vector_aicontacts = notification.vector;
+    		    me.radar.index = 0;
+	            return emesary.Transmitter.ReceiptStatus_OK;
+	        }
+	        return emesary.Transmitter.ReceiptStatus_NotProcessed;
+	    };
+		emesary.GlobalTransmitter.Register(dlnk.DatalinkRadarRecipient);
+		dlnk.DatalinkNotification = VectorNotification.new("DatalinkNotification");
+		dlnk.DatalinkNotification.updateV(dlnk.vector_aicontacts_for);
+		dlnk.timer.start();
+		return omni;
+	},
+
+	scan: func () {
+		if (!me.enabled) return;
+		
+		#this loop is really fast. But we only check 1 contact per call
+		if (me.index >= size(me.vector_aicontacts)) {
+			# will happen if there is no contacts or if contact(s) went away
+			me.index = 0;
+			return;
+		}
+		me.contact = me.vector_aicontacts[me.index];
+		me.wasBlue = me.contact["blue"];
+		me.cs = me.contact.get_Callsign();
+		if (me.wasBlue == nil) me.wasBlue = 0;
+
+		if (!me.contact.isValid()) {
+			me.contact.blue = 0;
+			if (me.wasBlue > 0) {
+				#print(me.cs," is invalid and purged from Datalink");
+				me.new_vector_aicontacts_for = [];
+				foreach (me.c ; me.vector_aicontacts_for) {
+					if (!me.c.equals(me.contact) and !me.c.equalsFast(me.contact)) {
+						append(me.new_vector_aicontacts_for, me.c);
+					}
+				}
+				me.vector_aicontacts_for = me.new_vector_aicontacts_for;
+			}
+		} else {
+			
+
+			if (me.contact.getRangeDirect()*M2NM > me.max_dist_nm) {me.index += 1;return;}
+			
+
+	        me.lnk = datalink.get_data(me.cs);
+	        if (!me.contact.isValid()) {
+	        	me.lnk = nil;
+	        }
+	        if (me.lnk != nil and me.lnk.on_link() == 1) {
+	            me.blue = 1;
+	            me.blueIndex = me.lnk.index()+1;
+	        } elsif (me.cs == getprop("link16/wingman-4")) { # Hack that the F16 need. Just ignore it, as nil wont cause expection.
+	            me.blue = 1;
+	            me.blueIndex = 0;
+	        } else {
+	        	me.blue = 0;
+	            me.blueIndex = -1;
+	        }
+	        if (!me.blue and me.lnk != nil and me.lnk.tracked() == 1) {
+	            me.blue = 2;
+	            me.blueIndex = me.lnk.tracked_by_index()+1;
+	        }
+
+	        me.contact.blue = me.blue;
+	        if (me.blue > 0) {
+	        	me.contact.blueIndex = me.blueIndex;
+				if (!AirborneRadar.containsVectorContact(me.vector_aicontacts_for, me.contact)) {
+					append(me.vector_aicontacts_for, me.contact);
+					emesary.GlobalTransmitter.NotifyAll(me.DatalinkNotification.updateV(me.vector_aicontacts_for));
+				}
+			} elsif (me.wasBlue > 0) {
+				me.new_vector_aicontacts_for = [];
+				foreach (me.c ; me.vector_aicontacts_for) {
+					if (!me.c.equals(me.contact) and !me.c.equalsFast(me.contact)) {
+						append(me.new_vector_aicontacts_for, me.c);
+					}
+				}
+				me.vector_aicontacts_for = me.new_vector_aicontacts_for;
+			}
+		}
+		me.index += 1;
+        if (me.index > size(me.vector_aicontacts)-1) {
+        	me.index = 0;
+        	emesary.GlobalTransmitter.NotifyAll(me.DatalinkNotification.updateV(me.vector_aicontacts_for));
+        }
+	},
+	del: func {
+        emesary.GlobalTransmitter.DeRegister(me.DatalinkRadarRecipient);
+    },
+};
+
+
+
+
+
+
+
+
+
+
+########################### BEGIN NON-GENERIC CLASSES ##########################
+
+
+
+
+
+
+#   █████  ██     ██  ██████         █████  
+#  ██   ██ ██     ██ ██             ██   ██ 
+#  ███████ ██  █  ██ ██   ███ █████  ██████ 
+#  ██   ██ ██ ███ ██ ██    ██            ██ 
+#  ██   ██  ███ ███   ██████         █████  
+#                                           
+#                                           
+var AWG9 = {
+	#
+	# Root modes is  0: CRM  1: ACM
+	#
+	fieldOfRegardMaxAz: 60,
+	fieldOfRegardMaxElev: 50,
+	fieldOfRegardMinElev: -70,
+	instantFoVradius: 2.3*0.5,#
+	instantVertFoVradius: 2.3*0.5,# real vert radius (used by ground mapper)
+	instantHoriFoVradius: 2.3*0.5,# (not used)
+	rcsRefDistance: 89,
+	rcsRefValue: 3.2,
+	targetHistory: 3,# Not used in TWS
+	isEnabled: func {
+		me.e = RadarServicable.getBoolValue() and DisplayRdr.getBoolValue() and RadarStandby.getValue() != 1;# and !getprop("/fdm/jsbsim/gear/unit[0]/WOW")
+		return me.e;
+	},
+	loopSpecific: func {
+		updateDisplays();
+	},
+	setAAMode: func {
+		if (me.rootMode != 0) {
+			me.rootMode = 0;
+			me.oldMode = me.currentMode;
+			me.currentModeIndex = 0;
+			me.newMode = me.mainModes[me.rootMode][me.currentModeIndex];
+			me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
+			me.oldMode.leaveMode();
+		}
+	},
+	setAirMode: func (currentModeIndex) {
+		if (currentModeIndex == me.currentModeIndex) return 0;
+		if (currentModeIndex == -1) return 0;
+		
+		
+		me.newMode = me.mainModes[me.rootMode][currentModeIndex];
+		me.oldMode = me.currentMode;
+		if (me.oldMode != 3 and me.oldMode != 4 and (currentModeIndex == 3 or currentModeIndex == 4)) {
+			me.newMode.superMode  = me.oldMode;
+			me.newMode.superIndex = me.currentModeIndex;
+		}
+		me.currentModeIndex = currentModeIndex;
+		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
+		me.oldMode.leaveMode();
+		return 1;
+	},
+	toggleAirMode: func {
+		currentModeIndex = me.currentModeIndex+1;
+		if (currentModeIndex > 2) currentModeIndex = 0;
+		
+		me.newMode = me.mainModes[me.rootMode][currentModeIndex];
+		me.oldMode = me.currentMode;
+		me.currentModeIndex = currentModeIndex;
+		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
+		me.oldMode.leaveMode();
+		return 1;
+	},
+	showAZ: func {
+		me.currentMode.showAZ();
+	},
+	getTiltKnob: func {
+		me.theKnob = antennae_knob_prop.getValue();
+		if (math.abs(me.theKnob) < 1) {
+			antennae_knob_prop.setValue(0);
+			me.theKnob = 0;
+		}
+		return me.theKnob;
+	},
+	getSideKnob: func {
+		me.theKnob = antennae_az_knob_prop.getValue();# -60 to 60
+		if (math.abs(me.theKnob) < 5) {
+			antennae_az_knob_prop.setValue(0);
+			me.theKnob = 0;
+		}
+		return me.theKnob;
+	},
+	checks: func {
+		cycleField();
+		selectHookCheck();
+	},
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#   █████  ██     ██  ██████         █████      ███    ███  █████  ██ ███    ██     ███    ███  ██████  ██████  ███████ 
+#  ██   ██ ██     ██ ██             ██   ██     ████  ████ ██   ██ ██ ████   ██     ████  ████ ██    ██ ██   ██ ██      
+#  ███████ ██  █  ██ ██   ███ █████  ██████     ██ ████ ██ ███████ ██ ██ ██  ██     ██ ████ ██ ██    ██ ██   ██ █████   
+#  ██   ██ ██ ███ ██ ██    ██            ██     ██  ██  ██ ██   ██ ██ ██  ██ ██     ██  ██  ██ ██    ██ ██   ██ ██      
+#  ██   ██  ███ ███   ██████         █████      ██      ██ ██   ██ ██ ██   ████     ██      ██  ██████  ██████  ███████ 
+#                                                                                                                       
+#                                                                                                                       
+var AWG9Mode = {
+	minRange: 5,
+	maxRange: 200,
+	bars: 4,
+	az: 60,
+	barHeight: 1.00,
+	barPattern:  [ [[-1,0],[1,0]],     # 1, 2, 4, 8               # These are multitudes of [me.az, instantFoVradius]
+	               [[-1,-0.785],[1,-0.785],[1,0.785],[-1,0.785]],
+	               [[1,-3*0.685],[1,3*0.685],[-1,3*0.685],[-1,1*0.685],[1,1*0.685],[1,-1*0.685],[-1,-1*0.685],[-1,-3*0.685]],
+	               [[1,-7*0.625],[1,7*0.625],[-1,7*0.625],[-1,5*0.625],[1,5*0.625],[1,3*0.625],[-1,3*0.625],[-1,1*0.625],[1,1*0.625],[1,-1*0.625],[-1,-1*0.625],[-1,-3*0.625],[1,-3*0.625],[1,-5*0.625],[-1,-5*0.625],[-1,-7*0.625]] ],
+	barPatternMin: [0, -0.785, -3*0.685, -7*0.625],
+	barPatternMax: [0,  0.785,  3*0.685,  7*0.625],
+	rootName: "AIR",
+	shortName: "",
+	longName: "",
+	cycleAZ: func {
+		if (me.az == 10) me.az = 20;
+		elsif (me.az == 20) me.az = 40;
+		elsif (me.az == 40) me.az = 60;
+		elsif (me.az == 60) me.az = 10;
+		else me.az = 10;
+		me.nextPatternNode = 0;
+	},
+	showAZ: func {
+		return 1;
+	},
+	showBars: func {
+		return 1;
+	},
+	setRange: func (range) {
+		return 0;
+	},
+	getRange: func {
+		return RangeRadar2.getValue();
+	},
+	frameCompleted: func {
+		if (me.lastFrameStart != -1) {
+			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
+			me.timeToFadeBleps = me.radar.targetHistory*me.lastFrameDuration;
+		}
+		me.lastFrameStart = me.radar.elapsed;
+	},
+	cycleDesignate: func {
+		if (!size(me.radar.vector_aicontacts_bleps)) {
+			me.priorityTarget = nil;
+			return;
+		}
+		if (me.priorityTarget == nil) {
+			me.testIndex = -1;
+		} else {
+			me.testIndex = me.radar.vectorIndex(me.radar.vector_aicontacts_bleps, me.priorityTarget);
+		}
+		for(me.i = me.testIndex+1;me.i<size(me.radar.vector_aicontacts_bleps);me.i+=1) {
+			me.priorityTarget = me.radar.vector_aicontacts_bleps[me.i];
+			return;
+		}
+		for(me.i = 0;me.i<=me.testIndex;me.i+=1) {
+			me.priorityTarget = me.radar.vector_aicontacts_bleps[me.i];
+			return;
+		}
+	},
+};#                                    END AWG-9 Mode base class
+
+
+
+
+
+
+
+
+#  ██████  ██     ██ ███████ 
+#  ██   ██ ██     ██ ██      
+#  ██████  ██  █  ██ ███████ 
+#  ██   ██ ██ ███ ██      ██ 
+#  ██   ██  ███ ███  ███████ 
+#                            
+#                            
+var RWSMode = {
+	radar: nil,
+	shortName: "RWS",
+	longName: "Range While Search",
+	superMode: nil,
+	subMode: nil,
+	discSpeed_dps: 50,
+	rcsFactor: 1.0,
+	priorityTarget: nil,
+	new: func (subMode, radar = nil) {
+		var mode = {parents: [RWSMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		mode.subMode = subMode;
+		subMode.superMode = mode;
+		#subMode.shortName = mode.shortName;
+		return mode;
+	},
+	cycleBars: func {
+		me.bars += 1;
+		if (me.bars == 5) me.bars = 1;
+		me.nextPatternNode = 0;
+	},
+	designate: func (designate_contact) {
+		if (designate_contact == nil) return;
+		me.radar.setCurrentMode(me.subMode, designate_contact);
+		me.subMode.radar = me.radar;# find some smarter way of setting it.
+	},
+	undesignate: func {},
+	designatePriority: func (contact) {
+		me.priorityTarget = contact;
+	},
+	preStep: func {
+		var dev_tilt_deg = me.radar.getSideKnob();
+		me.elevationTilt = me.radar.getTiltKnob();
+		if (me.az == 60) {
+			dev_tilt_deg = 0;
+		}
+		me.azimuthTilt = dev_tilt_deg;
+		if (me.azimuthTilt > me.radar.fieldOfRegardMaxAz-me.az) {
+			me.azimuthTilt = me.radar.fieldOfRegardMaxAz-me.az;
+		} elsif (me.azimuthTilt < -me.radar.fieldOfRegardMaxAz+me.az) {
+			me.azimuthTilt = -me.radar.fieldOfRegardMaxAz+me.az;
+		}
+		if (me.priorityTarget != nil) {
+			if (!size(me.priorityTarget.getBleps())) {
+				me.priorityTarget = nil;
+				me.undesignate();
+			}
+		}
+	},
+	increaseRange: func {
+		me._increaseRange();
+	},
+	decreaseRange: func {
+		me._decreaseRange();
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		return [1,0,1,0,0,1];
+	},
+};
+
+
+
+
+#  ██████  ██    ██ ██      ███████ ███████     ███████ ███████  █████  ██████   ██████ ██   ██ 
+#  ██   ██ ██    ██ ██      ██      ██          ██      ██      ██   ██ ██   ██ ██      ██   ██ 
+#  ██████  ██    ██ ██      ███████ █████       ███████ █████   ███████ ██████  ██      ███████ 
+#  ██      ██    ██ ██           ██ ██               ██ ██      ██   ██ ██   ██ ██      ██   ██ 
+#  ██       ██████  ███████ ███████ ███████     ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ 
+#                                                                                               
+#                                                                                               
+var PulseMode = {
+	shortName: "PD",
+	longName: "Pulse Doppler Search",
+	discSpeed_dps: 40,
+	maxScanIntervalForVelocity: 12,
+	minClosure: 115, # kt
+	rcsFactor: 1.1,
+	new: func (subMode, radar = nil) {
+		var mode = {parents: [PulseMode, RWSMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		mode.subMode = subMode;
+		subMode.superMode = mode;
+		#subMode.shortName = mode.shortName;
+		return mode;
+	},
+	designate: func (designate_contact) {
+		return;
+		if (designate_contact == nil) return;
+		me.radar.setCurrentMode(me.subMode, designate_contact);
+		me.subMode.radar = me.radar;# find some smarter way of setting it.
+		me.radar.registerBlep(designate_contact, designate_contact.getDeviationStored(), 0);
+	},
+	designatePriority: func {
+		# NOP
+	},
+	undesignate: func {
+		# NOP
+	},
+	preStep: func {
+		me.elevationTilt = me.radar.getTiltKnob();
+		var dev_tilt_deg = me.radar.getSideKnob();
+		if (me.az == 60) {
+			dev_tilt_deg = 0;
+		}
+		me.azimuthTilt = dev_tilt_deg;
+		if (me.azimuthTilt > me.radar.fieldOfRegardMaxAz-me.az) {
+			me.azimuthTilt = me.radar.fieldOfRegardMaxAz-me.az;
+		} elsif (me.azimuthTilt < -me.radar.fieldOfRegardMaxAz+me.az) {
+			me.azimuthTilt = -me.radar.fieldOfRegardMaxAz+me.az;
+		}
+		if (me.priorityTarget != nil) {
+			if (!size(me.priorityTarget.getBleps())) {
+				me.priorityTarget = nil;
+				me.undesignate();
+			}
+		}
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		#print(me.currentTracked,"   ",(me.radar.elapsed - contact.blepTime));
+		if (((me.radar.elapsed - contact.getLastBlepTime()) < me.maxScanIntervalForVelocity) and contact.getLastClosureRate() > 0) {
+			#print("VELOCITY");
+			return [0,0,1,1,1,0];
+		}
+		#print("  EMPTY");
+		return [0,0,0,0,1,0];
+	},
+	cycleDesignate: func {
+	},
+};
+
+
+
+
+
+
+
+#  ████████ ██     ██ ███████ 
+#     ██    ██     ██ ██      
+#     ██    ██  █  ██ ███████ 
+#     ██    ██ ███ ██      ██ 
+#     ██     ███ ███  ███████ 
+#                             
+#                             
+var TWSMode = {
+	radar: nil,
+	shortName: "TWS",
+	longName: "Track While Scan",
+	superMode: nil,
+	subMode: nil,
+	maxRange: 80,
+	discSpeed_dps: 45,
+	rcsFactor: 0.9,
+	timeToBlinkTracks: 8,
+	maxScanIntervalForTrack: 9,
+	priorityTarget: nil,
+	currentTracked: [],
+	maxTracked: 10,
+	az: 40,# slow scan, so default is 25 to get those double taps in there.
+	bars: 2,# default is less due to need 2 scans of target to get groundtrack
+	new: func (subMode, radar = nil) {
+		var mode = {parents: [TWSMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		mode.subMode = subMode;
+		subMode.superMode = mode;
+		#subMode.shortName = mode.shortName;
+		return mode;
+	},
+	cycleAZ: func {
+		if (me.az <= 20) {
+			me.az = 40;
+			me.bars = 2;#2 scan lines
+		} else {
+			me.az = 20;
+			me.bars = 3;#4 scan lines
+		}
+		me.nextPatternNode = 0;
+	},
+	cycleBars: func {
+		me.bars += 1;
+		if (me.bars > 3) {
+			me.bars = 2;
+			me.az = 40;
+		} else {
+			me.bars = 3;
+			me.az = 20;
+		}
+		me.nextPatternNode = 0;
+	},
+	designate: func (designate_contact) {
+		if (designate_contact != nil) {
+			me.radar.setCurrentMode(me.subMode, designate_contact);
+			me.subMode.radar = me.radar;# find some smarter way of setting it.
+		} else {
+			me.priorityTarget = nil;
+		}
+	},
+	designatePriority: func (contact) {
+		me.priorityTarget = contact;
+	},
+	getPriority: func {
+		return me.priorityTarget;
+	},
+	undesignate: func {
+		me.priorityTarget = nil;
+	},
+	preStep: func {
+	 	me.azimuthTilt = me.radar.getSideKnob();
+	 	me.elevationTilt = me.radar.getTiltKnob();
+		if (me.priorityTarget != nil) {
+			if (!size(me.priorityTarget.getBleps()) or !me.radar.containsVectorContact(me.radar.vector_aicontacts_bleps, me.priorityTarget) or me.radar.elapsed - me.priorityTarget.getLastBlepTime() > me.radar.timeToKeepBleps) {
+				me.priorityTarget = nil;
+				me.undesignate();
+				return;
+			}
+			
+			me.lastBlep = me.priorityTarget.getLastBlep();
+			if (me.lastBlep != nil) {
+				me.centerTilt = me.lastBlep.getAZDeviation();
+				if (me.centerTilt > me.azimuthTilt+me.az) {
+					me.azimuthTilt = me.centerTilt-me.az;
+				} elsif (me.centerTilt < me.azimuthTilt-me.az) {
+					me.azimuthTilt = me.centerTilt+me.az;
+				}
+				me.elevationTilt = me.lastBlep.getElev();
+			} else {
+				me.priorityTarget = nil;
+				me.undesignate();
+				return;
+			}
+			#me.prioRange_nm = me.priorityTarget.getLastRangeDirect()*M2NM;
+			#if (me.prioRange_nm < 0.40 * me.getRange()) {
+			#	me._decreaseRange();
+			#} elsif (me.prioRange_nm > 0.90 * me.getRange()) {
+			#	me._increaseRange();
+			#} elsif (me.prioRange_nm < 3) {
+				# auto go to STT when target is very close
+			#	me.designate(me.priorityTarget);
+			#}
+			# Source MLU Tape 1:
+			#me.bars = math.min(3, me.bars);
+			#me.az = math.min(25, me.az);
+		} else {
+			me.undesignate();
+		}
+		me.constrainAz();
+	},
+	frameCompleted: func {
+		if (me.lastFrameStart != -1) {
+			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
+		}
+		me.lastFrameStart = me.radar.elapsed;
+	},
+	enterMode: func {
+		me.currentTracked = [];
+		foreach(c;me.radar.vector_aicontacts_bleps) {
+			c.ignoreTrackInfo();# Kind of a hack to make it give out false info. Bypasses hadTrackInfo() but not hasTrackInfo().
+		}
+	},
+	leaveMode: func {
+		me.priorityTarget = nil;
+		me.lastFrameStart = -1;
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		#print(me.currentTracked,"   ",(me.radar.elapsed - contact.blepTime));
+		me.scanInterval = (me.radar.elapsed - contact.getLastBlepTime()) < me.maxScanIntervalForTrack;
+		me.isInCurrent = me.radar.containsVectorContact(me.currentTracked, contact);
+		if (size(me.currentTracked) < me.maxTracked and me.scanInterval) {
+			#print("  TWICE    ",(me.radar.elapsed - contact.getLastBlepTime()));
+			#print(me.radar.containsVectorContact(me.radar.vector_aicontacts_bleps, contact),"   ",me.radar.elapsed - contact.blepTime);			
+			if (!me.isInCurrent) append(me.currentTracked, contact);
+			return [1,1,1,1,1,1];
+		} elsif (me.isInCurrent and me.scanInterval) {
+			return [1,1,1,1,1,1];
+		} elsif (me.isInCurrent) {
+			me.tmp = [];
+			foreach (me.cc ; me.currentTracked) {
+				if(!me.cc.equals(contact)) {
+					append(me.tmp, me.cc);
+				}
+			}
+			me.currentTracked = me.tmp;
+		}
+		#print("  ONCE    ",me.currentTracked);
+		return [1,0,1,0,0,1];
+	},
+	prunedContact: func (c) {
+		if (c.equals(me.priorityTarget)) {
+			me.priorityTarget = nil;# this might have fixed the nil exception
+		}
+		if (c.hadTrackInfo()) {
+			me.del = me.radar.containsVectorContact(me.currentTracked, c);
+			if (me.del) {
+				me.tmp = [];
+				foreach (me.cc ; me.currentTracked) {
+					if(!me.cc.equals(c)) {
+						append(me.tmp, me.cc);
+					}
+				}
+				me.currentTracked = me.tmp;
+			}
+		}
+	},
+	testContact: func (contact) {
+		#if (me.radar.elapsed - contact.getLastBlepTime() > me.maxScanIntervalForTrack and contact.azi == 1) {
+		#	contact.azi = 0;
+		#	me.currentTracked -= 1;
+		#}
+	},
+	cycleDesignate: func {
+		if (!size(me.radar.vector_aicontacts_bleps)) {
+			me.priorityTarget = nil;
+			return;
+		}
+		if (me.priorityTarget == nil) {
+			me.testIndex = -1;
+		} else {
+			me.testIndex = me.radar.vectorIndex(me.radar.vector_aicontacts_bleps, me.priorityTarget);
+		}
+		for(me.i = me.testIndex+1;me.i<size(me.radar.vector_aicontacts_bleps);me.i+=1) {
+			#if (me.radar.vector_aicontacts_bleps[me.i].hadTrackInfo()) {
+				me.priorityTarget = me.radar.vector_aicontacts_bleps[me.i];
+				return;
+			#}
+		}
+		for(me.i = 0;me.i<=me.testIndex;me.i+=1) {
+			#if (me.radar.vector_aicontacts_bleps[me.i].hadTrackInfo()) {
+				me.priorityTarget = me.radar.vector_aicontacts_bleps[me.i];
+				return;
+			#}
+		}
+	},
+};
+
+
+
+
+
+
+#   █████   ██████ ███    ███ 
+#  ██   ██ ██      ████  ████ 
+#  ███████ ██      ██ ████ ██ 
+#  ██   ██ ██      ██  ██  ██ 
+#  ██   ██  ██████ ██      ██ 
+#                             
+#                             
+var F16ACMMode = {#TODO
+	radar: nil,
+	rootName: "ACM",
+	shortName: "STBY",
+	longName: "Air Combat Mode Standby",
+	superMode: nil,
+	subMode: nil,
+	range: 5,
+	maxRange: 5,
+	discSpeed_dps: 70,
+	rcsFactor: 1.0,
+	timeToFadeBleps: 1,
+	bars: 1,
+	az: 1,
+	new: func (subMode, radar = nil) {
+		var mode = {parents: [F16ACMMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		mode.subMode = subMode;
+		mode.subMode.superMode = mode;
+		mode.subMode.shortName = mode.shortName;
+		return mode;
+	},
+	showBars: func {
+		return 0;
+	},
+	showAZinHSD: func {
+		return 0;
+	},
+	cycleAZ: func {	},
+	cycleBars: func { },
+	designate: func (designate_contact) {
+	},
+	designatePriority: func (contact) {
+
+	},
+	getPriority: func {
+		return nil;
+	},
+	undesignate: func {
+	},
+	preStep: func {
+	},
+	increaseRange: func {
+		return 0;
+	},
+	decreaseRange: func {
+		return 0;
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		return nil;
+	},
+	testContact: func (contact) {
+	},
+	cycleDesignate: func {
+	},
+};
+
+var PalMode = {
+	radar: nil,
+	#rootName: "ACM",
+	shortName: "PAL",
+	longName: "Pilot automatic lockon",
+	superMode: nil,
+	subMode: nil,
+	range: 10,
+	minRange: 10,
+	maxRange: 10,
+	discSpeed_dps: 70,
+	rcsFactor: 1.0,
+	timeToFadeBleps: 1,# TODO
+	bars: 4,
+	az: 20,
+	new: func (subMode, radar = nil) {
+		var mode = {parents: [PalMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		mode.subMode = subMode;
+		mode.subMode.superMode = mode;
+		#mode.subMode.shortName = mode.shortName;
+		return mode;
+	},
+	showBars: func {
+		return 0;
+	},
+	cycleAZ: func {	},
+	cycleBars: func { },
+	designate: func (designate_contact) {
+		if (designate_contact == nil) {
+			acmLockSound.setBoolValue(0);
+			return;
+		}
+		acmLockSound.setBoolValue(1);
+		me.radar.setCurrentMode(me.subMode, designate_contact);
+		me.subMode.radar = me.radar;
+	},
+	designatePriority: func (contact) {
+	},
+	getPriority: func {
+		return nil;
+	},
+	undesignate: func {
+	},
+	preStep: func {
+		me.radar.horizonStabilized = 0;
+		me.elevationTilt = 0;
+		me.azimuthTilt = 0;
+	},
+	getRange: func {
+		return me.range;
+	},
+	increaseRange: func {
+		return 0;
+	},
+	decreaseRange: func {
+		return 0;
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		me.designate(contact);
+		return [1,1,1,1,1,1];
+	},
+	testContact: func (contact) {
+	},
+	cycleDesignate: func {
+	},
+	getCursorAltitudeLimits: func {
+		return nil;
+	},
+};
+
+
+
+
+
+#  ███████ ████████ ████████ 
+#  ██         ██       ██    
+#  ███████    ██       ██    
+#       ██    ██       ██    
+#  ███████    ██       ██    
+#                            
+#                            
+var STTMode = {
+	radar: nil,
+	shortName: "STT",
+	longName: "Single Target Track",
+	superMode: nil,
+	discSpeed_dps: 80,
+	rcsFactor: 1,
+	maxRange: 160,
+	priorityTarget: nil,
+	az: AWG9.instantFoVradius*0.8,
+	barHeight: 0.90,# multiple of instantFoVradius
+	bars: 2,
+	minimumTimePerReturn: 0.10,
+	timeToFadeBleps: 5, # Need to have time to move disc to the selection from wherever it was before entering STT. Plus already faded bleps from superMode will get pruned if this is to low.
+	debug: 1,
+	painter: 1,
+	debug: 0,
+	new: func (radar = nil) {
+		var mode = {parents: [STTMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		return mode;
+	},
+	showAZ: func {
+		return 0;
+	},
+	showAZinHSD: func {
+		return 0;
+	},
+	showBars: func {
+		return me.superMode.showBars();
+	},
+	showRangeOptions: func {
+		return 0;
+	},
+	getBars: func {
+		return me.superMode.getBars();
+	},
+	getAz: func {
+		# We return the parents mode AZ and bars in this class, so they are shown in radar display as B4 A4 etc etc.
+		return me.superMode.getAz();
+	},
+	preStep: func {
+		me.debug = getprop("debug-radar/debug-stt");
+		if (me.priorityTarget != nil and size(me.priorityTarget.getBleps())) {
+			me.lastBlep = me.priorityTarget.getLastBlep();
+			if (me.debug > 0) {
+				setprop("debug-radar/STT-bleps", size(me.priorityTarget.getBleps()));
+			}
+			if (me.lastBlep != nil) {
+				me.azimuthTilt = me.lastBlep.getAZDeviation();
+				me.elevationTilt = me.lastBlep.getElev(); # tilt here is in relation to horizon
+			} else {
+				me.priorityTarget = nil;
+				me.undesignate();
+				return;
+			}
+			if (!size(me.priorityTarget.getBleps()) or !me.radar.containsVectorContact(me.radar.vector_aicontacts_bleps, me.priorityTarget)) {
+				me.priorityTarget = nil;
+				me.undesignate();
+				return;
+			} elsif (me.azimuthTilt > me.radar.fieldOfRegardMaxAz-me.az) {
+				me.azimuthTilt = me.radar.fieldOfRegardMaxAz-me.az;
+			} elsif (me.azimuthTilt < -me.radar.fieldOfRegardMaxAz+me.az) {
+				me.azimuthTilt = -me.radar.fieldOfRegardMaxAz+me.az;
+			}
+			if (me.priorityTarget.getRangeDirect()*M2NM < 0.40 * me.getRange()) {
+				me._decreaseRange();
+			}
+			if (me.priorityTarget.getRangeDirect()*M2NM > 0.90 * me.getRange()) {
+				me._increaseRange();
+			}
+			if (me.debug > 0) {
+				setprop("debug-radar/STT-focused", me.priorityTarget.get_Callsign());
+			}
+		} else {
+			if (me.debug > 0) {
+				setprop("debug-radar/STT-focused", "--none--");
+			}
+			if (me.debug > 0) {
+				setprop("debug-radar/STT-bleps", -1);
+			}
+			me.priorityTarget = nil;
+			me.undesignate();
+		}
+	},
+	designatePriority: func (prio) {
+		me.priorityTarget = prio;
+	},
+	undesignate: func {
+		me.radar.setCurrentMode(me.superMode, me.priorityTarget);
+		me.priorityTarget = nil;
+		#var log = caller(1); foreach (l;log) print(l);
+	},
+	designate: func {},
+	cycleBars: func {},
+	cycleAZ: func {},
+	increaseRange: func {# Range is auto-set in STT
+		return 0;
+	},
+	decreaseRange: func {# Range is auto-set in STT
+		return 0;
+	},
+	setRange: func {# Range is auto-set in STT
+	},
+	frameCompleted: func {
+		if (me.lastFrameStart != -1) {
+			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
+			#me.timeToFadeBleps = math.max(2, me.radar.targetHistory*me.lastFrameDuration);
+		}
+		me.lastFrameStart = me.radar.elapsed;
+	},
+	leaveMode: func {
+		me.priorityTarget = nil;
+		me.lastFrameStart = -1;
+		#me.timeToFadeBleps = 5;# Reset to 5, since frameCompleted might have lowered it.
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		if (me.priorityTarget != nil and contact.equals(me.priorityTarget)) {
+			return [1,1,1,1,1,1];
+		}
+		return nil;
+	},
+	getCursorAltitudeLimits: func {
+		return nil;
+	},
+};
+
+var PDSTTMode = {
+	rootName: "CRM",
+	shortName: "PDSTT",
+	longName: "Pulse Doppler - Single Target Track",
+	new: func (radar = nil) {
+		var mode = {parents: [PDSTTMode, STTMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		return mode;
+	},
+	undesignate: func {
+		if (me["superIndex"] != nil) me.radar.currentModeIndex = me.superIndex;
+		me.radar.setCurrentMode(me.superMode, me.priorityTarget);
+		me.priorityTarget = nil;
+		#var log = caller(1); foreach (l;log) print(l);
+	},
+};
+
+var PSTTMode = {
+	rootName: "AIR",
+	shortName: "PSTT",
+	longName: "Pulse - Single Target Track",
+	pulse: MONO, # MONO or DOPPLER
+	new: func (radar = nil) {
+		var mode = {parents: [PSTTMode, STTMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		return mode;
+	},
+	undesignate: func {
+		if (me["superIndex"] != nil) me.radar.currentModeIndex = me.superIndex;
+		me.radar.setCurrentMode(me.superMode, me.priorityTarget);
+		me.priorityTarget = nil;
+		#var log = caller(1); foreach (l;log) print(l);
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		if (me.priorityTarget != nil and contact.equals(me.priorityTarget)) {
+			return [1,1,1,1,0,1];
+		}
+		return nil;
+	},
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+#   █████  ███    ██     ██  █████  ██      ██████        ███████  ██████  
+#  ██   ██ ████   ██    ██  ██   ██ ██      ██   ██       ██      ██  ████ 
+#  ███████ ██ ██  ██   ██   ███████ ██      ██████  █████ ███████ ██ ██ ██ 
+#  ██   ██ ██  ██ ██  ██    ██   ██ ██      ██   ██            ██ ████  ██ 
+#  ██   ██ ██   ████ ██     ██   ██ ███████ ██   ██       ███████  ██████  
+#                                                                          
+#                                                                          
+var RWR = {
+	# inherits from Radar
+	# will check radar/transponder and ground occlusion.
+	# will sort according to threat level
+	new: func () {
+		var rr = {parents: [RWR, Radar]};
+
+		rr.vector_aicontacts = [];
+		rr.vector_aicontacts_threats = [];
+		#rr.timer          = maketimer(2, rr, func rr.scan());
+
+		rr.RWRRecipient = emesary.Recipient.new("RWRRecipient");
+		rr.RWRRecipient.radar = rr;
+		rr.RWRRecipient.Receive = func(notification) {
+	        if (notification.NotificationType == "OmniNotification") {
+	        	#printf("RWR recv: %s", notification.NotificationType);
+	            if (me.radar.enabled == 1) {
+	    		    me.radar.vector_aicontacts = notification.vector;
+	    		    me.radar.scan();
+	    	    }
+	            return emesary.Transmitter.ReceiptStatus_OK;
+	        }
+	        return emesary.Transmitter.ReceiptStatus_NotProcessed;
+	    };
+		emesary.GlobalTransmitter.Register(rr.RWRRecipient);
+		#nr.FORNotification = VectorNotification.new("FORNotification");
+		#nr.FORNotification.updateV(nr.vector_aicontacts_for);
+		#rr.timer.start();
+		return rr;
+	},
+	heatDefense: 0,
+	scan: func {
+		# sort in threat?
+		# run by notification
+		# mock up code, ultra simple threat index, is just here cause rwr have special needs:
+		# 1) It has almost no range restriction
+		# 2) Its omnidirectional
+		# 3) It might have to update fast (like 0.25 secs)
+		# 4) To build a proper threat index it needs at least these properties read:
+		#       model type
+		#       class (AIR/SURFACE/MARINE)
+		#       lock on myself
+		#       missile launch
+		#       transponder on/off
+		#       bearing and heading
+		#       IFF info
+		#       ECM
+		#       radar on/off
+		if (!EcmOn.getBoolValue()) {
+            setprop("sound/rwr-lck", 0);
+            setprop("ai/submodels/submodel[0]/flare-auto-release-cmd", 0);
+            return;
+        }
+        me.vector_aicontacts_threats = [];
+		me.fct = 10*2.0;
+        me.myCallsign = self.getCallsign();
+        me.myCallsign = size(me.myCallsign) < 8 ? me.myCallsign : left(me.myCallsign,7);
+        me.act_lck = 0;
+        me.autoFlare = 0;
+        me.closestThreat = 0;
+        me.elapsed = elapsedProp.getValue();
+        foreach(me.u ; me.vector_aicontacts) {
+        	# [me.ber,me.head,contact.getCoord(),me.tp,me.radar,contact.getDeviationHeading(),contact.getRangeDirect()*M2NM, contact.getCallsign()]
+        	me.threatDB = me.u.getThreatStored();
+            me.cs = me.threatDB[7];
+            me.rn = me.threatDB[6];
+            if ((me.u["blue"] != nil and me.u.blue == 1 and !me.threatDB[10]) or me.rn > 150) {
+                continue;
+            }
+            me.bearing = me.threatDB[0];
+            me.trAct = me.threatDB[3];
+            me.show = 1;
+            me.heading = me.threatDB[1];
+            me.inv_bearing =  me.bearing+180;#bearing from target to me
+            me.deviation = me.inv_bearing - me.heading;# bearing deviation from target to me
+            me.dev = math.abs(geo.normdeg180(me.deviation));# my degrees from opponents nose
+            
+            if (me.show == 1) {
+                if (me.dev < 30 and me.rn < 7 and me.threatDB[8] > 60) {
+                    # he is in position to fire heatseeker at me
+                    me.heatDefenseNow = me.elapsed + me.rn*1.5;
+                    if (me.heatDefenseNow > me.heatDefense) {
+                        me.heatDefense = me.heatDefenseNow;
+                    }
+                }
+                me.threat = 0;
+                if (me.u.getModel() != "missile_frigate" and me.u.getModel() != "S-75" and me.u.getModel() != "buk-m2" and me.u.getModel() != "MIM104D" and me.u.getModel() != "s-300" and me.u.getModel() != "fleet" and me.u.getModel() != "ZSU-23-4M") {
+                    me.threat += ((180-me.dev)/180)*0.30;# most threat if I am in front of his nose
+                    me.spd = (60-me.threatDB[8])/60;
+                    #me.threat -= me.spd>0?me.spd:0;# if his speed is lower than 60kt then give him minus threat else positive
+                } elsif (me.u.getModel == "missile_frigate" or me.u.getModel() == "fleet") {
+                    me.threat += 0.30;
+                } else {
+                    me.threat += 0.30;
+                }
+                me.danger = 50;# within this range he is most dangerous
+                if (me.u.getModel() == "missile_frigate" or me.u.getModel() == "fleet" or me.u.getModel() == "s-300") {
+                    me.danger = 80;
+                } elsif (me.u.getModel() == "buk-m2" or me.u.getModel() == "S-75") {
+                    me.danger = 35;
+                } elsif (me.u.getModel() == "MIM104D") {
+                    me.danger = 45;
+                } elsif (me.u.getModel() == "ZSU-23-4M") {
+                    me.danger = 7.5;
+                }
+                if (me.threatDB[10]) me.threat += 0.30;# has me locked
+                me.threat += ((me.danger-me.rn)/me.danger)>0?((me.danger-me.rn)/me.danger)*0.60:0;# if inside danger zone then add threat, the closer the more.
+                me.threat += me.threatDB[9]>0?(me.threatDB[9]/500)*0.10:0;# more closing speed means more threat.
+                if (me.threat > me.closestThreat) me.closestThreat = me.threat;
+                #printf("A %s threat:%.2f range:%d dev:%d", me.u.get_Callsign(),me.threat,me.u.get_range(),me.deviation);
+                if (me.threat > 1) me.threat = 1;
+                if (me.threat <= 0) continue;
+                #printf("B %s threat:%.2f range:%d dev:%d", me.u.get_Callsign(),me.threat,me.u.get_range(),me.deviation);
+                append(me.vector_aicontacts_threats, me.u);# [me.u,me.threat, me.threatDB[5]]
+            } else {
+#                printf("%s ----", me.u.get_Callsign());
+            }
+        }
+
+        me.launchClose = getprop("payload/armament/MLW-launcher") != "";
+        me.incoming = getprop("payload/armament/MAW-active") or me.heatDefense > me.elapsed;
+        me.spike = getprop("payload/armament/spike")*(getprop("ai/submodels/submodel[0]/count")>15);
+        me.autoFlare = me.spike?math.max(me.closestThreat*0.25,0.05):0;
+
+        if (0 and getprop("f16/avionics/ew-mode-knob") == 2)
+        	print("wow: ", getprop("/fdm/jsbsim/gear/unit[0]/WOW"),"  spiked: ",me.spike,"  incoming: ",me.incoming, "  launch: ",me.launchClose,"  spikeResult:", me.autoFlare,"  aggresive:",me.launchClose * 0.85 + me.incoming * 0.85,"  total:",me.launchClose * 0.85 + me.incoming * 0.85+me.autoFlare);
+
+        me.autoFlare += me.launchClose * 0.85 + me.incoming * 0.85;
+
+        me.autoFlare *= 0.1 * 2.5 * !getprop("/fdm/jsbsim/gear/unit[0]/WOW");#0.1 being the update rate for flare dropping code.
+
+        setprop("ai/submodels/submodel[0]/flare-auto-release-cmd", me.autoFlare * (getprop("ai/submodels/submodel[0]/count")>0));
+        if (me.autoFlare > 0.80 and rand()>0.99 and getprop("ai/submodels/submodel[0]/count") < 1) {
+            setprop("ai/submodels/submodel[0]/flare-release-out-snd", 1);
+        }
+	},
+	del: func {
+        emesary.GlobalTransmitter.DeRegister(me.RWRRecipient);
+    },
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var scanInterval = 0.05;# 20hz for main radar
+var ddd_screen_width = 0.0844;#use the maximum here
+laserOn = props.globals.getNode("controls/armament/laser-arm-dmd",1);#don't put 'var' keyword in front of this.
+var datalink_power = props.globals.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus1-powered",0);
+enable_tacobject = 0;
+var wndprop = props.globals.getNode("environment/wind-speed-kt",0);
+
+
+
+var acmLockSound = props.globals.getNode("sound/acm-lock",1);
+
+var getCompleteList = func {
+	return baser.vector_aicontacts_last;
+}
+
+
+var this_model = "f-14b";
+var we_are_bs = 0;# RIO
+var pilot_lock        = 0;
+var cockpitNotifier = nil;
+var radar_ranges = [5,10,20,50,100,200];
+# RWR
+var EcmOn             = props.globals.getNode("instrumentation/ecm/on-off", 1);
+# HUD
+var HudTgtHDisplay    = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/target-display", 1);
+var HudTgt            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/target", 1);
+var HudTgtTDev        = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/target-total-deviation", 1);
+var HudTgtTDeg        = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/target-total-angle", 1);
+var HudTgtClosureRate = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/closure-rate", 1);
+var HudTgtDistance = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/distance", 1);
+var SWTgtRange        = props.globals.getNode("sim/model/"~this_model~"/systems/armament/aim9/target-range-nm",1);
+# Field
+var antennae_knob_prop = props.globals.getNode("controls/radar/antennae-knob",0);# tilt scan field up or down
+var antennae_az_knob_prop = props.globals.getNode("controls/radar/antennae-az-knob",0);# -60 to 60, tilt scan field left or right (when not 120). No controls mapped to this yet.
+# Radar
+var cycle_range       = getprop("instrumentation/radar/cycle-range");# if range should be cycled or only go up/down.
+var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range",1);
+var DisplayRdr        = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/display-rdr",1);
+var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
+var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
+var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby",1);
+var SelectTargetCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
+var BarsCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleBars",1);
+BarsCommand.setValue(0);
+var AzCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleAz",1);
+AzCommand.setValue(0);
+var WcsMode           = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode",1);
+
+var selectHookCheck = func {
+    var tgt_cmd = SelectTargetCommand.getValue();
+    SelectTargetCommand.setIntValue(0);
+	if (tgt_cmd != 0) awg9Radar.cycleDesignate();# for now only 1 direction
+	var prio = awg9Radar.getPriorityTarget();
+	if (prio != nil) {
+		screen.log.write("RIO: Selected "~prio.get_Callsign()~".", 1,1,0);
+	} else {
+		screen.log.write("RIO: Selected nothing.", 1,1,0);
+	}
+}
+
+var cycleField = func {
+	var b_cmd = BarsCommand.getValue();
+    BarsCommand.setIntValue(0);
+	if (b_cmd != 0) {
+		awg9Radar.cycleBars();
+		rioRadar();
+	}
+	var a_cmd = AzCommand.getValue();
+    AzCommand.setIntValue(0);
+	if (a_cmd != 0) {
+		awg9Radar.cycleAZ();
+		rioRadar();
+	}
+	updateDDD();
+}
+
+var bars2bars = [1,2,4,8];
+
+var rioRadar = func {
+	screen.log.write("RIO: Scanning "~bars2bars[awg9Radar.currentMode.bars-1]~" bars and "~(awg9Radar.currentMode.az*2)~" degrees.", 1,1,0);
+}
+
+var wcs2mode = [nil,4,3,-1,0,1,-1,2,5];
+var mode2wcs = [4,5,7,2,1,8];
+
+var wcs_mode_sel = func (wcsMode) {
+	# 1 STT P
+	# 2 STT PD
+	# 3 P search
+	# 4 PD Search
+	# 5 RWS
+	# 6 TWS AUTO
+	# 7 TWS MAN
+	# 8 PAL
+	
+	#pulseDSMode, rwsMode, twsMode, PDSTTMode.new(), PSTTMode.new(), PAL
+
+	var result = awg9Radar.setAirMode(wcs2mode[wcsMode]);
+
+	if (result == 0) return;
+	#print("wcs2mode[",wcsMode,"] = ", wcs2mode[wcsMode]);
+	WcsMode.setValue(wcsMode);
+}
+
+var wcs_mode_toggle = func {
+	awg9Radar.toggleAirMode();
+	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
+}
+
+var lock = func {
+	print("RIO request STT mode");
+	var tgt = awg9Radar.getPriorityTarget();
+	if (tgt == nil) {
+		print("  but there is nothing designated.");
+		return;
+	}
+	awg9Radar.designate(tgt);
+	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
+}
+
+var des = func {
+	# The button/knob is called DES, the mode "Pilot automatic lockon".
+	print("Pilot request PAL mode");
+	awg9Radar.setAirMode(5);
+}
+
+var modeSwitch = func (rdr) {
+	var md = rdr.currentMode;
+	if (md.shortName == "PDSTT") {
+		WcsMode.setValue(2);
+	} elsif (md.shortName == "PSTT") {
+		WcsMode.setValue(1);
+	} else {
+		WcsMode.setValue(mode2wcs[rdr.currentModeIndex]);
+	}
+}
+
+# Controls
+# ---------------------------------------------------------------------
+var toggle_radar_standby = func() {
+	if ( pilot_lock and ! we_are_bs ) { return }
+	RadarStandby.setBoolValue(!RadarStandby.getBoolValue());
+}
+var range_control = func(n) {
+	var range_radar = RangeRadar2.getValue();
+    newri = 0;
+    forindex(ri; radar_ranges){
+        if (radar_ranges[ri] == range_radar) {
+            newri = ri + n;
+            break;
+		}
+    }
+    if (newri < 0) {
+    	if (!cycle_range) {return;}
+    	newri = size(radar_ranges) - 1;
+    } elsif (newri >= size(radar_ranges)) {
+    	if (!cycle_range) {return;}
+    	newri = 0;
+	}
+
+    RangeRadar2.setValue(radar_ranges[newri]);
+
+    if (cockpitNotifier != nil)
+      	cockpitNotifier.notify_value(cockpitNotifier.set_radar_range, range_radar);
+}
+init = func() {
+	var our_ac_name = getprop("sim/aircraft");
+    # map variants to the base
+    if(our_ac_name == "f-14a") our_ac_name = "f-14b";
+	if (our_ac_name == "f-14b-bs") { we_are_bs = 1; }
+}
+init();
+
+var updateDisplays = func {
+	updateTID();
+	updateTgts();
+}
+
+var updateDDD = func {
+	var caretPosition = awg9Radar.getCaretPosition();
+	SwpFac.setValue(caretPosition[0]);
+}
+
+var updateTID = func {
+	# Keep the 120 az for now, as the smaller az's can be rotated from side to side
+	# That needs to be done in xml first. Need 20 deg, 40 deg, 80 deg and 120 deg.
+}
+
+var ddd_m_per_deg = 0.5 * ddd_screen_width / AWG9.fieldOfRegardMaxAz;
+
+var updateTgts = func {
+	var actives = awg9Radar.getActiveBleps();
+	var i = 0;
+	var shown = [];
+	foreach (var active_u ; actives) {
+		var blep = active_u.getLastBlep();
+		if (blep == nil) {
+			continue;
+		}
+		var sinceBlep = awg9Radar.elapsed - blep.getBlepTime();
+		if (sinceBlep > awg9Radar.currentMode.timeToFadeBleps) {
+			continue;
+		}
+		if (math.abs(blep.getAZDeviation())>AWG9.fieldOfRegardMaxAz) {
+			continue;
+		}
+		var threat = awg9Radar.containsVector(f14_rwr.vector_aicontacts_threats, active_u) and active_u["blue"] != 1;
+		tgts[i]["bearing-deg"].setDoubleValue(blep.getBearing());
+		tgts[i]["true-heading-deg"].setDoubleValue(blep.getHeading()==nil?-2:blep.getHeading());
+		tgts[i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * blep.getAZDeviation());
+		tgts[i]["carrier"].setBoolValue(active_u.isCarrier());
+		#tgts[i]["ecm-signal"].setDoubleValue(0);#TODO
+		tgts[i]["display"].setBoolValue(1);
+		tgts[i]["visible"].setBoolValue(1);
+		tgts[i]["behind-terrain"].setBoolValue(0);
+		tgts[i]["rwr-visible"].setBoolValue(threat);
+		tgts[i]["ddd-echo-fading"].setDoubleValue(sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
+		tgts[i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
+		tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
+		tgts[i]["rounded-alt-ft"].setIntValue(blep.getAltitude()==nil?0:math.round(blep.getAltitude()*0.001));
+		tgts[i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
+		tgts[i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
+		tgts[i]["closure-rate-kts"].setDoubleValue(blep.getClosureRate());
+		append(shown, active_u);
+		i += 1;
+		if (i > 18) break;
+	}
+	foreach (var active_dl ; dlnkRadar.vector_aicontacts_for) {
+		if (i > 18) break;
+		if (active_dl["blue"] != 1) {
+			continue;
+		}
+		var discard = awg9Radar.containsVector(shown, active_t);
+		if (discard) {
+			continue;
+		}
+		if (math.abs(geo.normdeg180(active_dl.getBearing()-self.getHeading()))>AWG9.fieldOfRegardMaxAz or active_dl.getRange()*M2NM > awg9Radar.getRange()) {
+			# To avoid datalink contacts from being painted outside the display
+			continue;
+		}
+		tgts[i]["bearing-deg"].setDoubleValue(active_dl.getBearing());
+		tgts[i]["true-heading-deg"].setDoubleValue(active_dl.getHeading());
+		tgts[i]["ddd-relative-bearing"].setDoubleValue(0);
+		tgts[i]["carrier"].setBoolValue(active_dl.isCarrier());
+		#tgts[i]["ecm-signal"].setDoubleValue(0);#TODO
+		tgts[i]["display"].setBoolValue(1);
+		tgts[i]["visible"].setBoolValue(1);
+		tgts[i]["behind-terrain"].setBoolValue(0);
+		tgts[i]["rwr-visible"].setBoolValue(0);
+		tgts[i]["ddd-echo-fading"].setDoubleValue(0);# Don't show dlnk on ddd
+		tgts[i]["ddd-draw-range-nm"].setDoubleValue(0);
+		tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*active_dl.getRange()*M2NM);
+		tgts[i]["rounded-alt-ft"].setIntValue(active_dl.getAltitude());
+		tgts[i]["closure-last-time"].setDoubleValue(awg9Radar.elapsed);#TODO
+		tgts[i]["closure-last-range-nm"].setDoubleValue(active_dl.getRange()*M2NM);#TODO
+		tgts[i]["closure-rate-kts"].setDoubleValue(0);
+		append(shown, active_dl);
+		i += 1;
+	}
+	foreach (var active_t ; f14_rwr.vector_aicontacts_threats) {
+		if (i > 18) break;
+		var discard = awg9Radar.containsVector(shown, active_t);
+		if (discard) {
+			continue;
+		}
+		tgts[i]["bearing-deg"].setDoubleValue(active_t.getBearing());
+		tgts[i]["true-heading-deg"].setDoubleValue(active_t.getHeading());
+		#tgts[i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * geo.normdeg180(active_u.getHeading() - self.getHeading()) );
+		#tgts[i]["carrier"].setBoolValue(active_u.isCarrier());
+		#tgts[i]["ecm-signal"].setDoubleValue(0);#TODO
+		tgts[i]["display"].setBoolValue(0);
+		tgts[i]["visible"].setBoolValue(1);
+		tgts[i]["behind-terrain"].setBoolValue(0);
+		tgts[i]["rwr-visible"].setBoolValue(1);
+		#tgts[i]["ddd-echo-fading"].setDoubleValue(sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
+		#tgts[i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
+		#tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
+		#tgts[i]["rounded-alt-ft"].setIntValue(blep.getAltitude()==nil?0:math.round(blep.getAltitude()*0.001));
+		#tgts[i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
+		#tgts[i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
+		#tgts[i]["closure-rate-kts"].setDoubleValue(blep.getClosureRate());
+		i += 1;
+	}
+	for (;i<=18;i+=1) {
+		tgts[i]["display"].setBoolValue(0);
+		tgts[i]["visible"].setBoolValue(0);
+		tgts[i]["rwr-visible"].setBoolValue(0);
+	}
+}
+
+
+var TgtProp = {
+    "bearing-deg": nil,
+    "true-heading-deg": nil,
+    "range-score": nil,
+    "ddd-relative-bearing": nil,
+    "carrier": nil,
+    "ecm-signal": nil,
+    "ecm-signal-norm": nil,
+    "ecm_type_num": nil,
+    "display": nil,
+    "visible": nil,
+    "behind-terrain": nil,
+    "rwr-visible": nil,
+    "ddd-echo-fading": nil,
+    "ddd-draw-range-nm": nil,
+    "tid-draw-range-nm": nil,
+    "rounded-alt-ft": nil,
+    "closure-last-time": nil,
+    "closure-last-range-nm": nil,
+    "closure-rate-kts": nil,
+};
+
+var tgts = [];
+
+
+var initPilotTgts = func {
+	# Local back-seater has a different radar-awg-9 folder and shall not see its pilot's aircraft.
+	var InstrTgts = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
+	if (we_are_bs) {
+		if  ( BS_instruments.Pilot != nil ) {
+			# Use a different radar-awg-9 folder.
+			InstrTgts = BS_instruments.Pilot.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
+			# Do not see our pilot's aircraft.
+			#var target_callsign = self.getCallsign();
+			#var p_callsign = BS_instruments.Pilot.getNode("callsign").getValue();
+			#if ( target_callsign == p_callsign ) {
+			#	obj.not_acting = 1;
+			#}
+		}
+	}
+	tgts = [];
+	for (var i = 0; i <= 18; i += 1) {
+	    var TgtsFiles = InstrTgts.getNode("multiplayer["~i~"]", 1);
+	    var myTgt = {parents:[TgtProp]};
+	    foreach(var key ; keys(TgtProp)) {
+	    	myTgt[key] = TgtsFiles.getNode(key, 1);
+	    }
+	    myTgt.visible.setBoolValue(0);
+	    myTgt.display.setBoolValue(0);
+	    append(tgts, myTgt);
+	}
+};
+
+var hud_nearest_tgt = func() {
+	# Computes nearest_u position in the HUD
+	var active_u = awg9Radar.getPriorityTarget();
+	if ( active_u != nil and (awg9Radar.currentMode.painter or awg9Radar.currentMode.shortName == "TWS") and active_u.getLastBlep() != nil) {
+		SWTgtRange.setValue(active_u.getLastRangeDirect()*M2NM);
+
+		#if(awg9_trace)
+		#	print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
+		var devs = develev_to_devroll(active_u.getLastBlep().getPilotDeviations());
+		var combined_dev_deg = devs[0];
+		var combined_dev_length =  devs[1];
+		var clamped = devs[2];
+		if ( clamped ) {
+			Diamond_Blinker.blink();
+		} else {
+			Diamond_Blinker.cont();
+		}
+
+		# Clamp closure rate from -200 to +1,000 Kts.
+		var cr = active_u.getLastClosureRate();
+        
+		if (cr != nil)
+        {
+            if (cr < -200) 
+                cr = 200;
+            else if (cr > 1000) 
+                cr = 1000;
+			HudTgtClosureRate.setValue(cr);
+        }
+
+		HudTgtTDeg.setValue(combined_dev_deg);
+		HudTgtTDev.setValue(combined_dev_length);
+		
+		var range = active_u.getLastRangeDirect();
+		if (range == nil) {
+			HudTgtHDisplay.setBoolValue(0);
+			return;
+		}
+        HudTgtDistance.setValue(range*M2NM);
+        HudTgtHDisplay.setBoolValue(1);
+
+        var callsign = active_u.getCallsign();
+        var model = active_u.getModel();
+
+        var target_id = "";
+        if(callsign != nil)
+            target_id = callsign;
+        else
+            target_id = active_u.prop.getName() ~ "[" ~ active_u.index ~ "]";
+        if (model != nil and model != "")
+            target_id = target_id ~ " " ~ model;
+
+        HudTgt.setValue(target_id);
+		return;
+	}
+	SWTgtRange.setValue(0);
+	HudTgtClosureRate.setValue(0);
+	HudTgtTDeg.setValue(0);
+	HudTgtTDev.setValue(0);
+	HudTgtHDisplay.setBoolValue(0);
+}
+# HUD clamped target blinker
+Diamond_Blinker = aircraft.light.new("sim/model/"~this_model~"/lighting/hud-diamond-switch", [0.1, 0.1]);
+setprop("sim/model/"~this_model~"/lighting/hud-diamond-switch/enabled", 1);
+
+
+var eye_hud_m          = 0.6;#pilot: -3.30  hud: -3.9
+var hud_radius_m       = 0.100;
+
+
+var develev_to_devroll = func(dev_) {
+	dev_[0] = 90-dev_[0];
+	dev_[1] = 90-dev_[1];
+	dev_[0] *= D2R;
+	dev_[1] *= D2R;
+	if (math.sin(dev_[0]) == 0 or math.sin(dev_[1]) == 0) return [0,0,0];
+	if (math.cos(dev_[0]) == 0 or math.cos(dev_[1]) == 0) return [0,20,1];
+	var clamped = 0;
+	# Deviation length on the HUD (at level flight),
+	# 0.6686m = distance eye <-> virtual HUD screen.
+	var h_dev = eye_hud_m / ( math.sin(dev_[0]) / math.cos(dev_[0]) );
+	var v_dev = eye_hud_m / ( math.sin(dev_[1]) / math.cos(dev_[1]) );
+	# Angle between HUD center/top <-> HUD center/symbol position.
+	# -90° left, 0° up, 90° right, +/- 180° down. 
+	var dev_deg =  math.atan2( h_dev, v_dev ) * R2D;
+	# Correction with own a/c roll.
+	var combined_dev_deg = dev_deg;
+	# Lenght HUD center <-> symbol pos on the HUD:
+	var combined_dev_length = math.sqrt((h_dev*h_dev)+(v_dev*v_dev));
+	# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
+	var abs_combined_dev_deg = math.abs( combined_dev_deg );
+	var clamp = hud_radius_m;
+	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
+		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;
+		if ( coef > 0.050 ) { coef = 0.050 }
+		clamp -= coef; 
+	}
+	if ( combined_dev_length > clamp ) {
+		combined_dev_length = clamp;
+		clamped = 1;
+	}
+	var v = [combined_dev_deg, combined_dev_length, clamped];
+	return(v);
+}
+
+
+
+
+
+
+
+
+
+
+# start generic radar system
+var baser = AIToNasal.new();
+var partitioner = NoseRadar.new();
+var omni = OmniRadar.new(1.0, 150, 55);
+var terrain = TerrainChecker.new(0.05, 1, 30);# 0.05 or 0.10 is fine here
+var dlnkRadar = DatalinkRadar.new(0.03, 110);# 3 seconds because cannot be too slow for DLINK targets
+var ecm = ECMChecker.new(0.05, 6);
+
+# start specific radar system
+var rwsMode = RWSMode.new(PDSTTMode.new());
+var twsMode = TWSMode.new(PDSTTMode.new());
+var pulseDSMode = PulseMode.new(PDSTTMode.new());
+var palMode = PalMode.new(PSTTMode.new());
+var awg9Radar = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
+var f14_rwr = RWR.new();
+
+if (!we_are_bs) {
+	initPilotTgts();
+}
+
+
+# TODO
+#+ Inputs/Controls
+#+ Displays
+#+ RWR
+#+ make dual seater not see each other on radar
+#+ hook target beside TWS
+#  show hook target on TID (Richard)
+#+ Pilot modes
+#  Ask Richard how/if ecm works.
+#  Move most methods into classes
+#+ Datalink
+#  Ask about "closure-last-x"

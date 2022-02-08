@@ -218,7 +218,7 @@ var contactPoint = nil;
 var AIM = {
 	lowestETA: nil,
 	#done
-	new : func (p, type = "AIM-9", sign = "Sidewinder", midFlightFunction = nil, nasalPosition = nil) {
+	new : func (p, type = "AIM-9L", sign = "Sidewinder", midFlightFunction = nil, nasalPosition = nil) {
 		if(AIM.active[p] != nil) {
 			#do not make new missile logic if one exist for this pylon.
 			return -1;
@@ -252,14 +252,10 @@ var AIM = {
         if (m.SwSoundVol.getValue() == nil) {
         	m.SwSoundVol.setDoubleValue(0);
         }
-        m.inacc                 = getprop("payload/armament/tgp-inacc-system");# set to false, unless using the f16
         m.tacview_support       = getprop("payload/armament/tacview");# set to false, unless using an aircraft that has tacview
         m.gnd_launch            = getprop("payload/armament/gnd-launch");#true to be a SAM or ship
         if (m.gnd_launch == nil) {
         	m.gnd_launch = 0;
-        }
-        if (m.inacc == nil) {
-        	m.inacc = 0;
         }
         if (m.tacview_support == nil) {
         	m.tacview_support = 0;
@@ -1250,9 +1246,11 @@ var AIM = {
 	commandDir: func (heading_deg, pitch_deg) {
 		# commands are relative to aircraft bore
 		if (me.status == MISSILE_FLYING) return;
-		me.command_dir_heading = heading_deg;
-		me.command_dir_pitch = pitch_deg;
-		me.slave_to_radar = FALSE;
+		if (vector.Math.angleBetweenVectors(vector.Math.eulerToCartesian2(-heading_deg, pitch_deg), [1,0,0]) <= me.fcs_fov) {
+			me.command_dir_heading = heading_deg;
+			me.command_dir_pitch = pitch_deg;
+			me.slave_to_radar = FALSE;
+		}
 		me.printCode("Bore/dir command: heading %0.1f pitch %0.1f", heading_deg, pitch_deg);
 	},
 
@@ -1411,7 +1409,7 @@ var AIM = {
 				#	me.rail_head_deg = me.Tgt.get_bearing()-OurHdg.getValue();
 				#}
 				me.railvec = vector.Math.eulerToCartesian3X(-me.rail_head_deg, me.rail_pitch_deg,0);
-				me.veccy = vector.Math.yawPitchRollVector(-ac_hdg,ac_pitch,ac_roll,me.railvec);
+				me.veccy = vector.Math.rollPitchYawVector(ac_roll,ac_pitch,-ac_hdg,me.railvec);
 				me.carty = vector.Math.cartesianToEuler(me.veccy);
 				me.msl_pitch = me.carty[1];
 				me.defaultHeading = me.Tgt != nil?me.Tgt.get_bearing():0;#90 deg tubes align to target heading, else north
@@ -1453,15 +1451,8 @@ var AIM = {
 		me.coord = geo.Coord.new(init_coord);
 		# Get target position.
 		if (me.Tgt != nil) {
-			if (me.inacc) {
-				if (!me.target_pnt) {
-					me.Tgt.inac_x = 0;
-	        		me.Tgt.inac_y = 0;
-	        		me.Tgt.inac_z = 0;
-				}
-				if (me.Tgt == contactPoint) {
-					me.usingTGPPoint = 1;
-				}
+			if (me.Tgt == contactPoint) {
+				me.usingTGPPoint = 1;
 			}
 			me.t_coord = me.Tgt.get_Coord();
 			me.maddog = FALSE;
@@ -1920,13 +1911,6 @@ var AIM = {
 		me.semiLostLock = FALSE;
 		me.heatLostLock = FALSE;
 		me.hasGuided = FALSE;
-		if (me.inacc) {
-			if (!me.target_pnt and tagt!=nil) {
-				me.Tgt.inac_x = 0;
-	    		me.Tgt.inac_y = 0;
-	    		me.Tgt.inac_z = 0;
-			}
-		}
 	},
 
 	flight: func {
@@ -2016,7 +2000,7 @@ var AIM = {
 				me.callsign = "Unknown";
 				me.newTargetAssigned = FALSE;
 			}
-		} elsif (me.inacc and me.Tgt != nil and me.Tgt.get_type() == POINT and me.guidance == "laser" and me.usingTGPPoint and contactPoint == nil) {
+		} elsif (me.Tgt != nil and me.Tgt.get_type() == POINT and me.guidance == "laser" and me.usingTGPPoint and contactPoint == nil) {
 			# if laser illuminated lock is lost on a targetpod target:
 			if (!(me.canSwitch and me.reaquire)) {
 				me.Tgt = nil;
@@ -2027,7 +2011,7 @@ var AIM = {
 				me.callsign = "Unknown";
 				me.newTargetAssigned = FALSE;
 			}
-		} elsif (me.inacc and me.Tgt == nil and me.guidance == "laser" and me.usingTGPPoint and contactPoint != nil) {
+		} elsif (me.Tgt == nil and me.guidance == "laser" and me.usingTGPPoint and contactPoint != nil) {
 			# see if we can regain lock on new laser spot:
 			if (me.newLock(contactPoint)) {
 				me.setNewTargetInFlight(contactPoint);
@@ -2228,7 +2212,7 @@ var AIM = {
 				me.hdg = OurHdg.getValue();
 			} else {
 				me.railvec = me.myMath.eulerToCartesian3X(-me.rail_head_deg, me.rail_pitch_deg,0);
-				me.veccy = me.myMath.yawPitchRollVector(-OurHdg.getValue(),OurPitch.getValue(),OurRoll.getValue(),me.railvec);
+				me.veccy = me.myMath.rollPitchYawVector(OurRoll.getValue(),OurPitch.getValue(),-OurHdg.getValue(),me.railvec);
 				me.carty = me.myMath.cartesianToEuler(me.veccy);
 				me.defaultHeading = me.Tgt != nil?me.Tgt.get_bearing():0;#90 deg tubes align to target heading, else north
 				me.pitch = me.carty[1];
@@ -3242,7 +3226,7 @@ var AIM = {
 
 	canSeekerKeepUp: func () {
 		me.globalVectorToTarget = me.myMath.eulerToCartesian3X(-me.t_course, me.t_elev_deg, 0);
-		me.localVectorTarget  = me.myMath.rollPitchYawVector(0, -me.pitch, me.hdg, me.globalVectorToTarget);
+		me.localVectorTarget  = me.myMath.yawPitchVector(me.hdg, -me.pitch, me.globalVectorToTarget);
 		if (me.counter == me.counter_last+1 and !me.newTargetAssigned and me["localVectorSeeker"] != nil and (me.guidance == "heat" or me.guidance == "vision") and me.prevGuidance == me.guidance and me.prevTarget == me.Tgt) {
 			# calculate if the seeker can keep up with the angular change of the target
 			#
@@ -3250,7 +3234,7 @@ var AIM = {
 			#
 			if (!me.caged) {
 				# Gyro is stabilized
-				me.localVectorSeeker = me.myMath.rollPitchYawVector(0, -me.last_track_e, me.last_track_h, me.localVectorSeeker);
+				me.localVectorSeeker = me.myMath.yawPitchVector(me.last_track_h, -me.last_track_e, me.localVectorSeeker);
 			}
 			me.angleSeekerToTarget  = me.myMath.angleBetweenVectors(me.localVectorSeeker, me.localVectorTarget);
 			me.deviation_per_sec = me.angleSeekerToTarget/me.dt;
@@ -3638,7 +3622,7 @@ var AIM = {
 
 			me.printGuideDetails("LOS rate: %06.4f rad/s", me.line_of_sight_rate_rps);
 
-			me.t_velocity = me.myMath.getCartesianVelocity(me.Tgt.get_heading(), me.Tgt.get_Pitch(), me.Tgt.get_Roll(), me.Tgt.get_uBody(), me.Tgt.get_vBody(), me.Tgt.get_wBody());
+			me.t_velocity = me.myMath.getCartesianVelocity(-me.Tgt.get_heading(), me.Tgt.get_Pitch(), me.Tgt.get_Roll(), me.Tgt.get_uBody(), me.Tgt.get_vBody(), me.Tgt.get_wBody());
 						
 			if ((me.flareLock == FALSE and me.chaffLock == FALSE) or me.t_heading == nil) {
 				me.euler = me.myMath.cartesianToEuler(me.t_velocity);
@@ -3846,6 +3830,7 @@ var AIM = {
 
 		####Ground interaction
 		me.ground = geo.elevation(me.coord.lat(), me.coord.lon()) or 0;
+		me.terrainImpact = 0;
 		if(me.ground > me.coord.alt()) {
 			me.event = "exploded";
 			if(me.life_time < me.arming_time) {
@@ -3860,9 +3845,9 @@ var AIM = {
 				#me.direct_dist_m = me.coord.direct_distance_to(me.Tgt.get_Coord());
 			}
 			if ((me.Tgt != nil and me.direct_dist_m != nil) or me.Tgt == nil) {
-				me.coord.set_alt(me.ground);
-				me.explode("Hit terrain.", me.coord, me.direct_dist_m, me.event);
-				return TRUE;
+				me.terrainImpact = 1;
+				#me.explode("Hit terrain.", me.coord, me.direct_dist_m, me.event);
+				#return TRUE;
 			}
 		}
 
@@ -3871,14 +3856,20 @@ var AIM = {
 			# (use xyz coord to avoid the strange behaviour of comparing geo coordinates).
 			for (var i=me.crc_frames_look_back; i >= 0; i-=1){
 				me.crc_coord[i]   = (i != 0) ? me.crc_coord[i-1]   : me.coord.xyz();
-				me.crc_t_coord[i] = (i != 0) ? me.crc_t_coord[i-1] : (me.inacc?me.Tgt.get_Coord(0).xyz():me.t_coord.xyz());
+				me.crc_t_coord[i] = (i != 0) ? me.crc_t_coord[i-1] : me.t_coord.xyz();
 				me.crc_range[i]   = (i != 0) ? me.crc_range[i-1]   : me.myMath.magnitudeVector(
 																		 me.myMath.minus(me.crc_coord[0], 
 																						 me.crc_t_coord[0]));
 			}
 
-			if (me.crc_coord[1] == nil or me.crc_t_coord[1] == nil or me.crc_range[1] == nil)
+			if (me.crc_coord[1] == nil or me.crc_t_coord[1] == nil or me.crc_range[1] == nil) {
+				if (me.terrainImpact) {
+					me.coord.set_alt(me.ground);
+					me.explode("Hit terrain.", me.coord, me.direct_dist_m, me.event);
+					return TRUE;
+				}
 				return FALSE; # Wait for the buffer to fill at least once.		   
+			}
 
 			if (me.life_time > me.arming_time) {
 				# Distance to target increase.
@@ -3899,6 +3890,11 @@ var AIM = {
 			me.Tgt = nil; # make sure we dont in inertial mode with target go in and start checking distances.
 			me.explode("Selfdestructed.", me.coord);
 		    return TRUE;
+		}
+		if (me.terrainImpact) {
+			me.coord.set_alt(me.ground);
+			me.explode("Hit terrain.", me.coord, me.direct_dist_m, me.event);
+			return TRUE;
 		}
 		return FALSE;
 	},
@@ -3993,6 +3989,7 @@ var AIM = {
         msg.Pitch = pitch;
         msg.Heading = heading;
         msg.u_fps = speed;
+        msg.isValid();
         notifications.geoBridgedTransmitter.NotifyAll(msg);
 #print("fox2.nas: transmit in flight");
 #f14.debugRecipient.Receive(msg);
@@ -4079,7 +4076,7 @@ var AIM = {
 				me.printStats("%s  time %.1f", phrase, me.life_time);
 				if(getprop("payload/armament/msg") and hitPrimaryTarget and wh_mass > 0){
 					thread.lock(mutexTimer);
-					append(AIM.timerQueue, [AIM, AIM.notifyHit, [coordinates.alt() - (me.inacc?me.Tgt.get_Coord(0).alt():me.t_coord.alt()),range,me.callsign,coordinates.course_to(me.inacc?me.Tgt.get_Coord(0):me.t_coord),reason,me.typeID, me.typeLong, 0], -1]);
+					append(AIM.timerQueue, [AIM, AIM.notifyHit, [coordinates.alt() - me.t_coord.alt(),range,me.callsign,coordinates.course_to(me.t_coord),reason,me.typeID, me.typeLong, 0], -1]);
 					thread.unlock(mutexTimer);
                 } else {
 	                thread.lock(mutexTimer);
@@ -4118,9 +4115,7 @@ var AIM = {
 				continue;
 			}
 			var min_distance = me.testMe.get_Coord().direct_distance_to(explode_coord);
-			if (me.inacc) {
-				min_distance = me.testMe.get_Coord(0).direct_distance_to(explode_coord);
-			}
+			
 			if (min_distance < me.reportDist and (me.Tgt == nil or me.testMe.getUnique() != me.Tgt.getUnique())) {
 				var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, me.testMe.get_Callsign());
 				me.printStats(phrase);
@@ -4196,7 +4191,7 @@ var AIM = {
 		if (me.noCommonTarget) {
 			return nil;
 		}
-		if (me.inacc and me.target_pnt and contactPoint != nil) {
+		if (me.target_pnt and contactPoint != nil) {
 			return contactPoint;
 		} else {
 			return contact;
@@ -4269,9 +4264,9 @@ var AIM = {
 			}
 			me.cooling_last_time = me.cool_elapsed;
 			me.detect_range_curr_nm = me.extrapolate(me.warm, 0, 1, me.cold_detect_range_nm, me.warm_detect_range_nm);
-			#me.detect_range_curr_nm *= me.seam_scan?0.5:1; # source for this is not credible.
+			me.detect_range_curr_nm *= me.seam_scan?0.65:1;#GR1F-16CJ-34-1-1 page 1-402
 		} else {
-			#me.detect_range_curr_nm = (me.seam_scan?0.5:1)*me.max_fire_range_nm; # no credible source for this
+			me.detect_range_curr_nm = (me.seam_scan?0.65:1)*me.max_fire_range_nm;#GR1F-16CJ-34-1-1 page 1-402
 		}
 	},
 

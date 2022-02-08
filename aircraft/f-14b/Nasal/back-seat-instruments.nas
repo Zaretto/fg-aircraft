@@ -11,10 +11,12 @@ var check_pilot_callsign = func() {
 		foreach (var p; mpplayers) {
 			if ( p.getChild("callsign").getValue() == r_callsign ) {
 				Pilot = p; 
+				awg_9.initPilotTgts();
 			}
 		}
 	} else {
 		Pilot = nil;
+		awg_9.initPilotTgts();
 	}
 }
 

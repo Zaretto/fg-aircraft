@@ -1046,5 +1046,5 @@ var printfDebug = func {if (debug == 1) call(printf,arg);};
 var dualWeapons = ["MK-83"];
 var getCompleteRadarTargetsList = func {
 	# A list of all MP/AI aircraft/ships/surface-targets around the aircraft.
-	return awg_9.completeList;
+	return awg_9.getCompleteList();
 }
