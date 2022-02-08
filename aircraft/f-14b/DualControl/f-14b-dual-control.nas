@@ -50,10 +50,10 @@ var pilot_connect_copilot = func (copilot) {
 					awg_9.RadarStandby.setBoolValue(b);
 				},
 				func (b) {
-					awg_9.WcsMode.getNode("pulse-srch").setBoolValue(b);
+					awg_9.wcs_mode_sel(4);
 				},
 				func (b) {
-					awg_9.WcsMode.getNode("tws-auto").setBoolValue(b);
+					awg_9.awg_9.wcs_mode_sel(7);
 					awg_9.wcs_mode_update();
 				}
 			]

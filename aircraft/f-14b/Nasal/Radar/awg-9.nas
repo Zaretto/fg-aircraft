@@ -2189,7 +2189,7 @@ var cycleField = func {
 var bars2bars = [1,2,4,8];
 
 var rioRadar = func {
-	screen.log.write("RIO: Scanning "~bars2bars[awg9Radar.currentMode.bars-1]~" bars and "~(awg9Radar.currentMode.az*2)~" degrees.", 1,1,0);
+	screen.log.write(sprintf("RIO: Scanning %d bars and %d degrees.",bars2bars[awg9Radar.currentMode.bars-1],awg9Radar.currentMode.az*2), 1,1,0);
 }
 
 var wcs2mode = [nil,4,3,-1,0,1,-1,2,5];
@@ -2609,3 +2609,6 @@ if (!we_are_bs) {
 #  STT auto switch
 #  DDD range buttons
 #  DDD elev setting and caret setting right of display
+#  datalink random startup
+#  rio setfile Nasal
+#  ejection view
