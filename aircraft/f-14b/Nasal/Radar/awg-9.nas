@@ -2616,6 +2616,7 @@ if (!we_are_bs) {
 }
 wcs_mode_sel(4);
 setprop("instrumentation/datalink/channel", int(rand()*33));#should probably not be in this file
+setprop("orientation/opposite",180);#Used for xml rio rwr display.
 
 # TODO
 #+ Inputs/Controls
