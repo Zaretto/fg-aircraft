@@ -648,7 +648,7 @@ var instruments_exec = {
             }
         } else {
             # odd frame
-            awg_9.hud_nearest_tgt();
+            awg_9.hud.hud_nearest_tgt();
             instruments_data_export();
             if ( ArmSysRunning.getBoolValue() ) {
                 f14.armament_update();

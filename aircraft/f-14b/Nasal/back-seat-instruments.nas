@@ -11,12 +11,12 @@ var check_pilot_callsign = func() {
 		foreach (var p; mpplayers) {
 			if ( p.getChild("callsign").getValue() == r_callsign ) {
 				Pilot = p; 
-				awg_9.initPilotTgts();
+				awg_9.xmlDisplays.initPilotTgts();
 			}
 		}
 	} else {
 		Pilot = nil;
-		awg_9.initPilotTgts();
+		awg_9.xmlDisplays.initPilotTgts();
 	}
 }
 
@@ -145,8 +145,8 @@ var init = func {
 
 	# launch
 	check_pilot_callsign();
-	radardist.init();
-	awg_9.init();
+	#radardist.init();
+	#awg_9.init();
     backseatUpdateTimer.start();
 }
 

@@ -207,7 +207,7 @@ var AirborneRadar = {
 		#new_mode.setCursorDeviation(me.currentMode.getCursorDeviation()); # no need since submodes don't overwrite this
 		new_mode.designatePriority(priority);
 		new_mode.enterMode();
-		modeSwitch(me);#F14 custom
+		me.modeSwitch();#F14 custom
 		settimer(func me.clearShowScan(), 0.5);
 	},
 	setRootMode: func (mode_number, priority = nil) {
@@ -1087,7 +1087,7 @@ var AWG9 = {
 		return me.e;
 	},
 	loopSpecific: func {
-		updateDisplays();
+		me.updateDisplays();
 	},
 	setAAMode: func {
 		if (me.rootMode != 0) {
@@ -1154,10 +1154,66 @@ var AWG9 = {
 		return me.theKnob;
 	},
 	checks: func {
-		cycleField();
-		selectHookCheck();
+		me.cycleField();
+		me.selectHookCheck();
 		antennae_deg_prop.setValue(me.eulerY);
 		RangeActualRadar2.setValue(me.getRange());
+	},
+	updateDisplays: func {
+		me.updateTID();
+		xmlDisplays.updateTgts();
+	},
+	updateDDD: func {
+		me.caretPosition = me.getCaretPosition();
+		SwpFac.setValue(me.caretPosition[0]);
+	},
+	updateTID: func {
+		# Keep the 120 az for now, as the smaller az's can be rotated from side to side
+		# That needs to be done in xml first. Need 20 deg, 40 deg, 80 deg and 120 deg.
+	},
+	selectHookCheck: func {
+	    me.tgt_cmd = SelectTargetCommand.getValue();
+	    SelectTargetCommand.setIntValue(0);
+		if (me.tgt_cmd != 0) {
+			me.cycleDesignate();# for now only 1 direction
+			me.prio = awg9Radar.getPriorityTarget();
+			if (me.prio != nil) {
+				screen.log.write("RIO: Selected "~me.prio.get_Callsign()~".", 1,1,0);
+			} else {
+				screen.log.write("RIO: Selected nothing.", 1,1,0);
+			}
+		}
+	},
+	cycleField: func {
+		me.b_cmd = BarsCommand.getValue();
+	    BarsCommand.setIntValue(0);
+		if (me.b_cmd != 0 and !me.currentMode.painter) {
+			me.cycleBars();
+			me.rioRadar();
+		}
+		me.a_cmd = AzCommand.getValue();
+	    AzCommand.setIntValue(0);
+		if (me.a_cmd != 0 and !me.currentMode.painter) {
+			me.cycleAZ();
+			me.rioRadar();
+		}
+		me.updateDDD();
+	},
+	rioRadar: func {
+		screen.log.write(sprintf("RIO: Scanning %d bars and %d degrees.",bars2bars[me.currentMode.bars-1],me.currentMode.az*2), 1,1,0);
+	},
+	modeSwitch: func {
+		me.md = me.currentMode;
+		if (me.md.shortName == "PDSTT") {
+			WcsMode.setValue(2);
+			AntTrk.setBoolValue(1);
+		} elsif (me.md.shortName == "PSTT") {
+			WcsMode.setValue(1);
+			AntTrk.setBoolValue(1);
+		} else {
+			WcsMode.setValue(mode2wcs[me.currentModeIndex]);
+			AntTrk.setBoolValue(0);
+		}
 	},
 };
 
@@ -1327,14 +1383,15 @@ var RWSMode = {
 
 
 
-#  ██████  ██    ██ ██      ███████ ███████     ███████ ███████  █████  ██████   ██████ ██   ██ 
-#  ██   ██ ██    ██ ██      ██      ██          ██      ██      ██   ██ ██   ██ ██      ██   ██ 
-#  ██████  ██    ██ ██      ███████ █████       ███████ █████   ███████ ██████  ██      ███████ 
-#  ██      ██    ██ ██           ██ ██               ██ ██      ██   ██ ██   ██ ██      ██   ██ 
-#  ██       ██████  ███████ ███████ ███████     ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ 
-#                                                                                               
-#                                                                                               
-var PulseMode = {
+
+#  ██████  ██    ██ ██      ███████ ███████     ██████   ██████  ██████  ██████  ██      ███████ ██████      ███████ ███████  █████  ██████   ██████ ██   ██ 
+#  ██   ██ ██    ██ ██      ██      ██          ██   ██ ██    ██ ██   ██ ██   ██ ██      ██      ██   ██     ██      ██      ██   ██ ██   ██ ██      ██   ██ 
+#  ██████  ██    ██ ██      ███████ █████       ██   ██ ██    ██ ██████  ██████  ██      █████   ██████      ███████ █████   ███████ ██████  ██      ███████ 
+#  ██      ██    ██ ██           ██ ██          ██   ██ ██    ██ ██      ██      ██      ██      ██   ██          ██ ██      ██   ██ ██   ██ ██      ██   ██ 
+#  ██       ██████  ███████ ███████ ███████     ██████   ██████  ██      ██      ███████ ███████ ██   ██     ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ 
+#                                                                                                                                                            
+#                                                                                                                                                            
+var PulseDMode = {
 	shortName: "PD",
 	longName: "Pulse Doppler Search",
 	discSpeed_dps: 40,
@@ -1342,7 +1399,7 @@ var PulseMode = {
 	minClosure: 115, # kt
 	rcsFactor: 1.1,
 	new: func (subMode, radar = nil) {
-		var mode = {parents: [PulseMode, RWSMode, AWG9Mode, RadarMode]};
+		var mode = {parents: [PulseDMode, RWSMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
 		mode.subMode = subMode;
 		subMode.superMode = mode;
@@ -2055,6 +2112,7 @@ var RWR = {
                 if (me.threat > me.closestThreat) me.closestThreat = me.threat;
                 #printf("A %s threat:%.2f range:%d dev:%d", me.u.get_Callsign(),me.threat,me.u.get_range(),me.deviation);
                 if (me.threat > 1) me.threat = 1;
+                me.u.threat = me.threat;
                 if (me.threat <= 0) continue;
                 #printf("B %s threat:%.2f range:%d dev:%d", me.u.get_Callsign(),me.threat,me.u.get_range(),me.deviation);
                 append(me.vector_aicontacts_threats, me.u);# [me.u,me.threat, me.threatDB[5]]
@@ -2178,45 +2236,18 @@ BarsCommand.setValue(0);
 AzCommand.setValue(0);
 AntTrk.setBoolValue(0);
 
-var selectHookCheck = func {
-    var tgt_cmd = SelectTargetCommand.getValue();
-    SelectTargetCommand.setIntValue(0);
-	if (tgt_cmd != 0) {
-		awg9Radar.cycleDesignate();# for now only 1 direction
-		var prio = awg9Radar.getPriorityTarget();
-		if (prio != nil) {
-			screen.log.write("RIO: Selected "~prio.get_Callsign()~".", 1,1,0);
-		} else {
-			screen.log.write("RIO: Selected nothing.", 1,1,0);
-		}
-	}
-}
 
-var cycleField = func {
-	var b_cmd = BarsCommand.getValue();
-    BarsCommand.setIntValue(0);
-	if (b_cmd != 0 and !awg9Radar.currentMode.painter) {
-		awg9Radar.cycleBars();
-		rioRadar();
-	}
-	var a_cmd = AzCommand.getValue();
-    AzCommand.setIntValue(0);
-	if (a_cmd != 0 and !awg9Radar.currentMode.painter) {
-		awg9Radar.cycleAZ();
-		rioRadar();
-	}
-	updateDDD();
-}
 
 var bars2bars = [1,2,4,8];
-
-var rioRadar = func {
-	screen.log.write(sprintf("RIO: Scanning %d bars and %d degrees.",bars2bars[awg9Radar.currentMode.bars-1],awg9Radar.currentMode.az*2), 1,1,0);
-}
-
 var wcs2mode = [nil,4,3,-1,0,1,-1,2,5];
 var mode2wcs = [4,5,7,2,1,8];
 
+# Controls
+# ---------------------------------------------------------------------
+var toggle_radar_standby = func() {
+	if ( pilot_lock and ! we_are_bs ) { return }
+	RadarStandby.setBoolValue(!RadarStandby.getBoolValue());
+}
 var wcs_mode_sel = func (wcsMode) {
 	# 1 STT P
 	# 2 STT PD
@@ -2235,12 +2266,10 @@ var wcs_mode_sel = func (wcsMode) {
 	#print("wcs2mode[",wcsMode,"] = ", wcs2mode[wcsMode]);
 	WcsMode.setValue(wcsMode);
 }
-
 var wcs_mode_toggle = func {
 	awg9Radar.toggleAirMode();
 	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
 }
-
 var lock = func {
 	print("RIO request STT mode");
 	var tgt = awg9Radar.getPriorityTarget();
@@ -2251,32 +2280,10 @@ var lock = func {
 	awg9Radar.designate(tgt);
 	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
 }
-
 var des = func {
 	# The button/knob is called DES, the mode "Pilot automatic lockon".
 	print("Pilot request PAL mode");
 	awg9Radar.setAirMode(5);
-}
-
-var modeSwitch = func (rdr) {
-	var md = rdr.currentMode;
-	if (md.shortName == "PDSTT") {
-		WcsMode.setValue(2);
-		AntTrk.setBoolValue(1);
-	} elsif (md.shortName == "PSTT") {
-		WcsMode.setValue(1);
-		AntTrk.setBoolValue(1);
-	} else {
-		WcsMode.setValue(mode2wcs[rdr.currentModeIndex]);
-		AntTrk.setBoolValue(0);
-	}
-}
-
-# Controls
-# ---------------------------------------------------------------------
-var toggle_radar_standby = func() {
-	if ( pilot_lock and ! we_are_bs ) { return }
-	RadarStandby.setBoolValue(!RadarStandby.getBoolValue());
 }
 var range_control = func(n) {
 	var range_radar = RangeRadar2.getValue();
@@ -2308,123 +2315,6 @@ init = func() {
 }
 init();
 
-var updateDisplays = func {
-	updateTID();
-	updateTgts();
-}
-
-var updateDDD = func {
-	var caretPosition = awg9Radar.getCaretPosition();
-	SwpFac.setValue(caretPosition[0]);
-}
-
-var updateTID = func {
-	# Keep the 120 az for now, as the smaller az's can be rotated from side to side
-	# That needs to be done in xml first. Need 20 deg, 40 deg, 80 deg and 120 deg.
-}
-
-var ddd_m_per_deg = 0.5 * ddd_screen_width / AWG9.fieldOfRegardMaxAz;
-
-var updateTgts = func {
-	if (!size(tgts)) return;
-	var actives = awg9Radar.getActiveBleps();
-	var i = 0;
-	var shown = [];
-	foreach (var active_u ; actives) {
-		var blep = active_u.getLastBlep();
-		if (blep == nil) {
-			continue;
-		}
-		var sinceBlep = awg9Radar.elapsed - blep.getBlepTime();
-		if (sinceBlep > awg9Radar.currentMode.timeToFadeBleps) {
-			continue;
-		}
-		if (math.abs(blep.getAZDeviation())>AWG9.fieldOfRegardMaxAz) {
-			continue;
-		}
-		var threat = awg9Radar.containsVector(f14_rwr.vector_aicontacts_threats, active_u) and active_u["blue"] != 1;
-		tgts[i]["bearing-deg"].setDoubleValue(blep.getBearing());
-		tgts[i]["true-heading-deg"].setDoubleValue(blep.getHeading()==nil?-2:blep.getHeading());
-		tgts[i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * blep.getAZDeviation());
-		tgts[i]["carrier"].setBoolValue(active_u.isCarrier());
-		#tgts[i]["ecm-signal"].setDoubleValue(0);#TODO
-		tgts[i]["display"].setBoolValue(1);
-		tgts[i]["visible"].setBoolValue(1);
-		tgts[i]["behind-terrain"].setBoolValue(0);
-		tgts[i]["rwr-visible"].setBoolValue(threat);
-		tgts[i]["ddd-echo-fading"].setDoubleValue(sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
-		tgts[i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
-		tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
-		tgts[i]["rounded-alt-ft"].setIntValue(blep.getAltitude()==nil?0:math.round(blep.getAltitude()*0.001));
-		tgts[i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
-		tgts[i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
-		tgts[i]["closure-rate-kts"].setDoubleValue(blep.getClosureRate());
-		append(shown, active_u);
-		i += 1;
-		if (i > 18) break;
-	}
-	foreach (var active_dl ; dlnkRadar.vector_aicontacts_for) {
-		if (i > 18) break;
-		if (active_dl["blue"] != 1) {
-			continue;
-		}
-		var discard = awg9Radar.containsVector(shown, active_dl);
-		if (discard) {
-			continue;
-		}
-		if (math.abs(geo.normdeg180(active_dl.getBearing()-self.getHeading()))>AWG9.fieldOfRegardMaxAz or active_dl.getRange()*M2NM > awg9Radar.getRange()) {
-			# To avoid datalink contacts from being painted outside the display
-			continue;
-		}
-		tgts[i]["bearing-deg"].setDoubleValue(active_dl.getBearing());
-		tgts[i]["true-heading-deg"].setDoubleValue(active_dl.getHeading());
-		tgts[i]["ddd-relative-bearing"].setDoubleValue(0);
-		tgts[i]["carrier"].setBoolValue(active_dl.isCarrier());
-		#tgts[i]["ecm-signal"].setDoubleValue(0);#TODO
-		tgts[i]["display"].setBoolValue(1);
-		tgts[i]["visible"].setBoolValue(1);
-		tgts[i]["behind-terrain"].setBoolValue(0);
-		tgts[i]["rwr-visible"].setBoolValue(0);
-		tgts[i]["ddd-echo-fading"].setDoubleValue(0);# Don't show dlnk on ddd
-		tgts[i]["ddd-draw-range-nm"].setDoubleValue(0);
-		tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*active_dl.getRange()*M2NM);
-		tgts[i]["rounded-alt-ft"].setIntValue(math.round(active_dl.getAltitude()*0.001));
-		tgts[i]["closure-last-time"].setDoubleValue(awg9Radar.elapsed);#TODO
-		tgts[i]["closure-last-range-nm"].setDoubleValue(active_dl.getRange()*M2NM);#TODO
-		tgts[i]["closure-rate-kts"].setDoubleValue(0);
-		append(shown, active_dl);
-		i += 1;
-	}
-	foreach (var active_t ; f14_rwr.vector_aicontacts_threats) {
-		if (i > 18) break;
-		var discard = awg9Radar.containsVector(shown, active_t);
-		if (discard) {
-			continue;
-		}
-		tgts[i]["bearing-deg"].setDoubleValue(active_t.getBearing());
-		tgts[i]["true-heading-deg"].setDoubleValue(active_t.getHeading());
-		#tgts[i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * geo.normdeg180(active_u.getHeading() - self.getHeading()) );
-		#tgts[i]["carrier"].setBoolValue(active_u.isCarrier());
-		#tgts[i]["ecm-signal"].setDoubleValue(0);#TODO
-		tgts[i]["display"].setBoolValue(0);
-		tgts[i]["visible"].setBoolValue(1);
-		tgts[i]["behind-terrain"].setBoolValue(0);
-		tgts[i]["rwr-visible"].setBoolValue(1);
-		#tgts[i]["ddd-echo-fading"].setDoubleValue(sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
-		#tgts[i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
-		#tgts[i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
-		#tgts[i]["rounded-alt-ft"].setIntValue(blep.getAltitude()==nil?0:math.round(blep.getAltitude()*0.001));
-		#tgts[i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
-		#tgts[i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
-		#tgts[i]["closure-rate-kts"].setDoubleValue(blep.getClosureRate());
-		i += 1;
-	}
-	for (;i<=18;i+=1) {
-		tgts[i]["display"].setBoolValue(0);
-		tgts[i]["visible"].setBoolValue(0);
-		tgts[i]["rwr-visible"].setBoolValue(0);
-	}
-}
 
 
 var TgtProp = {
@@ -2433,13 +2323,13 @@ var TgtProp = {
     "range-score": nil,
     "ddd-relative-bearing": nil,
     "carrier": nil,
-    "ecm-signal": nil,
-    "ecm-signal-norm": nil,
-    "ecm_type_num": nil,
+    "ecm-signal": nil,# if shown on rwr
+    "ecm-signal-norm": nil,#threat
+    "ecm_type_num": nil,#abbrv.
     "display": nil,
     "visible": nil,
     "behind-terrain": nil,
-    "rwr-visible": nil,
+    "rwr-visible": nil,#not used
     "ddd-echo-fading": nil,
     "ddd-draw-range-nm": nil,
     "tid-draw-range-nm": nil,
@@ -2450,99 +2340,143 @@ var TgtProp = {
 };
 
 var tgts = [];
+var ddd_m_per_deg = 0.5 * ddd_screen_width / AWG9.fieldOfRegardMaxAz;
 
-
-var initPilotTgts = func {
-	# Local back-seater has a different radar-awg-9 folder and shall not see its pilot's aircraft.
-	var InstrTgts = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
-	if (we_are_bs) {
-		if  ( BS_instruments.Pilot != nil ) {
-			# Use a different radar-awg-9 folder.
-			InstrTgts = BS_instruments.Pilot.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
-			# Do not see our pilot's aircraft.
-			#var target_callsign = self.getCallsign();
-			#var p_callsign = BS_instruments.Pilot.getNode("callsign").getValue();
-			#if ( target_callsign == p_callsign ) {
-			#	obj.not_acting = 1;
+var xmlDisplays = {
+	updateTgts: func {
+		if (!size(tgts)) return;
+		me.actives = awg9Radar.getActiveBleps();
+		me.i = 0;
+		me.shown = [];
+		foreach (me.active_u ; me.actives) {
+			me.blep = me.active_u.getLastBlep();
+			if (me.blep == nil) {
+				continue;
+			}
+			me.sinceBlep = awg9Radar.elapsed - me.blep.getBlepTime();
+			if (me.sinceBlep > awg9Radar.currentMode.timeToFadeBleps) {
+				continue;
+			}
+			if (math.abs(me.blep.getAZDeviation())>AWG9.fieldOfRegardMaxAz) {
+				continue;
+			}
+			me.threat = me.active_u["threat"] != nil and me.active_u["threat"] > 0 and me.active_u["blue"] != 1;
+			tgts[me.i]["bearing-deg"].setDoubleValue(me.blep.getBearing());
+			tgts[me.i]["true-heading-deg"].setDoubleValue(me.blep.getHeading()==nil?-2:me.blep.getHeading());
+			tgts[me.i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * me.blep.getAZDeviation());
+			tgts[me.i]["carrier"].setBoolValue(me.active_u.isCarrier());
+			tgts[me.i]["display"].setBoolValue(1);
+			tgts[me.i]["visible"].setBoolValue(1);
+			tgts[me.i]["behind-terrain"].setBoolValue(0);
+			tgts[me.i]["rwr-visible"].setBoolValue(me.threat);
+			#if (me.threat) {
+				tgts[me.i]["ecm-signal"].setDoubleValue(me.threat);#?(active_u.threat>0.7?0.95:0.87):0);
+			#	tgts[me.i]["ecm-signal-norm"].setDoubleValue(active_u.threat);
+			#	tgts[me.i]["ecm_type_num"].setValue("29");
 			#}
+			tgts[me.i]["ddd-echo-fading"].setDoubleValue(me.sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
+			tgts[me.i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
+			tgts[me.i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
+			tgts[me.i]["rounded-alt-ft"].setIntValue(me.blep.getAltitude()==nil?0:math.round(me.blep.getAltitude()*0.001));
+			#tgts[me.i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
+			#tgts[me.i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
+			tgts[me.i]["closure-rate-kts"].setDoubleValue(me.blep.getClosureRate());
+			append(me.shown, me.active_u);
+			me.i += 1;
+			if (me.i > 18) break;
 		}
-	}
-	tgts = [];
-	for (var i = 0; i <= 18; i += 1) {
-	    var TgtsFiles = InstrTgts.getNode("multiplayer["~i~"]", 1);
-	    var myTgt = {parents:[TgtProp]};
-	    foreach(var key ; keys(TgtProp)) {
-	    	myTgt[key] = TgtsFiles.getNode(key, 1);
-	    }
-	    myTgt.visible.setBoolValue(0);
-	    myTgt.display.setBoolValue(0);
-	    append(tgts, myTgt);
-	}
+		foreach (me.active_dl ; dlnkRadar.vector_aicontacts_for) {
+			if (me.i > 18) break;
+			if (me.active_dl["blue"] != 1) {
+				continue;
+			}
+			me.discard = awg9Radar.containsVector(me.shown, me.active_dl);
+			if (me.discard) {
+				continue;
+			}
+			if (math.abs(geo.normdeg180(me.active_dl.getBearing()-self.getHeading()))>AWG9.fieldOfRegardMaxAz or me.active_dl.getRange()*M2NM > awg9Radar.getRange()) {
+				# To avoid datalink contacts from being painted outside the display
+				continue;
+			}
+			tgts[me.i]["bearing-deg"].setDoubleValue(me.active_dl.getBearing());
+			tgts[me.i]["true-heading-deg"].setDoubleValue(me.active_dl.getHeading());
+			tgts[me.i]["ddd-relative-bearing"].setDoubleValue(0);
+			tgts[me.i]["carrier"].setBoolValue(me.active_dl.isCarrier());
+			tgts[me.i]["display"].setBoolValue(1);
+			tgts[me.i]["visible"].setBoolValue(1);
+			tgts[me.i]["behind-terrain"].setBoolValue(0);
+			tgts[me.i]["rwr-visible"].setBoolValue(0);
+			tgts[me.i]["ecm-signal"].setDoubleValue(0);
+			tgts[me.i]["ddd-echo-fading"].setDoubleValue(0);# Don't show dlnk on ddd
+			tgts[me.i]["ddd-draw-range-nm"].setDoubleValue(0);
+			tgts[me.i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*me.active_dl.getRange()*M2NM);
+			tgts[me.i]["rounded-alt-ft"].setIntValue(math.round(me.active_dl.getAltitude()*0.001));
+			#tgts[me.i]["closure-last-time"].setDoubleValue(awg9Radar.elapsed);#TODO
+			#tgts[me.i]["closure-last-range-nm"].setDoubleValue(active_dl.getRange()*M2NM);#TODO
+			tgts[me.i]["closure-rate-kts"].setDoubleValue(0);
+			append(me.shown, me.active_dl);
+			me.i += 1;
+		}
+		foreach (me.active_t ; f14_rwr.vector_aicontacts_threats) {
+			if (me.i > 18) break;
+			me.discard = awg9Radar.containsVector(me.shown, me.active_t);
+			if (me.discard) {
+				continue;
+			}
+			tgts[me.i]["bearing-deg"].setDoubleValue(me.active_t.getBearing());
+			tgts[me.i]["true-heading-deg"].setDoubleValue(me.active_t.getHeading());
+			#tgts[me.i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * geo.normdeg180(active_u.getHeading() - self.getHeading()) );
+			#tgts[me.i]["carrier"].setBoolValue(active_u.isCarrier());
+			tgts[me.i]["ecm-signal"].setDoubleValue(1);#active_t.threat>0.7?0.95:0.87);
+			tgts[me.i]["display"].setBoolValue(0);
+			tgts[me.i]["visible"].setBoolValue(1);
+			tgts[me.i]["behind-terrain"].setBoolValue(0);
+			tgts[me.i]["rwr-visible"].setBoolValue(1);
+			#tgts[me.i]["ddd-echo-fading"].setDoubleValue(sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
+			#tgts[me.i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
+			#tgts[me.i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*blep.getRangeNow()*M2NM);
+			#tgts[me.i]["rounded-alt-ft"].setIntValue(blep.getAltitude()==nil?0:math.round(blep.getAltitude()*0.001));
+			#tgts[me.i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
+			#tgts[me.i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
+			#tgts[me.i]["closure-rate-kts"].setDoubleValue(blep.getClosureRate());
+			me.i += 1;
+		}
+		for (;me.i<=18;me.i+=1) {
+			tgts[me.i]["display"].setBoolValue(0);
+			tgts[me.i]["visible"].setBoolValue(0);
+			tgts[me.i]["rwr-visible"].setBoolValue(0);
+			tgts[me.i]["ecm-signal"].setBoolValue(0);
+		}
+	},
+	initPilotTgts: func {
+		# Local back-seater has a different radar-awg-9 folder and shall not see its pilot's aircraft.
+		me.InstrTgts = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
+		if (we_are_bs) {
+			if  ( BS_instruments.Pilot != nil ) {
+				# Use a different radar-awg-9 folder.
+				me.InstrTgts = BS_instruments.Pilot.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
+				# Do not see our pilot's aircraft.
+				#var target_callsign = self.getCallsign();
+				#var p_callsign = BS_instruments.Pilot.getNode("callsign").getValue();
+				#if ( target_callsign == p_callsign ) {
+				#	obj.not_acting = 1;
+				#}
+			}
+		}
+		tgts = [];
+		for (me.i = 0; me.i <= 18; me.i += 1) {
+		    me.TgtsFiles = me.InstrTgts.getNode("multiplayer["~me.i~"]", 1);
+		    me.myTgt = {parents:[TgtProp]};
+		    foreach(me.key ; keys(TgtProp)) {
+		    	me.myTgt[me.key] = me.TgtsFiles.getNode(me.key, 1);
+		    }
+		    me.myTgt.visible.setBoolValue(0);
+		    me.myTgt.display.setBoolValue(0);
+		    append(tgts, me.myTgt);
+		}
+	},
 };
 
-var hud_nearest_tgt = func() {
-	# Computes nearest_u position in the HUD
-	var active_u = awg9Radar.getPriorityTarget();
-	if ( active_u != nil and (awg9Radar.currentMode.painter or awg9Radar.currentMode.shortName == "TWS") and active_u.getLastBlep() != nil) {
-		var lstR = active_u.getLastRangeDirect();
-		if (lstR!=nil) SWTgtRange.setValue(lstR*M2NM);
-		else SWTgtRange.setValue(0);
-
-		#if(awg9_trace)
-		#	print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
-		var devs = develev_to_devroll(active_u.getLastBlep().getPilotDeviations());
-		var combined_dev_deg = devs[0];
-		var combined_dev_length =  devs[1];
-		var clamped = devs[2];
-		if ( clamped ) {
-			Diamond_Blinker.blink();
-		} else {
-			Diamond_Blinker.cont();
-		}
-
-		# Clamp closure rate from -200 to +1,000 Kts.
-		var cr = active_u.getLastClosureRate();
-        
-		if (cr != nil)
-        {
-            if (cr < -200) 
-                cr = 200;
-            else if (cr > 1000) 
-                cr = 1000;
-			HudTgtClosureRate.setValue(cr);
-        }
-
-		HudTgtTDeg.setValue(combined_dev_deg);
-		HudTgtTDev.setValue(combined_dev_length);
-		
-		var range = active_u.getLastRangeDirect();
-		if (range == nil) {
-			HudTgtHDisplay.setBoolValue(0);
-			return;
-		}
-        HudTgtDistance.setValue(range*M2NM);
-        HudTgtHDisplay.setBoolValue(1);
-
-        var callsign = active_u.getCallsign();
-        var model = active_u.getModel();
-
-        var target_id = "";
-        if(callsign != nil)
-            target_id = callsign;
-        else
-            target_id = active_u.prop.getName() ~ "[" ~ active_u.index ~ "]";
-        if (model != nil and model != "")
-            target_id = target_id ~ " " ~ model;
-
-        HudTgt.setValue(target_id);
-		return;
-	}
-	SWTgtRange.setValue(0);
-	HudTgtClosureRate.setValue(0);
-	HudTgtTDeg.setValue(0);
-	HudTgtTDev.setValue(0);
-	HudTgtHDisplay.setBoolValue(0);
-}
 # HUD clamped target blinker
 Diamond_Blinker = aircraft.light.new("sim/model/"~this_model~"/lighting/hud-diamond-switch", [0.1, 0.1]);
 setprop("sim/model/"~this_model~"/lighting/hud-diamond-switch/enabled", 1);
@@ -2551,41 +2485,106 @@ setprop("sim/model/"~this_model~"/lighting/hud-diamond-switch/enabled", 1);
 var eye_hud_m          = 0.6;#pilot: -3.30  hud: -3.9
 var hud_radius_m       = 0.100;
 
+var hud = {
+	hud_nearest_tgt: func() {
+		# Computes nearest_u position in the HUD
+		me.active_u = awg9Radar.getPriorityTarget();
+		if ( me.active_u != nil and (awg9Radar.currentMode.painter or awg9Radar.currentMode.shortName == "TWS") and me.active_u.getLastBlep() != nil) {
+			me.lstR = me.active_u.getLastRangeDirect();
+			if (me.lstR!=nil) SWTgtRange.setValue(me.lstR*M2NM);
+			else SWTgtRange.setValue(0);
 
-var develev_to_devroll = func(dev_) {
-	dev_[0] = 90-dev_[0];
-	dev_[1] = 90-dev_[1];
-	dev_[0] *= D2R;
-	dev_[1] *= D2R;
-	if (math.sin(dev_[0]) == 0 or math.sin(dev_[1]) == 0) return [0,0,0];
-	if (math.cos(dev_[0]) == 0 or math.cos(dev_[1]) == 0) return [0,20,1];
-	var clamped = 0;
-	# Deviation length on the HUD (at level flight),
-	# 0.6686m = distance eye <-> virtual HUD screen.
-	var h_dev = eye_hud_m / ( math.sin(dev_[0]) / math.cos(dev_[0]) );
-	var v_dev = eye_hud_m / ( math.sin(dev_[1]) / math.cos(dev_[1]) );
-	# Angle between HUD center/top <-> HUD center/symbol position.
-	# -90° left, 0° up, 90° right, +/- 180° down. 
-	var dev_deg =  math.atan2( h_dev, v_dev ) * R2D;
-	# Correction with own a/c roll.
-	var combined_dev_deg = dev_deg;
-	# Lenght HUD center <-> symbol pos on the HUD:
-	var combined_dev_length = math.sqrt((h_dev*h_dev)+(v_dev*v_dev));
-	# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
-	var abs_combined_dev_deg = math.abs( combined_dev_deg );
-	var clamp = hud_radius_m;
-	if ( abs_combined_dev_deg >= 0 and abs_combined_dev_deg < 90 ) {
-		var coef = ( 90 - abs_combined_dev_deg ) * 0.00075;
-		if ( coef > 0.050 ) { coef = 0.050 }
-		clamp -= coef; 
-	}
-	if ( combined_dev_length > clamp ) {
-		combined_dev_length = clamp;
-		clamped = 1;
-	}
-	var v = [combined_dev_deg, combined_dev_length, clamped];
-	return(v);
-}
+			#if(awg9_trace)
+			#	print("active_u ",wcs_mode, active_u.get_range()," Display", active_u.get_display(), "dev ",active_u.deviation," ",l_az_fld," ",r_az_fld);
+			me.devs = me.develev_to_devroll(me.active_u.getLastBlep().getPilotDeviations());
+			me.combined_dev_deg = me.devs[0];
+			me.combined_dev_length =  me.devs[1];
+			me.clamped = me.devs[2];
+			if ( me.clamped ) {
+				Diamond_Blinker.blink();
+			} else {
+				Diamond_Blinker.cont();
+			}
+
+			# Clamp closure rate from -200 to +1,000 Kts.
+			me.cr = me.active_u.getLastClosureRate();
+	        
+			if (me.cr != nil)
+	        {
+	            if (me.cr < -200) 
+	                me.cr = 200;
+	            else if (me.cr > 1000) 
+	                me.cr = 1000;
+				HudTgtClosureRate.setValue(me.cr);
+	        }
+
+			HudTgtTDeg.setValue(me.combined_dev_deg);
+			HudTgtTDev.setValue(me.combined_dev_length);
+			
+			me.range = me.active_u.getLastRangeDirect();
+			if (me.range == nil) {
+				HudTgtHDisplay.setBoolValue(0);
+				return;
+			}
+	        HudTgtDistance.setValue(me.range*M2NM);
+	        HudTgtHDisplay.setBoolValue(1);
+
+	        me.callsign = me.active_u.getCallsign();
+	        me.model = me.active_u.getModel();
+
+	        me.target_id = "";
+	        if(me.callsign != nil)
+	            me.target_id = me.callsign;
+	        else
+	            me.target_id = me.active_u.prop.getName() ~ "[" ~ me.active_u.prop.getIndex() ~ "]";
+	        if (me.model != nil and me.model != "")
+	            me.target_id = me.target_id ~ " " ~ me.model;
+
+	        HudTgt.setValue(me.target_id);
+			return;
+		}
+		SWTgtRange.setValue(0);
+		HudTgtClosureRate.setValue(0);
+		HudTgtTDeg.setValue(0);
+		HudTgtTDev.setValue(0);
+		HudTgtHDisplay.setBoolValue(0);
+	},
+	
+	develev_to_devroll: func(dev_) {
+		dev_[0] = 90-dev_[0];
+		dev_[1] = 90-dev_[1];
+		dev_[0] *= D2R;
+		dev_[1] *= D2R;
+		if (math.sin(dev_[0]) == 0 or math.sin(dev_[1]) == 0) return [0,0,0];
+		if (math.cos(dev_[0]) == 0 or math.cos(dev_[1]) == 0) return [0,20,1];
+		me.clamped = 0;
+		# Deviation length on the HUD (at level flight),
+		# 0.6686m = distance eye <-> virtual HUD screen.
+		me.h_dev = eye_hud_m / ( math.sin(dev_[0]) / math.cos(dev_[0]) );
+		me.v_dev = eye_hud_m / ( math.sin(dev_[1]) / math.cos(dev_[1]) );
+		# Angle between HUD center/top <-> HUD center/symbol position.
+		# -90° left, 0° up, 90° right, +/- 180° down. 
+		me.dev_deg =  math.atan2( me.h_dev, me.v_dev ) * R2D;
+		# Correction with own a/c roll.
+		me.combined_dev_deg = me.dev_deg;
+		# Lenght HUD center <-> symbol pos on the HUD:
+		me.combined_dev_length = math.sqrt((me.h_dev*me.h_dev)+(me.v_dev*me.v_dev));
+		# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
+		me.abs_combined_dev_deg = math.abs( me.combined_dev_deg );
+		me.clamp = hud_radius_m;
+		if ( me.abs_combined_dev_deg >= 0 and me.abs_combined_dev_deg < 90 ) {
+			me.coef = ( 90 - me.abs_combined_dev_deg ) * 0.00075;
+			if ( me.coef > 0.050 ) { me.coef = 0.050 }
+			me.clamp -= me.coef; 
+		}
+		if ( me.combined_dev_length > me.clamp ) {
+			me.combined_dev_length = me.clamp;
+			me.clamped = 1;
+		}
+		me.v = [me.combined_dev_deg, me.combined_dev_length, me.clamped];
+		return me.v;
+	},
+};
 
 
 
@@ -2607,14 +2606,15 @@ var ecm = ECMChecker.new(0.05, 6);
 # start specific radar system
 var rwsMode = RWSMode.new(PDSTTMode.new());
 var twsMode = TWSMode.new(PDSTTMode.new());
-var pulseDSMode = PulseMode.new(PDSTTMode.new());
+var pulseDSMode = PulseDMode.new(PDSTTMode.new());
 var palMode = PalMode.new(PSTTMode.new());
 var awg9Radar = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr = RWR.new();
 
 if (!we_are_bs) {
-	initPilotTgts();
+	xmlDisplays.initPilotTgts();
 }
+wcs_mode_sel(4);
 setprop("instrumentation/datalink/channel", int(rand()*33));#should probably not be in this file
 
 # TODO
@@ -2640,3 +2640,5 @@ setprop("instrumentation/datalink/channel", int(rand()*33));#should probably not
 #+ ejection view
 #+ tons of rio errors
 #+ tab controls bars
+#- dual seat rio mode transfer
+#  review discspeeds
