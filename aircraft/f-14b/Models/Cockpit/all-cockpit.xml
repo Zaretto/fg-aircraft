@@ -33468,7 +33468,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
             <binding>
                 <command>nasal</command>
-                <script>if (awg_9.we_are_bs) var mode_ecm_nav = props.globals.getNode("sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav");mode_ecm_nav.setBoolValue( ! mode_ecm_nav.getBoolValue());</script>
+                <script>if (awg_9.we_are_bs) BS_instruments.select_ecm_nav();</script>
             </binding>
         </action>
     </animation>

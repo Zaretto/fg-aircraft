@@ -2332,10 +2332,6 @@ init = func() {
 		we_are_bs = 1;
 
 		# Backseater need these for displays to run
-		setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
-		setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",120);
-		setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
-		setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
 		RadarServicable.setBoolValue(1);
 	}
 }
@@ -2689,6 +2685,6 @@ setprop("orientation/opposite",180);
 #- dual seat rio mode transfer
 #  review discspeeds
 #  make aim-54 be able to fire on only tws selection
-#  no ejection for dual rio
+#+ no ejection for dual rio
 #  Switch to EDMD dual rio dont work
 #  Sidewinder on and off
