@@ -2243,10 +2243,12 @@ var wcs_mode_sel = func (wcsMode) {
 	WcsMode.setValue(wcsMode);
 }
 var wcs_mode_toggle = func {
+	if ( pilot_lock and ! we_are_bs ) { return }
 	awg9Radar.toggleAirMode();
 	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
 }
 var lock = func {
+	if ( pilot_lock and ! we_are_bs ) { return }
 	print("RIO request STT mode");
 	var tgt = awg9Radar.getPriorityTarget();
 	if (tgt == nil) {
@@ -2287,7 +2289,13 @@ init = func() {
 	var our_ac_name = getprop("sim/aircraft");
     # map variants to the base
     if(our_ac_name == "f-14a") our_ac_name = "f-14b";
-	if (our_ac_name == "f-14b-bs") { we_are_bs = 1; }
+	if (our_ac_name == "f-14b-bs") {
+		we_are_bs = 1;
+		#setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+		#setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",120);
+		#setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+		#setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+	}
 }
 init();
 
@@ -2575,7 +2583,7 @@ var hud = {
 var baser = AIToNasal.new();
 var partitioner = NoseRadar.new();
 var omni = OmniRadar.new(1.0, 150, 55);
-var terrain = TerrainChecker.new(0.05, 1, 30);# 0.05 or 0.10 is fine here
+var terrain = TerrainChecker.new(0.05, 1, 45);# 0.05 or 0.10 is fine here
 var dlnkRadar = DatalinkRadar.new(0.03, 110);# 3 seconds because cannot be too slow for DLINK targets
 var ecm = ECMChecker.new(0.05, 6);
 

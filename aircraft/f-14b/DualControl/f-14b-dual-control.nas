@@ -50,12 +50,29 @@ var pilot_connect_copilot = func (copilot) {
 					awg_9.RadarStandby.setBoolValue(b);
 				},
 				func (b) {
-					awg_9.wcs_mode_sel(4);
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[2]").setValue(b);
+					f14.station_selector(2);
 				},
 				func (b) {
-					awg_9.awg_9.wcs_mode_sel(7);
-					awg_9.wcs_mode_update();
-				}
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[3]").setValue(b);
+					f14.station_selector(3);
+				},
+				func (b) {
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[4]").setValue(b);
+					f14.station_selector(4);
+				},
+				func (b) {
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[5]").setValue(b);
+					f14.station_selector(5);
+				},
+				func (b) {
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[6]").setValue(b);
+					f14.station_selector(6);
+				},
+				func (b) {
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[7]").setValue(b);
+					f14.station_selector(7);
+				},
 			]
 		),
 		DCT.TDMDecoder.new
@@ -63,7 +80,18 @@ var pilot_connect_copilot = func (copilot) {
 			[
 				func (b) {
 					RangeRadar2.setValue(b);
-				}
+				},
+				func (b) {
+					awg_9.wcs_mode_sel(b);
+				},
+				func (b) {
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[1]").setValue(b);
+					f14.station_selector(1);
+				},
+				func (b) {
+					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[8]").setValue(b);
+					f14.station_selector(8);
+				},
 			]
 		)
 	];
@@ -93,15 +121,22 @@ var copilot_connect_pilot = func (pilot) {
 			#  0 - 4: awg9 Controls
 			[
 				awg_9.RadarStandby,
-				awg_9.WcsMode.getNode("pulse-srch"),
-				awg_9.WcsMode.getNode("tws-auto")
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[2]"),
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[3]"),
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[4]"),
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[5]"),
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[6]"),
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[7]")
 			],
 			props.globals.getNode(bs_switches1_mpp)
 		),
 		DCT.TDMEncoder.new (
 			#  0: awg9 Range
 			[
-				props.globals.getNode("instrumentation/radar/radar2-range")
+				props.globals.getNode("instrumentation/radar/radar2-range"),
+				awg_9.WcsMode,
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[1]"),
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[8]")
 			],
 			props.globals.getNode(bs_TDM1_mpp)
 
