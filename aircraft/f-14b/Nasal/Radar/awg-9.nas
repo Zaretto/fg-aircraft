@@ -1181,6 +1181,11 @@ var AWG9 = {
 	selectHookCheck: func {
 	    me.tgt_cmd = SelectTargetCommand.getValue();
 	    SelectTargetCommand.setIntValue(0);
+	    if (pilot_lock) {
+	    	if (Hook.getValue() == nil) return;
+	    	designateMPCallsign(Hook.getValue());
+	    	return;
+	    }
 		if (me.tgt_cmd != 0) {
 			me.cycleDesignate();# for now only 1 direction
 			me.prio = awg9Radar.getPriorityTarget();
@@ -1229,9 +1234,11 @@ var AWG9 = {
 				me.registerBlep(me.u, me.u.getDeviationStored(), me.currentMode.painter, me.currentMode.pulse);# In case RIO's radar has seen him, but pilots radar has not.
 				me.currentMode.designatePriority(me.u);
 				print("DualControl: RIO hooked "~mp);
-				break;
+				return;
 			}
 		}
+		me.currentMode.designatePriority(nil);
+		screen.log.write("RIO: Selection failed handover.", 1,1,0);
 	},
 };
 

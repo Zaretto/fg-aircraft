@@ -41,7 +41,7 @@ var pilot_connect_copilot = func (copilot) {
 	print("######## pilot_connect_copilot() ########");
 	# Lock awg_9 controls for the pilot.
 	awg_9.pilot_lock = 1;
-	ll = setlistener(copilot.getNode("sim/multiplay/generic/string[11]"),func (prop) {if (!awg_9.pilot_lock) return; screen.log.write("RIO: Selected Something.", 1,1,0);awg_9.awg9Radar.designateMPCallsign(prop.getValue());},1,0);
+	ll = setlistener(copilot.getNode("sim/multiplay/generic/string[11]"),func (prop) {if (!awg_9.pilot_lock) return; screen.log.write("RIO: Selected Something.", 1,1,0);awg_9.awg9Radar.designateMPCallsign(prop.getValue());awg_9.Hook.setValue(prop.getValue())},1,0);
 	#awg_9.Hook.alias(copilot.getNode("sim/multiplay/generic/string[11]"));
 	return [
 		# Process received properties.
