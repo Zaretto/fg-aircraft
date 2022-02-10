@@ -140,7 +140,7 @@ var AirborneRadar = {
 	},
 	cycleDesignate: func {
 		me.currentMode.cycleDesignate();
-		if (me.getPriorityTarget() != nil) print("Hooked ",me.getPriorityTarget().getCallsign());
+		if (me.getPriorityTarget() != nil) print("Hooked ",me.getPriorityTarget().get_Callsign());#F14 custom
 		else print("Nothing designated");
 	},
 	cycleMode: func {
@@ -272,7 +272,6 @@ var AirborneRadar = {
 	loop: func {
 		me.enabled = me.isEnabled();
 		me.checks();#F14 custom
-		if (0) setprop("instrumentation/radar/radar-standby", !me.enabled); # F14 custom
 		# calc dt here, so we don't get a massive dt when going from disabled to enabled:
 		me.elapsed = elapsedProp.getValue();
 		me.dt = me.elapsed - me.lastElapsed;
@@ -300,7 +299,10 @@ var AirborneRadar = {
 	},
 	loopMedium: func {
 		me.loopSpecific(); #F14 custom
-		if (we_are_bs) return; #F14 custom
+		if (we_are_bs) {
+			stbySend.setIntValue(1);
+			return; #F14 custom
+		}
 		#
 		# It send out what target we are Single-target-track locked onto if any so the target get RWR warning.
 		# It also sends out on datalink what we are STT/SAM/TWS locked onto.
@@ -445,7 +447,7 @@ var AirborneRadar = {
 			setprop("debug-radar/main-beam-deviation", "--unseen-lock--");
 		}
 	},
-	registerBlep: func (contact, dev, stt, doppler = 1) {#F14 custom
+	registerBlep: func (contact, dev, stt, doppler = 1) {
 		if (!contact.isVisible()) {return 0;}
 		if (doppler) {
 			if (contact.isHiddenFromDoppler()) {
@@ -1076,9 +1078,9 @@ var AWG9 = {
 	fieldOfRegardMaxAz: 60,
 	fieldOfRegardMaxElev: 50,
 	fieldOfRegardMinElev: -70,
-	instantFoVradius: 2.3*0.5,#
-	instantVertFoVradius: 2.3*0.5,# real vert radius (used by ground mapper)
-	instantHoriFoVradius: 2.3*0.5,# (not used)
+	instantFoVradius: 2.2*0.5,#
+	instantVertFoVradius: 2.2*0.5,# real vert radius (used by ground mapper)
+	instantHoriFoVradius: 2.2*0.5,# (not used)
 	rcsRefDistance: 89,
 	rcsRefValue: 3.2,
 	targetHistory: 3,# Not used in TWS
@@ -1106,7 +1108,7 @@ var AWG9 = {
 		
 		me.newMode = me.mainModes[me.rootMode][currentModeIndex];
 		me.oldMode = me.currentMode;
-		if (me.currentModeIndex != 3 and me.currentModeIndex != 4 and (currentModeIndex == 3 or currentModeIndex == 4)) {
+		if (me.currentModeIndex != 4 and me.currentModeIndex != 5 and (currentModeIndex == 4 or currentModeIndex == 5)) {
 			me.newMode.superMode  = me.oldMode;
 			me.newMode.superIndex = me.currentModeIndex;
 		}
@@ -1125,8 +1127,8 @@ var AWG9 = {
 	},
 	toggleAirMode: func {
 		currentModeIndex = me.currentModeIndex+1;
-		if (currentModeIndex > 2) currentModeIndex = 0;
-		
+		if (currentModeIndex > 3) currentModeIndex = 0;
+
 		me.newMode = me.mainModes[me.rootMode][currentModeIndex];
 		me.oldMode = me.currentMode;
 		me.currentModeIndex = currentModeIndex;
@@ -1392,7 +1394,7 @@ var RWSMode = {
 #                                                                                                                                                            
 #                                                                                                                                                            
 var PulseDMode = {
-	shortName: "PD",
+	shortName: "PD Search",
 	longName: "Pulse Doppler Search",
 	discSpeed_dps: 40,
 	maxScanIntervalForVelocity: 12,
@@ -1455,6 +1457,35 @@ var PulseDMode = {
 
 
 
+#  ██████  ██    ██ ██      ███████ ███████     ███████ ███████  █████  ██████   ██████ ██   ██ 
+#  ██   ██ ██    ██ ██      ██      ██          ██      ██      ██   ██ ██   ██ ██      ██   ██ 
+#  ██████  ██    ██ ██      ███████ █████       ███████ █████   ███████ ██████  ██      ███████ 
+#  ██      ██    ██ ██           ██ ██               ██ ██      ██   ██ ██   ██ ██      ██   ██ 
+#  ██       ██████  ███████ ███████ ███████     ███████ ███████ ██   ██ ██   ██  ██████ ██   ██ 
+#                                                                                               
+#                                                                                               
+var PulseMode = {
+	shortName: "P Search",
+	longName: "Pulse Search",
+	discSpeed_dps: 45,
+	rcsFactor: 1.0,
+	detectMARINE: 1,
+	detectSURFACE: 1,
+	detectAIR: 0,
+	new: func (subMode, radar = nil) {
+		var mode = {parents: [PulseMode, RWSMode, AWG9Mode, RadarMode]};
+		mode.radar = radar;
+		mode.subMode = subMode;
+		subMode.superMode = mode;
+		#subMode.shortName = mode.shortName;
+		return mode;
+	},
+	getSearchInfo: func (contact) {
+		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
+		#print(me.currentTracked,"   ",(me.radar.elapsed - contact.blepTime));
+		return [1,0,1,1,0,1];
+	},
+};
 
 
 
@@ -1663,76 +1694,21 @@ var TWSMode = {
 
 
 
-#   █████   ██████ ███    ███ 
-#  ██   ██ ██      ████  ████ 
-#  ███████ ██      ██ ████ ██ 
-#  ██   ██ ██      ██  ██  ██ 
-#  ██   ██  ██████ ██      ██ 
-#                             
-#                             
-var F16ACMMode = {#TODO
-	radar: nil,
-	rootName: "ACM",
-	shortName: "STBY",
-	longName: "Air Combat Mode Standby",
-	superMode: nil,
-	subMode: nil,
-	range: 5,
-	maxRange: 5,
-	discSpeed_dps: 70,
-	rcsFactor: 1.0,
-	timeToFadeBleps: 1,
-	bars: 1,
-	az: 1,
-	new: func (subMode, radar = nil) {
-		var mode = {parents: [F16ACMMode, AWG9Mode, RadarMode]};
-		mode.radar = radar;
-		mode.subMode = subMode;
-		mode.subMode.superMode = mode;
-		mode.subMode.shortName = mode.shortName;
-		return mode;
-	},
-	showBars: func {
-		return 0;
-	},
-	showAZinHSD: func {
-		return 0;
-	},
-	cycleAZ: func {	},
-	cycleBars: func { },
-	designate: func (designate_contact) {
-	},
-	designatePriority: func (contact) {
 
-	},
-	getPriority: func {
-		return nil;
-	},
-	undesignate: func {
-	},
-	preStep: func {
-	},
-	increaseRange: func {
-		return 0;
-	},
-	decreaseRange: func {
-		return 0;
-	},
-	getSearchInfo: func (contact) {
-		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
-		return nil;
-	},
-	testContact: func (contact) {
-	},
-	cycleDesignate: func {
-	},
-};
 
+
+#  ██████   █████  ██      
+#  ██   ██ ██   ██ ██      
+#  ██████  ███████ ██      
+#  ██      ██   ██ ██      
+#  ██      ██   ██ ███████ 
+#                          
+#                          
 var PalMode = {
 	radar: nil,
 	#rootName: "ACM",
 	shortName: "PAL",
-	longName: "Pilot automatic lockon",
+	longName: "Pilot Automatic Lockon",
 	superMode: nil,
 	subMode: nil,
 	range: 10,
@@ -1817,7 +1793,7 @@ var STTMode = {
 	shortName: "STT",
 	longName: "Single Target Track",
 	superMode: nil,
-	discSpeed_dps: 80,
+	discSpeed_dps: 70,
 	rcsFactor: 1,
 	maxRange: 160,
 	priorityTarget: nil,
@@ -1941,7 +1917,7 @@ var STTMode = {
 };
 
 var PDSTTMode = {
-	rootName: "CRM",
+	rootName: "AIR",
 	shortName: "PDSTT",
 	longName: "Pulse Doppler - Single Target Track",
 	new: func (radar = nil) {
@@ -2239,8 +2215,8 @@ AntTrk.setBoolValue(0);
 
 
 var bars2bars = [1,2,4,8];
-var wcs2mode = [nil,4,3,-1,0,1,-1,2,5];
-var mode2wcs = [4,5,7,2,1,8];
+var wcs2mode = [nil,5,4,3,0,1,-1,2,6];
+var mode2wcs = [4,5,7,3,2,1,8];
 
 # Controls
 # ---------------------------------------------------------------------
@@ -2258,7 +2234,7 @@ var wcs_mode_sel = func (wcsMode) {
 	# 7 TWS MAN
 	# 8 PAL
 	
-	#pulseDSMode, rwsMode, twsMode, PDSTTMode.new(), PSTTMode.new(), PAL
+	#pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), PAL
 
 	var result = awg9Radar.setAirMode(wcs2mode[wcsMode]);
 
@@ -2283,7 +2259,7 @@ var lock = func {
 var des = func {
 	# The button/knob is called DES, the mode "Pilot automatic lockon".
 	print("Pilot request PAL mode");
-	awg9Radar.setAirMode(5);
+	awg9Radar.setAirMode(6);
 }
 var range_control = func(n) {
 	var range_radar = RangeRadar2.getValue();
@@ -2607,8 +2583,9 @@ var ecm = ECMChecker.new(0.05, 6);
 var rwsMode = RWSMode.new(PDSTTMode.new());
 var twsMode = TWSMode.new(PDSTTMode.new());
 var pulseDSMode = PulseDMode.new(PDSTTMode.new());
+var pulseMode = PulseMode.new(PSTTMode.new());
 var palMode = PalMode.new(PSTTMode.new());
-var awg9Radar = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
+var awg9Radar = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr = RWR.new();
 
 if (!we_are_bs) {
