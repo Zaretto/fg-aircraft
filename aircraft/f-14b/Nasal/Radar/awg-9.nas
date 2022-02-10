@@ -140,8 +140,13 @@ var AirborneRadar = {
 	},
 	cycleDesignate: func {
 		me.currentMode.cycleDesignate();
-		if (me.getPriorityTarget() != nil) print("Hooked ",me.getPriorityTarget().get_Callsign());#F14 custom
-		else print("Nothing designated");
+		if (me.getPriorityTarget() != nil) {#F14 custom
+			print("Hooked ",me.getPriorityTarget().get_Callsign());
+			if (we_are_bs) Hook.setValue(me.getPriorityTarget().getCallsign());
+		} else {
+			print("Nothing designated");
+			if (we_are_bs) Hook.setValue("");
+		}
 	},
 	cycleMode: func {
 		me.currentModeIndex += 1;
@@ -1207,14 +1212,25 @@ var AWG9 = {
 	modeSwitch: func {
 		me.md = me.currentMode;
 		if (me.md.shortName == "PDSTT") {
-			WcsMode.setValue(2);
+			if(!pilot_lock or we_are_bs) WcsMode.setValue(2);
 			AntTrk.setBoolValue(1);
 		} elsif (me.md.shortName == "PSTT") {
-			WcsMode.setValue(1);
+			if(!pilot_lock or we_are_bs) WcsMode.setValue(1);
 			AntTrk.setBoolValue(1);
 		} else {
-			WcsMode.setValue(mode2wcs[me.currentModeIndex]);
+			if(!pilot_lock or we_are_bs) WcsMode.setValue(mode2wcs[me.currentModeIndex]);
 			AntTrk.setBoolValue(0);
+		}
+	},
+	designateMPCallsign: func (mp) {
+		# Doesn't really work well for AI, if even RIO and Pilot has the same AI locally..
+		foreach (me.u; me.vector_aicontacts_for) {
+			if (me.u.getCallsign() == mp) {
+				me.registerBlep(me.u, me.u.getDeviationStored(), me.currentMode.painter, me.currentMode.pulse);# In case RIO's radar has seen him, but pilots radar has not.
+				me.currentMode.designatePriority(me.u);
+				print("DualControl: RIO hooked "~mp);
+				break;
+			}
 		}
 	},
 };
@@ -2189,9 +2205,9 @@ var HudTgtClosureRate = props.globals.getNode("sim/model/"~this_model~"/instrume
 var HudTgtDistance = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/distance", 1);
 var SWTgtRange        = props.globals.getNode("sim/model/"~this_model~"/systems/armament/aim9/target-range-nm",1);
 # Field
-var antennae_knob_prop = props.globals.getNode("controls/radar/antennae-knob",0);# tilt scan field up or down
+var antennae_knob_prop = props.globals.getNode("controls/radar/antennae-knob",1);# tilt scan field up or down
 var antennae_deg_prop = props.globals.getNode("instrumentation/radar/antennae-deg",1);
-var antennae_az_knob_prop = props.globals.getNode("controls/radar/antennae-az-knob",0);# -60 to 60, tilt scan field left or right (when not 120). No controls mapped to this yet.
+var antennae_az_knob_prop = props.globals.getNode("controls/radar/antennae-az-knob",1);# -60 to 60, tilt scan field left or right (when not 120). No controls mapped to this yet.
 # Radar
 var cycle_range       = getprop("instrumentation/radar/cycle-range");# if range should be cycled or only go up/down.
 var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range",1);
@@ -2202,17 +2218,19 @@ var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrume
 var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
 var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby",1);
 var SelectTargetCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
+var Hook              = props.globals.getNode("instrumentation/radar/selection",1);
 var BarsCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleBars",1);
 var AzCommand = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleAz",1);
 var WcsMode           = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode",1);
-RangeActualRadar2.setValue(50);
-antennae_deg_prop.setValue(0);
-SelectTargetCommand.setValue(0);
-BarsCommand.setValue(0);
-AzCommand.setValue(0);
+if (we_are_bs) Hook.setValue("");
+RangeActualRadar2.setIntValue(50);
+antennae_deg_prop.setDoubleValue(0);
+antennae_knob_prop.setDoubleValue(0);
+antennae_az_knob_prop.setDoubleValue(0);
+SelectTargetCommand.setIntValue(0);
+BarsCommand.setBoolValue(0);
+AzCommand.setBoolValue(0);
 AntTrk.setBoolValue(0);
-
-
 
 var bars2bars = [1,2,4,8];
 var wcs2mode = [nil,5,4,3,0,1,-1,2,6];
@@ -2225,6 +2243,7 @@ var toggle_radar_standby = func() {
 	RadarStandby.setBoolValue(!RadarStandby.getBoolValue());
 }
 var wcs_mode_sel = func (wcsMode) {
+	if ( pilot_lock and ! we_are_bs ) { return }
 	# 1 STT P
 	# 2 STT PD
 	# 3 P search
@@ -2259,11 +2278,13 @@ var lock = func {
 	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
 }
 var des = func {
+	if ( pilot_lock and ! we_are_bs ) { return }# for simplicity we let RIO control this.
 	# The button/knob is called DES, the mode "Pilot automatic lockon".
 	print("Pilot request PAL mode");
 	awg9Radar.setAirMode(6);
 }
 var range_control = func(n) {
+	if ( pilot_lock and ! we_are_bs ) { return }
 	var range_radar = RangeRadar2.getValue();
     newri = 0;
     forindex(ri; radar_ranges){
@@ -2291,16 +2312,24 @@ init = func() {
     if(our_ac_name == "f-14a") our_ac_name = "f-14b";
 	if (our_ac_name == "f-14b-bs") {
 		we_are_bs = 1;
-		#setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
-		#setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",120);
-		#setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
-		#setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+		setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+		setprop("fdm/jsbsim/systems/electrics/ac-essential-bus1",120);
+		setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+		setprop("fdm/jsbsim/systems/electrics/ac-left-main-bus",120);
+		RadarServicable.setBoolValue(1);
 	}
 }
 init();
 
+# When dualcontrol backseater controls radar:
+if (!we_are_bs) {
+	setlistener(antennae_knob_prop,func {if (!pilot_lock) return; screen.log.write("RIO: Turned radar up/down.", 1,1,0);},0,0);
+	setlistener(RangeRadar2,func {if (!pilot_lock) return; screen.log.write("RIO: Switched radar range.", 1,1,0);},0,0);
+	setlistener(RadarStandby,func {if (!pilot_lock) return; screen.log.write("RIO: Switched radar on/off.", 1,1,0);},0,0);
+	setlistener(WcsMode,func (prop) {if (!pilot_lock) return; screen.log.write("RIO: Switched radar mode.", 1,1,0);awg9Radar.setAirMode(wcs2mode[prop.getIntValue()]);},0,0);
+};
 
-
+# XML Display properties control
 var TgtProp = {
     "bearing-deg": nil,
     "true-heading-deg": nil,
@@ -2435,7 +2464,7 @@ var xmlDisplays = {
 	initPilotTgts: func {
 		# Local back-seater has a different radar-awg-9 folder and shall not see its pilot's aircraft.
 		me.InstrTgts = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
-		if (we_are_bs) {
+		if (0 and we_are_bs) {
 			if  ( BS_instruments.Pilot != nil ) {
 				# Use a different radar-awg-9 folder.
 				me.InstrTgts = BS_instruments.Pilot.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
@@ -2596,9 +2625,7 @@ var palMode = PalMode.new(PSTTMode.new());
 var awg9Radar = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr = RWR.new();
 
-if (!we_are_bs) {
-	xmlDisplays.initPilotTgts();
-}
+xmlDisplays.initPilotTgts();
 wcs_mode_sel(4);
 setprop("instrumentation/datalink/channel", int(rand()*33));#should probably not be in this file
 setprop("orientation/opposite",180);#Used for xml rio rwr display.

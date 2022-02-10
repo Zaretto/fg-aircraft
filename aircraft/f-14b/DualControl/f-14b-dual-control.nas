@@ -35,12 +35,14 @@ var RangeRadar2 = props.globals.getNode("instrumentation/radar/radar2-range");
 # Pilot MP property mappings and specific copilot connect/disconnect actions.
 #---------------------------------------------------------------------------
 
-
+var ll = nil;
 # Used by dual_control to set up the mappings for the pilot.
 var pilot_connect_copilot = func (copilot) {
 	print("######## pilot_connect_copilot() ########");
 	# Lock awg_9 controls for the pilot.
 	awg_9.pilot_lock = 1;
+	ll = setlistener(copilot.getNode("sim/multiplay/generic/string[11]"),func (prop) {if (!awg_9.pilot_lock) return; screen.log.write("RIO: Selected Something.", 1,1,0);awg_9.awg9Radar.designateMPCallsign(prop.getValue());},1,0);
+	#awg_9.Hook.alias(copilot.getNode("sim/multiplay/generic/string[11]"));
 	return [
 		# Process received properties.
 		DCT.SwitchDecoder.new (
@@ -50,28 +52,28 @@ var pilot_connect_copilot = func (copilot) {
 					awg_9.RadarStandby.setBoolValue(b);
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[2]").setValue(b);
-					f14.station_selector(2);
+					f14.station_select(2,b);
+					f14.arm_selector();
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[3]").setValue(b);
-					f14.station_selector(3);
+					f14.station_select(3,b);
+					f14.arm_selector();
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[4]").setValue(b);
-					f14.station_selector(4);
+					f14.station_select(4,b);
+					f14.arm_selector();
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[5]").setValue(b);
-					f14.station_selector(5);
+					f14.station_select(5,b);
+					f14.arm_selector();
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[6]").setValue(b);
-					f14.station_selector(6);
+					f14.station_select(6,b);
+					f14.arm_selector();
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[7]").setValue(b);
-					f14.station_selector(7);
+					f14.station_select(7,b);
+					f14.arm_selector();
 				},
 			]
 		),
@@ -82,16 +84,22 @@ var pilot_connect_copilot = func (copilot) {
 					RangeRadar2.setValue(b);
 				},
 				func (b) {
-					awg_9.wcs_mode_sel(b);
+					awg_9.WcsMode.setIntValue(b);
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[1]").setValue(b);
-					f14.station_selector(1);
+					f14.station_select(1,b);
+					f14.arm_selector();
 				},
 				func (b) {
-					props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[8]").setValue(b);
-					f14.station_selector(8);
+					f14.station_select(8,b);
+					f14.arm_selector();
 				},
+				func (b) {
+					awg_9.antennae_knob_prop.setDoubleValue(b);
+				},
+				#func (b) {
+				#	awg_9.Hook.setValue(b);
+				#},
 			]
 		)
 	];
@@ -102,6 +110,11 @@ var pilot_disconnect_copilot = func {
 	print("######## pilot_disconnect_copilot() ########");
 	# Unlock awg_9 controls for the pilot.
 	awg_9.pilot_lock = 0;
+	#awg_9.Hook.unalias();
+	if (ll != nil) {
+		removelistener(ll);
+		ll = nil;
+	}
 }
 
 # Copilot MP property mappings and specific pilot connect/disconnect actions.
@@ -136,7 +149,9 @@ var copilot_connect_pilot = func (pilot) {
 				props.globals.getNode("instrumentation/radar/radar2-range"),
 				awg_9.WcsMode,
 				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[1]"),
-				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[8]")
+				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[8]"),
+				awg_9.antennae_knob_prop,
+				#awg_9.Hook,
 			],
 			props.globals.getNode(bs_TDM1_mpp)
 
@@ -173,10 +188,10 @@ var set_copilot_wrappers = func (pilot) {
 	p = "sim/model/f-14b/controls/TID/brightness";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "sim/model/f-14b/controls/TID/on-off";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto";
+	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
+	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/radar/az-field";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
@@ -190,9 +205,9 @@ var set_copilot_wrappers = func (pilot) {
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/nav[1]/radials/selected-deg";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/radar/radar2-range";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
-	p = "instrumentation/radar/radar-standby";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	#p = "instrumentation/radar/radar2-range";
+	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	#p = "instrumentation/radar/radar-standby";
+	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
 }
 

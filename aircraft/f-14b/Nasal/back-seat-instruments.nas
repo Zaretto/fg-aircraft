@@ -10,13 +10,11 @@ var check_pilot_callsign = func() {
 		var mpplayers = props.globals.getNode("/ai/models").getChildren("multiplayer");
 		foreach (var p; mpplayers) {
 			if ( p.getChild("callsign").getValue() == r_callsign ) {
-				Pilot = p; 
-				awg_9.xmlDisplays.initPilotTgts();
+				Pilot = p;
 			}
 		}
 	} else {
 		Pilot = nil;
-		awg_9.xmlDisplays.initPilotTgts();
 	}
 }
 
