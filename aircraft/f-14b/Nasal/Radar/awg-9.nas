@@ -1181,9 +1181,9 @@ var AWG9 = {
 	selectHookCheck: func {
 	    me.tgt_cmd = SelectTargetCommand.getValue();
 	    SelectTargetCommand.setIntValue(0);
-	    if (pilot_lock) {
+	    if (pilot_lock and me.tgt_cmd != 0) {
 	    	if (Hook.getValue() == nil) return;
-	    	designateMPCallsign(Hook.getValue());
+	    	me.designateMPCallsign(Hook.getValue());
 	    	return;
 	    }
 		if (me.tgt_cmd != 0) {
@@ -2689,3 +2689,6 @@ setprop("orientation/opposite",180);
 #- dual seat rio mode transfer
 #  review discspeeds
 #  make aim-54 be able to fire on only tws selection
+#  no ejection for dual rio
+#  Switch to EDMD dual rio dont work
+#  Sidewinder on and off
