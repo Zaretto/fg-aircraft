@@ -71,5 +71,5 @@ var eject2 = func {
   esRIO.releaseAtNothing();
   
   #setprop("sim/view[0]/enabled",0); #disabled since it might get saved so user gets no pilotview in next aircraft he flies in.
-  settimer(func {f14.exp();},3.5);
+  #settimer(func {f14.exp();},3.5);
 }
