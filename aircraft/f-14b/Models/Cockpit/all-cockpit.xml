@@ -32609,7 +32609,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <not>
-                <property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
+                <property>/sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
             </not>
         </condition>
     </animation>
@@ -32894,7 +32894,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                     <value>Back-seat View</value>
                 </equals>
             </or>
-            <property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
+            <property>/sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
             <greater-than>
                 <property>/fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>1</value>
@@ -33448,7 +33448,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>red_mode-switch</object-name>
-        <property>sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
+        <property>/sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav</property>
         <factor>60</factor>
         <axis>
             <object-name>red_mode-switch-axis</object-name>
@@ -33464,7 +33464,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <interval-sec>0.05</interval-sec>
             <binding>
                 <command>nasal</command>
-                <script>f14_instruments.select_key_ecm_nav();</script>
+                <script>if (!awg_9.we_are_bs) f14_instruments.select_key_ecm_nav();</script>
             </binding>
             <binding>
                 <command>nasal</command>
