@@ -41,6 +41,7 @@ var pilot_connect_copilot = func (copilot) {
 	print("######## pilot_connect_copilot() ########");
 	# Lock awg_9 controls for the pilot.
 	awg_9.pilot_lock = 1;
+	awg_9.awg9Radar.currentMode.priorityTarget = nil;
 	ll = setlistener(copilot.getNode("sim/multiplay/generic/string[11]"),func (prop) {if (!awg_9.pilot_lock) return; var hk = prop.getValue(); if (hk == nil) return; awg_9.awg9Radar.designateMPCallsign(hk);awg_9.Hook.setValue(hk)},1,0);
 	#awg_9.Hook.alias(copilot.getNode("sim/multiplay/generic/string[11]"));
 	return [

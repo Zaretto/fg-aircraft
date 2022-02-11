@@ -1201,7 +1201,7 @@ var AWG9 = {
 	    	me.designateMPCallsign(me.hk);
 	    	return;
 	    }
-		if (me.tgt_cmd != 0) {
+		if (me.tgt_cmd != 0 and !pilot_lock) {
 			me.cycleDesignate();# for now only 1 direction
 			me.prio = awg9Radar.getPriorityTarget();
 			if (me.prio != nil) {
