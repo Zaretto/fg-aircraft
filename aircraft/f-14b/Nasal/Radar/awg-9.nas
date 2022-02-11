@@ -2432,7 +2432,7 @@ var xmlDisplays = {
 			me.tgts[me.i]["ddd-echo-fading"].setDoubleValue(me.sinceBlep/awg9Radar.currentMode.timeToFadeBleps);#TODO: The alpha only seems to work when 1.
 			me.tgts[me.i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
 			me.tgts[me.i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
-			me.tgts[me.i]["rounded-alt-ft"].setIntValue(me.blep.getAltitude()==nil?0:math.round(me.blep.getAltitude()*0.001));
+			me.tgts[me.i]["rounded-alt-ft"].setIntValue(me.blep.getAltitude()==nil?-1001:math.round(me.blep.getAltitude()*0.001));
 			#me.tgts[me.i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
 			#me.tgts[me.i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
 			me.tgts[me.i]["closure-rate-kts"].setDoubleValue(me.blep.getClosureRate());
