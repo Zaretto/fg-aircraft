@@ -5501,6 +5501,8 @@ var hud_radius_m       = 0.100;
 
 #was in hud
 var develev_to_devroll = func(dev_rad, elev_rad) {
+	if (math.sin(dev_rad) == 0 or math.sin(elev_rad) == 0) return [0,0,0];
+	if (math.cos(dev_rad) == 0 or math.cos(elev_rad) == 0) return [0,20,1];
 	var clamped = 0;
 	# Deviation length on the HUD (at level flight),
 	# 0.6686m = distance eye <-> virtual HUD screen.
@@ -5510,7 +5512,7 @@ var develev_to_devroll = func(dev_rad, elev_rad) {
 	# -90° left, 0° up, 90° right, +/- 180° down. 
 	var dev_deg =  math.atan2( h_dev, v_dev ) * R2D;
 	# Correction with own a/c roll.
-	var combined_dev_deg = dev_deg - OurRoll.getValue();
+	var combined_dev_deg = dev_deg;
 	# Lenght HUD center <-> symbol pos on the HUD:
 	var combined_dev_length = math.sqrt((h_dev*h_dev)+(v_dev*v_dev));
 	# clamp and squeeze the top of the display area so the symbol follow the egg shaped HUD limits.
