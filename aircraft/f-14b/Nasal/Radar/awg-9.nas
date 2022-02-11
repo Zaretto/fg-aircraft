@@ -1088,7 +1088,7 @@ var AWG9 = {
 	instantHoriFoVradius: 2.2*0.5,# (not used)
 	rcsRefDistance: 89,
 	rcsRefValue: 3.2,
-	targetHistory: 3,# Not used in TWS
+	targetHistory: 3,# Not used in F-14
 	isEnabled: func {
 		me.e = RadarServicable.getBoolValue() and DisplayRdr.getBoolValue() and RadarStandby.getValue() != 1;# and !getprop("/fdm/jsbsim/gear/unit[0]/WOW")
 		return me.e;
@@ -1212,6 +1212,7 @@ var AWG9 = {
 				screen.log.write("RIO: Nothing to select.", 1,1,0);
 			}
 		}
+		if (we_are_bs and me.getPriorityTarget() == nil) Hook.setValue("");
 	},
 	cycleField: func {
 		me.b_cmd = BarsCommand.getValue();
@@ -1319,13 +1320,6 @@ var AWG9Mode = {
 	},
 	getRange: func {
 		return RangeRadar2.getValue();
-	},
-	frameCompleted: func {
-		if (me.lastFrameStart != -1) {
-			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
-			me.timeToFadeBleps = me.radar.targetHistory*me.lastFrameDuration;
-		}
-		me.lastFrameStart = me.radar.elapsed;
 	},
 	cycleDesignate: func {
 		if (!size(me.radar.vector_aicontacts_bleps)) {
@@ -1934,13 +1928,6 @@ var STTMode = {
 		return 0;
 	},
 	setRange: func {# Range is auto-set in STT
-	},
-	frameCompleted: func {
-		if (me.lastFrameStart != -1) {
-			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
-			#me.timeToFadeBleps = math.max(2, me.radar.targetHistory*me.lastFrameDuration);
-		}
-		me.lastFrameStart = me.radar.elapsed;
 	},
 	leaveMode: func {
 		me.priorityTarget = nil;
