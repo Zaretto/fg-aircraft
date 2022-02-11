@@ -492,7 +492,7 @@ var AirborneRadar = {
 		foreach(contact ; me.vector_aicontacts_bleps) {
 			me.bleps_cleaned = [];
 			foreach (me.blep;contact.getBleps()) {
-				if (me.elapsed - me.blep.getBlepTime() < math.max(me.timeToKeepBleps, me.currentMode.timeToFadeBleps)) {
+				if (me.elapsed - me.blep.getBlepTime() < me.currentMode.timeToFadeBleps) {# F14 custom
 					append(me.bleps_cleaned, me.blep);
 				}
 			}
@@ -1081,8 +1081,8 @@ var AWG9 = {
 	# Root modes is  0: CRM  1: ACM
 	#
 	fieldOfRegardMaxAz: 60,
-	fieldOfRegardMaxElev: 50,
-	fieldOfRegardMinElev: -70,
+	fieldOfRegardMaxElev: 60,
+	fieldOfRegardMinElev: -80,
 	instantFoVradius: 2.2*0.5,#
 	instantVertFoVradius: 2.2*0.5,# real vert radius (used by ground mapper)
 	instantHoriFoVradius: 2.2*0.5,# (not used)
@@ -1150,13 +1150,23 @@ var AWG9 = {
 			antennae_knob_prop.setValue(0);
 			me.theKnob = 0;
 		}
+		if (me.theKnob > me.fieldOfRegardMaxElev-10) {
+			me.theKnob = me.fieldOfRegardMaxElev-10;
+		} elsif (me.theKnob < me.fieldOfRegardMinElev+10) {
+			me.theKnob = me.fieldOfRegardMinElev+10;
+		}
 		return me.theKnob;
 	},
 	getSideKnob: func {
 		me.theKnob = antennae_az_knob_prop.getValue();# -60 to 60
-		if (math.abs(me.theKnob) < 5) {
+		if (math.abs(me.theKnob) < 2.5) {
 			antennae_az_knob_prop.setValue(0);
 			me.theKnob = 0;
+		}
+		if (me.theKnob > me.fieldOfRegardMaxAz) {
+			me.theKnob = me.fieldOfRegardMaxAz;
+		} elsif (me.theKnob < -me.fieldOfRegardMaxAz) {
+			me.theKnob = -me.fieldOfRegardMaxAz;
 		}
 		return me.theKnob;
 	},
@@ -1181,9 +1191,14 @@ var AWG9 = {
 	selectHookCheck: func {
 	    me.tgt_cmd = SelectTargetCommand.getValue();
 	    SelectTargetCommand.setIntValue(0);
+	    if (me.tgt_cmd == 0) {
+	    	me.tgt_cmd = SelectTargetCommandJoy.getValue();
+	    }
+	    SelectTargetCommandJoy.setIntValue(0);
 	    if (pilot_lock and me.tgt_cmd != 0) {
-	    	if (Hook.getValue() == nil) return;
-	    	me.designateMPCallsign(Hook.getValue());
+	    	me.hk = Hook.getValue();
+	    	if (me.hk == nil or me.hk == "") return;
+	    	me.designateMPCallsign(me.hk);
 	    	return;
 	    }
 		if (me.tgt_cmd != 0) {
@@ -1826,7 +1841,7 @@ var STTMode = {
 	barHeight: 0.90,# multiple of instantFoVradius
 	bars: 2,
 	minimumTimePerReturn: 0.10,
-	timeToFadeBleps: 5, # Need to have time to move disc to the selection from wherever it was before entering STT. Plus already faded bleps from superMode will get pruned if this is to low.
+	timeToFadeBleps: 13, # F14 custom # Need to have time to move disc to the selection from wherever it was before entering STT. Plus already faded bleps from superMode will get pruned if this is to low.
 	debug: 1,
 	painter: 1,
 	debug: 0,
@@ -1927,11 +1942,12 @@ var STTMode = {
 	leaveMode: func {
 		me.priorityTarget = nil;
 		me.lastFrameStart = -1;
-		#me.timeToFadeBleps = 5;# Reset to 5, since frameCompleted might have lowered it.
+		me.timeToFadeBleps = 13;# F14 custom # Reset to 5, since frameCompleted might have lowered it.
 	},
 	getSearchInfo: func (contact) {
 		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
 		if (me.priorityTarget != nil and contact.equals(me.priorityTarget)) {
+			me.timeToFadeBleps = 1.5;
 			return [1,1,1,1,1,1];
 		}
 		return nil;
@@ -1977,6 +1993,7 @@ var PSTTMode = {
 	getSearchInfo: func (contact) {
 		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
 		if (me.priorityTarget != nil and contact.equals(me.priorityTarget)) {
+			me.timeToFadeBleps = 1.5;
 			return [1,1,1,1,0,1];
 		}
 		return nil;
@@ -2214,9 +2231,9 @@ var HudTgtClosureRate    = props.globals.getNode("sim/model/"~this_model~"/instr
 var HudTgtDistance       = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/distance", 1);
 var SWTgtRange           = props.globals.getNode("sim/model/"~this_model~"/systems/armament/aim9/target-range-nm",1);
 # Field
-var antennae_knob_prop   = props.globals.getNode("controls/radar/antennae-knob",1);# tilt scan field up or down
-var antennae_az_knob_prop= props.globals.getNode("controls/radar/antennae-az-knob",1);# -60 to 60, tilt scan field left or right (when not 120). No controls mapped to this yet.
-var antennae_deg_prop    = props.globals.getNode("instrumentation/radar/antennae-deg",1);#actual current radar tilt
+var antennae_knob_prop   = props.globals.getNode("controls/radar/elevation-deg",1);# tilt scan field up or down # joystick binding
+var antennae_az_knob_prop= props.globals.getNode("controls/radar/azimuth-deg",1);# -60 to 60, tilt scan field left or right (when not 120). # joystick binding
+var antennae_deg_prop    = props.globals.getNode("instrumentation/radar/antennae-deg",1);#actual current radar tilt 
 # Radar
 var cycle_range          = getprop("instrumentation/radar/cycle-range");# if range should be cycled or only go up/down.
 var RangeRadar2          = props.globals.getNode("instrumentation/radar/radar2-range",1);
@@ -2228,15 +2245,17 @@ var DisplayRdr           = props.globals.getNode("sim/model/"~this_model~"/instr
 var AntTrk               = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/ant-trk-light",1);
 var SwpFac               = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
 var SelectTargetCommand  = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
+var SelectTargetCommandJoy= props.globals.getNode("controls/armament/target-selected",1);# joystick binding
 var BarsCommand          = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleBars",1);
 var AzCommand            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/cycleAz",1);
 var WcsMode              = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode",1);
-if (we_are_bs) Hook.setValue("");
+Hook.setValue("");
 RangeActualRadar2.setIntValue(50);
 antennae_deg_prop.setDoubleValue(0);
 antennae_knob_prop.setDoubleValue(0);
 antennae_az_knob_prop.setDoubleValue(0);
 SelectTargetCommand.setIntValue(0);
+SelectTargetCommandJoy.setIntValue(0);
 BarsCommand.setBoolValue(0);
 AzCommand.setBoolValue(0);
 AntTrk.setBoolValue(0);
@@ -2410,7 +2429,7 @@ var xmlDisplays = {
 			#	me.tgts[me.i]["ecm-signal-norm"].setDoubleValue(active_u.threat);
 			#	me.tgts[me.i]["ecm_type_num"].setValue("29");
 			#}
-			me.tgts[me.i]["ddd-echo-fading"].setDoubleValue(me.sinceBlep/awg9Radar.currentMode.timeToFadeBleps < 0.5);#TODO: The alpha only seems to work when 1.
+			me.tgts[me.i]["ddd-echo-fading"].setDoubleValue(me.sinceBlep/awg9Radar.currentMode.timeToFadeBleps);#TODO: The alpha only seems to work when 1.
 			me.tgts[me.i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
 			me.tgts[me.i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
 			me.tgts[me.i]["rounded-alt-ft"].setIntValue(me.blep.getAltitude()==nil?0:math.round(me.blep.getAltitude()*0.001));
@@ -2686,5 +2705,6 @@ setprop("orientation/opposite",180);
 #  review discspeeds
 #  make aim-54 be able to fire on only tws selection
 #+ no ejection for dual rio
-#  Switch to EDMD dual rio dont work
-#  Sidewinder on and off
+#+ Switch to EDMD dual rio dont work
+#+ Sidewinder on and off
+#+ Standard joystick bindings for radar.

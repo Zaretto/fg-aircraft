@@ -2248,7 +2248,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <desc>Antennae up</desc>
                 <binding>
                     <command>property-adjust</command>
-                    <property>controls/radar/antennae-knob</property>
+                    <property>controls/radar/elevation-deg</property>
                     <step>1.5</step>
                     <min>-70</min>
                     <max>50</max>
@@ -2256,7 +2256,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 </binding>
                 <binding>
                     <command>nasal</command>
-                    <script>screen.log.write(sprintf("Antennae knob elev at %+.1f degrees",getprop("controls/radar/antennae-knob")));</script>
+                    <script>screen.log.write(sprintf("Antennae knob elev at %+.1f degrees",getprop("controls/radar/elevation-deg")));</script>
                 </binding>
             </key>
 
@@ -2265,7 +2265,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <desc>Antennae down</desc>
                 <binding>
                     <command>property-adjust</command>
-                    <property>controls/radar/antennae-knob</property>
+                    <property>controls/radar/elevation-deg</property>
                     <step>-1.5</step>
                     <min>-70</min>
                     <max>50</max>
@@ -2273,7 +2273,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 </binding>
                 <binding>
                     <command>nasal</command>
-                    <script>screen.log.write(sprintf("Antennae elev knob at %+.1f degrees",getprop("controls/radar/antennae-knob")));</script>
+                    <script>screen.log.write(sprintf("Antennae elev knob at %+.1f degrees",getprop("controls/radar/elevation-deg")));</script>
                 </binding>
             </key>
 
