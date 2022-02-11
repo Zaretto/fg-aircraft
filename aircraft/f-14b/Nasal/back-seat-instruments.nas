@@ -53,13 +53,13 @@ instruments_data_import = func {
 			if (size(l) > 11)
 			{
 			    var ac_powered = l[10] != nil and l[10] == "1";
-			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",ac_powered*2);
-			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",ac_powered*2); 
-			    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",ac_powered*2);
-		        setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",ac_powered*2);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",ac_powered*2);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered*2);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered*2);
+			    Pilot.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus1", 1).setDoubleValue(ac_powered*2);
+			    Pilot.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus2", 1).setDoubleValue(ac_powered*2); 
+			    Pilot.getNode("fdm/jsbsim/systems/electrics/ac-left-main-bus", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/ac-right-main-bus", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-essential-bus1", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-essential-bus2", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-main-bus", 1).setDoubleValue(ac_powered*2);
 		    }
 		}
 	}

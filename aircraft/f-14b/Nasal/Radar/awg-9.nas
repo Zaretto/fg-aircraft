@@ -1246,16 +1246,19 @@ var AWG9 = {
 	},
 	designateMPCallsign: func (mp) {
 		# Doesn't really work well for AI, if even RIO and Pilot has the same AI locally..
+		if (mp == "" and Hook.getValue() == "") return;
 		foreach (me.u; me.vector_aicontacts_for) {
 			if (left(md5(me.u.getCallsign()),7) == mp) {
 				me.registerBlep(me.u, me.u.getDeviationStored(), me.currentMode.painter, me.currentMode.pulse);# In case RIO's radar has seen him, but pilots radar has not.
 				me.currentMode.designatePriority(me.u);
-				print("DualControl: RIO hooked "~mp);
+				screen.log.write("RIO: Selected "~me.u.get_Callsign(), 1,1,0);
+				print("DualControl: RIO hooked "~me.u.get_Callsign());
 				return;
 			}
 		}
 		me.currentMode.designatePriority(nil);
-		screen.log.write("RIO: Selection failed handover.", 1,1,0);
+		screen.log.write("RIO: Selection failed handover. Try press 'y' to repeat it.", 1,1,0);
+		print("RIO Dual Control: Selection failed handover.");
 	},
 };
 
@@ -2358,9 +2361,9 @@ init();
 
 # When dualcontrol backseater controls radar:
 if (!we_are_bs) {
-	setlistener(antennae_knob_prop,func {if (!pilot_lock) return; screen.log.write("RIO: Tilted radar.", 1,1,0);},0,0);
-	setlistener(RangeRadar2,func {if (!pilot_lock) return; screen.log.write("RIO: Changed radar range.", 1,1,0);},0,0);
-	setlistener(RadarStandby,func {if (!pilot_lock) return; screen.log.write("RIO: Switched radar standby state.", 1,1,0);},0,0);
+	setlistener(antennae_knob_prop,func (prop) {if (!pilot_lock) return; screen.log.write("RIO: Tilted radar to "~sprintf("%.1f",prop.getValue()), 1,1,0);},0,0);
+	setlistener(RangeRadar2,func (prop) {if (!pilot_lock) return; screen.log.write("RIO: Changed radar range to "~prop.getValue(), 1,1,0);},0,0);
+	setlistener(RadarStandby,func (prop) {if (!pilot_lock) return; screen.log.write("RIO: Switched radar standby state.", 1,1,0);},0,0);
 	setlistener(WcsMode,func (prop) {if (!pilot_lock) return; awg9Radar.setAirMode(wcs2mode[prop.getIntValue()]); screen.log.write("RIO: Radar is now in "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);},0,0);
 };
 
@@ -2506,24 +2509,33 @@ var xmlDisplays = {
 			me.tgts[me.i]["ecm-signal"].setBoolValue(0);
 		}
 	},
+	initDualTgts: func (pilot) {
+		# Local back-seater has a different radar-awg-9 folder and shall not see its pilot's aircraft.
+		if  ( pilot != nil ) {
+			# Use a different radar-awg-9 folder.
+			me.InstrTgts = pilot.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
+			# Do not see our pilot's aircraft.
+			#var target_callsign = self.getCallsign();
+			#var p_callsign = BS_instruments.Pilot.getNode("callsign").getValue();
+			#if ( target_callsign == p_callsign ) {
+			#	obj.not_acting = 1;
+			#}
+		}
+		me.tgts = [];
+		for (me.i = 0; me.i <= number_of_xml_mp_symbols; me.i += 1) {
+		    me.TgtsFiles = me.InstrTgts.getNode("multiplayer["~me.i~"]", 1);
+		    me.myTgt = {parents:[TgtProp]};
+		    foreach(me.key ; keys(TgtProp)) {
+		    	me.myTgt[me.key] = me.TgtsFiles.getNode(me.key, 1);
+		    }
+		    me.myTgt.visible.setBoolValue(0);
+		    me.myTgt.display.setBoolValue(0);
+		    append(me.tgts, me.myTgt);
+		}
+	},
 	initPilotTgts: func {
 		me.InstrTgts = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
-		if (0 and we_are_bs) {
-			# Local back-seater has a different radar-awg-9 folder and shall not see its pilot's aircraft.
-			# Disabled.
-			# Properties in model xml just needed a leading slash for this to work with same properties.
-			# Not sure why the other method didn't work. I might have broken something if it should work. ~Nikolai
-			if  ( BS_instruments.Pilot != nil ) {
-				# Use a different radar-awg-9 folder.
-				me.InstrTgts = BS_instruments.Pilot.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/targets", 1);
-				# Do not see our pilot's aircraft.
-				#var target_callsign = self.getCallsign();
-				#var p_callsign = BS_instruments.Pilot.getNode("callsign").getValue();
-				#if ( target_callsign == p_callsign ) {
-				#	obj.not_acting = 1;
-				#}
-			}
-		}
+		
 		me.tgts = [];
 		for (me.i = 0; me.i <= number_of_xml_mp_symbols; me.i += 1) {
 		    me.TgtsFiles = me.InstrTgts.getNode("multiplayer["~me.i~"]", 1);
@@ -2669,7 +2681,9 @@ var palMode     = PalMode.new(PSTTMode.new());
 var awg9Radar   = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr     = RWR.new();
 
-xmlDisplays.initPilotTgts();
+if (!we_are_bs) {
+	xmlDisplays.initPilotTgts();
+}
 wcs_mode_sel(4);
 
 #should probably not be in this file, this is due to people that don't set it, they are all gonna fly around with 00 elsewise and always see each other
@@ -2708,3 +2722,4 @@ setprop("orientation/opposite",180);
 #+ Switch to EDMD dual rio dont work
 #+ Sidewinder on and off
 #+ Standard joystick bindings for radar.
+#  Handover dual control az and bars setting.
