@@ -680,13 +680,20 @@ var RprobePos        = props.globals.getNode("sim/model/f-14b/refuel/position-no
 var RprobePosGeneric = props.globals.getNode("fdm/jsbsim/propulsion/refuel-probe-pos-norm");
 RprobePosGeneric.alias(RprobePos);
 
+setlistener("sim/model/f-14b/controls/fuel/refuel-probe-switch", func(v){
+	if (v.getValue())
+		r_probe.open();
+	else 
+		r_probe.close(); 
+},0,0);
+
 var refuel_probe_switch_up = func() {
 	var sw = RprobeSw.getValue();
 	if ( sw < 2 ) {
 		sw += 1;
 		RprobeSw.setValue(sw);
 	}
-	r_probe.open();
+#	r_probe.open();
 }
 var refuel_probe_switch_down = func() {
 	var sw = RprobeSw.getValue();
@@ -694,7 +701,7 @@ var refuel_probe_switch_down = func() {
 		sw -= 1;
 		RprobeSw.setValue(sw);
 	}
-	if ( sw == 0 ) { r_probe.close(); }
+#	if ( sw == 0 ) { r_probe.close(); }
 }
 var refuel_probe_switch_cycle = func() {
 	var sw = RprobeSw.getValue();
@@ -702,7 +709,7 @@ var refuel_probe_switch_cycle = func() {
 	if ( sw == 2 ) {
 		sw = 0;
 		RprobeSw.setValue(sw);
-		r_probe.close();	
+#		r_probe.close();	
 	}
 }
 
