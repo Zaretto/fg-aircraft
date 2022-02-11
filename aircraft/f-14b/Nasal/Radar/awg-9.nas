@@ -142,7 +142,7 @@ var AirborneRadar = {
 		me.currentMode.cycleDesignate();
 		if (me.getPriorityTarget() != nil) {#F14 custom
 			print("Hooked ",me.getPriorityTarget().get_Callsign());
-			if (we_are_bs) Hook.setValue(me.getPriorityTarget().getCallsign());
+			if (we_are_bs) Hook.setValue(left(md5(me.getPriorityTarget().getCallsign()),7));
 		} else {
 			print("Nothing designated");
 			if (we_are_bs) Hook.setValue("");
@@ -1247,7 +1247,7 @@ var AWG9 = {
 	designateMPCallsign: func (mp) {
 		# Doesn't really work well for AI, if even RIO and Pilot has the same AI locally..
 		foreach (me.u; me.vector_aicontacts_for) {
-			if (me.u.getCallsign() == mp) {
+			if (left(md5(me.u.getCallsign()),7) == mp) {
 				me.registerBlep(me.u, me.u.getDeviationStored(), me.currentMode.painter, me.currentMode.pulse);# In case RIO's radar has seen him, but pilots radar has not.
 				me.currentMode.designatePriority(me.u);
 				print("DualControl: RIO hooked "~mp);
