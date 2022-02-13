@@ -205,12 +205,12 @@ var AirborneRadar = {
 		return me.currentMode.shortName;
 	},
 	setCurrentMode: func (new_mode, priority = nil) {
-		me.oldMode = me.currentMode;
+		me.olderMode = me.currentMode;
 		me.currentMode = new_mode;
 		new_mode.radar = me;
 		#new_mode.setCursorDeviation(me.currentMode.getCursorDeviation()); # no need since submodes don't overwrite this
 		new_mode.designatePriority(priority);
-		if (me.oldMode != nil) me.oldMode.leaveMode();
+		if (me.olderMode != nil) me.olderMode.leaveMode();
 		new_mode.enterMode();
 		me.modeSwitch();#F14 custom
 		settimer(func me.clearShowScan(), 0.5);
