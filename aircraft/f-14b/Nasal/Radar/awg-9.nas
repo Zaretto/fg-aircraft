@@ -157,7 +157,6 @@ var AirborneRadar = {
 		me.newMode.setRange(me.currentMode.getRange());
 		me.oldMode = me.currentMode;
 		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
-		me.oldMode.leaveMode();
 	},
 	cycleRootMode: func {
 		me.rootMode += 1;
@@ -169,7 +168,6 @@ var AirborneRadar = {
 		#me.newMode.setRange(me.currentMode.getRange());
 		me.oldMode = me.currentMode;
 		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
-		me.oldMode.leaveMode();
 	},
 	cycleAZ: func {
 		if (me["gmapper"] != nil) me.gmapper.clear();
@@ -207,10 +205,12 @@ var AirborneRadar = {
 		return me.currentMode.shortName;
 	},
 	setCurrentMode: func (new_mode, priority = nil) {
+		me.oldMode = me.currentMode;
 		me.currentMode = new_mode;
 		new_mode.radar = me;
 		#new_mode.setCursorDeviation(me.currentMode.getCursorDeviation()); # no need since submodes don't overwrite this
 		new_mode.designatePriority(priority);
+		if (me.oldMode != nil) me.oldMode.leaveMode();
 		new_mode.enterMode();
 		me.modeSwitch();#F14 custom
 		settimer(func me.clearShowScan(), 0.5);
@@ -225,7 +225,6 @@ var AirborneRadar = {
 		#me.newMode.setRange(me.currentMode.getRange());
 		me.oldMode = me.currentMode;
 		me.setCurrentMode(me.newMode, priority);
-		me.oldMode.leaveMode();
 	},
 	getRange: func {
 		return me.currentMode.getRange();
@@ -913,7 +912,7 @@ var RadarMode = {
 		me.lastFrameStart = -1;
 	},
 	enterMode: func {
-		# Warning: This gets called BEFORE previous mode's leaveMode()
+		
 	},
 	designatePriority: func (contact) {},
 	cycleDesignate: func {},
@@ -1103,7 +1102,6 @@ var AWG9 = {
 			me.currentModeIndex = 0;
 			me.newMode = me.mainModes[me.rootMode][me.currentModeIndex];
 			me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
-			me.oldMode.leaveMode();
 		}
 	},
 	setAirMode: func (currentModeIndex) {
@@ -1127,7 +1125,6 @@ var AWG9 = {
 		}
 		me.currentModeIndex = currentModeIndex;
 		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
-		me.oldMode.leaveMode();
 		return 1;
 	},
 	toggleAirMode: func {
@@ -1138,7 +1135,6 @@ var AWG9 = {
 		me.oldMode = me.currentMode;
 		me.currentModeIndex = currentModeIndex;
 		me.setCurrentMode(me.newMode, me.oldMode["priorityTarget"]);
-		me.oldMode.leaveMode();
 		return 1;
 	},
 	showAZ: func {
@@ -1365,6 +1361,7 @@ var RWSMode = {
 	discSpeed_dps: 50,
 	rcsFactor: 1.0,
 	priorityTarget: nil,
+	pulse: DOPPLER,
 	new: func (subMode, radar = nil) {
 		var mode = {parents: [RWSMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
@@ -1437,6 +1434,7 @@ var PulseDMode = {
 	maxScanIntervalForVelocity: 12,
 	minClosure: 115, # kt
 	rcsFactor: 1.1,
+	pulse: DOPPLER,
 	new: func (subMode, radar = nil) {
 		var mode = {parents: [PulseDMode, RWSMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
@@ -1509,6 +1507,7 @@ var PulseMode = {
 	detectMARINE: 1,
 	detectSURFACE: 1,
 	detectAIR: 0,
+	pulse: MONO,
 	new: func (subMode, radar = nil) {
 		var mode = {parents: [PulseMode, RWSMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
@@ -1550,6 +1549,7 @@ var TWSMode = {
 	maxTracked: 10,
 	az: 40,# slow scan, so default is 25 to get those double taps in there.
 	bars: 2,# default is less due to need 2 scans of target to get groundtrack
+	pulse: DOPPLER,
 	new: func (subMode, radar = nil) {
 		var mode = {parents: [TWSMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
@@ -1649,10 +1649,12 @@ var TWSMode = {
 		foreach(c;me.radar.vector_aicontacts_bleps) {
 			c.ignoreTrackInfo();# Kind of a hack to make it give out false info. Bypasses hadTrackInfo() but not hasTrackInfo().
 		}
+		set54ToPitbull();
 	},
 	leaveMode: func {
 		me.priorityTarget = nil;
 		me.lastFrameStart = -1;
+		set54ToNormal();
 	},
 	getSearchInfo: func (contact) {
 		# searchInfo:               dist, groundtrack, deviations, speed, closing-rate, altitude
@@ -1756,6 +1758,7 @@ var PalMode = {
 	timeToFadeBleps: 1,# TODO
 	bars: 4,
 	az: 20,
+	pulse: MONO,
 	new: func (subMode, radar = nil) {
 		var mode = {parents: [PalMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
@@ -1877,6 +1880,7 @@ var STTMode = {
 				me.azimuthTilt = me.lastBlep.getAZDeviation();
 				me.elevationTilt = me.lastBlep.getElev(); # tilt here is in relation to horizon
 			} else {
+				me.lostLock();
 				me.priorityTarget = nil;
 				me.undesignate();
 				return;
@@ -1884,6 +1888,7 @@ var STTMode = {
 			if (!size(me.priorityTarget.getBleps()) or !me.radar.containsVectorContact(me.radar.vector_aicontacts_bleps, me.priorityTarget)) {
 				me.priorityTarget = nil;
 				me.undesignate();
+				me.lostLock();
 				return;
 			} elsif (me.azimuthTilt > me.radar.fieldOfRegardMaxAz-me.az) {
 				me.azimuthTilt = me.radar.fieldOfRegardMaxAz-me.az;
@@ -1909,6 +1914,9 @@ var STTMode = {
 			me.priorityTarget = nil;
 			me.undesignate();
 		}
+	},
+	lostLock: func {
+		screen.log.write("RIO: Lost lock.", 1,0.5,0);
 	},
 	designatePriority: func (prio) {
 		me.priorityTarget = prio;
@@ -1945,12 +1953,18 @@ var STTMode = {
 	getCursorAltitudeLimits: func {
 		return nil;
 	},
+	#prunedContact: func (c) {
+	#	if (c == me.priorityTarget) {
+	#		print("Pruned from STT ",me.timeToFadeBleps);
+	#	}
+	#},
 };
 
 var PDSTTMode = {
 	rootName: "AIR",
 	shortName: "PDSTT",
 	longName: "Pulse Doppler - Single Target Track",
+	pulse: DOPPLER,
 	new: func (radar = nil) {
 		var mode = {parents: [PDSTTMode, STTMode, AWG9Mode, RadarMode]};
 		mode.radar = radar;
@@ -2298,7 +2312,7 @@ var lock = func {
 	print("RIO request STT mode");
 	var tgt = awg9Radar.getPriorityTarget();
 	if (tgt == nil) {
-		print("  but there is nothing designated.");
+		print("  but there is nothing selected.");
 		return;
 	}
 	awg9Radar.designate(tgt);
@@ -2353,6 +2367,24 @@ if (!we_are_bs) {
 	setlistener(RadarStandby,func (prop) {if (!pilot_lock) return; screen.log.write("RIO: Switched radar standby state.", 1,1,0);},0,0);
 	setlistener(WcsMode,func (prop) {if (!pilot_lock) return; awg9Radar.setAirMode(wcs2mode[prop.getIntValue()]); screen.log.write("RIO: Radar is now in "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);},0,0);
 };
+
+# Set AIM-54 to go active directly off the rails
+var set54ToPitbull = func {
+	if (we_are_bs) return;
+	var all = pylons.fcs.getAllOfType("AIM-54");
+	foreach (ph ; all) {
+		ph.guidance = "radar";
+		ph.max_fire_range_nm = 11;
+	}
+}
+var set54ToNormal = func {
+	if (we_are_bs) return;
+	var all = pylons.fcs.getAllOfType("AIM-54");
+	foreach (ph ; all) {
+		ph.guidance = "semi-radar";
+		ph.max_fire_range_nm = 80;
+	}
+}
 
 # XML Display properties control
 var TgtProp = {
@@ -2685,7 +2717,7 @@ setprop("orientation/opposite",180);
 #+ RWR
 #+ make dual seater not see each other on radar
 #+ hook target beside TWS
-#  show hook target on TID (Richard)
+#  show encircled target on TID (Richard)
 #+ Pilot mode(s)
 #+ Ask Richard how/if ecm works.
 #+ Move most methods into classes
@@ -2693,7 +2725,6 @@ setprop("orientation/opposite",180);
 #+ Ask Richard about "closure-last-x"
 #+ Enable master-arm SIM
 #+ PAL range range on TID
-#  aim9 non radar test
 #+ STT auto switch error
 #+ DDD range buttons
 #+ DDD elev setting and caret setting right of display
@@ -2702,11 +2733,13 @@ setprop("orientation/opposite",180);
 #+ ejection view
 #+ tons of rio errors
 #+ tab controls bars
-#- dual seat rio mode transfer
-#  review discspeeds
-#  make aim-54 be able to fire on only tws selection
+#+ dual seat rio mode transfer
+#+ make aim-54 be able to fire on only tws selection
 #+ no ejection for dual rio
 #+ Switch to EDMD dual rio dont work
 #+ Sidewinder on and off
 #+ Standard joystick bindings for radar.
+#  review discspeeds
 #  Handover dual control az and bars setting.
+#  aim9 non radar test
+#  aim7 lock test above 10nm

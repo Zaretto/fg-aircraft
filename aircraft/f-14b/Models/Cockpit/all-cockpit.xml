@@ -19860,7 +19860,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel(2)</script>
+				<script>if (awg_9.getPriorityTarget() != nil) awg_9.wcs_mode_sel(2); else print("Nothing to lock");</script>
 			</binding>
 		</action>
 	</animation>
@@ -19888,7 +19888,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel(1)</script>
+				<script>if (awg_9.getPriorityTarget() != nil) awg_9.wcs_mode_sel(1); else print("Nothing to lock");</script>
 			</binding>
 		</action>
 	</animation>
