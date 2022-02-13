@@ -1287,6 +1287,13 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                             <dialog-name>event-log</dialog-name>
                         </binding>
                     </item>
+                    <item n="11">
+                        <label>Tacview Options</label>
+                        <binding>
+                            <command>dialog-show</command>
+                            <dialog-name>tacview</dialog-name>
+                        </binding>
+                    </item>
                 </menu>
             </default>
         </menubar>
@@ -1471,6 +1478,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         <instrumentation>
             <path>Aircraft/f-14b/Systems/instrumentation.xml</path>
         </instrumentation>
+        <tacview-recording type="bool">0</tacview-recording>
     </sim>
     <environment>
         <aircraft-effects>
@@ -2555,6 +2563,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
             <MAW-bearing type="double">0</MAW-bearing>
             <MAW-active type="bool">false</MAW-active>
             <spike type="bool">false</spike>
+            <tacview type="bool">true</tacview>
             <aim-9>
                 <type-id type="int">57</type-id>
                 <short-name type="string">A-9L</short-name>
@@ -2781,7 +2790,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
             <is_fleet type="bool">false</is_fleet>
             <rwr_to_screen type="bool">true</rwr_to_screen>
             <rwr_audio_extended type="bool">false</rwr_audio_extended>
-            <tacview_supported type="bool">false</tacview_supported>
+            <tacview_supported type="bool">true</tacview_supported>
             <m28_auto type="bool">false</m28_auto>
             <mlw_max type="double">-1</mlw_max>
             <auto_flare_caller type="bool">false</auto_flare_caller>
@@ -2933,6 +2942,9 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         <gci>
             <file>Aircraft/f-14b/Nasal/gci-listener.nas</file>
         </gci>
+        <tacview>
+            <file>Aircraft/f-14b/Nasal/tacview.nas</file>
+        </tacview>
     </nasal>
 
 </PropertyList>
