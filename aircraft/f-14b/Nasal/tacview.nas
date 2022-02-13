@@ -83,6 +83,9 @@ var mainloop = func() {
     writeMyPlanePos();
     writeMyPlaneAttributes();
     foreach (var cx; awg_9.getCompleteList()) {
+        if(cx.getType() == awg_9.ORDANANCE) {
+            continue;
+        }
         if (cx["prop"] != nil and cx.prop.getName() == "multiplayer" and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
             continue;
         }
