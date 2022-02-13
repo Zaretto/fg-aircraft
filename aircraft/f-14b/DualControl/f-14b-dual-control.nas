@@ -98,9 +98,15 @@ var pilot_connect_copilot = func (copilot) {
 				func (b) {
 					awg_9.antennae_knob_prop.setDoubleValue(b);
 				},
-				#func (b) {
-				#	awg_9.Hook.setValue(b);
-				#},
+				func (b) {
+					awg_9.antennae_az_knob_prop.setValue(b);
+				},
+				func (b) {
+					awg_9.barsIndexChange(b);
+				},
+				func (b) {
+					awg_9.azFieldChange(b);
+				},
 			]
 		)
 	];
@@ -152,7 +158,9 @@ var copilot_connect_pilot = func (pilot) {
 				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[1]"),
 				props.globals.getNode("sim/model/f-14b/controls/armament/station-selector[8]"),
 				awg_9.antennae_knob_prop,
-				#awg_9.Hook,
+				awg_9.antennae_az_knob_prop,
+				awg_9.bars_index,
+				awg_9.az_field,
 			],
 			props.globals.getNode(bs_TDM1_mpp)
 
@@ -192,11 +200,11 @@ var set_copilot_wrappers = func (pilot) {
 	p = "sim/model/f-14b/controls/TID/brightness";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "sim/model/f-14b/controls/TID/on-off";
-	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
 	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto";
-	pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/radar/az-field";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/ecm/on-off";
@@ -238,11 +246,11 @@ var unset_copilot_wrappers = func {
 	p = "sim/model/f-14b/controls/TID/brightness";
 	prev_pilot.getNode(p, 1).unalias();
 	p = "sim/model/f-14b/controls/TID/on-off";
-	#prev_pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	prev_pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/pulse-srch";
 	#prev_pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto";
-	prev_pilot.getNode(p, 1).unalias();
+	#prev_pilot.getNode(p, 1).unalias();
 	p = "instrumentation/radar/az-field";
 	prev_pilot.getNode(p, 1).unalias();
 	p = "instrumentation/ecm/on-off";

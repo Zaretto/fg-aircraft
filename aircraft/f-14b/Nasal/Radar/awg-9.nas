@@ -1227,6 +1227,10 @@ var AWG9 = {
 	},
 	rioRadar: func {
 		screen.log.write(sprintf("RIO: Scanning %d bars and %d degrees.",bars2bars[me.currentMode.bars-1],me.currentMode.az*2), 1,1,0);
+		if (we_are_bs) {
+			az_field.setIntValue(me.currentMode.az);
+			bars_index.setIntValue(me.currentMode.bars);
+		}
 	},
 	modeSwitch: func {
 		me.md = me.currentMode;
@@ -1239,6 +1243,10 @@ var AWG9 = {
 		} else {
 			if(!pilot_lock or we_are_bs) WcsMode.setValue(mode2wcs[me.currentModeIndex]);
 			AntTrk.setBoolValue(0);
+		}
+		if (we_are_bs) {
+			az_field.setIntValue(me.currentMode.az);
+			bars_index.setIntValue(me.currentMode.bars);
 		}
 	},
 	designateMPCallsign: func (mp) {
@@ -1304,6 +1312,18 @@ var AWG9Mode = {
 		elsif (me.az == AWG9.fieldOfRegardMaxAz) me.az = 10;
 		else me.az = 10;
 		me.nextPatternNode = 0;
+	},
+	setAz: func (newAz) {
+		if (newAz != me.az and (newAz == 10 or newAz == 20 or newAz == 40 or newAz == 80 or newAz == AWG9.fieldOfRegardMaxAz)) {
+			me.az = newAz;
+			me.nextPatternNode = 0;
+		}
+	},
+	setBarsIndex: func (newBars) {
+		if (newBars != me.bars and newBars >= 0 and newBars <= 4) {
+			me.bars = newBars;
+			me.nextPatternNode = 0;
+		}
 	},
 	showAZ: func {
 		return 1;
@@ -1578,6 +1598,28 @@ var TWSMode = {
 			me.az = 20;
 		}
 		me.nextPatternNode = 0;
+	},
+	setBarsIndex: func (newBars) {
+		if (newBars != me.bars and (newBars == 3 or newBars == 2)) {
+			me.bars = newBars;
+			if (me.bars == 2) {
+				me.az = 40;
+			} else {
+				me.az = 20;
+			}
+			me.nextPatternNode = 0;
+		}
+	},
+	setAz: func (newAz) {
+		if (newAz != me.az and (newAz == 20 or newAz == 40)) {
+			me.az = newAz;
+			if (me.az == 20) {
+				me.bars = 3;
+			} else {
+				me.bars = 2;
+			}
+			me.nextPatternNode = 0;
+		}
 	},
 	designate: func (designate_contact) {
 		if (designate_contact != nil) {
@@ -2238,6 +2280,8 @@ var SWTgtRange           = props.globals.getNode("sim/model/"~this_model~"/syste
 var antennae_knob_prop   = props.globals.getNode("controls/radar/elevation-deg",1);# tilt scan field up or down # joystick binding
 var antennae_az_knob_prop= props.globals.getNode("controls/radar/azimuth-deg",1);# -60 to 60, tilt scan field left or right (when not 120). # joystick binding
 var antennae_deg_prop    = props.globals.getNode("instrumentation/radar/antennae-deg",1);#actual current radar tilt 
+var bars_index           = props.globals.getNode("instrumentation/radar/rio-dualcontrol-bars-index",1);#actual current radar bars index
+var az_field             = props.globals.getNode("instrumentation/radar/rio-dualcontrol-azimuth-field",1);#actual current radar az field. On purpose not the same as the old property used in xml model.
 # Radar
 var cycle_range          = getprop("instrumentation/radar/cycle-range");# if range should be cycled or only go up/down.
 var RangeRadar2          = props.globals.getNode("instrumentation/radar/radar2-range",1);
@@ -2307,6 +2351,25 @@ var wcs_mode_toggle = func {
 	awg9Radar.toggleAirMode();
 	screen.log.write("RIO: Switched to "~awg9Radar.currentMode.shortName~" mode.", 1,1,0);
 }
+var barsIndexChange = func (b) {
+	if (!pilot_lock) return;
+	var oldBarsIndex = awg9Radar.getBars();
+	if (oldBarsIndex != b and !awg9Radar.currentMode.painter) {
+		#print("Bars ",oldBarsIndex," new: ",b);
+		awg9Radar.currentMode.setBarsIndex(b);
+		#awg9Radar.rioRadar();
+	}
+}
+
+var azFieldChange = func (b) {
+	if (!pilot_lock) return;
+	var oldAz = awg9Radar.getAzimuthRadius();
+	if (oldAz != b and !awg9Radar.currentMode.painter) {
+		#print("Az ",oldAz," new: ",b);
+		awg9Radar.currentMode.setAz(b);
+		#awg9Radar.rioRadar();
+	}
+}
 var lock = func {
 	if ( pilot_lock and ! we_are_bs ) { return }
 	print("RIO request STT mode");
@@ -2353,7 +2416,6 @@ init = func() {
     if(our_ac_name == "f-14a") our_ac_name = "f-14b";
 	if (our_ac_name == "f-14b-bs") {
 		we_are_bs = 1;
-
 		# Backseater need these for displays to run
 		RadarServicable.setBoolValue(1);
 	}
@@ -2700,15 +2762,19 @@ var palMode     = PalMode.new(PSTTMode.new());
 var awg9Radar   = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr     = RWR.new();
 
-if (!we_are_bs) {
-	xmlDisplays.initPilotTgts();
-}
 wcs_mode_sel(4);
 
-#should probably not be in this file, this is due to people that don't set it, they are all gonna fly around with 00 elsewise and always see each other
-setprop("instrumentation/datalink/channel", int(rand()*33));
+if (!we_are_bs) {
+	xmlDisplays.initPilotTgts();
+} else {
+	# Calling this to make sure the az/bars properties are populated.
+	awg9Radar.rioRadar();
+}
 
-#Used for xml rio rwr display. Is a hack.
+#should probably not be in this file, this is due to people that don't set it, they are all gonna fly around with 00 elsewise and always see each other
+#setprop("instrumentation/datalink/channel", int(rand()*33)); Not needed, since 00 means datalink is off
+
+#Used for xml rio rwr display. Is a hack until fixed in model xml and ac3d.
 setprop("orientation/opposite",180);
 
 # TODO
@@ -2740,6 +2806,6 @@ setprop("orientation/opposite",180);
 #+ Sidewinder on and off
 #+ Standard joystick bindings for radar.
 #  review discspeeds
-#  Handover dual control az and bars setting.
+#+ Handover dual control az and bars setting.
 #  aim9 non radar test
-#  aim7 lock test above 10nm
+#? aim7 lock test above 10nm
