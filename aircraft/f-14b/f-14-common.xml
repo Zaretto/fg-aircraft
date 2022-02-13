@@ -1599,10 +1599,6 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
 
     <controls>
         <windshield-heat type="int">1</windshield-heat>
-        <radar>
-            <antennae-knob type="double">0</antennae-knob>
-            <antennae-az-knob type="double">0</antennae-az-knob>
-        </radar>
         <armament>
             <trigger type="bool">false</trigger>
             <master-arm-switch alias="/sim/model/f-14b/controls/armament/master-arm-switch"/>
@@ -2474,12 +2470,11 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
             <switch-position type="int">1</switch-position>
         </tacan>
         <radar>
-            <az-field type="int">120</az-field>
+            <az-field type="bool">true</az-field>
             <cycle-range type="bool">false</cycle-range>
             <debug-mode type="bool">true</debug-mode>
             <display-rdr type="bool">true</display-rdr>!
             <enabled type="bool">true</enabled>!
-            <ho-field type="int">120</ho-field><!-- bars -->!
             <limited-select type="bool">true</limited-select>
             <radar-mode type="int">1</radar-mode>!
             <radar-standby type="bool">false</radar-standby>

@@ -1175,6 +1175,11 @@ var AWG9 = {
 	updateDisplays: func {
 		me.updateTID();
 		xmlDisplays.updateTgts();
+		az_field_on_off.setBoolValue(!me.currentMode.painter);
+		if (!me.currentMode.painter) {
+			az_field_left.setDoubleValue(me.currentMode.azimuthTilt-me.currentMode.az);
+			az_field_right.setDoubleValue(me.currentMode.azimuthTilt+me.currentMode.az);
+		}
 	},
 	updateDDD: func {
 		me.caretPosition = me.getCaretPosition();
@@ -2282,6 +2287,9 @@ var antennae_az_knob_prop= props.globals.getNode("controls/radar/azimuth-deg",1)
 var antennae_deg_prop    = props.globals.getNode("instrumentation/radar/antennae-deg",1);#actual current radar tilt 
 var bars_index           = props.globals.getNode("instrumentation/radar/rio-dualcontrol-bars-index",1);#actual current radar bars index
 var az_field             = props.globals.getNode("instrumentation/radar/rio-dualcontrol-azimuth-field",1);#actual current radar az field. On purpose not the same as the old property used in xml model.
+var az_field_on_off      = props.globals.getNode("instrumentation/radar/az-field",1);
+var az_field_left        = props.globals.getNode("instrumentation/radar/az-field-left",1);
+var az_field_right       = props.globals.getNode("instrumentation/radar/az-field-right",1);
 # Radar
 var cycle_range          = getprop("instrumentation/radar/cycle-range");# if range should be cycled or only go up/down.
 var RangeRadar2          = props.globals.getNode("instrumentation/radar/radar2-range",1);
@@ -2370,6 +2378,7 @@ var azFieldChange = func (b) {
 		#awg9Radar.rioRadar();
 	}
 }
+
 var lock = func {
 	if ( pilot_lock and ! we_are_bs ) { return }
 	print("RIO request STT mode");

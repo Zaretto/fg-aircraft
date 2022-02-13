@@ -7141,6 +7141,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <inherits-from>Effects/model-transparent</inherits-from>
         <object-name>az-field-60</object-name>
         <object-name>az-field-120</object-name>
+        <object-name>az-field-left</object-name>
+        <object-name>az-field-right</object-name>
         <object-name>own-ac</object-name>
         <object-name>pulse-srch</object-name>
         <object-name>tws-auto</object-name>
@@ -7402,13 +7404,87 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
+                <value>10000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
                 <value>120</value>
             </equals>
         </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>az-field-right</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+            <equals>
+                <property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
+                <value>0</value>
+            </equals>
+            <property>sim/model/f-14b/controls/HSD/on-off</property>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>az-field-left</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+            <equals>
+                <property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
+                <value>0</value>
+            </equals>
+            <property>sim/model/f-14b/controls/HSD/on-off</property>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>az-field-left</object-name>
+        <property>instrumentation/radar/az-field-left</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m> -5.74036 </x1-m>
+            <y1-m> 0.000167 </y1-m>
+            <z1-m> -0.307788 </z1-m>
+            <x2-m> -5.61315 </x2-m>
+            <y2-m> 0.000167 </y2-m>
+            <z2-m> -0.242778 </z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>az-field-right</object-name>
+        <property>instrumentation/radar/az-field-right</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m> -5.74036 </x1-m>
+            <y1-m> 0.000167 </y1-m>
+            <z1-m> -0.307788 </z1-m>
+            <x2-m> -5.61315 </x2-m>
+            <y2-m> 0.000167 </y2-m>
+            <z2-m> -0.242778 </z2-m>
+        </axis>
     </animation>
     <animation>
         <type>select</type>
@@ -15043,6 +15119,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <!-- lighting -->
     <animation>
         <object-name>hr_tid</object-name>
+        <object-name>az-field-left</object-name>
+        <object-name>az-field-right</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -24518,6 +24596,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <object-name>rtr_center-cross</object-name>
         <object-name>rtr_az-field-60</object-name>
         <object-name>rtr_az-field-120</object-name>
+        <object-name>rtr_az-field-left</object-name>
+        <object-name>rtr_az-field-right</object-name>
         <object-name>rtr_own-ac</object-name>
         <object-name>rtr_pulse-srch</object-name>
         <object-name>rtr_tws-auto</object-name>
@@ -24712,13 +24792,69 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
+                <value>100000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
                 <value>120</value>
             </equals>
         </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>rtr_az-field-right</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>rtr_az-field-left</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>rtr_az-field-left</object-name>
+        <property>instrumentation/radar/az-field-left</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m>-4.14342</x1-m>
+            <y1-m>0.000167</y1-m>
+            <z1-m>-0.097431</z1-m>
+            <x2-m>-4.09252</x2-m>
+            <y2-m>0.000167</y2-m>
+            <z2-m>-0.076381</z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>rtr_az-field-right</object-name>
+        <property>instrumentation/radar/az-field-right</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m>-4.14342</x1-m>
+            <y1-m>0.000167</y1-m>
+            <z1-m>-0.097431</z1-m>
+            <x2-m>-4.09252</x2-m>
+            <y2-m>0.000167</y2-m>
+            <z2-m>-0.076381</z2-m>
+        </axis>
     </animation>
     <animation>
         <type>select</type>
@@ -32434,6 +32570,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <!-- lighting -->
     <animation>
         <object-name>rtr_tid</object-name>
+        <object-name>rtr_az-field-left</object-name>
+        <object-name>rtr_az-field-right</object-name>
         <type>material</type>
         <condition>
             <greater-than>

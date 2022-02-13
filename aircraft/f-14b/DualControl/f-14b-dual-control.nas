@@ -207,6 +207,10 @@ var set_copilot_wrappers = func (pilot) {
 	#pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/radar/az-field";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	p = "instrumentation/radar/az-field-left";
+	pilot.getNode(p, 1).alias(props.globals.getNode(p));
+	p = "instrumentation/radar/az-field-right";
+	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "instrumentation/ecm/on-off";
 	pilot.getNode(p, 1).alias(props.globals.getNode(p));
 	p = "sim/model/f-14b/controls/rio-ecm-display/mode-ecm-nav";
@@ -252,6 +256,10 @@ var unset_copilot_wrappers = func {
 	#p = "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode/tws-auto";
 	#prev_pilot.getNode(p, 1).unalias();
 	p = "instrumentation/radar/az-field";
+	prev_pilot.getNode(p, 1).unalias();
+	p = "instrumentation/radar/az-field-right";
+	prev_pilot.getNode(p, 1).unalias();
+	p = "instrumentation/radar/az-field-left";
 	prev_pilot.getNode(p, 1).unalias();
 	p = "instrumentation/ecm/on-off";
 	prev_pilot.getNode(p, 1).unalias();
