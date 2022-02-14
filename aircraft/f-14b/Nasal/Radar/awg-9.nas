@@ -1573,7 +1573,7 @@ var TWSMode = {
 	superMode: nil,
 	subMode: nil,
 	maxRange: 80,
-	discSpeed_dps: 45,
+	discSpeed_dps: 40,
 	rcsFactor: 0.9,
 	timeToBlinkTracks: 8,
 	maxScanIntervalForTrack: 9,
@@ -2793,8 +2793,6 @@ if (!we_are_bs) {
 #should probably not be in this file, this is due to people that don't set it, they are all gonna fly around with 00 elsewise and always see each other
 #setprop("instrumentation/datalink/channel", int(rand()*33)); Not needed, since 00 means datalink is off
 
-#Used for xml rio rwr display. Is a hack until fixed in model xml and ac3d.
-setprop("orientation/opposite",180);
 
 # TODO
 #+ Inputs/Controls
@@ -2802,7 +2800,6 @@ setprop("orientation/opposite",180);
 #+ RWR
 #+ make dual seater not see each other on radar
 #+ hook target beside TWS
-#  show encircled target on TID (Richard)
 #+ Pilot mode(s)
 #+ Ask Richard how/if ecm works.
 #+ Move most methods into classes
@@ -2824,7 +2821,7 @@ setprop("orientation/opposite",180);
 #+ Switch to EDMD dual rio dont work
 #+ Sidewinder on and off
 #+ Standard joystick bindings for radar.
-#  review discspeeds
 #+ Handover dual control az and bars setting.
-#  aim9 non radar test
-#? aim7 lock test above 10nm
+#+ review discspeeds and default bars
+#? aim7 lock test above 11nm (cannot reproduce)
+#  show encircled target on TID (Richard)
