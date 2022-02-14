@@ -2263,7 +2263,7 @@ var scanInterval = 0.05;# 20hz for main radar
 var ddd_screen_width = 0.0844;#use the maximum here
 laserOn = props.globals.getNode("controls/armament/laser-arm-dmd",1);#don't put 'var' keyword in front of this.
 var datalink_power = props.globals.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus1-powered",0);
-enable_tacobject = 0;
+enable_tacobject = 1;
 var wndprop = props.globals.getNode("environment/wind-speed-kt",0);
 
 
