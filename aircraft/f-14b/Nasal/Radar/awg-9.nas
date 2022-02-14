@@ -1298,7 +1298,7 @@ var AWG9 = {
 var AWG9Mode = {
 	minRange: 5,
 	maxRange: 200,
-	bars: 4,
+	bars: 3,
 	az: 60,
 	barHeight: 1.00,
 	barPattern:  [ [[-1,0],[1,0]],     # 1, 2, 4, 8               # These are multitudes of [me.az, instantFoVradius]
@@ -1310,6 +1310,7 @@ var AWG9Mode = {
 	rootName: "AIR",
 	shortName: "",
 	longName: "",
+	minTimeToFadeBleps: 10,
 	cycleAZ: func {
 		if (me.az == 10) me.az = 20;
 		elsif (me.az == 20) me.az = 40;
@@ -1360,6 +1361,13 @@ var AWG9Mode = {
 			me.priorityTarget = me.radar.vector_aicontacts_bleps[me.i];
 			return;
 		}
+	},
+	frameCompleted: func {
+		if (me.lastFrameStart != -1) {
+			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
+			me.timeToFadeBleps = math.max(1.2*me.lastFrameDuration, me.minTimeToFadeBleps);
+		}
+		me.lastFrameStart = me.radar.elapsed;
 	},
 };#                                    END AWG-9 Mode base class
 
@@ -2000,16 +2008,17 @@ var STTMode = {
 	getCursorAltitudeLimits: func {
 		return nil;
 	},
-	#prunedContact: func (c) {
-	#	if (c == me.priorityTarget) {
-	#		print("Pruned from STT ",me.timeToFadeBleps);
-	#	}
-	#},
+	frameCompleted: func {
+		if (me.lastFrameStart != -1) {
+			me.lastFrameDuration = me.radar.elapsed - me.lastFrameStart;
+		}
+		me.lastFrameStart = me.radar.elapsed;
+	},
 };
 
 var PDSTTMode = {
 	rootName: "AIR",
-	shortName: "PDSTT",
+	shortName: "PD STT",
 	longName: "Pulse Doppler - Single Target Track",
 	pulse: DOPPLER,
 	new: func (radar = nil) {
@@ -2027,7 +2036,7 @@ var PDSTTMode = {
 
 var PSTTMode = {
 	rootName: "AIR",
-	shortName: "PSTT",
+	shortName: "Pulse STT",
 	longName: "Pulse - Single Target Track",
 	pulse: MONO, # MONO or DOPPLER
 	new: func (radar = nil) {
@@ -2525,7 +2534,8 @@ var xmlDisplays = {
 			me.tgts[me.i]["ddd-echo-fading"].setDoubleValue(me.sinceBlep/awg9Radar.currentMode.timeToFadeBleps);#TODO: The alpha only seems to work when 1.
 			me.tgts[me.i]["ddd-draw-range-nm"].setDoubleValue((0.0657/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
 			me.tgts[me.i]["tid-draw-range-nm"].setDoubleValue((0.15/awg9Radar.getRange())*me.blep.getRangeNow()*M2NM);
-			me.tgts[me.i]["rounded-alt-ft"].setIntValue(me.blep.getAltitude()==nil?-1001:math.round(me.blep.getAltitude()*0.001));
+			me.tgts[me.i]["rounded-alt-ft"].setIntValue(me.blep.getAltitude()==nil?-1001:math.round((me.blep.getAltitude()+1)*0.001));# the plus one is due to fluctations of AI aircraft
+
 			#me.tgts[me.i]["closure-last-time"].setDoubleValue(blep.getBlepTime());#TODO
 			#me.tgts[me.i]["closure-last-range-nm"].setDoubleValue(blep.getRangeNow()*M2NM);#TODO
 			me.tgts[me.i]["closure-rate-kts"].setDoubleValue(me.blep.getClosureRate());

@@ -7492,7 +7492,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
+                <value>10000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
@@ -19938,7 +19938,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>if (awg_9.getPriorityTarget() != nil) awg_9.wcs_mode_sel(2); else print("Nothing to lock");</script>
+				<script>if (awg_9.awg9Radar.getPriorityTarget() != nil) awg_9.wcs_mode_sel(2); else print("Nothing to lock");</script>
 			</binding>
 		</action>
 	</animation>
@@ -19966,7 +19966,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>if (awg_9.getPriorityTarget() != nil) awg_9.wcs_mode_sel(1); else print("Nothing to lock");</script>
+				<script>if (awg_9.awg9Radar.getPriorityTarget() != nil) awg_9.wcs_mode_sel(1); else print("Nothing to lock");</script>
 			</binding>
 		</action>
 	</animation>
@@ -24862,7 +24862,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
+                <value>10000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
