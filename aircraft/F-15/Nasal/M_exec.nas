@@ -38,7 +38,7 @@ var rtExec_loop = func
     notifications.frameNotification.fetchvars();
 
     if (!notifications.frameNotification.running){
-#        print("M_exec: waiting for sim start");
+        logprint(1, "M_exec: waiting for sim start");
         return;
     }
     notifications.frameNotification.dT = notifications.frameNotification.elapsed_seconds - notifications.frameNotification.curT;
@@ -71,7 +71,7 @@ var rtExec_loop = func
         frame_inc = 0.02;#50 Hz
     }
     if (frame_inc != cur_frame_inc) {
-#        print("[EMEXEC]: Adjust frequency to ",1/frame_inc, " Hz");
+        logprint(2, "[EMEXEC]: Adjust frequency to ",1/frame_inc, " Hz");
         cur_frame_inc = frame_inc;
     }
     execTimer.restart(cur_frame_inc);
@@ -104,4 +104,5 @@ print("M_exec: starting");
 execTimer.start()
 });
 #execTimer.start();
-emesary.GlobalTransmitter.OverrunDetection(9);
+if(defined("emesary.GlobalTransmitter.OverrunDetection"))
+ emesary.GlobalTransmitter.OverrunDetection(9);

@@ -165,7 +165,7 @@ var backseat_update = maketimer(UPDATE_PERIOD, func
 
 # Init ####################
 var init = func {
-	print("Initializing f15 Back Seat Systems");
+	logprint(3, "Initializing F-15 Back Seat Systems");
     setprop("/sim/walker/outside",1);
     #
     #

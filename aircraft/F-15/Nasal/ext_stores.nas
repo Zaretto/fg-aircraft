@@ -144,7 +144,7 @@ Station =
 };
 
 var ext_loads_init = func() {
-    print("F-15 External loads init");
+    logprint(3, "F-15 External loads init");
 
 #    if (S0 == nil)
 #        S0 = Station.new(0);
@@ -184,7 +184,7 @@ var ext_loads_init = func() {
 ##  }
 
     if (getprop("sim/model/f15/systems/external-loads/external-load-set") == "clean")  {
-#        print(" --> First run: reload Clean");
+#        logprint(3, " --> First run: reload Clean");
         first_time_run = 1;
         ext_loads_set("Clean");
     }
@@ -423,7 +423,7 @@ var update_weapons_over_mp = func
             elsif (S.get_type() == "MK-84")
                 agm_count = agm_count+1;
         }
-#    print("count ",aim9_count, aim7_count, aim120_count);
+#    logprint(3, "count ",aim9_count, aim7_count, aim120_count);
         setprop("sim/model/f15/systems/armament/aim9/count",aim9_count);
         setprop("sim/model/f15/systems/armament/aim7/count",aim7_count);
         setprop("sim/model/f15/systems/armament/aim120/count",aim120_count);
@@ -433,7 +433,7 @@ var update_weapons_over_mp = func
         b_wpstring = b_wpstring;
 # Send the bits string as INT over MP.
         f15_net.send_wps_state(b_wpstring);
-#        print("MP String ",b_wpstring,":",b_stores);
+#        logprint(3, "MP String ",b_wpstring,":",b_stores);
 
     }
 }
@@ -486,7 +486,7 @@ update_stores_tanks = func(payload_idx){
     payload_stores_node = sprintf("payload/weight[%d]/",payload_idx);
     dialog_stores_node = sprintf("consumables/fuel/tank[%d]/selected",getprop(payload_stores_node~"tank"));
     v = !getprop(dialog_stores_node~"selected");
-#    print("update_stores_tanks: ", payload_stores_node, " -> ", dialog_stores_node, " = ",v);
+#    logprint(3, "update_stores_tanks: ", payload_stores_node, " -> ", dialog_stores_node, " = ",v);
     setprop(dialog_stores_node~"selected", v);
     if (v)      {  
         setprop(payload_stores_node~"selected","Droptank");
@@ -510,6 +510,6 @@ setlistener("sim/model/f15/systems/external-loads/external-centre-tank-demand", 
 });
 
 setlistener("sim/model/f15/systems/external-loads/external-load-set", func(v)            {
-#    print("External load set ",v.getValue());
+#    logprint(3, "External load set ",v.getValue());
     ext_loads_set(v.getValue());
 },0,0);

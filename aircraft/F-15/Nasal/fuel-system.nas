@@ -93,9 +93,9 @@ var TotalFuelLbs  = props.globals.getNode("consumables/fuel/total-fuel-lbs", 1);
 var TotalFuelGals = props.globals.getNode("consumables/fuel/total-fuel-gals", 1);
 
 configure_cft = func(v) {
-    print("CFT changed ",cft.getValue(), " ", v.getValue());
+    logprint(3, "CFT changed ",cft.getValue(), " ", v.getValue());
     if (Conformal_R == nil or Conformal_L == nil){
-#        print("No tanks defined ***************************************************************************\n\n");
+        logprint(5, "No tanks defined ***************************************************************************\n\n");
       return;
     }
     if (cft.getValue()){
@@ -155,7 +155,7 @@ do_tank_selected(v != nil and v.getValue() != "Droptank", 6, 598.48);
 
 var init_fuel_system = func {
 
-	print("Initializing f15 fuel system");
+	logprint(3, "Initializing F-15 fuel system");
 
 
 	if ( ! fuel_system_initialized ) {
@@ -380,22 +380,22 @@ var refuel_probe_switch_cycle = func() {
 var level_list = [];
 
 var internal_save_fuel = func() {
-#	print("Saving f15 fuel levels");
+	logprint(2, "Saving F-15 fuel levels");
 	level_list = [];
 	foreach (var t; Tank.list) {
-#    print(" -- ",t.name," = ",t.level_lbs.getValue());
+	    logprint(2, " -- ",t.name," = ",t.level_lbs.getValue());
 		append(level_list, t.get_level());
 	}
 }
 var internal_restore_fuel = func() {
-#	print("Restoring f15 fuel levels");
+	logprint(2, "Restoring F-15 fuel levels");
 	var i = 0;
 	foreach (var t; Tank.list) {
-#    print(" -- ",t.name," = ",t.level_lbs.getValue());
+        logprint(2, " -- ",t.name," = ",t.level_lbs.getValue());
         if (i < size(level_list))
           t.set_level(level_list[i]);
 	    else
-          print("ERROR: Fuel restore level not saved -- ",t.name," = ",t.level_lbs.getValue());
+          logprint(3, "ERROR: Fuel restore level not saved -- ",t.name," = ",t.level_lbs.getValue());
 		i += 1;
 	}
 }
@@ -427,7 +427,7 @@ Tank = {
 		obj.selected.setBoolValue(connect);
 		obj.ppg.setDoubleValue(6.3);
 		append(Tank.list, obj);
-#		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
+		logprint(2, "Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
 	newExternal : func (name, number, connect, side) {
@@ -452,7 +452,7 @@ Tank = {
 		obj.ppg.setDoubleValue(6.3);
 
 		append(Tank.list, obj);
-#		print("Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
+		logprint(2, "Tank.new[",number,"], ",obj.name," lbs=", obj.level_lbs.getValue());
 		return obj;
 	},
     #
@@ -537,7 +537,7 @@ Tank = {
     adjust_level_by_delta : func(side, delta)
     {
         var t = me;
-#        print("Processing ",t.name," is fitted ",t.is_fitted()," delta ",delta);
+        logprint(2, "Processing ",t.name," is fitted ",t.is_fitted()," delta ",delta);
         if (t.is_fitted()) # true for internal; only true when external connected
         {
             if (t.is_side(side))
@@ -548,14 +548,14 @@ Tank = {
                     if (tdelta < 0)
                     {
                         delta = delta + t.get_level_lbs();
-#                        print("Tank ",t.name," empty : new_delta ", delta);
+                        logprint(2, "Tank ",t.name," empty : new_delta ", delta);
                         t.set_level_lbs(0);
                     }
                     else
                     {
                         if (tdelta > t.get_capacity_lbs()) tdelta = t.get_capacity_lbs();
                         t.set_level_lbs(tdelta);
-#                        print("Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
+                        logprint(2, "Tank(finished) ",t.name," set to  ", tdelta, " now ", t.get_level_lbs());
                         delta = delta - tdelta;
                     }
                 }
@@ -567,11 +567,11 @@ Tank = {
 
                     delta = delta - tdelta;
                     t.set_level_lbs(t.get_level_lbs() + tdelta);
-#                    print("Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
+                    logprint(2, "Tank ",t.name," increase by ", tdelta, " now ", t.get_level_lbs());
                 }
             }
-#            else
-#                print("-- not adjusting ",t.name," not matched on side ",side);
+            else
+                logprint(23, "-- not adjusting ",t.name," not matched on side ",side);
         }
         return delta;
     },
@@ -598,7 +598,7 @@ Prop = {
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
 		obj.ppg.setDoubleValue(6.3);
 		append(Prop.list, obj);
-#print("Name ",name,running,obj.level_lbs, obj.get_capacity());
+		logprint(2, "Proportioner: Name ",name,running,obj.level_lbs, obj.get_capacity());
 		return obj;
 	},
 	
@@ -632,12 +632,12 @@ Prop = {
 		var ppg = me.ppg.getValue();
 		var level = me.get_lbs();
 		if (level == nil) {
-#print("nil level ",obj.name);
-return;
+			logprint(2, "fuel: update: nil level ",obj.name);
+			return;
         }
 		if (amount_lbs == nil) {
-#print("nil amount_lbs level ",obj.name);
-return;
+			logprint(2, "fuel: update: nil amount_lbs level ",obj.name);
+			return;
         }
 		if (level == 0) {
 			return 1;
@@ -768,7 +768,7 @@ var set_fuel = func(total) {
         inc = -1;
     }
 
-#    print("\n set_fuel to ",total," delta ",total_delta);
+    logprint(2, "\n set_fuel to ",total," delta ",total_delta);
     if (total_delta > 0)
     {
         total_delta = Tank1.adjust_level_by_delta(TankBothSide, total_delta);

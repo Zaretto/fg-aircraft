@@ -21,6 +21,7 @@
  #
  #---------------------------------------------------------------------------*/
 
+developMode = props.getNode("/sim/developer-mode",1);
 
 var FrameNotification = 
 {
@@ -49,19 +50,19 @@ var FrameNotification =
                 }
                 if (new_class.properties[notification.property] != nil 
                     and new_class.properties[notification.property] != notification.variable)
-                  print("[WARNING]: (",notification.module,") FrameNotification: already have variable ",new_class.properties[notification.property]," for ",notification.variable, " referencing property ",notification.property);
+                logprint(5," (",notification.module,") FrameNotification: already have variable ",new_class.properties[notification.property]," for ",notification.variable, " referencing property ",notification.property);
 
                 if (new_class.monitored[notification.variable] != nil 
                     and new_class.monitored[notification.variable].getPath() != notification.property
                     and new_class.monitored[notification.variable].getPath() != "/"~notification.property)
-                  print("[WARNING]: (",notification.module,") FrameNotification: already have variable ",notification.variable,"=",new_class.monitored[notification.variable].getPath(), " using different property ",notification.property);
+                  logprint(5," (",notification.module,") FrameNotification: already have variable ",notification.variable,"=",new_class.monitored[notification.variable].getPath(), " using different property ",notification.property);
                 #                else if (new_class.monitored[notification.variable] == nil)
                 #                  print("[INFO]: (",notification.module,") FrameNotification.",notification.variable, " = ",notification.property);
 
                 new_class.monitored[notification.variable] = root_node.getNode(notification.property,1);
                 new_class.properties[notification.property] = notification.variable;
 
-                print("[INFO]: (",notification.module,") FrameNotification.",notification.variable, " = ",notification.property, " -> ", new_class.monitored[notification.variable].getPath() );
+                logprint(3, " (",notification.module,") FrameNotification.",notification.variable, " = ",notification.property, " -> ", new_class.monitored[notification.variable].getPath() );
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
@@ -69,8 +70,8 @@ var FrameNotification =
         new_class.fetchvars = func() {
             foreach (var mp; keys(new_class.monitored)){
                 if(new_class.monitored[mp] != nil){
-                    if (FrameNotification.debug > 1)
-                      print(" ",mp, " = ",new_class.monitored[mp].getValue());
+                    if (FrameNotification.debug > 1 and developMode.getValue())
+                      logprint(3," ",mp, " = ",new_class.monitored[mp].getValue());
                     new_class[mp] = new_class.monitored[mp].getValue();
                 }
             }
