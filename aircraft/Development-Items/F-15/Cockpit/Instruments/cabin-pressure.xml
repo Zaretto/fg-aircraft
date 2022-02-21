@@ -1,60 +1,25 @@
 <?xml version="1.0"?>
 
-<!-- F-15 Backup ADI by Richard Harrison; rjh@zaretto.com (based on AI.xml by Dave Culp) -->
+<!-- F-15 Cabin Pressure Gauge by Richard Harrison; rjh@zaretto.com -->
 
 <PropertyList>
 
-    <path>backup-adi.ac</path>
+    <path>cabin-pressure.ac</path>
 
     <animation>
         <type>rotate</type>
-        <object-name>AttitudeBall</object-name>
-        <property>orientation/roll-deg</property>
-        <factor>1</factor>
+        <object-name>cabin-pressure-needle</object-name>
+        <property>fdm/jsbsim/systems/ecs/cabin-altitude-ft</property>
+        <factor>0.00604</factor>
         <center>
-            <x-m>-5.7195</x-m>
-            <y-m>0.013</y-m>
-            <z-m>0.7712</z-m>
+            <x-m>-5.7076</x-m>
+            <y-m>0.3728</y-m>
+            <z-m>0.7851</z-m>
         </center>
+        <max>50000</max>
+        <min>50000</min>
         <axis>
-            <x>1</x>
-            <y>0</y>
-            <z>0</z>
-        </axis>
-    </animation>
-
-    <animation>
-        <type>rotate</type>
-        <object-name>AttitudeBall</object-name>
-        <property>orientation/pitch-deg</property>
-        <factor>1</factor>
-        <center>
-            <x-m>-5.7195</x-m>
-            <y-m>0.013</y-m>
-            <z-m>0.7712</z-m>
-        </center>
-        <axis>
-            <x>0</x>
-            <y>1</y>
-            <z>0</z>
-        </axis>
-    </animation>
-
-    <animation>
-        <type>rotate</type>
-        <object-name>SkyPointer</object-name>
-        <property>orientation/roll-deg</property>
-        <factor>1</factor>
-        <offset-deg>180</offset-deg>
-        <center>
-            <x-m>-5.6961</x-m>
-            <y-m>0.01</y-m>
-            <z-m>0.77</z-m>
-        </center>
-        <axis>
-            <x>1</x>
-            <y>0</y>
-            <z>0</z>
+            <x>-1</x>
         </axis>
     </animation>
     <!--Lighting-->
@@ -66,9 +31,6 @@
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
             </greater-than>
-            <not>
-                <property>/sim/rendering/rembrandt/enabled</property>
-            </not>
             <not>
                 <property>/sim/rendering/rembrandt/enabled</property>
             </not>
@@ -96,7 +58,7 @@
             <not>
                 <property>/sim/rendering/rembrandt/enabled</property>
             </not>
-            <property>/controls/lighting/stby-inst</property>
+            <property>controls/lighting/aux-inst</property>
         </condition>
         <emission>
             <factor-prop>/controls/lighting/aux-inst</factor-prop>
@@ -108,7 +70,7 @@
             <blue-prop>/controls/lighting/instrument-blue</blue-prop>
         </emission>
     </animation>
-    <!-- ALS Model Interior (Shadow) -->
+<!-- ALS Model Interior (Shadow) -->
     <effect>
         <name>f15interior</name>
         <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
