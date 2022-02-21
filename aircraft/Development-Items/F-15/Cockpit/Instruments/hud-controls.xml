@@ -1,34 +1,24 @@
 <?xml version="1.0"?>
 
-<!-- F-15C backseat comms panel Richard Harrison rjh@zaretto.com;-->
+<!-- F-15C HUD instrument (canvas) Richard Harrison rjh@zaretto.com;-->
 
 <PropertyList>
 
-    <path>backseat-comms-panel.ac</path>
+    <path>hud-controls.ac</path>
 
-    <!-- Master Caution Button -->
-    <animation>
-        <object-name>bs_master-caution-button-on</object-name>
-        <type>material</type>
-        <ambient>
-            <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
-            <red>  1.000</red>
-            <green>1</green>
-            <blue> 1</blue>
-        </ambient>
-        <!--<diffuse>
-          <factor-prop>sim/model/f15/instrumentation/warnings/bs_master-caution</factor-prop>
-          <red>  1.000</red>
-          <green>1</green>
-          <blue> 1</blue>
-      </diffuse>-->
-        <emission>
-            <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
-            <red>  1.000</red>
-            <green>1</green>
-            <blue> 1</blue>
-        </emission>
-    </animation>
+ <!--   <effect>
+        <inherits-from>Effects/model-transparent</inherits-from>
+        <object-name>HUDImage1</object-name>
+        <object-name>HUDImage2</object-name>
+    </effect>
+-->
+    <effect>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15hud</inherits-from>
+        <object-name>HUDImage1</object-name>
+        <object-name>HUDImage2</object-name>
+        <object-name>HUDImageBevels</object-name>
+    </effect>
+
     <animation>
         <type>select</type>
         <object-name>sam-light-on</object-name>
@@ -73,6 +63,43 @@
         </condition>
     </animation>
 
+
+    <!-- Master Caution Button -->
+    <animation>
+        <object-name>master-caution-button-on</object-name>
+        <type>material</type>
+        <ambient>
+            <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </ambient>
+        <!--<diffuse>
+          <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+          <red>  1.000</red>
+          <green>1</green>
+          <blue> 1</blue>
+      </diffuse>-->
+        <emission>
+            <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <object-name>master-caution-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <interval-sec>0.1</interval-sec>
+            <binding>
+                <command>nasal</command>
+                <script>aircraft.master_caution_pressed()</script>
+            </binding>
+        </action>
+    </animation>
 
     <!-- transponder -->
     <animation>
@@ -136,7 +163,7 @@
                 <property>instrumentation/transponder/inputs/digit[3]</property>
                 <factor>1</factor>
                 <min>0</min>
-                <max>7</max>
+                <max>8</max>
                 <wrap>true</wrap>
             </binding>
         </action>
@@ -159,7 +186,7 @@
                 <property>instrumentation/transponder/inputs/digit[2]</property>
                 <factor>1</factor>
                 <min>0</min>
-                <max>7</max>
+                <max>8</max>
                 <wrap>true</wrap>
             </binding>
         </action>
@@ -182,7 +209,7 @@
                 <property>instrumentation/transponder/inputs/digit[1]</property>
                 <factor>1</factor>
                 <min>0</min>
-                <max>7</max>
+                <max>8</max>
                 <wrap>true</wrap>
             </binding>
         </action>
@@ -205,7 +232,7 @@
                 <property>instrumentation/transponder/inputs/digit[0]</property>
                 <factor>1</factor>
                 <min>0</min>
-                <max>7</max>
+                <max>8</max>
                 <wrap>true</wrap>
             </binding>
         </action>
@@ -215,7 +242,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-drum1</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>0.001</factor>
         <step>100</step>
         <scroll>0.5</scroll>
@@ -226,7 +253,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-drum2</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>0.01</factor>
         <step>10</step>
         <scroll>0.5</scroll>
@@ -237,7 +264,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-drum3</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>0.1</factor>
         <step>1</step>
         <axis>
@@ -247,7 +274,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-drum4</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>1</factor>
         <step>0.1</step>
         <axis>
@@ -257,7 +284,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-drum5</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>10</factor>
         <step>0.01</step>
         <axis>
@@ -267,17 +294,18 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-drum6</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>100</factor>
         <step>0.001</step>
         <axis>
             <y>-1</y>
         </axis>
     </animation>
+
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-chan-drum2</object-name>
-        <property>/instrumentation/comm[0]/preset-channel</property>
+        <property>instrumentation/comm[0]/preset-channel</property>
         <factor>0.1</factor>
         <step>1</step>
         <axis>
@@ -287,7 +315,72 @@
     <animation>
         <type>textranslate</type>
         <object-name>hud-freq-chan-drum1</object-name>
-        <property>/instrumentation/comm[0]/preset-channel</property>
+        <property>instrumentation/comm[0]/preset-channel</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    
+    <animation>
+        <type>knob</type>
+        <object-name>knob-freq-chan</object-name>
+        <property>instrumentation/comm[0]/preset-channel</property>
+        <factor>3.6</factor>
+        <axis>
+            <object-name>knob-freq-chan-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/comm[0]/preset-channel</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>99</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>hud-display-depr-knob</object-name>
+        <property>instrumentation/hud/rtcl-depr</property>
+        <factor>1</factor>
+        <axis>
+            <object-name>hud-display-depr-knob-axis</object-name>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/hud/rtcl-depr</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>360</max>
+                <wrap>true</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-display-depr100</object-name>
+        <property>instrumentation/hud/rtcl-depr</property>
+        <factor>0.001</factor>
+        <step>100</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-display-depr10</object-name>
+        <property>instrumentation/hud/rtcl-depr</property>
         <factor>0.01</factor>
         <step>10</step>
         <scroll>0.5</scroll>
@@ -296,6 +389,42 @@
         </axis>
     </animation>
 
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-display-depr0</object-name>
+        <property>instrumentation/hud/rtcl-depr</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-video-minutes-remain10</object-name>
+        <property>instrumentation/hud/video-minutes-remain</property>
+        <factor>0.01</factor>
+        <step>10</step>
+        <scroll>0.5</scroll>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>hud-video-minutes-remain0</object-name>
+        <property>instrumentation/hud/video-minutes-remain</property>
+        <factor>0.1</factor>
+        <step>1</step>
+        <axis>
+            <y>-1</y>
+        </axis>
+    </animation>
+    
     <!-- Comm: Min 118.0
                Max 137.0
                Inc 0.025
@@ -303,13 +432,13 @@
     <animation>
         <type>knob</type>
         <object-name>knob-freq-uhf1</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>0.01</factor>
         <step>10</step>
         <center>
-            <x-m>-4.1447</x-m>
+            <x-m>-5.5823</x-m>
             <y-m>-0.0248</y-m>
-            <z-m>1.2897</z-m>
+            <z-m>1.204</z-m>
         </center>
         <axis>
             <x>1</x>
@@ -320,7 +449,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+                <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
                 <factor>10</factor>
                 <min>118</min>
                 <max>137</max>
@@ -331,12 +460,12 @@
     <animation>
         <type>knob</type>
         <object-name>knob-freq-uhf2</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>1</factor>
         <center>
-            <x-m>-4.1447</x-m>
+            <x-m>-5.5824</x-m>
             <y-m>0.0123</y-m>
-            <z-m>1.2897</z-m>
+            <z-m>1.205</z-m>
         </center>
         <axis>
             <x>1</x>
@@ -347,7 +476,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+                <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
                 <factor>1</factor>
                 <min>118</min>
                 <max>137</max>
@@ -359,12 +488,12 @@
     <animation>
         <type>knob</type>
         <object-name>knob-freq-uhf3</object-name>
-        <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+        <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
         <factor>10</factor>
         <center>
-            <x-m>-4.1447</x-m>
+            <x-m>-5.5824</x-m>
             <y-m>0.0483</y-m>
-            <z-m>1.2897</z-m>
+            <z-m>1.205</z-m>
         </center>
         <axis>
             <x>1</x>
@@ -375,7 +504,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>/instrumentation/comm[0]/frequencies/selected-mhz</property>
+                <property>instrumentation/comm[0]/frequencies/selected-mhz</property>
                 <factor>0.025</factor>
                 <min>118</min>
                 <max>137</max>
@@ -391,9 +520,9 @@
         <offset-deg>180</offset-deg>
         <factor>260</factor>
         <center>
-            <x-m>-4.1394</x-m>
+            <x-m>-5.5771</x-m>
             <y-m>0.0886</y-m>
-            <z-m>1.3092</z-m>
+            <z-m>1.2236</z-m>
         </center>
         <axis>
             <x>-1</x>
@@ -440,8 +569,7 @@
     <effect>
         <name>f15panel-left</name>
         <inherits-from>Aircraft/F-15/Models/Effects/f15panel-left</inherits-from>
-        <object-name>hud-mode-panel</object-name>
-        <object-name>hud-freq-panel</object-name>
+        <object-name>panels</object-name>
     </effect>
     <effect>
         <name>f15panel-knob</name>
@@ -456,6 +584,7 @@
         <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
         <object-name>mount</object-name>
         <object-name>instrument</object-name>
+        <object-name>hud-glass-mount</object-name>
     </effect>
 
     <animation>
@@ -480,4 +609,75 @@
             <blue-prop>/controls/lighting/instrument-blue</blue-prop>
         </emission>
     </animation>
+    <animation>
+        <object-name>HUDImage1</object-name>
+        <object-name>HUDImage2</object-name>
+        <type>material</type>
+        <condition>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>sim/model/f15/controls/HUD/brightness</factor-prop>
+            <red>  1</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>hud-switch-sym</object-name>
+        <property>sim/model/f15/controls/HUD/sym-rej</property>
+        <factor>20</factor>
+        <center>
+            <x-m>-5.5978</x-m>
+            <y-m>-0.0212</y-m>
+            <z-m>1.1593</z-m>
+        </center>
+        <axis>
+            <y>1</y>
+        </axis>
+
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/HUD/sym-rej</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>knob</type>
+        <object-name>hud-display-brt-symbol</object-name>
+        <property>sim/model/f15/controls/HUD/brightness</property>
+        <factor>-110</factor>
+        <center>
+            <x-m>-5.6044</x-m>
+            <y-m>-0.0584</y-m>
+            <z-m>1.1193</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/HUD/brightness</property>
+                <factor>0.1</factor>
+                <min>0</min>
+                <max>1</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+
 </PropertyList>
