@@ -38,7 +38,7 @@ var RangeRadar2 = props.globals.getNode("instrumentation/radar/radar2-range");
 
 # Used by dual_control to set up the mappings for the pilot.
 var pilot_connect_copilot = func (copilot) {
-	print("######## pilot_connect_copilot() ########");
+	logprint(3, "######## pilot_connect_copilot() ########");
 	# Lock awg_9 controls for the pilot.
 	awg_9.pilot_lock = 1;
 	return [
@@ -71,7 +71,7 @@ var pilot_connect_copilot = func (copilot) {
 }
 
 var pilot_disconnect_copilot = func {
-	print("######## pilot_disconnect_copilot() ########");
+	logprint(3, "######## pilot_disconnect_copilot() ########");
 	# Unlock awg_9 controls for the pilot.
 	awg_9.pilot_lock = 0;
 }
@@ -81,7 +81,7 @@ var pilot_disconnect_copilot = func {
 
 # Used by dual_control to set up the mappings for the copilot.
 var copilot_connect_pilot = func (pilot) {
-	print("######## copilot_connect_pilot() ########");
+	logprint(3, "######## copilot_connect_pilot() ########");
 	# Initialize Nasal wrappers for copilot pick anaimations.
 	set_copilot_wrappers(pilot);
 
@@ -111,7 +111,7 @@ var copilot_connect_pilot = func (pilot) {
 }
 
 var copilot_disconnect_pilot = func {
-	print("######## copilot_disconnect_pilot() ########");
+	logprint(3, "######## copilot_disconnect_pilot() ########");
 }
 
 
