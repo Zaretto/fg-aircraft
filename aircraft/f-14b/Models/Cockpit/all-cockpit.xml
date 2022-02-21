@@ -3,6 +3,114 @@
     <path>all-cockpit.ac</path>
     <!--Merged from Aircraft/f-14b/Models/Cockpit/detail-inside-front.xml-->
     <!-- Détailled Cockpit Consoles and Panels -->
+    <animation>
+        <type>translate</type>
+        <object-name>rdr-elev-index</object-name>
+        <property>/controls/radar/elevation-deg</property>
+        <offset-m>-0.001</offset-m>
+        <factor>0.00065</factor>
+        <axis>
+           <x1-m> -4.17961 </x1-m>
+           <y1-m> -0.1092 </y1-m>
+           <z1-m> 0.17625 </z1-m>
+           <x2-m> -4.20207 </x2-m>
+           <y2-m> -0.1092 </y2-m>
+           <z2-m> 0.278391 </z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>rdr-elev-index.001</object-name>
+        <property>/instrumentation/radar/antennae-deg</property>
+        <offset-m>-0.001</offset-m>
+        <factor>0.00065</factor>
+        <axis>
+           <x1-m> -4.17961 </x1-m>
+           <y1-m> -0.1092 </y1-m>
+           <z1-m> 0.17625 </z1-m>
+           <x2-m> -4.20207 </x2-m>
+           <y2-m> -0.1092 </y2-m>
+           <z2-m> 0.278391 </z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rng-5-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>awg_9.RangeRadar2.setValue(5);if (awg_9.cockpitNotifier != nil) awg_9.cockpitNotifier.notify_value(awg_9.cockpitNotifier.set_radar_range, 5);</script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rng-10-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>awg_9.RangeRadar2.setValue(10);if (awg_9.cockpitNotifier != nil) awg_9.cockpitNotifier.notify_value(awg_9.cockpitNotifier.set_radar_range, 10);</script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rng-20-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>awg_9.RangeRadar2.setValue(20);if (awg_9.cockpitNotifier != nil) awg_9.cockpitNotifier.notify_value(awg_9.cockpitNotifier.set_radar_range, 20);</script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rng-50-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>awg_9.RangeRadar2.setValue(50);if (awg_9.cockpitNotifier != nil) awg_9.cockpitNotifier.notify_value(awg_9.cockpitNotifier.set_radar_range, 50);</script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rng-100-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>awg_9.RangeRadar2.setValue(100);if (awg_9.cockpitNotifier != nil) awg_9.cockpitNotifier.notify_value(awg_9.cockpitNotifier.set_radar_range, 100);</script>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>rng-200-button</object-name>
+        <action>
+            <button>0</button>
+            <repeatable>false</repeatable>
+            <binding>
+                <command>nasal</command>
+                <script>awg_9.RangeRadar2.setValue(200);if (awg_9.cockpitNotifier != nil) awg_9.cockpitNotifier.notify_value(awg_9.cockpitNotifier.set_radar_range, 200);</script>
+            </binding>
+        </action>
+    </animation>
     <name>Detail-Inside-Front</name>
     <animation>
         <type>pick</type>
@@ -1237,7 +1345,7 @@
                     </greater-than>
                 </not>
                 <less-than>
-                    <property>instrumentation/airspeed-indicator/indicated-mach</property>
+                    <property>/instrumentation/airspeed-indicator/indicated-mach</property>
                     <value>0.4</value>
                 </less-than>
             </or>
@@ -1766,7 +1874,7 @@
                     <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </equals>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>/instrumentation/altimeter/setting-stby</property>
             </or>
         </condition>
     </animation>
@@ -1774,7 +1882,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-1</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>10</factor>
         <offset>-0.01</offset>
         <axis>
@@ -1786,7 +1894,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-2</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>1</factor>
         <offset>-0.1</offset>
         <step>0.1</step>
@@ -1800,7 +1908,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-3</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -1814,7 +1922,7 @@
     <animation>
         <type>textranslate</type>
         <object-name>drum-inhg-4</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -1829,7 +1937,7 @@
     <animation>
         <type>knob</type>
         <object-name>barometric-pressure-knob</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0</factor>
         <axis>
             <object-name>barometric-pressure-knob-axis</object-name>
@@ -1837,7 +1945,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
+                <property>/instrumentation/altimeter/setting-inhg</property>
                 <factor>0.01</factor>
                 <min>27.90</min>
                 <max>31.40</max>
@@ -1848,7 +1956,7 @@
     <animation>
         <type>knob</type>
         <object-name>stby-reset-knob</object-name>
-        <property>instrumentation/altimeter/setting-stby</property>
+        <property>/instrumentation/altimeter/setting-stby</property>
         <factor>-90</factor>
         <axis>
             <object-name>stby-reset-knob-axis</object-name>
@@ -1856,7 +1964,7 @@
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>/instrumentation/altimeter/setting-stby</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -7030,6 +7138,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <inherits-from>Effects/model-transparent</inherits-from>
         <object-name>az-field-60</object-name>
         <object-name>az-field-120</object-name>
+        <object-name>az-field-left</object-name>
+        <object-name>az-field-right</object-name>
         <object-name>own-ac</object-name>
         <object-name>pulse-srch</object-name>
         <object-name>tws-auto</object-name>
@@ -7266,7 +7376,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>3</value>
             </equals>
         </condition>
@@ -7280,7 +7390,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>6</value>
             </equals>
         </condition>
@@ -7291,7 +7401,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
+                <value>10000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
@@ -7301,11 +7411,85 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     </animation>
     <animation>
         <type>select</type>
-        <object-name>az-field-60</object-name>
+        <object-name>az-field-right</object-name>
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+            <equals>
+                <property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
+                <value>0</value>
+            </equals>
+            <property>sim/model/f-14b/controls/HSD/on-off</property>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>az-field-left</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+            <equals>
+                <property>sim/model/f-14b/controls/pilots-displays/hsd-mode-nav</property>
+                <value>0</value>
+            </equals>
+            <property>sim/model/f-14b/controls/HSD/on-off</property>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>az-field-left</object-name>
+        <property>instrumentation/radar/az-field-left</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m> -5.74036 </x1-m>
+            <y1-m> 0.000167 </y1-m>
+            <z1-m> -0.307788 </z1-m>
+            <x2-m> -5.61315 </x2-m>
+            <y2-m> 0.000167 </y2-m>
+            <z2-m> -0.242778 </z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>az-field-right</object-name>
+        <property>instrumentation/radar/az-field-right</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m> -5.74036 </x1-m>
+            <y1-m> 0.000167 </y1-m>
+            <z1-m> -0.307788 </z1-m>
+            <x2-m> -5.61315 </x2-m>
+            <y2-m> 0.000167 </y2-m>
+            <z2-m> -0.242778 </z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>az-field-60</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>10000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
@@ -7339,7 +7523,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <object-name>hr_miles-drum-0</object-name>
         <condition>
             <less-than>
-                <property>instrumentation/radar/radar2-range</property>
+                <property>/instrumentation/radar/radar2-range-actual</property>
                 <value>3</value>
             </less-than>
         </condition>
@@ -7347,7 +7531,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>hr_miles-drum-1</object-name>
-        <property>instrumentation/radar/radar2-range</property>
+        <property>/instrumentation/radar/radar2-range-actual</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -7359,7 +7543,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>hr_miles-drum-2</object-name>
-        <property>instrumentation/radar/radar2-range</property>
+        <property>/instrumentation/radar/radar2-range-actual</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -7371,7 +7555,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>hr_miles-drum-3</object-name>
-        <property>instrumentation/radar/radar2-range</property>
+        <property>/instrumentation/radar/radar2-range-actual</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -7474,6 +7658,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP1/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[0]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -7507,6 +7695,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP1/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP1/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP1/carrier" />
                 <value>false</value>
@@ -7687,6 +7879,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP2/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[1]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -7720,6 +7916,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP2/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP2/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP2/carrier" />
                 <value>false</value>
@@ -7900,6 +8100,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP3/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[2]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -7933,6 +8137,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP3/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP3/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP3/carrier" />
                 <value>false</value>
@@ -8113,6 +8321,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP4/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[3]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -8146,6 +8358,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP4/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP4/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP4/carrier" />
                 <value>false</value>
@@ -8326,6 +8542,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP5/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[4]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -8359,6 +8579,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP5/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP5/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP5/carrier" />
                 <value>false</value>
@@ -8539,6 +8763,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP6/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[5]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -8572,6 +8800,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP6/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP6/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP6/carrier" />
                 <value>false</value>
@@ -8752,6 +8984,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP7/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[6]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -8785,6 +9021,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP7/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP7/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP7/carrier" />
                 <value>false</value>
@@ -8965,6 +9205,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP8/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[7]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -8998,6 +9242,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP8/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP8/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP8/carrier" />
                 <value>false</value>
@@ -9178,6 +9426,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP9/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[8]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -9211,6 +9463,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP9/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP9/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP9/carrier" />
                 <value>false</value>
@@ -9391,6 +9647,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP10/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[9]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -9424,6 +9684,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP10/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP10/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP10/carrier" />
                 <value>false</value>
@@ -9604,6 +9868,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP11/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[10]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -9637,6 +9905,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP11/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP11/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP11/carrier" />
                 <value>false</value>
@@ -9817,6 +10089,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP12/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[11]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -9850,6 +10126,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP12/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP12/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP12/carrier" />
                 <value>false</value>
@@ -10030,6 +10310,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP13/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[12]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -10063,6 +10347,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP13/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP13/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP13/carrier" />
                 <value>false</value>
@@ -10243,6 +10531,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP14/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[13]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -10276,6 +10568,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP14/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP14/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP14/carrier" />
                 <value>false</value>
@@ -10456,6 +10752,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP15/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[14]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -10489,6 +10789,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP15/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP15/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP15/carrier" />
                 <value>false</value>
@@ -10669,6 +10973,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP16/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[15]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -10702,6 +11010,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP16/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP16/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP16/carrier" />
                 <value>false</value>
@@ -10882,6 +11194,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP17/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[16]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -10915,6 +11231,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP17/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP17/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP17/carrier" />
                 <value>false</value>
@@ -11095,6 +11415,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP18/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[17]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -11128,6 +11452,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP18/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP18/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP18/carrier" />
                 <value>false</value>
@@ -11308,6 +11636,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP19/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[18]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -11341,6 +11673,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../MP19/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../MP19/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../MP19/carrier" />
                 <value>false</value>
@@ -14780,6 +15116,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <!-- lighting -->
     <animation>
         <object-name>hr_tid</object-name>
+        <object-name>az-field-left</object-name>
+        <object-name>az-field-right</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -19451,7 +19789,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
                 <value>0</value>
             </greater-than>
-            <property>sim/model/f-14b/instrumentation/radar-awg-9/ant-trk-light</property>
+            <property>/sim/model/f-14b/instrumentation/radar-awg-9/ant-trk-light</property>
         </condition>
     </animation>
     <animation>
@@ -19582,12 +19920,12 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>2</value>
             </equals>
         </condition>
     </animation>
-    <!-- <animation>
+    <animation>
 		<name>pd-stt</name>
 		<type>pick</type>
 		<visible>true</visible>
@@ -19597,10 +19935,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel("pd-stt")</script>
+				<script>if (awg_9.awg9Radar.getPriorityTarget() != nil) awg_9.wcs_mode_sel(2); else print("Nothing to lock");</script>
 			</binding>
 		</action>
-	</animation> -->
+	</animation>
     <animation>
         <type>select</type>
         <object-name>pulse-stt-light-on</object-name>
@@ -19610,12 +19948,12 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>1</value>
             </equals>
         </condition>
     </animation>
-    <!-- <animation>
+    <animation>
 		<name>pulse-stt</name>
 		<type>pick</type>
 		<visible>true</visible>
@@ -19625,10 +19963,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel("pulse-stt")</script>
+				<script>if (awg_9.awg9Radar.getPriorityTarget() != nil) awg_9.wcs_mode_sel(1); else print("Nothing to lock");</script>
 			</binding>
 		</action>
-	</animation> -->
+	</animation>
     <animation>
         <type>select</type>
         <object-name>pd-srch-light-on</object-name>
@@ -19638,12 +19976,12 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
-                <value>1</value>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <value>4</value>
             </equals>
         </condition>
     </animation>
-    <!-- <animation>
+    <animation>
 		<name>pd-srch</name>
 		<type>pick</type>
 		<visible>true</visible>
@@ -19653,10 +19991,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel("pd-srch")</script>
+				<script>awg_9.wcs_mode_sel(4)</script>
 			</binding>
 		</action>
-	</animation> -->
+	</animation>
     <animation>
         <type>select</type>
         <object-name>rws-light-on</object-name>
@@ -19666,12 +20004,12 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>5</value>
             </equals>
         </condition>
     </animation>
-    <!-- <animation>
+    <animation>
 		<name>rws</name>
 		<type>pick</type>
 		<visible>true</visible>
@@ -19681,10 +20019,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel("rws")</script>
+				<script>awg_9.wcs_mode_sel(5)</script>
 			</binding>
 		</action>
-	</animation> -->
+	</animation>
     <animation>
         <type>select</type>
         <object-name>tws-auto-light-on</object-name>
@@ -19694,7 +20032,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>6</value>
             </equals>
         </condition>
@@ -19713,7 +20051,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
             <binding>
                 <command>nasal</command>
-                <script>f14.notify_prop(f14.set_radar_mode, "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode");</script>
+                <script>#f14.notify_prop(f14.set_radar_mode, "/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode");</script>
             </binding>
         </action>
     </animation>
@@ -19726,12 +20064,12 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>7</value>
             </equals>
         </condition>
     </animation>
-    <!-- <animation>
+    <animation>
 		<name>tws-man</name>
 		<type>pick</type>
 		<visible>true</visible>
@@ -19741,10 +20079,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
 			<repeatable>false</repeatable>
 			<binding>
 				<command>nasal</command>
-				<script>awg_9.wcs_mode_sel("tws-man")</script>
+				<script>awg_9.wcs_mode_sel(7)</script>
 			</binding>
 		</action>
-	</animation> -->
+	</animation>
     <animation>
         <type>select</type>
         <object-name>pulse-srch-light-on</object-name>
@@ -19754,7 +20092,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>3</value>
             </equals>
         </condition>
@@ -19773,19 +20111,19 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
             <binding>
                 <command>nasal</command>
-                <script>f14.notify_prop(f14.set_radar_mode, "sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode");</script>
+                <script>#f14.notify_prop(f14.set_radar_mode, "/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode");</script>
             </binding>
         </action>
     </animation>
     <animation>
         <type>knob</type>
         <object-name>radar-brightness-knob</object-name>
-        <property>sim/model/f-14b/controls/radar-awg-9/brightness</property>
+        <property>/sim/model/f-14b/controls/radar-awg-9/brightness</property>
         <factor>180</factor>
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>sim/model/f-14b/controls/radar-awg-9/brightness</property>
+                <property>/sim/model/f-14b/controls/radar-awg-9/brightness</property>
                 <factor>0.1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -20036,9 +20374,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP1/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP1/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP1/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP2>
         <!--Group ddd_MP2 -->
@@ -20092,9 +20438,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP2/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP2/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP2/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP3>
         <!--Group ddd_MP3 -->
@@ -20148,9 +20502,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP3/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP3/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP3/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP4>
         <!--Group ddd_MP4 -->
@@ -20204,9 +20566,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP4/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP4/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP4/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP5>
         <!--Group ddd_MP5 -->
@@ -20260,9 +20630,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP5/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP5/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP5/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP6>
         <!--Group ddd_MP6 -->
@@ -20316,9 +20694,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP6/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP6/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP6/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP7>
         <!--Group ddd_MP7 -->
@@ -20372,9 +20758,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP7/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP7/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP7/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP8>
         <!--Group ddd_MP8 -->
@@ -20428,9 +20822,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP8/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP8/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP8/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP9>
         <!--Group ddd_MP9 -->
@@ -20484,9 +20886,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP9/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP9/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP9/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP10>
         <!--Group ddd_MP10 -->
@@ -20540,9 +20950,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP10/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP10/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP10/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP11>
         <!--Group ddd_MP11 -->
@@ -20596,9 +21014,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP11/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP11/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP11/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP12>
         <!--Group ddd_MP12 -->
@@ -20652,9 +21078,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP12/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP12/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP12/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP13>
         <!--Group ddd_MP13 -->
@@ -20708,9 +21142,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP13/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP13/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP13/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP14>
         <!--Group ddd_MP14 -->
@@ -20764,9 +21206,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP14/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP14/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP14/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP15>
         <!--Group ddd_MP15 -->
@@ -20820,9 +21270,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP15/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP15/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP15/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP16>
         <!--Group ddd_MP16 -->
@@ -20876,9 +21334,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP16/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP16/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP16/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP17>
         <!--Group ddd_MP17 -->
@@ -20932,9 +21398,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP17/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP17/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP17/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP18>
         <!--Group ddd_MP18 -->
@@ -20988,9 +21462,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP18/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP18/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP18/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_MP19>
         <!--Group ddd_MP19 -->
@@ -21044,9 +21526,17 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <green>1</green>
             <blue>0.0</blue>
         </emission>
-        <transparency>
+        <!--transparency>
             <alpha-prop alias="../../../ddd_MP19/ddd-echo-fading" />
-        </transparency>
+        </transparency-->
+    </animation>
+    <animation>
+        <object-name alias="../../ddd_MP19/object-name">dr_</object-name>
+        <type>blend</type>
+        <property alias="../../ddd_MP19/ddd-echo-fading" />
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
     </animation>
     <ddd_TK1>
         <!--Group ddd_TK1 -->
@@ -22522,7 +23012,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>asi-rio-mach-scale</object-name>
-        <property>instrumentation/airspeed-indicator/indicated-mach</property>
+        <property>/instrumentation/airspeed-indicator/indicated-mach</property>
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -22923,7 +23413,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                     <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                     <value>0</value>
                 </equals>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>/instrumentation/altimeter/setting-stby</property>
             </or>
         </condition>
     </animation>
@@ -22931,7 +23421,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>fa_drum-inhg-1</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>10</factor>
         <offset>-0.01</offset>
         <axis>
@@ -22943,7 +23433,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>fa_drum-inhg-2</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>1</factor>
         <offset>-0.1</offset>
         <step>0.1</step>
@@ -22957,7 +23447,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>fa_drum-inhg-3</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -22971,7 +23461,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>fa_drum-inhg-4</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -22986,7 +23476,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>knob</type>
         <object-name>fa_barometric-pressure-knob</object-name>
-        <property>instrumentation/altimeter/setting-inhg</property>
+        <property>/instrumentation/altimeter/setting-inhg</property>
         <factor>0</factor>
         <axis>
             <object-name>fa_barometric-pressure-knob-axis</object-name>
@@ -22994,7 +23484,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-inhg</property>
+                <property>/instrumentation/altimeter/setting-inhg</property>
                 <factor>0.01</factor>
                 <min>27.90</min>
                 <max>31.40</max>
@@ -23005,7 +23495,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>knob</type>
         <object-name>fa_stby-reset-knob</object-name>
-        <property>instrumentation/altimeter/setting-stby</property>
+        <property>/instrumentation/altimeter/setting-stby</property>
         <factor>-90</factor>
         <axis>
             <object-name>fa_stby-reset-knob-axis</object-name>
@@ -23013,7 +23503,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>instrumentation/altimeter/setting-stby</property>
+                <property>/instrumentation/altimeter/setting-stby</property>
                 <factor>1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -23116,7 +23606,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-1-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[1]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[1]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-1-sw-axis</object-name>
@@ -23141,7 +23631,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-2-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[2]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[2]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-2-sw-axis</object-name>
@@ -23166,7 +23656,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-3-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[3]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[3]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-3-sw-axis</object-name>
@@ -23191,7 +23681,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-4-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[4]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[4]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-4-sw-axis</object-name>
@@ -23216,7 +23706,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-5-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[5]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[5]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-5-sw-axis</object-name>
@@ -23241,7 +23731,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-6-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[6]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[6]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-6-sw-axis</object-name>
@@ -23266,7 +23756,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-7-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[7]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[7]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-7-sw-axis</object-name>
@@ -23291,7 +23781,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>sta-8-sw</object-name>
-        <property>sim/model/f-14b/controls/armament/station-selector[8]</property>
+        <property>/sim/model/f-14b/controls/armament/station-selector[8]</property>
         <factor>30</factor>
         <axis>
             <object-name>sta-8-sw-axis</object-name>
@@ -23946,12 +24436,12 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>knob</type>
         <object-name>TID-brightness-knob</object-name>
-        <property>sim/model/f-14b/controls/TID/brightness</property>
+        <property>/sim/model/f-14b/controls/TID/brightness</property>
         <factor>180</factor>
         <action>
             <binding>
                 <command>property-adjust</command>
-                <property>sim/model/f-14b/controls/TID/brightness</property>
+                <property>/sim/model/f-14b/controls/TID/brightness</property>
                 <factor>0.1</factor>
                 <min>0</min>
                 <max>1</max>
@@ -24103,6 +24593,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <object-name>rtr_center-cross</object-name>
         <object-name>rtr_az-field-60</object-name>
         <object-name>rtr_az-field-120</object-name>
+        <object-name>rtr_az-field-left</object-name>
+        <object-name>rtr_az-field-right</object-name>
         <object-name>rtr_own-ac</object-name>
         <object-name>rtr_pulse-srch</object-name>
         <object-name>rtr_tws-auto</object-name>
@@ -24272,7 +24764,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>3</value>
             </equals>
         </condition>
@@ -24286,7 +24778,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <value>0</value>
             </greater-than>
             <equals>
-                <property>sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
+                <property>/sim/model/f-14b/instrumentation/radar-awg-9/wcs-mode</property>
                 <value>6</value>
             </equals>
         </condition>
@@ -24297,7 +24789,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
-                <value>0</value>
+                <value>100000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
@@ -24307,11 +24799,67 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     </animation>
     <animation>
         <type>select</type>
-        <object-name>rtr_az-field-60</object-name>
+        <object-name>rtr_az-field-right</object-name>
         <condition>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
                 <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>rtr_az-field-left</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <equals>
+                <property>instrumentation/radar/az-field</property>
+                <value>1</value>
+            </equals>
+        </condition>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>rtr_az-field-left</object-name>
+        <property>instrumentation/radar/az-field-left</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m>-4.14342</x1-m>
+            <y1-m>0.000167</y1-m>
+            <z1-m>-0.097431</z1-m>
+            <x2-m>-4.09252</x2-m>
+            <y2-m>0.000167</y2-m>
+            <z2-m>-0.076381</z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>rtr_az-field-right</object-name>
+        <property>instrumentation/radar/az-field-right</property>
+        <factor>-1</factor>
+        <axis>
+            <x1-m>-4.14342</x1-m>
+            <y1-m>0.000167</y1-m>
+            <z1-m>-0.097431</z1-m>
+            <x2-m>-4.09252</x2-m>
+            <y2-m>0.000167</y2-m>
+            <z2-m>-0.076381</z2-m>
+        </axis>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>rtr_az-field-60</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>10000</value>
             </greater-than>
             <equals>
                 <property>instrumentation/radar/az-field</property>
@@ -24351,7 +24899,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <object-name>rtr_miles-drum-0</object-name>
         <condition>
             <less-than>
-                <property>instrumentation/radar/radar2-range</property>
+                <property>/instrumentation/radar/radar2-range-actual</property>
                 <value>3</value>
             </less-than>
         </condition>
@@ -24359,7 +24907,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>rtr_miles-drum-1</object-name>
-        <property>instrumentation/radar/radar2-range</property>
+        <property>/instrumentation/radar/radar2-range-actual</property>
         <factor>0.1</factor>
         <offset>-1</offset>
         <step>1</step>
@@ -24371,7 +24919,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>rtr_miles-drum-2</object-name>
-        <property>instrumentation/radar/radar2-range</property>
+        <property>/instrumentation/radar/radar2-range-actual</property>
         <factor>0.01</factor>
         <offset>-10</offset>
         <step>10</step>
@@ -24383,7 +24931,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>textranslate</type>
         <object-name>rtr_miles-drum-3</object-name>
-        <property>instrumentation/radar/radar2-range</property>
+        <property>/instrumentation/radar/radar2-range-actual</property>
         <factor>0.001</factor>
         <offset>-100</offset>
         <step>100</step>
@@ -24487,6 +25035,11 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP1/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <!--property alias="../../rtr_MP1/true-heading-deg" /--> <!-- could not get this to work -->
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[0]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -24520,6 +25073,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP1/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP1/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP1/carrier" />
                 <value>false</value>
@@ -24702,6 +25259,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP2/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[1]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -24735,6 +25296,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP2/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP2/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP2/carrier" />
                 <value>false</value>
@@ -24917,6 +25482,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP3/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[2]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -24950,6 +25519,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP3/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP3/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP3/carrier" />
                 <value>false</value>
@@ -25132,6 +25705,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP4/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[3]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -25165,6 +25742,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP4/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP4/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP4/carrier" />
                 <value>false</value>
@@ -25347,6 +25928,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP5/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[4]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -25380,6 +25965,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP5/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP5/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP5/carrier" />
                 <value>false</value>
@@ -25562,6 +26151,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP6/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[5]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -25595,6 +26188,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP6/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP6/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP6/carrier" />
                 <value>false</value>
@@ -25777,6 +26374,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP7/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[6]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -25810,6 +26411,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP7/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP7/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP7/carrier" />
                 <value>false</value>
@@ -25992,6 +26597,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP8/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[7]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -26025,6 +26634,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP8/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP8/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP8/carrier" />
                 <value>false</value>
@@ -26207,6 +26820,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP9/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[8]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -26240,6 +26857,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP9/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP9/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP9/carrier" />
                 <value>false</value>
@@ -26422,6 +27043,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP10/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[9]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -26455,6 +27080,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP10/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP10/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP10/carrier" />
                 <value>false</value>
@@ -26637,6 +27266,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP11/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[10]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -26670,6 +27303,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP11/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP11/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP11/carrier" />
                 <value>false</value>
@@ -26852,6 +27489,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP12/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[11]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -26885,6 +27526,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP12/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP12/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP12/carrier" />
                 <value>false</value>
@@ -27067,6 +27712,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP13/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[12]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -27100,6 +27749,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP13/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP13/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP13/carrier" />
                 <value>false</value>
@@ -27282,6 +27935,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP14/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[13]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -27315,6 +27972,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP14/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP14/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP14/carrier" />
                 <value>false</value>
@@ -27497,6 +28158,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP15/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[14]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -27530,6 +28195,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP15/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP15/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP15/carrier" />
                 <value>false</value>
@@ -27712,6 +28381,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP16/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[15]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -27745,6 +28418,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP16/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP16/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP16/carrier" />
                 <value>false</value>
@@ -27927,6 +28604,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP17/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[16]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -27960,6 +28641,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP17/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP17/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP17/carrier" />
                 <value>false</value>
@@ -28142,6 +28827,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP18/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[17]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -28175,6 +28864,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP18/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP18/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP18/carrier" />
                 <value>false</value>
@@ -28353,10 +29046,14 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <type>select</type>
         <object-name alias="../../rtr_MP19/hdg-name" />
         <condition>
-            <equals>
+            <equals> 
                 <property alias="../../../../rtr_MP19/carrier" />
                 <value>false</value>
             </equals>
+            <greater-than>
+                <property>sim/model/f-14b/instrumentation/radar-awg-9/targets/multiplayer[18]/true-heading-deg</property>
+                <value>-1</value>
+            </greater-than>
         </condition>
     </animation>
     <animation>
@@ -28390,6 +29087,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <property alias="../../../../rtr_MP19/rounded-alt-ft" />
                 <value>10</value>
             </less-than>
+            <greater-than>
+                <property alias="../../../../rtr_MP19/rounded-alt-ft" />
+                <value>-1000</value>
+            </greater-than>
             <equals>
                 <property alias="../../../../rtr_MP19/carrier" />
                 <value>false</value>
@@ -31866,6 +32567,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <!-- lighting -->
     <animation>
         <object-name>rtr_tid</object-name>
+        <object-name>rtr_az-field-left</object-name>
+        <object-name>rtr_az-field-right</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -32659,7 +33362,16 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>re_tid</object-name>
-        <property>orientation/heading-magnetic-deg</property>
+        <property>/orientation/heading-magnetic-deg</property>
+        <axis>
+            <object-name>h_compass-rose-axis</object-name>
+        </axis>
+    </animation>
+    <animation>
+        <type>rotate</type>
+        <object-name>re_ecm-bkg</object-name>
+        <factor>0</factor>
+        <offset-deg>180</offset-deg>
         <axis>
             <object-name>h_compass-rose-axis</object-name>
         </axis>
@@ -33194,7 +33906,11 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <interval-sec>0.05</interval-sec>
             <binding>
                 <command>nasal</command>
-                <script>f14_instruments.select_key_ecm_nav();</script>
+                <script>if (!awg_9.we_are_bs) f14_instruments.select_key_ecm_nav();</script>
+            </binding>
+            <binding>
+                <command>nasal</command>
+                <script>if (awg_9.we_are_bs) BS_instruments.select_ecm_nav();</script>
             </binding>
         </action>
     </animation>

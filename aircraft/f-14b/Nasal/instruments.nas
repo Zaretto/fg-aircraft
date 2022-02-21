@@ -648,7 +648,7 @@ var instruments_exec = {
             }
         } else {
             # odd frame
-            awg_9.hud_nearest_tgt();
+            awg_9.hud.hud_nearest_tgt();
             instruments_data_export();
             if ( ArmSysRunning.getBoolValue() ) {
                 f14.armament_update();
@@ -872,8 +872,8 @@ return;
 	ticker.setDoubleValue(0);
 	local_mag_deviation();
 	tacan_switch_init();
-	radardist.init();
-	awg_9.init();
+	#radardist.init();
+	#awg_9.init();
 	an_arc_182v.init();
 	an_arc_159v1.init();
     f14.set_flood_lighting_colour();
@@ -883,6 +883,8 @@ return;
 		aircraft.data.add(f_tc);
 	}
 	setprop("f14/done",0);#reset ejection seat
+	view.setViewByIndex(0);
+	setprop("sim/view[115]/enabled", 0);
     common_init();
 }
 

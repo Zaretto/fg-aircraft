@@ -83,7 +83,7 @@ var weapons_init = func() {
 	print("Initializing F-14B weapons system");
 	
 	SwTempTimeLeft.setValue(7200);
-	ArmSwitch.setValue(1);
+	ArmSwitch.setValue(pylons.ARM_OFF);
 	ArmLever.setBoolValue(0);
 	system_stop();
 	SysRunning.setBoolValue(0);
@@ -172,7 +172,7 @@ var armament_update2 = func {
 	var pWeight = 0;
 	for (var i = 0;i<10;i+=1) {
 		setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/type", getprop("payload/weight["~i~"]/selected"));
-		if (ArmSwitch.getValue() != 2) {
+		if (ArmSwitch.getValue() == pylons.ARM_OFF) {
 			setprop("sim/model/f-14b/systems/external-loads/station["~i~"]/display",0);
 		}
 		if (i != 2 and i != 7) {#TODO: run less often
@@ -196,8 +196,6 @@ var armament_update2 = func {
 		# 30 seconds for the missiles to be cooled.
 		SwTempTime.setValue(math.max(0, SwTempTime.getValue() - 0.1));
 	}
-	# set internal master-arm.
-	setprop("controls/armament/master-arm",ArmSwitch.getValue()==2);
 	
 	# manage smoke
     if (SmokeCmd.getValue() and (SmokeMountedR.getValue() or SmokeMountedL.getValue())) {
@@ -231,7 +229,7 @@ var getDLZ = func {
 }
 
 var setCockpitLights = func {
-	if (ArmSwitch.getValue() > 1 and pylons.fcs.isLock()) {
+	if (ArmSwitch.getValue() != pylons.ARM_OFF and pylons.fcs.isLock()) {
 		setprop("sim/model/f-14b/systems/armament/lock-light", 1);
 	} else {
 		setprop("sim/model/f-14b/systems/armament/lock-light", 0);
@@ -250,7 +248,7 @@ var setCockpitLights = func {
 
 var update_gun_ready = func() {
 	var ready = 0;
-	if ( ArmSwitch.getValue() == 2 and GunCount.getValue() > 0 and getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>=20 and getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1")>=70 and getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure") and getprop("payload/armament/fire-control/serviceable")) {
+	if ( ArmSwitch.getValue() != pylons.ARM_OFF and GunCount.getValue() > 0 and getprop("fdm/jsbsim/systems/electrics/dc-main-bus")>=20 and getprop("fdm/jsbsim/systems/electrics/ac-essential-bus1")>=70 and getprop("fdm/jsbsim/systems/hydraulics/flight-system-pressure") and getprop("payload/armament/fire-control/serviceable")) {
 		ready = 1;
 	}
 	GunReady.setBoolValue(ready);
@@ -282,12 +280,12 @@ var system_stop = func {
 var master_arm_lever_toggle = func {
 	var master_arm_lever = ArmLever.getBoolValue(); # 0 = Closed, 1 = Open.
 	var master_arm_switch = ArmSwitch.getValue();
-	if ( master_arm_lever and master_arm_switch > 1 ) {
-		ArmSwitch.setValue(1);
+	if ( master_arm_lever and master_arm_switch == pylons.ARM_ARM ) {
+		ArmSwitch.setValue(pylons.ARM_OFF);
 	}
 	ArmLever.setBoolValue( ! master_arm_lever );
-	if (master_arm_switch == 2) {
-		ArmSwitch.setValue(1);
+	if (master_arm_switch == pylons.ARM_ARM) {
+		ArmSwitch.setValue(pylons.ARM_OFF);
 		system_stop();
 	}
 }
@@ -296,17 +294,18 @@ var master_arm_switch = func(a) {
 	var master_arm_lever = ArmLever.getBoolValue();
 	var master_arm_switch = ArmSwitch.getValue(); # 2 = On, 1 = Off, 0 = training (not operational yet).
 	if (a == 1) {
-		if (master_arm_switch == 0) {
-			ArmSwitch.setValue(1);
-		} elsif (master_arm_switch == 1 and master_arm_lever) {
-			ArmSwitch.setValue(2);
+		if (master_arm_switch == pylons.ARM_SIM) {
+			ArmSwitch.setValue(pylons.ARM_OFF);
+		} elsif (master_arm_switch == pylons.ARM_OFF and master_arm_lever) {
+			ArmSwitch.setValue(pylons.ARM_ARM);
 			system_start();
 		}
 	} else {
-		if (master_arm_switch == 1) {
-			ArmSwitch.setDoubleValue(0);
-		} elsif (master_arm_switch == 2) {
-			ArmSwitch.setValue(1);
+		if (master_arm_switch == pylons.ARM_OFF) {
+			ArmSwitch.setValue(pylons.ARM_SIM);
+			system_start();
+		} elsif (master_arm_switch == pylons.ARM_ARM) {
+			ArmSwitch.setValue(pylons.ARM_OFF);
 			system_stop();
 		}
 	}
@@ -319,17 +318,17 @@ var master_arm_cycle = func() {
 	var master_arm_switch = ArmSwitch.getValue();
 	if (master_arm_switch == 0) {
 		# Training --> Off.
-		ArmSwitch.setValue(1);
+		ArmSwitch.setValue(pylons.ARM_OFF);
 		ArmLever.setBoolValue(0);
 	} elsif (master_arm_switch == 1) {
 		# Off --> 0n.
-		ArmSwitch.setValue(2);
+		ArmSwitch.setValue(pylons.ARM_ARM);
 		ArmLever.setBoolValue(1);
 		system_start();
 		SysRunning.setBoolValue(1);
 	} elsif (master_arm_switch == 2)  {
 		# Training mode (not operational yet).
-		ArmSwitch.setValue(0);
+		ArmSwitch.setValue(pylons.ARM_SIM);
 		ArmLever.setBoolValue(0);
 		system_stop();
 		SysRunning.setBoolValue(0);
