@@ -100,7 +100,7 @@ var TEWSDisplay = {
         obj.TEWSsvg = obj.canvas.createGroup();
  
         # Parse an SVG file and add the parsed elements to the given group
-        logprint(3, "TEWS : Load SVG ",canvas.parsesvg(obj.TEWSsvg, svgname));
+        canvas.parsesvg(obj.TEWSsvg, svgname);
         #obj.TEWSsvg.setTranslation (-20.0, 37.0);
         #logprint(3, "TEWS INIT");
         obj.tews_on = 1;

@@ -100,7 +100,7 @@ notifications.frameNotification.curT = 0;
 var execTimer = maketimer(cur_frame_inc, rtExec_loop);
 execTimer.simulatedTime = 1;
 setlistener("/sim/signals/fdm-initialized", func {
-print("M_exec: starting");
+logprint(2,"M_exec: starting");
 execTimer.start()
 });
 #execTimer.start();
