@@ -60,13 +60,11 @@ DC Main Bus 28 V DC
     <switch name="systems/electrics/egenerator-kva">
           <default value="0"/>
           <test  logic="AND" value="5">
-            systems/hydraulics/combined-system-psi ge 2100
+            systems/hydraulics/emerg-gen ne 0
             systems/electrics/emerg-generator-status eq 1
-            systems/electrics/lgenerator-kva lt 20
-            systems/electrics/rgenerator-kva lt 20
           </test>
           <test  logic="AND" value="1">
-            systems/hydraulics/combined-system-psi ge 1100
+            propulsion/jfs-running ne 0
             systems/electrics/emerg-generator-status eq 1
             systems/electrics/lgenerator-kva lt 20
             systems/electrics/rgenerator-kva lt 20
