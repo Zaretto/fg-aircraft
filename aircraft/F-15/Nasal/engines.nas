@@ -360,18 +360,20 @@ setlistener("sim/model/f15/controls/electrics/jfs-start-handle", func {
 
             if (!jfs_starting)
             {
-                if  (getprop("fdm/jsbsim/systems/hydraulics/util-system-accumulator-psi") > 500)
+                if  (getprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-psi") > 500)
                 {
                     jfs_starting = 1;
                     jfs_start.setValue(10);
                     startupTimer.restart(jfsStartupTime);
-                    setprop("fdm/jsbsim/systems/hydraulics/jfs-bleed", 100); # psi/sec
+                    setprop("fdm/jsbsim/systems/hydraulics/jfs-bleed", 56); # psi/sec (estimated)
                     logprint(2, "Start JFS");
                 }
                 else
-                    setprop("/sim/messages/pilot", "No util hydraulic pressure cannot start JFS");
+                    setprop("/sim/messages/pilot", "JFS accumulator needs to be recharged - cannot start JFS");
 
             }
+            else
+                logprint(3, "JFS cannot start because already starting");
         }
         else
         {

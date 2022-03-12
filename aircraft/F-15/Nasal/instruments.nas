@@ -297,9 +297,9 @@ var common_init = func
 
     #
     # this is just to ensure that we start with pressure in the util hyds
-    setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",-500);
+    setprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-preload-input",-500);
     settimer(func {
-        setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); 
+        setprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-preload-input",0); 
     }, 4);
     if (getprop("fdm/jsbsim/position/h-agl-ft") != nil) {
         if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) {

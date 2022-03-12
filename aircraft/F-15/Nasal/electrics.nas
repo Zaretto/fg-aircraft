@@ -340,7 +340,7 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-oxygen",0);
         }
     }
-    if  (getprop("fdm/jsbsim/systems/hydraulics/util-system-accumulator-psi") < 500)
+    if  (getprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-psi") < 500)
     {
         if (!getprop("sim/model/f15/lights/ca-jfs-low"))
         {
