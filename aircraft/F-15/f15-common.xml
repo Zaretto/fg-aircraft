@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- F-15 All Variants
    | Richard Harrison: released 2015-06-29 : rjh@zaretto.com
-   |   
+   |
    | Authors/Contributions:
    | Richard Harrison; flight and systems models. Cockpit model and operation. Revisions to external 3d model (engines, ramps, animations, speedbrake). Sound. Canvas HUD, MPCD, VSD, TEWS. Revisions to xii files for weapons, radar, etc.
    |                   sole developer of original version (2014->2015)
@@ -58,17 +58,17 @@
                 <ptc-nz-accelerometer-limit>1</ptc-nz-accelerometer-limit>
                 <ptc-p-gain>0.4</ptc-p-gain>
               </cas>
-          
+
               <fcs>
                 <aim-fitted>0</aim-fitted>
                 <flap-cmd-sum />
                 <hook-engage />
                 <steer-maneuver>0</steer-maneuver>
-          
+
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
                 <rudder-deadzone alias="/autopilot/settings/rudder-deadzone"/>
-                
+
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
@@ -81,7 +81,7 @@
                 <damage-reset>0</damage-reset>
                 <gear-asym>0</gear-asym>
                 <serviceable>1</serviceable>
-          
+
                 <emergency-handle type="double">0</emergency-handle>
                 <emerg-pos type="double">0</emerg-pos>
                 <emerg-pos-dmd type="double">0</emerg-pos-dmd>
@@ -104,7 +104,7 @@
             <position>
                 <aircraft-on-ground-last-value>2</aircraft-on-ground-last-value>
               </position>
-          
+
             <propulsion>
                 <engine n="0">
                     <augmentation-alight type="bool">false</augmentation-alight>
@@ -123,7 +123,7 @@
             <simulation>
                 <channel-dt type="double">0.00833333333</channel-dt>
             </simulation>
- 
+
             <systems>
                 <cadc>
                     <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
@@ -138,7 +138,7 @@
 
                 <ecs>
                     <anti-fog>0</anti-fog>
-                    <!-- ECS bleed air source: 
+                    <!-- ECS bleed air source:
                     0 : BOTH
                     1 : Right
                     2 : Off
@@ -186,7 +186,7 @@
                     <holdback-cmd>0</holdback-cmd>
                     <launchbar-engaged />
                 </holdback>
-            
+
                 <hook>
                     <tailhook-length-ft>10.1</tailhook-length-ft>
                     <tailhook-offset-x-in>646</tailhook-offset-x-in>
@@ -1172,7 +1172,7 @@
                     <left-wing-torn type="bool">false</left-wing-torn>
                     <right-wing-torn type="bool">false</right-wing-torn>
                 </wings>
-                <!-- values that may need to be changed in the future if the carrier handling is fixed 
+                <!-- values that may need to be changed in the future if the carrier handling is fixed
                      and/or the intialization procedure changes
                 -->
                 <overrides>
@@ -1551,7 +1551,7 @@
 
         <tutorials include="Tutorials/F-15-tutorial-index.xml"/>
     </sim>
-	
+
 	<autopilot n="0">
 		<internal n="0">
 			<pitch-active type="bool">0</pitch-active>
@@ -1730,7 +1730,7 @@
                 <vol-track type="double">1.00</vol-track>
                 <max-fire-range-nm type="int">38.8</max-fire-range-nm>
                 <min-fire-range-nm type="double">0.35</min-fire-range-nm>
-                <FCS-field-deg type="int">30</FCS-field-deg>
+                <FCS-field-deg type="int">110</FCS-field-deg>
                 <seeker-field-deg type="int">135</seeker-field-deg>
                 <max-g type="int">30</max-g>
                 <thrust-lbf-stage-1 type="double">2700</thrust-lbf-stage-1>                <!-- guess -->
@@ -2177,7 +2177,7 @@
                 <binding>
                     <command>nasal</command>
                     <script type="string">
-                        <![CDATA[ 
+                        <![CDATA[
                             if (getprop("fdm/jsbsim/fcs/steer-maneuver"))
                             {
                                 gui.popupTip("Maneuver NWS disabled");
@@ -2312,7 +2312,7 @@
                 <binding>
                     <command>nasal</command>
                     <script type="string">
-                        <![CDATA[ 
+                        <![CDATA[
                         if(getprop("sim/hud/visibility[1]"))
                         {
                             setprop("sim/hud/visibility[0]",0);
