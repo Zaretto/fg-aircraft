@@ -21,6 +21,15 @@
 # * Optional
 #   /instrumentation/datalink/receive_period = 1        receiving loop update rate
 #
+# Optional: Re-define the function
+#   datalink.can_transmit(callsign, mp_prop, mp_index)
+#
+# This function should return 'true' when the given aircraft is able to transmit over datalink to us.
+# For instance, it can be used to check line of sight and maximum range.
+# The default implementation always returns true (always able to transmit).
+# Arguments are callsign, property node /ai/models/multiplayer[i], index of the former node.
+#
+#
 # API:
 # - get_data(callsign)
 #     Returns all datalink information about 'callsign' as an object, or nil if there is none.
@@ -104,7 +113,7 @@
 #
 ## Sending data
 # Set the identifier with send_data({"identifier": <identifier>, ...});
-# The identifier must be a string.
+# The identifier must be a string. It must not contain '!'.
 
 ### Coordinate transmission (extension name: "point")
 #
@@ -121,7 +130,7 @@
 #### Protocol:
 #
 # Data is transmitted on MP generic string[7], with the following format:
-#   <channel>(|<data>)+
+#   <channel>(!<data>)+
 #
 # <channel> is a hash of the datalink channel. See hash_channel() and check_channel_hash().
 # Each <data> block corresponds to data sent by an extension.
@@ -147,7 +156,7 @@
 #
 # encode(data)              extension encoding function.
 #   Must return the encoding of the extension data (i.e. <data> when calling
-#   send_data({name: <data>})) into a string, which may use any character except '|'.
+#   send_data({name: <data>})) into a string, which may use any character except '!'.
 #   The extension prefix must not be part of the encoded string.
 #
 # decode(aircrafts_data, callsign, index, string)      extension decoding function.
@@ -172,9 +181,18 @@
 
 
 #### Version and changelog
-# current: v1.0.1, minimum compatible: v1.0.0
+# current: v1.1.0, minimum compatible: v1.0.0
 #
-## v1.0.1: Add is_known(), is_friendly(), is_hostile() helpers to extension "contacts".
+## v1.1.0:
+# Allow external transmission restrictions
+# Make transmitting contact IFF optional
+# Ensure personal identifier has no '!'
+# '\n' is redundant for printf()
+# Fix separator character in documentation
+# Fix error when sending unknown extension
+#
+## v1.0.1:
+# Add is_known(), is_friendly(), is_hostile() helpers to extension "contacts".
 #
 ## v1.0.0: Initial version
 # - Core protocol for datalink channel.
@@ -194,6 +212,11 @@ var mp_path = "sim/multiplay/generic/string["~mp_string~"]";
 var channel_hash_period = 600;
 
 var receive_period = getprop("/instrumentation/datalink/receive_period") or 1;
+
+# Should be overwitten to add transmission restrictions.
+var can_transmit = func(contact, mp_prop, mp_index) {
+    return 1;
+}
 
 ### Properties
 
@@ -221,8 +244,7 @@ foreach (var name; keys(input)) {
 # Channel is hashed with current time (rounded to 10min) and own callsign.
 
 var clean_callsign = func(callsign) {
-    if (size(callsign) > 7) return left(callsign, 7);
-    else return callsign;
+    return damage.processCallsign(callsign);
 }
 
 var my_callsign = func {
@@ -307,11 +329,11 @@ var contact_parents = [Contact];
 
 var register_extension = func(name, prefix, class, encode, decode) {
     if (contains(extensions, name)) {
-        printf("Datalink: double registration of extension '%s'. Skipping.\n", name);
+        printf("Datalink: double registration of extension '%s'. Skipping.", name);
         return -1;
     }
     if (contains(extension_prefixes, prefix)) {
-        printf("Datalink: double registration of extension prefix '%s'. Skipping.\n", name);
+        printf("Datalink: double registration of extension prefix '%s'. Skipping.", name);
         return -1;
     }
     extensions[name] = { prefix: prefix, encode: encode, decode: decode, };
@@ -354,7 +376,8 @@ var send_data = func(data, timeout=nil) {
     foreach(var ext; keys(data)) {
         # Skip missing extensions with a warning
         if (!contains(extensions, ext)) {
-            printf("Warning: unknown datalink extension %s in send_data().\n", ext);
+            printf("Warning: unknown datalink extension %s in send_data().", ext);
+            continue;
         }
         str = str ~ data_separator ~ extensions[ext].prefix ~ extensions[ext].encode(data[ext]);
     }
@@ -441,6 +464,10 @@ var receive_loop = func {
         # Check channel
         if (!check_channel(tokens[0], callsign, my_channel)) continue;
 
+        # We check this _after_ the channel. Checking the channel is quite cheap,
+        # and we don't know how slow this function is, it might have a get_cart_ground_intersection()
+        if (!can_transmit(callsign, mp, idx)) continue;
+
         # Add to list of connected aircrafts.
         append(connected_callsigns, callsign);
         append(connected_indices, idx);
@@ -510,7 +537,14 @@ var ContactIdentifier = {
 
 var encode_identifier = func(ident) {
     # Force string conversion
-    return ""~ident;
+    ident = ""~ident;
+
+    if (find("!", ident) >= 0) {
+        printf("Datalink: Identifier is not allowed to contain '!': %s.", ident);
+        return "";
+    } else {
+        return ident;
+    }
 }
 
 var decode_identifier = func(aircrafts_data, callsign, str) {
@@ -576,7 +610,7 @@ var ContactTracked = {
 
 var encode_contact = func(contact) {
     # Encode bitfield
-    var bits = contact.iff != nil ? contact.iff : IFF_UNKNOWN;
+    var bits = contact["iff"] != nil ? contact.iff : IFF_UNKNOWN;
 
     return emesary.TransferString.encode(clean_callsign(contact.callsign))
         ~ emesary.TransferByte.encode(bits);

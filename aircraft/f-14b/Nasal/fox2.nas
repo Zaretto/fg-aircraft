@@ -510,10 +510,10 @@ var AIM = {
         if (m.vector_thrust == nil) {
         	m.vector_thrust = FALSE;
         }
-        if (m.flareResistance == nil) {
+        if (m.flareResistance == nil or !m.gnd_launch) {
         	m.flareResistance = 0.85;
         }
-        if (m.chaffResistance == nil) {
+        if (m.chaffResistance == nil or !m.gnd_launch) {
         	m.chaffResistance = 0.85;
         }
         if (m.guidanceLaw == nil) {
@@ -1188,16 +1188,19 @@ var AIM = {
 		me.dlz_t_rho = me.dlz_t_rs[0];
 		me.dlz_t_sound_fps = me.dlz_t_rs[1];
 		me.dlz_tG    = me.maxG(me.dlz_t_rho, me.max_g);
-		me.dlz_t_mach = contact.get_Speed()*KT2FPS/me.dlz_t_sound_fps;
-		me.dlz_o_mach = getprop("velocities/mach");
+		#me.dlz_t_mach = contact.get_Speed()*KT2FPS/me.dlz_t_sound_fps;
+		#me.dlz_o_mach = getprop("velocities/mach");
 		me.contactCoord = contact.get_Coord();
-		me.vectorToEcho   = me.myMath.eulerToCartesian2(-contact.get_bearing(), me.myMath.getPitch(geo.aircraft_position(), me.contactCoord));
-    	me.vectorEchoNose = me.myMath.eulerToCartesian3X(-contact.get_heading(), contact.get_Pitch(), contact.get_Roll());
-    	me.angleToRear    = geo.normdeg180(me.myMath.angleBetweenVectors(me.vectorToEcho, me.vectorEchoNose));
-    	me.abso           = math.abs(me.angleToRear)-90;
-    	me.mach_factor    = math.sin(me.abso*D2R);
+		#me.vectorToEcho   = me.myMath.eulerToCartesian2(-contact.get_bearing(), me.myMath.getPitch(geo.aircraft_position(), me.contactCoord));
+    	#me.vectorEchoNose = me.myMath.eulerToCartesian3X(-contact.get_heading(), contact.get_Pitch(), contact.get_Roll());
+    	#me.angleToRear    = geo.normdeg180(me.myMath.angleBetweenVectors(me.vectorToEcho, me.vectorEchoNose));
+    	#me.abso           = math.abs(me.angleToRear)-90;
+    	#me.mach_factor    = math.sin(me.abso*D2R);
+    	#me.dlz_CS         = me.mach_factor*me.dlz_t_mach+me.dlz_o_mach;#closing speed in mach (old version)
 
-    	me.dlz_CS         = me.mach_factor*me.dlz_t_mach+me.dlz_o_mach;
+    	me.dlz_mid_rs = me.rho_sndspeed((me.dlz_t_alt+me.dlz_o_alt)*0.5);#get average speed of sound between us and target
+		me.dlz_CS = KT2FPS * contact.get_closure_rate() / me.dlz_mid_rs[1];#approx closing speed in mach
+
 	    me.min_fire_nm = me.getCurrentMinFireRange(contact);
     	me.dlz_opt   = me.clamp(me.max_fire_range_nm *0.3* (me.dlz_o_alt/me.dlz_opt_alt) + me.max_fire_range_nm *0.2* (me.dlz_t_alt/me.dlz_opt_alt) + me.max_fire_range_nm *0.5* (me.dlz_CS/me.dlz_opt_mach),me.min_fire_nm,me.max_fire_range_nm);
     	me.dlz_nez   = me.clamp(me.dlz_opt * (me.dlz_tG/45), me.min_fire_nm, me.dlz_opt);
@@ -1233,6 +1236,15 @@ var AIM = {
 			me.tgtRange = me.Tgt.get_range();
 			me.loft_cue = me.map(me.Tgt.get_range(), me.dlz_nez, (me.dlz_opt+me.max_fire_range_nm)*0.5, 0, 15);
 			me.loft_cue *= me.map(ourAlt.getValue(), 0, 40000, 3, 1);
+		}
+
+		# Do not find a relative bearing that is so great that radar loses track of target:
+		me.maxBearing = me.fcs_fov - 10;# margin is 10 degrees
+		me.relativeBearing = geo.normdeg180(me.horiz_intercept[1]-me.Tgt.get_bearing());
+		if (me.relativeBearing > me.maxBearing) {
+			me.horiz_intercept[1] = me.Tgt.get_bearing() + me.maxBearing;
+		} elsif (me.relativeBearing < -me.maxBearing) {
+			me.horiz_intercept[1] = me.Tgt.get_bearing() - me.maxBearing;
 		}
 
 		return [me.horiz_intercept[1], math.clamp(me.loft_cue, 0, 45)]; # attack-bearing, loft-cue
@@ -1963,7 +1975,7 @@ var AIM = {
 
 	setNewTargetInFlight: func (tagt) {
 		me.Tgt = tagt;
-		me.callsign = tagt==nil?"Unknown":me.Tgt.get_Callsign();
+		me.callsign = tagt==nil?"Unknown":damage.processCallsign(me.Tgt.get_Callsign());
 		me.printStatsDetails("Target set to %s", me.callsign);
 		me.newTargetAssigned = tagt==nil?FALSE:TRUE;
 		me.t_coord = tagt==nil?nil:me.Tgt.get_Coord();
@@ -3124,8 +3136,9 @@ var AIM = {
 						me.chaffLast = me.chaffNumber;
 						me.chaffTime = getprop("sim/time/elapsed-sec");
 						me.aspectDeg = me.aspectToExhaust(me.coord, me.Tgt) / 180;# 0 = viewing engine, 1 = front
-
-						me.chaffLock = rand() < (1-me.chaffResistance - ((1-me.chaffResistance) * 0.5 * me.aspectDeg));# 50% less chance to be fooled if front aspect
+						me.semi = me.guidance == "semi-radar"?0.5:1;
+						me.chaffChance = (1-me.chaffResistance)*me.semi;
+						me.chaffLock = rand() < (me.chaffChance - (me.chaffChance * 0.5 * me.aspectDeg));# 50% less chance to be fooled if front aspect
 
 						if (me.chaffLock == TRUE) {
 							me.printStats(me.type~": Missile locked on chaff from "~me.callsign);
@@ -4183,7 +4196,7 @@ var AIM = {
 				me.printStats(phrase);
 
  				if(getprop("payload/armament/msg") and wh_mass > 0){
- 					var cs = me.testMe.get_Callsign();
+ 					var cs = damage.processCallsign(me.testMe.get_Callsign());
  					var cc = me.testMe.get_Coord();
  					thread.lock(mutexTimer);
 					append(AIM.timerQueue, [AIM, AIM.notifyHit, [explode_coord.alt() - cc.alt(),min_distance,cs,explode_coord.course_to(cc),"mhit1",me.typeID, me.typeLong,0], -1]);
@@ -4197,8 +4210,7 @@ var AIM = {
 		var min_distance = geo.aircraft_position().direct_distance_to(explode_coord);
 		if (min_distance < me.reportDist) {
 			# hitting oneself :)
-			var cs = getprop("sim/multiplay/callsign");
-			cs = size(cs) < 8 ? cs : left(cs,7);
+			var cs = damage.processCallsign(getprop("sim/multiplay/callsign"));
 			var phrase = sprintf("%s %s: %.1f meters from: %s", me.type,event, min_distance, cs);# if we mention ourself then we need to explicit add ourself as author.
 			me.printStats(phrase);
 			if (wh_mass > 0) {
@@ -4668,7 +4680,7 @@ var AIM = {
 
 		me.Tgt = me.tagt;
 
-        me.callsign = me.Tgt.get_Callsign();
+        me.callsign = damage.processCallsign(me.Tgt.get_Callsign());
 
 		settimer(func me.update_lock(), 0.1);
 	},

@@ -1,10 +1,8 @@
 # Needs vector.nas
 #
-# Math for canvas HUD
-#
 # Author: Nikolai V. Chr. (FPI location code adapted from Buccaneer aircraft)
 #
-# Version 1.08
+# Version 1.09
 #
 # License: GPL 2.0
 	
@@ -59,13 +57,13 @@ var HudMath = {
 			me.centerOffsetSlantedMeter = -1*(me.length*0.5-me.boreSlantedDownFromTopMeter);#used (distance from center origin up to bore [negative number])
 			#printf("len=%.3fm angle=%.1fdeg angle2=%.1fdeg boredist=%.3fm borefromtop=%.3fm offset=%.3fm",me.length,me.slantAngle*R2D,me.slantAngleOther*R2D,me.distanceToBore,me.boreSlantedDownFromTopMeter,me.centerOffsetSlantedMeter);
 		}
-			if (initialization) {
-				# calc Y offset from HUD canvas center origin.
-				me.centerOffset = -1 * (me.canvasHeight/2 - ((me.hud3dTop - me.input.view0Z.getValue())*me.pixelPerMeterY));#TODO: use originCanvas?
-			} elsif (!me.parallax) {
-				# calc Y offset from HUD canvas center origin.
-				me.centerOffset = -1 * (me.canvasHeight/2 - ((me.hud3dTop - me.input.viewZ.getValue())*me.pixelPerMeterY));
-			}
+		if (initialization) {
+			# calc Y offset from HUD canvas center origin.
+			me.centerOffset = -1 * (me.canvasHeight/2 - ((me.hud3dTop - me.input.view0Z.getValue())*me.pixelPerMeterY));#TODO: use originCanvas?
+		} elsif (!me.parallax) {
+			# calc Y offset from HUD canvas center origin.
+			me.centerOffset = -1 * (me.canvasHeight/2 - ((me.hud3dTop - me.input.viewZ.getValue())*me.pixelPerMeterY));
+		}
 		
 	},
 	
@@ -97,14 +95,12 @@ var HudMath = {
 	
 	getBorePos: func {
 		# returns bore pos in canvas from center origin
+		if (me.slanted) {
+			return [0,me.centerOffsetSlantedMeter*me.pixelPerMeterYSlant];
+		}
 		return [0,me.centerOffset];
 	},
-	
-	getBorePosSlanted: func {
-		# returns bore pos in canvas from center origin
-		return [0,me.centerOffsetSlantedMeter*me.pixelPerMeterYSlant];
-	},
-	
+		
 	getPosFromCoord: func (gpsCoord, aircraft = nil) {
 		# return pos in canvas from center origin
 		if (aircraft== nil) {
@@ -149,17 +145,15 @@ var HudMath = {
 	},
 
 	getDevFromCoord: func (gpsCoord, viewh, viewp, hdp, aircraft=nil) {
-        # hdp is a hash containing pitch, roll, and trueheading of aircraft
+        # hdp is a hash containing pitch, roll, and true-heading of aircraft
         # return pos in canvas from center origin
         if (aircraft== nil) {
             me.crft = geo.viewer_position();
         } else {
             me.crft = aircraft;
         }
-        me.ptch = vector.Math.getPitch(me.crft,gpsCoord);
-        me.dst  = me.crft.direct_distance_to(gpsCoord);
+        me.ptch = vector.Math.getPitch(me.crft, gpsCoord);
         me.brng = me.crft.course_to(gpsCoord);
-        me.hrz  = math.cos(me.ptch*D2R)*me.dst;
 
         var ym = vector.Math.yawMatrix(-viewh);
         var pm = vector.Math.pitchMatrix(-viewp);
@@ -170,12 +164,30 @@ var HudMath = {
         me.rotation = vector.Math.multiplyMatrices(me.rollM, vector.Math.multiplyMatrices(me.pitchM, me.yawM));
         me.rotation = vector.Math.multiplyMatrices(vm, me.rotation);
 
-        me.vel_gx = math.cos(me.brng*D2R) *me.hrz;
-        me.vel_gy = -math.sin(me.brng*D2R) *me.hrz;
-        me.vel_gz = math.sin(me.ptch*D2R)*me.dst;
+        me.coord_x = math.cos(me.brng*D2R)*math.cos(me.ptch*D2R);
+        me.coord_y = -math.sin(me.brng*D2R)*math.cos(me.ptch*D2R);
+        me.coord_z = math.sin(me.ptch*D2R);
         
-        var tv = vector.Math.normalize([me.vel_gx,me.vel_gy,me.vel_gz]);
+        var tv = [me.coord_x,me.coord_y,me.coord_z];
         var dv = vector.Math.multiplyMatrixWithVector(me.rotation, tv);
+        var angles = vector.Math.cartesianToEuler(dv);
+
+        return [angles[0]==nil?0:angles[0],angles[1]];
+    },
+
+    getDevFromHMD: func (heading, pitch, viewh, viewp) {
+        # return pos in canvas from center origin
+        
+        var ym = vector.Math.yawMatrix(viewh);
+        var pm = vector.Math.pitchMatrix(-viewp);
+        var vm = vector.Math.multiplyMatrices(pm, ym);
+
+        me.target_x = math.cos(heading*D2R)*math.cos(pitch*D2R);
+        me.target_y = -math.sin(heading*D2R)*math.cos(pitch*D2R);
+        me.target_z = math.sin(pitch*D2R);
+        
+        var tv = [me.target_x,me.target_y,me.target_z];
+        var dv = vector.Math.multiplyMatrixWithVector(vm, tv);
         var angles = vector.Math.cartesianToEuler(dv);
 
         return [angles[0]==nil?0:angles[0],angles[1]];
@@ -251,6 +263,7 @@ var HudMath = {
 	},
 	
 	getPolarFromCenterPos: func (x,y) {
+		# only works well when not too far from bore.
 		y -= me.centerOffset;
 		return me.getPolarFromBorePos(x,y);
 	},
