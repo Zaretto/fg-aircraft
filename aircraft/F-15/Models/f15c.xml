@@ -78,16 +78,19 @@
                  f15_net.mp_network_init(0);
              }
          }
+         #print("Model load VSD");
          if (getprop("/sim/model/f15/backseat-load-network-required")or 0) {
              if (!contains(globals, "f15vsd")) {
                  var fn_vsd = locate_nasal("VSD/VSD_main.nas");
                  if (fn_vsd != nil)
                    io.load_nasal(fn_vsd, "f15vsd");
              }
+             #print("Model init VSD ",_module_id);
              # ensure that everyone knows that we have just been loaded.
              var modelNotification = emesary.Notification.new("F15Model", _module_id);
              modelNotification.root_node = self;
              emesary.GlobalTransmitter.NotifyAll(modelNotification);
+             #emesary.GlobalTransmitter.PrintRecipients();
          } else {
              print("F-15: not backset so not loading backseat VSD");
          }
