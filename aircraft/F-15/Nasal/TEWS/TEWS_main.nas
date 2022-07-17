@@ -117,6 +117,8 @@ var TEWSDisplay = {
         obj.tews_alignment_offset = -90;
         obj.symbol_list = [];
         obj.locked_symbol = TEWSSymbol.new(0, obj.TEWSsvg, "hat_locked");
+        obj.process_targets = frame_utils.PartitionProcessor.new("TEWS-display", 20, nil);
+
         for (var i = 0; i < obj.max_symbols; i += 1)
           {
               var ts = append(obj.symbol_list, TEWSSymbol.new(i, obj.TEWSsvg, "hat"));
@@ -124,107 +126,90 @@ var TEWSDisplay = {
           }
         return obj;
     },
-    update : func ()
-                   {  
-if(!me.tews_on)
-return;
-    var heading = getprop("orientation/heading-deg");
-    var target_idx = 0;
-    var radar_range = getprop("instrumentation/radar/radar2-range");
+    update : func (notification){  
+        if(!me.tews_on)
+            return;
 
-    var scale = 220/2; # horizontal / vertical scale (half resolution)
-    var is_active = 0;
+        var scale = 220/2; # horizontal / vertical scale (half resolution)
 
-    foreach( u; awg_9.tgts_list ) 
-    {
-        var callsign = "XX";
-        if (u.get_range() < radar_range and u.get_RWR_visible())
-        {
-            if (u.Callsign != nil)
-                callsign = u.Callsign.getValue();
+        me.process_targets.process(me, awg_9.tgts_list, 
+                                func(pp, obj, data){
+                                    obj.target_idx=1;
+                                    obj.is_active = 0;
+                                },
+                                func(pp, obj, u){
+                                    var callsign = "XX";
+                                    if (u.get_range() < notification.radar2_range and u.get_RWR_visible())
+                                    {
+                                        if (u.Callsign != nil)
+                                            callsign = u.Callsign.getValue();
 
-            var model = "XX";
+                                        var model = "XX";
 
-            if (u.Model != nil)
-                model = u.Model.getValue();
+                                        if (u.Model != nil)
+                                            model = u.Model.getValue();
 
-            if (target_idx < me.max_symbols)
-            {
-                var tgt = nil;
+                                        if (obj.target_idx < me.max_symbols)
+                                        {
+                                            var tgt = nil;
 
-                if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue()){
-                    tgt = me.locked_symbol;
-                    is_active = 1;
-                }
-                else{
-                    tgt = me.symbol_list[target_idx];
-                    target_idx = target_idx+1;
-                }
+                                            if (awg_9.active_u != nil and awg_9.active_u.Callsign != nil and u.Callsign.getValue() == awg_9.active_u.Callsign.getValue()){
+                                                tgt = me.locked_symbol;
+                                                obj.is_active = 1;
+                                            }
+                                            else{
+                                                tgt = me.symbol_list[obj.target_idx];
+                                                obj.target_idx = obj.target_idx+1;
+                                            }
 
-                if (tgt != nil)
-                {
-        
-    # We have a valid target - so display it. Not quite sure why we need to adjust this but we do.
-    #                    var bearing = u.get_deviation(heading);
-                        var bearing = geo.normdeg(u.get_deviation(heading) + me.tews_alignment_offset);
+                                            if (tgt != nil)
+                                            {
 
-                        tgt.setVisible(1);#u.get_display());#Leto: is is only display true when in radar field, so we ignore that.
-                        tgt.setCallsign(callsign);
-                        var r = (u.get_range()*scale) / radar_range;
-                        var xc  = r * math.cos(bearing/57.29577950560105);
-                        var yc = r * math.sin(bearing/57.29577950560105);
+                                    # We have a valid target - so display it. Not quite sure why we need to adjust this but we do.
+                                    #                    var bearing = u.get_deviation(notification.OrientationHeadingDeg);
+                                                    var bearing = geo.normdeg(u.get_deviation(notification.OrientationHeadingDeg) + me.tews_alignment_offset);
 
-                        tgt.setVisible(1);
+                                                    tgt.setVisible(1);#u.get_display());#Leto: is is only display true when in radar field, so we ignore that.
+                                                    tgt.setCallsign(callsign);
+                                                    var r = (u.get_range()*scale) / notification.radar2_range;
+                                                    var xc  = r * math.cos(bearing/57.29577950560105);
+                                                    var yc = r * math.sin(bearing/57.29577950560105);
 
-    #                    printf("TEWS: %d(%d,%d): %s %s: :R %f B %f %f", target_idx,xc,yc,
-    #                           callsign, model, 
-    #                           u.get_altitude(), u.get_range(), u.get_bearing());
+                                                    tgt.setVisible(1);
 
-                        tgt.setTranslation (xc, yc);
-                        tgt.setRotation(geo.normdeg(u.get_heading()-heading)/57.29577950560105);
-                    }
-            }
-        }
-        if (target_idx >= me.max_symbols){ 
-#            logprint(3, "TEWS: break before end of list");
-            break;
-        }
-    }
-    if (!is_active)
-      me.locked_symbol.setVisible(0);
+                                    #                    printf("TEWS: %d(%d,%d): %s %s: :R %f B %f %f", obj.target_idx,xc,yc,
+                                    #                           callsign, model, 
+                                    #                           u.get_altitude(), u.get_range(), u.get_bearing());
 
-    for(var nv = target_idx; nv < me.max_symbols;nv += 1)
-    {
-        var tgt = me.symbol_list[nv];
-        if (tgt != nil)
-        {
-            tgt.setVisible(0);
-        }
-    }
-}
-};
+                                                    tgt.setTranslation (xc, yc);
+                                                    tgt.setRotation(geo.normdeg(u.get_heading()-notification.OrientationHeadingDeg)/57.29577950560105);
+                                                }
+                                        }
+                                    }
+                                    if (obj.target_idx >= me.max_symbols){ 
+                                        return 0;
+                                    }
+                                    return 1;
+                                },
+                                func(pp, obj, data){
+                                    if (!obj.is_active)
+                                        me.locked_symbol.setVisible(0);
 
-var TEWSRecipient =
-{
-    new: func(_ident)
-    {
-        var new_class = emesary.Recipient.new(_ident);
-        new_class.Tews = nil;
-        new_class.Receive = func(notification)
-        {
-            if (notification.NotificationType == "FrameNotification")
-            {
-                if (new_class.Tews == nil)
-                  new_class.Tews = TEWSDisplay.new("Nasal/TEWS/TEWS.svg","TEWSImage", 326,256, 0,0);
-                if (!math.mod(notifications.frameNotification.FrameCount,4)){
-                    new_class.Tews.update();
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
-        return new_class;
+                                    for(var nv = obj.target_idx; nv < me.max_symbols;nv += 1)
+                                    {
+                                        var tgt = me.symbol_list[nv];
+                                        if (tgt != nil)
+                                        {
+                                            tgt.setVisible(0);
+                                        }
+                                    }
+                                });
     },
 };
+input = {
+            OrientationHeadingDeg  : "orientation/heading-deg",
+            radar2_range           : "instrumentation/radar/radar2-range",
+            };
 
-emesary.GlobalTransmitter.Register(TEWSRecipient.new("F15-TEWS"));
+emexec.ExecModule.register("F15-TEWS",input, TEWSDisplay.new("Nasal/TEWS/TEWS.svg","TEWSImage", 326,256, 0,0), 4);
+
