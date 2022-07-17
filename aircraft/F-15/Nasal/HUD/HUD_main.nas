@@ -1,8 +1,11 @@
 # F-15 Canvas HUD
 # ---------------------------
-# HUD class has dataprovider
-# F-15C HUD is in two parts so we have a single class that we can instantiate
-# twice on for each combiner pane
+#
+# The F-15C HUD is provided by 2 combiners.
+# We model this accurately in the geometry by having the two glass panes 
+# which are texture mapped onto a single canvas texture.two instances of the HUD
+# 2016-01-06: The HUD appears slightly trapezoidal (better than previous version
+#             however still could be improved possibly with a transformation matrix.
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2015-01-27  - based on F-20 HUD main module Enrique Laso (Flying toaster) 
 # ---------------------------
@@ -172,8 +175,8 @@ var F15HUD = {
             obj.dlzY      =100;
             obj.dlzWidth  = 10;
             obj.dlzHeight = 90;
-obj.dlzHeight=60;
-obj.dlzY = 70;
+            obj.dlzHeight=60;
+            obj.dlzY = 70;
             obj.dlzLW     =  1;
             obj.dlz      = obj.svg.createChild("group");
             obj.dlz2     = obj.dlz.createChild("group");
@@ -264,127 +267,127 @@ obj.dlzY = 70;
                                         else
                                           obj.ladder.setCenter (110,900+obj.pitch_deg*-(1772/90));
                                     }),
-                            props.UpdateManager.FromHashList(["Alpha", "OrientationSideSlipDeg"], 0.001, func(val)
-                                                                     {
-                                                                         if (val.OrientationSideSlipDeg == nil or val.Alpha == nil)
-                                                                           return;
-                                                                         obj.VV_x = (val.OrientationSideSlipDeg or 0)*10; # adjust for view
-                                                                         obj.VV_y = (val.Alpha or 0)*10; # adjust for view
-                                                                         obj.VV.setTranslation (obj.VV_x, obj.VV_y);
-                                                                     }),
-                            props.UpdateManager.FromHashList(["InstrumentedG", "CadcOwsMaximumG"], 0.05, func(val)
-                                                                     {
-                                                                         obj.window8.setText(sprintf("%02d %02d", 
-                                                                                                     math.round(val.InstrumentedG*10.0), 
-                                                                                                     math.round(val.CadcOwsMaximumG*10.0)));
-                                                                     }),
-                            props.UpdateManager.FromHashList(["Alpha", 
-                                                                      "ControlsGearBrakeParking", 
-                                                                      "AirspeedIndicatorIndicatedMach",
-                                                                      "ControlsGearGearDown"], 0.01, func(val)
-                                                                     {
-                                                                         obj.alpha = val.Alpha or 0;
-                                                                         obj.mach = val.AirspeedIndicatorIndicatedMach or 0;
-                                                                         if(val.ControlsGearBrakeParking)
-                                                                           obj.window7.setText("BRAKES");
-                                                                         else if(val.ControlsGearGearDown or obj.alpha > 20)
-                                                                           obj.window7.setText(sprintf("AOA %d",obj.alpha));
-                                                                         else
-                                                                           obj.window7.setText(sprintf(" %1.3f",obj.mach));
-                                                                     }),
-                            props.UpdateManager.FromHashList(["AutopilotRouteManagerActive",
-                                                                      "AutopilotRouteManagerWpDist",
-                                                                      "AutopilotRouteManagerWpEtaSeconds",
-                                                                      "ControlsGearGearDown"], 0.1, func(val)
-                                                                     {
-                                                                         if (val.AutopilotRouteManagerActive) {
-                                                                             obj.rng = val.AutopilotRouteManagerWpDist;
-                                                                             obj.eta_s = val.AutopilotRouteManagerWpEtaSeconds;
-                                                                             if (obj.rng != nil) {
-                                                                                 obj.HudNavRangeDisplay =sprintf("N %4.1f", obj.rng);
-                                                                             } else {
-                                                                                 obj.HudNavRangeDisplay = "N XXX";
-                                                                             }
+            props.UpdateManager.FromHashList(["Alpha", "OrientationSideSlipDeg"], 0.001, func(val)
+                                                        {
+                                                            if (val.OrientationSideSlipDeg == nil or val.Alpha == nil)
+                                                            return;
+                                                            obj.VV_x = (val.OrientationSideSlipDeg or 0)*10; # adjust for view
+                                                            obj.VV_y = (val.Alpha or 0)*10; # adjust for view
+                                                            obj.VV.setTranslation (obj.VV_x, obj.VV_y);
+                                                        }),
+            props.UpdateManager.FromHashList(["InstrumentedG", "CadcOwsMaximumG"], 0.05, func(val)
+                                                        {
+                                                            obj.window8.setText(sprintf("%02d %02d", 
+                                                                                        math.round(val.InstrumentedG*10.0), 
+                                                                                        math.round(val.CadcOwsMaximumG*10.0)));
+                                                        }),
+            props.UpdateManager.FromHashList(["Alpha", 
+                                                        "ControlsGearBrakeParking", 
+                                                        "AirspeedIndicatorIndicatedMach",
+                                                        "ControlsGearGearDown"], 0.01, func(val)
+                                                        {
+                                                            obj.alpha = val.Alpha or 0;
+                                                            obj.mach = val.AirspeedIndicatorIndicatedMach or 0;
+                                                            if(val.ControlsGearBrakeParking)
+                                                            obj.window7.setText("BRAKES");
+                                                            else if(val.ControlsGearGearDown or obj.alpha > 20)
+                                                            obj.window7.setText(sprintf("AOA %d",obj.alpha));
+                                                            else
+                                                            obj.window7.setText(sprintf(" %1.3f",obj.mach));
+                                                        }),
+            props.UpdateManager.FromHashList(["AutopilotRouteManagerActive",
+                                                        "AutopilotRouteManagerWpDist",
+                                                        "AutopilotRouteManagerWpEtaSeconds",
+                                                        "ControlsGearGearDown"], 0.1, func(val)
+                                                        {
+                                                            if (val.AutopilotRouteManagerActive) {
+                                                                obj.rng = val.AutopilotRouteManagerWpDist;
+                                                                obj.eta_s = val.AutopilotRouteManagerWpEtaSeconds;
+                                                                if (obj.rng != nil) {
+                                                                    obj.HudNavRangeDisplay =sprintf("N %4.1f", obj.rng);
+                                                                } else {
+                                                                    obj.HudNavRangeDisplay = "N XXX";
+                                                                }
 
-                                                                             if (obj.eta_s != nil)
-                                                                               obj.HudNavRangeETA = sprintf("%2d MIN",obj.eta_s/60);
-                                                                             else
-                                                                               obj.HudNavRangeETA = "XX MIN";
-                                                                         } else {
-                                                                             obj.HudNavRangeDisplay = "";
-                                                                             obj.HudNavRangeETA = "";
-                                                                         }
-                                                                     }),
-                            props.UpdateManager.FromHashList(["ControlsArmamentMasterArmSwitch",
-                                                                      "ControlsArmamentWeaponSelector",
-                                                                      "ArmamentRounds",
-                                                                      "ArmamentAim9Count",
-                                                                      "ArmamentAim120Count",
-                                                                      "ArmamentAim7Count",
-                                                                      "ArmamentAgmCount",
-                                                                      "RadarActiveTargetAvailable",
-                                                                      "RadarActiveTargetDisplay",
-                                                                      "RadarActiveTargetCallsign",
-                                                                      "RadarActiveTargetType",
-                                                                      "RadarActiveTargetRange",
-                                                                      "RadarActiveTargetClosure",
-                                                                      "HudNavRangeDisplay",
-                                                                      "HudNavRangeETA"], nil, func(val)
-                                                                     {
-                                                                         if (val.ControlsArmamentMasterArmSwitch) {
-                                                                             var w_s = val.ControlsArmamentWeaponSelector;
-                                                                             obj.window2.setVisible(1);
-                                                                             if (w_s == 0) {
-                                                                                 obj.window2.setText(sprintf("%3d",val.ArmamentRounds));
-                                                                             } else if (w_s == 1) {
-                                                                                 obj.window2.setText(sprintf("S%2dL", val.ArmamentAim9Count));
-                                                                             } else if (w_s == 2){
-                                                                                 obj.window2.setText(sprintf("M%2dF", val.ArmamentAim120Count
-                                                                                                             + val.ArmamentAim7Count));
-                                                                             } else if (w_s == 5){
-                                                                                 obj.window2.setText(sprintf("G%2d", val.ArmamentAgmCount));
-                                                                             }
-                                                                             if (val.RadarActiveTargetAvailable or 0) {
-                                                                                 obj.window3.setText(val.RadarActiveTargetCallsign);
-                                                                                 var model = "XX";
-                                                                                 if (val.RadarActiveTargetType != "")
-                                                                                   model = val.RadarActiveTargetType;
+                                                                if (obj.eta_s != nil)
+                                                                obj.HudNavRangeETA = sprintf("%2d MIN",obj.eta_s/60);
+                                                                else
+                                                                obj.HudNavRangeETA = "XX MIN";
+                                                            } else {
+                                                                obj.HudNavRangeDisplay = "";
+                                                                obj.HudNavRangeETA = "";
+                                                            }
+                                                        }),
+            props.UpdateManager.FromHashList(["ControlsArmamentMasterArmSwitch",
+                                                        "ControlsArmamentWeaponSelector",
+                                                        "ArmamentRounds",
+                                                        "ArmamentAim9Count",
+                                                        "ArmamentAim120Count",
+                                                        "ArmamentAim7Count",
+                                                        "ArmamentAgmCount",
+                                                        "RadarActiveTargetAvailable",
+                                                        "RadarActiveTargetDisplay",
+                                                        "RadarActiveTargetCallsign",
+                                                        "RadarActiveTargetType",
+                                                        "RadarActiveTargetRange",
+                                                        "RadarActiveTargetClosure",
+                                                        "HudNavRangeDisplay",
+                                                        "HudNavRangeETA"], nil, func(val)
+                                                        {
+                                                            if (val.ControlsArmamentMasterArmSwitch) {
+                                                                var w_s = val.ControlsArmamentWeaponSelector;
+                                                                obj.window2.setVisible(1);
+                                                                if (w_s == 0) {
+                                                                    obj.window2.setText(sprintf("%3d",val.ArmamentRounds));
+                                                                } else if (w_s == 1) {
+                                                                    obj.window2.setText(sprintf("S%2dL", val.ArmamentAim9Count));
+                                                                } else if (w_s == 2){
+                                                                    obj.window2.setText(sprintf("M%2dF", val.ArmamentAim120Count
+                                                                                                + val.ArmamentAim7Count));
+                                                                } else if (w_s == 5){
+                                                                    obj.window2.setText(sprintf("G%2d", val.ArmamentAgmCount));
+                                                                }
+                                                                if (val.RadarActiveTargetAvailable or 0) {
+                                                                    obj.window3.setText(val.RadarActiveTargetCallsign);
+                                                                    var model = "XX";
+                                                                    if (val.RadarActiveTargetType != "")
+                                                                    model = val.RadarActiveTargetType;
 
-                                                                                 #these labels aren't correct - but we don't have a full simulation of the targetting and missiles so 
-                                                                                 #have no real idea on the details of how this works.
-                                                                                 if (val.RadarActiveTargetDisplay){
-                                                                                     obj.window4.setText(sprintf("RNG %3.1f", val.RadarActiveTargetRange));
-                                                                                     obj.window5.setText(sprintf("CLO %-3d", val.RadarActiveTargetClosure));
-                                                                                 } else{
-                                                                                     obj.window4.setText("");
-                                                                                     obj.window5.setText("");
-                                                                                 }
-                                                                                 obj.window6.setText(model);
-                                                                                 obj.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
-                                                                             } else {
-                                                                                  # this else added by Leto
-                                                                                 obj.window3.setText("");
-                                                                                 obj.window4.setText("");
-                                                                                 obj.window5.setText("");
-                                                                                 obj.window6.setText("");
-                                                                                 obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
-                                                                             }
-                                                                         } else {
-                                                                             obj.window2.setVisible(0);
-                                                                             if (val.HudNavRangeDisplay != "")
-                                                                               obj.window3.setText("NAV");
-                                                                             else
-                                                                               obj.window3.setText("");
-                                                                             obj.window4.setText(val.HudNavRangeDisplay);
-                                                                             obj.window5.setText(val.HudNavRangeETA);
-                                                                             obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
-                                                                         }
-                                                                     }
-                                                                    ),
+                                                                    #these labels aren't correct - but we don't have a full simulation of the targetting and missiles so 
+                                                                    #have no real idea on the details of how this works.
+                                                                    if (val.RadarActiveTargetDisplay){
+                                                                        obj.window4.setText(sprintf("RNG %3.1f", val.RadarActiveTargetRange));
+                                                                        obj.window5.setText(sprintf("CLO %-3d", val.RadarActiveTargetClosure));
+                                                                    } else{
+                                                                        obj.window4.setText("");
+                                                                        obj.window5.setText("");
+                                                                    }
+                                                                    obj.window6.setText(model);
+                                                                    obj.window6.setVisible(1); # SRM UNCAGE / TARGET ASPECT
+                                                                } else {
+                                                                    # this else added by Leto
+                                                                    obj.window3.setText("");
+                                                                    obj.window4.setText("");
+                                                                    obj.window5.setText("");
+                                                                    obj.window6.setText("");
+                                                                    obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
+                                                                }
+                                                            } else {
+                                                                obj.window2.setVisible(0);
+                                                                if (val.HudNavRangeDisplay != "")
+                                                                obj.window3.setText("NAV");
+                                                                else
+                                                                obj.window3.setText("");
+                                                                obj.window4.setText(val.HudNavRangeDisplay);
+                                                                obj.window5.setText(val.HudNavRangeETA);
+                                                                obj.window6.setVisible(0); # SRM UNCAGE / TARGET ASPECT
+                                                            }
+                                                        }
+                                                    ),
                            ];
 return obj;
 },
-  #
+#
 #
 # get a text element from the SVG and set the font / sizing
     get_text : func(id, font, size, ratio)
@@ -616,38 +619,7 @@ return obj;
     list: [],
 };
 
-#
-# The F-15C HUD is provided by 2 combiners.
-# We model this accurately in the geometry by having the two glass panes 
-# which are texture mapped onto a single canvas texture.two instances of the HUD
-# 2016-01-06: The HUD appears slightly trapezoidal (better than previous version
-#             however still could be improved possibly with a transformation matrix.
 
-
-var HUDRecipient =
-{
-    new: func(_ident)
-    {
-        var new_class = emesary.Recipient.new(_ident);
-        new_class.MainHUD = nil;
-        new_class.Receive = func(notification)
-        {
-            if (notification.NotificationType == "FrameNotification")
-            {
-                if (new_class.MainHUD == nil)
-                  new_class.MainHUD = F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1");
-                if (!math.mod(notifications.frameNotification.FrameCount,2)){
-                    new_class.MainHUD.update(notification);
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
-        return new_class;
-    },
-};
-
-emesary.GlobalTransmitter.Register(HUDRecipient.new("F15-HUD"));
 input = {
         AirspeedIndicatorIndicatedMach          : "instrumentation/airspeed-indicator/indicated-mach",
         Alpha                                   : "orientation/alpha-indicated-deg",
@@ -683,6 +655,5 @@ input = {
         InstrumentedG                           : "instrumentation/g-meter/instrumented-g",
         VelocitiesAirspeedKt                    : "velocities/airspeed-kt",
 };
-foreach (var name; keys(input)) {
-    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-HUD", name, input[name]));
-}
+
+emexec.ExecModule.register("F15-HUD",input, F15HUD.new("Nasal/HUD/HUD.svg", "HUDImage1"), 2);

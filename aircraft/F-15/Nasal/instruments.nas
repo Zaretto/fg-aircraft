@@ -398,62 +398,62 @@ setprop("sim/model/f15/lighting/warn-medium-lights-switch/enabled", 1);
 #var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
 #var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-15mp",routedNotifications);
 
-var INSTRUMENTS_Recipient =
+var AircraftModule =
 {
     new: func(_ident)
     {
         var new_class = emesary.Recipient.new(_ident);
-        new_class.Receive = func(notification){
-            if (notification.NotificationType == "FrameNotification") {
-                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
-                if (main_loop_launched){
-                    mach = Mach.getValue();
-                    var cnt = notification.FrameCount;
-                    
-                    ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
-                    
-                    burner +=1;
-                    if ( burner == 3 ) { burner = 0 }
-                    BurnerN.setValue(burner);
-                    
-                    if ( getprop("sim/replay/time") > 0 ) 
-                        setprop("orientation/alpha-indicated-deg", (getprop("orientation/alpha-deg") - 0.797) / 0.8122);
-                    else
-                        setprop("orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
-                    
-                    if (frame_count == 0) {
-                        if ((notification.Alpha or 0) > aoa_max.getValue() or 0) {
-                            aoa_max.setDoubleValue(notification.Alpha);
-                        }
-                        f15_chronograph.update_chrono();
-                    }
-                    if (frame_count == 6) {
-                        fuel_update();
-                        cnt = 0;
-                    }
-                    if (frame_count == 2) {
-                        awg_9.hud_nearest_tgt();
-                        
-                        if ( notification.ArmSysRunning ) {
-                            armament_update();
-                        }
-                        armament_update2();
-                    }
-                    if (frame_count == 3) {
-                        afcs_filters();
-                    }
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
+        append(new_class.parents, AircraftModule);
+        new_class.alphaIndicatedDegNode = props.globals.getNode("orientation/alpha-indicated-deg",1);
         return new_class;
+    },
+    update :  func(notification){
+        if (main_loop_launched){
+            mach = Mach.getValue();
+
+            var frame_count = math.mod(notification.FrameCount,8);
+
+            ownship_pos.set_latlon(notification.AcLat, notification.AcLon);
+            
+            burner = math.mod(burner + 1,4);
+            BurnerN.setValue(burner);
+            
+            if ( notification.ReplayTime > 0 ) 
+                me.alphaIndicatedDegNode.setValue((notification.AlphaRaw - 0.797) / 0.8122);
+            else
+                me.alphaIndicatedDegNode.setValue(notification.AlphaAero);
+            
+            if (frame_count == 0) {
+                if ((notification.Alpha or 0) > aoa_max.getValue() or 0) {
+                    aoa_max.setDoubleValue(notification.Alpha);
+                }
+                f15_chronograph.update_chrono();
+            }
+            else if (frame_count == 2) {
+                fuel_update();
+            }
+            else if (frame_count == 4) {
+                awg_9.hud_nearest_tgt();
+                
+                if ( notification.ArmSysRunning ) {
+                    armament_update();
+                }
+                armament_update2();
+            }
+            else if (frame_count == 6) {
+                afcs_filters();
+            }
+        }
     },
 };
 
-emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-inst"));
+
   input = {
+          AcLat                 : "position/latitude-deg",
+          AcLon                 : "position/longitude-deg",
           Alpha                 : "orientation/alpha-indicated-deg",
+          AlphaAero             : "fdm/jsbsim/aero/alpha-indicated-deg",
+          AlphaRaw              : "orientation/alpha-deg",
           frame_rate                : "/sim/frame-rate",
           frame_rate_worst          : "/sim/frame-rate-worst",
           elapsed_seconds           : "/sim/time/elapsed-sec",
@@ -475,9 +475,8 @@ emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-inst"));
           TcModeSwitch     : "sim/model/f15/instrumentation/tacan/mode",
           MagHdg           : "orientation/heading-magnetic-deg",
           MagDev           : "orientation/local-mag-dev",
-          ArmSysRunning : "sim/model/f15/systems/armament/system-running",
+          ArmSysRunning    : "sim/model/f15/systems/armament/system-running",
+          ReplayTime       : "sim/replay/time",
           };
-
-foreach (var name; keys(input)) {
-    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-inst", name, input[name]));
-}
+emexec.ExecModule.register("F15-BASE",input, AircraftModule.new("F15-BASE"), 1);
+emexec.ExecModule.transmitter.OverrunDetection(9);

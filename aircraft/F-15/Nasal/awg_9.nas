@@ -1796,7 +1796,7 @@ var RADARRecipient =
         {
             if (notification.NotificationType == "FrameNotification")
             {
-                if (!math.mod(notifications.frameNotification.FrameCount,3)){
+                if (!math.mod(notification.FrameCount,3)){
                     awg_9.rdr_loop();
                 }
                 return emesary.Transmitter.ReceiptStatus_OK;
@@ -1807,4 +1807,4 @@ var RADARRecipient =
     },
 };
 
-emesary.GlobalTransmitter.Register(RADARRecipient.new("RADAR-AWG9"));
+emexec.ExecModule.transmitter.Register(RADARRecipient.new("RADAR-AWG9"));
