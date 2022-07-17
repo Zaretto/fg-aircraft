@@ -228,7 +228,7 @@
     </fdm>
 
     <sim>
-        <minimum-fg-version>2017.2</minimum-fg-version>
+        <minimum-fg-version>2020.3</minimum-fg-version>
         <description>F-15</description>
         <author>Richard Harrison, Enrique Laso, Nikolai V. Chr., Joshua Davidson</author>
         <status>production</status>
@@ -2523,9 +2523,18 @@
         <pilot-g>1</pilot-g>
     </accelerations>
 
+    <fallback>
+        <nasal>
+            <emexec>
+                <file>Aircraft/F-15/Nasal/fallback/emexec.nas</file>
+            </emexec>
+        </nasal>
+    </fallback>
     <nasal>
+        <fallback>
+            <file>Aircraft/F-15/Nasal/fallback-module.nas</file>
+        </fallback>
         <notifications>
-            <file>Nasal/M_frame_notification.nas</file>
             <file>Aircraft/F-15/Nasal/ArmamentNotification.nas</file>
             <file>Aircraft/F-15/Nasal/GeoBridgedTransmitter.nas</file>
         </notifications>
@@ -2569,30 +2578,6 @@
         <damage>
             <file>Aircraft/F-15/Nasal/damage.nas</file><!-- must be before weapons.nas -->
         </damage>
-        <aircraft>
-            <file>Aircraft/F-15/Nasal/M_exec.nas</file>
-            <file>Nasal/canvas/MFD_Generic.nas</file>
-            <file>Aircraft/Generic/an_spn_46.nas</file>
-            <file>Aircraft/Generic/an_spn_46.nas</file>
-            <file>Aircraft/F-15/Nasal/liveries.nas</file>
-            <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
-            <file>Aircraft/F-15/Nasal/flaps_computer.nas</file>
-            <file>Aircraft/F-15/Nasal/engines.nas</file>
-            <file>Aircraft/F-15/Nasal/gear.nas</file>
-            <file>Aircraft/F-15/Nasal/hud.nas</file>
-            <file>Aircraft/F-15/Nasal/engines.nas</file>
-            <file>Aircraft/F-15/Nasal/fuel-system.nas</file>
-            <file>Aircraft/F-15/Nasal/electrics.nas</file>
-            <file>Aircraft/F-15/Nasal/instruments.nas</file>
-            <file>Aircraft/F-15/Nasal/afcs.nas</file>
-            <file>Nasal/HUD/HUD_main.nas</file>
-            <file>Nasal/VSD/VSD_main.nas</file>
-            <file>Nasal/TEWS/TEWS_main.nas</file>
-            <file>Nasal/MPCD/MPCD_main.nas</file>
-            <file>Aircraft/F-15/Nasal/weapons.nas</file>
-            <file>Aircraft/F-15/Nasal/ext_stores.nas</file>
-            <file>Aircraft/F-15/Nasal/crash-and-stress.nas</file>
-        </aircraft>
         <environment>
             <file>Nasal/environment.nas</file>
         </environment>
@@ -2617,6 +2602,34 @@
         <hudmath>
             <file>Aircraft/F-15/Nasal/hud_math.nas</file>
         </hudmath>
+        <!-- For backwards compatibility we include a copy of the FGdata Nasal module -->
+        <!-- <emexec>
+            <file>Aircraft/F-15/Nasal/emexec.nas</file>
+        </emexec> -->
+        <aircraft>
+            <file>Nasal/canvas/MFD_Generic.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
+            <file>Aircraft/Generic/an_spn_46.nas</file>
+            <file>Aircraft/F-15/Nasal/liveries.nas</file>
+            <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
+            <file>Aircraft/F-15/Nasal/flaps_computer.nas</file>
+            <file>Aircraft/F-15/Nasal/engines.nas</file>
+            <file>Aircraft/F-15/Nasal/gear.nas</file>
+            <file>Aircraft/F-15/Nasal/hud.nas</file>
+            <file>Aircraft/F-15/Nasal/engines.nas</file>
+            <file>Aircraft/F-15/Nasal/fuel-system.nas</file>
+            <file>Aircraft/F-15/Nasal/electrics.nas</file>
+            <file>Aircraft/F-15/Nasal/instruments.nas</file>
+            <file>Aircraft/F-15/Nasal/afcs.nas</file>
+            <file>Nasal/HUD/HUD_main.nas</file>
+            <file>Nasal/VSD/VSD_main.nas</file>
+            <file>Nasal/TEWS/TEWS_main.nas</file>
+            <file>Nasal/MPCD/MPCD_main.nas</file>
+            <file>Aircraft/F-15/Nasal/weapons.nas</file>
+            <file>Aircraft/F-15/Nasal/ext_stores.nas</file>
+            <file>Aircraft/F-15/Nasal/crash-and-stress.nas</file>
+        </aircraft>
+
     </nasal>
 
 </PropertyList>
