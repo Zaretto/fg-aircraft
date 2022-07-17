@@ -734,8 +734,7 @@ var F15_Recipient =
         var new_class = emesary.Recipient.new(_ident);
         new_class.Receive = func(notification){
             if (notification.NotificationType == "FrameNotification") {
-                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
-#                var frame_count1 = math.mod(notifications.frameNotification.FrameCount,2);
+                var frame_count = math.mod(notification.FrameCount,8);
 
                 #Fetch most commonly used values
                 CurrentIAS = 	CurrentIASnode.getValue();
@@ -777,4 +776,5 @@ var F15_Recipient =
     },
 };
 
-emesary.GlobalTransmitter.Register(F15_Recipient.new("F15-main"));
+emexec.ExecModule.transmitter.Register(F15_Recipient.new("F15-main"));
+
