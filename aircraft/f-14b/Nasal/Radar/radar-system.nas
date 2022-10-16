@@ -830,7 +830,7 @@ var AIContact = {
 		    }
 		    me.coord = geo.Coord.new().set_latlon(me.lat.getValue(), me.lon.getValue(), me.alt.getValue()*FT2M);
 	    }
-	    if (me.coord.lat() == nil or me.coord.lon() == nil or me.coord.alt() == nil) me.coord = me.oldCoord;# This is due to an error Sammy had
+	    if (me.coord.lat() == nil or me.coord.lon() == nil or me.coord.alt() == nil or me.coord.x() == nil or me.coord.y() == nil or me.coord.z() == nil) me.coord = me.oldCoord;# This is due to an error Sammy had
 	    return me.coord;
 	},
 
@@ -883,7 +883,7 @@ var AIContact = {
 		me.virtTGP.getType = func {
 			return POINT;
 		};
-		me.virtTGP.callsign = "On "~me.get_Callsign();
+		me.virtTGP.callsign = me.get_Callsign();
 		return me.virtTGP;
 	},
 
