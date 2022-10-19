@@ -850,15 +850,11 @@ var fixAirframe = func {
 }
 
 setlistener("sim/model/f-14b/controls/damage-enabled", func(v){
-#print("Damage enabled ",v.getValue());
     if (v.getValue())
       setprop("fdm/jsbsim/systems/flyt/damage-enabled",1);
     else
       setprop("fdm/jsbsim/systems/flyt/damage-enabled",0);
-  },0,0);
-
-setprop("fdm/jsbsim/systems/flyt/damage-enabled",getprop("sim/model/f-14b/controls/damage-enabled"));
-
+});
 
 var esRIO = nil;
 

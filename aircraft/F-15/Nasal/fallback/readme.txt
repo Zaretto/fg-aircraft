@@ -1,3 +1,8 @@
-Contains modules that have been added to fgdata to permit since the minimum version.
-
-<fallback>
+# load any modules that are defined as fallback modules.
+# define in /fallback/nasal
+# e.g.
+#    <fallback>
+#       <emexec>
+#            <file>Aircraft/F-15/Nasal/emexec.nas</file>
+#        </emexec>
+#    </fallback>

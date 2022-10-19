@@ -882,6 +882,9 @@ return;
 	foreach (var f_tc; TcFreqs.getChildren()) {
 		aircraft.data.add(f_tc);
 	}
+    # ensure JSBSim damage matches GUI.
+    setprop("fdm/jsbsim/systems/flyt/damage-enabled",getprop("sim/model/f-14b/controls/damage-enabled"));
+
 	setprop("f14/done",0);#reset ejection seat
 	view.setViewByIndex(0);
 	setprop("sim/view[115]/enabled", 0);
