@@ -1206,30 +1206,11 @@ var MPCD_Device =
 #
 # Connect the radar range to the nav display range. 
 setprop("instrumentation/mpcd-sit/inputs/range-nm", getprop("instrumentation/radar/radar2-range"));
-emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowN","gear/gear[0]/wow"));
-emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowL","gear/gear[1]/wow"));
-emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowR","gear/gear[2]/wow"));
-var MPCDRecipient =
-{
-    new: func(_ident)
-    {
-        var new_class = emesary.Recipient.new(_ident);
-        new_class.MPCD = nil;
-        new_class.Receive = func(notification)
-        {
-            if (notification.NotificationType == "FrameNotification")
-            {
-                if (new_class.MPCD == nil)
-                  new_class.MPCD = MPCD_Device.new("F15-MPCD", "MPCDImage",0);
-                if (!math.mod(notifications.frameNotification.FrameCount,4)){
-                    new_class.MPCD.update(notification);
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
-        return new_class;
-    },
+input = {
+        wowN          : "gear/gear[0]/wow",
+        wowL          : "gear/gear[1]/wow",
+        wowR          : "gear/gear[2]/wow",
 };
 
-emesary.GlobalTransmitter.Register(MPCDRecipient.new("F15-MPCD"));
+emexec.ExecModule.register("F-15 MPCD", input, MPCD_Device.new("F15-MPCD", "MPCDImage",0),1);
+

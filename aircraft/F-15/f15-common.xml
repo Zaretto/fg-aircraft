@@ -2201,14 +2201,10 @@
                 <binding>
                     <command>nasal</command>
                     <script>
-                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd"))
-                        {
-                            logprint(3,print("Catapult launch");
-                        setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
-                        setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
-                        }
-                        else
-                        {
+                        if (getprop("fdm/jsbsim/systems/holdback/holdback-cmd")){
+                            logprint(3,"Catapult launch");
+                            setprop("fdm/jsbsim/systems/catapult/cat-launch-cmd",1);
+                            setprop("fdm/jsbsim/systems/holdback/holdback-cmd",0);
                         }
                     </script>
                 </binding>

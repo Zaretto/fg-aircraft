@@ -479,4 +479,3 @@ var AircraftModule =
           ReplayTime       : "sim/replay/time",
           };
 emexec.ExecModule.register("F15-BASE",input, AircraftModule.new("F15-BASE"), 1);
-emexec.ExecModule.transmitter.OverrunDetection(9);
