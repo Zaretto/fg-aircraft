@@ -397,12 +397,19 @@ xsi:noNamespaceSchemaLocation="http://raw.githubusercontent.com/JSBSim-Team/jsbs
         <fcs_function name="systems/flyt/wing-damage-negative-total">
             <function>
                 <ifthen>
-                    <gt>
+                    <eq>
+                        <property>systems/flyt/damage-reset</property>
+                        <value>1</value>
+                    </eq>
+                    <value>0</value>
+                    <ifthen>
+                        <gt>
+                            <property>systems/flyt/wing-damage-negative-g-lag</property>
+                            <property>systems/flyt/wing-damage-negative-total</property>
+                        </gt>
                         <property>systems/flyt/wing-damage-negative-g-lag</property>
                         <property>systems/flyt/wing-damage-negative-total</property>
-                    </gt>
-                    <property>systems/flyt/wing-damage-negative-g-lag</property>
-                    <property>systems/flyt/wing-damage-negative-total</property>
+                    </ifthen>
                 </ifthen>
             </function>
         </fcs_function>
@@ -438,29 +445,29 @@ xsi:noNamespaceSchemaLocation="http://raw.githubusercontent.com/JSBSim-Team/jsbs
         <fcs_function name="systems/flyt/wing-damage-positive-total">
             <function>
                 <ifthen>
-                    <gt>
+                    <eq>
+                        <property>systems/flyt/damage-reset</property>
+                        <value>1</value>
+                    </eq>
+                    <value>0</value>
+                    <ifthen>
+                        <gt>
+                            <property>systems/flyt/wing-damage-positive-g-lag</property>
+                            <property>systems/flyt/wing-damage-positive-total</property>
+                        </gt>
                         <property>systems/flyt/wing-damage-positive-g-lag</property>
                         <property>systems/flyt/wing-damage-positive-total</property>
-                    </gt>
-                    <property>systems/flyt/wing-damage-positive-g-lag</property>
-                    <property>systems/flyt/wing-damage-positive-total</property>
+                    </ifthen>
                 </ifthen>
             </function>
         </fcs_function>
 
         <fcs_function name="systems/flyt/wing-bend-damage-total">
             <function>
-                <ifthen>
-                    <nq>
-                        <property>systems/flyt/damage-reset</property>
-                        <value>1</value>
-                    </nq>
-                    <sum>
-                        <property>systems/flyt/wing-damage-negative-total</property>
-                        <property>systems/flyt/wing-damage-positive-total</property>
-                    </sum>
-                    <value>0</value>
-                </ifthen>
+                <sum>
+                    <property>-systems/flyt/wing-damage-negative-total</property>
+                    <property>systems/flyt/wing-damage-positive-total</property>
+                </sum>
             </function>
             <clipto>
                 <min>0</min>
