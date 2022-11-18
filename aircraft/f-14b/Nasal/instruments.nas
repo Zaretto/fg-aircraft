@@ -78,7 +78,9 @@ var nav1_freq_update = func {
 		setprop("instrumentation/nav[1]/frequencies/selected-mhz", nav1_as_selected);
 	}
 }
-var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
+# carrier approach 'glideslope' based on 3/4 mile @ 360feet
+# (i.e. 1207m at 109m)
+var FD_TANDEG = math.tan(3.5 / 57.29577950560105);
 
 #
 # AN/SPN 46 transmits - this receives.
@@ -291,32 +293,8 @@ var select_key_ecm_nav = func {
 
 # Save fuel state ###############
 var bingo      = props.globals.getNode("sim/model/f-14b/controls/fuel/bingo", 1);
-var fwd_lvl    = props.globals.getNode("consumables/fuel/tank[0]/level-lbs", 1); # fwd group 4700 lbs
-var aft_lvl    = props.globals.getNode("consumables/fuel/tank[1]/level-lbs", 1); # aft group 4400 lbs
-var Lbb_lvl    = props.globals.getNode("consumables/fuel/tank[2]/level-lbs", 1); # left beam box 1250 lbs
-var Lsp_lvl    = props.globals.getNode("consumables/fuel/tank[3]/level-lbs", 1); # left sump tank 300 lbs
-var Rbb_lvl    = props.globals.getNode("consumables/fuel/tank[4]/level-lbs", 1); # right beam box 1250 lbs
-var Rsp_lvl    = props.globals.getNode("consumables/fuel/tank[5]/level-lbs", 1); # right sump tank 300 lbs
-var Lw_lvl     = props.globals.getNode("consumables/fuel/tank[6]/level-lbs", 1); # left wing tank 2000 lbs
-var Rw_lvl     = props.globals.getNode("consumables/fuel/tank[7]/level-lbs", 1); # right wing tank 2000 lbs
-var Le_lvl     = props.globals.getNode("consumables/fuel/tank[8]/level-lbs", 1); # left external tank 2000 lbs
-var Re_lvl     = props.globals.getNode("consumables/fuel/tank[9]/level-lbs", 1); # right external tank 2000 lbs
-var fwd_lvl_gal_us    = props.globals.getNode("consumables/fuel/tank[0]/level-gal_us", 1);
-var aft_lvl_gal_us    = props.globals.getNode("consumables/fuel/tank[1]/level-gal_us", 1);
-var Lbb_lvl_gal_us    = props.globals.getNode("consumables/fuel/tank[2]/level-gal_us", 1);
-var Lsp_lvl_gal_us    = props.globals.getNode("consumables/fuel/tank[3]/level-gal_us", 1);
-var Rbb_lvl_gal_us    = props.globals.getNode("consumables/fuel/tank[4]/level-gal_us", 1);
-var Rsp_lvl_gal_us    = props.globals.getNode("consumables/fuel/tank[5]/level-gal_us", 1);
-var Lw_lvl_gal_us     = props.globals.getNode("consumables/fuel/tank[6]/level-gal_us", 1);
-var Rw_lvl_gal_us     = props.globals.getNode("consumables/fuel/tank[7]/level-gal_us", 1);
-var Le_lvl_gal_us     = props.globals.getNode("consumables/fuel/tank[8]/level-gal_us", 1);
-var Re_lvl_gal_us     = props.globals.getNode("consumables/fuel/tank[9]/level-gal_us", 1);
 aircraft.data.add(	bingo,
-					fwd_lvl, aft_lvl, Lbb_lvl, Lsp_lvl, Rbb_lvl, Rsp_lvl, Lw_lvl,
-					Rw_lvl, Le_lvl, Re_lvl,
-					fwd_lvl_gal_us, aft_lvl_gal_us, Lbb_lvl_gal_us, Lsp_lvl_gal_us,
-					Rbb_lvl_gal_us, Rsp_lvl_gal_us, Lw_lvl_gal_us, Rw_lvl_gal_us,
-					Le_lvl_gal_us, Re_lvl_gal_us,
+                    "consumables/fuel/total-fuel-lbs-for-restore",
 					"sim/model/f-14b/systems/external-loads/station[2]/type",
 					"sim/model/f-14b/systems/external-loads/station[7]/type",
 					"consumables/fuel/tank[8]/selected",
@@ -359,6 +337,7 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/VDI/on-off",
 	"sim/hud/visibility[0]",
 	"sim/hud/visibility[1]",
+	"sim/model/f-14b/controls/damage-enabled",
 	"sim/model/f-14b/controls/hud/on-off",
 	"sim/model/f-14b/controls/HSD/on-off",
 	"sim/model/f-14b/controls/pilots-displays/mode/aa-bt",
@@ -366,14 +345,18 @@ aircraft.data.add("sim/model/f-14b/controls/VDI/brightness",
 	"sim/model/f-14b/controls/pilots-displays/mode/cruise-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/ldg-bt",
 	"sim/model/f-14b/controls/pilots-displays/mode/to-bt",
-    "sim/model/f-14b/wings/damage-enabled",
     "sim/model/f-14b/controls/windshield-heat",
 	"sim/model/f-14b/controls/pilots-displays/hsd-mode-nav",
-	"sim/model/f-14b/wings/damage-enabled",
 	"fdm/jsbsim/propulsion/engine[0]/compressor-stall-amount",
 	"fdm/jsbsim/propulsion/engine[1]/compressor-stall-amount",
 	"fdm/jsbsim/propulsion/engine[0]/mcb-failed",
-	"fdm/jsbsim/propulsion/engine[1]/mcb-failed"
+	"fdm/jsbsim/propulsion/engine[1]/mcb-failed",
+    "sim/model/f-14b/fx/vapour-color-left-r" ,
+    "sim/model/f-14b/fx/vapour-color-left-g" ,
+    "sim/model/f-14b/fx/vapour-color-left-b" ,
+    "sim/model/f-14b/fx/vapour-color-right-r",
+    "sim/model/f-14b/fx/vapour-color-right-g",
+    "sim/model/f-14b/fx/vapour-color-right-b",
 );
 
 var inc_ticker = func {
@@ -391,12 +374,14 @@ aircraft.data.add("sim/model/f-14b/instrumentation/radar-altimeter/limit-bug");
 
 # Lighting ################
 aircraft.data.add(
-	"sim/model/f-14b/controls/lighting/hook-bypass",
+	"sim/model/f-14b/controls/lighting/hook-bypass-field",
 	"controls/lighting/instruments-norm",
 	"controls/lighting/panel-norm",
 	"sim/model/f-14b/controls/lighting/anti-collision-switch",
 	"sim/model/f-14b/controls/lighting/position-flash-switch",
-	"sim/model/f-14b/controls/lighting/position-wing-switch");
+	"sim/model/f-14b/controls/lighting/position-wing-switch",
+    "sim/model/f-14b/controls/lighting/red-flood-light-switch",
+    "sim/model/f-14b/controls/lighting/white-flood-light-switch");
 
 # HSD #####################
 var hsd_mode_node = props.globals.getNode("sim/model/f-14b/controls/pilots-displays/hsd-mode-nav");
@@ -562,20 +547,49 @@ var instruments_exec = {
 	new : func (_ident){
         print("instruments_exec: init");
         var obj = { parents: [instruments_exec]};
-#        input = {
-#               name : "property",
-#        };
-#
-#        foreach (var name; keys(input)) {
-#            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident, name, input[name]));
-#        }
+
+        # export / import properties from JSBSim that are bools as this doesn't seem to work directly.
+        input = {
+               aoa_indexer_slow : "/fdm/jsbsim/systems/electrics/aoa-indexer-slow",
+               aoa_indexer_onspeed : "/fdm/jsbsim/systems/electrics/aoa-indexer-onspeed",
+               aoa_indexer_fast : "/fdm/jsbsim/systems/electrics/aoa-indexer-fast",
+               tailhook_bypass_field: "sim/model/f-14b/controls/lighting/hook-bypass-field"
+        };
+        foreach (var name; keys(input)) {
+            emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new(_ident, name, input[name]));
+        }
+
+        # corresponding properties to export/import from/to
+        obj.aoa_indexer_slow    = props.globals.getNode("sim/multiplay/generic/bool[28]");
+        obj.aoa_indexer_onspeed = props.globals.getNode("sim/multiplay/generic/bool[29]");
+        obj.aoa_indexer_fast    = props.globals.getNode("sim/multiplay/generic/bool[30]");
+        obj.tailhook_bypass_field = props.globals.getNode("fdm/jsbsim/systems/hook/tailhook-bypass-field");
+
 
         #
         # recipient that will be registered on the global transmitter and connect this
         # subsystem to allow subsystem notifications to be received
         obj.recipient = emesary.Recipient.new(_ident~".Subsystem");
         obj.recipient.instruments_exec = obj;
-
+        
+        obj.update_items = [
+            props.UpdateManager.FromHashValue("aoa_indexer_slow", 1, func(val)
+                                            {
+                                                obj.aoa_indexer_slow.setBoolValue(val);
+                                            }),
+            props.UpdateManager.FromHashValue("aoa_indexer_onspeed", 1, func(val)
+                                            {
+                                                obj.aoa_indexer_onspeed.setBoolValue(val);
+                                            }),
+            props.UpdateManager.FromHashValue("aoa_indexer_fast", 1, func(val)
+                                            {
+                                                obj.aoa_indexer_fast.setBoolValue(val);
+                                            }),
+            props.UpdateManager.FromHashValue("tailhook_bypass_field", 1, func(val)
+                                            {
+                                                obj.tailhook_bypass_field.setBoolValue(val);
+                                            }),
+        ];
         obj.recipient.Receive = func(notification)
         {
             if (notification.NotificationType == "FrameNotification")
@@ -594,6 +608,11 @@ var instruments_exec = {
 #        print("Exec instruments: dT",notification.dT, " frame=",notification.FrameCount);        
         aircraft.ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
         
+        foreach(var update_item; me.update_items)
+        {
+            update_item.update(notification);
+        }
+
         burner +=1;
         if ( burner == 3 ) { burner = 0 }
         BurnerN.setValue(burner);
@@ -629,11 +648,12 @@ var instruments_exec = {
             }
         } else {
             # odd frame
-            awg_9.hud_nearest_tgt();
+            awg_9.hud.hud_nearest_tgt();
             instruments_data_export();
             if ( ArmSysRunning.getBoolValue() ) {
                 f14.armament_update();
             }
+            f14.armament_update2();
             if (notifications.frameNotification.FrameCount == 5 or notifications.frameNotification.FrameCount == 11 ) {
                 # done each 0.3 sec.
                 afcs_filters();
@@ -691,7 +711,7 @@ var common_carrier_init = func {
             if (f14.carrier_ara_63_position == nil or geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 200)
             {
                 print("Special init for Carrier cat launch");
-                setprop("/fdm/jsbsim/systems/systems/holdback/holdback-cmd",1);
+                setprop("/fdm/jsbsim/systems/holdback/holdback-cmd",1);
                 setprop("gear/launchbar/position-norm",1);
                 repos_gear_down = 1;
             }
@@ -789,6 +809,8 @@ var common_init = func {
         if (getprop("sim/model/f-14b/controls/windshield-heat") != nil)
             setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f-14b/controls/windshield-heat"));
 
+f14_afcs.afcs_disengage();
+    setprop("fdm/jsbsim/systems/hook/tailhook-bypass-field",getprop("sim/model/f-14b/controls/lighting/hook-bypass-field"));
         setprop("sim/multiplay/visibility-range-nm", 200);
 	print("Setting replay medium res to 50hz");
         setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
@@ -834,8 +856,14 @@ var common_init = func {
 }
 
 # Init ####################
-var init = func {
-	print("Initializing F-14 Systems");
+var init = func(v) {
+if (v == nil or !v.getValue())
+  {
+	print("init: not ready ",v.getValue());
+return;
+  }
+
+	print("Initializing F-14 Systems ",v.getValue());
 	f14.ext_loads_init();
 	f14.init_fuel_system();
 	aircraft.data.load();
@@ -844,26 +872,46 @@ var init = func {
 	ticker.setDoubleValue(0);
 	local_mag_deviation();
 	tacan_switch_init();
-	radardist.init();
-	awg_9.init();
+	#radardist.init();
+	#awg_9.init();
 	an_arc_182v.init();
 	an_arc_159v1.init();
+    f14.set_flood_lighting_colour();
 	setprop("controls/switches/radar_init", 0);
 	# properties to be stored
 	foreach (var f_tc; TcFreqs.getChildren()) {
 		aircraft.data.add(f_tc);
 	}
+    # ensure JSBSim damage matches GUI.
+    setprop("fdm/jsbsim/systems/flyt/damage-enabled",getprop("sim/model/f-14b/controls/damage-enabled"));
 
+	setprop("f14/done",0);#reset ejection seat
+	view.setViewByIndex(0);
+	setprop("sim/view[115]/enabled", 0);
     common_init();
-    f14.external_load_loopTimer.start();
-    
-    # make failure mode for radar, so that when aircraft is hit missiles cannot still be fired off.
-    var prop = "/instrumentation/radar";
-    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
-    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
+
+var initOnce = func {
+	if (getprop("sim/signals/fdm-initialized")) {
+		# this method will be run once when the FDM is ready, and will never be run again. (unless the FG Reset option is used)
+		removelistener(initOnceListen);
+	    
+	    # make failure mode for radar and fire-control, so that when aircraft is hit missiles cannot still be fired off:
+	    var prop = "/instrumentation/radar";
+	    var actuator_radar = compat_failure_modes.set_unserviceable(prop);
+	    FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
+	    
+	    prop = "/payload/armament/fire-control";
+	    var actuator_fire_control = compat_failure_modes.set_unserviceable(prop);
+	    FailureMgr.add_failure_mode(prop, "Fire-control", actuator_fire_control);
+	    
+	    var fire_fc = compat_failure_modes.set_unserviceable("damage/fire");# will make smoke trail when damaged
+		FailureMgr.add_failure_mode("damage/fire", "Fire", fire_fc);
+	}
+}
+var initOnceListen = setlistener("sim/signals/fdm-initialized", initOnce);# this listener will be removed after it has ran once.
 
 
 setlistener("sim/position-finalized", func (is_done) {
@@ -878,6 +926,8 @@ setlistener("sim/position-finalized", func (is_done) {
 setlistener("sim/signals/reinit", func (reinit) {
     if (reinit.getValue()) {
         f14.internal_save_fuel();
+        setprop("ai/submodels/submodel[4]/count", 100);#replenish chaff and flares
+    	setprop("ai/submodels/submodel[5]/count", 100);
     } else {
         settimer(func { f14.internal_restore_fuel() }, 0.6);
     }
@@ -886,8 +936,8 @@ setlistener("sim/signals/reinit", func (reinit) {
 
 # warning lights medium speed flasher
 # -----------------------------------
-aircraft.light.new("sim/model/f-14b/lighting/warn-medium-lights-switch", [0.3, 0.2]);
-setprop("sim/model/f-14b/lighting/warn-medium-lights-switch/enabled", 1);
+aircraft.light.new("fdm/jsbsim/systems/electrics/aoa-indexer-light", [0.3, 0.2]);
+setprop("fdm/jsbsim/systems/electrics/aoa-indexer-light/enabled", 1);
 
 
 # Old Fashioned Radio Button Selectors
@@ -938,9 +988,8 @@ carrier_approach_reposition = func {
     var dist_m = 11000;
     if (getprop("sim/presets/carrier-approach-dist-m") != nil)
         dist_m  = getprop("sim/presets/carrier-approach-dist-m");
-    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
     np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
-    var gs_height = ((dist_m*FD_TAN3DEG)+20)*3.281;
+    var gs_height = ((dist_m*FD_TANDEG)+20)*3.281;
     lat = np.lat();
     lon = np.lon();
     onspeed = get_approach_onspeed();
@@ -1004,7 +1053,6 @@ return;
 }
 
 print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
-    var FD_TAN3DEG = math.tan(3.0 / 57.29577950560105);
 
     var np = geo.Coord.new()
     .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
@@ -1107,6 +1155,6 @@ setlistener("fdm/jsbsim/systems/hook/arrestor-wire-available", func(v)
 {
 	if (v != nil and v.getValue() == 0 and getprop("fdm/jsbsim/systems/hook/funcs/hook-operational-efficiency") < 1)
 	{
-		setprop("/sim/messages/copilot", "Arrestor wire inoperable due to overspeed. Onspeed VC "~int(getprop("fdm/jsbsim/inertia/onspeed-kts"))~"kts ");
+		setprop("/sim/messages/copilot", "Arrestor wire inoperable due to overspeed. Onspeed VC "~int(getprop("fdm/jsbsim/inertia/aoa-indexer-kts"))~"kts ");
 	}
 },0,0);

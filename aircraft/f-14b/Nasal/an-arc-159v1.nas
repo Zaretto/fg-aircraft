@@ -37,6 +37,14 @@ var Comm2_Freq_stdby = props.globals.getNode("instrumentation/comm[1]/frequencie
 
 var df_lock = 0;
 
+update_volume_for_mode = func {
+	if ( Mode.getValue() == 1 or Mode.getValue() == 2 ) {
+		Comm2_Volume.setValue(Volume.getValue());
+	}
+	else
+		Comm2_Volume.setValue(0);
+}
+
 var turn_on = func() {
 	var f = Function.getValue();
 	if ( f == 0 ) {
@@ -50,8 +58,7 @@ var turn_on = func() {
 		Comm2_Freq.setValue(243);
 		Selected_F.setValue(243000);
 	}
-	var v = Volume.getValue();
-	Comm2_Volume.setValue(v);
+	update_volume_for_mode();
 }
 
 var turn_off = func() {
@@ -82,6 +89,7 @@ var adj_mode = func(s) {
 	var old_m = m;
 	m += s;
 	if ( m > 3 ) { m = 3 } elsif ( m < 0 ) { m = 0 }
+#	print("AN/ARC-159 mode",s," -> ",m);
 	Mode.setValue(m);
 	if ( m == 0 ) {
 		turn_off();
@@ -92,9 +100,11 @@ var adj_mode = func(s) {
 	} elsif ( m == 3) {
 		Comm2_Freq.setValue(0);
 	}
+	update_volume_for_mode();
 }
 
 var adj_function = func(s) {
+#	print("AN/ARC-159 function",s);
 	var m = Mode.getValue();
 	var f = Function.getValue();
 	var old_f = f;
@@ -122,6 +132,7 @@ var adj_channel = func(s) {
 	var p = Preset.getValue();
 	p += s;
 	if ( p < 0 ) { p = 0 } elsif ( p > 19 ) { p = 19 }
+#	print("Channel ",p);
 	Preset.setValue(p);
 	var path = "frequency[" ~ p ~ "]";
 	var p_freq = Presets.getNode(path).getValue();
@@ -157,6 +168,7 @@ var test_band = func(fq) {
 var load_freq = func() {
 	var m = Mode.getValue();
 	var f = Function.getValue();
+#	print("load-freq ",m," -> ",f);
 	if ( f == 0 and m > 0 ) {
 		load();
 		Load_State.setValue(1);
@@ -164,17 +176,9 @@ var load_freq = func() {
 	}
 }
 
-var set_volume = func(s) {
-	var v = Volume.getValue();
-	var m = Mode.getValue();
-	v += s;
-	if ( v < 0 ) { v = 0 } elsif ( v > 1 ) { v = 1 }
-	Volume.setValue(v);
-	if ( m == 1 or m == 2 ) {
-		Comm2_Volume.setValue(v);
-	}
-}
-
+var volumeListener = setlistener(Volume.getPath(), func(v){
+	update_volume_for_mode();
+}, 0, 0);
 
 var init = func() {
 	var m = Mode.getValue();
@@ -219,3 +223,8 @@ var p18 = Radio.getNode("presets/frequency[18]");
 var p19 = Radio.getNode("presets/frequency[19]");
 aircraft.data.add(Preset, Mode, Function, Comm2_Freq, Comm2_Freq_stdby, p0, p1, p2, p3, p4, p5,
 	p6, p7, p8, p9, p10, p11, p12, p13, p14, p14, p15, p16, p17, p18, p19);
+
+ cleanup = func{
+	 removelistener(volumeListener);
+	 volumeListener = nil;
+ }

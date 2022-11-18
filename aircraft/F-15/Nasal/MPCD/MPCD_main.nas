@@ -9,27 +9,39 @@
 
 #for debug: setprop ("/sim/startup/terminal-ansi-colors",0);
 
+# SIT scaling for legibility is based on the work Fox-Three who
+# provided a prototype with values of 3.5 for the lines and 1.5 for the fonts.
+# I've adjusted the code so that we setup the scaling at the start
+# and also specify the font to match the other displays 
+
+                           # original value 
+var HSDblepFontSize  = 24; # 15;
+var HSDlargeFontSize = 36; # 25;
+var HSDfontSize      = 24; # 16;
+var HSDlineWidth     =  6; # 1.5;
+var HSDfontFace      = "condensed.txf";        
+
 var MPCD_Station =
 {
-	new : func (svg, ident)
+    new : func (svg, ident)
     {
 		var obj = {parents : [MPCD_Station] };
 
         obj.status = svg.getElementById("PACS_L_"~ident);
         if (obj.status == nil)
-            print("Failed to load PACS_L_"~ident);
+            logprint(3, "Failed to load PACS_L_"~ident);
 
         obj.label = svg.getElementById("PACS_V_"~ident);
         if (obj.label == nil)
-            print("Failed to load PACS_V_"~ident);
+            logprint(3, "Failed to load PACS_V_"~ident);
 
         obj.selected = svg.getElementById("PACS_R_"~ident);
         if (obj.selected == nil)
-            print("Failed to load PACS_R_"~ident);
+            logprint(3, "Failed to load PACS_R_"~ident);
 
         obj.selected1 = svg.getElementById("PACS_R1_"~ident);
         if (obj.selected1 == nil)
-            print("Failed to load PACS_R1_"~ident);
+            logprint(3, "Failed to load PACS_R1_"~ident);
 
         obj.prop = "payload/weight["~ident~"]";
         obj.ident = ident;
@@ -50,51 +62,60 @@ var MPCD_Station =
     update: func
     {
         var weapon_mode = getprop("sim/model/f15/controls/armament/weapon-selector");
-        var na = getprop(me.prop~"/selected");
+        var na = pylons.pylons[me.ident+1].getWeapons(); #getprop(me.prop~"/selected");
         var sel = 0;
         var mode = "STBY";
         var sel_node = "sim/model/f15/systems/external-loads/station["~me.ident~"]/selected";
         var master_arm=getprop("sim/model/f15/controls/armament/master-arm-switch");
 
-        if (na != nil and na != "none")
+        if (na != nil and size(na) and na[0] != nil)
         {
-            if (na == "AIM-9")
+            if (na[0].type == "AIM-9")
             {
                 na = "9L";
                 if (weapon_mode == 1)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "SRM";
             }
-            elsif (na == "AIM-120") 
+            elsif (na[0].type == "AIM-120") 
             {
-                na = "120A";
+                na = "120B";
                 if (weapon_mode == 2)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "MRM";
             }
-            elsif (na == "MK-84") {
+            elsif (na[0].type == "MK-84" or na[0].type == "GBU-10") {
                 na = "";
                 mode = "";
             }
-            elsif (na == "AIM-7") 
+            elsif (na[0].type == "AIM-7") 
             {
-                na = "7M";
+                na = "7F";
                 if (weapon_mode == 2)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
                 else mode = "MRM";
             }
+            else
+            {
+                mode = "";
+                na = "";
+            }
+
             me.status.setText(mode);
             me.label.setText(na);
 
@@ -128,19 +149,19 @@ var MPCD_GroundStation =
 
         obj.status = svg.getElementById("PACS_L_"~ident~"-g");
         if (obj.status == nil)
-            print("Failed to load PACS_L_"~ident~"-g");
+            logprint(3, "Failed to load PACS_L_"~ident~"-g");
 
         obj.label = svg.getElementById("PACS_V_"~ident~"-g");
         if (obj.label == nil)
-            print("Failed to load PACS_V_"~ident~"-g");
+            logprint(3, "Failed to load PACS_V_"~ident~"-g");
 
         obj.selected = svg.getElementById("PACS_R_"~ident~"-g");
         if (obj.selected == nil)
-            print("Failed to load PACS_R_"~ident~"-g");
+            logprint(3, "Failed to load PACS_R_"~ident~"-g");
 
         obj.selected1 = svg.getElementById("PACS_R1_"~ident~"-g");
         if (obj.selected1 == nil)
-            print("Failed to load PACS_R1_"~ident~"-g");
+            logprint(3, "Failed to load PACS_R1_"~ident~"-g");
 
         obj.prop = "payload/weight["~ident~"]";
         obj.ident = ident;
@@ -174,7 +195,20 @@ var MPCD_GroundStation =
                 na = "84";
                 if (weapon_mode == 5)
                 {
-                    sel = getprop(sel_node);
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
+                    if (sel and master_arm)
+                        mode = "RDY";
+                }
+                else mode = "AG";
+            }
+             elsif (na == "GBU-10")
+            {
+                na = "10";
+                if (weapon_mode == 5)
+                {
+                    #sel = getprop(sel_node);
+                    sel = me.ident+1 == pylons.fcs.getSelectedPylonNumber();
                     if (sel and master_arm)
                         mode = "RDY";
                 }
@@ -287,8 +321,6 @@ var MPCD_Device =
         svg.width  = canvas_x*(1-uv_x);
         svg.height = canvas_y*(1-uv_y);
         
-        
-        
         svg.holeTop_y          = svg.origin_y+svg.height*0.15;
         svg.holeBottom_y       = svg.origin_y+svg.height*0.85;
         svg.holeHeight         = svg.holeBottom_y-svg.holeTop_y;
@@ -298,7 +330,7 @@ var MPCD_Device =
         #svg.holeTopFromMyPos_y = svg.myPos_y-svg.holeTop_y;
         
         svg.p_HSD = me.PFD._canvas.createGroup();
-        #print("h "~svg.holeHeight);#339
+        #logprint(3, "h "~svg.holeHeight);#339
         svg.hole = svg.p_HSD.createChild("path")
             .moveTo(svg.holeRadius,0)
             .arcSmallCW(svg.holeRadius,svg.holeRadius, 0, -svg.holeRadius*2, 0)
@@ -306,7 +338,7 @@ var MPCD_Device =
             .setColor(0,1,0)# segmented green
             .setTranslation(svg.centrum_x,svg.centrum_y)
             .set("z-index",10001)
-            .setStrokeLineWidth(1.5)
+            .setStrokeLineWidth(HSDlineWidth)
             .setStrokeDashArray([10, 10]);
         svg.holeMask = svg.p_HSD.createChild("image")
                 .setTranslation(uv_x*canvas_x,uv_y*canvas_y)
@@ -328,73 +360,73 @@ var MPCD_Device =
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(-90*D2R), svg.compassRadius*math.sin(-90*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c3 = svg.p_HSDcompass.createChild("text")
                 .setText("3")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(-60*D2R), svg.compassRadius*math.sin(-60*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c6 = svg.p_HSDcompass.createChild("text")
                 .setText("6")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(-30*D2R), svg.compassRadius*math.sin(-30*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c9 = svg.p_HSDcompass.createChild("text")
                 .setText("E")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(0*D2R), svg.compassRadius*math.sin(0*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c12 = svg.p_HSDcompass.createChild("text")
                 .setText("12")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(30*D2R), svg.compassRadius*math.sin(30*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c15 = svg.p_HSDcompass.createChild("text")
                 .setText("15")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(60*D2R), svg.compassRadius*math.sin(60*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c18 = svg.p_HSDcompass.createChild("text")
                 .setText("S")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(90*D2R), svg.compassRadius*math.sin(90*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c21 = svg.p_HSDcompass.createChild("text")
                 .setText("21")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(120*D2R), svg.compassRadius*math.sin(120*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c24 = svg.p_HSDcompass.createChild("text")
                 .setText("24")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(150*D2R), svg.compassRadius*math.sin(150*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c27 = svg.p_HSDcompass.createChild("text")
                 .setText("W")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(180*D2R), svg.compassRadius*math.sin(180*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c30 = svg.p_HSDcompass.createChild("text")
                 .setText("30")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(210*D2R), svg.compassRadius*math.sin(210*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.c33 = svg.p_HSDcompass.createChild("text")
                 .setText("33")
                 .setAlignment("center-center")
                 .setColor(0,1,0)
                 .setTranslation(svg.compassRadius*math.cos(240*D2R), svg.compassRadius*math.sin(240*D2R))
-                .setFontSize(16, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0);
         svg.compassLines = svg.p_HSDcompass.createChild("path")
                 .moveTo((svg.compassRadius-svg.compassL)*math.cos(10*D2R), (svg.compassRadius-svg.compassL)*math.sin(10*D2R))
                 .lineTo(svg.compassRadius*math.cos(10*D2R), svg.compassRadius*math.sin(10*D2R))
@@ -445,7 +477,7 @@ var MPCD_Device =
                 .moveTo((svg.compassRadius-svg.compassL)*math.cos(350*D2R), (svg.compassRadius-svg.compassL)*math.sin(350*D2R))
                 .lineTo(svg.compassRadius*math.cos(350*D2R), svg.compassRadius*math.sin(350*D2R))
                 .setColor(0,1,0)
-                .setStrokeLineWidth(1.5);
+                .setStrokeLineWidth(HSDlineWidth);
         
             
         
@@ -473,7 +505,7 @@ var MPCD_Device =
                     .moveTo(0,0)
                     .vert(-12)
                     .setColor(1,1,0) #yellow for now. Some are green (friendly), red (hostile), blue (fighter-link).
-                    .setStrokeLineWidth(1.5)#on the image some are segmented, I guess thats for not detected by own radar, so making them full drawn.
+                    .setStrokeLineWidth(HSDlineWidth)#on the image some are segmented, I guess thats for not detected by own radar, so making them full drawn.
                     .set("z-index",10)
                     .hide();
             svg.ship[i] = svg.p_HSDmyPos.createChild("path")
@@ -487,7 +519,7 @@ var MPCD_Device =
                     .horiz(8)
                     .vert(4)
                     .setColor(1,1,0) #yellow for now. Some are green (friendly), red (hostile), blue (fighter-link).
-                    .setStrokeLineWidth(1.5)
+                    .setStrokeLineWidth(HSDlineWidth)
                     .set("z-index",10)
                     .hide();
             svg.blepText[i] = svg.p_HSDmyPos.createChild("text")
@@ -495,7 +527,7 @@ var MPCD_Device =
                 .setAlignment("center-top")
                 .setColor(1,1,0) #yellow for now. Some are green (friendly), red (hostile), blue (fighter-link).
                 .set("z-index",9)
-                .setFontSize(15, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDblepFontSize, 1.0);
         }
         svg.steerpointsMaxUsed = -1;
         svg.steerpoints = [];
@@ -507,7 +539,7 @@ var MPCD_Device =
                 .moveTo(12,-12)
                 .vert(24)
                 .setColor(1,1,1)
-                .setStrokeLineWidth(1.5)# essentially the cursor. Full drawn as does not have fighter-link yet.
+                .setStrokeLineWidth(HSDlineWidth)# essentially the cursor. Full drawn as does not have fighter-link yet.
                 .set("z-index",100)
                 .hide();
 
@@ -520,7 +552,7 @@ var MPCD_Device =
            .horiz(20)
            .setColor(0.5,0.5,1)# always light-blue
            .set("z-index",1)
-           .setStrokeLineWidth(1.5);
+           .setStrokeLineWidth(HSDlineWidth);
 
         svg.infoTgt = svg.p_HSD.createChild("text")
                 .setText("2F/MIG29")
@@ -528,49 +560,49 @@ var MPCD_Device =
                 .setTranslation(1024*0.92,1024*0.8)
                 .setColor(1,1,0)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         svg.infoBer = svg.p_HSD.createChild("text")
                 .setText("TN 00357")
                 .setAlignment("right-center")
                 .setTranslation(1024*0.92,1024*0.8+30)
                 .setColor(1,1,0)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         svg.infoPos = svg.p_HSD.createChild("text")
                 .setText("23K G435")
                 .setAlignment("right-center")
                 .setTranslation(1024*0.92,1024*0.8+60)
                 .setColor(1,1,0)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         svg.infoArm = svg.p_HSD.createChild("text")
                 .setText("A4A")
                 .setAlignment("left-center")
                 .setTranslation(1024*0.08,1024*0.8+30)
                 .setColor(0,1,0)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         svg.infoTime = svg.p_HSD.createChild("text")
                 .setText("14:25:04Z")
                 .setAlignment("left-center")
                 .setTranslation(1024*0.08,1024*0.05)
                 .setColor(1,1,1)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         svg.infoPq = svg.p_HSD.createChild("text")
                 .setText("RPQ 15")
                 .setAlignment("left-center")
                 .setTranslation(1024*0.08,1024*0.05+30)
                 .setColor(0,1,0)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         svg.infoRange = svg.p_HSD.createChild("text")
                 .setText("20")
                 .setAlignment("right-center")
                 .setTranslation(1024*0.92,1024*0.1)
                 .setColor(0,1,0)
                 .set("z-index",10020)
-                .setFontSize(25, 1.0);
+                .setFont(HSDfontFace).setFontSize(HSDlargeFontSize, 1.0);
         # TODO: these tables needs to be expanded:
         svg.shipLookup = {  
                 "missile_frigate":          "",
@@ -583,6 +615,9 @@ var MPCD_Device =
         };
         svg.samLookup = {
                 "buk-m2":                   "11",
+                "S-75":                     "02",
+                "MIM104D":                  " P",
+                "s300":                     "20",
         };     
         svg.typeLookup = {
                 "f-14b":                    "F",     #fighter
@@ -708,7 +743,7 @@ var MPCD_Device =
                     .moveTo(0,0)
                     .lineTo(-me.radarX,me.radarY)
                     #.arcSmallCW(me.rdrRangePixels,me.rdrRangePixels, 0, me.radarX*2, 0)
-                    .setStrokeLineWidth(1.5)
+                    .setStrokeLineWidth(HSDlineWidth)
                     .set("z-index",5)
                     .setColor(0,1,0)# green
                     .update();
@@ -738,7 +773,7 @@ var MPCD_Device =
                             .moveTo(20,10)
                             .horiz(-40)
                             .lineTo(0,-20)
-                            .setStrokeLineWidth(1.5)
+                            .setStrokeLineWidth(HSDlineWidth)
                             .set("z-index",4)
                             .setColor(1,0.75,0)#orange
                             .setColorFill(0,0,0);
@@ -749,7 +784,7 @@ var MPCD_Device =
                             #.setFont(??)
                             .set("z-index",5)
                             .setTranslation(-4,0)
-                            .setFontSize(17, 1.0));
+                            .setFont(HSDfontFace).setFontSize(HSDfontSize, 1.0));
                     }
                     me.root.steerpoints[me.j].setTranslation(me.legX,me.legY);
                     me.root.steerpointsText[me.j].setVisible(me.plan.current != me.j);
@@ -758,7 +793,7 @@ var MPCD_Device =
                         me.root.legs.createChild("path")
                             .moveTo(me.legX,me.legY)
                             .lineTo(me.prevX,me.prevY)
-                            .setStrokeLineWidth(1.5)
+                            .setStrokeLineWidth(HSDlineWidth)
                             .setColor(1,0.75,0)#orange
                             .update();
                     }
@@ -957,7 +992,7 @@ var MPCD_Device =
         var oo = me;
         var update_flares = func(o) {
             v = getprop("/ai/submodels/submodel[5]/count");
-            print("submodel [5]",v);
+            logprint(3, "submodel [5]",v);
             
             o.p1_3.LBL_CHAFF.setText(sprintf("CHF %3d",v));
             o.p1_3.LBL_FLARE.setText(sprintf(" FLR %2d",v));
@@ -970,10 +1005,6 @@ var MPCD_Device =
         setlistener("ai/submodels/submodel[5]/flare-release", func {
             update_flares(oo);
         });
-
-
-        me.pjitds_1 =  PFD_NavDisplay.new(me.PFD,"Situation", "mpcd-sit", "pjitds_1", "jtids_main");
-        # use the radar range as the ND range.
 
         me.p_spin_recovery = me.PFD.addPage("Spin recovery", "p_spin_recovery");
         me.p_spin_recovery.cur_page = nil;
@@ -1065,7 +1096,7 @@ var MPCD_Device =
                     {
                         if (v != nil) {
                             me.mfd_device_status = v.getValue();
-                            print("MFD Mode ",me.designation," ",me.mfd_device_status);
+                            logprint(3, "MFD Mode ",me.designation," ",me.mfd_device_status);
                             if (!me.mfd_device_status)
                                 me.PFDsvg.setVisible(0);
                             else
@@ -1096,10 +1127,10 @@ var MPCD_Device =
 
         me.p1_1.addMenuItem(0, "ARMT", me.p1_2);
         me.p1_1.addMenuItem(1, "BIT", me.p1_2);
-        me.p1_1.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_1.addMenuItem(2, "SIT", me.p_HSD);
         me.p1_1.addMenuItem(3, "WPN", me.p1_2);
         me.p1_1.addMenuItem(4, "DTM", me.p1_2);
-        me.p1_1.addMenuItem(8, "SIT2", me.p_HSD);#added by niko
+        #//me.p1_1.addMenuItem(8, "SIT2", me.p_HSD);#added by niko
         
         me.p_HSD.addMenuItem(9, "M", me.p1_1);#added by niko
         me.p_HSD.addMenuItem(0, "DAT", me.p_HSD);#added by niko
@@ -1115,7 +1146,7 @@ var MPCD_Device =
         me.p1_2.addMenuItem(4, "WPN LOAD", me.p1_3);
         me.p1_2.addMenuItem(9, "M", me.p1_1);
 
-        me.p1_3.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_3.addMenuItem(2, "SIT", me.p_HSD);
         me.p1_3.addMenuItem(3, "A/G", me.p1_4);
         me.p1_3.addMenuItem(4, "2/2", me.p1_3);
         me.p1_3.addMenuItem(8, "TM\nPWR", me.p1_3);
@@ -1125,7 +1156,7 @@ var MPCD_Device =
         me.p1_3.addMenuItem(14, "PYLON", me.p1_3);
         me.p1_3.addMenuItem(15, "MODE S", me.p1_3);
 
-        me.p1_4.addMenuItem(2, "SIT", me.pjitds_1);
+        me.p1_4.addMenuItem(2, "SIT", me.p_HSD);
         me.p1_4.addMenuItem(3, "A/A", me.p1_3);
 #        me.p1_4.addMenuItem(4, "2/2", me.p1_3);
 #        me.p1_4.addMenuItem(8, "TM\nPWR", me.p1_3);
@@ -1136,7 +1167,6 @@ var MPCD_Device =
 #        me.p1_4.addMenuItem(15, "MODE S", me.p1_3);
 
 
-        me.pjitds_1.addMenuItem(9, "M", me.p1_1);
     },
 
     update : func(notification)
@@ -1176,30 +1206,11 @@ var MPCD_Device =
 #
 # Connect the radar range to the nav display range. 
 setprop("instrumentation/mpcd-sit/inputs/range-nm", getprop("instrumentation/radar/radar2-range"));
-emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowN","gear/gear[0]/wow"));
-emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowL","gear/gear[1]/wow"));
-emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("MPCD", "wowR","gear/gear[2]/wow"));
-var MPCDRecipient =
-{
-    new: func(_ident)
-    {
-        var new_class = emesary.Recipient.new(_ident);
-        new_class.MPCD = nil;
-        new_class.Receive = func(notification)
-        {
-            if (notification.NotificationType == "FrameNotification")
-            {
-                if (new_class.MPCD == nil)
-                  new_class.MPCD = MPCD_Device.new("F15-MPCD", "MPCDImage",0);
-                if (!math.mod(notifications.frameNotification.FrameCount,4)){
-                    new_class.MPCD.update(notification);
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
-        return new_class;
-    },
+input = {
+        wowN          : "gear/gear[0]/wow",
+        wowL          : "gear/gear[1]/wow",
+        wowR          : "gear/gear[2]/wow",
 };
 
-emesary.GlobalTransmitter.Register(MPCDRecipient.new("F15-MPCD"));
+emexec.ExecModule.register("F-15 MPCD", input, MPCD_Device.new("F15-MPCD", "MPCDImage",0),1);
+

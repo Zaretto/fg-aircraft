@@ -43,6 +43,7 @@ var ORDNANCE = 3;
 var knownShips = {
     "missile_frigate":       nil,
     "frigate":       nil,
+    "fleet":       nil,
     "USS-LakeChamplain":     nil,
     "USS-NORMANDY":     nil,
     "USS-OliverPerry":     nil,
@@ -51,6 +52,8 @@ var knownShips = {
 
 var knownSurface = {
     "buk-m2":       nil,
+    "s-300":       nil,
+    "gci":       nil,
     "depot":       nil,
     "truck":     nil,
     "tower":     nil,
@@ -215,7 +218,6 @@ var u_ecm_signal      = 0;
 var u_ecm_signal_norm = 0;
 var u_radar_standby   = 0;
 var u_ecm_type_num    = 0;
-var FD_TAN3DEG = 0.052407779283; # tan(3)
 var sel_next_target = 0;
 var sel_prev_target = 0;
 var stby = 0;
@@ -305,7 +307,10 @@ var rdr_loop = func(notification) {
 			u.set_display(0);
 		}
         armament.contact = nil;
-	}
+        setprop("sim/multiplay/generic/string[6]", "");
+	} else {
+        setprop("sim/multiplay/generic/string[6]", "");
+    }
 }
 
 var sweep_frame_inc = 0.2;
@@ -422,7 +427,7 @@ var az_scan = func(notification) {
                             u.setClass(SURFACE);
                         } elsif (contains(knownShips,mdl)) {
                             u.setClass(MARINE);
-                        } elsif (u.get_altitude() < 5) {
+                        } elsif (u.get_altitude() < 1.5 and u.get_altitude() > -1.5) {
                             u.setClass(MARINE);
                         } elsif (u.get_Speed() < 60) {
                             u.setClass(SURFACE);
@@ -707,6 +712,21 @@ if(awg9_trace)
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
         active_u = nil; armament.contact = active_u;
+    }
+    if (active_u != nil and active_u.get_display() and getprop("controls/armament/master-arm") and active_u_callsign != nil and active_u_callsign != "") {
+        # transmit what we are locked onto
+        setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+        
+        # the below code is needed so missile can lock/not-lock onto active_u depending on class.
+        if (active_u.get_type() == armament.AIR and active_u.get_Speed() < 60) {
+            # active_u have landed
+            active_u.setClass(armament.SURFACE);
+        } elsif ((active_u.get_type() == armament.SURFACE or active_u.get_type() == armament.MARINE) and active_u.get_Speed() > 60) {
+            # active_u have taken-off
+            active_u.setClass(armament.AIR);
+        }
+    } else {
+        setprop("sim/multiplay/generic/string[6]", "");
     }
 }
 
@@ -1112,7 +1132,7 @@ var range_control = func(n) {#richard there was 2 of this method, I kinda delete
 wcs_mode_sel = func(mode) {
 #	if ( pilot_lock and ! we_are_bs ) { return }
 setprop("sim/model/"~this_model~"/instrumentation/radar-awg-9/wcs-mode", mode);
-wcs_current_mode == mode;
+wcs_current_mode = mode;
 	if ( mode == wcs_mode_pulse_srch ) {
 		AzField.setValue(120);
 		ddd_screen_width = 0.0844;
@@ -1167,6 +1187,9 @@ var Target = {
         obj.pitch   = c.getNode("orientation/pitch-deg");
         obj.roll   = c.getNode("orientation/roll-deg");
 		obj.Alt = c.getNode("position/altitude-ft");
+        obj.ubody           = c.getNode("velocities/uBody-fps");
+        obj.vbody           = c.getNode("velocities/vBody-fps");
+        obj.wbody           = c.getNode("velocities/wBody-fps");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
 		obj.Valid = c.getNode("valid");
@@ -1656,7 +1679,7 @@ else
     },
     isRadiating: func (coord) {
         me.rn = me.get_range();
-        if (me.get_model() != "buk-m2" and me.get_model() != "missile_frigate" and me.get_type()!=MARINE) {
+        if (me.get_model() != "buk-m2" and me.get_model() != "s-300" and me.get_model() != "missile_frigate" and me.get_model() != "fleet" and me.get_type()!=MARINE) {
             me.bearingR = coord.course_to(me.get_Coord());
             me.headingR = me.get_heading();
             me.inv_bearingR =  me.bearingR+180;
@@ -1674,6 +1697,36 @@ else
     isVirtual: func {
         # used by missile-code
         return FALSE;
+    },
+    get_uBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.ubody.getValue();
+      }
+      if(body == nil) {
+        body = me.get_Speed()*KT2FPS;
+      }
+      return body;
+    },    
+    get_vBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.vbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
+    },    
+    get_wBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.wbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
     },
 	list : [],
 };

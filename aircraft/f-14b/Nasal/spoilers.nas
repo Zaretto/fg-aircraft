@@ -21,10 +21,10 @@ var computeSpoilers = func {
     # all spoiler handling in the FDM when using JSBSim
     if (usingJSBSim)
     {
-        CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
-        CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-pos");
-        CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
-        CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-pos");
+        CurrentLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-outer-pos");
+        CurrentInnerLeftSpoiler = getprop("fdm/jsbsim/fcs/spoiler-left-inner-pos");
+        CurrentInnerRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-inner-pos");
+        CurrentRightSpoiler = getprop("fdm/jsbsim/fcs/spoiler-right-outer-pos");
         return;
     }
 

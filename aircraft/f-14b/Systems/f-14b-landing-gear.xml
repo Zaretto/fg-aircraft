@@ -8,7 +8,6 @@
     -->
 
 <system name="Landing Gear">
-    <property value="-94.01">gear/unit[0]/z-position-base</property>
 
     <channel name="Nose strut length">
         <kinematic name="Nose strut kneeling">
@@ -38,7 +37,7 @@
             <output>fcs/gear-kneel-dmd</output>
         </aerosurface_scale>
 
-        <fcs_function>
+        <fcs_function name="gear/unit[0]/compression-adjusted-ft">
             <description>Adjusted gear compression</description>
             <function>
                 <sum>
@@ -49,7 +48,7 @@
             <output>gear/unit[0]/compression-adjusted-ft</output>
         </fcs_function>
 
-        <fcs_function>
+        <fcs_function name="gear/unit[0]/z-position">
             <description>Adjusted gear position</description>
             <function>
                 <sum>

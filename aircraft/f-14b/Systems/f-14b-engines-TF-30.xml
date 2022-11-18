@@ -19,23 +19,11 @@ and Robert J. Shaw,  May 1985
     -->
 
 <system name="ENGINES">
-    <!-- mid compression bypass failure -->
-    <property value="0"  >propulsion/engine[0]/mcb-failed</property>
-    <!-- simple lag between compressor conditions met and compressor stall -->
-    <property value="1.7">propulsion/engine[0]/P0-stall-lag</property>
-    <property value="0.4">propulsion/engine[0]/compressor-stall-amount</property>
-
-    <property value="0.4"  >propulsion/engine[1]/mcb-failed</property>
-    <!-- simple lag between compressor conditions met and compressor stall the right engine is less likely to stall for no apparent reason-->
-    <property value="2.1">propulsion/engine[1]/P0-stall-lag</property>
-    <property value="0">propulsion/engine[1]/compressor-stall-amount</property>
-
-    <property value="0">fcs/throttle-apc</property>
 
     <channel name="engine-control">
         <switch name="fcs/throttle-switched[0]">
             <default value="fcs/throttle-cmd-norm[0]"/>
-            <test logic="AND" value="fcs/throttle-apc">
+            <test logic="AND" value="systems/apc/throttle-pla-norm">
                 systems/apc/active eq 1
                 position/aircraft-on-ground eq 0
             </test>
@@ -43,7 +31,7 @@ and Robert J. Shaw,  May 1985
 
         <switch name="fcs/throttle-switched[1]">
             <default value="fcs/throttle-cmd-norm[1]"/>
-            <test logic="AND" value="fcs/throttle-apc">
+            <test logic="AND" value="systems/apc/throttle-pla-norm">
                 systems/apc/active eq 1
                 position/aircraft-on-ground eq 0
             </test>
@@ -87,7 +75,7 @@ and Robert J. Shaw,  May 1985
         </scheduled_gain>
     </channel>
 
-    <channel name="F110-L">
+    <channel name="TF30-L">
         <!-- TF30 compressor stall stuff 
              Engine stall margin MCB system open idle 26, 26 mid. 82/83 %, 18% military
 
@@ -546,7 +534,7 @@ and Robert J. Shaw,  May 1985
 
     </channel>
 
-    <channel name="F110-R">
+    <channel name="TF30-R">
         <switch name="propulsion/engine[1]/mid-compression-bypass-active">
             <default value="1"/>
             <test value="0">

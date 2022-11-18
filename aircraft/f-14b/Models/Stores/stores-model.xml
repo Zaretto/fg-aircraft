@@ -7,8 +7,12 @@
     <object-name>exttank-left</object-name>
     <condition>
       <equals>
-        <property>sim/model/f-14b/systems/external-loads/station[2]/type</property>
-        <value>external tank</value>
+        <property>payload/armament/station/id-2-set</property>
+        <value>267 Gal Fuel Tank</value>
+      </equals>
+      <equals>
+        <property>payload/armament/station/id-2-count</property>
+        <value>1</value>
       </equals>
     </condition>
   </animation>
@@ -19,8 +23,12 @@
     <object-name>exttank-right</object-name>
     <condition>
       <equals>
-        <property>sim/model/f-14b/systems/external-loads/station[7]/type</property>
-        <value>external tank</value>
+        <property>payload/armament/station/id-7-set</property>
+        <value>267 Gal Fuel Tank</value>
+      </equals>
+      <equals>
+        <property>payload/armament/station/id-7-count</property>
+        <value>1</value>
       </equals>
     </condition>
   </animation>
@@ -31,11 +39,25 @@
 		<nopreview/>
 		<object-name>wings-pylons</object-name>
 		<condition>
-			<not>   
-				<equals>
-					<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-					<value>Clean</value>
-				</equals>
+			<not>
+				<and>
+					<equals>
+				        <property>payload/armament/station/id-0-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-1-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-8-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-9-set</property>
+				        <value>Empty</value>
+				    </equals>
+				</and>
 			</not>
 		</condition>
 	</animation>
@@ -45,20 +67,26 @@
 		<nopreview/>
 		<object-name>central-pylons</object-name>
 		<condition>
-			<or>   
-				<equals>
-					<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-					<value>FAD</value>
-				</equals>
-				<equals>
-					<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-					<value>FAD heavy</value>
-				</equals>
-				<equals>
-					<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-					<value>Bombcat</value>
-				</equals>
-			</or>
+			<not>
+				<and>
+					<equals>
+				        <property>payload/armament/station/id-3-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-4-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-5-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-6-set</property>
+				        <value>Empty</value>
+				    </equals>
+				</and>
+			</not>
 		</condition>
 	</animation>
 
@@ -68,10 +96,18 @@
 		<object-name>aim-9-1-launcher</object-name>
 		<object-name>aim-9-8-launcher</object-name>
 		<condition>  
-			<equals>
-				<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-				<value>FAD light</value>
-			</equals>
+			<not>
+				<and>
+				    <equals>
+				        <property>payload/armament/station/id-1-set</property>
+				        <value>Empty</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-8-set</property>
+				        <value>Empty</value>
+				    </equals>
+				</and>
+			</not>
 		</condition>
 	</animation>
 
@@ -80,11 +116,17 @@
 		<nopreview/>
 		<object-name>aim-54-1-launcher</object-name>
 		<object-name>aim-54-8-launcher</object-name>
-		<condition>  
-			<equals>
-				<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-				<value>FAD heavy</value>
-			</equals>
+		<condition>
+				<or>
+				    <equals>
+				        <property>payload/armament/station/id-1-set</property>
+				        <value>AIM-54</value>
+				    </equals>
+				    <equals>
+				        <property>payload/armament/station/id-8-set</property>
+				        <value>AIM-54</value>
+				    </equals>
+				</or>
 		</condition>
 	</animation>
 
@@ -95,9 +137,13 @@
 		<object-name>aim-7-1</object-name>
 		<condition>     
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[1]/type</property>
-				<value>AIM-7</value>
-			</equals> 
+		        <property>payload/armament/station/id-1-set</property>
+		        <value>AIM-7</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-1-count</property>
+		        <value>1</value>
+		    </equals>
 		</condition>
 	</animation>
 
@@ -107,9 +153,13 @@
 		<object-name>aim-7-3</object-name>
 		<condition>     
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[3]/type</property>
-				<value>AIM-7</value>
-			</equals>
+		        <property>payload/armament/station/id-3-set</property>
+		        <value>AIM-7</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-3-count</property>
+		        <value>1</value>
+		    </equals>
 		</condition>
 	</animation>
 
@@ -119,9 +169,13 @@
 		<object-name>aim-7-4</object-name>
 		<condition>     
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[4]/type</property>
-				<value>AIM-7</value>
-			</equals>
+		        <property>payload/armament/station/id-4-set</property>
+		        <value>AIM-7</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-4-count</property>
+		        <value>1</value>
+		    </equals>
 		</condition>
 	</animation>
 
@@ -131,9 +185,13 @@
 		<object-name>aim-7-5</object-name>
 		<condition>     
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[5]/type</property>
-				<value>AIM-7</value>
-			</equals>
+		        <property>payload/armament/station/id-5-set</property>
+		        <value>AIM-7</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-5-count</property>
+		        <value>1</value>
+		    </equals>
 		</condition>
 	</animation>
 
@@ -143,9 +201,13 @@
 		<object-name>aim-7-6</object-name>
 		<condition>     
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[6]/type</property>
-				<value>AIM-7</value>
-			</equals>
+		        <property>payload/armament/station/id-6-set</property>
+		        <value>AIM-7</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-6-count</property>
+		        <value>1</value>
+		    </equals>
 		</condition>
 	</animation>
 
@@ -155,24 +217,34 @@
 		<object-name>aim-7-8</object-name>
 		<condition>   
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[8]/type</property>
-				<value>AIM-7</value>
-			</equals>  
+		        <property>payload/armament/station/id-8-set</property>
+		        <value>AIM-7</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-8-count</property>
+		        <value>1</value>
+		    </equals>  
 		</condition>
 	</animation>
 
 
 	<!-- AIM-54 -->
 	<animation>
-		<type>select</type>
+		<type>select</type><!-- why is this select done twice? -->
 		<nopreview/>
 		<object-name>aim-54-1-launcher</object-name>
 		<object-name>aim-54-8-launcher</object-name>
 		<condition>
-			<equals>
-				<property>sim/model/f-14b/systems/external-loads/external-load-set</property>
-				<value>FAD heavy</value>
-			</equals>
+			<or>
+			    <equals>
+			        <property>payload/armament/station/id-1-set</property>
+			        <value>AIM-54</value>
+			    </equals>
+			    <equals>
+			        <property>payload/armament/station/id-8-set</property>
+			        <value>AIM-54</value>
+			    </equals>
+			</or>
 		</condition>
 	</animation>
 
@@ -182,9 +254,13 @@
 		<object-name>aim-54-1</object-name>
 		<condition>   
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[1]/type</property>
-				<value>AIM-54</value>
-			</equals>
+		        <property>payload/armament/station/id-1-set</property>
+		        <value>AIM-54</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-1-count</property>
+		        <value>1</value>
+		    </equals>  
 		</condition>
 	</animation>
 
@@ -194,9 +270,13 @@
 		<object-name>aim-54-3</object-name>
 		<condition>   
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[3]/type</property>
-				<value>AIM-54</value>
-			</equals>
+		        <property>payload/armament/station/id-3-set</property>
+		        <value>AIM-54</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-3-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -206,9 +286,13 @@
 		<object-name>aim-54-4</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[4]/type</property>
-				<value>AIM-54</value>
-			</equals>
+		        <property>payload/armament/station/id-4-set</property>
+		        <value>AIM-54</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-4-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -218,9 +302,13 @@
 		<object-name>aim-54-5</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[5]/type</property>
-				<value>AIM-54</value>
-			</equals>
+		        <property>payload/armament/station/id-5-set</property>
+		        <value>AIM-54</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-5-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -230,9 +318,13 @@
 		<object-name>aim-54-6</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[6]/type</property>
-				<value>AIM-54</value>
-			</equals>
+		        <property>payload/armament/station/id-6-set</property>
+		        <value>AIM-54</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-6-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -242,9 +334,13 @@
 		<object-name>aim-54-8</object-name>
 		<condition>   
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[8]/type</property>
-				<value>AIM-54</value>
-			</equals>
+		        <property>payload/armament/station/id-8-set</property>
+		        <value>AIM-54</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-8-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -256,9 +352,13 @@
 		<object-name>aim-9-0</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[0]/type</property>
-				<value>AIM-9</value>
-			</equals>
+		        <property>payload/armament/station/id-0-set</property>
+		        <value>AIM-9</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-0-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -268,9 +368,13 @@
 		<object-name>aim-9-1</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[1]/type</property>
-				<value>AIM-9</value>
-			</equals>
+		        <property>payload/armament/station/id-1-set</property>
+		        <value>AIM-9</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-1-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -280,9 +384,13 @@
 		<object-name>aim-9-8</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[8]/type</property>
-				<value>AIM-9</value>
-			</equals>
+		        <property>payload/armament/station/id-8-set</property>
+		        <value>AIM-9</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-8-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -292,9 +400,13 @@
 		<object-name>aim-9-9</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[9]/type</property>
-				<value>AIM-9</value>
-			</equals>
+		        <property>payload/armament/station/id-9-set</property>
+		        <value>AIM-9</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-9-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -305,9 +417,13 @@
 		<object-name>mk-83-3</object-name>
 		<condition>   
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[3]/type</property>
-				<value>MK-83</value>
-			</equals>
+		        <property>payload/armament/station/id-3-set</property>
+		        <value>MK-83</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-3-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -317,9 +433,13 @@
 		<object-name>mk-83-4</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[4]/type</property>
-				<value>MK-83</value>
-			</equals>
+		        <property>payload/armament/station/id-4-set</property>
+		        <value>MK-83</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-4-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -329,9 +449,13 @@
 		<object-name>mk-83-5</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[5]/type</property>
-				<value>MK-83</value>
-			</equals>
+		        <property>payload/armament/station/id-5-set</property>
+		        <value>MK-83</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-5-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 
@@ -341,9 +465,13 @@
 		<object-name>mk-83-6</object-name>
 		<condition>  
 			<equals>
-				<property>sim/model/f-14b/systems/external-loads/station[6]/type</property>
-				<value>MK-83</value>
-			</equals>
+		        <property>payload/armament/station/id-6-set</property>
+		        <value>MK-83</value>
+		    </equals>
+		    <equals>
+		        <property>payload/armament/station/id-6-count</property>
+		        <value>1</value>
+		    </equals> 
 		</condition>
 	</animation>
 

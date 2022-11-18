@@ -9,25 +9,19 @@
 ## Global constants ##
 var true = 1;
 var false = 0;
-var frameRateNode = props.getNode("/sim/frame-rate");
 var CurrentIASnode = props.globals.getNode("velocities/airspeed-kt");
-var CurrentMachnode = props.globals.getNode("velocities/mach");
-var CurrentAltnode = props.globals.getNode("position/altitude-ft");
-var wowLnode = props.globals.getNode("gear/gear[1]/wow");
-var wowRnode = props.globals.getNode("gear/gear[2]/wow");
-var Alphanode = props.globals.getNode("orientation/alpha-indicated-deg");
-var Throttlenode = props.globals.getNode("controls/engines/engine/throttle");
-var e_trimnode = props.globals.getNode("controls/flight/elevator-trim");
-var deltaTnode = props.globals.getNode ("sim/time/delta-sec");
-var currentGnode = props.globals.getNode ("accelerations/pilot-gdamped");
 var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
 var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
 #
 # 2018.3 has improved stores handling - but this is turned 
 gui.external_stores_2018_1_compat = 0;
 
+LOG_INFO = 3;
+LOG_WARN = 4;
+LOG_ALERT = 5;
+
 var payload_dialog_reload = func(from) { 
-#    print("payload_dialog_reload: ",from);    
+#    logprint(3, "payload_dialog_reload: ",from);    
     setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
 }
 
@@ -42,14 +36,18 @@ var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialog
 error_mismatch.open();
 }
 var fixAirframe = func {
-# F-15 doesn't support wing detachment.
-    left_wing_torn.setValue(0);
-    right_wing_torn.setValue(0);
-	setprop ("fdm/jsbsim/gear/damage-reset", 1);
-	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
-	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
-	repairMe();
-	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
+    if (getprop("payload/armament/msg")==1 and !getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
+        screen.log.write(pylons.msgA);
+    } else {
+    # F-15 doesn't support wing detachment.
+        left_wing_torn.setValue(0);
+        right_wing_torn.setValue(0);
+    	setprop ("fdm/jsbsim/gear/damage-reset", 1);
+    	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
+    	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
+    	repairMe();
+    	settimer (func { setprop ("fdm/jsbsim/gear/damage-reset", 0); }, 1.3);
+    }
 }
 #
 # 2017.3 or earlier FG compatibility fixes
@@ -199,9 +197,7 @@ var position_flash_init  = func {
 }
 setprop("sim/multiplay/visibility-range-nm", 200);
 
-# Flight control system ######################### 
-
-
+# lighting
 var lighting_collision = props.globals.getNode("sim/model/f15/lighting/anti-collision/state", 1);
 var lighting_position  = props.globals.getNode("sim/model/f15/lighting/position/state", 1);
 
@@ -418,68 +414,15 @@ var n2_r = getprop("engines/engine[1]/n2");
 # volume: -0.3 + 0.01 * engines/engine[0]/n2
 }
 
-#
-# --------------------------
-# Frame adapative update - two methods either rate 2 or rate 4.
-# RJH: 2015-08-16
-# Note: continual update of canvas elements at low frame rates makes 
-# things worse so we skip frames to reduce the load.
-# At higher frame rates the extra updates aren't required so we will skip
-# frames based on the frame rate (this is effectively 4/15 - i.e. the update
-# every 4 frames but extended to work for higher rates)
-#
-# continual update of canvas elements at low frame rates makes things worse
-# so we skip frames to reduce the load.
-# at higher frame rates the extra updates aren't required so we will skip
-# frames based on the frame rate (this is effectively 4/15 - i.e. the update
-# every 4 frames but extended to work for higher rates)
-# ---------------
-
-# Rate 4 modules (5hz) (rate 4 comes from quarter frame at 30hz)
-var r4_count = 0;
-var r2_count = 0;
-
-var rate4modules = func {
-    if (r4_count == 0)
-      aircraft.electricsFrame();
-    elsif (r4_count == 1)
-      aircraft.computeNWS ();
-    elsif (r4_count == 2)
-      aircraft.update_weapons_over_mp();
-    elsif (r4_count == 3)
-      updateVolume();
-    elsif (r4_count == 4)
-      radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
-    elsif (r4_count == 5)
-      aircraft.routeManagerUpdate();
-    elsif (r4_count == 6) {
-        if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
-            setprop("fdm/jsbsim/propulsion/refuel",0);
-            setprop("fdm/jsbsim/propulsion/ground-refuel",0);
-        }
-    } else {
-        r4_count = 0;
-        return;
-    }
-    r4_count += 1;
-
-}
-
-var startProcess = func {
-	position_flash_init();
-	#slat_output.setDoubleValue(0);
-	var autopilot = gui.Dialog.new("sim/gui/dialogs/autopilot/dialog", "Aircraft/F-15/Systems/autopilot-dlg.xml");
-}
+position_flash_init();
 
 var two_seater = getprop("fdm/jsbsim/metrics/two-place-canopy");
 if (two_seater)
-print("F-15 two seat variant (B,D,E)");
-
-setlistener("/sim/signals/fdm-initialized", startProcess);
+logprint(3, "F-15 two seat variant (B,D,E)");
 
 setlistener("sim/model/f15/controls/AFCS/cas-takeoff-trim", func(v) {
-print("Takeoff trim");
-setprop("controls/flight/elevator-trim", -0.43);
+    logprint(3, "Takeoff trim");
+    setprop("controls/flight/elevator-trim", -0.43);
 });
 #----------------------------------------------------------------------------
 # View change: Ctrl-V switchback to view #0 but switch to Rio view when already
@@ -720,54 +663,58 @@ setlistener("/controls/flight/elevator-trim", func {
 	}
 });
 
-var F15_Recipient =
+last_position = nil;
+distanceNode = props.globals.getNode("/position/distance-flown-nm",1);
+distanceNode.setValue(0);
+
+var F15MainModule =
 {
-    new: func(_ident)
-    {
-        var new_class = emesary.Recipient.new(_ident);
-        new_class.Receive = func(notification){
-            if (notification.NotificationType == "FrameNotification") {
-                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
-#                var frame_count1 = math.mod(notifications.frameNotification.FrameCount,2);
+    update: func(notification){
+        # total distance flown calculations.
+        currentDistance = distanceNode.getValue();
+        if ( last_position != nil) {
+            # total distance 
+            currentPosition = geo.aircraft_position();
+            distanceNode.setValue(currentDistance + (last_position.distance_to(currentPosition)*M2NM));
+        }
+        last_position = currentPosition = geo.aircraft_position();
 
-                #Fetch most commonly used values
-                CurrentIAS = 	CurrentIASnode.getValue();
-                CurrentMach = CurrentMachnode.getValue();
-                CurrentAlt = CurrentAltnode.getValue();
-                wow = wowLnode.getBoolValue() or wowRnode.getBoolValue();
-                Alpha = Alphanode.getValue();
-                Throttle = Throttlenode.getValue();
-                e_trim = e_trimnode.getValue();
-                deltaT = deltaTnode.getValue();
-                currentG =    currentGnode.getValue();
+        var frame_count = math.mod(notification.FrameCount,8);
 
-                if (frame_count == 0){
-                    aircraft.electricsFrame();
-                    aircraft.rain.update();
-                    aircraft.computeEngines ();
-                    acFrost.setValue(sysFrost.getValue());
-                } elsif (frame_count == 1)
-                  aircraft.computeNWS ();
-                elsif (frame_count == 2)
-                  aircraft.update_weapons_over_mp();
-                elsif (frame_count == 3)
-                  updateVolume();
-                elsif (frame_count == 4)
-                  radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
-                elsif (frame_count == 5)
-                  aircraft.routeManagerUpdate();
-                elsif (frame_count == 6) {
-                    if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
-                        setprop("fdm/jsbsim/propulsion/refuel",0);
-                        setprop("fdm/jsbsim/propulsion/ground-refuel",0);
-                    }
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
+        # legacy logic for subscheduling. 
+        if (frame_count == 0){
+            aircraft.electricsFrame();
+            aircraft.rain.update();
+            aircraft.computeEngines ();
+            acFrost.setValue(sysFrost.getValue());
+        } elsif (frame_count == 1)
+            aircraft.computeNWS ();
+        elsif (frame_count == 3)
+            updateVolume();
+        elsif (frame_count == 4)
+            radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);
+        elsif (frame_count == 5)
+            aircraft.routeManagerUpdate();
+        elsif (frame_count == 6) {
+            if (getprop("fdm/jsbsim/propulsion/ground-refuel") and (!wow or getprop("fdm/jsbsim/gear/unit[2]/wheel-speed-fps") > 1)) {
+                setprop("fdm/jsbsim/propulsion/refuel",0);
+                setprop("fdm/jsbsim/propulsion/ground-refuel",0);
             }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
-        return new_class;
+            wow = wowLnode.getBoolValue() or wowRnode.getBoolValue();
+        }
     },
 };
-
-emesary.GlobalTransmitter.Register(F15_Recipient.new("F15-main"));
+var input = {
+    CurrentIASnode      : "velocities/airspeed-kt",
+    CurrentMachnode     : "velocities/mach",
+    CurrentAltnode      : "position/altitude-ft",
+    wowLnode            : "gear/gear[1]/wow",
+    wowRnode            : "gear/gear[2]/wow",
+    Alphanode           : "orientation/alpha-indicated-deg",
+    Throttlenode        : "controls/engines/engine/throttle",
+    e_trimnode          : "controls/flight/elevator-trim",
+    deltaTnode          : "sim/time/delta-sec",
+    currentGnode        : "accelerations/pilot-gdamped",
+};
+emexec.ExecModule.register("F-15 Main", input, F15MainModule);
+emexec.ExecModule.transmitter.OverrunDetection(9);

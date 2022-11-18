@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+  <model>
+    <name>pilot</name>
+    <path>pilot-rio.ac</path>
+    <offsets>
+      <x-m> 4.5</x-m>
+      <y-m> 0.000</y-m>
+      <z-m> 0.5</z-m>
+    </offsets>
+  </model>
+
+  <model> 
+    <name>chair</name>
+    <path>chair-rio.ac</path>
+    <offsets>
+      <x-m> 4.5</x-m>
+      <y-m> 0.0000</y-m>
+      <z-m> 0.5</z-m>
+    </offsets>
+  </model>
+
+  <model>
+    <name>chute</name>
+    <path>chute.xml</path>
+  </model>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>pilot</object-name>
+    <object-name>chair</object-name>
+    <offset-deg>130</offset-deg>
+    <center>
+      <x-m> 0 </x-m>
+      <y-m> 0.0000</y-m>
+      <z-m> 0.0</z-m>
+    </center>
+    <axis>
+     <x>0</x>
+     <y>-1</y>
+     <z>0</z>
+    </axis>
+  </animation>
+  <animation>
+    <type>rotate</type>
+    <object-name>chute</object-name>
+    <offset-deg>90</offset-deg>
+    <center>
+      <x-m> 0.0 </x-m>
+      <y-m> 0.0000</y-m>
+      <z-m> 0.0</z-m>
+    </center>
+    <axis>
+     <x>0</x>
+     <y>-1</y>
+     <z>0</z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>chair</object-name>
+    <condition>
+      <less-than>
+        <property>payload/armament/es/flags/deploy-id-12</property>
+        <value>0.99</value>
+      </less-than>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>chute</object-name>
+    <condition>
+      <greater-than>
+        <property>payload/armament/es/flags/deploy-id-12</property>
+        <value>0.10</value>
+      </greater-than>
+    </condition>
+  </animation>
+
+  <animation>
+  <type>scale</type>
+  <object-name>chute</object-name>
+  <property>payload/armament/es/flags/deploy-id-12</property>
+  <z-factor>1.0</z-factor>
+ </animation>
+
+</PropertyList>

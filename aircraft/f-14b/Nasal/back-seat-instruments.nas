@@ -10,7 +10,7 @@ var check_pilot_callsign = func() {
 		var mpplayers = props.globals.getNode("/ai/models").getChildren("multiplayer");
 		foreach (var p; mpplayers) {
 			if ( p.getChild("callsign").getValue() == r_callsign ) {
-				Pilot = p; 
+				Pilot = p;
 			}
 		}
 	} else {
@@ -53,13 +53,13 @@ instruments_data_import = func {
 			if (size(l) > 11)
 			{
 			    var ac_powered = l[10] != nil and l[10] == "1";
-			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus1",ac_powered);
-			    setprop("/fdm/jsbsim/systems/electrics/ac-essential-bus2",ac_powered); 
-			    setprop("/fdm/jsbsim/systems/electrics/ac-left-main-bus",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/ac-right-main-bus",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus1",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-essential-bus2",ac_powered);
-		        setprop("/fdm/jsbsim/systems/electrics/dc-main-bus",ac_powered);
+			    Pilot.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus1", 1).setDoubleValue(ac_powered*2);
+			    Pilot.getNode("fdm/jsbsim/systems/electrics/ac-essential-bus2", 1).setDoubleValue(ac_powered*2); 
+			    Pilot.getNode("fdm/jsbsim/systems/electrics/ac-left-main-bus", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/ac-right-main-bus", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-essential-bus1", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-essential-bus2", 1).setDoubleValue(ac_powered*2);
+		        Pilot.getNode("fdm/jsbsim/systems/electrics/dc-main-bus", 1).setDoubleValue(ac_powered*2);
 		    }
 		}
 	}
@@ -90,7 +90,7 @@ var cnt = 0;
 var main_loop = func {
 	cnt += 1;
 	# done each 0.05 sec.
-	awg_9.rdr_loop();
+	#awg_9.rdr_loop();
 	var a = cnt / 2;
 	if ( ( a ) == int( a )) {
 		# done each 0.1 sec, cnt even.
@@ -138,13 +138,13 @@ var init = func {
     setprop("/fdm/jsbsim/systems/electrics/transrect-online",2);
     setprop("fdm/jsbsim/systems/hydraulics/combined-system-psi",2398);
     setprop("fdm/jsbsim/systems/hydraulics/flight-system-psi",2396);
-    setprop("engines/engine[0]/oil-pressure-psi", 28);
-    setprop("engines/engine[1]/oil-pressure-psi", 28);
+    setprop("fdm/jsbsim/propulsion/engine[0]/oil-pressure-psi", 28);
+    setprop("fdm/jsbsim/propulsion/engine[1]/oil-pressure-psi", 28);
 
 	# launch
 	check_pilot_callsign();
-	radardist.init();
-	awg_9.init();
+	#radardist.init();
+	#awg_9.init();
     backseatUpdateTimer.start();
 }
 

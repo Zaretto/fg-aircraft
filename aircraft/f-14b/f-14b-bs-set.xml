@@ -15,33 +15,6 @@
 		<keyboard n="0" include="/Input/Keyboard/carrier-bindings.xml">
 			<!--<multikey include="Models/Cockpit/radios-multikey.xml"/>-->
 
-			<key n="14">
-				<name>Ctrl-n</name>
-				<desc>Toggles Radar PULSE SRCH / TWS AUTO Modes</desc>
-				<binding>
-					<command>nasal</command>
-					<script>awg_9.wcs_mode_toggle()</script>
-				</binding>
-			</key>
-
-			<key n="69">
-				<name>E</name>
-				<desc>Decrease Radar Range</desc>
-				<binding>
-					<command>nasal</command>
-					<script>awg_9.range_control(-1);</script>
-				</binding>
-			</key>
-
-			<key n="82">
-				<name>R</name>
-				<desc>Increase Radar Range</desc>
-				<binding>
-					<command>nasal</command>
-					<script>awg_9.range_control(1);</script>
-				</binding>
-			</key>
-
 			<key n="104">
 				<name>h</name>
 				<desc>ECM cycle modes</desc>
@@ -51,27 +24,297 @@
 				</binding>
 			</key>
 
-			<key n="113">
-				<name>q</name>
-				<desc>Toggle radar standby mode</desc>
-				<binding>
-					<command>nasal</command>
-					<script>awg_9.toggle_radar_standby();</script>
-				</binding>
-			</key>
+			<key n="69">
+                <name>E</name>
+                <desc>Decrease Radar Range</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.range_control(-1);</script>
+                </binding>
+            </key>
+
+            <key n="81">
+                <name>Q</name>
+                <desc>Reset view</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>
+                        setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
+                        setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
+                        setprop("sim/current-view/pitch-offset-deg", getprop("sim/current-view/config/pitch-offset-deg"));
+                        setprop("sim/current-view/roll-offset-deg", getprop("sim/current-view/config/roll-offset-deg"));
+                    </script>
+                </binding>
+            </key>
+
+            <key n="82">
+                <name>R</name>
+                <desc>Increase Radar Range</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.range_control(1);</script>
+                </binding>
+            </key>
+
+            <key n="104">
+                <name>h</name>
+                <desc>HSD cycle modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>f14_instruments.select_key_ecm_nav();</script>
+                </binding>
+            </key>
+            <key n="113">
+                <name>q</name>
+                <desc>Toggle radar standby mode</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.toggle_radar_standby();</script>
+                </binding>
+            </key>
+
+            <!-- radar keys BEGIN -->
+
+            <key n="114">
+                <name>r</name>
+                <desc>Radar STT lock</desc>
+                <binding n="1">
+                    <command>nasal</command>
+                    <script>awg_9.lock();</script>
+                </binding>
+            </key>
+
+            <key n="100">
+                <name>d</name>
+                <desc>Pilot automatic lockon</desc>
+                <binding n="1">
+                    <command>nasal</command>
+                    <script>awg_9.des();</script>
+                </binding>
+            </key>
+
+            <key n="121">
+                <name>y</name>
+                <desc>Next target select</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/select-target</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <key n="89">
+                <name>Y</name>
+                <desc>Cycle radar az field</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/cycleAz</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <key n="85">
+                <name>U</name>
+                <desc>Undesignate</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.awg9Radar.undesignate();</script>
+                </binding>
+            </key>
+
+            <key n="105">
+                <name>i</name>
+                <desc>Antennae up</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/radar/elevation-deg</property>
+                    <step>1.5</step>
+                    <min>-70</min>
+                    <max>50</max>
+                    <wrap>false</wrap>
+                </binding>
+                <binding>
+                    <command>nasal</command>
+                    <script>screen.log.write(sprintf("Antennae knob elev at %+.1f degrees",getprop("controls/radar/elevation-deg")));</script>
+                </binding>
+            </key>
+
+            <key n="73">
+                <name>I</name>
+                <desc>Antennae down</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/radar/elevation-deg</property>
+                    <step>-1.5</step>
+                    <min>-70</min>
+                    <max>50</max>
+                    <wrap>false</wrap>
+                </binding>
+                <binding>
+                    <command>nasal</command>
+                    <script>screen.log.write(sprintf("Antennae elev knob at %+.1f degrees",getprop("controls/radar/elevation-deg")));</script>
+                </binding>
+            </key>
+
+            <key n="68">
+                <name>D</name>
+                <desc>Cycle radar bars</desc>
+                <binding n="2">
+                    <command>property-assign</command>
+                    <property>sim/model/f-14b/instrumentation/radar-awg-9/cycleBars</property>
+                    <value>1</value>
+                </binding>
+            </key>
+
+            <key n="14">
+                <name>Ctrl-n</name>
+                <desc>Toggle Radar Modes</desc>
+                <binding>
+                    <command>nasal</command>
+                    <script>awg_9.wcs_mode_toggle()</script>
+                </binding>
+            </key>
+
+            <!-- radar keys END -->
+
+            <key n="21">
+              <name>Ctrl-U</name>
+              <desc>[Cheat] Add 1000ft of emergency altitude</desc>
+              <binding>
+                    <command>nasal</command>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("CTRL-U disabled at the moment.");
+                        } else {
+                            setprop("position/altitude-ft", getprop("position/altitude-ft")+1000);
+                            setprop("sim/startup/onground", 0);
+                        }
+                    </script>
+              </binding>
+             </key>
+
+             <key n="97">
+              <name>a</name>
+              <desc>Increase speed-up</desc>
+                <binding n="3">
+                    <command>nasal</command>
+                    <condition>
+                            <and>
+                                <not-equals>
+                                    <property>sim/current-view/name</property>
+                                    <value>Walk View</value>
+                                </not-equals>
+                                <not-equals>
+                                    <property>sim/current-view/name</property>
+                                    <value>Walker Orbit View</value>
+                                </not-equals>
+                            </and>
+                     </condition>
+                    <script>
+                        if (getprop("payload/armament/msg")) {
+                            screen.log.write("Speed-up disabled at the moment.");
+                        } else {
+                            controls.speedup(1);
+                        }
+                    </script>
+                </binding>
+             </key>
+              <key n="65">
+              <name>A</name>
+              <desc>Decrease speed-up</desc>
+                <binding n="3">
+                    <command>nasal</command>
+                    <condition>
+                        <and>
+                        <not-equals>
+                            <property>sim/current-view/name</property>
+                            <value>Walk View</value>
+                        </not-equals>
+                        <not-equals>
+                            <property>sim/current-view/name</property>
+                            <value>Walker Orbit View</value>
+                        </not-equals>
+                        </and>
+                 </condition>
+                    <script>
+                        if (getprop("payload/armament/msg")==1) {
+                            screen.log.write("Speed-down disabled at the moment.");
+                        } else {
+                            controls.speedup(-1);
+                        }
+                    </script>
+                </binding>
+             </key>
+
+             <key n="49">
+                <name>CTRL-1</name>
+                <mod-ctrl>
+                    <desc>GCI pict</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/picture</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="50">
+                <name>CTRL-2</name>
+                <mod-ctrl>
+                    <desc>GCI dope</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/bogeydope</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="51">
+                <name>CTRL-3</name>
+                <mod-ctrl>
+                    <desc>GCI cutoff</desc>
+                    <binding>
+                        <command>property-assign</command>
+                        <property>instrumentation/gci/cutoff</property>
+                        <value>1</value>
+                    </binding>
+                </mod-ctrl>
+            </key>
+            <key n="262">
+              <name>F6</name>
+              <desc>Eject</desc>
+              <repeatable type="bool">false</repeatable>
+              <binding>
+               <command>nasal</command>
+               <script>
+                f14.eject();
+               </script>
+              </binding>
+             </key>
 
 		</keyboard>
 	</input>
 
 	<instrumentation>
 		<radar>
-			<az-field type="double">120</az-field>
+			<az-field type="bool">true</az-field>
 			<enabled type="bool">true</enabled>
 			<range type="double">120</range>
 			<radar2-range type="double">50</radar2-range>
 			<radar-standby type="int">0</radar-standby>
 			<symbols-enabled type="bool">true</symbols-enabled>
 		</radar>
+		<iff><!-- todo: make iff and datalink be same as dual seater pilots setting -->
+            <power_prop type="string">instrumentation/iff/power</power_prop>
+            <channel_prop type="string">instrumentation/iff/channel</channel_prop>
+            <power type="bool">true</power>
+            <channel type="int">0</channel>            
+        </iff>
+        <datalink>
+            <power_prop type="string">instrumentation/datalink/receive_period</power_prop>
+            <channel_prop type="string">instrumentation/datalink/channel</channel_prop>
+            <receive_period type="double">1</receive_period>
+            <channel type="int">0</channel>
+        </datalink>
 		<ecm>
 			<enabled type="bool">true</enabled>
 			<on-off type="bool">true</on-off>
@@ -355,6 +598,17 @@
 					<VDI>
 						<brightness type="double">1</brightness>
 					</VDI>
+
+					<armament>
+                        <station-selector n="1" type="int">0</station-selector>
+                        <station-selector n="2" type="int">0</station-selector>
+                        <station-selector n="3" type="int">0</station-selector>
+                        <station-selector n="4" type="int">0</station-selector>
+                        <station-selector n="5" type="int">0</station-selector>
+                        <station-selector n="6" type="int">0</station-selector>
+                        <station-selector n="7" type="int">0</station-selector>
+                        <station-selector n="8" type="int">0</station-selector>
+                    </armament>
 					
 				</controls>
 
@@ -405,15 +659,15 @@
 						<rd-rot-light type="bool">false</rd-rot-light>
 						<jat-light type="bool">false</jat-light>
 						<irot-light type="bool">false</irot-light>
-						<wcs-mode>
-							<pd-stt type="bool">false</pd-stt>
+						<wcs-mode type="int">3</wcs-mode>
+							<!--pd-stt type="bool">false</pd-stt>
 							<pulse-stt type="bool">false</pulse-stt>
 							<pd-srch type="bool">false</pd-srch>
 							<rws type="bool">false</rws>
 							<tws-auto type="bool">false</tws-auto>
 							<tws-man type="bool">false</tws-man>
-							<pulse-srch type="bool">true</pulse-srch>
-						</wcs-mode>
+							<pulse-srch type="bool">true</pulse-srch-->
+						
 					</radar-awg-9>
 
 				</instrumentation>
@@ -440,6 +694,7 @@
 				<!-- <int n="6" type="int">0</int>    right wing torn -->
 				<string n="0" type="string"></string>    <!-- bs_TDM1_mpp -->
 				<string n="1" type="string"></string>    <!-- pilot's instruments -->
+				<string n="11" alias="/instrumentation/radar/selection"/>    <!-- RIO's radar selection -->
 			</generic>
 		</multiplay>
 
@@ -513,6 +768,8 @@
 			</config>
 		</view>
 
+	
+
 		<!-- Pilot's position. -->
 <!--
 <view n="100">
@@ -575,22 +832,162 @@
 				<at-model type="bool">false</at-model>
 			</config>
 		</view>
-
+		<view n="115">
+            <name>Ejection View</name>
+            <type>lookat</type>
+            <enabled type="bool">false</enabled>
+            <internal>false</internal>
+            <config>
+                <from-model type="bool">false</from-model>
+                <!--<eye-lat-deg-path>/ai/models/es/position/latitude-deg</eye-lat-deg-path>
+                <eye-lon-deg-path>/ai/models/es/position/longitude-deg</eye-lon-deg-path>
+                <eye-alt-ft-path>/ai/models/es/position/altitude-ft</eye-alt-ft-path>-->
+                <at-model type="bool">false</at-model>
+                <!--<target-x-offset-m type="double">0</target-x-offset-m>
+                <target-y-offset-m type="double">0</target-y-offset-m>
+                <target-z-offset-m type="double">0</target-z-offset-m>-->
+                <default-field-of-view-deg type="double">55.0</default-field-of-view-deg>
+                <pitch-offset-deg type="double">0</pitch-offset-deg>
+                <heading-offset-deg type="double">0</heading-offset-deg>
+                <roll-offset-deg type="double">0</roll-offset-deg>
+                <x-offset-m type="double">0</x-offset-m>
+                <!-- left(+)/right(-) -->
+                <y-offset-m type="double">0</y-offset-m>
+                <!-- up(+)/down(-) -->
+                <z-offset-m type="double">-25</z-offset-m>
+                <!-- fore(+)/aft(-) -->
+            </config>
+        </view>
 	</sim>
 
+	<controls>
+        <armament>
+            <station n="12">
+                <offsets>
+                    <x-m type="double">-5</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">0.5</z-m>
+                </offsets>
+            </station>
+            <station n="13">
+                <offsets>
+                    <x-m type="double">-3.5</x-m>
+                    <y-m type="double">0</y-m>
+                    <z-m type="double">-0.5</z-m>
+                </offsets>
+            </station>
+        </armament>
+    </controls>
+
+	<payload>
+        <armament>
+            <use-fg-default-hud type="bool">true</use-fg-default-hud>
+            <models type="string">Aircraft/f-14b/Models/Stores/</models>
+            <modelsUseCase type="bool">true</modelsUseCase>
+            <modelsUpperCase type="bool">true</modelsUpperCase>
+            <pylon-offset type="int">1</pylon-offset>
+            <pylon-stations>controls/armament</pylon-stations>
+            <station-name type="string">station</station-name>
+            <hit-interpolation type="bool">true</hit-interpolation>
+            <enable-craters type="bool">true</enable-craters>
+            <msg type="bool">false</msg>
+            <damage type="bool">false</damage>
+            <MLW-bearing type="double">0</MLW-bearing>
+            <MLW-count type="int">0</MLW-count>
+            <MLW-launcher type="string"></MLW-launcher>
+            <MAW-bearing type="double">0</MAW-bearing>
+            <MAW-active type="bool">false</MAW-active>
+            <spike type="bool">false</spike>
+            <tacview type="bool">true</tacview>
+            <es>                    <!-- Ejection seat -->
+                <type-id type="int">93</type-id>
+                <vol-search type="double">0.075</vol-search>
+                <vol-track type="double">0.25</vol-track>
+                <vol-track-weak type="double">0.175</vol-track-weak>
+                <guidance type="string">unguided</guidance>
+                <navigation type="string">direct</navigation>
+                <all-aspect type="bool">false</all-aspect>
+                <max-fire-range-nm type="double">6.9</max-fire-range-nm>
+                <FCS-field-deg type="int">50</FCS-field-deg>
+                <seeker-field-deg type="int">54</seeker-field-deg>
+                <max-g type="int">10</max-g>
+                <max-launch-g type="int">9</max-launch-g>
+                <thrust-lbf-stage-1 type="double">1500</thrust-lbf-stage-1>
+                <thrust-lbf-stage-2 type="double">0.0</thrust-lbf-stage-2>
+                <stage-1-duration-sec type="double">1</stage-1-duration-sec>
+                <stage-2-duration-sec type="double">0.0</stage-2-duration-sec>
+                <weight-launch-lbs type="double">300</weight-launch-lbs>
+                <weight-warhead-lbs type="double">0.0</weight-warhead-lbs>
+                <weight-fuel-lbm type="double">5.0</weight-fuel-lbm>
+                <drag-coeff type="double">1.35</drag-coeff>
+                <delta-drag-coeff-deploy type="double">75.00</delta-drag-coeff-deploy>
+                <cross-section-sqft type="double">2</cross-section-sqft>
+                <arming-time-sec type="double">0</arming-time-sec>
+                <min-speed-for-guiding-mach type="double">0.8</min-speed-for-guiding-mach>
+                <self-destruct-time-sec type="double">5000</self-destruct-time-sec>
+                <seeker-angular-speed-dps type="double">10.0</seeker-angular-speed-dps>
+                <lock-on-sun-deg type="double">20</lock-on-sun-deg>
+                <loft-altitude type="int">0</loft-altitude>
+                <min-fire-range-nm type="double">0.0</min-fire-range-nm>
+                <rail type="bool">true</rail>
+                <rail-length-m type="double">1.5</rail-length-m>
+                <rail-point-forward type="bool">false</rail-point-forward>
+                <rail-pitch-deg type="double">90</rail-pitch-deg>
+                <drop-time type="double">0</drop-time>
+                <deploy-time type="double">3.5</deploy-time>
+                <inert type="bool">true</inert>
+                <lateral-dps type="int">2</lateral-dps>
+                <max-report-distance type="double">65</max-report-distance>
+                <class type="string">A</class>
+                <fire-msg type="string">weeeeee</fire-msg>
+                <long-name type="string">Project Gamma</long-name>
+                <short-name type="string">gamma</short-name>
+                <pitch-animation-disabled type="bool">true</pitch-animation-disabled>
+            </es>
+        </armament>
+        <d-config>
+            <full_damage_dist_m type="double">3</full_damage_dist_m>
+            <use_hitpoints_instead_of_failure_modes_bool type="bool">false</use_hitpoints_instead_of_failure_modes_bool>
+            <hp_max type="double">80</hp_max>
+            <hitable_by_air_munitions type="bool">true</hitable_by_air_munitions>
+            <hitable_by_cannon type="bool">true</hitable_by_cannon>
+            <is_fleet type="bool">false</is_fleet>
+            <rwr_to_screen type="bool">true</rwr_to_screen>
+            <rwr_audio_extended type="bool">false</rwr_audio_extended>
+            <tacview_supported type="bool">true</tacview_supported>
+            <m28_auto type="bool">false</m28_auto>
+            <mlw_max type="double">-1</mlw_max>
+            <auto_flare_caller type="bool">false</auto_flare_caller>
+        </d-config>
+    </payload>
+
+	<debug-radar>
+        <debug-main type="int">0</debug-main>
+        <debug-stt type="int">0</debug-stt>
+    </debug-radar>
+
 	<nasal>
-		<radardist>
+		<iff>
+            <file>Aircraft/f-14b/Nasal/iff.nas</file>
+        </iff>
+        <datalink>
+            <file>Aircraft/f-14b/Nasal/datalink.nas</file>
+        </datalink>
+		<!--radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
-		</radardist>
+		</radardist-->
         <vector>
             <file>Aircraft/f-14b/Nasal/vector.nas</file>
         </vector>
         <rcs>
-            <file>Aircraft/f-14b/Nasal/rcs.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/rcs_mand.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/rcs.nas</file>
         </rcs>
 		<awg_9>
-			<file>Aircraft/f-14b/Nasal/awg_9.nas</file>
-		</awg_9>
+            <file>Aircraft/f-14b/Nasal/Radar/radar-system.nas</file>
+            <file>Aircraft/f-14b/Nasal/Radar/awg-9.nas</file>
+            <!--file>Aircraft/f-14b/Nasal/M_nearest_carrier.nas</file-->
+        </awg_9>
 		<dual_control_tools>
 			<file>Aircraft/Generic/DualControl/dual-control-tools.nas</file>
 		</dual_control_tools>
@@ -600,12 +997,18 @@
 		<dual_control>
 			<file>Aircraft/Generic/DualControl/copilot-dual-control.nas</file>
 		</dual_control>
+		<f14>
+			<file>Aircraft/f-14b/DualControl/f14.nas</file>
+		</f14>
 		<BS_instruments>
 			<file>Aircraft/f-14b/Nasal/back-seat-instruments.nas</file>
 		</BS_instruments>
 		<armament>
             <file>Aircraft/f-14b/Nasal/fox2.nas</file>
         </armament>
+        <tacview>
+            <file>Aircraft/f-14b/Nasal/tacview.nas</file>
+        </tacview>
 	</nasal>
 
 

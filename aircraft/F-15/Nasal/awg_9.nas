@@ -222,6 +222,7 @@ var rdr_loop = func() {
 		if ( we_are_bs == 0) {
 			RadarStandbyMP.setIntValue(our_radar_stanby); # Tell over MP if
 			# our radar is scaning or is in stanby. Don't if we are a back-seater.
+            if (our_radar_stanby) setprop("sim/multiplay/generic/string[6]", "");
 		}
 	} elsif ( size(tgts_list) > 0 ) {
 		foreach( u; tgts_list ) {
@@ -346,7 +347,11 @@ var az_scan = func() {
             if (active_u == nil or active_u.Callsign == nil or active_u.Callsign.getValue() == nil or active_u.Callsign.getValue() != active_u_callsign)
             {
                 if (active_u != nil)
+                {
                     active_u = nil;
+                    active_u_callsign = nil;
+                    setprop("sim/multiplay/generic/string[6]", "");
+                }
                 armament.contact = active_u;
             }
 
@@ -358,7 +363,7 @@ var az_scan = func() {
                     continue;
                 }
                 if (type == "multiplayer" or type == "tanker" or type == "aircraft" 
-                    or type == "ship" or type == "groundvehicle" or type == "aim-120" or type == "aim-7" or type == "aim-9") 
+                    or type == "ship" or type == "groundvehicle") # or type == "aim-120" or type == "aim-7" or type == "aim-9"
                 {
                     append(tgts_list, Target.new(c));
                 }
@@ -388,6 +393,13 @@ var az_scan = func() {
             scan_next_tgt_check = ElapsedSec.getValue()  + ScanVisibilityCheckInterval.getValue();
             scan_update_visibility = 1;
         }
+
+        # always clear the MP locked callsign and it will be reselected in the inner loop only 
+        # if the conditions are met
+        # - airbone
+        # - displayed (visible and on display)
+        # - master arm active
+        setprop("sim/multiplay/generic/string[6]", "");
 
         #
         # clear the values ready for the new scan
@@ -567,6 +579,9 @@ var az_scan = func() {
                   if (u.airbone) {
                       if (active_u_callsign != nil and u.Callsign != nil and u.Callsign.getValue() == active_u_callsign) {
                           active_u = u; armament.contact = active_u;
+                          if (u.get_display() and getprop("controls/armament/master-arm")) {
+                            setprop("sim/multiplay/generic/string[6]", left(md5(active_u_callsign), 4));
+                          }
                       }
                   }
                   idx=idx+1;
@@ -578,7 +593,7 @@ var az_scan = func() {
                       }
                   }
               }
-          }
+            }
         u.set_fading(u_fading);
 
         if (active_u != nil) {
@@ -667,10 +682,13 @@ var az_scan = func() {
         {
             active_u = nearest_u = tmp_nearest_u = prv; armament.contact = active_u;
 
-            if (tmp_nearest_u.Callsign != nil)
+            if (tmp_nearest_u.Callsign != nil) {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
-            else
+                setprop("sim/multiplay/generic/string[6]", getprop("controls/armament/master-arm")?left(md5(active_u_callsign), 4):"");
+            } else {
                 active_u_callsign = nil;
+                setprop("sim/multiplay/generic/string[6]", "");
+            }
                 
         }
         awg_9.sel_prev_target =0;
@@ -721,10 +739,13 @@ var az_scan = func() {
         if (nxt != nil)
         {
             active_u = nearest_u = tmp_nearest_u = nxt; armament.contact = active_u;
-            if (tmp_nearest_u.Callsign != nil)
+            if (tmp_nearest_u.Callsign != nil) {
                 active_u_callsign = tmp_nearest_u.Callsign.getValue();
-            else
+                setprop("sim/multiplay/generic/string[6]", getprop("controls/armament/master-arm")?left(md5(active_u_callsign), 4):"");
+            } else {
                 active_u_callsign = nil;
+                setprop("sim/multiplay/generic/string[6]", "");
+            }
         }
         awg_9.sel_next_target =0;
     }
@@ -734,7 +755,8 @@ var az_scan = func() {
 
     # finally ensure that the active target is still in the targets list.
     if (!containsV(tgts_list, active_u)) {
-        active_u = nil; armament.contact = active_u;
+        active_u = nil; armament.contact = active_u; active_u_callsign = nil;
+        setprop("sim/multiplay/generic/string[6]", "");
     }
 }
 
@@ -1157,6 +1179,9 @@ var Target = {
 		obj.Heading = c.getNode("orientation/true-heading-deg");
         obj.pitch   = c.getNode("orientation/pitch-deg");
         obj.roll   = c.getNode("orientation/roll-deg");
+        obj.ubody           = c.getNode("velocities/uBody-fps");
+        obj.vbody           = c.getNode("velocities/vBody-fps");
+        obj.wbody           = c.getNode("velocities/wBody-fps");
 		obj.Alt = c.getNode("position/altitude-ft");
 		obj.AcType = c.getNode("sim/model/ac-type");
 		obj.type = c.getName();
@@ -1579,10 +1604,18 @@ var Target = {
         return me.unique;
     },
     get_type: func {
+        # These two lines fixes the issue of not being able to shoot an aircraft this radar has seen on ground, or opposite:
+        if    (me.target_classification != AIR and me.get_Speed() > 60) me.target_classification = AIR;
+        elsif (me.target_classification == AIR and me.get_Speed() < 60) me.target_classification = SURFACE;
         return me.target_classification;
     },
     isPainted: func {
-        return 1;
+        # AIM-7 require continuing lock of target during flight:
+        return active_u != nil and me.get_Callsign() == active_u_callsign;
+    },
+    isLaserPainted: func{
+        # should really check if the laser is armed here
+        return me.isPainted();
     },
     getFlareNode: func {
         return me.propNode.getNode("rotors/main/blade[3]/flap-deg");
@@ -1624,6 +1657,57 @@ var Target = {
     get_model: func {
         return me.ModelType;
     },
+    get_uBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.ubody.getValue();
+      }
+      if(body == nil) {
+        body = me.get_Speed()*KT2FPS;
+      }
+      return body;
+    },    
+    get_vBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.vbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
+    },    
+    get_wBody: func {
+      var body = nil;
+      if (me.ubody != nil) {
+        body = me.wbody.getValue();
+      }
+      if(body == nil) {
+        body = 0;
+      }
+      return body;
+    },
+    isVirtual: func(){
+        return 0;
+    },
+    isRadiating: func (coord) {
+        # If this Target is transmitting radar in direction of coord:
+        me.rn = me.get_range();
+        if (me.get_model() != "gci" and me.get_model() != "S-75" and me.get_model() != "buk-m2" and me.get_model() != "MIM104D" and me.get_model() != "missile_frigate" and me.get_model() != "s-300" and me.get_model() != "ZSU-23-4M" and me.get_type()!=armament.MARINE) {
+            me.bearingR = coord.course_to(me.get_Coord());
+            me.headingR = me.get_heading();
+            me.inv_bearingR =  me.bearingR+180;
+            me.deviationRd = me.inv_bearingR - me.headingR;
+        } else {
+            me.deviationRd = 0;
+        }
+        me.rdrAct = me.propNode.getNode("sim/multiplay/generic/int[2]");
+        if (me.rn < 70 and ((me.rdrAct != nil and me.rdrAct.getValue()!=1) or me.rdrAct == nil) and math.abs(geo.normdeg180(me.deviationRd)) < 60) {
+            # our radar is active and pointed at coord.
+            return 1;
+        }
+        return 0;
+    },
 	list : [],
 };
 
@@ -1646,81 +1730,11 @@ dump_tgt_list = func {
     }
 }
 
-setlistener("/instrumentation/tacan/display/channel", func {
-                find_carrier_by_tacan();
-},0,0);
-#
-# Locate carrier based on TACAN. This used to be used for the ARA 63 (Carrier ILS) support - but this has
-# been replaced by the Emesary based notification model. However the ground services dialog uses this
-# for reposition - so replace the continual scanning (as part of the radar) with a one off method that can be
-# called as needed.
-find_carrier_by_tacan = func(output) {
-    var raw_list = awg_9.Mp.getChildren();
-    var carrier_located = 0;
-    
-    foreach ( var c; raw_list ) {
-
-        var tchan = c.getNode("navaids/tacan/channel-ID");
-        if (tchan != nil and !we_are_bs) {
-            tchan = tchan.getValue();
-            if (tchan == getprop("/instrumentation/tacan/display/channel")) {
-# Tuned into this carrier (node) so use the offset.
-# Get the position of the glideslope; this is offset from the carrier position by
-# a smidgen. This is measured and is a point slightly in front of the TDZ where the
-# deck is marked with previous tyre marks (which seems as good a place as any to 
-# aim for).
-                if (c.getNode("position/global-x") != nil) {
-                    var x = c.getNode("position/global-x").getValue() + 88.7713542;
-                    var y = c.getNode("position/global-y").getValue() + 18.74631309;
-                    var z = c.getNode("position/global-z").getValue() + 115.6574875;
-
-                    output.carrier_ara_63_position = geo.Coord.new().set_xyz(x, y, z);
-
-                    var carrier_heading = c.getNode("orientation/true-heading-deg");
-                    if (carrier_heading != nil) {
-                        # relative offset of the course to the tdz
-                        # according to my measurements the Nimitz class is 8.1362114 degrees (measured 178 vs carrier 200 allowing for local magvar -13.8637886)
-                        # (i.e. this value is from tuning rather than calculation)
-                        output.carrier_heading = carrier_heading.getValue();
-                        output.carrier_ara_63_heading = carrier_heading.getValue() - 8.1362114;
-                    }
-                    else
-                    {
-                        output.carrier_ara_63_heading = 0;
-                        print("Carrier heading invalid");
-                    }
-                    carrier_located = 1;
-                    output.tuned_carrier_name = c.getNode("name").getValue();
-                    setprop("sim/model/"~this_model~"/tuned-carrier",output.tuned_carrier_name);
-                    return;
-                }
-                else
-                {
-                    # tuned tacan is not carrier.
-                    output.carrier_ara_63_heading = 0;
-                }
-            }
-        }
-    }
-}
 var RADARRecipient =
 {
-    new: func(_ident)
+    update: func(notification)
     {
-        var new_class = emesary.Recipient.new(_ident);
-        new_class.Receive = func(notification)
-        {
-            if (notification.NotificationType == "FrameNotification")
-            {
-                if (!math.mod(notifications.frameNotification.FrameCount,3)){
-                    awg_9.rdr_loop();
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
-        return new_class;
+        awg_9.rdr_loop();
     },
 };
-
-emesary.GlobalTransmitter.Register(RADARRecipient.new("RADAR-AWG9"));
+emexec.ExecModule.register("AWG-9",{}, RADARRecipient, 1);

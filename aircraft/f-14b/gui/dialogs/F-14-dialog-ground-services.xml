@@ -1,0 +1,474 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+    <name>ground-services</name>
+    <layout>vbox</layout>
+    <default-padding>0</default-padding>
+    <modal>false</modal>
+    <width>650</width>
+    <valign>top</valign>
+
+    <nasal>
+        <open>
+            <![CDATA[
+                awg_9.find_carrier_by_tacan();
+            ]]>
+        </open>
+        <close></close>
+    </nasal>
+
+    <group>
+        <layout>hbox</layout>
+        <default-padding>0</default-padding>
+
+        <group>
+            <layout>vbox</layout>
+            <default-padding>1</default-padding>
+
+            <empty>
+                <pref-height>2</pref-height>
+            </empty>
+
+            <group>
+                <layout>vbox</layout>
+                <padding>8</padding>
+                <checkbox>
+                    <halign>left</halign>
+                    <label> Digital Flight Controls System (DFCS)</label>
+                    <row>1</row>
+                    <column>1</column>
+                    <property>fdm/jsbsim/fcs/dfcs-active</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/fcs/dfcs-active</property>
+                    </binding>
+                </checkbox>
+
+                <checkbox>
+                    <halign>left</halign>
+                    <label> Mod DLC (AFC 735) active</label>
+                    <property>fdm/jsbsim/fcs/mod-dlc-AFC-735-active</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/fcs/mod-dlc-AFC-735-active</property>
+                    </binding>
+                </checkbox>
+
+                <checkbox>
+                    <halign>left</halign>
+                    <label> External Electrical Power Connected</label>
+                    <property>fdm/jsbsim/systems/electrics/ground-power</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-power</property>
+                    </binding>
+                </checkbox>
+
+                <checkbox>
+                    <halign>left</halign>
+                    <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                    <label> External Air Connected</label>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>fdm/jsbsim/systems/electrics/ground-air</property>
+                    </binding>
+                </checkbox>
+
+                <checkbox>
+                    <halign>left</halign>
+                    <label> Extended HUD</label>
+                    <property>sim/hud/extended-mode</property>
+                    <live>true</live>
+                    <binding>
+                        <command>property-toggle</command>
+                        <property>sim/hud/extended-mode</property>
+                    </binding>
+                </checkbox>
+            </group>
+            <hrule />
+            <group>
+                <layout>table</layout>
+                <padding>8</padding>
+                <group>
+                    <row>1</row>
+                    <column>1</column>
+                    <layout>table</layout>
+                    <visible>
+                        <not>
+                            <or>
+                                <property>sim/model/f-14b/fx/smoke-mnt-left</property>
+                                <property>sim/model/f-14b/fx/smoke-mnt-right</property>
+                            </or>
+                        </not>
+                    </visible>
+                    <text>
+                        <label>Smoke generation  available when smoke winders fitted</label>
+                        <row>1</row>
+                        <column>1</column>
+                    </text>
+                    <text>
+                        <label>- use the fuel and stores dialog to select airshow load</label>
+                        <row>2</row>
+                        <column>1</column>
+                    </text>
+                </group>
+                <group>
+                    <row>1</row>
+                    <column>1</column>
+                    <layout>table</layout>
+                    <visible>
+                        <or>
+                            <property>sim/model/f-14b/fx/smoke-mnt-left</property>
+                            <property>sim/model/f-14b/fx/smoke-mnt-right</property>
+                        </or>
+                    </visible>
+
+                    <checkbox>
+                        <label>Smoke generator</label>
+                        <row>0</row>
+                        <column>0</column>
+                        <property>/sim/model/f-14b/fx/smoke-cmd</property>
+                        <live>true</live>
+                        <binding>
+                            <command>property-toggle</command>
+                            <property>/sim/model/f-14b/fx/smoke-cmd</property>
+                        </binding>
+                    </checkbox>
+
+                    <!-- <text>
+                        <halign>left</halign>
+                        <label>Vapour Color:</label>
+                        <row>0</row>
+                        <col>0</col>
+                        <colspan>3</colspan>
+                    </text> -->
+
+                    <text>
+                        <label>Red</label>
+                        <row>1</row>
+                        <col>1</col>
+                    </text>
+                    <text>
+                        <label>Green</label>
+                        <row>1</row>
+                        <col>2</col>
+                    </text>
+                    <text>
+                        <label>Blue</label>
+                        <row>1</row>
+                        <col>3</col>
+                    </text>
+                    <text>
+                        <label>Left</label>
+                        <row>2</row>
+                        <col>0</col>
+                    </text>
+
+                    <text>
+                        <label>Right</label>
+                        <row>3</row>
+                        <col>0</col>
+                    </text>
+
+                    <slider>
+                        <row>2</row>
+                        <col>1</col>
+                        <halign>right</halign>
+                        <pref-width>150</pref-width>
+                        <property>sim/model/f-14b/fx/vapour-color-left-r</property>
+                        <min>0.0</min>
+                        <max>1.0</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                        </binding>
+                        <live>true</live>
+                    </slider>
+
+                    <slider>
+                        <row>2</row>
+                        <col>2</col>
+                        <halign>right</halign>
+                        <pref-width>150</pref-width>
+                        <property>sim/model/f-14b/fx/vapour-color-left-g</property>
+                        <min>0.0</min>
+                        <max>1.0</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                        </binding>
+                        <live>true</live>
+                    </slider>
+
+                    <slider>
+                        <row>2</row>
+                        <col>3</col>
+                        <halign>right</halign>
+                        <pref-width>150</pref-width>
+                        <property>sim/model/f-14b/fx/vapour-color-left-b</property>
+                        <min>0.0</min>
+                        <max>1.0</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                        </binding>
+                        <live>true</live>
+                    </slider>
+
+                    <slider>
+                        <row>3</row>
+                        <col>1</col>
+                        <halign>right</halign>
+                        <pref-width>150</pref-width>
+                        <property>sim/model/f-14b/fx/vapour-color-right-r</property>
+                        <min>0.0</min>
+                        <max>1.0</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                        </binding>
+                        <live>true</live>
+                    </slider>
+
+                    <slider>
+                        <row>3</row>
+                        <col>2</col>
+                        <halign>right</halign>
+                        <pref-width>150</pref-width>
+                        <property>sim/model/f-14b/fx/vapour-color-right-g</property>
+                        <min>0.0</min>
+                        <max>1.0</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                        </binding>
+                        <live>true</live>
+                    </slider>
+
+                    <slider>
+                        <row>3</row>
+                        <col>3</col>
+                        <halign>right</halign>
+                        <pref-width>150</pref-width>
+                        <property>sim/model/f-14b/fx/vapour-color-right-b</property>
+                        <min>0.0</min>
+                        <max>1.0</max>
+                        <binding>
+                            <command>dialog-apply</command>
+                        </binding>
+                        <live>true</live>
+                    </slider>
+                </group>
+            </group>
+        </group>
+    </group>
+    <hrule />
+    <group>
+        <layout>hbox</layout>
+        <text>
+            <halign>left</halign>
+            <live>true</live>
+            <format>Tuned Carrier %s : Controls</format>
+            <property>sim/model/f-14b/tuned-carrier</property>
+            <label></label>
+        </text>
+    </group>
+    <group>
+        <layout>hbox</layout>
+        <slider>
+            <name>CarrierApproachDist</name>
+            <property>sim/presets/carrier-approach-dist-m</property>
+            <live>1</live>
+            <min>0</min>
+            <max>11000</max>
+            <binding>
+                <command>dialog-apply</command>
+                <object-name>CarrierApproachDist</object-name>
+            </binding>
+        </slider>
+        <text>
+            <halign>left</halign>
+            <live>true</live>
+            <format>%d M</format>
+            <property>sim/presets/carrier-approach-dist-m</property>
+            <label></label>
+        </text>
+        <button>
+            <legend>Carrier Straight In</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.carrier_approach_reposition();</script>
+            </binding>
+            <!--      <binding>
+        <command>dialog-close</command>
+      </binding>
+-->
+        </button>
+        <button>
+            <legend>Case 1 - overhead</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14_instruments.carrier_case_1_approach_reposition();</script>
+            </binding>
+            <!--      <binding>
+        <command>dialog-close</command>
+      </binding>
+-->
+        </button>
+    </group>
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <legend>Carrier Launch</legend>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    awg_9.find_carrier_by_tacan();
+                    var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+                    var dist_m = 7;
+                    np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
+                    setprop("sim/presets/latitude-deg",np.lat());
+                    setprop("sim/presets/longitude-deg",np.lon());
+                    setprop("sim/presets/altitude-ft",65.2);
+                    setprop("sim/presets/airspeed-kt",0);
+                    setprop("sim/presets/pitch-deg",0);
+                    setprop("/sim/presets/carrier",f14.tuned_carrier_name);
+                    fgcommand("reposition");
+                </script>
+            </binding>
+            <!--      <binding>
+        <command>dialog-close</command>
+      </binding>
+-->
+        </button>
+        <layout>hbox</layout>
+        <default-padding>0</default-padding>
+        <button>
+            <legend>Set Tower to Carrier</legend>
+            <binding>
+                <command>nasal</command>
+                <script>
+                    awg_9.find_carrier_by_tacan();
+                    var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+                    np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
+                    setprop("/sim/tower/latitude-deg",np.lat());
+                    setprop("/sim/tower/longitude-deg",np.lon());
+                    setprop("/sim/tower/altitude-ft",np.alt()+100);
+                </script>
+            </binding>
+        </button>
+    </group>
+    <hrule />
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <legend>Full</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14.set_fuel(22000)</script> <!-- more than can be held will just be ignored by the set_fuel logic -->
+            </binding>
+        </button>
+        <button>
+            <legend>7k</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14.set_fuel(7000)</script>
+            </binding>
+        </button>
+        <button>
+            <legend>3.5k</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14.set_fuel(3500)</script>
+            </binding>
+        </button>
+        <button>
+            <legend>11k</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14.set_fuel(11000)</script>
+            </binding>
+        </button>
+        <button>
+            <legend>50klb total</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14.set_fuel(math.max(1000, 50000-(getprop("fdm/jsbsim/inertia/weight-lbs")-getprop("sim/model/f-14b/instrumentation/fuel-gauges/total"))))</script>
+            </binding>
+        </button>
+        <button>
+            <legend>Quickstart</legend>
+            <binding>
+                <command>nasal</command>
+                <script>f14.quickstart()</script>
+            </binding>
+        </button>
+    </group>
+    <hrule />
+    <group>
+        <!-- Weapons Sets -->
+        <layout>hbox</layout>
+        <!-- button>
+                        <legend>Reload gun</legend>
+                        <equal>true</equal>
+                        <binding>
+                            <command>nasal</command>
+                            <script>
+                                pylons.cannon_load();
+                            </script>
+                        </binding>
+                    </button-->
+        <button>
+            <legend>Clean</legend>
+            <equal>true</equal>
+            <binding>
+                <command>nasal</command>
+                <script>f14.ext_loads_set("Clean")</script>
+            </binding>
+        </button>
+        <button>
+            <legend>FAD</legend>
+            <equal>true</equal>
+            <binding>
+                <command>nasal</command>
+                <script>f14.ext_loads_set("FAD")</script>
+            </binding>
+        </button>
+        <button>
+            <legend>FAD light</legend>
+            <equal>true</equal>
+            <binding>
+                <command>nasal</command>
+                <script>f14.ext_loads_set("FAD light")</script>
+            </binding>
+        </button>
+        <button>
+            <legend>FAD heavy</legend>
+            <equal>true</equal>
+            <binding>
+                <command>nasal</command>
+                <script>f14.ext_loads_set("FAD heavy")</script>
+            </binding>
+        </button>
+        <button>
+            <legend>Bombcat</legend>
+            <equal>true</equal>
+            <binding>
+                <command>nasal</command>
+                <script>f14.ext_loads_set("Bombcat")</script>
+            </binding>
+        </button>
+    </group>
+    <hrule />
+    <group>
+        <layout>hbox</layout>
+        <button>
+            <legend>Close</legend>
+            <default>true</default>
+            <key>Esc</key>
+            <binding>
+                <command>dialog-close</command>
+            </binding>
+        </button>
+    </group>
+
+</PropertyList>

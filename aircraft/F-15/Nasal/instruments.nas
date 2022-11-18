@@ -322,14 +322,16 @@ var common_init = func
 }
 
 # Init ####################
+var prop = nil;
 var init = func {
 	print("Initializing f15 Systems");
     var modelNotification = emesary.Notification.new("F15Model", nil, 0);
     modelNotification.root_node = props.globals;
     emesary.GlobalTransmitter.NotifyAll(modelNotification);
     emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Init", 1, 0));
-	ext_loads_init();
 	init_fuel_system();
+  ext_loads_init();
+	
 	aircraft.data.load();
 	f15_net.mp_network_init(1);
 	weapons_init();
@@ -344,9 +346,16 @@ var init = func {
 
     common_init();
      main_loop_launched = 1;
-    var prop = "/instrumentation/radar";
+
+
+    if (prop != nil) return;#the code below must only be run once:
+    prop = "/instrumentation/radar";
     var actuator_radar = compat_failure_modes.set_unserviceable(prop);
     FailureMgr.add_failure_mode(prop, "Radar", actuator_radar);
+
+    prop = "/payload/armament/fire-control";
+    var actuator_Fire_control = compat_failure_modes.set_unserviceable(prop);
+    FailureMgr.add_failure_mode(prop, "Fire control", actuator_Fire_control);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
@@ -371,6 +380,8 @@ setlistener("sim/position-finalized", func (is_done) {
 });
 setlistener("sim/signals/reinit", func (reinit) {
     if (reinit.getValue()) {
+        setprop("ai/submodels/submodel[5]/count", 100);#replenish chaff and flares
+        setprop("ai/submodels/submodel[6]/count", 100);
         internal_save_fuel();
     } else {
         settimer(func { internal_restore_fuel() }, 0.6);
@@ -387,61 +398,62 @@ setprop("sim/model/f15/lighting/warn-medium-lights-switch/enabled", 1);
 #var incomingBridge = emesary_mp_bridge.IncomingMPBridge.startMPBridge(routedNotifications);
 #var outgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("F-15mp",routedNotifications);
 
-var INSTRUMENTS_Recipient =
+var AircraftModule =
 {
     new: func(_ident)
     {
         var new_class = emesary.Recipient.new(_ident);
-        new_class.Receive = func(notification){
-            if (notification.NotificationType == "FrameNotification") {
-                var frame_count = math.mod(notifications.frameNotification.FrameCount,7);
-                if (main_loop_launched){
-                    mach = Mach.getValue();
-                    var cnt = notification.FrameCount;
-                    
-                    ownship_pos.set_latlon(getprop("position/latitude-deg"), getprop("position/longitude-deg"));
-                    
-                    burner +=1;
-                    if ( burner == 3 ) { burner = 0 }
-                    BurnerN.setValue(burner);
-                    
-                    if ( getprop("sim/replay/time") > 0 ) 
-                        setprop("orientation/alpha-indicated-deg", (getprop("orientation/alpha-deg") - 0.797) / 0.8122);
-                    else
-                        setprop("orientation/alpha-indicated-deg", getprop("fdm/jsbsim/aero/alpha-indicated-deg"));
-                    
-                    if (frame_count == 0) {
-                        if ((notification.Alpha or 0) > aoa_max.getValue() or 0) {
-                            aoa_max.setDoubleValue(notification.Alpha);
-                        }
-                        f15_chronograph.update_chrono();
-                    }
-                    if (frame_count == 6) {
-                        fuel_update();
-                        cnt = 0;
-                    }
-                    if (frame_count == 2) {
-                        awg_9.hud_nearest_tgt();
-                        
-                        if ( notification.ArmSysRunning ) {
-                            armament_update();
-                        }
-                    }
-                    if (frame_count == 3) {
-                        afcs_filters();
-                    }
-                }
-                return emesary.Transmitter.ReceiptStatus_OK;
-            }
-            return emesary.Transmitter.ReceiptStatus_NotProcessed;
-        };
+        append(new_class.parents, AircraftModule);
+        new_class.alphaIndicatedDegNode = props.globals.getNode("orientation/alpha-indicated-deg",1);
         return new_class;
+    },
+    update :  func(notification){
+        if (main_loop_launched){
+            mach = Mach.getValue();
+
+            var frame_count = math.mod(notification.FrameCount,8);
+
+            ownship_pos.set_latlon(notification.AcLat, notification.AcLon);
+            
+            burner = math.mod(burner + 1,4);
+            BurnerN.setValue(burner);
+            
+            if ( notification.ReplayTime > 0 ) 
+                me.alphaIndicatedDegNode.setValue((notification.AlphaRaw - 0.797) / 0.8122);
+            else
+                me.alphaIndicatedDegNode.setValue(notification.AlphaAero);
+            
+            if (frame_count == 0) {
+                if ((notification.Alpha or 0) > aoa_max.getValue() or 0) {
+                    aoa_max.setDoubleValue(notification.Alpha);
+                }
+                f15_chronograph.update_chrono();
+            }
+            else if (frame_count == 2) {
+                fuel_update();
+            }
+            else if (frame_count == 4) {
+                awg_9.hud_nearest_tgt();
+                
+                if ( notification.ArmSysRunning ) {
+                    armament_update();
+                }
+                armament_update2();
+            }
+            else if (frame_count == 6) {
+                afcs_filters();
+            }
+        }
     },
 };
 
-emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-inst"));
+
   input = {
+          AcLat                 : "position/latitude-deg",
+          AcLon                 : "position/longitude-deg",
           Alpha                 : "orientation/alpha-indicated-deg",
+          AlphaAero             : "fdm/jsbsim/aero/alpha-indicated-deg",
+          AlphaRaw              : "orientation/alpha-deg",
           frame_rate                : "/sim/frame-rate",
           frame_rate_worst          : "/sim/frame-rate-worst",
           elapsed_seconds           : "/sim/time/elapsed-sec",
@@ -463,9 +475,7 @@ emesary.GlobalTransmitter.Register(INSTRUMENTS_Recipient.new("F15-inst"));
           TcModeSwitch     : "sim/model/f15/instrumentation/tacan/mode",
           MagHdg           : "orientation/heading-magnetic-deg",
           MagDev           : "orientation/local-mag-dev",
-          ArmSysRunning : "sim/model/f15/systems/armament/system-running",
+          ArmSysRunning    : "sim/model/f15/systems/armament/system-running",
+          ReplayTime       : "sim/replay/time",
           };
-
-foreach (var name; keys(input)) {
-    emesary.GlobalTransmitter.NotifyAll(notifications.FrameNotificationAddProperty.new("F15-inst", name, input[name]));
-}
+emexec.ExecModule.register("F15-BASE",input, AircraftModule.new("F15-BASE"), 1);

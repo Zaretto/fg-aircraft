@@ -567,4 +567,13 @@ var lsnr = setlistener("sim/signals/fdm-initialized", crash_start);
 # test:
 var repairMe = func {
 	crashCode.repair();
+	setprop("f14/done",0);#reset ejection seat
+	view.setViewByIndex(0);
+	setprop("sim/view[115]/enabled", 0);
+};
+
+var exp = func {
+	if (crashCode.exploded==0) {
+		crashCode._explodeBegin("Aircraft was abandoned ");
+	}
 };

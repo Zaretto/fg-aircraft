@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+*******************************************************************
+  F-14 External Lighting 
+  Position lights
+  ===============
+  * Left Vertical Tail AFT  (white)
+
+* Wing Tip (Left (red), Green(red)) 
+  when (wing sweep <= 25 OR gear down 
+
+  * Wing Glove (Left (red), Green(red)) Upper/Lower 
+  when (wing sweep > 25) OR gear down 
+
+Anticollision 
+============
+Chin Pod (or TCS Pod)
+Left Vertical Tail FORE (red flashing)
+Right Vertical Tail AFT
+
+Refuelling probe light automatic when probe extended.
+
+When Anticollision lights on position lights only steady otherwise can
+flash if cockpit switch set to flash.
+
+ref: http://www.anft.net/f-14/f14-detail-light.htm
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  NOTE: cockpit lighting is provided by a combination of emissive
+        objects and implicit light maps 
+
+*******************************************************************
+-->
+
+<PropertyList>
+  <path>f-14b-external-lighting.ac</path>
+
+  <animation>
+    <object-name>Slimmers</object-name>
+    <type>material</type>
+    <condition>
+        <greater-than>
+            <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+            <value>0</value>
+        </greater-than>
+    </condition>
+    <emission>
+        <factor-prop>sim/multiplay/generic/int[1]</factor-prop>
+        <red>0.091</red>
+        <green>0.098</green>
+        <blue>0.078</blue>
+    </emission>
+</animation>
+
+</PropertyList>

@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<!--
+        Description: F-14 JSBSim model properties/config
+        Author: Richard Harrison (rjh@zaretto.com)
+-->
+
+
+<PropertyList>
+
+    <tuning>
+        <ClDFM type="double">1.0</ClDFM>
+        <ClDAFM type="double">1.0</ClDAFM>
+        <CdDFM type="double">1.0</CdDFM>
+        <CdDAFM type="double">1.0</CdDAFM>
+        <CMDFM type="double">1.0</CMDFM>
+        <CMADFM type="double">1.0</CMADFM>
+        <DClSLM type="double">1.0</DClSLM>
+        <CMUC type="double">1.0</CMUC>
+        <CMBRK type="double">1.0</CMBRK>
+        <CMDLC type="double">1.00</CMDLC>
+    </tuning>
+    <fcs>
+        <aim-fitted type="double">0</aim-fitted>
+        <dfcs-active type="double">1</dfcs-active>
+        <stick-dlc-mf-switch type="double">0</stick-dlc-mf-switch>
+        <stick-thumbwheel-norm type="double">0</stick-thumbwheel-norm>
+        <dlc-active type="double">0</dlc-active>
+        <external-tanks-fitted type="double">0</external-tanks-fitted>
+        <flap-pos-deg-effective>0</flap-pos-deg-effective>
+        <flap-cmd-sum />
+        <hook-engage />
+        <mod-dlc-AFC-735-active type="double">1</mod-dlc-AFC-735-active>
+        <pitch-damper-enable type="double">0</pitch-damper-enable>
+        <spoiler-differential-active-rate>0.25</spoiler-differential-active-rate>
+        <roll-sas-enable type="double">0</roll-sas-enable>
+        <slat-cmd type="double">0</slat-cmd>
+        <spoiler-ground-brake-armed />
+        <wing-sweep-mode />
+        <wing-sweep-pilot-dmd />
+        <yaw-damper-enable type="double">0</yaw-damper-enable>
+      </fcs>
+      <gear>
+        <unit n="0">
+          <z-position-base type="double">-94.01</z-position-base>
+        </unit>
+      </gear>
+      <metrics>
+        <aoa-indexer>
+            <!-- target = 11.3 deg AoA (indicated allowing for offset in AOA sensor-->
+            <!-- F-14AAD-1 Figure 2-124; Angle-of-Attack Displays -->
+
+            <slow-deg-start>15.5</slow-deg-start>
+            <optimum-deg-start>14</optimum-deg-start>
+            <optimum-deg-end>16</optimum-deg-end>
+            <fast-deg-end>14.5</fast-deg-end>
+            <!-- target (AFCS)-->
+            <target-deg>15</target-deg>
+        </aoa-indexer>
+      </metrics>
+    <propulsion>
+        <refuel-probe-pos-norm type="float">0</refuel-probe-pos-norm>
+        <engine n="0">
+            <augmentation-alight type="float">0</augmentation-alight>
+            <oil-pressure-denormalisation-factor type="float">61.3</oil-pressure-denormalisation-factor>
+            <!-- TF30 config -->
+            <compressor-stall-amount type="double">0.4</compressor-stall-amount>
+            <mcb-failed type="double">0<!-- mid compression bypass failure --></mcb-failed>
+            <P0-stall type="double">0</P0-stall>
+            <P0-stall-lag type="double">1.7<!-- simple lag between compressor conditions met and compressor stall --></P0-stall-lag>
+        </engine>
+        <engine n="1">
+            <augmentation-alight type="float">0</augmentation-alight>
+            <oil-pressure-denormalisation-factor type="float">59.3</oil-pressure-denormalisation-factor>
+            <!-- TF30 config -->
+            <compressor-stall-amount type="double">0</compressor-stall-amount>
+            <mcb-failed type="double">0.4</mcb-failed>
+            <P0-stall type="double">0</P0-stall>
+            <P0-stall-lag type="double">2.1<!-- simple lag between compressor conditions met and compressor stall the right engine is less likely to stall for no apparent reason--></P0-stall-lag>
+        </engine>
+    </propulsion>
+    <sas>
+        <!-- SAS Pitch channel configuration TM-81833- Figure 3 -->
+        <pitch-3-q-c1 type="double">2</pitch-3-q-c1>
+        <pitch-3-q-c2 type="double">0</pitch-3-q-c2>
+        <pitch-3-q-c3 type="double">2</pitch-3-q-c3>
+        <pitch-3-q-c4 type="double">1</pitch-3-q-c4>
+
+        <roll-sas-1-input-0-rate type="double">10</roll-sas-1-input-0-rate>
+
+        <rudder-power-actuator-cval type="double">0.05</rudder-power-actuator-cval>
+
+        <!-- SAS YAW Channel configuration -->
+        <!-- yaw-sas-2-v1-stkr-factor is 2.60 for System B and 3.19 for System C 
+            this is the only difference between the two systems.
+            The described High-Alpha ARI system is the same as System B 
+            Figure 20 from [1] below for YAW SAS
+            Figure 21 from [1] below for ROLL SAS
+            see https://ntrs.nasa.gov/citations/19800020867
+            and https://ntrs.nasa.gov/citations/19820005275
+        -->
+        <roll-sas-5-v2-c1>0</roll-sas-5-v2-c1>
+        <roll-sas-5-v2-c2>1</roll-sas-5-v2-c2>
+        <roll-sas-5-v2-c3>0.05</roll-sas-5-v2-c3>
+        <roll-sas-5-v2-c4>1</roll-sas-5-v2-c4>
+
+        <roll-sas-3-p-rad-filtered-c1>0.25</roll-sas-3-p-rad-filtered-c1>
+
+        <yaw-sas-2-v1-stkr-factor type="double">3.19</yaw-sas-2-v1-stkr-factor>
+        <yaw-sas-2-v3-c1 type="double">0</yaw-sas-2-v3-c1>
+        <yaw-sas-2-v3-c2 type="double">1</yaw-sas-2-v3-c2>
+        <yaw-sas-2-v3-c3 type="double">0.125</yaw-sas-2-v3-c3>
+        <yaw-sas-2-v3-c4 type="double">1</yaw-sas-2-v3-c4>
+
+        <yaw-sas-3-ay-c1 type="double">0.00</yaw-sas-3-ay-c1>
+        <yaw-sas-3-ay-c2 type="double">1.00</yaw-sas-3-ay-c2>
+        <yaw-sas-3-ay-c3 type="double">0.05</yaw-sas-3-ay-c3> 
+        <!-- 0.18 -->
+        <yaw-sas-3-ay-c4 type="double">1.00</yaw-sas-3-ay-c4>
+
+        <yaw-sas-3-r-c1 type="double">2</yaw-sas-3-r-c1>
+        <yaw-sas-3-r-c2 type="double">0</yaw-sas-3-r-c2>
+        <yaw-sas-3-r-c3 type="double">2</yaw-sas-3-r-c3>
+        <yaw-sas-3-r-c4 type="double">1</yaw-sas-3-r-c4>
+    </sas>
+    <systems>
+        <afcs>
+            <altitude-hold-alt-diff-feet type="float">0</altitude-hold-alt-diff-feet>
+            <elevator-cmd-delta type="float">0</elevator-cmd-delta>
+        </afcs>
+        <apc>
+            <active type="bool">0</active>
+            <alpha-u-reference type="double">15</alpha-u-reference>
+            <throttle-pla-norm type="double">0</throttle-pla-norm>
+        </apc>
+        <cadc>
+            <manuv-flap-extension-calc-lag type="double">0.9</manuv-flap-extension-calc-lag>
+            <manuv-flap-extension-washout-lag type="double">1.3</manuv-flap-extension-washout-lag>
+            <manuv-slat-extension-manual type="double">0</manuv-slat-extension-manual>
+          </cadc>
+        <catapult>
+            <cat-pos-norm type="float">0</cat-pos-norm>
+        </catapult>
+        <ecs>
+            <anti-fog type="double">0</anti-fog>
+            <bleed-air-source type="double">0</bleed-air-source>
+            <cabin-altitude-ft />
+            <emerg-vent type="double">0</emerg-vent>
+            <liquid-oxygen-activated type="double">0</liquid-oxygen-activated>
+            <oxygen-pressure-psi />
+            <oxygen-qty-test type="double">0</oxygen-qty-test>
+            <oxygen-quantity-liters />
+            <oxygen-supply-mode type="double">0</oxygen-supply-mode>
+            <pressurisation-active type="double">1</pressurisation-active>
+            <windscreen-factor1 type="double">6750</windscreen-factor1>
+            <windscreen-frost-amount-dmd-rate type="double">0.1</windscreen-frost-amount-dmd-rate>
+            <windscreen-heater-power-watts />
+            <windscreen-heater-watts-second type="double">46</windscreen-heater-watts-second>
+            <windscreen-temperature-k type="double">290</windscreen-temperature-k>
+            <windshield-heat type="double">0</windshield-heat>
+          </ecs>
+        <electrics>
+            <ac-right-main-bus type="float">0</ac-right-main-bus>
+            <emerg-generator-status type="double">1</emerg-generator-status>
+            <ground-power type="double">0</ground-power>
+            <lgenerator-status type="double">1</lgenerator-status>
+            <rgenerator-status type="double">1</rgenerator-status>
+            <master-test-lights alias="/sim/model/f-14b/lights/master-test-lights"></master-test-lights>
+        </electrics>
+        <flyt>
+            <alpha-mx type="double">1.34706</alpha-mx>
+            <damage-reset type="double">0</damage-reset>
+            <damage-enabled>1</damage-enabled>
+            <distortion-factor-per-g type="double">0.0213</distortion-factor-per-g>
+            <flaps-damage-time type="double">10</flaps-damage-time>
+            <flaps-main-damage-total>0</flaps-main-damage-total>
+            <flutter-full-ias type="double">950</flutter-full-ias>
+            <flutter-max-bend-amplitude type="double">0.3</flutter-max-bend-amplitude>
+            <flutter-onset-ias type="double">850</flutter-onset-ias>
+            <flutter-pulsation type="double">18.84</flutter-pulsation>
+            <max-g type="double">7.5</max-g>
+            <min-g type="double">-3.0</min-g>
+
+            <permanent-bend-factor type="double">0.02</permanent-bend-factor>
+            <slats-damage-total>0</slats-damage-total>
+            <stress-run type="double">0</stress-run>
+            <ultimate-max-g type="double">15.0</ultimate-max-g>
+            <ultimate-min-g type="double">-6.0</ultimate-min-g>
+            <wing-bend-time type="double">10</wing-bend-time>
+            <wing-bend-total type="double">0</wing-bend-total>
+            <wing-bend-damage-rate type="double">0</wing-bend-damage-rate>
+            <wing-torn-left type="int">0</wing-torn-left>
+            <wing-torn-right type="int">0</wing-torn-right>"
+        </flyt>
+        <holdback>
+            <holdback-cmd type="double">0</holdback-cmd>
+        </holdback>
+        <hook>
+            <tailhook-cmd-norm type="bool">false</tailhook-cmd-norm>
+            <arrestor-wire-reset-time type="double">20</arrestor-wire-reset-time>
+            <tailhook-bypass-field type="int">0</tailhook-bypass-field> <!-- non zero  if hook bypass in field setting -->
+            <funcs>
+                <arrestor-wire-available-dt type="double">-60</arrestor-wire-available-dt>
+                <hook-operational-efficiency type="double">1.0</hook-operational-efficiency>
+            </funcs>
+            <hook-decel-force type="double"></hook-decel-force>
+            <tailhook-length-ft type="double">10.1</tailhook-length-ft>
+            <tailhook-offset-x-in type="double">646</tailhook-offset-x-in>
+            <tailhook-offset-y-in type="double">0.0</tailhook-offset-y-in>
+            <tailhook-offset-z-in type="double">0</tailhook-offset-z-in>
+            <tailhook-pos-deg type="double">0</tailhook-pos-deg>
+            <tailhook-pos-max-deg type="double">52.369</tailhook-pos-max-deg>
+            <tailhook-pos-min-deg type="double">0</tailhook-pos-min-deg>
+        </hook>
+        <hydraulics>
+            <flight-system-psi type="float">0</flight-system-psi>
+            <combined-system-psi type="float">0</combined-system-psi>
+            <bidi-activation type="double">2100</bidi-activation>
+            <bidi-cutoff-min-pressure type="double">-500<!-- the min pressure is really for when no hydraulic fluid and the pressure has been at that levelfor more than 10 seconds, so for now we will not model this as there is no way for fluid to be depleted --></bidi-cutoff-min-pressure>
+            <bidi-normal-pressure type="double">2500</bidi-normal-pressure>
+            <combined-system-pump-failed type="double">0</combined-system-pump-failed>
+            <emerg-flyt-hyd-switch type="double">0</emerg-flyt-hyd-switch>
+            <emerg-pump-auto-activation type="double">2100</emerg-pump-auto-activation>
+            <emerg-pump-auto-deactivation type="double">2400</emerg-pump-auto-deactivation>
+            <emerg-system-pump-failed type="double">0</emerg-system-pump-failed>
+            <flight-system-pump-failed type="double">0</flight-system-pump-failed>
+            <hyd-transfer-pump-switch type="double">1</hyd-transfer-pump-switch>
+            <normal-pressure type="double">3022</normal-pressure>
+            <reservoir-quantity type="double">25</reservoir-quantity>
+        </hydraulics>
+        <NWS>
+            <engaged />
+          </NWS>
+    </systems>
+</PropertyList>
