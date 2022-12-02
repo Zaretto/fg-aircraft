@@ -699,7 +699,7 @@ var F15MainModule =
                 setprop("fdm/jsbsim/propulsion/refuel",0);
                 setprop("fdm/jsbsim/propulsion/ground-refuel",0);
             }
-            wow = wowLnode.getBoolValue() or wowRnode.getBoolValue();
+            wow = notification.wowLnode or notification.wowRnode;
         }
     },
 };
