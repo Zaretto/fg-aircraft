@@ -970,7 +970,7 @@ DatalinkRadar = {
 		dlnk.DatalinkNotification = VectorNotification.new("DatalinkNotification");
 		dlnk.DatalinkNotification.updateV(dlnk.vector_aicontacts_for);
 		dlnk.timer.start();
-		return omni;
+		return dlnk;
 	},
 
 	scan: func () {
@@ -999,17 +999,13 @@ DatalinkRadar = {
 				}
 				me.vector_aicontacts_for = me.new_vector_aicontacts_for;
 			}
-		} else {
-			
-
-			if (me.contact.getRangeDirect()*M2NM > me.max_dist_nm) {me.index += 1;return;}
-			
+		} else {		
 
 	        me.lnk = datalink.get_data(me.cs);
 	        if (!me.contact.isValid()) {
 	        	me.lnk = nil;
 	        }
-	        if (me.lnk != nil and me.lnk.on_link() == 1) {
+	        if (me.lnk != nil and me.lnk.on_link() == 1 and me.contact.getRangeDirect()*M2NM < me.max_dist_nm) {
 	            me.blue = 1;
 	            me.blueIndex = me.lnk.index()+1;
 	        } elsif (me.cs == getprop("link16/wingman-4")) { # Hack that the F16 need. Just ignore it, as nil wont cause expection.
@@ -1020,8 +1016,14 @@ DatalinkRadar = {
 	            me.blueIndex = -1;
 	        }
 	        if (!me.blue and me.lnk != nil and me.lnk.tracked() == 1) {
-	            me.blue = 2;
-	            me.blueIndex = me.lnk.tracked_by_index()+1;
+	        	me.dl_idx = me.lnk.tracked_by_index();
+	        	if (me.dl_idx != nil and me.dl_idx > -1) {
+		        	me.dl_rng = getprop("ai/models/multiplayer["~me.dl_idx~"]/radar/range-nm");
+		        	if (me.dl_rng != nil and me.dl_rng < me.max_dist_nm) {
+			            me.blue = 2;
+			            me.blueIndex = me.dl_idx+1;
+			        }
+			    }
 	        }
 
 	        me.contact.blue = me.blue;
@@ -2165,11 +2167,11 @@ var RWR = {
                     }
                 }
                 me.threat = 0;
-                if (me.u.getModel() != "missile_frigate" and me.u.getModel() != "S-75" and me.u.getModel() != "buk-m2" and me.u.getModel() != "MIM104D" and me.u.getModel() != "s-300" and me.u.getModel() != "fleet" and me.u.getModel() != "ZSU-23-4M") {
+                if (me.u.getModel() != "missile_frigate" and me.u.getModel() != "S-75" and me.u.getModel() != "SA-6" and me.u.getModel() != "buk-m2" and me.u.getModel() != "MIM104D" and me.u.getModel() != "s-200" and me.u.getModel() != "s-300" and me.u.getModel() != "fleet" and me.u.getModel() != "ZSU-23-4M") {
                     me.threat += ((180-me.dev)/180)*0.30;# most threat if I am in front of his nose
                     me.spd = (60-me.threatDB[8])/60;
                     #me.threat -= me.spd>0?me.spd:0;# if his speed is lower than 60kt then give him minus threat else positive
-                } elsif (me.u.getModel == "missile_frigate" or me.u.getModel() == "fleet") {
+                } elsif (me.u.getModel() == "missile_frigate" or me.u.getModel() == "fleet") {
                     me.threat += 0.30;
                 } else {
                     me.threat += 0.30;
@@ -2179,6 +2181,10 @@ var RWR = {
                     me.danger = 80;
                 } elsif (me.u.getModel() == "buk-m2" or me.u.getModel() == "S-75") {
                     me.danger = 35;
+                } elsif (me.u.getModel() == "SA-6") {
+                    me.danger = 15;
+                } elsif (me.u.getModel() == "s-200") {
+                    me.danger = 150;
                 } elsif (me.u.getModel() == "MIM104D") {
                     me.danger = 45;
                 } elsif (me.u.getModel() == "ZSU-23-4M") {
