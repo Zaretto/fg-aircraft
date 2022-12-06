@@ -2523,7 +2523,7 @@ var xmlDisplays = {
 			if (math.abs(me.blep.getAZDeviation())>AWG9.fieldOfRegardMaxAz) {
 				continue;
 			}
-			me.threat = me.active_u["threat"] != nil and me.active_u["threat"] > 0 and me.active_u["blue"] != 1;
+			me.threat = (me.active_u["threat"] != nil and me.active_u["threat"] > 0 and me.active_u["blue"] != 1)?(me.active_u["threat"] > 0.50?0.9:0.85):0;
 			me.tgts[me.i]["bearing-deg"].setDoubleValue(me.blep.getBearing());
 			me.tgts[me.i]["true-heading-deg"].setDoubleValue(me.blep.getHeading()==nil?-2:me.blep.getHeading());
 			me.tgts[me.i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * me.blep.getAZDeviation());
@@ -2533,7 +2533,7 @@ var xmlDisplays = {
 			me.tgts[me.i]["behind-terrain"].setBoolValue(0);
 			me.tgts[me.i]["rwr-visible"].setBoolValue(me.threat);
 			#if (me.threat) {
-				me.tgts[me.i]["ecm-signal"].setDoubleValue(me.threat?0.85:0);#?(active_u.threat>0.7?0.95:0.87):0);
+				me.tgts[me.i]["ecm-signal"].setDoubleValue(me.threat);#?(active_u.threat>0.7?0.95:0.87):0);
 			#	me.tgts[me.i]["ecm-signal-norm"].setDoubleValue(active_u.threat);
 			#	me.tgts[me.i]["ecm_type_num"].setValue("29");
 			#}
@@ -2589,11 +2589,12 @@ var xmlDisplays = {
 			if (me.discard) {
 				continue;
 			}
+			me.threat = (me.active_t["threat"] != nil and me.active_t["threat"] > 0 and me.active_t["blue"] != 1)?(me.active_t["threat"] > 0.50?0.9:0.85):0;
 			me.tgts[me.i]["bearing-deg"].setDoubleValue(me.active_t.getBearing());
 			me.tgts[me.i]["true-heading-deg"].setDoubleValue(me.active_t.getHeading());
 			#me.tgts[me.i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * geo.normdeg180(active_u.getHeading() - self.getHeading()) );
 			#me.tgts[me.i]["carrier"].setBoolValue(active_u.isCarrier());
-			me.tgts[me.i]["ecm-signal"].setDoubleValue(0.85);#active_t.threat>0.7?0.95:0.87);
+			me.tgts[me.i]["ecm-signal"].setDoubleValue(me.threat);#active_t.threat>0.7?0.95:0.87);
 			me.tgts[me.i]["display"].setBoolValue(0);
 			me.tgts[me.i]["visible"].setBoolValue(1);
 			me.tgts[me.i]["behind-terrain"].setBoolValue(0);
@@ -2612,7 +2613,7 @@ var xmlDisplays = {
 			me.tgts[me.i]["display"].setBoolValue(0);
 			me.tgts[me.i]["visible"].setBoolValue(0);
 			me.tgts[me.i]["rwr-visible"].setBoolValue(0);
-			me.tgts[me.i]["ecm-signal"].setBoolValue(0);
+			me.tgts[me.i]["ecm-signal"].setDoubleValue(0);
 		}
 	},
 	initDualTgts: func (pilot) {
