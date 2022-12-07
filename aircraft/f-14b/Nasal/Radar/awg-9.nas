@@ -1016,9 +1016,10 @@ DatalinkRadar = {
 	            me.blueIndex = -1;
 	        }
 	        if (!me.blue and me.lnk != nil and me.lnk.tracked() == 1) {
+	        	me.dl_sender = callsignToContact.get(me.lnk.tracked_by());
 	        	me.dl_idx = me.lnk.tracked_by_index();
-	        	if (me.dl_idx != nil and me.dl_idx > -1) {
-		        	me.dl_rng = getprop("ai/models/multiplayer["~me.dl_idx~"]/radar/range-nm");
+	        	if (me.dl_idx != nil and me.dl_idx > -1 and me.dl_sender != nil) {
+		        	me.dl_rng = me.dl_sender.get_range();
 		        	if (me.dl_rng != nil and me.dl_rng < me.max_dist_nm) {
 			            me.blue = 2;
 			            me.blueIndex = me.dl_idx+1;
@@ -2776,6 +2777,7 @@ var baser       = AIToNasal.new();
 var partitioner = NoseRadar.new();
 var omni        = OmniRadar.new(1.0, 150, 55);
 var terrain     = TerrainChecker.new(0.05, 1, 45);# 0.05 or 0.10 is fine here
+var callsignToContact = CallsignToContact.new();
 var dlnkRadar   = DatalinkRadar.new(0.03, 110);# 3 seconds because cannot be too slow for DLINK targets
 var ecm         = ECMChecker.new(0.05, 6);
 
@@ -2787,6 +2789,7 @@ var pulseMode   = PulseMode.new(PSTTMode.new());
 var palMode     = PalMode.new(PSTTMode.new());
 var awg9Radar   = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr     = RWR.new();
+
 
 wcs_mode_sel(4);
 
