@@ -946,10 +946,24 @@ DatalinkRadar = {
 	# Direct line of sight required for ~1000MHz signal.
 	#
 	# This class is only semi generic!
-	new: func (rate, max_dist_nm) {
+	new: func (rate, max_dist_fighter_nm, max_dist_station_nm) {
 		var dlnk = {parents: [DatalinkRadar, Radar]};
+
+		dlnk.max_dist_fighter_nm = max_dist_fighter_nm;
+		dlnk.max_dist_station_nm = max_dist_station_nm;
+
+		datalink.can_transmit = func(callsign, mp_prop, mp_index) {
+		    dlnk.contactSender = callsignToContact.get(callsign);
+		    if (dlnk.contactSender == nil) return 0;
+		    if (!dlnk.contactSender.isVisible()) return 0;
+
+		    dlnk.isContactStation = isKnownSurface(dlnk.contactSender.getModel()) or isKnownShip(dlnk.contactSender.getModel()) or isKnownAwacs(dlnk.contactSender.getModel());
+		    dlnk.max_dist_nm = dlnk.isContactStation?dlnk.max_dist_station_nm:dlnk.max_dist_fighter_nm;
+		    
+		    return dlnk.contactSender.get_range() < dlnk.max_dist_nm;
+		}
+
 		
-		dlnk.max_dist_nm = max_dist_nm;
 		dlnk.index = 0;
 		dlnk.vector_aicontacts = [];
 		dlnk.vector_aicontacts_for = [];
@@ -975,7 +989,7 @@ DatalinkRadar = {
 
 	scan: func () {
 		if (!me.enabled) return;
-		
+
 		#this loop is really fast. But we only check 1 contact per call
 		if (me.index >= size(me.vector_aicontacts)) {
 			# will happen if there is no contacts or if contact(s) went away
@@ -999,13 +1013,11 @@ DatalinkRadar = {
 				}
 				me.vector_aicontacts_for = me.new_vector_aicontacts_for;
 			}
-		} else {		
+		} else {
 
 	        me.lnk = datalink.get_data(me.cs);
-	        if (!me.contact.isValid()) {
-	        	me.lnk = nil;
-	        }
-	        if (me.lnk != nil and me.lnk.on_link() == 1 and me.contact.getRangeDirect()*M2NM < me.max_dist_nm) {
+	        
+	        if (me.lnk != nil and me.lnk.on_link() == 1) {
 	            me.blue = 1;
 	            me.blueIndex = me.lnk.index()+1;
 	        } elsif (me.cs == getprop("link16/wingman-4")) { # Hack that the F16 need. Just ignore it, as nil wont cause expection.
@@ -1016,14 +1028,10 @@ DatalinkRadar = {
 	            me.blueIndex = -1;
 	        }
 	        if (!me.blue and me.lnk != nil and me.lnk.tracked() == 1) {
-	        	me.dl_sender = callsignToContact.get(me.lnk.tracked_by());
 	        	me.dl_idx = me.lnk.tracked_by_index();
-	        	if (me.dl_idx != nil and me.dl_idx > -1 and me.dl_sender != nil) {
-		        	me.dl_rng = me.dl_sender.get_range();
-		        	if (me.dl_rng != nil and me.dl_rng < me.max_dist_nm) {
-			            me.blue = 2;
-			            me.blueIndex = me.dl_idx+1;
-			        }
+	        	if (me.dl_idx != nil and me.dl_idx > -1) {
+		            me.blue = 2;
+		            me.blueIndex = me.dl_idx+1;
 			    }
 	        }
 
@@ -2778,7 +2786,7 @@ var partitioner = NoseRadar.new();
 var omni        = OmniRadar.new(1.0, 150, 55);
 var terrain     = TerrainChecker.new(0.05, 1, 45);# 0.05 or 0.10 is fine here
 var callsignToContact = CallsignToContact.new();
-var dlnkRadar   = DatalinkRadar.new(0.03, 110);# 3 seconds because cannot be too slow for DLINK targets
+var dlnkRadar = DatalinkRadar.new(0.03, 110, 225);# 3 seconds because cannot be too slow for DLINK targets
 var ecm         = ECMChecker.new(0.05, 6);
 
 # start specific radar system
