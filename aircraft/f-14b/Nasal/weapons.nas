@@ -161,6 +161,7 @@ var armament_update = func {
 	update_gun_ready();
 	setCockpitLights();
 	#ccrp();
+	ccip();
 }
 
 # Main loop 2
@@ -222,6 +223,69 @@ var ccrp = func {
 	}
 	setprop("sim/model/f-14b/systems/armament/aim9/ccrp",0);
 	setprop("sim/model/f-14b/systems/armament/aim9/ccrp-hud-vert", 0);
+}
+
+var ccip = func {
+	if (!ccipTimer.isRunning) ccipTimer.start();
+}
+
+var ccip_loop = func {
+	var weap = pylons.fcs.getSelectedWeapon();
+	if (weap != nil and weap.parents[0] == armament.AIM and weap.type == "MK-83") {
+		var ccip_result = weap.getCCIPadv(20,0.25);# Simulate max 20s drop, with 0.25s intervals.
+		if (ccip_result != nil) {
+			setHUDDegPosFromGPS(ccip_result[0]);
+			setprop("sim/hud/aim/show", 1);#if ccip should be displayed in HUD.		
+		} else {
+			setprop("sim/hud/aim/show", 0);
+		}
+		return;
+	}
+	setprop("sim/hud/aim/show", 0);
+	ccipTimer.stop();
+}
+
+var ccipTimer = maketimer(0.05, ccip_loop);
+
+setHUDDegPosFromGPS = func (gpsCoord) {
+		var crft = awg_9.self.getCoord();
+		var ptch = vector.Math.getPitch(crft, gpsCoord);
+	    var dst  = crft.direct_distance_to(gpsCoord);
+	    var brng = crft.course_to(gpsCoord);
+	    var hrz  = math.cos(ptch*D2R)*dst;
+
+	    var vel_gz = -math.sin(ptch*D2R)*dst;
+	    var vel_gx = math.cos(brng*D2R) *hrz;
+	    var vel_gy = math.sin(brng*D2R) *hrz;
+	    
+
+	    var yaw   = awg_9.self.getHeading() * D2R;
+	    var roll  = awg_9.self.getRoll()    * D2R;
+	    var pitch = awg_9.self.getPitch()   * D2R;
+
+	    var sy = math.sin(yaw);   cy = math.cos(yaw);
+	    var sr = math.sin(roll);  cr = math.cos(roll);
+	    var sp = math.sin(pitch); cp = math.cos(pitch);
+	 
+	    var vel_bx = vel_gx * cy * cp
+	               + vel_gy * sy * cp
+	               + vel_gz * -sp;
+	    var vel_by = vel_gx * (cy * sp * sr - sy * cr)
+	               + vel_gy * (sy * sp * sr + cy * cr)
+	               + vel_gz * cp * sr;
+	    var vel_bz = vel_gx * (cy * sp * cr + sy * sr)
+	               + vel_gy * (sy * sp * cr - cy * sr)
+	               + vel_gz * cp * cr;
+	 
+	    var dir_y  = math.atan2(round0_(vel_bz), math.max(vel_bx, 0.001)) * R2D;
+	    var dir_x  = math.atan2(round0_(vel_by), math.max(vel_bx, 0.001)) * R2D;
+
+	    setprop("sim/hud/aim/pitch", -dir_y);
+		setprop("sim/hud/aim/yaw", dir_x);
+}
+
+var round0_ = func(x) {
+	return math.abs(x) > 0.01 ? x : 0;
 }
 
 var getDLZ = func {
