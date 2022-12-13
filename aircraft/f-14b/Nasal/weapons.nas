@@ -298,6 +298,7 @@ var setCockpitLights = func {
 	} else {
 		setprop("sim/model/f-14b/systems/armament/lock-light", 0);
 	}
+	var dlzShow = 0;
 	var dlzArray = getDLZ();
 	if (dlzArray == nil or size(dlzArray) == 0) {
 	    setprop("sim/model/f-14b/systems/armament/launch-light", 0);
@@ -307,7 +308,32 @@ var setCockpitLights = func {
 		} else {
 			setprop("sim/model/f-14b/systems/armament/launch-light", 0);
 		}
+		var dlzValue = 0;
+		var dlzTarget = dlzArray[4];
+		var dlzMax = dlzArray[0];
+		var dlzOptimistic = dlzArray[1];
+		var dlzNez = dlzArray[2];
+		var dlzMin = dlzArray[3];
+		
+		if (dlzTarget < dlzMin) {
+			dlzValue = 0;
+		} elsif (dlzTarget < dlzNez) {
+			dlzValue = extrapolate(dlzTarget, dlzMin, dlzNez, 0, 10);
+		} elsif (dlzTarget < dlzOptimistic) {
+			dlzValue = extrapolate(dlzTarget, dlzNez, dlzOptimistic, 10, 20);
+		} elsif (dlzTarget < dlzMax) {
+			dlzValue = extrapolate(dlzTarget, dlzOptimistic, dlzMax, 20, 30);
+		} else {
+			dlzValue = 30;
+		}
+		setprop("sim/hud/dlz/value", dlzValue);
+		dlzShow = 1;
 	}
+	setprop("sim/hud/dlz/show", dlzShow);
+}
+
+var extrapolate = func (x, x1, x2, y1, y2) {
+    return y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
 }
 
 var update_gun_ready = func() {
