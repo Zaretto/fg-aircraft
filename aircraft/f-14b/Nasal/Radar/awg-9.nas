@@ -946,10 +946,24 @@ DatalinkRadar = {
 	# Direct line of sight required for ~1000MHz signal.
 	#
 	# This class is only semi generic!
-	new: func (rate, max_dist_nm) {
+	new: func (rate, max_dist_fighter_nm, max_dist_station_nm) {
 		var dlnk = {parents: [DatalinkRadar, Radar]};
+
+		dlnk.max_dist_fighter_nm = max_dist_fighter_nm;
+		dlnk.max_dist_station_nm = max_dist_station_nm;
+
+		datalink.can_transmit = func(callsign, mp_prop, mp_index) {
+		    dlnk.contactSender = callsignToContact.get(callsign);
+		    if (dlnk.contactSender == nil) return 0;
+		    if (!dlnk.contactSender.isVisible()) return 0;
+
+		    dlnk.isContactStation = isKnownSurface(dlnk.contactSender.getModel()) or isKnownShip(dlnk.contactSender.getModel()) or isKnownAwacs(dlnk.contactSender.getModel());
+		    dlnk.max_dist_nm = dlnk.isContactStation?dlnk.max_dist_station_nm:dlnk.max_dist_fighter_nm;
+		    
+		    return dlnk.contactSender.get_range() < dlnk.max_dist_nm;
+		}
+
 		
-		dlnk.max_dist_nm = max_dist_nm;
 		dlnk.index = 0;
 		dlnk.vector_aicontacts = [];
 		dlnk.vector_aicontacts_for = [];
@@ -970,12 +984,12 @@ DatalinkRadar = {
 		dlnk.DatalinkNotification = VectorNotification.new("DatalinkNotification");
 		dlnk.DatalinkNotification.updateV(dlnk.vector_aicontacts_for);
 		dlnk.timer.start();
-		return omni;
+		return dlnk;
 	},
 
 	scan: func () {
 		if (!me.enabled) return;
-		
+
 		#this loop is really fast. But we only check 1 contact per call
 		if (me.index >= size(me.vector_aicontacts)) {
 			# will happen if there is no contacts or if contact(s) went away
@@ -1000,15 +1014,9 @@ DatalinkRadar = {
 				me.vector_aicontacts_for = me.new_vector_aicontacts_for;
 			}
 		} else {
-			
-
-			if (me.contact.getRangeDirect()*M2NM > me.max_dist_nm) {me.index += 1;return;}
-			
 
 	        me.lnk = datalink.get_data(me.cs);
-	        if (!me.contact.isValid()) {
-	        	me.lnk = nil;
-	        }
+	        
 	        if (me.lnk != nil and me.lnk.on_link() == 1) {
 	            me.blue = 1;
 	            me.blueIndex = me.lnk.index()+1;
@@ -1020,8 +1028,11 @@ DatalinkRadar = {
 	            me.blueIndex = -1;
 	        }
 	        if (!me.blue and me.lnk != nil and me.lnk.tracked() == 1) {
-	            me.blue = 2;
-	            me.blueIndex = me.lnk.tracked_by_index()+1;
+	        	me.dl_idx = me.lnk.tracked_by_index();
+	        	if (me.dl_idx != nil and me.dl_idx > -1) {
+		            me.blue = 2;
+		            me.blueIndex = me.dl_idx+1;
+			    }
 	        }
 
 	        me.contact.blue = me.blue;
@@ -2165,11 +2176,11 @@ var RWR = {
                     }
                 }
                 me.threat = 0;
-                if (me.u.getModel() != "missile_frigate" and me.u.getModel() != "S-75" and me.u.getModel() != "buk-m2" and me.u.getModel() != "MIM104D" and me.u.getModel() != "s-300" and me.u.getModel() != "fleet" and me.u.getModel() != "ZSU-23-4M") {
+                if (me.u.getModel() != "missile_frigate" and me.u.getModel() != "S-75" and me.u.getModel() != "SA-6" and me.u.getModel() != "buk-m2" and me.u.getModel() != "MIM104D" and me.u.getModel() != "s-200" and me.u.getModel() != "s-300" and me.u.getModel() != "fleet" and me.u.getModel() != "ZSU-23-4M") {
                     me.threat += ((180-me.dev)/180)*0.30;# most threat if I am in front of his nose
                     me.spd = (60-me.threatDB[8])/60;
                     #me.threat -= me.spd>0?me.spd:0;# if his speed is lower than 60kt then give him minus threat else positive
-                } elsif (me.u.getModel == "missile_frigate" or me.u.getModel() == "fleet") {
+                } elsif (me.u.getModel() == "missile_frigate" or me.u.getModel() == "fleet") {
                     me.threat += 0.30;
                 } else {
                     me.threat += 0.30;
@@ -2179,6 +2190,10 @@ var RWR = {
                     me.danger = 80;
                 } elsif (me.u.getModel() == "buk-m2" or me.u.getModel() == "S-75") {
                     me.danger = 35;
+                } elsif (me.u.getModel() == "SA-6") {
+                    me.danger = 15;
+                } elsif (me.u.getModel() == "s-200") {
+                    me.danger = 150;
                 } elsif (me.u.getModel() == "MIM104D") {
                     me.danger = 45;
                 } elsif (me.u.getModel() == "ZSU-23-4M") {
@@ -2517,7 +2532,7 @@ var xmlDisplays = {
 			if (math.abs(me.blep.getAZDeviation())>AWG9.fieldOfRegardMaxAz) {
 				continue;
 			}
-			me.threat = me.active_u["threat"] != nil and me.active_u["threat"] > 0 and me.active_u["blue"] != 1;
+			me.threat = (me.active_u["threat"] != nil and me.active_u["threat"] > 0 and me.active_u["blue"] != 1)?(me.active_u["threat"] > 0.50?0.9:0.85):0;
 			me.tgts[me.i]["bearing-deg"].setDoubleValue(me.blep.getBearing());
 			me.tgts[me.i]["true-heading-deg"].setDoubleValue(me.blep.getHeading()==nil?-2:me.blep.getHeading());
 			me.tgts[me.i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * me.blep.getAZDeviation());
@@ -2583,11 +2598,12 @@ var xmlDisplays = {
 			if (me.discard) {
 				continue;
 			}
+			me.threat = (me.active_t["threat"] != nil and me.active_t["threat"] > 0 and me.active_t["blue"] != 1)?(me.active_t["threat"] > 0.50?0.9:0.85):0;
 			me.tgts[me.i]["bearing-deg"].setDoubleValue(me.active_t.getBearing());
 			me.tgts[me.i]["true-heading-deg"].setDoubleValue(me.active_t.getHeading());
 			#me.tgts[me.i]["ddd-relative-bearing"].setDoubleValue(ddd_m_per_deg * geo.normdeg180(active_u.getHeading() - self.getHeading()) );
 			#me.tgts[me.i]["carrier"].setBoolValue(active_u.isCarrier());
-			me.tgts[me.i]["ecm-signal"].setDoubleValue(1);#active_t.threat>0.7?0.95:0.87);
+			me.tgts[me.i]["ecm-signal"].setDoubleValue(me.threat);#active_t.threat>0.7?0.95:0.87);
 			me.tgts[me.i]["display"].setBoolValue(0);
 			me.tgts[me.i]["visible"].setBoolValue(1);
 			me.tgts[me.i]["behind-terrain"].setBoolValue(0);
@@ -2606,7 +2622,7 @@ var xmlDisplays = {
 			me.tgts[me.i]["display"].setBoolValue(0);
 			me.tgts[me.i]["visible"].setBoolValue(0);
 			me.tgts[me.i]["rwr-visible"].setBoolValue(0);
-			me.tgts[me.i]["ecm-signal"].setBoolValue(0);
+			me.tgts[me.i]["ecm-signal"].setDoubleValue(0);
 		}
 	},
 	initDualTgts: func (pilot) {
@@ -2769,7 +2785,8 @@ var baser       = AIToNasal.new();
 var partitioner = NoseRadar.new();
 var omni        = OmniRadar.new(1.0, 150, 55);
 var terrain     = TerrainChecker.new(0.05, 1, 45);# 0.05 or 0.10 is fine here
-var dlnkRadar   = DatalinkRadar.new(0.03, 110);# 3 seconds because cannot be too slow for DLINK targets
+var callsignToContact = CallsignToContact.new();
+var dlnkRadar = DatalinkRadar.new(0.03, 110, 225);# 3 seconds because cannot be too slow for DLINK targets
 var ecm         = ECMChecker.new(0.05, 6);
 
 # start specific radar system
@@ -2780,6 +2797,7 @@ var pulseMode   = PulseMode.new(PSTTMode.new());
 var palMode     = PalMode.new(PSTTMode.new());
 var awg9Radar   = AirborneRadar.newAirborne([[pulseDSMode, rwsMode, twsMode, pulseMode, PDSTTMode.new(), PSTTMode.new(), palMode]], AWG9);
 var f14_rwr     = RWR.new();
+
 
 wcs_mode_sel(4);
 
