@@ -161,6 +161,7 @@ var armament_update = func {
 	update_gun_ready();
 	setCockpitLights();
 	#ccrp();
+	ccip();
 }
 
 # Main loop 2
@@ -224,6 +225,69 @@ var ccrp = func {
 	setprop("sim/model/f-14b/systems/armament/aim9/ccrp-hud-vert", 0);
 }
 
+var ccip = func {
+	if (!ccipTimer.isRunning) ccipTimer.start();
+}
+
+var ccip_loop = func {
+	var weap = pylons.fcs.getSelectedWeapon();
+	if (weap != nil and weap.parents[0] == armament.AIM and weap.type == "MK-83") {
+		var ccip_result = weap.getCCIPadv(20,0.25);# Simulate max 20s drop, with 0.25s intervals.
+		if (ccip_result != nil) {
+			setHUDDegPosFromGPS(ccip_result[0]);
+			setprop("sim/hud/aim/show", 1);#if ccip should be displayed in HUD.		
+		} else {
+			setprop("sim/hud/aim/show", 0);
+		}
+		return;
+	}
+	setprop("sim/hud/aim/show", 0);
+	ccipTimer.stop();
+}
+
+var ccipTimer = maketimer(0.05, ccip_loop);
+
+setHUDDegPosFromGPS = func (gpsCoord) {
+		var crft = awg_9.self.getCoord();
+		var ptch = vector.Math.getPitch(crft, gpsCoord);
+	    var dst  = crft.direct_distance_to(gpsCoord);
+	    var brng = crft.course_to(gpsCoord);
+	    var hrz  = math.cos(ptch*D2R)*dst;
+
+	    var vel_gz = -math.sin(ptch*D2R)*dst;
+	    var vel_gx = math.cos(brng*D2R) *hrz;
+	    var vel_gy = math.sin(brng*D2R) *hrz;
+	    
+
+	    var yaw   = awg_9.self.getHeading() * D2R;
+	    var roll  = awg_9.self.getRoll()    * D2R;
+	    var pitch = awg_9.self.getPitch()   * D2R;
+
+	    var sy = math.sin(yaw);   cy = math.cos(yaw);
+	    var sr = math.sin(roll);  cr = math.cos(roll);
+	    var sp = math.sin(pitch); cp = math.cos(pitch);
+	 
+	    var vel_bx = vel_gx * cy * cp
+	               + vel_gy * sy * cp
+	               + vel_gz * -sp;
+	    var vel_by = vel_gx * (cy * sp * sr - sy * cr)
+	               + vel_gy * (sy * sp * sr + cy * cr)
+	               + vel_gz * cp * sr;
+	    var vel_bz = vel_gx * (cy * sp * cr + sy * sr)
+	               + vel_gy * (sy * sp * cr - cy * sr)
+	               + vel_gz * cp * cr;
+	 
+	    var dir_y  = math.atan2(round0_(vel_bz), math.max(vel_bx, 0.001)) * R2D;
+	    var dir_x  = math.atan2(round0_(vel_by), math.max(vel_bx, 0.001)) * R2D;
+
+	    setprop("sim/hud/aim/pitch", -dir_y);
+		setprop("sim/hud/aim/yaw", dir_x);
+}
+
+var round0_ = func(x) {
+	return math.abs(x) > 0.01 ? x : 0;
+}
+
 var getDLZ = func {
     return pylons.getDLZ();
 }
@@ -234,6 +298,7 @@ var setCockpitLights = func {
 	} else {
 		setprop("sim/model/f-14b/systems/armament/lock-light", 0);
 	}
+	var dlzShow = 0;
 	var dlzArray = getDLZ();
 	if (dlzArray == nil or size(dlzArray) == 0) {
 	    setprop("sim/model/f-14b/systems/armament/launch-light", 0);
@@ -243,7 +308,32 @@ var setCockpitLights = func {
 		} else {
 			setprop("sim/model/f-14b/systems/armament/launch-light", 0);
 		}
+		var dlzValue = 0;
+		var dlzTarget = dlzArray[4];
+		var dlzMax = dlzArray[0];
+		var dlzOptimistic = dlzArray[1];
+		var dlzNez = dlzArray[2];
+		var dlzMin = dlzArray[3];
+		
+		if (dlzTarget < dlzMin) {
+			dlzValue = 0;
+		} elsif (dlzTarget < dlzNez) {
+			dlzValue = extrapolate(dlzTarget, dlzMin, dlzNez, 0, 10);
+		} elsif (dlzTarget < dlzOptimistic) {
+			dlzValue = extrapolate(dlzTarget, dlzNez, dlzOptimistic, 10, 20);
+		} elsif (dlzTarget < dlzMax) {
+			dlzValue = extrapolate(dlzTarget, dlzOptimistic, dlzMax, 20, 30);
+		} else {
+			dlzValue = 30;
+		}
+		setprop("sim/hud/dlz/value", dlzValue);
+		dlzShow = 1;
 	}
+	setprop("sim/hud/dlz/show", dlzShow);
+}
+
+var extrapolate = func (x, x1, x2, y1, y2) {
+    return y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
 }
 
 var update_gun_ready = func() {

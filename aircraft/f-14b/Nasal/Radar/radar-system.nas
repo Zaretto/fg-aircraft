@@ -348,7 +348,7 @@ var AIToNasal = {
 			me.lookupCallsignNew[callsignKey] = callsignsRaw;
 			foreach(me.newContact; callsignsRaw) {
 				append(me.vector_aicontacts, me.newContact);
-				me.newContact.init();
+				me.newContact.init();				
 			}
 		}		
 	},
@@ -400,6 +400,51 @@ var Contact = {
 	},
 };
 
+
+#   ██████  █████  ██      ██      ███████ ██  ██████  ███    ██     ██       ██████   ██████  ██   ██ ██    ██ ██████  
+#  ██      ██   ██ ██      ██      ██      ██ ██       ████   ██     ██      ██    ██ ██    ██ ██  ██  ██    ██ ██   ██ 
+#  ██      ███████ ██      ██      ███████ ██ ██   ███ ██ ██  ██     ██      ██    ██ ██    ██ █████   ██    ██ ██████  
+#  ██      ██   ██ ██      ██           ██ ██ ██    ██ ██  ██ ██     ██      ██    ██ ██    ██ ██  ██  ██    ██ ██      
+#   ██████ ██   ██ ███████ ███████ ███████ ██  ██████  ██   ████     ███████  ██████   ██████  ██   ██  ██████  ██      
+#                                                                                                                       
+#                                                                                                                       
+var CallsignToContact = {
+	# 
+	new: func () {
+		var ctc = {parents: [CallsignToContact, Radar]};
+				
+		ctc.struct_csContact = {};
+
+		ctc.CallsignToContactRecipient = emesary.Recipient.new("CallsignToContactRecipient");
+		ctc.CallsignToContactRecipient.radar = ctc;
+		ctc.CallsignToContactRecipient.Receive = func(notification) {
+	        if (notification.NotificationType == "AINotification") {
+	        	#printf("OmniRadar recv: %s", notification.NotificationType);
+	            if (me.radar.enabled == 1) {
+	    		    me.radar.struct_csContact = {};
+	    		    foreach(contact ; notification.vector) {
+	    		    	var cs = contact.getCallsign();
+	    		    	if (cs == nil or cs == "") continue;
+	    		    	me.radar.struct_csContact[cs] = contact;
+	    		    }
+	    	    }
+	            return emesary.Transmitter.ReceiptStatus_OK;
+	        }
+	        return emesary.Transmitter.ReceiptStatus_NotProcessed;
+	    };
+		emesary.GlobalTransmitter.Register(ctc.CallsignToContactRecipient);
+		return ctc;
+	},
+
+	get: func (cs) {
+		if (!me.enabled) return nil;
+		return me.struct_csContact[cs];
+	},
+
+	del: func {
+        emesary.GlobalTransmitter.DeRegister(me.CallsignToContactRecipient);
+    },
+};
 
 
 #   ██████  ██     ██ ███    ██ ███████ ██   ██ ██ ██████  
@@ -1287,7 +1332,8 @@ var AIContact = {
 		me.getType();
 	},
 	getUnique: func {
-		return me.callsign ~ me.model ~ me.ainame ~ me.sign ~ me.aitype ~ me.subid ~ me.prop.getName();
+		# The isVirtual at the end, is so multiexplosion in missile-code can tell apart a virtual from the real thing.
+		return me.callsign ~ me.model ~ me.ainame ~ me.sign ~ me.aitype ~ me.subid ~ me.prop.getName() ~ me.isVirtual();
 	},
 	isValid: func {
 		if (!me.valid.getValue() and me["dlinkNode"] != nil) {
@@ -2305,11 +2351,29 @@ var enable_tacobject = 0;
 var isOmniRadiating = func (model) {
 	# Override this method in your aircraft to do this in another way
 	# Return 1 if this contacts radar is not constricted to a cone.
-	return model == "gci" or model == "S-75" or model == "buk-m2" or model == "MIM104D" or model == "missile_frigate" or model == "fleet" or model == "s-300" or model == "ZSU-23-4M";
+	return model == "gci" or model == "S-75" or model == "SA-6" or model == "buk-m2" or model == "MIM104D" or model == "missile_frigate" or model == "fleet" or model == "s-200" or model == "s-300" or model == "ZSU-23-4M";
 }
 
 var getRadarFieldRadius = func (model) {
 	# Override this method in your aircraft to do this in another way
+	if (model == "A-50" or model == "EC-137R" or model == "E-3") {
+		return 180;
+	}
+	if (model == "S-75" or model == "s-200") {
+		return 180;
+	}
+	if (model == "SA-6" or model == "buk-m2") {
+		return 180;
+	}
+	if (model == "s-300" or model == "MIM104D") {
+		return 180;
+	}
+	if (model == "gci" or model == "ZSU-23-4M") {
+		return 180;
+	}
+	if (model == "fleet" or model == "missile-frigate") {
+		return 180;
+	}
 	return 60;
 }
 
@@ -2327,6 +2391,10 @@ var isKnownSurface = func (model) {
 	contains(knownSurface, model);
 }
 
+var isKnownAwacs = func (model) {
+	contains(knownAwacs, model);
+}
+
 var isKnownHeli = func (model) {
 	contains(knownHelis, model);
 }
@@ -2342,6 +2410,12 @@ var knownCarriers = {
 	"mp-vinson": nil,
 };
 
+var knownAwacs = {
+	"A-50": nil,
+	"EC-137R": nil,
+	"E-3": nil,
+};
+
 var knownShips = {
     "missile_frigate":       nil,
     "frigate":       nil,
@@ -2355,7 +2429,9 @@ var knownShips = {
 var knownSurface = {
     "S-75":       nil,
     "buk-m2":       nil,
+    "SA-6":       nil,
     "s-300":       nil,
+    "s-200":       nil,
     "depot":       nil,
     "struct":       nil,
     "point":       nil,
