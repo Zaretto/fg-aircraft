@@ -63,7 +63,7 @@ var GPS = 1;
 
 var DualSeaterCallsign = props.globals.getNode("/sim/remote/pilot-callsign", 1);
 
-var emptyCoord = geo.Coord.new().set_xyz(0,0,0);
+var emptyCoord = geo.Coord.new().set_xyz(10,10,10);
 
 
 var VectorNotification = {
@@ -235,6 +235,11 @@ var AIToNasal = {
 	    	me.aircraftPos = geo.Coord.new().set_xyz(me.x.getValue(), me.y.getValue(), me.z.getValue());
 	    	me.aircraftPos.alt();# TODO: once fixed in FG this line is no longer needed.
 	    }
+
+	    if (me.aircraftPos.alt() == nil or me.aircraftPos.lat() == nil or me.aircraftPos.lon() == nil) {
+	    	me.nextReadTreeFrame();
+		    return;
+        }
 	    
 	    
         
@@ -608,6 +613,7 @@ var Blep = {
 	new: func (valueVector) {
 		var b = {parents: [Blep]};
 		b.values = valueVector;
+		b.mutex = thread.newlock();
 		return b;
 	},
 
@@ -707,6 +713,16 @@ var Blep = {
 		me.clr = me.values[6];
 		return me.clr==nil?0:me.clr;
 	},
+
+	getID: func {
+		return me.ID;
+	},
+
+	getECEFVelocity: func {
+		if (me["ECEFVelocity"] != nil) return me["ECEFVelocity"];
+		me.ECEFVelocity = vector.Math.vectorToGeoVector(vector.Math.getCartesianVelocity(-me.getHeading(), me.values[10], me.values[11], me.values[12],me.values[13],me.values[14]), me.getCoord()).vector;
+		return me.ECEFVelocity;# m per sec
+	},
 };
 
 
@@ -738,6 +754,7 @@ var AIContact = {
 		c.aitype = aitype;
 		c.sign = sign;
 		c.bleps = [];
+		c.groundTrackBlep = nil;
 		c.lastRegisterWasTrack = 0;
 		c.virt = nil;
 		c.virtTGP = nil;
@@ -1146,7 +1163,19 @@ var AIContact = {
 		}
 		append(newArray, me.coord);#8 coord
 		append(newArray, stt);#9 if was detected in a STT or FTT mode.
-		append(me.bleps, Blep.new(newArray));
+		if (me.lastRegisterWasTrack) {
+			append(newArray, me.getPitch());#10
+			append(newArray, me.getRoll());#11
+			append(newArray, me.get_uBody()*FT2M);#12
+			append(newArray, me.get_vBody()*FT2M);#13
+			append(newArray, me.get_wBody()*FT2M);#14
+		}
+		me.freshBlep = Blep.new(newArray);
+		append(me.bleps, me.freshBlep);
+		if (me.lastRegisterWasTrack) {
+			me.groundTrackBlep = me.freshBlep;
+			me.freshBlep.ID = rand();
+		}
 	},
 
 	getBleps: func {
@@ -1160,6 +1189,10 @@ var AIContact = {
 		#
 		if (!size(me.bleps)) return nil;
 		return me.bleps[size(me.bleps)-1];
+	},
+
+	getLastGroundTrackBlep: func {
+		return me.groundTrackBlep;
 	},
 
 	setBleps: func (bleps_cleaned) {
