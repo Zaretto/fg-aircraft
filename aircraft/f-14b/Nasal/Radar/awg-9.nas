@@ -2788,10 +2788,12 @@ var EcmLock11 = props.globals.getNode("payload/armament/spike-gnd-11",1);
 var EcmLock23 = props.globals.getNode("payload/armament/spike-gnd-23",1);
 var EcmLockp2 = props.globals.getNode("payload/armament/spike-gnd-p2",1);
 var EcmLocknk = props.globals.getNode("payload/armament/spike-gnd-nk",1);
-var EcmMAW = props.globals.getNode("payload/armament/MAW-active", 1);
+var EcmMAW1 = props.globals.getNode("payload/armament/MAW-active", 1);
+var EcmMAW2 = props.globals.getNode("payload/armament/MAW-semiactive", 1);
 var alter = 0;
 var passiveWarnings = func {
-	EcmAlert1.setBoolValue((EcmMAW.getValue() and alter) or (EcmAirLock.getValue() and !EcmMAW.getValue()));
+	var maw = EcmMAW1.getValue() or EcmMAW2.getValue();
+	EcmAlert1.setBoolValue((maw and alter) or (EcmAirLock.getValue() and !maw));
 	EcmAlert2.setBoolValue(EcmLock20.getValue() or EcmLock02.getValue() or EcmLock05.getValue() or EcmLock06.getValue() or EcmLock11.getValue() or EcmLock23.getValue() or EcmLockp2.getValue() or EcmLocknk.getValue());
 	alter = !alter;
 };
