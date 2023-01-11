@@ -29,7 +29,11 @@ var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right",
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
-var AgMode       = AcModel.getNode("/controls/pilots-displays/mode/ag-bt",1);
+var AgMode     = AcModel.getNode("/controls/pilots-displays/mode/ag-bt",1);
+var Aim9Volume    = AcModel.getNode("payload/armament/aim-9/sound-volume",1);
+var Aim9SeamLight = AcModel.getNode("sim/model/f-14b/controls/armament/acm-panel-lights/seam-lock-light",1);
+var Aim9TrackVol  = AcModel.getNode("payload/armament/aim-9/vol-track", 1);
+var TriggerHotLight = AcModel.getNode("sim/model/f-14b/controls/armament/acm-panel-lights/hot-trig-light",1);
 
 var aim9_count = 0;
 
@@ -204,6 +208,9 @@ var armament_update2 = func {
 	} else {
 		SmokeActive.setIntValue(0);
 	}
+
+    Aim9SeamLight.setBoolValue(SysRunning.getBoolValue() and Aim9Volume.getValue() == Aim9TrackVol.getValue());
+    TriggerHotLight.setBoolValue(SysRunning.getBoolValue() and pylons.fcs.weaponHot());
 }
 
 var ccrp = func {
