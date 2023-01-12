@@ -424,17 +424,17 @@ var impact_listener = func {
 
 var hitmessage = func(typeOrd) {
   #print("inside hitmessage");
-  var phrase = typeOrd ~ " hit: " ~ hit_callsign ~ ": " ~ hits_count ~ " hits";
+  var phrase = typeOrd ~ " hit: " ~ hit_callsign ~ ": " ~ (hits_count*5) ~ " hits";
   if (getprop("payload/armament/msg") == TRUE) {
     print(phrase);
     #print("Second id: "~(151+armament.shells[typeOrd][0]));
     var msg = notifications.ArmamentNotification.new("mhit", 4, -1*(damage.shells[typeOrd][0]+1));
                 msg.RelativeAltitude = 0;
                 msg.Bearing = 0;
-                msg.Distance = hits_count;
+                msg.Distance = hits_count*5;
                 msg.RemoteCallsign = hit_callsign; # RJHTODO: maybe handle flares / chaff 
                 notifications.hitBridgedTransmitter.NotifyAll(msg);
-    damage.damageLog.push("You hit "~hit_callsign~" with "~typeOrd~", "~hits_count~" times.");
+    damage.damageLog.push("You hit "~hit_callsign~" with "~typeOrd~", "~(hits_count*5)~" times.");
   } else {
     setprop("/sim/messages/atc", phrase);
   }
