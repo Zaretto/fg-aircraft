@@ -19,17 +19,22 @@ var WeaponsWeight = props.globals.getNode("sim/model/f-14b/systems/external-load
 var PylonsWeight = props.globals.getNode("sim/model/f-14b/systems/external-loads/pylons-weight", 1);
 
 # smoke stuff:
-var SmokeActive = props.globals.getNode("sim/model/f-14b/fx/smoke-colors", 1);#double
-var SmokeColor = props.globals.getNode("sim/model/f-14b/fx/smoke-colors-demand", 1);#double
-var SmokeCmd = props.globals.initNode("sim/model/f-14b/fx/smoke-cmd", 0,"BOOL");
-var SmokeMountedL = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-left", 0,"BOOL");
-var SmokeMountedR = props.globals.initNode("sim/model/f-14b/fx/smoke-mnt-right", 0,"BOOL");
+var SmokeActive = AcModel.getNode("fx/smoke-colors", 1);#double
+var SmokeColor = AcModel.getNode("fx/smoke-colors-demand", 1);#double
+var SmokeCmd = AcModel.initNode("fx/smoke-cmd", 0,"BOOL");
+var SmokeMountedL = AcModel.initNode("fx/smoke-mnt-left", 0,"BOOL");
+var SmokeMountedR = AcModel.initNode("fx/smoke-mnt-right", 0,"BOOL");
 
 # AIM stuff:
 var SwCount    = AcModel.getNode("systems/armament/aim9/count");
 var SWCoolOn   = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-on-light");
 var SWCoolOff  = AcModel.getNode("controls/armament/acm-panel-lights/sw-cool-off-light");
-var AgMode       = AcModel.getNode("/controls/pilots-displays/mode/ag-bt",1);
+var AgMode     = AcModel.getNode("/controls/pilots-displays/mode/ag-bt",1);
+var Aim9Volume    = props.globals.getNode("payload/armament/aim-9/sound-volume",1);
+var Aim9VolumeBool= props.globals.getNode("payload/armament/aim-9/sound-on-off",1);
+var Aim9SeamLight = AcModel.getNode("controls/armament/acm-panel-lights/seam-lock-light",1);
+var Aim9TrackVol  = props.globals.getNode("payload/armament/aim-9/vol-track", 1);
+var TriggerHotLight = AcModel.getNode("controls/armament/acm-panel-lights/hot-trig-light",1);
 
 var aim9_count = 0;
 
@@ -204,6 +209,9 @@ var armament_update2 = func {
 	} else {
 		SmokeActive.setIntValue(0);
 	}
+	
+    Aim9SeamLight.setBoolValue(SysRunning.getBoolValue() and Aim9VolumeBool.getValue() and Aim9Volume.getValue() == Aim9TrackVol.getValue());
+    TriggerHotLight.setBoolValue(SysRunning.getBoolValue() and pylons.fcs.weaponHot());
 }
 
 var ccrp = func {
@@ -694,17 +702,17 @@ var impact_listener = func {
 
 var hitmessage = func(typeOrd) {
   #print("inside hitmessage");
-  var phrase = typeOrd ~ " hit: " ~ hit_callsign ~ ": " ~ hits_count ~ " hits";
+  var phrase = typeOrd ~ " hit: " ~ hit_callsign ~ ": " ~ (hits_count*5) ~ " hits";
   if (getprop("payload/armament/msg") == TRUE) {
   	print(phrase);
   	#print("Second id: "~(151+armament.shells[typeOrd][0]));
     var msg = notifications.ArmamentNotification.new("mhit", 4, -1*(damage.shells[typeOrd][0]+1));
 		        msg.RelativeAltitude = 0;
 		        msg.Bearing = 0;
-		        msg.Distance = hits_count;
+		        msg.Distance = hits_count*5;
 		        msg.RemoteCallsign = hit_callsign; # RJHTODO: maybe handle flares / chaff 
 		        notifications.hitBridgedTransmitter.NotifyAll(msg);
-	damage.damageLog.push("You hit "~hit_callsign~" with "~typeOrd~", "~hits_count~" times.");
+	damage.damageLog.push("You hit "~hit_callsign~" with "~typeOrd~", "~(hits_count*5)~" times.");
   } else {
     setprop("/sim/messages/atc", phrase);
   }
