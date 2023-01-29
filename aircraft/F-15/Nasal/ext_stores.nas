@@ -454,6 +454,10 @@ setlistener("controls/armament/emergency-jettison", func(v) {
         setprop("consumables/fuel/tank[6]/selected",0);
         setprop("consumables/fuel/tank[7]/selected",0);
 
+        setprop("payload/weight[1]/selected","none");
+        setprop("payload/weight[5]/selected","none");
+        setprop("payload/weight[9]/selected","none");
+
         foreach (var S; Station.list) {
             setprop("payload/weight["~S.index~"]/selected","none");
         }

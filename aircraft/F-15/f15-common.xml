@@ -232,6 +232,7 @@
         <description>F-15</description>
         <author>Richard Harrison, Enrique Laso, Nikolai V. Chr., Joshua Davidson</author>
         <status>production</status>
+	<tacview-recording type="bool">0</tacview-recording>
         <config>
             <hud-filter type="int">1</hud-filter>
         </config>
@@ -1382,6 +1383,13 @@
                             <dialog-name>iff-datalink</dialog-name>
                         </binding>
                     </item>
+		    <item n="12">
+			    <label>Tacview Options</label>
+                        <binding>
+                            <command>dialog-show</command>
+                            <dialog-name>tacview</dialog-name>
+                        </binding>
+		    </item>
                 </menu>
             </default>
         </menubar>
@@ -1643,7 +1651,7 @@
             <is_fleet type="bool">false</is_fleet>
             <rwr_to_screen type="bool">true</rwr_to_screen>
             <rwr_audio_extended type="bool">true</rwr_audio_extended>
-            <tacview_supported type="bool">false</tacview_supported>
+            <tacview_supported type="bool">true</tacview_supported>
             <m28_auto type="bool">false</m28_auto>
             <mlw_max type="double">2.25</mlw_max>
             <auto_flare_caller type="bool">false</auto_flare_caller>
@@ -2625,7 +2633,9 @@
             <file>Aircraft/F-15/Nasal/ext_stores.nas</file>
             <file>Aircraft/F-15/Nasal/crash-and-stress.nas</file>
         </aircraft>
-
+	<tacview>
+            <file>Aircraft/F-15/Nasal/tacview.nas</file>
+        </tacview>
     </nasal>
 
 </PropertyList>
