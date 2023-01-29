@@ -369,9 +369,9 @@ setlistener("sim/position-finalized", func (is_done) {
     }
     if(first_time_run)  {
         print(">> First time run");
-        setprop("consumables/fuel/tank[5]/selected",false);
-        setprop("consumables/fuel/tank[6]/selected",false);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",0);
+        setprop("consumables/fuel/tank[6]/selected",0);
+        setprop("consumables/fuel/tank[7]/selected",0);
         
         setprop("consumables/fuel/tank[5]/level-lbs",0);
         setprop("consumables/fuel/tank[6]/level-lbs",0);

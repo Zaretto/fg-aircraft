@@ -467,10 +467,10 @@ Tank = {
         return me.side == s;
     },
     is_fitted : func {
-        if (!me.external) return true;
+        if (!me.external) return 1;
         if (me.prop.getNode("selected").getValue())
-            return true;
-        return false;
+            return 1;
+        return 0;
     },
 
 	get_capacity : func {
@@ -538,7 +538,7 @@ Tank = {
     {
         var t = me;
 #        print("Processing ",t.name," is fitted ",t.is_fitted()," delta ",delta);
-        if (t.is_fitted()) # true for internal; only true when external connected
+        if (t.is_fitted()) # 1 for internal; only true when external connected
         {
             if (t.is_side(side))
             {
@@ -593,7 +593,7 @@ Prop = {
 		obj.dumprate = obj.prop.getNode("dump-rate-lbs-hr", 1);
 		obj.running = obj.prop.getNode("running", 1);
 		obj.running.setBoolValue(running);
-        obj.prop.getNode("hidden", 1).setBoolValue(true);
+        obj.prop.getNode("hidden", 1).setBoolValue(1);
 		obj.prop.getChild("selected", 0, 1).setBoolValue(connect);
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
 		obj.ppg.setDoubleValue(6.3);
