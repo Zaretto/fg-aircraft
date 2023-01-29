@@ -6,9 +6,7 @@
 # Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
 #
 
-## Global constants ##
-var true = 1;
-var false = 0;
+
 var CurrentIASnode = props.globals.getNode("velocities/airspeed-kt");
 var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
 var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
@@ -19,6 +17,8 @@ gui.external_stores_2018_1_compat = 0;
 LOG_INFO = 3;
 LOG_WARN = 4;
 LOG_ALERT = 5;
+
+setprop("/sim/emexec/max-rate-hz",30);
 
 var payload_dialog_reload = func(from) { 
 #    logprint(3, "payload_dialog_reload: ",from);    
@@ -459,12 +459,12 @@ var quickstart = func() {
 #    setprop("controls/lighting/panel-norm",1);
 #    setprop("controls/lighting/instruments-norm",1);
     setprop("sim/model/f15/controls/HUD/brightness",1);
-    setprop("sim/model/f15/controls/HUD/on-off",true);
+    setprop("sim/model/f15/controls/HUD/on-off",1);
     setprop("sim/model/f15/controls/VSD/brightness",1);
-    setprop("sim/model/f15/controls/VSD/on-off",true);
+    setprop("sim/model/f15/controls/VSD/on-off",1);
     setprop("sim/model/f15/controls/TEWS/brightness",1);
     setprop("sim/model/f15/controls/MPCD/brightness",1);
-    setprop("sim/model/f15/controls/MPCD/on-off",true);
+    setprop("sim/model/f15/controls/MPCD/on-off",1);
     setprop("sim/model/f15/controls/MPCD/mode",2);
     setprop("sim/model/f15/lights/radio2-brightness",0.6);
 
@@ -531,11 +531,11 @@ var cold_and_dark = func()
     setprop("sim/model/f15/controls/CAS/yaw-damper-enable",0);
 
     setprop("sim/model/f15/controls/HUD/brightness",0);
-    setprop("sim/model/f15/controls/HUD/on-off",false);
+    setprop("sim/model/f15/controls/HUD/on-off",0);
     setprop("sim/model/f15/controls/MPCD/brightness",0);
     setprop("sim/model/f15/controls/MPCD/on-off",0);
     setprop("sim/model/f15/controls/TEWS/brightness",0);
-    setprop("sim/model/f15/controls/VSD/on-off",false);
+    setprop("sim/model/f15/controls/VSD/on-off",0);
     setprop("sim/model/f15/controls/VSD/brightness",0);
 
     setprop("sim/model/f15/controls/electrics/emerg-flt-hyd-switch",0);

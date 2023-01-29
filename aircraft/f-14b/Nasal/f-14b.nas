@@ -326,17 +326,6 @@ var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/in
 var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
-
-#
-#
-# ARA-63 (Carrier Landing System) support
-var tuned_carrier_name=getprop("/sim/presets/carrier");
-var carrier_ara_63_position = nil;
-var carrier_heading = nil;
-var carrier_ara_63_heading = nil;
-
-
-
 var timedMotions = func {
 
 	# disable if we are in replay mode
@@ -742,11 +731,11 @@ var cold_and_dark = func()
 
     setprop("/controls/gear/brake-parking",1);
     setprop("sim/model/f-14b/controls/HUD/brightness",0);
-    setprop("sim/model/f-14b/controls/HUD/on-off",false);
+    setprop("sim/model/f-14b/controls/HUD/on-off",0);
     setprop("sim/model/f-14b/controls/MPCD/brightness",0);
     setprop("sim/model/f-14b/controls/MPCD/on-off",0);
     setprop("sim/model/f-14b/controls/TEWS/brightness",0);
-    setprop("sim/model/f-14b/controls/VSD/on-off",false);
+    setprop("sim/model/f-14b/controls/VSD/on-off",0);
     setprop("sim/model/f-14b/controls/VSD/brightness",0);
 
     setprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch",0);
