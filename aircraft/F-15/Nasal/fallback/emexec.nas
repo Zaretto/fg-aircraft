@@ -86,7 +86,7 @@ var FrameNotification =
                 new_class.monitored[notification.variable] = root_node.getNode(notification.property,1);
                 new_class.properties[notification.property] = notification.variable;
 
-                logprint(3,"(",notification.module,") FrameNotification.",notification.variable, " = ",notification.property, " -> ", new_class.monitored[notification.variable].getPath() );
+                logprint(4,"(",notification.module,") FrameNotification.",notification.variable, " = ",notification.property, " -> ", new_class.monitored[notification.variable].getPath() );
                 return emesary.Transmitter.ReceiptStatus_OK;
             }
             return emesary.Transmitter.ReceiptStatus_NotProcessed;
@@ -98,7 +98,7 @@ var FrameNotification =
         foreach (var mp; keys(me.monitored)){
             if(me.monitored[mp] != nil){
                 if (FrameNotification.debug > 1)
-                    logprint(4," ",mp, " = ",me.monitored[mp].getValue());
+                    logprint(5," ",mp, " = ",me.monitored[mp].getValue());
                 me[mp] = me.monitored[mp].getValue();
             }
         }
@@ -139,10 +139,13 @@ var EmesaryExecutive =  {
             Ident: _ident,
             lp : aircraft.lowpass.new(3),
             frameNotification : FrameNotification.new(1, transmitter),
+            emexecRate : props.globals.getNode("/sim/emexec/rate-hz",1),
+            emexecMaxRate : props.globals.getNode("/sim/emexec/max-rate-hz",1),
             frame_inc : 0,
             cur_frame_inc : 0.033, # start off at 33hz
         };
         new_class.transmitter = transmitter;
+        new_class.set_rate(30);
         
         # setup the properties to monitor for this system
         var exec_prop_list = {
@@ -167,6 +170,11 @@ var EmesaryExecutive =  {
         new_class.execTimer.simulatedTime = 1;
 
         return new_class;
+     },
+     set_rate : func(ratehz){
+        me.emexecRate.setValue(ratehz);
+        me.cur_frame_inc = 1.0/ratehz;
+        me.frame_inc = me.cur_frame_inc;
      },
      start : func {
         me.execTimer.start();
@@ -229,32 +237,22 @@ var EmesaryExecutive =  {
         me.transmitter.NotifyAll(me.frameNotification);
 
         me.frameNotification.FrameCount = me.frameNotification.FrameCount + 1;
-        me.frameNotification.filtered_frame_rate_worst = (int)(me.lp.filter(me.frameNotification.frame_rate_worst));
+        me.frameNotification.filtered_frame_rate = (int)(me.lp.filter(me.frameNotification.frame_rate));
     
         # this permits us to go up to 1/32 rate (which could be less than 1hz)
         if (me.frameNotification.FrameCount > 32) {
             me.frameNotification.FrameCount = 0;
         # adjust exec rate based on frame rate.
-            if (me.frameNotification.filtered_frame_rate_worst < 5) {
-                me.frame_inc = 0.25;#4 Hz
-            } elsif (me.frameNotification.filtered_frame_rate_worst < 10) {
-                me.frame_inc = 0.125;#8 Hz
-            } elsif (me.frameNotification.filtered_frame_rate_worst < 15) {
-                me.frame_inc = 0.10;#10 Hz
-            } elsif (me.frameNotification.filtered_frame_rate_worst < 20) {
-                me.frame_inc = 0.075;#13.3 Hz
-            } elsif (me.frameNotification.filtered_frame_rate_worst < 25) {
-                me.frame_inc = 0.05;#20 Hz
-            } elsif (me.frameNotification.filtered_frame_rate_worst < 40) {
-                me.frame_inc = 0.0333;#30 Hz
-            } else {
-                me.frame_inc = 0.02;#50 Hz
-            }
+            # calculate exec update rate based on frame rate; this a quadratic function from a curve fit.
+            me.frame_inc = (math.round((0.33227017+0.10041432*me.frameNotification.filtered_frame_rate+0.01681707*me.frameNotification.filtered_frame_rate*me.frameNotification.filtered_frame_rate)/5)*5+5);
+
+            # limit to: 1 <= update rate <= maxRate (default 50) 
+            me.frame_inc = math.max(1,math.min(me.emexecMaxRate.getValue(), me.frame_inc));
+            me.frame_inc = 1/me.frame_inc;
 
             # Adjust timer if new value
             if (me.frame_inc != me.cur_frame_inc) {
-                logprint(3,  me.Ident~": Adjust frequency to ",1/me.frame_inc, " Hz");
-                me.cur_frame_inc = me.frame_inc;
+                me.set_rate(1.0/me.frame_inc);
                 me.execTimer.restart(me.cur_frame_inc);
             }
         }
