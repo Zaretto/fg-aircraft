@@ -113,7 +113,7 @@ controls.applyBrakes = func(v, which = 0)  {
 #            demandedFlaps = 0; # Clean.
 #
 #        FlapsCmd.setValue(demandedFlaps); 
-#        DLCactive = false;
+#        DLCactive = 0;
 #        DLC_Engaged.setBoolValue(0);
 #
 #        print("F14: raise flaps ",demandedFlaps);

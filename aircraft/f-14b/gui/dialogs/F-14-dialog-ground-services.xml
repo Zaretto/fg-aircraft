@@ -11,7 +11,7 @@
     <nasal>
         <open>
             <![CDATA[
-                awg_9.find_carrier_by_tacan();
+                # nasal code
             ]]>
         </open>
         <close></close>
@@ -322,17 +322,18 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    awg_9.find_carrier_by_tacan();
-                    var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
-                    var dist_m = 7;
-                    np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
-                    setprop("sim/presets/latitude-deg",np.lat());
-                    setprop("sim/presets/longitude-deg",np.lon());
-                    setprop("sim/presets/altitude-ft",65.2);
-                    setprop("sim/presets/airspeed-kt",0);
-                    setprop("sim/presets/pitch-deg",0);
-                    setprop("/sim/presets/carrier",f14.tuned_carrier_name);
-                    fgcommand("reposition");
+                    if (nearest_carrier != nil){
+                        var np = nearest_carrier.getpos();
+                        var dist_m = 7;
+                        np.apply_course_distance(f14.nearest_carrier.get_heading(),-dist_m);
+                        setprop("sim/presets/latitude-deg",np.lat());
+                        setprop("sim/presets/longitude-deg",np.lon());
+                        setprop("sim/presets/altitude-ft",65.2);
+                        setprop("sim/presets/airspeed-kt",0);
+                        setprop("sim/presets/pitch-deg",0);
+                        setprop("/sim/presets/carrier",nearest_carrier.name);
+                        fgcommand("reposition");
+                    }
                 </script>
             </binding>
             <!--      <binding>
@@ -347,12 +348,14 @@
             <binding>
                 <command>nasal</command>
                 <script>
-                    awg_9.find_carrier_by_tacan();
-                    var np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
-                    np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
-                    setprop("/sim/tower/latitude-deg",np.lat());
-                    setprop("/sim/tower/longitude-deg",np.lon());
-                    setprop("/sim/tower/altitude-ft",np.alt()+100);
+                    if (nearest_carrier != nil){
+                        var np = nearest_carrier.getpos();
+                        var dist_m = 7;
+                        np.apply_course_distance(f14.nearest_carrier.get_heading()-116,-50);
+                        setprop("/sim/tower/latitude-deg",np.lat());
+                        setprop("/sim/tower/longitude-deg",np.lon());
+                        setprop("/sim/tower/altitude-ft",np.alt()+100);
+                    }
                 </script>
             </binding>
         </button>

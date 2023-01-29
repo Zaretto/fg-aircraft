@@ -254,9 +254,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","none");
 
-        setprop("consumables/fuel/tank[5]/selected",false);
-        setprop("consumables/fuel/tank[6]/selected",false);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",0);
+        setprop("consumables/fuel/tank[6]/selected",0);
+        setprop("consumables/fuel/tank[7]/selected",0);
 
         setprop("consumables/fuel/tank[5]/level-lbs",0);
         setprop("consumables/fuel/tank[6]/level-lbs",0);
@@ -269,9 +269,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","Droptank");
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","Droptank");
-        setprop("consumables/fuel/tank[5]/selected",true);
-        setprop("consumables/fuel/tank[6]/selected",true);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",1);
+        setprop("consumables/fuel/tank[6]/selected",1);
+        setprop("consumables/fuel/tank[7]/selected",0);
     } 
     elsif ( s == "Offensive Counter Air" ) 
     {
@@ -279,9 +279,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","Droptank");
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","Droptank");
-        setprop("consumables/fuel/tank[5]/selected",true);
-        setprop("consumables/fuel/tank[6]/selected",true);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",1);
+        setprop("consumables/fuel/tank[6]/selected",1);
+        setprop("consumables/fuel/tank[7]/selected",0);
     } 
     elsif ( s == "No Fly Zone" ) 
     {
@@ -289,9 +289,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","Droptank");
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","Droptank");
-        setprop("consumables/fuel/tank[5]/selected",true);
-        setprop("consumables/fuel/tank[6]/selected",true);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",1);
+        setprop("consumables/fuel/tank[6]/selected",1);
+        setprop("consumables/fuel/tank[7]/selected",0);
     } 
     elsif ( s == "Ferry Flight" ) 
     {
@@ -299,9 +299,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","Droptank");
         setprop("payload/weight[5]/selected","Droptank");
         setprop("payload/weight[9]/selected","Droptank");
-        setprop("consumables/fuel/tank[5]/selected",true);
-        setprop("consumables/fuel/tank[6]/selected",true);
-        setprop("consumables/fuel/tank[7]/selected",true);
+        setprop("consumables/fuel/tank[5]/selected",1);
+        setprop("consumables/fuel/tank[6]/selected",1);
+        setprop("consumables/fuel/tank[7]/selected",1);
     }
     elsif ( s == "Air Superiority" ) 
     {
@@ -309,9 +309,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","Droptank");
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","Droptank");
-        setprop("consumables/fuel/tank[5]/selected",true);
-        setprop("consumables/fuel/tank[6]/selected",true);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",1);
+        setprop("consumables/fuel/tank[6]/selected",1);
+        setprop("consumables/fuel/tank[7]/selected",0);
     } 
     elsif ( s == "Ground Attack" ) 
     {
@@ -319,9 +319,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","MK-84");
         setprop("payload/weight[5]/selected","MK-84");
         setprop("payload/weight[9]/selected","MK-84");
-        setprop("consumables/fuel/tank[5]/selected",false);
-        setprop("consumables/fuel/tank[6]/selected",false);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",0);
+        setprop("consumables/fuel/tank[6]/selected",0);
+        setprop("consumables/fuel/tank[7]/selected",0);
     } 
     elsif ( s == "Combat Air Patrol" ) 
     {
@@ -329,9 +329,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","Droptank");
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","Droptank");
-        setprop("consumables/fuel/tank[5]/selected",true);
-        setprop("consumables/fuel/tank[6]/selected",true);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",1);
+        setprop("consumables/fuel/tank[6]/selected",1);
+        setprop("consumables/fuel/tank[7]/selected",0);
     } 
     elsif ( s == "Training" ) 
     {
@@ -339,9 +339,9 @@ var ext_loads_set2 = func(s)
         setprop("payload/weight[1]/selected","none");
         setprop("payload/weight[5]/selected","Droptank");
         setprop("payload/weight[9]/selected","none");
-        setprop("consumables/fuel/tank[5]/selected",false);
-        setprop("consumables/fuel/tank[6]/selected",false);
-        setprop("consumables/fuel/tank[7]/selected",true);
+        setprop("consumables/fuel/tank[5]/selected",0);
+        setprop("consumables/fuel/tank[6]/selected",0);
+        setprop("consumables/fuel/tank[7]/selected",1);
     } 
     update_dialog_checkboxes();
     update_wpstring();
@@ -380,12 +380,12 @@ var toggle_ext_tank_selected = func() {
     update_wpstring();
 }
 
-var update_wp_requested = false;
+var update_wp_requested = 0;
 var update_wp_next = 0;
 var update_wp_frequency_s = 15;
 var update_wpstring = func
 {
-    update_wp_requested = true;
+    update_wp_requested = 1;
 }
 
 var update_weapons_over_mp = func
@@ -401,7 +401,7 @@ var update_weapons_over_mp = func
         var agm_count = 0;
 
         update_wp_next = cur_time + update_wp_frequency_s;
-        update_wp_requested = false;
+        update_wp_requested = 0;
 
         foreach (var S; Station.list)
         {
@@ -447,15 +447,15 @@ setlistener("controls/armament/emergency-jettison", func(v) {
               T.set_level_lbs(0);
             #                        printf("Set %s to 0",T.get_name());
         }
-        setprop("controls/armament/station[1]/jettison-all",true);
-        setprop("controls/armament/station[5]/jettison-all",true);
-        setprop("controls/armament/station[9]/jettison-all",true);
-	setprop("payload/weight[1]/selected","none");
+        setprop("controls/armament/station[1]/jettison-all",1);
+        setprop("controls/armament/station[5]/jettison-all",1);
+        setprop("controls/armament/station[9]/jettison-all",1);
+        setprop("payload/weight[1]/selected","none");
         setprop("payload/weight[5]/selected","none");
         setprop("payload/weight[9]/selected","none");
-        setprop("consumables/fuel/tank[5]/selected",false);
-        setprop("consumables/fuel/tank[6]/selected",false);
-        setprop("consumables/fuel/tank[7]/selected",false);
+        setprop("consumables/fuel/tank[5]/selected",0);
+        setprop("consumables/fuel/tank[6]/selected",0);
+        setprop("consumables/fuel/tank[7]/selected",0);
 
         foreach (var S; Station.list) {
             setprop("payload/weight["~S.index~"]/selected","none");

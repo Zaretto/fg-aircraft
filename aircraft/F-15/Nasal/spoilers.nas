@@ -30,11 +30,11 @@ var computeSpoilers = func {
 
 var toggleGroundSpoilers = func {
 	if (getprop ("controls/flight/ground-spoilers-armed")) {
-		setprop ("controls/flight/ground-spoilers-armed", false);
+		setprop ("controls/flight/ground-spoilers-armed", 0);
 		SpoilersCmd.setDoubleValue(0.0);
         setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",0);
 	} else {
-		setprop ("controls/flight/ground-spoilers-armed", true);
+		setprop ("controls/flight/ground-spoilers-armed", 1);
         setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",1);
 	}
 }
@@ -43,12 +43,12 @@ var set_spoiler_brake = func(v)
 {
     if (v > 0)
     {
-    	setprop ("controls/flight/ground-spoilers-armed", true);
+    	setprop ("controls/flight/ground-spoilers-armed", 1);
         setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",1);
     }
     else
     {
-        setprop ("controls/flight/ground-spoilers-armed", false);
+        setprop ("controls/flight/ground-spoilers-armed", 0);
         setprop ("fdm/jsbsim/fcs/spoiler-ground-brake-armed",0);
     	SpoilersCmd.setDoubleValue(0.0);
     }

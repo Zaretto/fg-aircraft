@@ -1,6 +1,4 @@
 ## Global constants ##
-var true = 1;
-var false = 0;
 
 var deltaT = 1.0;
 
@@ -11,8 +9,8 @@ var currentG = 1.0;
 
 #Variables
 
-var AutoSweep = true;
-#var OverSweep = false;
+var AutoSweep = 1;
+#var OverSweep = 0;
 var WingSweep = 0.0; #Normalised wing sweep
 
 
@@ -39,12 +37,12 @@ var InnerLeftSpoilersTarget = 0.0;
 var InnerRightSpoilersTarget = 0.0;
 
 # create properties for ground spoilers 
-#setprop ("/controls/flight/ground-spoilers-armed", false);
-var GroundSpoilersDeployed = false;
+#setprop ("/controls/flight/ground-spoilers-armed", 0);
+var GroundSpoilersDeployed = 0;
 
 # Latching mechanism in order not to deploy ground spoilers if the aircraft
 # is on ground and the spoilers are armed
-var GroundSpoilersLatchedClosed = true;
+var GroundSpoilersLatchedClosed = 1;
 
 # create a property to control spoilers in the YaSim flight model
 setprop ("/controls/flight/yasim-spoilers", 0.0);
@@ -219,7 +217,7 @@ print("F-14 override tyresmoke ",number);
 		me.spray_factor = me.calc_spray_factor(me.groundspeed_kts);
 
 		# touchdown
-		# - wow changed (previously false)
+		# - wow changed (previously 0)
 		# - use a filter on touchdown and use this to determine if the smoke is active.
 		me.touchdown = 0;
 		if (me.wow != me.lastwow){
