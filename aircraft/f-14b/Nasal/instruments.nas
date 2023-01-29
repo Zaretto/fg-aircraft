@@ -56,11 +56,11 @@ aircraft.data.add(VtcRadialDeg, TcModeSwitch);
 
 # Compute local magnetic deviation.
 var local_mag_deviation = func {
-	var true = TrueHdg.getValue();
+	var trueHdg = TrueHdg.getValue();
 	var mag = MagHdg.getValue();
-    if (mag != nil and true != nil)
+    if (mag != nil and trueHdg != nil)
     {
-        mag_dev = geo.normdeg( mag - true );
+        mag_dev = geo.normdeg( mag - trueHdg );
         if ( mag_dev > 180 ) mag_dev -= 360;
         MagDev.setValue(mag_dev); 
     }
@@ -669,9 +669,9 @@ subsystem = instruments_exec.new("instruments_exec");
 
 var common_carrier_init = func {
 
-    if (f14.carrier_ara_63_position != nil and geo.aircraft_position() != nil)
+    if (f14.nearest_carrier != nil and geo.aircraft_position() != nil)
     {
-        if (geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 6000 and geo.aircraft_position().distance_to(f14.carrier_ara_63_position) > 400)
+        if (geo.aircraft_position().distance_to(f14.nearest_carrier.getpos()) < 6000 and geo.aircraft_position().distance_to(f14.nearest_carrier.getpos()) > 400)
         {
             print("Starting with hook down as near carrier");
             setprop("controls/gear/tailhook",1);
@@ -707,7 +707,7 @@ var common_carrier_init = func {
 
         if (carrier != nil and carrier != "" ) # and substr(getprop("/sim/presets/parkpos"),0,4) == "cat-")
         {
-            if (f14.carrier_ara_63_position == nil or geo.aircraft_position().distance_to(f14.carrier_ara_63_position) < 200)
+            if (f14.nearest_carrier == nil or geo.aircraft_position().distance_to(f14.nearest_carrier.getpos()) < 200)
             {
                 print("Special init for Carrier cat launch");
                 setprop("/fdm/jsbsim/systems/holdback/holdback-cmd",1);
@@ -981,13 +981,12 @@ get_approach_onspeed = func{
 #
 # Carrier reposition methods
 carrier_approach_reposition = func {
-    var np = geo.Coord.new()
-    .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+    var np = f14.nearest_carrier.getpos();
     var magvar=getprop("/orientation/local-mag-dev");
     var dist_m = 11000;
     if (getprop("sim/presets/carrier-approach-dist-m") != nil)
         dist_m  = getprop("sim/presets/carrier-approach-dist-m");
-    np.apply_course_distance(f14.carrier_ara_63_heading,-dist_m);
+    np.apply_course_distance(f14.nearest_carrier.get_heading(),-dist_m);
     var gs_height = ((dist_m*FD_TANDEG)+20)*3.281;
     lat = np.lat();
     lon = np.lon();
@@ -1002,7 +1001,7 @@ carrier_approach_reposition = func {
     setprop("sim/presets/airspeed-kt",onspeed);
     setprop("sim/presets/pitch-deg",7);
     #setprop("sim/presets/heading-deg",178-magvar);
-    setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+    setprop("sim/presets/heading-deg",f14.nearest_carrier.get_heading()-14-magvar);
     setprop("fdm/jsbsim/systems/hook/tailhook-cmd-norm",1);
     setprop("/sim/presets/carrier","");
     setprop("/sim/presets/parkpos","");
@@ -1033,8 +1032,8 @@ carrier_approach_reposition = func {
         setprop("fdm/jsbsim/gear/gear-cmd-norm",1);
         setprop("/controls/gear/brake-parking",0);
         #    setprop("sim/presets/airspeed-kt",onspeed);
-        np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
-        np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
+        np = f14.nearest_carrier.getpos();
+        np.apply_course_distance(f14.nearest_carrier.get_heading()-116,-50);
         setprop("/sim/tower/latitude-deg",np.lat());
         setprop("/controls/flight/flaps",1);
         setprop("/controls/gear/gear-down",1);
@@ -1045,7 +1044,7 @@ carrier_approach_reposition = func {
 
 
 f14_instruments.carrier_case_1_approach_reposition = func {
-if (f14.carrier_ara_63_position == nil)
+if (f14.nearest_carrier == nil)
 {
 print("No carrier");
 return;
@@ -1053,8 +1052,7 @@ return;
 
 print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
 
-    var np = geo.Coord.new()
-    .set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
+    var np = nearest_carrier.getpos();
     var magvar=getprop("/orientation/local-mag-dev");
 
     var dist_m = -560;
@@ -1064,7 +1062,7 @@ print("Case 1. Onspeed=",f14_instruments.get_approach_onspeed());
 
 #    if (getprop("sim/presets/carrier-approach-dist-m") != nil)
 #        dist_m  = getprop("sim/presets/carrier-approach-dist-m");
-    np.apply_course_distance(f14.carrier_ara_63_heading-90, dist_m);
+    np.apply_course_distance(f14.nearest_carrier.get_heading()-90, dist_m);
     lat = np.lat();
     lon = np.lon();
     f14.set_fuel(fuel);
@@ -1097,7 +1095,7 @@ setprop("/sim/presets/vBody-fps",0);
 setprop("/sim/presets/wBody-fps",0);
 
     #setprop("sim/presets/heading-deg",178-magvar);
-    setprop("sim/presets/heading-deg",f14.carrier_ara_63_heading-14-magvar);
+    setprop("sim/presets/heading-deg",f14.nearest_carrier.get_heading()-14-magvar);
     setprop("/sim/presets/carrier","");
     setprop("/sim/presets/parkpos","");
     setprop("position/latitude-deg",lat);
@@ -1137,8 +1135,8 @@ var elevator_trim = -0.089647;
 
         #    setprop("sim/presets/airspeed-kt",onspeed);
 
-        np = geo.Coord.new().set_xyz(f14.carrier_ara_63_position.x(), f14.carrier_ara_63_position.y(), f14.carrier_ara_63_position.z());
-        np.apply_course_distance(f14.carrier_ara_63_heading-116,-50);
+        np = nearest_carrier.getpos();
+        np.apply_course_distance(f14.nearest_carrier.get_heading()-116,-50);
 
         setprop("/sim/tower/latitude-deg",np.lat());
         setprop("/sim/tower/longitude-deg",np.lon());

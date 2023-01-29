@@ -731,11 +731,11 @@ var cold_and_dark = func()
 
     setprop("/controls/gear/brake-parking",1);
     setprop("sim/model/f-14b/controls/HUD/brightness",0);
-    setprop("sim/model/f-14b/controls/HUD/on-off",false);
+    setprop("sim/model/f-14b/controls/HUD/on-off",0);
     setprop("sim/model/f-14b/controls/MPCD/brightness",0);
     setprop("sim/model/f-14b/controls/MPCD/on-off",0);
     setprop("sim/model/f-14b/controls/TEWS/brightness",0);
-    setprop("sim/model/f-14b/controls/VSD/on-off",false);
+    setprop("sim/model/f-14b/controls/VSD/on-off",0);
     setprop("sim/model/f-14b/controls/VSD/brightness",0);
 
     setprop("sim/model/f-14b/controls/electrics/emerg-flt-hyd-switch",0);
