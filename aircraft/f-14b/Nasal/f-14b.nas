@@ -326,17 +326,6 @@ var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/in
 var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
-
-#
-#
-# ARA-63 (Carrier Landing System) support
-var tuned_carrier_name=getprop("/sim/presets/carrier");
-var carrier_ara_63_position = nil;
-var carrier_heading = nil;
-var carrier_ara_63_heading = nil;
-
-
-
 var timedMotions = func {
 
 	# disable if we are in replay mode
