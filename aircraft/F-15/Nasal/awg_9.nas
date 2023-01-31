@@ -1324,6 +1324,11 @@ var Target = {
 		obj.deviation = nil;
         obj.target_classification = AIR; # default to AIR targets
         obj.set_type_from_name(c.getName(), obj.ModelType);
+
+        obj.tacobj = {parents: [tacview.tacobj]};
+        obj.tacobj.tacviewID = left(md5(obj.unique),5);
+        obj.tacobj.valid = 1;
+
     
 		return obj;
 	},
@@ -1543,7 +1548,7 @@ var Target = {
         }
         return geo.Coord.new(me.TgTCoord);#best to pass a copy
     },
-
+    getCoord : func { return me.get_Coord();},
 	get_closure_rate : func() {
         #
         # calc closure using trig as the elapsed time method is not really accurate enough and jitters considerably
@@ -1657,6 +1662,7 @@ var Target = {
     get_model: func {
         return me.ModelType;
     },
+    getModel : func { return me.get_model();},
     get_uBody: func {
       var body = nil;
       if (me.ubody != nil) {
@@ -1710,6 +1716,8 @@ var Target = {
     },
 	list : [],
 };
+getCompleteList = func { tgts_list;}
+getPriorityTarget = func { active_u;}
 
 # Notes:
 

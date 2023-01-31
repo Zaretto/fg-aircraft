@@ -85,10 +85,10 @@ var mainloop = func() {
     thread.unlock(mutexWrite);
     writeMyPlanePos();
     writeMyPlaneAttributes();
-    foreach (var cx; radar_system.getCompleteList()) {
-        if(cx.getType() == armament.ORDNANCE) {
-            continue;
-        }
+    foreach (var cx; awg_9.getCompleteList()) {
+#        if(cx.getType() == armament.ORDNANCE) {
+#            continue;
+#        }
         if (cx["prop"] != nil and cx.prop.getName() == "multiplayer" and getprop("sim/multiplay/txhost") == "mpserver.opredflag.com") {
             continue;
         }
@@ -165,8 +165,8 @@ var writeMyPlanePos = func() {
 
 var writeMyPlaneAttributes = func() {
     var tgt = "";
-    if(radar_system.apg68Radar.getPriorityTarget() != nil) {
-        tgt= ",FocusedTarget="~radar_system.apg68Radar.getPriorityTarget().tacobj.tacviewID;
+    if(awg_9.getPriorityTarget() != nil) {
+        tgt= ",FocusedTarget="~awg_9.getPriorityTarget().tacobj.tacviewID;
     }
     var rmode = ",RadarMode=1";
     if (getprop("sim/multiplay/generic/int[2]")) {
