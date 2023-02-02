@@ -847,7 +847,8 @@
             <name>flaps-wind</name>
             <mode>looped</mode>
             <path>Aircraft/f-14b/Sounds/wind-noise.wav</path>
-            <volume>
+            <property>fdm/jsbsim/fcs/flap-windfx-volume</property>
+	    <volume>
                 <property>fdm/jsbsim/fcs/flap-windfx-volume</property>
                 <factor>0.002</factor>
             </volume>
@@ -865,6 +866,7 @@
             <name>gear-0-wind</name>
             <mode>looped</mode>
             <path>Aircraft/f-14b/Sounds/wind-noise.wav</path>
+            <property>fdm/jsbsim/fcs/gear-windfx-volume</property>
             <volume>
                 <property>fdm/jsbsim/fcs/gear-windfx-volume</property>
                 <factor>0.005</factor>
@@ -913,6 +915,12 @@
             <name>wind</name>
             <mode>looped</mode>
             <path>Aircraft/f-14b/Sounds/wind-noise.wav</path>
+	    <condition>
+	      <greater-than>
+                    <property>velocities/airspeed-kt</property>
+                    <value>0.0</value>
+              </greater-than>
+	    </condition>
             <volume>
                 <property>velocities/airspeed-kt</property>
                 <factor>0.000747400</factor>
@@ -960,6 +968,7 @@
             <name>air-brakes</name>
             <mode>looped</mode>
             <path>Aircraft/f-14b/Sounds/air-brakes.wav</path>
+	    <property>surface-positions/speedbrake-pos-norm</property>
             <volume>
                 <property>velocities/airspeed-kt</property>
                 <factor>0.001</factor>
