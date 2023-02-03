@@ -9,7 +9,7 @@ setprop("autopilot/locks/passive-mode", 1);
 var alt_switch      = props.globals.getNode("sim/model/f-14b/controls/AFCS/altitude");
 var hdg_gt_switch   = props.globals.getNode("sim/model/f-14b/controls/AFCS/heading-gt");
 var main_ap_engaged = props.globals.getNode("sim/model/f-14b/controls/AFCS/engage");
-
+var caution_ap_disengaged = props.globals.getNode("sim/model/f-14b/instrumentation/acls/engaged");
 # State
 var alt_enable      = props.globals.getNode("sim/model/f-14b/controls/AFCS/altitude-enable");
 
@@ -101,6 +101,7 @@ setlistener("sim/model/f-14b/controls/AFCS/heading-gt", func(v){
 #		print("HDG: wing lev");
 	}
 },0,0);
+
 
 var afcs_heading_switch = func(n) {
 	var hdg_gt = hdg_gt_switch.getValue();
@@ -282,6 +283,10 @@ afcs_groundtrack_engage = func() {
 }
 
 var afcs_disengage_1 = func() {
+	if (main_ap_engaged.getValue()){
+		caution_ap_disengaged.setValue(1);
+		settimer(func {caution_ap_disengaged.setValue(0) }, 2);
+	}
 	main_ap_engaged.setBoolValue( 0 );
 	alt_switch.setBoolValue( 0 );
 	alt_enable.setBoolValue(0);
