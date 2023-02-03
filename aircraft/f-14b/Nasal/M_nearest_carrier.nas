@@ -2,11 +2,9 @@ var Mp = props.globals.getNode("ai/models");
 
 setlistener("/ai/models/model-added", func(v){
     raw_list = Mp.getChildren();
-    print("FindNearestCarrier: updated list");
 });
 setlistener("/ai/models/model-removed", func(v){
     raw_list = Mp.getChildren();
-    print("FindNearestCarrier: updated list");
 });
 var nearest_carrier = nil;
 raw_list = Mp.getChildren();
