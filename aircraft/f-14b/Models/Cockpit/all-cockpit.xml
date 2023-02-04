@@ -1062,7 +1062,7 @@
                     </or>
                     <greater-than>
                         <property>surface-positions/flap-pos-norm</property>
-                        <value>0.4285714285714286</value>
+                        <value>0.2857</value>
                     </greater-than>
                     <less-than>
                         <property>controls/engines/engine[0]/throttle</property>
@@ -1231,36 +1231,17 @@
                 </greater-than>
                 <or>
                     <property>sim/model/f-14b/lights/master-test-lights</property>
-                    <and>
+                    <!-- <and>
                         <property>instrumentation/ecm/on-off</property>
                         <property>instrumentation/ecm/alert-type1</property>
-                    </and>
+                    </and> -->
                 </or>
             </and>
         </condition>
     </animation>
     <animation>
         <type>select</type>
-        <object-name>type2-lit</object-name>
-        <condition>
-            <and>
-                <greater-than>
-                    <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
-                    <value>0</value>
-                </greater-than>
-                <or>
-                    <property>sim/model/f-14b/lights/master-test-lights</property>
-                    <and>
-                        <property>instrumentation/ecm/on-off</property>
-                        <property>instrumentation/ecm/alert-type1</property>
-                    </and>
-                </or>
-            </and>
-        </condition>
-    </animation>
-    <animation>
-        <type>select</type>
-        <object-name>type3-lit</object-name>
+        <object-name>sam-lit</object-name>
         <condition>
             <and>
                 <greater-than>
@@ -1272,10 +1253,6 @@
                     <and>
                         <property>instrumentation/ecm/on-off</property>
                         <property>instrumentation/ecm/alert-type2</property>
-                        <greater-than>
-                            <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
-                            <value>0</value>
-                        </greater-than>
                     </and>
                 </or>
             </and>
@@ -1283,7 +1260,7 @@
     </animation>
     <animation>
         <type>select</type>
-        <object-name>type4-lit</object-name>
+        <object-name>ai-lit</object-name>
         <condition>
             <and>
                 <greater-than>
@@ -1301,6 +1278,25 @@
         </condition>
     </animation>
     <animation>
+        <type>select</type>
+        <object-name>aaa-lit</object-name>
+        <condition>
+            <and>
+                <greater-than>
+                    <property>fdm/jsbsim/systems/electrics/ac-left-main-bus</property>
+                    <value>0</value>
+                </greater-than>
+                <or>
+                    <property>sim/model/f-14b/lights/master-test-lights</property>
+                    <and>
+                        <property>instrumentation/ecm/on-off</property>
+                        <property>instrumentation/ecm/alert-type1</property>
+                    </and>
+                </or>
+            </and>
+        </condition>
+    </animation>
+     <animation>
         <type>select</type>
         <object-name>type5-lit</object-name>
         <condition>
@@ -1311,10 +1307,10 @@
                 </greater-than>
                 <or>
                     <property>sim/model/f-14b/lights/master-test-lights</property>
-                    <and>
+                    <!-- <and>
                         <property>instrumentation/ecm/on-off</property>
                         <property>instrumentation/ecm/alert-type1</property>
-                    </and>
+                    </and> -->
                 </or>
             </and>
         </condition>
@@ -1331,7 +1327,7 @@
     </animation>
     <animation>
         <type>material</type>
-        <object-name>type2-lit</object-name>
+        <object-name>sam-lit</object-name>
         <emission>
             <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
@@ -1341,7 +1337,7 @@
     </animation>
     <animation>
         <type>material</type>
-        <object-name>type3-lit</object-name>
+        <object-name>aaa-lit</object-name>
         <emission>
             <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
@@ -1350,7 +1346,7 @@
         </emission>
     </animation>    <animation>
         <type>material</type>
-        <object-name>type4-lit</object-name>
+        <object-name>ai-lit</object-name>
         <emission>
             <factor-prop>controls/lighting/instruments-norm</factor-prop>
             <red>1</red>
