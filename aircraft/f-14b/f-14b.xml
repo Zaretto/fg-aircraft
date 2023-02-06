@@ -405,7 +405,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
-        <!--  8 -->
+        <!--  6 -->
         <contact type="STRUCTURE" name="CANOPY">
             <location unit="IN">
                 <x> 214 </x>
@@ -433,7 +433,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <damping_coeff unit="LBS/FT/SEC"> 20000 </damping_coeff>
         </contact>-->
 
-        <!--  10 -->
+        <!--  7 -->
         <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
             <location unit="IN">
                 <x> 744 </x>
@@ -447,7 +447,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
-        <!--  11 -->
+        <!--  8 -->
         <contact type="STRUCTURE" name="RIGHT_VERTICAL_TAIL">
             <location unit="IN">
                 <x> 744 </x>
@@ -460,7 +460,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
-        <!-- 12 -->
+        <!-- 9 -->
         <contact type="STRUCTURE" name="REAR_BODY_LEFT">
             <location unit="IN">
                 <x> 713 </x>
@@ -474,7 +474,7 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
 
-        <!--  13 -->
+        <!--  10 -->
         <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
             <location unit="IN">
                 <x> 713 </x>
@@ -487,7 +487,8 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <spring_coeff unit="LBS/FT"> 41300 </spring_coeff>
             <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
         </contact>
-<!-- 14 -->
+
+		<!-- 11 -->
         <contact type="STRUCTURE" name="NOSE_CONE">
             <location unit="IN">
                 <x>  0 </x>
@@ -501,31 +502,48 @@ Maneuver FLAP (ITS) AND DLC Thumbwheel	Series	+45 deg DLC Thumbwheel mode	8.4 TE
             <damping_coeff unit="LBS/FT/SEC"> 2000 </damping_coeff>
         </contact>
 
+        <!--
+            We model the landing gear as two struts per gear position because of the
+            hard-step in the strut air curve.
 
-        <contact type="STRUCTURE" name="LEFT_MLG2">
+            NATOPS: 2.24.2 Main Landing Gear. Each main landing gear shock strut consists
+            of an upper outer cylinder and a lower internal piston that has a
+            maximum stroke of 25 inches. A hard step (31,000 pounds required for
+            further compression) in the strut air curve provides a consistent
+            4-inch stroke remaining in the ground static condition. A sidebrace
+            link is mechanically extended from the inboard side of the strut outer
+            cylinder to engage in a nacelle fitting and thus provides additional
+            side-load support for ground operations.
+
+            Design limit landing sink speed for the aircraft is 25.3 feet per
+            second (nominal landing sink speed is about 11 feet per second).
+        -->
+        
+		<!-- 12 -->
+        <contact type="BOGEY" name="LEFT_MLG2">
             <location unit="IN">
                 <x> 451 </x>
                 <y> -98 </y>
-                <z> -78  </z>
+                <z> -85  </z>
             </location>
             <static_friction> 0.001 </static_friction>
             <dynamic_friction> 0.001 </dynamic_friction>
             <rolling_friction> 0.001 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 88500 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 31000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 6200 </damping_coeff>
         </contact>
-        <!-- 2 -->
-        <contact type="STRUCTURE" name="RIGHT_MLG2">
+<!-- 13 -->
+        <contact type="BOGEY" name="RIGHT_MLG2">
             <location unit="IN">
                 <x> 451 </x>
                 <y> 98 </y>
-                <z> -78  </z>
+                <z> -85  </z>
             </location>
             <static_friction> 0.001 </static_friction>
             <dynamic_friction> 0.001 </dynamic_friction>
             <rolling_friction> 0.001 </rolling_friction>
-            <spring_coeff unit="LBS/FT"> 88500 </spring_coeff>
-            <damping_coeff unit="LBS/FT/SEC"> 8600 </damping_coeff>
+            <spring_coeff unit="LBS/FT"> 31000 </spring_coeff>
+            <damping_coeff unit="LBS/FT/SEC"> 6200 </damping_coeff>
         </contact>
     </ground_reactions>
 <!--<strut_force>
