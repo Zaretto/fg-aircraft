@@ -37,7 +37,6 @@ var EmesaryRecipient =
     new: func(_ident)
     {
         var new_class = emesary.Recipient.new(_ident);
-        new_class.ansn46_expiry = 0;
         new_class.Receive = func(notification)
         {
             if (notification.NotificationType == "GeoEventNotification") {
