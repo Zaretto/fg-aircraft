@@ -467,9 +467,9 @@ Tank = {
         return me.side == s;
     },
     is_fitted : func {
-        if (!me.external) return true;
+        if (!me.external) return 1;
         if (me.prop.getNode("selected").getValue())
-            return true;
+            return 1;
         return false;
     },
 
@@ -593,7 +593,7 @@ Prop = {
 		obj.dumprate = obj.prop.getNode("dump-rate-lbs-hr", 1);
 		obj.running = obj.prop.getNode("running", 1);
 		obj.running.setBoolValue(running);
-        obj.prop.getNode("hidden", 1).setBoolValue(true);
+        obj.prop.getNode("hidden", 1).setBoolValue(1);
 		obj.prop.getChild("selected", 0, 1).setBoolValue(connect);
 		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
 		obj.ppg.setDoubleValue(6.3);

@@ -6,9 +6,6 @@
 # Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
 #
 
-## Global constants ##
-var true = 1;
-var false = 0;
 var CurrentIASnode = props.globals.getNode("velocities/airspeed-kt");
 var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
 var sysFrost = props.globals.getNode("fdm/jsbsim/systems/ecs/windscreen-frost-amount",1);
@@ -459,12 +456,12 @@ var quickstart = func() {
 #    setprop("controls/lighting/panel-norm",1);
 #    setprop("controls/lighting/instruments-norm",1);
     setprop("sim/model/f15/controls/HUD/brightness",1);
-    setprop("sim/model/f15/controls/HUD/on-off",true);
+    setprop("sim/model/f15/controls/HUD/on-off",1);
     setprop("sim/model/f15/controls/VSD/brightness",1);
-    setprop("sim/model/f15/controls/VSD/on-off",true);
+    setprop("sim/model/f15/controls/VSD/on-off",1);
     setprop("sim/model/f15/controls/TEWS/brightness",1);
     setprop("sim/model/f15/controls/MPCD/brightness",1);
-    setprop("sim/model/f15/controls/MPCD/on-off",true);
+    setprop("sim/model/f15/controls/MPCD/on-off",1);
     setprop("sim/model/f15/controls/MPCD/mode",2);
     setprop("sim/model/f15/lights/radio2-brightness",0.6);
 
@@ -699,7 +696,7 @@ var F15MainModule =
                 setprop("fdm/jsbsim/propulsion/refuel",0);
                 setprop("fdm/jsbsim/propulsion/ground-refuel",0);
             }
-            wow = wowLnode.getBoolValue() or wowRnode.getBoolValue();
+            wow = notification.wowLnode or notification.wowRnode;
         }
     },
 };
