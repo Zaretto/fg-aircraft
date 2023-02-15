@@ -11,7 +11,8 @@ setlistener("/instrumentation/tacan/display/channel", func {
 # for reposition - so replace the continual scanning (as part of the radar) with a one off method that can be
 # called as needed.
 find_carrier_by_tacan = func {
-    var raw_list = awg_9.Mp.getChildren();
+    var Mp = props.globals.getNode("ai/models");
+    var raw_list = Mp.getChildren();
     var carrier_located = 0;
     
     foreach ( var c; raw_list ) {
