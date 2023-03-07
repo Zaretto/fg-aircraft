@@ -295,7 +295,7 @@ var CrashAndStress = {
 		    if(probability > 0.766 and me.fdm.input.fuel.getValue() > 2500) {
 		    	# 175kt+ and fuel in tanks will explode the aircraft on impact.
 		    	me.input.simCrashed.setBoolValue(TRUE);
-		    	me._explodeBegin("Aircraft hit "~hitStr~".");
+		    	me._explodeBegin("Aircraft hit "~hitStr);
 		    	return;
 		    }
 
@@ -558,7 +558,7 @@ var yaSimProp = {
 var crashCode = nil;
 var crash_start = func {
 	removelistener(lsnr);
-	crashCode = CrashAndStress.new([0,1,2]);
+	crashCode = CrashAndStress.new([0,1,2,12,13]);
 	crashCode.start();
 }
 

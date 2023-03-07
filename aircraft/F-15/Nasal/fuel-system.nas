@@ -470,7 +470,7 @@ Tank = {
         if (!me.external) return 1;
         if (me.prop.getNode("selected").getValue())
             return 1;
-        return 0;
+        return false;
     },
 
 	get_capacity : func {
