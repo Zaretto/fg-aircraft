@@ -97,7 +97,7 @@ var update_ext_load = func(sender, state)
         {
 			var ccc = c-2;
 			var cc = c-1;
-			str = chr(wpstr[ccc]) ~ chr(wpstr[cc]) ~ chr(wpstr[c]);
+			var str = chr(wpstr[ccc]) ~ chr(wpstr[cc]) ~ chr(wpstr[c]);
 			if ( str == "001" ) { o = "AIM-9" }
 			elsif ( str == "010") { o = "AIM-7" }
 			elsif ( str == "011") { o = "AIM-120" }
@@ -124,7 +124,7 @@ var update_ext_load = func(sender, state)
 
 			o = "none";
 			var cc = c-1;
-			str = chr(wpstr[cc]) ~ chr(wpstr[c]);
+			var str = chr(wpstr[cc]) ~ chr(wpstr[c]);
 			Station = Wnode.getChild ("station", s , 1);
 			Station.getNode("selected", 1).setBoolValue(0);
 			if ( str == "01" ) { 
