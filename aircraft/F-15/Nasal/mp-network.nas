@@ -45,20 +45,22 @@ var listen_to = func (pilot) {
         find("Aircraft/F-15/Models/F-15", pilot.getNode("sim/model/path").getValue()) != -1)
     {
 #		print("Accepted ",  pilot.getNode("sim/model/path").getValue());
-    setprop("/sim/walker/outside",0);
+
+		if (getprop("/sim/walker/outside"))
+			setprop("sim/walker/key-triggers/outside-toggle",1);
 
 		return 1;
 	}
     else
     {
-#    setprop("/sim/walker/outside",1);
-
 #		print("Not listening to ", pilot.getNode("sim/model/path").getValue());
 		return 0;
 	}
 }
 
 var when_disconnecting = func (pilot) {
+	if (getprop("/sim/walker/outside"))
+		setprop("sim/walker/key-triggers/outside-toggle",0);
     setprop("/sim/walker/outside",1);
 }
 
