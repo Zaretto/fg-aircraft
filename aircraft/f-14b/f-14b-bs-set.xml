@@ -890,8 +890,7 @@
             <station-name type="string">station</station-name>
             <hit-interpolation type="bool">true</hit-interpolation>
             <enable-craters type="bool">true</enable-craters>
-            <msg type="bool">false</msg>
-            <damage type="bool">false</damage>
+            <msg type="bool">true</msg>
             <MLW-bearing type="double">0</MLW-bearing>
             <MLW-count type="int">0</MLW-count>
             <MLW-launcher type="string"></MLW-launcher>
@@ -967,15 +966,15 @@
     </debug-radar>
 
 	<nasal>
-		<iff>
-            <file>Aircraft/f-14b/Nasal/iff.nas</file>
-        </iff>
-        <datalink>
-            <file>Aircraft/f-14b/Nasal/datalink.nas</file>
-        </datalink>
 		<!--radardist>
 			<file>Aircraft/Instruments-3d/radardist/radardist.nas</file>
 		</radardist-->
+        <notifications>
+            <file>Aircraft/f-14b/Nasal/AircraftEventNotification.nas</file>
+            <file>Aircraft/f-14b/Nasal/ArmamentNotification.nas</file>
+            <file>Aircraft/f-14b/Nasal/M_frame_notification.nas</file>
+            <file>Aircraft/f-14b/Nasal/GeoBridgedTransmitter.nas</file>
+        </notifications>
         <vector>
             <file>Aircraft/f-14b/Nasal/vector.nas</file>
         </vector>
@@ -983,6 +982,18 @@
             <file>Aircraft/f-14b/Nasal/Radar/rcs_mand.nas</file>
             <file>Aircraft/f-14b/Nasal/Radar/rcs.nas</file>
         </rcs>
+        <damage>
+            <file>Aircraft/f-14b/Nasal/damage.nas</file>
+        </damage>
+        <armament>
+            <file>Aircraft/f-14b/Nasal/fox2.nas</file>
+        </armament>
+        <iff>
+            <file>Aircraft/f-14b/Nasal/iff.nas</file>
+        </iff>
+        <datalink>
+            <file>Aircraft/f-14b/Nasal/datalink.nas</file>
+        </datalink>
 		<awg_9>
             <file>Aircraft/f-14b/Nasal/Radar/radar-system.nas</file>
             <file>Aircraft/f-14b/Nasal/Radar/awg-9.nas</file>
