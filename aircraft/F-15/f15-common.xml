@@ -107,10 +107,10 @@
           
             <propulsion>
                 <engine n="0">
-                    <augmentation-alight type="bool">false</augmentation-alight>
+                    <augmentation-alight type="double">false</augmentation-alight>
                 </engine>
                 <engine n="1">
-                    <augmentation-alight type="bool">false</augmentation-alight>
+                    <augmentation-alight type="double">false</augmentation-alight>
                 </engine>
                 <cft alias="/sim/model/f15/cft"/>
                 <inlet>
@@ -2529,6 +2529,9 @@
         <pilot-g>1</pilot-g>
     </accelerations>
 
+    <!-- Fallback nasal modules; these are modules that were added to FGData after the minimum supported
+    version (of FG) for the F-15 and having fallback modules enables us to support older FG with no
+    impact on our code -->
     <fallback>
         <nasal>
             <emexec>
@@ -2536,6 +2539,7 @@
             </emexec>
         </nasal>
     </fallback>
+    
     <nasal>
         <fallback>
             <file>Aircraft/F-15/Nasal/fallback-module.nas</file>
@@ -2608,10 +2612,6 @@
         <hudmath>
             <file>Aircraft/F-15/Nasal/hud_math.nas</file>
         </hudmath>
-        <!-- For backwards compatibility we include a copy of the FGdata Nasal module -->
-        <!-- <emexec>
-            <file>Aircraft/F-15/Nasal/emexec.nas</file>
-        </emexec> -->
         <aircraft>
             <file>Aircraft/F-15/Nasal/liveries.nas</file>
             <file>Aircraft/F-15/Nasal/aircraft-main.nas</file>
@@ -2628,7 +2628,7 @@
             <file>Aircraft/F-15/Nasal/ext_stores.nas</file>
             <file>Aircraft/F-15/Nasal/crash-and-stress.nas</file>
         </aircraft>
-	<tacview>
+        <tacview>
             <file>Aircraft/F-15/Nasal/tacview.nas</file>
         </tacview>
         <displays>
