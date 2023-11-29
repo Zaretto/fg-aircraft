@@ -36,8 +36,8 @@ cannon.brevity = "Guns guns";
 var fuelTank267Left = stations.FuelTank.new("L External", "TK267", 8, 370, "sim/model/f-14b/wingtankL");
 var fuelTank267Right = stations.FuelTank.new("R External", "TK267", 9, 370, "sim/model/f-14b/wingtankR");
 
-var smokewinderWhite1 = stations.Smoker.new("Smokewinder White", "SmokeW", "sim/model/f-14b/fx/smoke-mnt-left");
-var smokewinderWhite10 = stations.Smoker.new("Smokewinder White", "SmokeW", "sim/model/f-14b/fx/smoke-mnt-right");
+var smokewinderWhite1 = stations.Submodel.new("Smokewinder White", "SmokeW", "sim/model/f-14b/fx/smoke-mnt-left");
+var smokewinderWhite10 = stations.Submodel.new("Smokewinder White", "SmokeW", "sim/model/f-14b/fx/smoke-mnt-right");
 
 var pylonSets = {
 	empty: {name: "Empty", content: [], fireOrder: [], launcherDragArea: 0.0, launcherMass: 0, launcherJettisonable: 0, showLongTypeInsteadOfCount: 0, category: 1},
