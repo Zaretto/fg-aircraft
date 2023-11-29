@@ -27,18 +27,18 @@
 #i.e. change to [notifications.ArmamentInFlightNotification.new(nil), notifications.ArmamentNotification.new(nil)];
 var geoRoutedNotifications = [notifications.ArmamentInFlightNotification.new()];
 var geoBridgedTransmitter = emesary.Transmitter.new("geoOutgoingBridge");
-var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("f15mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
+var geooutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("mp.geo",geoRoutedNotifications, 18, "", geoBridgedTransmitter);
 
 # bridge should be tuned to be around 90% of the packet size full.
 geooutgoingBridge.TransmitFrequencySeconds = 0.75;
-geooutgoingBridge.MPStringMaxLen = 150;
+geooutgoingBridge.MPStringMaxLen = 175; # each is 34 bytes
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(geoRoutedNotifications, 18, emesary.GlobalTransmitter);
 
 
 #----- bridge hit (armament) notifications
 var hitRoutedNotifications = [notifications.ArmamentNotification.new(),notifications.StaticNotification.new()];
 var hitBridgedTransmitter = emesary.Transmitter.new("armamentNotificationBridge");
-var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("f15mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
+var hitoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("mp.hit",hitRoutedNotifications, 19, "", hitBridgedTransmitter);
 hitoutgoingBridge.TransmitFrequencySeconds = 1.5;
 hitoutgoingBridge.MPStringMaxLen = 120;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, emesary.GlobalTransmitter);
@@ -46,8 +46,38 @@ emesary_mp_bridge.IncomingMPBridge.startMPBridge(hitRoutedNotifications, 19, eme
 #----- bridge object notifications
 var objectRoutedNotifications = [notifications.ObjectInFlightNotification.new()];
 var objectBridgedTransmitter = emesary.Transmitter.new("objectNotificationBridge");
-var objectoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("f15mp.object",objectRoutedNotifications, 17, "", objectBridgedTransmitter);
+var objectoutgoingBridge = emesary_mp_bridge.OutgoingMPBridge.new("mp.object",objectRoutedNotifications, 17, "", objectBridgedTransmitter);
 objectoutgoingBridge.TransmitFrequencySeconds = 0.2;
 objectoutgoingBridge.MessageLifeTime = 1;
 objectoutgoingBridge.MPStringMaxLen = 150;
 emesary_mp_bridge.IncomingMPBridge.startMPBridge(objectRoutedNotifications, 17, emesary.GlobalTransmitter);
+
+#
+# debug all messages - this can be removed when testing isn't required.
+var debugRecipient = emesary.Recipient.new("Debug");
+debugRecipient.Receive = func(notification)
+{
+    if (notification.NotificationType != "FrameNotification")  {
+        print ("recv(0): type=",notification.NotificationType, " fromIncoming=",notification.FromIncomingBridge);
+
+        if (notification.NotificationType == "ArmamentInFlightNotification") {
+            print("recv(1): ",notification.NotificationType, " ", notification.Ident);
+            debug.dump(notification);
+
+        } else if (notification.NotificationType == "ArmamentNotification") {
+            if (notification.FromIncomingBridge) {
+                print("recv(2): ",notification.NotificationType, " ", notification.Ident,
+                      " Kind=",notification.Kind,
+                      " SecondaryKind=",notification.SecondaryKind,
+                      " RelativeAltitude=",notification.RelativeAltitude,
+                      " Distance=",notification.Distance,
+                      " Bearing=",notification.Bearing,
+                      " RemoteCallsign=",notification.RemoteCallsign);
+                debug.dump(notification);
+            }
+        }
+    }
+    return emesary.Transmitter.ReceiptStatus_NotProcessed; # we're not processing it, just looking
+}
+# uncomment next line to activate debug recipient.
+#emesary.GlobalTransmitter.Register(debugRecipient);

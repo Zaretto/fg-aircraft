@@ -74,6 +74,7 @@ var iff_hash = {
 var hash1 = "";
 var hash2 = "";
 var check_hash = "";
+var last_interogate = 0;
 
 var interrogate = func(tgt) {
 	if ( tgt.getChild("callsign") == nil or tgt.getNode("sim/multiplay/generic/string["~iff_mp_string~"]") == nil ) {
@@ -100,7 +101,7 @@ var _calculate_hash = func(time, callsign, channel) {
 	#print("channel|" ~ channel ~ "|");
 	#print("hash|"~left(md5(time ~ callsign ~ channel ~ iff_unique_id),iff_hash_length)~"|");
 	callsign = size(callsign) < 8?callsign:left(callsign, 7);
- 	return left(md5(time ~ callsign ~ channel ~ iff_unique_id),iff_hash_length);
+	return left(md5(time ~ callsign ~ channel ~ iff_unique_id),iff_hash_length);
 }
 
 var new_hashing = iff_hash.new();
