@@ -62,7 +62,11 @@ var eject = func{
   setprop("sim/view[115]/config/target-lon-deg-path","/ai/models/es["~(i-2)~"]/position/longitude-deg");
   setprop("sim/view[115]/config/target-alt-ft-path","/ai/models/es["~(i-2)~"]/position/altitude-ft");
   setprop("sim/view[115]/enabled", 1);
-  view.setViewByIndex(115);
+  
+  if(view["setViewByIndex"] == nil)
+    setprop("sim/current-view/view-number", 13);# add 2 since walker uses 2
+   else
+    view.setViewByIndex(115);
 
   settimer(eject2, 0.20)
 }

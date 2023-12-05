@@ -97,7 +97,7 @@ set_smoke_color = func{
 #    print("set_smoke_color");
     for (var i = 0; i < 6; i = i+1)
     {
-        smoke_v0 = int(math.min(color_encode_props[i].getDoubleValue()*31,31));
+        smoke_v0 = int(math.min(color_encode_props[i].getValue()*31,31));
         smoke_vv = int(smoke_v0 * color_encode_factors[i+1]);
 #        printf(" -- %d => %2d %8x",i,smoke_v0,smoke_vv);
         smoke_v = smoke_v + smoke_vv;
@@ -871,7 +871,10 @@ var eject = func{
   setprop("sim/view[115]/config/target-lon-deg-path","/ai/models/es["~(i-2)~"]/position/longitude-deg");
   setprop("sim/view[115]/config/target-alt-ft-path","/ai/models/es["~(i-2)~"]/position/altitude-ft");
   setprop("sim/view[115]/enabled", 1);
-  view.setViewByIndex(115);
+  if(view["setViewByIndex"] == nil)
+    setprop("sim/current-view/view-number", 13);# add 2 since walker uses 2
+  else
+    view.setViewByIndex(115);
 
   settimer(eject2, 0.20)
 }

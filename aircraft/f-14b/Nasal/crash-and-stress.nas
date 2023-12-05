@@ -568,7 +568,10 @@ var lsnr = setlistener("sim/signals/fdm-initialized", crash_start);
 var repairMe = func {
 	crashCode.repair();
 	setprop("f14/done",0);#reset ejection seat
-	view.setViewByIndex(0);
+	if(view["setViewByIndex"] == nil)
+      setprop("sim/current-view/view-number", 0);
+    else
+      view.setViewByIndex(0);
 	setprop("sim/view[115]/enabled", 0);
 };
 

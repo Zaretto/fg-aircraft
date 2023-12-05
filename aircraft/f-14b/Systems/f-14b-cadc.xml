@@ -465,7 +465,10 @@ xsi:noNamespaceSchemaLocation="http://raw.githubusercontent.com/JSBSim-Team/jsbs
         <fcs_function name="systems/flyt/wing-bend-damage-total">
             <function>
                 <sum>
-                    <property>-systems/flyt/wing-damage-negative-total</property>
+                    <product>
+                        <property>systems/flyt/wing-damage-negative-total</property>
+                        <value>-1</value>
+                    </product>
                     <property>systems/flyt/wing-damage-positive-total</property>
                 </sum>
             </function>

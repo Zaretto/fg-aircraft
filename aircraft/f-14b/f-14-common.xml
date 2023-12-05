@@ -2839,8 +2839,21 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         <done type="bool">false</done>
         <force type="double">0</force>
     </f14>
-
+    <!-- Fallback nasal modules; these are modules that were added to FGData after the minimum supported
+    version (of FG) for the F-15 and having fallback modules enables us to support older FG with no
+    impact on our code -->
+    <fallback>
+        <nasal>
+            <emexec>
+                <file>Aircraft/f-14b/Nasal/fallback/emexec.nas</file>
+            </emexec>
+        </nasal>
+    </fallback>
+    
     <nasal>
+        <fallback>
+            <file>Aircraft/f-14b/Nasal/fallback/fallback-module.nas</file>
+        </fallback>
         <!-- IFF And Datalink -->
         <iff>
             <file>Aircraft/f-14b/Nasal/iff.nas</file>
