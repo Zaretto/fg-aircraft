@@ -292,7 +292,10 @@ OperationTimer = {
 };         
 
 
-
+# ensure this property is set if not in defaults.xml
+if (getprop("/sim/emexec/max-rate-hz") == nil){
+   setprop("/sim/emexec/max-rate-hz",30);
+}
 
 var xmit = emesary.Transmitter.new("exec");
 var ExecModule =  EmesaryExecutive.new("EMEXEC", xmit);

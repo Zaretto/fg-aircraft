@@ -18,8 +18,6 @@ LOG_INFO = 3;
 LOG_WARN = 4;
 LOG_ALERT = 5;
 
-setprop("/sim/emexec/max-rate-hz",30);
-
 var payload_dialog_reload = func(from) { 
 #    logprint(3, "payload_dialog_reload: ",from);    
     setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
