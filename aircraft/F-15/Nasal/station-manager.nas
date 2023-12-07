@@ -67,6 +67,14 @@ var Station = {
 		# Get name of this station.
 		return me.currentName;
 	},
+
+	isOperable: func {
+		# Returns if is operable.
+		if (me.operableFunction != nil) {
+			return me.operableFunction();
+		}
+		return 1;
+	},
 	
 	isActive: func {
 		# Returns if is active. This is for example used in F-14, where stations be individually enabled or disabled.
@@ -102,21 +110,44 @@ var Station = {
 						};
 					} elsif (me.weaponName == "AGM-158") {
 						mf = func (struct) {
-							if (struct.dist_m != -1 and struct.dist_m*M2NM < 7 and struct.guidance == "gps") {
-								return {"guidance":"vision","class":"GM","target":"nil","guidanceLaw":"PN","abort_midflight_function":1};
+							if (struct.dist_m != -1 and struct.speed_fps != 0) {
+								if (struct.dist_m*M2NM > 10) {
+									# 22000 ft above sealevel, authentic value
+									return {"altitude": 22000};
+								}
+								if (struct.dist_horz_m != nil and M2NM*struct.dist_horz_m > 1.75 and struct.hasTarget) {
+									# Lower altitude to 5000 ft above target
+									return {"altitude_at": 5000};
+								}
+								if (struct.dist_horz_m != nil and M2NM*struct.dist_horz_m < 1.75 and struct.guidanceLaw == "direct-alt") {
+									# start terminal diving
+									return {"altitude":0,"guidanceLaw":"direct"};
+								}
+								if (M2FT*struct.dist_m/struct.speed_fps < 8 and struct.guidance == "gps") {
+									# 8s before impact switch to IR, authentic value
+									return {"guidance":"heat","guidanceLaw":"PN","altitude":0,"class":"GM","target":"closest","abort_midflight_function":1};
+								}
 							}
 							return {};
 						};
+					} elsif (me.weaponName == "AGM-88") {
+						mf = func (struct) {
+							if (!struct.hasTarget) {
+								# Is in maddog mode
+								return {"class": "GM","abort_midflight_function":1};
+							}
+							return {"abort_midflight_function":1};
+						};
 					} elsif (me.weaponName == "AIM-54") {
 						mf = func (struct) {
-							if (struct.dist_m != -1 and struct.dist_m*M2NM < 11 and struct.guidance == "semi-radar") {
-								return {"guidance":"radar","abort_midflight_function":1};
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 11 and struct.guidance == "sample") {
+								return {"guidance":"radar","guidanceLaw":"PN","abort_midflight_function":1};
 							}
 							return {};
 						};
 					} elsif (me.weaponName == "AIM-120") {
 						mf = func (struct) {
-							if (struct.dist_m != -1 and struct.dist_m*M2NM < 10 and struct.guidance == "inertial") {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 10 and struct.guidance == "sample") {
 								screen.log.write("AIM-120: Pitbull", 1,1,0);
 								return {"guidance":"radar","abort_midflight_function":1};
 							}
@@ -124,14 +155,111 @@ var Station = {
 						};
 					} elsif (me.weaponName == "MICA-EM") {
 						mf = func (struct) {
-							if (struct.dist_m != -1 and struct.dist_m*M2NM < 12 and struct.guidance == "inertial") {
+							if (struct.guidance == "inertial" and !struct.hasTarget) {
+								return {"guidance":"radar","abort_midflight_function":1};
+							}
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 12 and struct.guidance == "inertial" and struct.deviation_deg != nil and struct.deviation_deg < 70) {
 								screen.log.write("MICA-EM: Pitbull", 1,1,0);
 								return {"guidance":"radar","abort_midflight_function":1};
 							}
 							return {};
 						};
-					}
-					
+					} elsif (me.weaponName == "MICA-IR") {
+						mf = func (struct) {
+							if (struct.guidance == "inertial" and !struct.hasTarget) {
+								return {"guidance":"heat","abort_midflight_function":1};
+							}
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 12 and struct.guidance == "inertial" and struct.deviation_deg != nil and struct.deviation_deg < 70) {
+								return {"guidance":"heat","abort_midflight_function":1};
+							}
+							return {};
+						};
+					} elsif (me.weaponName == "AGM-84") {
+						mf = func (struct) {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 5 and struct.guidance == "inertial") {
+								return {"guidance":"radar","abort_midflight_function":1};
+							}
+							return {};
+						};
+					} elsif (me.weaponName == "AIM-9X") {
+						mf = func (struct) {
+						    var settings = {};
+						    settings.seeker_fov = 90;
+							if (struct.deviation_deg != nil) {
+								if (struct.deviation_deg > 70) {
+								    settings.guidanceLaw = "direct";
+								    #settings.guidance = "inertial";
+								} else {
+								    settings.guidanceLaw = "OPN";
+								    #settings.guidance = "heat";
+								    if (struct.deviation_deg < 55) {
+									    settings.abort_midflight_function = 1;
+									}
+								}
+							}
+							# Remove redundant values to keep logs clean
+							if (settings.seeker_fov == struct.seeker_fov) {
+							    settings.seeker_fov = nil;
+							}
+							if (settings["guidanceLaw"] == struct.guidanceLaw) {
+							    settings.guidanceLaw = nil;
+							}
+							#if (settings["guidance"] == struct.guidance) {
+							#    settings.guidance = nil;
+							#}
+							return settings;
+						};
+					} elsif (me.weaponName == "AIM-120AUT") {#varient used for automat that does not need new radar-system
+						mf = func (struct) {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 10 and struct.guidance == "inertial") {
+								return {"guidance":"radar"};
+							}
+							return {};
+						};
+					} elsif (me.weaponName == "RB-99AUT") {
+						mf = func (struct) {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 10 and struct.guidance == "inertial") {
+								return {"guidance":"radar"};
+							}
+							return {};
+						};
+					} elsif (me.weaponName == "R-77") {
+						mf = func (struct) {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 12 and struct.guidance == "inertial") {
+								return {"guidance":"radar"};
+							}
+							return {};
+						};
+					} elsif (me.weaponName == "R-73") {
+						mf = func (struct) {
+						    var settings = {};
+						    settings.seeker_fov = 90;
+							if (struct.deviation_deg != nil) {
+								if (struct.deviation_deg > 70) {
+								    settings.guidanceLaw = "direct";
+								    #settings.guidance = "inertial";
+								} else {
+								    settings.guidanceLaw = "OPN";
+								    #settings.guidance = "heat";
+								    if (struct.deviation_deg < 55) {
+									    settings.abort_midflight_function = 1;
+									}
+								}
+							}
+							# Remove redundant values to keep logs clean
+							if (settings.seeker_fov == struct.seeker_fov) {
+							    settings.seeker_fov = nil;
+							}
+							if (settings["guidanceLaw"] == struct.guidanceLaw) {
+							    settings.guidanceLaw = nil;
+							}
+							#if (settings["guidance"] == struct.guidance) {
+							#    settings.guidance = nil;
+							#}
+							return settings;
+						};
+			        }
+
 					me.aim = armament.AIM.new(me.id*100+me.i, me.weaponName, "", mf, me.position);
 					if (me.aim == -1) {
 						print("Pylon could not create "~me.weaponName);
@@ -258,9 +386,9 @@ var Station = {
 		# Get total ammo for this station. For missiles/bombs this is typically the numbers, for cannon submodel weapons it is the shell count.
 		me.ammo = 0;
 		foreach(me.weapon ; me.getWeapons()) {
-			if (me.weapon != nil and me.weapon.parents[0] == armament.AIM and (me.weapon.type == nil or me.weapon.type == type)) {
+			if (me.weapon != nil and me.weapon.parents[0] == armament.AIM and (type == nil or me.weapon.type == type)) {
 				me.ammo += 1;
-			} elsif (me.weapon != nil and me.weapon.parents[0] == SubModelWeapon and (me.weapon.type == nil or me.weapon.type == type)) {
+			} elsif (me.weapon != nil and me.weapon.parents[0] == SubModelWeapon and (type == nil or me.weapon.type == type)) {
 				me.ammo += me.weapon.getAmmo();
 			}
 		}
@@ -301,7 +429,7 @@ var Station = {
 };
 
 var InternalStation = {
-# simulates a fixed station, for example a for cannon mounted inside the aircraft
+# simulates a fixed internal station, for example a for cannon mounted inside the aircraft
 # inherits from Station
 	new: func (name, id, sets, pointmassNode, operableFunction = nil) {
 		var s = Station.new(name, id, [0,0,0], sets, nil, pointmassNode, operableFunction, nil);
@@ -312,6 +440,43 @@ var InternalStation = {
 		s.loadSet(sets[0]);
 		return s;
 	}
+};
+
+var FixedStation = {
+# simulates a fixed station, for example for CFT tanks
+# inherits from Station
+	new: func (name, id, sets, pointmassNode, dragareaNode, operableFunction = nil) {
+		var s = Station.new(name, id, [0,0,0], sets, nil, pointmassNode, operableFunction, nil);
+		s.parents = [FixedStation, Station];
+
+		s.node_dragaera = dragareaNode;
+		# these should not be called in parent.new(), as they are empty there.
+		s.initGUI();
+		s.loadSet(sets[0]);
+		return s;
+	},
+
+	loadingSet: func (set) {
+		# override this method to set custom attributes, before calculateFDM is ran after a set is loaded.
+		if (set != nil) {
+			me.launcherDA   = set.launcherDragArea;
+		} else {
+			me.launcherDA   = 0;
+		}
+	},
+
+	calculateFDM: func {
+		# override this method to set custom FDM attributes.
+		# do dragarea
+		me.totalDA = 0;
+		foreach(me.weapon;me.weapons) {
+			if (me.weapon != nil) {
+				me.totalDA += me.weapon.Cd_base*me.weapon.ref_area_sqft;
+			}
+		}
+		me.totalDA += me.launcherDA;
+		me.node_dragaera.setDoubleValue(me.totalDA);
+	},
 };
 
 var Pylon = {
@@ -507,7 +672,11 @@ var Pylon = {
 		if (me.currentSet.showLongTypeInsteadOfCount) {
 			foreach(me.wapny;me.weapons) {
 				if (me.wapny != nil) {
-					me.nameS = me.wapny.typeShort;
+					if (me.wapny.typeShort != nil) {
+						me.nameS = "1 "~me.wapny.typeShort;
+					} else {
+						me.nameS = "1 "~me.wapny.type;
+					}
 				}
 			}
 		} else {
@@ -515,8 +684,8 @@ var Pylon = {
 			foreach(me.weapon;me.weapons) {
 				if(me.weapon != nil) {
 					me.type = me.weapon.typeShort;
-					if (me.calcName[me.type]==nil) {
-						me.calcName[me.type]=1;
+					if (me.calcName[me.type] == nil) {
+						me.calcName[me.type] = 1;
 					} else {
 						me.calcName[me.type] += 1;
 					}
@@ -527,9 +696,11 @@ var Pylon = {
 			}
 			me.nameS = right(me.nameS, size(me.nameS)-2);#remove initial comma
 		}
-		if(me.nameS == "" and me.currentSet != nil and size(me.currentSet.content)!=0) {
+		if(me.nameS == "" and me.currentSet != nil and size(me.currentSet.content) != 0) {
+			# all launched or jettisoned
 			me.nameS = nil;
-		} elsif (me.nameS == "" and me.currentSet != nil and size(me.currentSet.content)==0) {
+		} elsif (me.nameS == "" and me.currentSet != nil and size(me.currentSet.content) == 0) {
+			# No launchable weapons
 			me.nameS = me.currentSet.name;
 		}
 		if(me.nameS == "" or me.nameS == "Empty") {
@@ -940,8 +1111,10 @@ var FuelTank = {
 
 	mount: func(pylon) {
 #		print(pylon.name);
-		me.guiNode = props.globals.getNode(baseGui~"/weight["~pylon.guiID~"]",1);
-		me.guiNode.initNode("tank",me.fuelTankNumber,"DOUBLE");
+		if (pylon.guiID != nil) {
+			me.guiNode = props.globals.getNode(baseGui~"/weight["~pylon.guiID~"]",1);
+			me.guiNode.initNode("tank",me.fuelTankNumber,"DOUBLE");
+		}		
 
 		# set capacity in fuel tank
 		if (fdm == "jsb") {
@@ -994,14 +1167,12 @@ var FuelTank = {
 	stop: func {},
 };
 
-var Smoker = {
-# Implements a external fuel tank.
+var Submodel = {
+# Implements a generic model, e.g., smoker or pod.
 #  no loop, but lots of listeners.
 #
-# Attributes:
-#  fuel tank number
 	new: func (name, short, model_path) {
-		var s = {parents:[Smoker]};
+		var s = {parents:[Submodel]};
 		s.type = name;
 		s.typeLong = name;
 		s.typeShort = short;
@@ -1015,22 +1186,18 @@ var Smoker = {
 	},
 
 	mount: func(pylon) {
-		# set capacity in fuel tank
 		setprop(me.modelPath, 1);
 	},
 
 	eject: func {
-		# spill out all the fuel?
 		setprop(me.modelPath, 0);
 	},
 
 	del: func {
-		# delete all the fuel
 		setprop(me.modelPath, 0);
 	},
 
 	getAmmo: func {
-		# return 0
 		return 0;
 	},
 
@@ -1054,22 +1221,13 @@ var Dummy = {
 		return s;
 	},
 
-	mount: func(pylon) {
-		
-	},
+	mount: func(pylon) {},
 
-	eject: func {
-		# spill out all the fuel?
-		
-	},
+	eject: func {},
 
-	del: func {
-		# delete all the fuel
-		
-	},
+	del: func {},
 
 	getAmmo: func {
-		# return 0
 		return 0;
 	},
 

@@ -1881,7 +1881,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <name>ctrl-q</name>
                 <desc>Trigger flare/chaff release</desc>
                 <binding>
-                    <command>property-toggle</command>
+                    <command>property-assign</command>
                     <property>/ai/submodels/submodel[4]/flare-release-cmd</property>
                     <value type="bool">true</value>
                 </binding>
@@ -2559,6 +2559,16 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         </fire>
     </damage>
 
+    <ai>
+        <submodels>
+            <submodel n="4">
+                <flare-release-cmd type="bool">false</flare-release-cmd>
+                <flare-auto-release-cmd type="double">0</flare-auto-release-cmd>
+                <flare-release type="bool">false</flare-release>
+            </submodel>
+        </submodels>
+    </ai>
+
     <payload>
         <armament>
             <use-fg-default-hud type="bool">true</use-fg-default-hud>
@@ -2930,6 +2940,7 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
         <!-- needs to be after the f14 modules - as otherwise the recipient will be registered before
                  the one that populates the aircraft fields in the notification -->
         <awg_9>
+            <file>Aircraft/f-14b/Nasal/Radar/radar-system-database.nas</file>
             <file>Aircraft/f-14b/Nasal/Radar/radar-system.nas</file>
             <file>Aircraft/f-14b/Nasal/Radar/awg-9.nas</file>
         </awg_9>
