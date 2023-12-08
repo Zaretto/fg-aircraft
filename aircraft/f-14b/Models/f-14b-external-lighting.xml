@@ -40,7 +40,7 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <type>material</type>
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
     </condition>
@@ -60,12 +60,20 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <object-name>pos_halo_WL</object-name>
     <object-name>pos_halo_Tail</object-name>
   </effect>
-
+  <animation>
+		<type>noshadow</type>
+    <object-name>coll_halo_CP</object-name>
+    <object-name>coll_halo_TL</object-name>
+    <object-name>coll_halo_TR</object-name>
+    <object-name>pos_halo_WR</object-name>
+    <object-name>pos_halo_WL</object-name>
+    <object-name>pos_halo_Tail</object-name>
+	</animation>
   <animation>
     <type>select</type>
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
     </condition>
@@ -73,8 +81,6 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
   </animation>
 
   <light-params>
-    <position-factor>sim/multiplay/generic/int[4]</position-factor>
-    <colision-factor>9</colision-factor>
     <afterburner-l>sim/multiplay/generic/int[8]</afterburner-l>
     <afterburner-r>sim/multiplay/generic/int[9]</afterburner-r>
   </light-params>
@@ -87,11 +93,34 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <!-- rembrandt halo -->
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+          <!-- Richard's way of making lights flash entirely in this expression. 
+               We take the sim time (decimal) and modulus this by the total duration of the blink
+               From this we subtract the ON time; which will give us a value of -blink_time..0
+               using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+               light
+              -->
+              <expression>
+          <min>
+            <product>
+              <min>
+                <difference>
+                  <mod>
+                    <property>/sim/time/elapsed-sec</property>
+                    <value>1.23</value> <!-- cycle time total (on+off)-->
+                  </mod>
+                  <value>0.08</value> <!-- on time -->
+                </difference>
+                <value>0</value>
+              </min>
+              <value>-1000</value>
+              <property>sim/multiplay/generic/bool[25]</property>
+            </product>
+            <value>1</value>
+          </min>
+        </expression>
         <value>0</value>
       </greater-than>
-      <property>sim/multiplay/generic/int[3]</property>
-    </condition>
+  </condition>
   </animation>
   <animation>
     <type>translate</type>
@@ -188,10 +217,37 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <!-- rembrandt halo -->
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
-      <property>sim/multiplay/generic/int[3]</property>
+      <greater-than>
+        <expression>
+          <!-- Richard's way of making lights flash entirely in this expression. 
+               We take the sim time (decimal) and modulus this by the total duration of the blink
+               From this we subtract the ON time; which will give us a value of -blink_time..0
+               using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+               light
+              -->
+          <min>
+            <product>
+              <min>
+                <difference>
+                  <mod>
+                    <property>/sim/time/elapsed-sec</property>
+                    <value>1.23</value> <!-- cycle time total (on+off)-->
+                  </mod>
+                  <value>0.08</value> <!-- on time -->
+                </difference>
+                <value>0</value>
+              </min>
+              <value>-1000</value>
+              <property>sim/multiplay/generic/bool[25]</property>
+            </product>
+            <value>1</value>
+          </min>
+        </expression>
+        <value>0</value>
+      </greater-than>
     </condition>
   </animation>
   <animation>
@@ -288,10 +344,37 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <!-- rembrandt halo -->
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
-      <property>sim/multiplay/generic/int[3]</property>
+      <greater-than>
+        <expression>
+          <!-- Richard's way of making lights flash entirely in this expression. 
+               We take the sim time (decimal) and modulus this by the total duration of the blink
+               From this we subtract the ON time; which will give us a value of -blink_time..0
+               using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+               light
+              -->
+          <min>
+            <product>
+              <min>
+                <difference>
+                  <mod>
+                    <property>/sim/time/elapsed-sec</property>
+                    <value>1.23</value> <!-- cycle time total (on+off)-->
+                  </mod>
+                  <value>0.08</value> <!-- on time -->
+                </difference>
+                <value>0</value>
+              </min>
+              <value>-1000</value>
+              <property>sim/multiplay/generic/bool[25]</property>
+            </product>
+            <value>1</value>
+          </min>
+        </expression>
+        <value>0</value>
+      </greater-than>
     </condition>
   </animation>
   <animation>
@@ -388,11 +471,60 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <object-name>RBT-coll_halo_WL</object-name>
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
-      <property>sim/multiplay/generic/int[4]</property>
-      <!--flasher -->
+      <greater-than>
+        <expression>
+          <!-- Richard's way of making lights flash or be steady entirely in this expression. 
+               We take the sim time (decimal) and modulus this by the total duration of the blink
+               From this we subtract the ON time; which will give us a value of -blink_time..0
+               using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+               light ; and then we add in (1-steady flag) to make it steady.
+               This value is then multiplied by the dim(0) off(1) bright(2) to give the value for the animation
+              -->
+        <product>
+            <table>
+              <property>sim/multiplay/generic/int[4]</property>
+              <entry>
+                <ind>0.0</ind>
+                <dep>3</dep>
+              </entry>
+              <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+              </entry>
+              <entry>
+                <ind>2</ind>
+                <dep>6</dep>
+              </entry>
+            </table>
+            <min>
+              <sum>
+                <product>
+                  <min>
+                    <difference>
+                      <mod>
+                        <property>/sim/time/elapsed-sec</property>
+                        <value>1.29</value> <!-- cycle time total (on+off)-->
+                      </mod>
+                      <value>0.09</value> <!-- on time -->
+                    </difference>
+                    <value>0</value>
+                  </min>
+                  <value>-1000</value> <!-- convert into positive seconds -->
+                </product>
+                <difference>
+                  <value>1</value>
+                  <property>sim/multiplay/generic/bool[26]</property>
+                </difference>
+              </sum>
+              <value>1</value>
+            </min>
+          </product>
+        </expression>
+        <value>0</value>
+      </greater-than>
       <not>
         <property>sim/multiplay/generic/int[5]</property>
         <!--wing torn -->
@@ -473,7 +605,21 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
   <animation>
     <type>scale</type>
     <object-name>pos_halo_WL</object-name>
-    <property>sim/multiplay/generic/int[4]</property>
+    <property>sim/multiplay/generic/int[3]</property>
+    <interpolation>
+      <entry>
+        <ind>0.0</ind>
+        <dep>3</dep>
+      </entry>
+      <entry>
+        <ind>1</ind>
+        <dep>0</dep>
+      </entry>
+      <entry>
+        <ind>2</ind>
+        <dep>6</dep>
+      </entry>
+    </interpolation>
     <x-min>1</x-min>
     <y-min>1</y-min>
     <z-min>1</z-min>
@@ -549,11 +695,60 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <object-name>RBT-coll_halo_WR</object-name>
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
-      <property>sim/multiplay/generic/int[4]</property>
-      <!--flasher -->
+      <greater-than>
+        <expression>
+          <!-- Richard's way of making lights flash or be steady entirely in this expression. 
+               We take the sim time (decimal) and modulus this by the total duration of the blink
+               From this we subtract the ON time; which will give us a value of -blink_time..0
+               using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+               light ; and then we add in (1-steady flag) to make it steady.
+               This value is then multiplied by the dim(0) off(1) bright(2) to give the value for the animation
+              -->
+          <product>
+            <table>
+              <property>sim/multiplay/generic/int[4]</property>
+              <entry>
+                <ind>0.0</ind>
+                <dep>3</dep>
+              </entry>
+              <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+              </entry>
+              <entry>
+                <ind>2</ind>
+                <dep>6</dep>
+              </entry>
+            </table>
+            <min>
+              <sum>
+                <product>
+                  <min>
+                    <difference>
+                      <mod>
+                        <property>/sim/time/elapsed-sec</property>
+                        <value>1.29</value> <!-- cycle time total (on+off)-->
+                      </mod>
+                      <value>0.09</value> <!-- on time -->
+                    </difference>
+                    <value>0</value>
+                  </min>
+                  <value>-1000</value> <!-- convert into positive seconds -->
+                </product>
+                <difference>
+                  <value>1</value>
+                  <property>sim/multiplay/generic/bool[26]</property>
+                </difference>
+              </sum>
+              <value>1</value>
+            </min>
+          </product>
+        </expression>
+        <value>0</value>
+      </greater-than>
       <not>
         <property>sim/multiplay/generic/int[5]</property>
         <!--wing torn -->
@@ -634,7 +829,21 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
   <animation>
     <type>scale</type>
     <object-name>pos_halo_WR</object-name>
-    <property>sim/multiplay/generic/int[4]</property>
+    <property>sim/multiplay/generic/int[3]</property>
+    <interpolation>
+      <entry>
+        <ind>0.0</ind>
+        <dep>3</dep>
+      </entry>
+      <entry>
+        <ind>1</ind>
+        <dep>0</dep>
+      </entry>
+      <entry>
+        <ind>2</ind>
+        <dep>6</dep>
+      </entry>
+    </interpolation>
     <x-min>1</x-min>
     <y-min>1</y-min>
     <z-min>1</z-min>
@@ -703,7 +912,7 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <far-m>10</far-m>
   </animation>
 
-  <!-- Navigation Wing Tail -->
+  <!-- Navigation Position Tail -->
   <animation>
     <type>select</type>
     <object-name>pos_halo_Tail</object-name>
@@ -711,11 +920,60 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <!-- rembrandt halo -->
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
-      <property>sim/multiplay/generic/int[4]</property>
-      <!--flasher -->
+      <greater-than>
+        <expression>
+          <!-- Richard's way of making lights flash or be steady entirely in this expression. 
+               We take the sim time (decimal) and modulus this by the total duration of the blink
+               From this we subtract the ON time; which will give us a value of -blink_time..0
+               using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+               light ; and then we add in (1-steady flag) to make it steady.
+               This value is then multiplied by the dim(0) off(1) bright(2) to give the value for the animation
+              -->
+          <product>
+            <table>
+              <property>sim/multiplay/generic/int[3]</property>
+              <entry>
+                <ind>0.0</ind>
+                <dep>3</dep>
+              </entry>
+              <entry>
+                <ind>1</ind>
+                <dep>0</dep>
+              </entry>
+              <entry>
+                <ind>2</ind>
+                <dep>6</dep>
+              </entry>
+            </table>
+            <min>
+              <sum>
+                <product>
+                  <min>
+                    <difference>
+                      <mod>
+                        <property>/sim/time/elapsed-sec</property>
+                        <value>1.29</value> <!-- cycle time total (on+off)-->
+                      </mod>
+                      <value>0.09</value> <!-- on time -->
+                    </difference>
+                    <value>0</value>
+                  </min>
+                  <value>-1000</value> <!-- convert into positive seconds -->
+                </product>
+                <difference>
+                  <value>1</value>
+                  <property>sim/multiplay/generic/bool[26]</property>
+                </difference>
+              </sum>
+              <value>1</value>
+            </min>
+          </product>
+        </expression>
+        <value>0</value>
+      </greater-than>
     </condition>
   </animation>
   <animation>
@@ -750,6 +1008,20 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <type>scale</type>
     <object-name>pos_halo_Tail</object-name>
     <property>sim/multiplay/generic/int[4]</property>
+    <interpolation>
+      <entry>
+        <ind>0.0</ind>
+        <dep>3</dep>
+      </entry>
+      <entry>
+        <ind>1</ind>
+        <dep>0</dep>
+      </entry>
+      <entry>
+        <ind>2</ind>
+        <dep>6</dep>
+      </entry>
+    </interpolation>
     <x-min>1</x-min>
     <y-min>1</y-min>
     <z-min>1</z-min>
@@ -825,7 +1097,7 @@ ref: http://www.anft.net/f-14/f14-detail-light.htm
     <object-name>taxi-lights</object-name>
     <condition>
       <greater-than>
-        <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+        <property>sim/multiplay/generic/bool[27]</property>
         <value>0</value>
       </greater-than>
       <property>sim/multiplay/generic/int[7]</property>

@@ -1102,6 +1102,9 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <bool n="1" type="bool" alias="/instrumentation/gci/bogeydope"/><!-- if change these to other bools, the l0k1 assets on github needs to be updated also -->
                 <bool n="2" type="bool" alias="/instrumentation/gci/cutoff"/>
                 <bool n="3" type="bool" alias="/damage/fire/serviceable"/>
+                <bool n="25" type="bool" alias="/sim/model/f-14b/controls/lighting/anti-collision-switch"/>
+                <bool n="26" type="bool" alias="/sim/model/f-14b/controls/lighting/position-flash-switch"/>
+                <bool n="27" type="bool" alias="/fdm/jsbsim/systems/electrics/ac-essential-bus1"/>
                 <bool n="28" type="bool"/> <!-- aoa indexer slow -->
                 <bool n="29" type="bool"/> <!-- aoa indexer onspeed -->
                 <bool n="30" type="bool"/> <!-- aoa indexer fast -->
@@ -1155,24 +1158,16 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <float n="11">0</float>
                 
                 <!-- /fdm/jsbsim/propulsion/engine[1]/alt/nozzle-pos-norm" -->
-                <int n="0" type="int">0</int>
-                <!-- fuel dump      -->
-                <int n="1" type="int">0</int>
-                <!-- formation slimmers -->
-                <int n="2" type="int">0</int>
-                <!-- radar-standby -->
-                <int n="3" type="int">0</int>
-                <!-- collision lights -->
-                <int n="4" type="int">0</int>
-                <!-- position lights -->
-                <int n="5" type="int">0</int>
-                <!-- left wing torn -->
-                <int n="6" type="int">0</int>
-                <!-- right wing torn -->
-                <int n="7" type="int">0</int>
+                <int n="0" type="int">0</int> <!-- fuel dump      -->
+                <int n="1" type="int">0</int> <!-- formation slimmers -->
+                <int n="2" type="int">0</int> <!-- radar-standby -->
+                <int n="3" type="int" alias="/sim/model/f-14b/controls/lighting/position-tail-switch"/> <!-- position lights, flash if bool[26] 0=dim, 1=off, 2=bright-->
+                <int n="4" type="int" alias="/sim/model/f-14b/controls/lighting/position-wing-switch"/> <!-- position lights, flash if bool[26] 0=dim, 1=off, 2=bright-->
+                <int n="5" type="int">0</int> <!-- left wing torn -->
+                <int n="6" type="int">0</int> <!-- right wing torn -->
+                <int n="7" alias="/controls/lighting/taxi-light"/>
 
-                <!--afterburner left-->
-                <int n="8" type="int">0</int>
+                <int n="8" desc="afterburner left" type="int">0</int>
                 <!--afterburner right-->
                 <int n="9" type="int">0</int>
                 <!--free-->

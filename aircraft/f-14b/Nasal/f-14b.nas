@@ -4,24 +4,10 @@ if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < 201620) {
     gui.showDialog("fg-version");
 }
 
-# Lighting 
 #setprop("sim/model/path","data/Aircraft/f-14b/F-14B.xml");
 
-# Collision lights flasher
-var anti_collision_switch = props.globals.getNode("sim/model/f-14b/controls/lighting/anti-collision-switch");
-aircraft.light.new("sim/model/f-14b/lighting/anti-collision", [0.09, 1.20], anti_collision_switch);
-
-# Navigation lights steady/flash dimmed/bright
-var position_flash_sw = props.globals.getNode("sim/model/f-14b/controls/lighting/position-flash-switch");
-var position = aircraft.light.new("sim/model/f-14b/lighting/position", [0.08, 1.15]);
-setprop("/sim/model/f-14b/lighting/position/enabled", 1);
-#setprop("sim/model/f-14b/fx/smoke-colors-demand",0);
-
-var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
 
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
-var sw_pos_prop = props.globals.getNode("sim/model/f-14b/controls/lighting/position-wing-switch", 1);
-var position_intens = 0;
 setprop("fdm/jsbsim/Factor1",1);
 setprop("sim/fdm/surface/override-level", 0);
 
@@ -192,50 +178,6 @@ set_flood_lighting_colour = func
 }
 
 
-position_switch = func(n) {
-	var sw_pos = sw_pos_prop.getValue();
-    print("position switch ",n," -> ",sw_pos);
-    if (sw_pos == 0){
-              position.switch(1);
-                position_intens = 3;
-    } else if (sw_pos == 1){
-                position.switch(0);
-                position_intens = 0;
-    } else if (sw_pos == 2){
-                position.switch(1);
-                position_intens = 6;
-    }
-}
-
-position_flash_switch = func {
-	if (! position_flash_sw.getBoolValue() ) {
-		position_flash_sw.setBoolValue(1);
-		position.blink();
-	} else {
-		position_flash_sw.setBoolValue(0);
-		position.cont();
-	}
-}
-
-var position_flash_init  = func {
-	if (position_flash_sw.getBoolValue() ) {
-		position.blink();
-	} else {
-		position.cont();
-	}
-	var sw_pos = sw_pos_prop.getValue();
-	if (sw_pos == 0 ) {
-		position_intens = 3;
-		position.switch(1);
-	} elsif (sw_pos == 1 ) {
-		position_intens = 0;
-		position.switch(0);
-	} elsif (sw_pos == 2 ) {
-		position_intens = 6;
-		position.switch(1);
-	}
-}
-
 
 # Canopy switch animation and canopy move. Toggle keystroke and 2 positions switch.
 var cnpy = aircraft.door.new("canopy", 3.9);
@@ -305,8 +247,6 @@ var right_elev_output  = props.globals.getNode("surface-positions/right-elevator
 var elev_output   = props.globals.getNode("surface-positions/elevator-pos-norm", 1);
 var aileron = props.globals.getNode("surface-positions/left-aileron-pos-norm", 1);
 
-var lighting_collision = props.globals.getNode("sim/model/f-14b/lighting/anti-collision/state", 1);
-var lighting_position  = props.globals.getNode("sim/model/f-14b/lighting/position/state", 1);
 var left_wing_torn     = props.globals.getNode("sim/model/f-14b/wings/left-wing-torn");
 var right_wing_torn    = props.globals.getNode("sim/model/f-14b/wings/right-wing-torn");
 
@@ -319,11 +259,8 @@ var right_elev_generic = props.globals.getNode("sim/multiplay/generic/float[5]",
 var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1);
 # sim/multiplay/generic/int[1] used by formation slimmers.
 # sim/multiplay/generic/int[2] used by radar standby.
-var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
-var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
 var left_wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/int[5]",1);
 var right_wing_torn_generic    = props.globals.getNode("sim/multiplay/generic/int[6]",1);
-var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[7]",1);
 # sim/multiplay/generic/string[0] used by external loads, see ext_stores.nas.
 
 var timedMotions = func {
@@ -469,11 +406,9 @@ var timedMotions = func {
     }
 	slat_generic.setDoubleValue(slat_output.getValue());
     #wing_sweep_generic.setDoubleValue(currentSweep);
-	lighting_collision_generic.setIntValue(lighting_collision.getValue());
-	lighting_position_generic.setIntValue(lighting_position.getValue() * position_intens);
+
 	left_wing_torn_generic.setIntValue(left_wing_torn.getValue());
 	right_wing_torn_generic.setIntValue(right_wing_torn.getValue());
-	lighting_taxi_generic.setIntValue(lighting_taxi.getValue());
 
 setprop("/sim/multiplay/generic/float[8]", getprop("/engines/engine[0]/augmentation-burner" ));
 setprop("/sim/multiplay/generic/float[9]", getprop("/engines/engine[1]/augmentation-burner" ));
@@ -619,7 +554,6 @@ var F14_exec = {
 
 subsystem = F14_exec.new("F14_exec");
 
-position_flash_init();
 slat_output.setDoubleValue(0);
 
 #----------------------------------------------------------------------------

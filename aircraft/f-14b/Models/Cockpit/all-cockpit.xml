@@ -17420,10 +17420,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
                 <max>2</max>
                 <wrap>false</wrap>
             </binding>
-            <binding>
-                <command>nasal</command>
-                <script>f14.position_switch(0)</script>
-            </binding>
+
         </action>
     </animation>
     <animation>
@@ -17463,8 +17460,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <action>
             <button>0</button>
             <binding>
-                <command>nasal</command>
-                <script>f14.position_flash_switch()</script>
+                <command>property-toggle</command>
+                <property>sim/model/f-14b/controls/lighting/position-flash-switch</property>
             </binding>
         </action>
     </animation>
