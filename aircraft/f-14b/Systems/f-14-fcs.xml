@@ -21,27 +21,98 @@
                 <max> 82 </max>
             </clipto>
         </pure_gain>
+    <!-- Implement variable sweep rate based on manual.
+            1. Work out the rate (deg/second) wing-sweep-rate-due-to-zload
+            2. Calculate the rate (per frame) wing-sweep-rate
+            3. work out the change from demand to actual
+            4. Deadband this to stop flutter
+            5. adjust wing sweep using (2)
+        -->
 
-      <kinematic name="fcs/wing-sweep-norm">
-            <noscale />
-            <input>fcs/wing-sweep-dmd-flap-limit</input>
-            <traverse>
-                <setting>
-                    <position>0.294117647</position>
-                    <time>3.25</time>
-                    <!-- F14AAD-1 15 deg/sec sweep rate, (68-20)=48; 48/15 = 3.25 -->
-                </setting>
-                <setting>
-                    <position>1</position>
-                    <time>3.25</time>
-                </setting>
-                <setting>
-                    <position>1.102941176</position>
-                    <time>5</time>
-                </setting>
-            </traverse>
-        </kinematic>
+        <fcs_function name="fcs/wing-sweep-rate-due-to-zload">
+            <description>
+                F-14-AAP-1 2.19.1 wing sweep rate can be significantly reduced or stalled by negative-g or large positive G excursions.
+                So from this I estimate that probably the wingsweep rate will be stalled at -1.5g and also start to reduce at over +3G
+                15 deg/sec sweep rate, (68-20)=48; 48/15 = 3.25 
+                </description>
+            <function>
+                <table>
+                    <independentVar lookup="row">-accelerations/n-pilot-z-norm</independentVar>
+                    <independentVar lookup="column">fcs/wing-sweep-norm</independentVar>
+                    <tableData>
+                                   0       1    1.01
+                        -1.5    0.00    0.00    0.00
+                        -1      0.50    0.50    0.04
+                        0       0.75    0.75    0.06
+                        0.5     1.00    1.00    0.08
+                        1       1.00    1.00    0.08
+                        3       1.00    1.00    0.08
+                        4       0.70    0.70    0.06
+                        5       0.50    0.50    0.04
+                        6       0.30    0.30    0.02
+                        7       0.00    0.00    0.00
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+        <fcs_function name="fcs/wing-sweep-rate">
+            <function>
+                <product>
+                    <property>fcs/wing-sweep-rate-due-to-zload</property>
+                    <property>simulation/channel-dt</property>
+                </product>
+            </function>
+        </fcs_function>
+        <fcs_function name="fcs/wing-sweep-delta-1">
+            <function>
+                <difference>
+                    <property>fcs/wing-sweep-dmd-flap-limit</property>
+                    <property>fcs/wing-sweep-norm-q</property>
+                </difference>
+            </function>
+        </fcs_function>
+        <deadband name="fcs/wing-sweep-delta">
+            <input>fcs/wing-sweep-delta-1</input>
+            <width>0.1</width>
+        </deadband>
+        <fcs_function name="fcs/wing-sweep-norm-q">
+            <function>
+                <ifthen>
+                    <gt>
+                        <property>fcs/wing-sweep-delta</property>
+                        <value>0</value>
+                    </gt>
+                    <sum>
+                        <property>fcs/wing-sweep-norm</property>
+                        <property>fcs/wing-sweep-rate</property>
+                    </sum>
+                    <ifthen>
+                        <lt>
+                            <property>fcs/wing-sweep-delta</property>
+                            <value>0</value>
+                        </lt>
+                        <difference>
+                            <property>fcs/wing-sweep-norm</property>
+                            <property>fcs/wing-sweep-rate</property>
+                        </difference>
+                        <ifthen>
+                            <gt>
+                                <property>fcs/wing-sweep-rate</property>
+                                <value>0</value>
+                            </gt>
+                            <property>fcs/wing-sweep-dmd-flap-limit</property>
+                            <property>fcs/wing-sweep-norm</property>
+                        </ifthen>
+                    </ifthen>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0.29</min>
+                <max>1.2</max>
+            </clipto>
 
+            <output>fcs/wing-sweep-norm</output>
+        </fcs_function>
 
         <!-- manual sweep; it is only permitted to sweep the wings more back than the CADC requires so effectively
                 we limit the sweep to the computed wing-sweep-cadc-pos -->
@@ -389,7 +460,6 @@ Figure 2-54.  Longitudinal System Authority
         </switch>
 
 
-
         <!-- spoilers -->
         <!-- spoilers -4deg when flaps deployed more than 25 deg (2.21.1.3 Main Flaps)-->
         <switch name="fcs/spoiler-zeropos">
@@ -500,7 +570,7 @@ Figure 2-54.  Longitudinal System Authority
                 <max>  50 </max>
             </range>
         </aerosurface_scale>
-        
+
         <!--2.23.6 Direct Lift Control 
             Before DLC can be engaged, the following conditions are required:
         1. Flaps down greater than 25deg
@@ -2114,7 +2184,7 @@ Figure 2-54.  Longitudinal System Authority
     </channel>
 
     <channel name="alpha-probe">
-    <!-- 
+        <!-- 
         Simulation of the alpha measurement devices,
             The aircraft has 3 of these; one on each side near the cockpit and one on the nose boom.
             As of 2021-07-14 I have not managed to find any indication of how these are handled so
