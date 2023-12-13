@@ -413,7 +413,7 @@ var AircraftModule =
             var frame_count = math.mod(notification.FrameCount,8);
 
             ownship_pos.set_latlon(notification.AcLat, notification.AcLon);
-            
+            notification.ownship_pos = ownship_pos;
             burner = math.mod(burner + 1,4);
             BurnerN.setValue(burner);
             

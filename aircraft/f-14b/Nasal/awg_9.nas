@@ -11,7 +11,6 @@
  #                       : be invoked in a controlled manner.
  #                       : RWR (Radar Warning Receiver) is computed in the radar loop for better performance
  #                       : AWG-9 Radar computes the nearest target for AIM-9.
- #                       : (F-14) Optionally provides the 'tuned carrier' tacan channel support for ARA-63 emulation
  #                       :
  #                       : This version is based on Richard's optimised, partioned version from the F-15 as of 09/2017
  #                       : the list of targets is only rebuilt when models are added and removed; which improves performance
@@ -59,13 +58,15 @@ var knownSurface = {
     "tower":     nil,
 };
 
-#var this_model = "f16";
 var this_model = "f-14b";
+#var this_model = "f15";
+#var this_model = "f16";
+
 var ownship_pos = geo.Coord.new();
 var cockpitNotifier = nil;
 var radar_ranges = [5,10,20,40,50,100,200];
 
-#var this_model = "f15";
+
 
 var ElapsedSec        = props.globals.getNode("sim/time/elapsed-sec");
 var SwpFac            = props.globals.getNode("sim/model/"~this_model~"/instrumentation/awg-9/sweep-factor", 1);
@@ -76,6 +77,7 @@ var HudTgtTDev        = props.globals.getNode("sim/model/"~this_model~"/instrume
 var HudTgtTDeg        = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/target-total-angle", 1);
 var HudTgtClosureRate = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/closure-rate", 1);
 var HudTgtDistance = props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/hud/distance", 1);
+var DebugMode         = props.globals.getNode("instrumentation/radar/debug-mode", 1);
 var AzField           = props.globals.getNode("instrumentation/radar/az-field", 1);
 var HoField           = props.globals.getNode("instrumentation/radar/ho-field", 1);
 var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range",1);
@@ -92,9 +94,9 @@ var SWTgtRange        = props.globals.getNode("sim/model/"~this_model~"/systems/
 var RadarServicable   = props.globals.getNode("instrumentation/radar/serviceable",1);
 var SelectTargetCommand =props.globals.getNode("sim/model/"~this_model~"/instrumentation/radar-awg-9/select-target",1);
 var LaserArm          = props.globals.getNode("controls/armament/laser-arm-dmd",1);
-var RefStrenght       = props.globals.getNode("instrumentation/radar/ref-strength",1);
-var RefRange          = props.globals.getNode("instrumentation/radar/ref-range",1);
-var LimitedSelect     = props.globals.getNode("instrumentation/radar/limited-select",1);
+#var RefStrenght       = props.globals.getNode("instrumentation/radar/ref-strength",1);
+#var RefRange          = props.globals.getNode("instrumentation/radar/ref-range",1);
+#var LimitedSelect     = props.globals.getNode("instrumentation/radar/limited-select",1);
 
 
 var myRadarStrength_rcs = getprop("instrumentation/radar/ref-strength");
@@ -171,6 +173,7 @@ ScanPartitionSize.setIntValue(10); # size of partition to run per frame.
 # |                   |                  |
 #  `''''''''''''''''''|'''''''''''''''''''
 
+#
 # local variables related to the simulation of the radar.
 var az_fld            = AzField.getValue();
 var l_az_fld          = 0;
@@ -505,7 +508,7 @@ var az_scan = func(notification) {
             # called infrequently so the list must not take into account something that may
            # change between invocations of the update.
             u.set_behind_terrain(0);
-var msg = "";
+#var msg = "";
 #pickingMethod = 0;
 #var v1 = TerrainManager.IsVisible(u.propNode,notification);
 #pickingMethod = 1;
@@ -1397,6 +1400,34 @@ else
 	get_reciprocal_bearing : func {
 		return geo.normdeg(me.get_bearing() + 180);
 	},
+# Azimuth field quadrants.
+# 120 means +/-60, as seen in the diagram below.
+#  _______________________________________
+# |                   H                  |
+# |               _.--+---.              |
+# |    13 L   ,-''    |    `--.          |
+# |         ,'        |        `.        |
+# |        /          |          \       |
+# |       /           |           \      |
+# |      /            |            \     |
+# |     90 L          |           90 R   |
+#.+-------------------+------------------+
+# |     :             |             ;    |
+# |      \            |            /     |
+# |  7 L  \           |           /      |
+# |        \          |          /       |
+# |         `.        |        ,'  4 R   |
+# |           '--.    |    _.-'          |
+# |               `---+--''              |
+# |                   T                  |
+#  `''''''''''''''''''|'''''''''''''''''''
+    get_aspect: func {
+        me.result = math.mod(me.get_reciprocal_bearing() + math.mod(180-awg_9.our_true_heading,360),360);
+        if (me.result > 180)
+            return -math.mod(me.result ,180);
+        else
+            return -(me.result-180);
+    },
 	get_deviation : func(true_heading_ref) {
 		me.deviationA =  deviation_normdeg(true_heading_ref, me.get_bearing());
 		return me.deviationA;
@@ -1519,6 +1550,9 @@ else
         return 0;
     },
     get_Coord: func(){
+        if (me.lat != nil) {
+            me.TgTCoord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
+        } else {
             if (me.x != nil)
             {
                 var x = me.x.getValue();
@@ -1526,14 +1560,13 @@ else
                 var z = me.z.getValue();
 
                 me.TgTCoord.set_xyz(x, y, z);
-        } elsif (me.lat != nil) {
-            me.TgTCoord.set_latlon(me.lat.getValue(), me.lon.getValue(), me.Alt.getValue() * FT2M);
             } else {
                 return nil;#hopefully wont happen
             }
+        }
         return geo.Coord.new(me.TgTCoord);#best to pass a copy
     },
-
+    getCoord : func { return me.get_Coord();},
 	get_closure_rate : func() {
         #
         # calc closure using trig as the elapsed time method is not really accurate enough and jitters considerably

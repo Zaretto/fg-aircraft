@@ -704,7 +704,7 @@ var F15MainModule =
 var input = {
     CurrentIASnode      : "velocities/airspeed-kt",
     CurrentMachnode     : "velocities/mach",
-    CurrentAltnode      : "position/altitude-ft",
+    altitude_ft         : "position/altitude-ft",
     wowLnode            : "gear/gear[1]/wow",
     wowRnode            : "gear/gear[2]/wow",
     Alphanode           : "orientation/alpha-indicated-deg",
