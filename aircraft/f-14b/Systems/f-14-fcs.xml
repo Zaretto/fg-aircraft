@@ -36,25 +36,31 @@
                 15 deg/sec sweep rate, (68-20)=48; 48/15 = 3.25 
                 </description>
             <function>
-                <table>
-                    <independentVar lookup="row">-accelerations/n-pilot-z-norm</independentVar>
-                    <independentVar lookup="column">fcs/wing-sweep-norm</independentVar>
-                    <tableData>
-                                   0       1    1.01
-                        -1.5    0.00    0.00    0.00
-                        -1      0.50    0.50    0.04
-                        0       0.75    0.75    0.06
-                        0.5     1.00    1.00    0.08
-                        1       1.00    1.00    0.08
-                        3       1.00    1.00    0.08
-                        4       0.70    0.70    0.06
-                        5       0.50    0.50    0.04
-                        6       0.30    0.30    0.02
-                        7       0.00    0.00    0.00
-                    </tableData>
+                <product>
+                    <table description="factor to adjust for G load">
+                        <independentVar lookup="row">-accelerations/n-pilot-z-norm</independentVar>
+                        <independentVar lookup="column">fcs/wing-sweep-norm</independentVar>
+                        <tableData>
+                                      0      1      1.01
+                            -1.5    0.00    0.00    0.00
+                            -1      0.50    0.50    0.13
+                            0       0.75    0.75    0.19
+                            0.5     1.00    1.00    0.25
+                            1       1.00    1.00    0.25
+                            3       1.00    1.00    0.25
+                            4       0.70    0.70    0.18
+                            5       0.50    0.50    0.13
+                            6       0.30    0.30    0.08
+                            7       0.00    0.00    0.00
+                        </tableData>
                 </table>
+                <!-- convert 15deg/sec into the normalised equivalent based on a range of 0..1 being 68 degrees -->
+                <value>15</value>
+                <value>0.014</value> 
+            </product>
             </function>
         </fcs_function>
+
         <fcs_function name="fcs/wing-sweep-rate">
             <function>
                 <product>
@@ -63,6 +69,7 @@
                 </product>
             </function>
         </fcs_function>
+        
         <fcs_function name="fcs/wing-sweep-delta-1">
             <function>
                 <difference>
@@ -71,11 +78,13 @@
                 </difference>
             </function>
         </fcs_function>
+        
         <deadband name="fcs/wing-sweep-delta">
             <input>fcs/wing-sweep-delta-1</input>
-            <width>0.1</width>
+            <width>0.002</width>
         </deadband>
-        <fcs_function name="fcs/wing-sweep-norm-q">
+
+        <fcs_function name="fcs/wing-sweep-norm-0">
             <function>
                 <ifthen>
                     <gt>
@@ -110,7 +119,6 @@
                 <min>0.29</min>
                 <max>1.2</max>
             </clipto>
-
             <output>fcs/wing-sweep-norm</output>
         </fcs_function>
 
