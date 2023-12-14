@@ -38,7 +38,7 @@
             <function>
                 <product>
                     <table description="factor to adjust for G load">
-                        <independentVar lookup="row">-accelerations/n-pilot-z-norm</independentVar>
+                        <independentVar lookup="row">accelerations/pilot-gdamped</independentVar>
                         <independentVar lookup="column">fcs/wing-sweep-norm</independentVar>
                         <tableData>
                                       0      1      1.01
@@ -74,7 +74,7 @@
             <function>
                 <difference>
                     <property>fcs/wing-sweep-dmd-flap-limit</property>
-                    <property>fcs/wing-sweep-norm-q</property>
+                    <property>fcs/wing-sweep-norm</property>
                 </difference>
             </function>
         </fcs_function>
@@ -84,7 +84,7 @@
             <width>0.002</width>
         </deadband>
 
-        <fcs_function name="fcs/wing-sweep-norm-0">
+        <fcs_function name="fcs/wing-sweep-norm">
             <function>
                 <ifthen>
                     <gt>
@@ -179,7 +179,7 @@
             <input>accelerations/n-pilot-z-norm</input>
             <delay type="time">0.007</delay>
             <gain>-1</gain>
-            <output>/accelerations/pilot-gdamped</output>
+            <output>accelerations/pilot-gdamped</output>
         </sensor>
 
         <sensor name="velocities/p-aero-rad_sec-sensor">
