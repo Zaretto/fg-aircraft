@@ -714,4 +714,5 @@ var input = {
     currentGnode        : "accelerations/pilot-gdamped",
 };
 emexec.ExecModule.register("F-15 Main", input, F15MainModule);
-emexec.ExecModule.transmitter.OverrunDetection(9);
+if (emexec.ExecModule.transmitter["OverrunDetection"] != nil)
+    emexec.ExecModule.transmitter.OverrunDetection(16);
