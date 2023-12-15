@@ -183,19 +183,19 @@ var armament_update2 = func {
 
 var setCockpitLights = func {
     if (ArmSwitch.getValue() > 0 and pylons.fcs.isLock()) {
-        setprop("sim/model/f15/systems/armament/launch-light", 1);
+        setprop("sim/model/f15/systems/armament/lock-light", 1);
     } else {
-        setprop("sim/model/f15/systems/armament/launch-light", 0);
+        setprop("sim/model/f15/systems/armament/lock-light", 0);
     }
-    return;
+
     var dlzArray = getDLZ();
     if (dlzArray == nil or size(dlzArray) == 0) {
-        setprop("sim/model/f15/systems/armament/lock-light", 0);
+        setprop("sim/model/f15/systems/armament/launch-light", 0);
     } else {
         if (dlzArray[4] < dlzArray[1]) {
-            setprop("sim/model/f15/systems/armament/lock-light", 1);
+            setprop("sim/model/f15/systems/armament/launch-light", 1);
         } else {
-            setprop("sim/model/f15/systems/armament/lock-light", 0);
+            setprop("sim/model/f15/systems/armament/launch-light", 0);
         }
     }
 }

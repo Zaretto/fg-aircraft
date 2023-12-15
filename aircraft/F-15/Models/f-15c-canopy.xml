@@ -51,7 +51,8 @@
         <object-name>CanopyWire</object-name >
         <object-name>StandbyCompass</object-name>
         <object-name>CanopyRefuelReadyLightLamp</object-name>
-        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyShootLightLamp</object-name>
+        <object-name>CanopyLockLightLamp</object-name>
         <object-name>CanopyBackCover</object-name>
         <object-name>CanopyLockShootLight</object-name>
         <object-name>CanopyRefuelReadyLight</object-name>
@@ -88,7 +89,8 @@
         <object-name>CanopyWire</object-name >
         <object-name>StandbyCompass</object-name>
         <object-name>CanopyRefuelReadyLightLamp</object-name>
-        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyShootLightLamp</object-name>
+        <object-name>CanopyLockLightLamp</object-name>
         <object-name>CanopyBackCover</object-name>
         <object-name>CanopyLockShootLight</object-name>
         <object-name>CanopyRefuelReadyLight</object-name>
@@ -185,11 +187,25 @@
     
     <animation>
         <type>select</type>
-        <object-name>CanopyLockShootLightLamp</object-name>
+        <object-name>CanopyShootLightLamp</object-name>
         <condition>
             <or>
                 <property>sim/model/f15/lights/master-test-lights</property>
                 <property>sim/model/f15/systems/armament/launch-light</property>
+            </or>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>CanopyLockLightLamp</object-name>
+        <condition>
+            <or>
+                <property>sim/model/f15/lights/master-test-lights</property>
+                <property>sim/model/f15/systems/armament/lock-light</property>
             </or>
             <greater-than>
                 <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -232,15 +248,15 @@
         <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
         <object-name>CanopyMirrors</object-name >
         <object-name>CanopyWire</object-name >
-        <object-name>CanopyLockShootLight</object-name>
         <object-name>WindscreenCanopyFrame</object-name>
         <object-name>Canopy</object-name>
         <object-name>CanopyBackCover</object-name>
         <object-name>CanopyFasteners</object-name>
         <object-name>WindscreenFasteners</object-name>
         <object-name>CanopyRefuelReadyLightLamp</object-name>
-        <object-name>CanopyLockShootLightLamp</object-name>
         <object-name>CanopyLockShootLight</object-name>
+        <object-name>CanopyShootLightLamp</object-name>
+        <object-name>CanopyLockLightLamp</object-name>
         <object-name>CanopyRefuelReadyLight</object-name>
     </effect>
 

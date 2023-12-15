@@ -772,19 +772,22 @@ var selectCheck = func {
         {
             dist = awg_9.active_u.get_range();
         }
-        print("Sel prev target:");
+        if (awg9_trace)
+            print("Sel prev target:");
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});#richard is this needed, or is the list guarenteed to be sorted by distance already?
         var prv=nil;
         foreach (var u; sorted_dist) 
         {
-            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
-            if(u.Callsign.getValue() == active_u_callsign and prv != nil)
-        {
-                if (prv != nil)
-                    print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
-                else
-                    print("first in list");
+            if (awg9_trace)
+                printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            if(u.Callsign.getValue() == active_u_callsign and prv != nil) {
+                if (awg9_trace){
+                    if (prv != nil)
+                        print("Located prev: ",prv.Callsign.getValue(), prv.get_range());
+                    else
+                        print("first in list");
+                }
                 break;
             }
             if(u.get_display() == 0) {
@@ -798,7 +801,8 @@ var selectCheck = func {
             if (idx > 0)
             {
                 prv = sorted_dist[idx];
-                print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
+                if (awg9_trace)
+                    print("Using last in list ",idx," = ",prv.Callsign.getValue(), prv.get_range());
             }
         }
 
@@ -811,7 +815,8 @@ var selectCheck = func {
             else
                 active_u_callsign = nil;
                 
-            printf("prv: %s %3.1f", prv.Callsign.getValue(), prv.get_range());
+            if (awg9_trace)
+                printf("prv: %s %3.1f", prv.Callsign.getValue(), prv.get_range());
         }
         awg_9.sel_prev_target =0;
     }
@@ -823,25 +828,29 @@ var selectCheck = func {
         {
             dist = awg_9.active_u.get_range();
         }
-        print("Sel next target: dist=",dist);
+        if (awg9_trace)
+            print("Sel next target: dist=",dist);
 
         var sorted_dist = sort (awg_9.tgts_list, func (a,b) {a.get_range()-b.get_range()});
         var nxt=nil;
         foreach (var u; sorted_dist) 
             {
-            printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
+            if (awg9_trace)
+                printf("TGT:: %5.2f (%5.2f) : %s ",u.get_range(), dist, u.Callsign.getValue());
             if(nxt == nil and u.get_display()) {
                 nxt = u;
             }
                 if(u.Callsign.getValue() == active_u_callsign)
                 {
-                print("Skipping active target ",active_u_callsign);
+                    if (awg9_trace)
+                        print("Skipping active target ",active_u_callsign);
                     continue;
                 }
             if(u.get_range() > dist and u.get_display())
                 {
                     nxt = u;
-                print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
+                    if (awg9_trace)
+                        print("Located next ",nxt.Callsign.getValue(), nxt.get_range());
                     break;
                 }
             }
@@ -859,7 +868,8 @@ var selectCheck = func {
             else
                 active_u_callsign = nil;
                 
-            printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
+            if (awg9_trace)
+                printf("nxt: %s %3.1f", nxt.Callsign.getValue(), nxt.get_range());
         }
         awg_9.sel_next_target =0;
     }
