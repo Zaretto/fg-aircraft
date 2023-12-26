@@ -381,7 +381,7 @@ var bore_loop = func {
         if (aim != nil and aim.type == "AIM-9") {
             if (standby == 1) {
                 #aim.setBore(1);
-                aim.setContacts(awg_9.completeList);
+                aim.setContacts(awg_9.getCompleteList());
                 aim.commandDir(0,-3.5);# the real is bored to -6 deg below real bore
                 bore = 1;
             } else {
