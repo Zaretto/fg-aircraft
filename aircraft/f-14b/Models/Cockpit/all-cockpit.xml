@@ -6792,16 +6792,15 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     <animation>
         <type>rotate</type>
         <object-name>tacan-bearing</object-name>
-        <property>orientation/heading-magnetic-deg</property>
-        <factor>-1</factor>
-        <axis>
-            <object-name>tid-axis</object-name>
-        </axis>
-    </animation>
-    <animation>
-        <type>rotate</type>
-        <object-name>tacan-bearing</object-name>
-        <property>instrumentation/tacan/indicated-mag-bearing-deg</property>
+        <expression>
+            <sum>
+                <product>
+                    <property>instrumentation/HSD/course-selected-deg</property>
+                    <value>-1</value>
+                </product>
+                <property>instrumentation/tacan/indicated-mag-bearing-deg</property>
+            </sum>
+        </expression>
         <axis>
             <object-name>tid-axis</object-name>
         </axis>
@@ -15257,7 +15256,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <binding>
                 <command>property-adjust</command>
                 <property>instrumentation/nav[1]/radials/selected-deg</property>
-                <step>-1</step>
+                <factor>1</factor>
                 <min>0</min>
                 <max>360</max>
                 <wrap>true</wrap>
@@ -15265,7 +15264,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <binding>
                 <command>property-adjust</command>
                 <property>instrumentation/nav[2]/radials/selected-deg</property>
-                <step>-1</step>
+                <factor>1</factor>
                 <min>0</min>
                 <max>360</max>
                 <wrap>true</wrap>
@@ -15341,8 +15340,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <object-name>test-case-axis</object-name>
         </axis>
     </animation>
-    
-    
+
+
     <!--Renamed objects: 
       tid: hr_tid
       rng-label: hr_rng-label
@@ -15374,7 +15373,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <blue>0.0</blue>
         </emission>
     </animation>
-    
+
     <!-- For VDI do not really have a way to animate contrast currently.
         <animation>
         <object-name></object-name>
@@ -15386,7 +15385,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <blue>0.0</blue>
         </emission>
     </animation> -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -16230,7 +16229,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </condition>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -16356,7 +16355,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     </animation>
     <!-- lighting -->
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -16791,7 +16790,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
     </animation>
 
 
-        <!-- Chronometer Start Stop Button -->
+    <!-- Chronometer Start Stop Button -->
     <animation>
         <name>start-stop-reset</name>
         <type>pick</type>
@@ -17104,7 +17103,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
-    
+
     <!-- VDI on/off Switch -->
     <animation>
         <type>rotate</type>
@@ -17303,7 +17302,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <blue>0.8</blue>
         </emission>
     </animation>
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -17315,8 +17314,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <name>f14panel-knob</name>
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
     </effect>
-    
-    
+
+
     <!--Renamed objects: 
       drum-1: rvc_drum-1
       drum-2: rvc_drum-2
@@ -17386,7 +17385,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </action>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -17534,7 +17533,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </action>
     </animation>
 
-    
+
     <!-- Instruments Wheel-->
     <animation>
         <type>knob</type>
@@ -17635,7 +17634,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
-        
+
     <!-- Hook Bypass Switch -->
     <animation>
         <type>knob</type>
@@ -17679,11 +17678,10 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
-    
+
     <!-- lighting -->
-    
-    
-    
+
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -17871,7 +17869,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </action>
         </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -19155,7 +19153,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </emission>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -19287,8 +19285,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
-    
-    
+
+
     <!-- bleed air source -->
     <animation>
         <type>pick</type>
@@ -19585,7 +19583,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </axis>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -19646,7 +19644,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </axis>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -20221,7 +20219,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </action>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -20233,8 +20231,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <inherits-from>Aircraft/f-14b/Models/Effects/f14panel-knob</inherits-from>
         <object-name>-knob</object-name>
     </effect>
-    
-    
+
+
     <!--Renamed objects: 
       tws-auto: rddp_tws-auto
       pulse-srch: rddp_pulse-srch
@@ -22954,7 +22952,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </condition>
     </animation>
     <!-- lighting -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -23870,7 +23868,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         </axis>
     </animation>
 
-<!-- END Armament selector switches -->
+    <!-- END Armament selector switches -->
 
     <animation>
         <type>knob</type>
@@ -23892,9 +23890,9 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
- 
+
     <!-- Lightning -->
-    
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
@@ -32652,7 +32650,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <blue>0.0</blue>
         </emission>
     </animation>
-  
+
     <!--Merged from Aircraft/f-14b/Models/Cockpit/fuel-gauge-rio.xml-->
     <animation>
         <type>select</type>
@@ -33133,7 +33131,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <type>rotate</type>
         <object-name>h_tacan-bearing</object-name>
         <property>orientation/heading-magnetic-deg</property>
-        <factor>-1</factor>&gt;
+        <factor>-1</factor>
         <axis>
             <object-name>h_compass-rose-axis</object-name>
         </axis>
@@ -33932,7 +33930,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             <blue>0.0</blue>
         </emission>
     </animation>
-    
+
     <!--Merged from Aircraft/f-14b/Models/Cockpit/rio-ecm-display.xml-->
     <name>ECM-DISPLAY</name>
     <animation>
@@ -34067,7 +34065,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
-<!-- IFF Panel -->
+    <!-- IFF Panel -->
 <animation>
     <type>knob</type>
     <object-name>rio-iff-code-knob</object-name>
@@ -34765,8 +34763,8 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
             </binding>
         </action>
     </animation>
-    
-<!-- RIO TEST PANEL -->    
+
+    <!-- RIO TEST PANEL -->    
 
 <animation>
     <type>knob</type>
@@ -34845,7 +34843,7 @@ Note Only stores loaded on BRU−32 parent racks can be AUX jettisoned.
         <object-name>rio-datalink-panel-mount</object-name>
         <object-name>rio-ddi-panel</object-name>
     </effect>
-   
+
     <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
     <effect>
         <name>f14panel</name>
