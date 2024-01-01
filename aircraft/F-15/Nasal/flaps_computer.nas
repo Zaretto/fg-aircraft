@@ -18,14 +18,11 @@ controls.applyBrakes = func(v, which = 0)  {
         {
             setprop("controls/flight/speedbrake", 0);
             weAppliedSpeedBrake=0;
-#            print("F14: dual purpose brakes release release airbrake brakes ",v,which);
         }
         if (which <= 0) { interpolate("/controls/gear/brake-left", v, controls.fullBrakeTime); }
         if (which >= 0) { interpolate("/controls/gear/brake-right", v, controls.fullBrakeTime); }
 
         weAppliedWheelBrake = which;
-
-#        print("F14: wheelbrakes ",v,":",which);
     }
     else
     {
@@ -34,7 +31,6 @@ controls.applyBrakes = func(v, which = 0)  {
             if (weAppliedWheelBrake <= 0) { interpolate("/controls/gear/brake-left", 0, controls.fullBrakeTime); }
             if (weAppliedWheelBrake >= 0) { interpolate("/controls/gear/brake-right", 0, controls.fullBrakeTime); }
             weAppliedWheelBrake=0;
-#            print("F14: dual purpose brakes release release wheel brakes ",v,which);
         }
 
     	if (v and (throttle_0.getValue() >= 0.98 or throttle_1.getValue() >= 0.98))
@@ -43,7 +39,6 @@ controls.applyBrakes = func(v, which = 0)  {
             return;
         }
         weAppliedSpeedBrake=which;
-#        print("F14: airbrakes  down ",v,which);
         setprop("controls/flight/speedbrake", v);
     }
 }

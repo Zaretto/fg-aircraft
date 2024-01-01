@@ -122,7 +122,7 @@ setlistener("autopilot/route-manager/current-wp", func {
                         var cruiseAlt = getprop("autopilot/route-manager/cruise/altitude-ft");
                         if (cruiseAlt != nil and cruiseAlt > groundElev)
                         {
-                            print("Using cruise alt ",cruiseAlt, demalt);
+                            logprint(3, "Using cruise alt ",cruiseAlt, demalt);
                             demalt = cruiseAlt;
                         }
                         else

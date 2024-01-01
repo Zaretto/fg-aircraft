@@ -310,7 +310,7 @@ var system_stop = func
 # Controls
 var masw = func(v)
 {
-    print("Master arm ",v.getValue());
+    logprint(2,"Master arm ",v.getValue());
 
     if (v.getValue())
     {

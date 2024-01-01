@@ -1,0 +1,301 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Altimeter by Richard Harrison rjh@zaretto.com ; based on A-10 by xiii -->
+<PropertyList>
+    <path>altimeter.ac</path>
+
+    <animation>
+        <type>rotate</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <object-name>needle</object-name>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.36</factor>
+        <center>
+            <x-m>-5.70147</x-m>
+            <y-m>0.17061</y-m>
+            <z-m>0.9943</z-m>
+        </center>
+        <axis>
+            <x>-1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+    </animation>
+
+    <!-- altimeter drum counter -->
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-1</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.001</factor>
+        <offset>-100</offset>
+        <step>100</step>
+        <scroll>10</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-4</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <scroll>10</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-2</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.0001</factor>
+        <offset>-1000</offset>
+        <step>1000</step>
+        <scroll>25</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-3</object-name>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+        </condition>
+        <property>instrumentation/altimeter/indicated-altitude-ft</property>
+        <factor>0.00001</factor>
+        <offset>-10000</offset>
+        <step>10000</step>
+        <scroll>25</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>negativ-flag</object-name>
+        <condition>
+            <or>
+                <!-- use the negative flag to indicate no power -->
+                <less-than>
+                    <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                    <value>0</value>
+                </less-than>
+                <equals>
+                    <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                    <value>0</value>
+                </equals>
+            </or>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>below-1000-flag</object-name>
+        <condition>
+            <less-than>
+                <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                <value>1000</value>
+            </less-than>
+        </condition>
+    </animation>
+    <animation>
+        <type>select</type>
+        <object-name>below-10000-flag</object-name>
+        <condition>
+            <less-than>
+                <property>instrumentation/altimeter/indicated-altitude-ft</property>
+                <value>10000</value>
+            </less-than>
+        </condition>
+    </animation>
+
+    <!-- barometer drum counter, numbered from left to right 43.21 -->
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-inhg-1</object-name>
+        <property>instrumentation/altimeter/setting-inhg</property>
+        <factor>10</factor>
+        <offset>-0.01</offset>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-inhg-2</object-name>
+        <property>instrumentation/altimeter/setting-inhg</property>
+        <factor>1</factor>
+        <offset>-0.1</offset>
+        <step>0.1</step>
+        <scroll>0.01</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-inhg-3</object-name>
+        <property>instrumentation/altimeter/setting-inhg</property>
+        <factor>0.1</factor>
+        <offset>-1</offset>
+        <step>1</step>
+        <scroll>0.01</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <type>textranslate</type>
+        <object-name>drum-inhg-4</object-name>
+        <property>instrumentation/altimeter/setting-inhg</property>
+        <factor>0.01</factor>
+        <offset>-10</offset>
+        <step>10</step>
+        <scroll>0.01</scroll>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <!-- Altimeter Ingh Setting Knob -->
+    <animation>
+        <type>knob</type>
+        <object-name>barometric-pressure-knob</object-name>
+        <property>instrumentation/altimeter/setting-inhg</property>
+        <factor>0</factor>
+        <center>
+            <x-m>-5.6889</x-m>
+            <y-m>0.1359</y-m>
+            <z-m>0.9632</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>instrumentation/altimeter/setting-inhg</property>
+
+                <factor>0.01</factor>
+                <min>27.90</min>
+                <max>31.40</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+    </animation>
+
+    <!-- lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+
+    <animation>
+        <object-name>instrument</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <greater-than>
+                <property>controls/lighting/flt-inst</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>/controls/lighting/flt-inst</factor-prop>
+            <red>  0.1000</red>
+            <green>0.0576</green>
+            <blue> 0.0161</blue>
+            <red-prop>/controls/lighting/instrument-red</red-prop>
+            <green-prop>/controls/lighting/instrument-green</green-prop>
+            <blue-prop>/controls/lighting/instrument-blue</blue-prop>
+        </emission>
+    </animation>
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+        <object-name>instrument</object-name>
+    </effect>
+</PropertyList>

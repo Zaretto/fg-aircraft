@@ -15,25 +15,25 @@ var message_id = nil;
 ###############################################################################
 # Send message wrappers.
 var send_wps_state = func (state) {
-#	print("Message to send: ",state);
+#	logprint(3, "Message to send: ",state);
 	if (typeof(broadcast) != "hash") {
-		print("Error: send_wps_state: typeof(broadcast) != hash");
+		logprint(3, "Error: send_wps_state: typeof(broadcast) != hash");
 		return;
 	}
 	broadcast.send(message_id["ext_load_state"] ~ Binary.encodeInt(state));
-#	print(message_id["ext_load_state"]," ",Binary.encodeInt(state));
-#	print(message_id["ext_load_state"] ~ Binary.encodeInt(state));
+#	logprint(3, message_id["ext_load_state"]," ",Binary.encodeInt(state));
+#	logprint(3, message_id["ext_load_state"] ~ Binary.encodeInt(state));
 }
 
 ###############################################################################
 # MP broadcast message handler.
 var handle_message = func (sender, msg) {
-#	print("Message from "~ sender.getNode("callsign").getValue() ~ " size: " ~ size(msg));
+#	logprint(3, "Message from "~ sender.getNode("callsign").getValue() ~ " size: " ~ size(msg));
 #	debug.dump(msg);
 	var type = msg[0];
 	if (type == message_id["ext_load_state"][0]) {
 		var state = Binary.decodeInt(substr(msg, 1));
-#	print("ext_load_state:", msg, " ", state);
+#	logprint(3, "ext_load_state:", msg, " ", state);
 	update_ext_load(sender, state);
 	}
 }
@@ -44,7 +44,7 @@ var listen_to = func (pilot) {
 	if (pilot.getNode("sim/model/path") != nil and
         find("Aircraft/F-15/Models/F-15", pilot.getNode("sim/model/path").getValue()) != -1)
     {
-#		print("Accepted ",  pilot.getNode("sim/model/path").getValue());
+#		logprint(3, "Accepted ",  pilot.getNode("sim/model/path").getValue());
 
 		if (getprop("/sim/walker/outside"))
 			setprop("sim/walker/key-triggers/outside-toggle",1);
@@ -53,7 +53,7 @@ var listen_to = func (pilot) {
 	}
     else
     {
-#		print("Not listening to ", pilot.getNode("sim/model/path").getValue());
+#		logprint(3, "Not listening to ", pilot.getNode("sim/model/path").getValue());
 		return 0;
 	}
 }
@@ -110,7 +110,7 @@ var update_ext_load = func(sender, state)
 			Station.getNode("selected", 1).setBoolValue(1);
             payload.getNode("weight-lb", 1).setDoubleValue(222); # used to detect if rails / pylons required
 			c -= 3;
-#			print("arm ",str," ",s," ",o);
+#			logprint(3, "arm ",str," ",s," ",o);
 		}
         else 
         {
@@ -146,7 +146,7 @@ tank_sel = 1;
             var fuel_n = FuelNode.getChild ("tank", fuel_idx, 1);
             fuel_idx = fuel_idx + 1;
             fuel_n.getNode("selected", 1).setBoolValue(tank_sel);
-#			print("tank ",str," ",s," ",o," ",tank_sel);
+#			logprint(3, "tank ",str," ",s," ",o," ",tank_sel);
 		}
     	payload.getNode("selected", 1).setValue(o);
 		s -= 1 ;
@@ -160,7 +160,7 @@ tank_sel = 1;
 # Initialization.
 var mp_network_init = func (active_participant)
 {
-    print("F-15 MP network broadcast init");
+    logprint(3, "F-15 MP network broadcast init");
 	Binary = mp_broadcast.Binary;
 	broadcast =
 		mp_broadcast.BroadcastChannel.new

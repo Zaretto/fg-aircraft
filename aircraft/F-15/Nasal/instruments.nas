@@ -40,9 +40,9 @@ var EmesaryRecipient =
         new_class.Receive = func(notification)
         {
             if (notification.NotificationType == "GeoEventNotification") {
-                print("received GeoNotification from ",notification.Callsign);
-                print ("  pos=",notification.Position.lat(),notification.Position.lon(),notification.Position.alt());
-                print ("  kind=",notification.Kind, " skind=",notification.SecondaryKind);
+                logprint(2,"received GeoNotification from ",notification.Callsign);
+                logprint(2,"  pos=",notification.Position.lat(),notification.Position.lon(),notification.Position.alt());
+                logprint(2,"  kind=",notification.Kind, " skind=",notification.SecondaryKind);
                 if (notification.FromIncomingBridge) {
                     if (notification.Kind == 1) { # created
                         if (notification.SecondaryKind >=80 and notification.SecondaryKind <= 95) {
@@ -280,7 +280,7 @@ controls.stepSpoilers = func(s) {
 
 var common_init = func
 {
-    print("Setting replay medium res to 50hz");
+    logprint(3, "Setting replay medium res to 50hz");
     setprop("sim/hud/visibility[0]",0);
     setprop("sim/hud/visibility[1]",0);
     aoa_max.setDoubleValue(0);
@@ -297,22 +297,22 @@ var common_init = func
 
     #
     # this is just to ensure that we start with pressure in the util hyds
-    setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",-500);
+    setprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-preload-input",-500);
     settimer(func {
-        setprop("fdm/jsbsim/systems/hydraulics/util-system-preload-input",0); 
+        setprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-preload-input",0); 
     }, 4);
     if (getprop("fdm/jsbsim/position/h-agl-ft") != nil) {
         if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) {
-            print("Starting with gear down as below 500 ft");
+            logprint(3, "Starting with gear down as below 500 ft");
             setprop("controls/gear/gear-down", 1);
             setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",1);
 
             if (getprop("fdm/jsbsim/position/h-agl-ft") < 50) {
                 setprop("controls/gear/brake-parking",1);
-                print("--> Set parking brake as below 50 ft");
+                logprint(3, "--> Set parking brake as below 50 ft");
             }
         } else {
-            print("Starting with gear up as above 500 ft");
+            logprint(3, "Starting with gear up as above 500 ft");
             setprop("controls/gear/gear-down", 0);
             setprop("fdm/jsbsim/fcs/gear/gear-dmd-norm",0);
             setprop("controls/gear/brake-parking",0);
@@ -323,7 +323,7 @@ var common_init = func
 # Init ####################
 var prop = nil;
 var init = func {
-	print("Initializing f15 Systems");
+	logprint(3, "Initializing F-15 Systems");
     var modelNotification = emesary.Notification.new("F15Model", nil, 0);
     modelNotification.root_node = props.globals;
     emesary.GlobalTransmitter.NotifyAll(modelNotification);
@@ -367,7 +367,7 @@ setlistener("sim/position-finalized", func (is_done) {
 #        common_carrier_init();
     }
     if(first_time_run)  {
-        print(">> First time run");
+        logprint(3, ">> First time run");
         setprop("consumables/fuel/tank[5]/selected",0);
         setprop("consumables/fuel/tank[6]/selected",0);
         setprop("consumables/fuel/tank[7]/selected",0);

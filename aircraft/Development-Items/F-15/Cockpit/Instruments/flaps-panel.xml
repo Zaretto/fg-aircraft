@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+
+<!-- F-15 Flaps panel by Richard Harrison; rjh@zaretto.com  -->
+
+<PropertyList>
+    <path>flaps-panel.ac</path>
+
+    <animation>
+        <type>pick</type>
+        <visible>true</visible>
+        <object-name>hook-switch</object-name>
+        <action>
+            <button>0</button>
+            <binding>
+                <command>property-toggle</command>
+                <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+            </binding>
+        </action>
+    </animation>
+    <animation>
+        <object-name>hook-switch</object-name>
+        <type>rotate</type>
+        <property>fdm/jsbsim/systems/hook/tailhook-cmd-norm</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>30</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>-10</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.6995</x-m>
+            <y-m>-0.411</y-m>
+            <z-m>0.8898</z-m>
+        </center>
+        <axis>
+            <x>0</x>
+            <y>-1</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+    <animation>
+        <object-name>flaps-light-transit</object-name>
+        <type>material</type>
+        <ambient>
+            <factor-prop>fdm/jsbsim/systems/electrics/flaps-transit-light</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </ambient>
+        <!--<diffuse>
+            <factor-prop>fdm/jsbsim/systems/electrics/flaps-transit-light</factor-prop>
+            <red>  1.000</red>
+          <green>1</green>
+          <blue> 1</blue>
+      </diffuse>-->
+        <emission>
+            <factor-prop>fdm/jsbsim/systems/electrics/flaps-transit-light</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
+    </animation>
+    <animation>
+        <object-name>flaps-light-down</object-name>
+        <type>material</type>
+        <ambient>
+            <factor-prop>fdm/jsbsim/systems/electrics/flaps-down-light</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </ambient>
+        <!--<diffuse>
+          <factor-prop>sim/model/f15/instrumentation/warnings/master-caution</factor-prop>
+          <red>  1.000</red>
+          <green>1</green>
+          <blue> 1</blue>
+      </diffuse>-->
+        <emission>
+            <factor-prop>fdm/jsbsim/systems/electrics/flaps-down-light</factor-prop>
+            <red>  1.000</red>
+            <green>1</green>
+            <blue> 1</blue>
+        </emission>
+    </animation>
+
+
+    <animation>
+        <type>knob</type>
+        <object-name>emerg-lg-handle</object-name>
+        <property>fdm/jsbsim/gear/emergency-handle</property>
+        <factor>-20</factor>
+        <center>
+            <x-m>-5.7092</x-m>
+            <y-m>-0.4654</y-m>
+            <z-m> 0.767</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+
+        <action>
+            <binding>
+                <command>property-adjust</command>
+                <property>fdm/jsbsim/gear/emergency-handle</property>
+                <factor>1</factor>
+                <min>0</min>
+                <max>2</max>
+                <wrap>false</wrap>
+            </binding>
+        </action>
+
+        <!--<release>
+            <binding>
+                <command>property-adjust</command>
+                <property>sim/model/f15/controls/electrics/emerg-lg-handle</property>
+                <step>0</step>
+                <min>0</min>
+                <max>0</max>
+            </binding>
+        </release>-->
+    </animation>
+    <animation>
+        <type>translate</type>
+        <object-name>emerg-lg-handle</object-name>
+        <property>sim/model/f15/controls/electrics/emerg-lg-handle</property>
+        <interpolation>
+            <entry>
+                <ind>0</ind>
+                <dep>0</dep>
+            </entry>
+            <entry>
+                <ind>1</ind>
+                <dep>0.02</dep>
+            </entry>
+        </interpolation>
+        <center>
+            <x-m>-5.7092</x-m>
+            <y-m>-0.4654</y-m>
+            <z-m> 0.767</z-m>
+        </center>
+        <axis>
+            <x>1</x>
+            <y>0</y>
+            <z>0</z>
+        </axis>
+    </animation>
+
+
+    <!-- Lighting -->
+    <animation>
+        <object-name>mount</object-name>
+        <type>material</type>
+        <condition>
+            <greater-than>
+                <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
+                <value>0</value>
+            </greater-than>
+            <not>
+                <property>/sim/rendering/rembrandt/enabled</property>
+            </not>
+        </condition>
+        <emission>
+            <factor-prop>/controls/lighting/panel-norm</factor-prop>
+            <red>  1.000</red>
+            <green>0.576</green>
+            <blue> 0.161</blue>
+            <red-prop>/controls/lighting/panel-red</red-prop>
+            <green-prop>/controls/lighting/panel-green</green-prop>
+            <blue-prop>/controls/lighting/panel-blue</blue-prop>
+
+        </emission>
+    </animation>
+    <!-- implicit ALS lighting see http://wiki.flightgear.org/ALS_technical_notes -->
+    <effect>
+        <name>f15panel-left</name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15panel-left</inherits-from>
+        <object-name>emerg-lg-panel</object-name>
+    </effect>
+    <!-- ALS Model Interior (Shadow) -->
+    <effect>
+        <name>f15interior</name>
+        <inherits-from>Aircraft/F-15/Models/Effects/f15interior</inherits-from>
+        <object-name>mount</object-name>
+    </effect>
+
+</PropertyList>

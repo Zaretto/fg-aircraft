@@ -371,7 +371,7 @@ var CrashAndStress = {
 		var time = me.fdm.input.simTime.getValue();
 		if (override == TRUE or (time - me.lastMessageTime) > 3) {
 			me.lastMessageTime = time;
-			print(str);
+			logprint(3, str);
 			screen.log.write(str, 0.7098, 0.5372, 0.0);# solarized yellow
 		}
 	},

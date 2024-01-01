@@ -165,10 +165,10 @@ var backseat_update = maketimer(UPDATE_PERIOD, func
 
 # Init ####################
 var init = func {
-	print("Initializing f15 Back Seat Systems");
+
+	logprint(3, "Initializing F-15 Back Seat Systems");
     if (!getprop("/sim/walker/outside"))
         setprop("sim/walker/key-triggers/outside-toggle",1);
-
     #
     #
     # Set the electrics for yasim (basic electrical model)

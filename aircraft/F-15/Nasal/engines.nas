@@ -165,7 +165,7 @@ var computeEngines = func {
     {
         if (getprop("controls/flight/speedbrake", 0))
         {
-            logprint(LOG_INFO, "Retract speedbrake when throttles advanced to MIL");
+            logprint(2, "Retract speedbrake when throttles advanced to MIL");
             setprop("controls/flight/speedbrake", 0);
         }
     }
@@ -242,7 +242,7 @@ var jfs_set_running = func{
     var engine_crank_switch_pos = engine_crank_switch_pos_prop.getValue();
 
 
-#    logprint(LOG_INFO, "Jfs set running callback");
+    logprint(2, "Jfs set running callback");
     if (jfs_running)
     {
         return;
@@ -261,11 +261,11 @@ var jfs_set_running = func{
     jfs_starting = 0;
 
     if (engine_crank_switch_pos == 1) {
-#        logprint(LOG_INFO, "JFS: Now set starter L");
+        logprint(2, "JFS: Now set starter L");
         setprop("controls/engines/engine[0]/starter",1);
     }
     if (engine_crank_switch_pos == 2) {
-#        logprint(LOG_INFO, "JFS: Now set starter R");
+        logprint(2, "JFS: Now set starter R");
         setprop("controls/engines/engine[1]/starter",1);
     }
     startupTimer.stop();
@@ -277,7 +277,7 @@ var jfs_set_running = func{
 
 var jfs_invoke_running_checks = func{
 
-#    logprint(LOG_INFO, "Jfs invoke shutdown  callback");
+    logprint(2, "Jfs invoke shutdown  callback");
 
     var total_fuel = getprop("consumables/fuel/total-fuel-lbs");
     if (getprop("sim/model/f15/controls/electrics/jfs-starter"))
@@ -292,7 +292,7 @@ var jfs_invoke_running_checks = func{
                 if (c.getName() == "tank" and c.getNode("level-lbs", 1).getValue() > 0)
                 {
                     var newval = c.getNode("level-lbs", 1).getValue()-1;
-#                    logprint(LOG_INFO, "reduce ",c.getName()," to ",newval);
+                    logprint(2, "reduce ",c.getName()," to ",newval);
                     c.getNode("level-lbs", 1).setValue(newval);
                     return;
                 }
@@ -328,7 +328,7 @@ var jfs_invoke_running_checks = func{
         setprop("controls/engines/engine[1]/starter",0);
 		engine_crank_switch_pos_prop.setIntValue(0);
     }
-#    logprint(LOG_INFO, "Jfs invoke shutdown cancel callback");
+    logprint(2, "Jfs invoke shutdown cancel callback");
 #    shutdownTimer.stop();
 }
 
@@ -353,29 +353,31 @@ setlistener("sim/model/f15/controls/electrics/jfs-start-handle", func {
 
     if (jfs_starter and !start_handle_out)
     {
-#        logprint(LOG_INFO, "JFS Starter pulled");
+        logprint(2, "JFS Starter pulled");
         if (!jfs_running)
         {
             shutdownTimer.restart(jfsShutdownTime);
 
             if (!jfs_starting)
             {
-                if  (getprop("fdm/jsbsim/systems/hydraulics/util-system-accumulator-psi") > 500)
+                if  (getprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-psi") > 500)
                 {
                     jfs_starting = 1;
                     jfs_start.setValue(10);
                     startupTimer.restart(jfsStartupTime);
-                    setprop("fdm/jsbsim/systems/hydraulics/jfs-bleed", 100); # psi/sec
-#                logprint(LOG_INFO, "Start JFS");
+                    setprop("fdm/jsbsim/systems/hydraulics/jfs-bleed", 56); # psi/sec (estimated)
+                    logprint(2, "Start JFS");
                 }
                 else
-                    setprop("/sim/messages/pilot", "No util hydraulic pressure cannot start JFS");
+                    setprop("/sim/messages/pilot", "JFS accumulator needs to be recharged - cannot start JFS");
 
             }
+            else
+                logprint(3, "JFS cannot start because already starting");
         }
         else
         {
-            logprint(LOG_INFO, "JFS cannot start because already running or engines running or no hydraulics");
+            logprint(3, "JFS cannot start because already running or engines running or no hydraulics");
         }
     }
     start_handle_out = jfs_starter;
@@ -394,7 +396,7 @@ setlistener("sim/model/f15/controls/electrics/jfs-starter", func {
         jfs_starting = 0;
         jfs_running_lamp.setValue(jfs_running);
         setprop("fdm/jsbsim/propulsion/jfs-running",jfs_running);
-#        logprint(LOG_INFO, "Jfs shutdown");
+        logprint(3, "Jfs shutdown");
     }
 });
 

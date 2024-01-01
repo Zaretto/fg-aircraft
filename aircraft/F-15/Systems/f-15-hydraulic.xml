@@ -1,13 +1,16 @@
 <?xml version="1.0"?>
 <!--
         Description: F15 hydraulics system
-        Notes: Supports engine and emergency pumps, with bidi transfer
-               (1) no electrical modelling so will always have hyd pressure
-               (2) Flight controls require hyds and will not function if no pressure
-               (3) pump failure supported (no pressure depending on pump/configuration of other pumps)
-               (4) Has utility system which has psi and accumulators and powers JFS
+        Notes: Supports engine pumps, with bidi transfer
+               (1) Flight controls CAS and ARI require hyds 
+               (2) pump failure supported (no pressure depending on pump/configuration of other pumps)
+               (3) Has utility system which has psi and accumulators 
+               (4) JFS has its own accumulator powered by utility
+               
+               The simulation here doesn't take into account the accumulators and modelling this will 
+               be a future improvement.
+
         Author: Richard Harrison (rjh@zaretto.com)
-        References: F14-AAD-1 p2-68 to p2-76, F-15 Figure 1-15
     -->
 
 <system name="hydraulic">
@@ -53,41 +56,6 @@ engines at 11 percent rpm.
             </test>
         </switch>
 
-        <switch name="systems/hydraulics/emerg-pump-low-speed-psi">
-            <default value="0"/>
-            <test  logic="AND" value="2001">
-                <!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
-                systems/hydraulics/emerg-system-pump-failed eq 0
-                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-                systems/electrics/ac-right-main-bus gt 5
-            </test>
-            <test  logic="AND" value="2001">
-                <!--                systems/hydraulics/emerg-flyt-hyd-switch eq 0  -->
-                systems/hydraulics/emerg-system-pump-failed eq 0
-                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-                propulsion/jfs-running ne 0
-            </test>
-            <test  logic="AND" value="0">
-                systems/hydraulics/emerg-pump-low-speed-psi ge 1800
-                systems/hydraulics/emerg-system-pump-failed ne 0
-                systems/hydraulics/flight-system-psi gt systems/hydraulics/emerg-pump-auto-deactivation
-                systems/hydraulics/combined-system-psi gt systems/hydraulics/emerg-pump-auto-deactivation
-            </test>
-        </switch>
-        <switch name="systems/hydraulics/emerg-pump-on">
-            <default value="0"/>
-            <test value="1">
-                systems/hydraulics/emerg-pump-low-speed-psi gt 0
-            </test>
-            <test value="1">
-                systems/hydraulics/flight-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-            </test>
-            <test value="1">
-                systems/hydraulics/combined-system-psi lt systems/hydraulics/emerg-pump-auto-activation
-            </test>
-        </switch>
         <pure_gain name="systems/hydraulics/bidi-combined-available-psi">
             <input>systems/hydraulics/combined-system-psi</input>
             <gain>systems/hydraulics/bidi-combined-to-flight-system-factor</gain>
@@ -103,7 +71,6 @@ engines at 11 percent rpm.
         </summer>
 
         <summer name="systems/hydraulics/emerg-transfer-to-flight-system-psi">
-            <input>systems/hydraulics/emerg-pump-low-speed-psi</input>
             <input>-systems/hydraulics/bidi-transfer-combined-to-flight-system-psi</input>
             <input>-systems/hydraulics/flight-system-pump-psi</input>
             <clipto>
@@ -170,7 +137,6 @@ engines at 11 percent rpm.
         </summer>
 
         <summer name="systems/hydraulics/emerg-transfer-to-combined-system-psi">
-            <input>systems/hydraulics/emerg-pump-low-speed-psi</input>
             <input>-systems/hydraulics/bidi-transfer-flight-to-combined-system-psi</input>
             <input>-systems/hydraulics/combined-system-pump-psi</input>
             <clipto>
@@ -206,26 +172,21 @@ engines at 11 percent rpm.
             <input>systems/hydraulics/elevator-bleed</input>
         </summer>
 
-        <!-- the basic bleed load is different depending on which pump is supplying the flow; the emergency
-     pump has less power and we model this simply by a factor that is the correlation between the flow
-     and the pressure - based on the emergency pump psi
--->
-        <scheduled_gain name="systems/hydraulics/flight-system-bleed">
-            <input>systems/hydraulics/flight-system-bleed-basic</input>
-            <table>
-                <independentVar lookup="row">systems/hydraulics/emerg-pump-low-speed-psi</independentVar>
-                <tableData>
-                    0      30
-                    2001     100
-                </tableData>
-            </table>
+        <fcs_function name="systems/hydraulics/flight-system-bleed">
+            <function>
+                <product>
+                    <property>systems/hydraulics/flight-system-bleed-basic</property>
+                    <value>100</value>
+                </product>
+            </function>
             <clipto>
                 <min> 0 </min>
                 <max>300</max>
             </clipto>
-        </scheduled_gain>
+        </fcs_function>
 
     </channel>
+
     <channel name="Util" execrate="4">
         <switch name="systems/hydraulics/util-system-feedin">
             <default value="0"/>
@@ -236,29 +197,288 @@ engines at 11 percent rpm.
                 systems/hydraulics/flight-system-psi gt 2000
             </test>
         </switch>
+
+        <fcs_function name="systems/hydraulics/util-system-rate">
+            <function>
+                <product>
+                    <property>systems/hydraulics/util-system-feedin</property>
+                    <value>0.6</value>
+                </product>
+            </function>
+            <clipto>
+                <min>50</min>
+                <max>800</max>
+            </clipto>
+        </fcs_function>
+
         <summer name="systems/hydraulics/util-system-bleed">
-            <input>systems/hydraulics/emerg-gear-bleed</input>
-            <input>systems/hydraulics/jfs-bleed</input>
             <input>systems/hydraulics/util-system-feedin</input>
-            <input>systems/hydraulics/util-system-preload-input</input>
+            <input>-systems/hydraulics/emerg-gear-bleed</input>
+            <input>-systems/hydraulics/emerg-gen-util-bleed</input>
+            <input>-systems/hydraulics/jfs-accumulator-feedin-psi</input>
         </summer>
-        <summer name="systems/hydraulics/util-system-psi">
-            <input>systems/hydraulics/combined-system-psi</input>
-            <input>systems/hydraulics/flight-system-psi</input>
+        <fcs_function name="systems/hydraulics/util-system-input-psi">
+            <function>
+                <sum>
+                    <property>systems/hydraulics/util-system-psi</property>
+                    <product>
+                        <property>systems/hydraulics/util-system-bleed</property>
+                        <property>simulation/channel-dt</property>
+                    </product>
+            </sum>
+            </function>
             <clipto>
                 <min>0</min>
-                <max>3000</max>
+                <max>5000</max>
             </clipto>
-        </summer>
-        <actuator name="systems/hydraulics/util-system-accumulator">
-            <input>systems/hydraulics/util-system-psi</input>
-            <rate_limit>systems/hydraulics/util-system-bleed</rate_limit>
-            <output>systems/hydraulics/util-system-accumulator-psi</output>
+        </fcs_function>
+
+
+        <actuator name="systems/hydraulics/util-system-accumulator-psi">
+            <input>systems/hydraulics/util-system-input-psi</input>
+            <rate_limit>systems/hydraulics/util-system-rate</rate_limit>
+            <output>systems/hydraulics/util-system-psi</output>
             <clipto>
                 <min>0</min>
                 <max>4000</max>
             </clipto>
         </actuator>
+
+        <!-- items connected to the util system -->
+        <switch name="systems/hydraulics/emerg-gen">
+            <default value="0"/>
+            <test  logic="AND" value="1">
+               propulsion/jfs-running eq 0
+               systems/hydraulics/util-system-accumulator-psi ge 1100
+              systems/electrics/emerg-generator-status eq 1
+              systems/electrics/lgenerator-kva lt 20
+              systems/electrics/rgenerator-kva lt 20
+            </test>
+        </switch>
+        <fcs_function name="systems/hydraulics/emerg-gen-util-bleed">
+            <function>
+                <product>
+                    <property>systems/hydraulics/emerg-gen</property>
+                    <value>20</value>
+                </product>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>20</max>
+            </clipto>
+        </fcs_function>
     </channel>
 
+            <!--
+            We have 
+            inputs
+                   pump            system-b
+                    |                  |     (b-feedin)
+                    +- - - - - - - - - +
+                              |
+                              |
+                          accumulator
+         -->
+
+    <property value="0">systems/hydraulics/b-system-psi</property>
+
+    <channel name="HydsA">
+        <scheduled_gain name="systems/hydraulics/a-pump-psi">
+            <input>propulsion/engine[1]/n2</input>
+            <table>
+                <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
+                <independentVar lookup="column">systems/hydraulics/flight-system-pump-failed</independentVar>
+                <tableData>
+                    0      1
+                    0       0      0
+                    18    130      0
+                </tableData>
+            </table>
+            <clipto>
+                <min>0</min>
+                <max>systems/hydraulics/normal-pressure</max>
+            </clipto>
+        </scheduled_gain>
+
+        <fcs_function name="systems/hydraulics/a-feedin-b-psi-s">
+            <description>
+            </description>
+            <function>
+                <product>
+                    <max>
+                        <difference>
+                            <value>2000</value>
+                            <property>systems/hydraulics/a-accumulator-psi</property>
+                        </difference>
+                        <value>0</value>
+                    </max>
+                    <property>systems/hydraulics/b-system-psi</property>
+                    <value>0.01</value>
+                </product>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>300</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="systems/hydraulics/a-accumulator-input-psi-s">
+            <function>
+                <sum>
+                    <property>-systems/hydraulics/a-bleed</property>
+                    <property>systems/hydraulics/a-feedin-b-psi-s</property>
+                    <property>systems/hydraulics/a-pump-psi</property>
+                </sum>
+            </function>
+            <clipto>
+                <min>-2000</min>
+                <max>2000</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="systems/hydraulics/a-accumulator-rate">
+            <function>
+                <table>
+                    <independentVar lookup="row">systems/hydraulics/a-accumulator-input-psi-s</independentVar>
+                    <tableData>
+                        0       1
+                        1    430
+                    </tableData>
+                </table>
+    
+                <!-- <sum>
+                    <property>systems/hydraulics/jfs-bleed</property>
+                    <property>systems/hydraulics/jfs-accumulator-preload-input</property>
+                </sum> -->
+            </function>
+        </fcs_function>
+
+        <fcs_function name="systems/hydraulics/a-accumulator-input-psi">
+            <function>
+                <sum>
+                    <property>systems/hydraulics/a-accumulator-psi</property>
+                    <product>
+                        <property>systems/hydraulics/a-accumulator-input-psi-s</property>
+                        <property>simulation/channel-dt</property>
+                    </product>
+                </sum>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>2000</max>
+            </clipto>
+        </fcs_function>
+
+        <actuator name="systems/hydraulics/a-accumulator">
+            <input>systems/hydraulics/a-accumulator-input-psi</input>
+            <rate_limit>systems/hydraulics/a-accumulator-rate</rate_limit>
+            <output>systems/hydraulics/a-accumulator-psi</output>
+            <clipto>
+                <min>0</min>
+                <max>2000</max>
+            </clipto>
+        </actuator>
+
+        <fcs_function name="systems/hydraulics/a-bleed">
+            <function>
+                <product>
+                    <property>systems/hydraulics/emerg-gen</property>
+                    <value>20</value>
+                </product>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>20</max>
+            </clipto>
+        </fcs_function>
+    </channel>
+    <!-- <channel name="HydsB">
+        <fcs_function name="systems/hydraulics/b-bleed">
+            <function>
+                <sum>
+                    <property>systems/hydraulics/a-feedin-b-psi-s</property>
+                </sum>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>20</max>
+            </clipto>
+        </fcs_function>
+
+        <actuator name="systems/hydraulics/b-accumulator">
+            <input>systems/hydraulics/b-accumulator-input-psi</input>
+            <rate_limit>systems/hydraulics/b-accumulator-rate</rate_limit>
+            <output>systems/hydraulics/b-accumulator-psi</output>
+            <clipto>
+                <min>0</min>
+                <max>2000</max>
+            </clipto>
+        </actuator>
+    </channel> -->
+    <channel name="JFSaccumulator" execrate="4">
+        <fcs_function name="systems/hydraulics/jfs-accumulator-feedin-psi">
+            <description>
+                 JFS accu is approx 10 times smaller than Util accum so adjust psi downwards by a
+                 factor of 10; this will then permit the same value to be used to deplete the utility
+                 and also replenish the JFS
+
+                 We limit to 300 psi/sec by way of an approximation of flow. 
+
+                 The factor of 10 and the limit of 300 are estimations because I could find no data.
+            </description>
+            <function>
+                <product>
+                    <max>
+                        <difference>
+                            <value>2000</value>
+                            <property>systems/hydraulics/jfs-accumulator-input-psi</property>
+                        </difference>
+                        <value>0</value>
+                    </max>
+                    <property>systems/hydraulics/util-system-accumulator-psi</property>
+                    <value>0.01</value>
+                </product>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>300</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="systems/hydraulics/jfs-accumulator-rate">
+            <function>
+                <sum>
+                    <property>systems/hydraulics/jfs-bleed</property>
+                    <property>systems/hydraulics/jfs-accumulator-preload-input</property>
+                    
+                </sum>
+            </function>
+        </fcs_function>
+        <fcs_function name="systems/hydraulics/jfs-accumulator-input-psi">
+            <function>
+                <sum>
+                    <property>-systems/hydraulics/jfs-bleed</property>
+                    <property>systems/hydraulics/jfs-accumulator-psi</property>
+                    <product>
+                        <property>systems/hydraulics/jfs-accumulator-feedin-psi</property>
+                        <value>10</value>
+                        <property>simulation/channel-dt</property>
+                    </product>
+                </sum>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>2000</max>
+            </clipto>
+        </fcs_function>
+        <actuator name="systems/hydraulics/jfs-accumulator">
+            <input>systems/hydraulics/jfs-accumulator-input-psi</input>
+            <rate_limit>systems/hydraulics/jfs-accumulator-rate</rate_limit>
+            <output>systems/hydraulics/jfs-accumulator-psi</output>
+            <clipto>
+                <min>0</min>
+                <max>2000</max>
+            </clipto>
+        </actuator>
+    </channel>
 </system>
