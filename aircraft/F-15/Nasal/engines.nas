@@ -365,7 +365,7 @@ setlistener("sim/model/f15/controls/electrics/jfs-start-handle", func {
                     jfs_starting = 1;
                     jfs_start.setValue(10);
                     startupTimer.restart(jfsStartupTime);
-                    setprop("fdm/jsbsim/systems/hydraulics/jfs-bleed", 56); # psi/sec (estimated)
+                    setprop("fdm/jsbsim/systems/hydraulics/jfs-bleed", 34); # psi/sec (estimated)
                     logprint(2, "Start JFS");
                 }
                 else

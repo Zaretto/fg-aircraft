@@ -215,7 +215,7 @@ engines at 11 percent rpm.
             <input>systems/hydraulics/util-system-feedin</input>
             <input>-systems/hydraulics/emerg-gear-bleed</input>
             <input>-systems/hydraulics/emerg-gen-util-bleed</input>
-            <input>-systems/hydraulics/jfs-accumulator-feedin-psi</input>
+            <input>-systems/hydraulics/jfs-accumulator-rate</input>
         </summer>
         <fcs_function name="systems/hydraulics/util-system-input-psi">
             <function>
@@ -348,7 +348,6 @@ engines at 11 percent rpm.
     
                 <!-- <sum>
                     <property>systems/hydraulics/jfs-bleed</property>
-                    <property>systems/hydraulics/jfs-accumulator-preload-input</property>
                 </sum> -->
             </function>
         </fcs_function>
@@ -416,16 +415,7 @@ engines at 11 percent rpm.
         </actuator>
     </channel> -->
     <channel name="JFSaccumulator" execrate="4">
-        <fcs_function name="systems/hydraulics/jfs-accumulator-feedin-psi">
-            <description>
-                 JFS accu is approx 10 times smaller than Util accum so adjust psi downwards by a
-                 factor of 10; this will then permit the same value to be used to deplete the utility
-                 and also replenish the JFS
-
-                 We limit to 300 psi/sec by way of an approximation of flow. 
-
-                 The factor of 10 and the limit of 300 are estimations because I could find no data.
-            </description>
+        <!-- <fcs_function name="systems/hydraulics/jfs-accumulator-feedin-psi">
             <function>
                 <product>
                     <max>
@@ -443,27 +433,55 @@ engines at 11 percent rpm.
                 <min>0</min>
                 <max>300</max>
             </clipto>
-        </fcs_function>
+        </fcs_function> -->
 
         <fcs_function name="systems/hydraulics/jfs-accumulator-rate">
-            <function>
-                <sum>
-                    <property>systems/hydraulics/jfs-bleed</property>
-                    <property>systems/hydraulics/jfs-accumulator-preload-input</property>
-                    
-                </sum>
+            <description>
+                JFS accu is approx 10 times smaller than Util accum so adjust psi downwards by a
+                factor of 10; this will then permit the same value to be used to deplete the utility
+                and also replenish the JFS
+
+                We limit to 300 psi/sec by way of an approximation of flow. 
+
+                The factor of 10 and the limit of 300 are estimations because I could find no data.
+           </description>
+           <function>
+                <product>
+                    <sum>
+                        <property>-systems/hydraulics/jfs-bleed</property>
+                        <ifthen>
+                            <gt>
+                                <property>systems/hydraulics/util-system-accumulator-psi</property>
+                                <value>400</value>
+                            </gt>
+                            <quotient>
+                                <property>systems/hydraulics/util-system-accumulator-psi</property>
+                                <value>10</value>
+                            </quotient>
+                            <value>0</value>
+                        </ifthen>
+                        <product>
+                            <property>propulsion/jfs-running</property>
+                            <value>20</value>
+                        </product>
+                    </sum>
+                    <property>simulation/channel-dt</property>
+                </product>
             </function>
         </fcs_function>
         <fcs_function name="systems/hydraulics/jfs-accumulator-input-psi">
             <function>
                 <sum>
-                    <property>-systems/hydraulics/jfs-bleed</property>
+                    <property>systems/hydraulics/jfs-accumulator-rate</property>
                     <property>systems/hydraulics/jfs-accumulator-psi</property>
-                    <product>
-                        <property>systems/hydraulics/jfs-accumulator-feedin-psi</property>
+                    <!-- <quotient>
+                        <property>systems/hydraulics/util-system-accumulator-psi</property>
                         <value>10</value>
-                        <property>simulation/channel-dt</property>
-                    </product>
+                    </quotient>
+                    <product>
+                        <property>propulsion/jfs-running</property>
+                        <value>20</value>
+                    </product> -->
                 </sum>
             </function>
             <clipto>
@@ -471,14 +489,18 @@ engines at 11 percent rpm.
                 <max>2000</max>
             </clipto>
         </fcs_function>
-        <actuator name="systems/hydraulics/jfs-accumulator">
-            <input>systems/hydraulics/jfs-accumulator-input-psi</input>
-            <rate_limit>systems/hydraulics/jfs-accumulator-rate</rate_limit>
+        <fcs_function name="systems/hydraulics/jfs-accumulator">
+            <function>
+                <sum>
+                    <property>systems/hydraulics/jfs-accumulator-input-psi</property>
+                    <property>systems/hydraulics/jfs-accumulator-rate</property>
+                </sum>
+            </function>
             <output>systems/hydraulics/jfs-accumulator-psi</output>
             <clipto>
                 <min>0</min>
                 <max>2000</max>
             </clipto>
-        </actuator>
+        </fcs_function>
     </channel>
 </system>
