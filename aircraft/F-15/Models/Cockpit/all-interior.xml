@@ -607,6 +607,32 @@
       </binding>
     </action>
   </animation>
+  <animation>
+    <type>knob</type>
+    <object-name>hud-switch-sym</object-name>
+    <property>sim/model/f15/controls/HUD/sym-rej</property>
+    <factor>20</factor>
+    <center>
+      <x-m>-5.5978</x-m>
+      <y-m>-0.0212</y-m>
+      <z-m>1.1593</z-m>
+    </center>
+    <axis>
+      <y>1</y>
+    </axis>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <binding>
+        <command>property-adjust</command>
+        <property>sim/model/f15/controls/HUD/sym-rej</property>
+        <factor>1</factor>
+        <min>0</min>
+        <max>2</max>
+        <wrap>false</wrap>
+      </binding>
+    </action>
+  </animation>
   <!-- lighting -->
   <animation>
     <object-name>hc_mount</object-name>
@@ -688,32 +714,6 @@
       <green>1</green>
       <blue> 1</blue>
     </emission>
-  </animation>
-  <animation>
-    <type>knob</type>
-    <object-name>hud-switch-sym</object-name>
-    <property>sim/model/f15/controls/HUD/sym-rej</property>
-    <factor>20</factor>
-    <center>
-      <x-m>-5.5978</x-m>
-      <y-m>-0.0212</y-m>
-      <z-m>1.1593</z-m>
-    </center>
-    <axis>
-      <y>1</y>
-    </axis>
-    <action>
-      <button>0</button>
-      <repeatable>false</repeatable>
-      <binding>
-        <command>property-adjust</command>
-        <property>sim/model/f15/controls/HUD/sym-rej</property>
-        <factor>1</factor>
-        <min>0</min>
-        <max>2</max>
-        <wrap>false</wrap>
-      </binding>
-    </action>
   </animation>
   <animation>
     <type>knob</type>
@@ -1859,6 +1859,32 @@
       </greater-than>
     </condition>
   </animation>
+  <animation>
+    <type>knob</type>
+    <object-name>intensity-knob</object-name>
+    <property>sim/model/f15/controls/TEWS/brightness</property>
+    <factor>-110</factor>
+    <center>
+      <x-m>-5.6862</x-m>
+      <y-m>0.2799</y-m>
+      <z-m>1.0699</z-m>
+    </center>
+    <axis>
+      <x>1</x>
+      <y>0</y>
+      <z>0</z>
+    </axis>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>sim/model/f15/controls/TEWS/brightness</property>
+        <factor>0.1</factor>
+        <min>0</min>
+        <max>1</max>
+        <wrap>false</wrap>
+      </binding>
+    </action>
+  </animation>
   <!-- Lighting -->
   <animation>
     <object-name>t_mount</object-name>
@@ -1919,32 +1945,6 @@
       <green>1</green>
       <blue> 1</blue>
     </emission>
-  </animation>
-  <animation>
-    <type>knob</type>
-    <object-name>intensity-knob</object-name>
-    <property>sim/model/f15/controls/TEWS/brightness</property>
-    <factor>-110</factor>
-    <center>
-      <x-m>-5.6862</x-m>
-      <y-m>0.2799</y-m>
-      <z-m>1.0699</z-m>
-    </center>
-    <axis>
-      <x>1</x>
-      <y>0</y>
-      <z>0</z>
-    </axis>
-    <action>
-      <binding>
-        <command>property-adjust</command>
-        <property>sim/model/f15/controls/TEWS/brightness</property>
-        <factor>0.1</factor>
-        <min>0</min>
-        <max>1</max>
-        <wrap>false</wrap>
-      </binding>
-    </action>
   </animation>
   <effect>
     <name>f15interior</name>
