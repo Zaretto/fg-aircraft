@@ -295,12 +295,6 @@ var common_init = func
     if (getprop("sim/model/f15/controls/windshield-heat") != nil)
       setprop("fdm/jsbsim/systems/ecs/windshield-heat",getprop("sim/model/f15/controls/windshield-heat"));
 
-    #
-    # this is just to ensure that we start with pressure in the util hyds
-    setprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-preload-input", 2000);
-    settimer(func {
-        setprop("fdm/jsbsim/systems/hydraulics/jfs-accumulator-preload-input",0); 
-    }, 4);
     if (getprop("fdm/jsbsim/position/h-agl-ft") != nil) {
         if (getprop("fdm/jsbsim/position/h-agl-ft") < 500) {
             logprint(3, "Starting with gear down as below 500 ft");
