@@ -32,12 +32,8 @@ var WingInternal_R         = nil;
 var WingExternal_L          = nil;
 var WingExternal_R         = nil;
 var Centre_External      = nil;
-var Left_Proportioner  = nil;
-var Right_Proportioner = nil;
 var Conformal_L = nil;
 var Conformal_R = nil;
-
-var neg_g = nil;
 
 
 var total_gals = 0;
@@ -78,10 +74,13 @@ var RightEngine	    = props.globals.getNode("engines").getChild("engine", 1);
 var LeftFuel		= LeftEngine.getNode("fuel-consumed-lbs", 1);
 var RightFuel		= RightEngine.getNode("fuel-consumed-lbs", 1);
 
-    var JSBLeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
-    var JSBRightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
-    LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
-    RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
+LeftFuel.setDoubleValue(0);
+RightFuel.setDoubleValue(0);
+
+var JSBLeftEngine		= props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 0);
+var JSBRightEngine	    = props.globals.getNode("/fdm/jsbsim/propulsion/").getChild("engine", 1);
+LeftFuel		= JSBLeftEngine.getNode("fuel-used-lbs", 1);
+RightFuel		= JSBRightEngine.getNode("fuel-used-lbs", 1);
 
 var LeftEngineRunning		= LeftEngine.getNode("running", 1);
 var RightEngineRunning		= RightEngine.getNode("running", 1);
@@ -91,6 +90,11 @@ RightEngine.getNode("out-of-fuel", 1);
 var RprobeSw = props.globals.getNode("sim/model/f15/controls/fuel/refuel-probe-switch");
 var TotalFuelLbs  = props.globals.getNode("consumables/fuel/total-fuel-lbs", 1);
 var TotalFuelGals = props.globals.getNode("consumables/fuel/total-fuel-gals", 1);
+
+# ensure feed lines are not selected as this breaks AAR.
+setprop("/consumables/fuel/tank[10]/selected",0);
+setprop("/consumables/fuel/tank[11]/selected",0);
+
 
 configure_cft = func(v) {
     logprint(3, "CFT changed ",cft.getValue(), " ", v.getValue());
@@ -160,14 +164,9 @@ var init_fuel_system = func {
 
 	if ( ! fuel_system_initialized ) {
 		build_new_tanks();
-		build_new_proportioners();
 		fuel_system_initialized = 1;
         configure_cft(cft);
 	}
-
-	#valves ("name",property, intitial status)
-
-	neg_g = Neg_g.new(0);
 
 	setlistener("sim/ai/enabled", func(n) { ai_enabled = n.getBoolValue() }, 1);
 	refuelingN = props.globals.initNode("/systems/refuel/contact", 0, "BOOL");
@@ -180,7 +179,6 @@ var init_fuel_system = func {
 	LBS_HOUR2GALS_SEC = (1 / PPG) / 3600;
 
 }
-
 
 var build_new_tanks = func {
 	#tanks ("name", number, initial connection status)
@@ -197,19 +195,11 @@ var build_new_tanks = func {
 	Conformal_R  = Tank.newExternal("Conformal Right", 9, 1, TankRightSide); 
 }
 
-var build_new_proportioners = func {
-	#proportioners ("name", number, initial connection status, operational status)
-	Left_Proportioner	= Prop.new("L feed line", 10, 1, 1); # 10 lbs
-	Right_Proportioner	= Prop.new("R feed line", 11, 1, 1); # 10 lbs
-}
-
 
 var fuel_update = func {
-
 	fuel_time = props.globals.getNode("/sim/time/elapsed-sec", 1).getValue();
 	fuel_dt = fuel_time - fuel_last_time;
 	fuel_last_time = fuel_time;
-	neg_g.update();
 	calc_levels();
 
 	if ( getprop("/sim/freeze/fuel") or getprop("/sim/replay/time") > 0 ) { return }
@@ -579,177 +569,7 @@ Tank = {
 };
 
 
-# Proportioner
-Prop = {
-	new : func (name, number, connect, running) {
-		var obj = { parents : [Prop]};
-		obj.prop = props.globals.getNode("consumables/fuel").getChild ("tank", number , 1);
-		obj.name = obj.prop.getNode("name", 1);
-		obj.prop.getChild("name", 0, 1).setValue(name);
-		obj.capacity = obj.prop.getNode("capacity-gal_us", 1);
-		obj.ppg = obj.prop.getNode("density-ppg", 1);
-		obj.level_gal_us = obj.prop.getNode("level-gal_us", 1);
-		obj.level_lbs = obj.prop.getNode("level-lbs", 1);
-		obj.dumprate = obj.prop.getNode("dump-rate-lbs-hr", 1);
-		obj.running = obj.prop.getNode("running", 1);
-		obj.running.setBoolValue(running);
-        obj.prop.getNode("hidden", 1).setBoolValue(1);
-		obj.prop.getChild("selected", 0, 1).setBoolValue(connect);
-		obj.prop.getChild("dump-rate-lbs-hr", 0, 1).setDoubleValue(0);
-		obj.ppg.setDoubleValue(6.3);
-		append(Prop.list, obj);
-		logprint(2, "Proportioner: Name ",name,running,obj.level_lbs, obj.get_capacity());
-		return obj;
-	},
-	
-	set_level : func (gals_us){
-		if(gals_us < 0) gals_us = 0;
-		me.level_gal_us.setDoubleValue(gals_us);
-		me.level_lbs.setDoubleValue(gals_us * me.ppg.getValue());
-	},
-	set_dumprate : func (dumprate){
-		me.dumprate.setDoubleValue(dumprate);
-	},
-	get_capacity : func {
-		return me.capacity.getValue();
-	},
-	get_level : func {
-		return me.level_gal_us.getValue();
-	},
-	get_running : func {
-		return me.running.getValue();
-	},
-	get_ullage : func () {
-		return me.get_capacity() - me.get_level();
-	},
-	get_name : func () {
-		return me.name.getValue();
-	},
-	get_lbs : func () {
-		return me.level_lbs.getValue();
-	},
-	update : func (amount_lbs) {
-		var ppg = me.ppg.getValue();
-		var level = me.get_lbs();
-		if (level == nil) {
-			logprint(2, "fuel: update: nil level ",obj.name);
-			return;
-        }
-		if (amount_lbs == nil) {
-			logprint(2, "fuel: update: nil amount_lbs level ",obj.name);
-			return;
-        }
-		if (level == 0) {
-			return 1;
-		} else {
-			me.prop.getChild("selected").setBoolValue(1);
-			me.running.setBoolValue(1);
-			level = level - amount_lbs ;
-			if(level <= 0) level = 0;
-			me.set_level(level/ppg);
-			return 0;
-		}
-	},
-	get_amount : func (fuel_dt, ullage) {
-		var amount = (dumprate_lbs_hr / (me.ppg.getValue() * 60 * 60)) * fuel_dt;
-		if(amount > me.level_gal_us.getValue()) {
-			amount = me.level_gal_us.getValue();
-		}
-		if(amount > ullage) {
-			amount = ullage;
-		}
-		var dumprate_lbs = ((amount/fuel_dt) * 60 * 60) * me.ppg.getValue();
-		return amount
-	},
-	set_transfer_tank : func (fuel_dt, tank) {
-		foreach (var r; Recup.list) {
-			if(r.get_name() == tank and me.get_running()) {
-				transfer = me.get_amount(fuel_dt, r.get_ullage());
-				me.set_level(me.get_level() - transfer);
-				r.set_level(r.get_level() + transfer);
-			}
-		}
-	},
-	jettisonFuel : func (fuel_dt) {
-		var amount = 0;
-		if(me.get_level() > 0 and me.get_running()) {
-			amount = (dumprate_lbs_hr / (me.ppg.getValue() * 60 * 60)) * fuel_dt;			
-			if(amount > max_instant_dumprate_lbs) { # Deal with low frame rates.
-				amount = max_instant_dumprate_lbs;
-			}
-		}
-		var dumprate_lbs = ((amount/fuel_dt) * 60) * me.ppg.getValue();
-		me.set_dumprate(dumprate_lbs);
-		me.set_level(me.get_level() - amount);
-	},
-	list : [],
-};
 
-
-
-
-# Negative G switch
-
-Neg_g = {
-	new : func(switch) {
-		var obj = { parents : [Neg_g]};
-		obj.prop = props.globals.getNode("controls/fuel/neg-g",1);
-		obj.switch = switch;
-		obj.prop.setBoolValue(switch);
-#		obj.acceleration = props.globals.getNode("accelerations/pilot-gdamped", 1);
-		obj.check = props.globals.getNode("controls/fuel/recuperator-check", 1);
-		return obj;
-	},
-	update : func() {
-#		var acc = me.acceleration.getValue();
-		var check = me.check.getValue();
-		if (currentG < 0 or check ) {
-			me.prop.setBoolValue(1);
-		} else {
-			me.prop.setBoolValue(0);
-		}
-	},
-	get_neg_g : func() {
-		return me.prop.getValue();
-	},
-};
-
-
-# Fuel valves
-
-Valve = {
-	new : func (name,
-				prop,
-				initial_pos
-				){
-		var obj = {parents : [Valve] };
-		obj.prop = props.globals.getNode(prop, 1);
-		obj.name = name;
-		obj.prop.setBoolValue(initial_pos);
-		append(Valve.list, obj);
-		return obj;
-	},
-	set : func (valve, pos) {
-		foreach (var v; Valve.list) {
-			if(v.get_name() == valve) {
-				v.prop.setValue(pos);
-			}
-		}
-	},
-	get : func (valve) {
-		var pos = 0;
-		foreach (var v; Valve.list) {
-			if(v.get_name() == valve) {
-				pos = v.prop.getValue();
-			}
-		}
-		return pos;
-	},
-	get_name : func () {
-		return me.name;
-	},
-	list : [],
-};
 
 var toggle_fuel_freeze = func() {
     setprop("sim/freeze/fuel", 1-getprop("sim/freeze/fuel"));
