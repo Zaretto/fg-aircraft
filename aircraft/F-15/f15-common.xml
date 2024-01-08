@@ -376,10 +376,10 @@
             <replay-config type="int">0</replay-config>
             <config n="0">
                 <name type="string">F-15 Flight Recorder</name>
-                <signals include="/Aircraft/Generic/flightrecorder/components/environment.xml"/>
-                <signals include="/Aircraft/Generic/flightrecorder/components/position.xml"/>
-                <signals include="/Aircraft/Generic/flightrecorder/components/controls.xml"/>
-                <signals include="/Aircraft/Generic/flightrecorder/components/surfaces.xml"/>
+                <signals include="/Aircraft/Generic/flightrecorder/components/environment.xml" />
+                <signals include="/Aircraft/Generic/flightrecorder/components/position.xml" />
+                <signals include="/Aircraft/Generic/flightrecorder/components/controls.xml" />
+                <signals include="/Aircraft/Generic/flightrecorder/components/surfaces.xml" />
                 <signals include="/Aircraft/Generic/flightrecorder/components/engine-jet.xml">
                     <count type="int">2</count>
                 </signals>
@@ -688,7 +688,52 @@
 
 
         <startup>
-            <splash-texture>Aircraft/F-15/f15c-splash.jpg</splash-texture>
+            <content n="2">
+                <hide>true</hide>
+            </content>
+            <content n="3">
+                <font>
+                    <size>0.03</size>
+                    <face>Fonts/Lato-Bold.ttf</face>
+                </font>
+            </content>
+            <model-content n="4">
+                <text>V1.12 2024-01-06</text>
+                <font>
+                    <size>0.03</size>
+                    <alignment>left-bottom</alignment>
+                    <face>Fonts/Lato-Bold.ttf</face>
+                </font>
+                <x>0.555</x>
+                <y>0.845</y>
+            </model-content>
+            <model-content n="1">
+                <text>80-0007 Block 27    Wind tunnel aerodynamics ref: AFIT/GAE/ENY/90D-16 </text>
+                <font>
+                    <alignment>left-bottom</alignment>
+                    <size>0.035</size>
+                    <face>Fonts/Lato-Regular.ttf</face>
+                </font>
+                <max-line-count>1</max-line-count>
+                <max-width>0.7</max-width>
+                <max-height>0.035</max-height>
+                <x>0.025</x>
+                <y>0.895</y>
+            </model-content>
+            <model-content>
+                <text>&#169;2024 Richard Harrison   rjh@zaretto.com</text>
+                <font>
+                    <alignment>left-bottom</alignment>
+                    <size>0.035</size>
+                    <face>Fonts/Lato-Regular.ttf</face>
+                    <max-line-count>1</max-line-count>
+                </font>
+                <max-line-count>1</max-line-count>
+                <max-width>0.7</max-width>
+                <max-height>0.035</max-height>
+                <x>0.025</x>
+                <y>0.93</y>
+            </model-content>
         </startup>
         <systems>
             <autopilot n="0">
@@ -2203,7 +2248,7 @@
             </key>
 
 
-                      <!-- map keys for catapult launch -->
+            <!-- map keys for catapult launch -->
             <key n="67">
                 <name>C</name>
                 <desc>Catapult Launch Command.</desc>
@@ -2236,7 +2281,7 @@
                 </binding>
             </key>
 
-  <!-- map keys for launch-bar -->
+            <!-- map keys for launch-bar -->
             <key n="76">
                 <name>L</name>
                 <desc>Launch-bar engage.</desc>
