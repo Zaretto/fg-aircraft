@@ -3815,7 +3815,7 @@ var AIM = {
 			}
 			me.cruise_or_loft = 1;
 		} elsif (me.snapUp and me.coord.alt() > me.t_coord.alt() and me.last_cruise_or_loft
-		         and me.t_elev_deg > me.clamp(-50/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 5.5) {
+		         and me.t_elev_deg > me.clamp(-40/me.speed_m,-30,-5) and me.dist_curr * M2NM > me.speed_m * 6.5) {
 			# cruising: keeping altitude since target is below and more than -45 degs down
 
 			me.ratio = (g_fps * me.dt)/me.old_speed_fps;
