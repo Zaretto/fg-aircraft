@@ -2735,12 +2735,12 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <long-name type="string">AIM-54C Phoenix</long-name>
                 <vol-search type="double">0.0</vol-search>
                 <vol-track type="double">0.20</vol-track>
-                <guidance source="authentic" type="string">sample</guidance><!-- temporary fix until sample guidance is implemented -->
+                <guidance source="authentic" type="string">sample</guidance>
                 <all-aspect source="authentic" type="bool">true</all-aspect>
                 <max-fire-range-nm source="authentic" type="double">107.25</max-fire-range-nm>
                 <FCS-field-deg type="int">25</FCS-field-deg>
                 <seeker-field-deg type="int">155</seeker-field-deg>
-                <max-g type="int">17</max-g><!-- AIM-54A could do 17G -->
+                <max-g source="AIM-54A could do 17G" type="int">20</max-g>
                 <thrust-lbf-stage-1 source="authentic" type="double">4000</thrust-lbf-stage-1>
                 <thrust-lbf-stage-2 source="authentic" type="double">0.0</thrust-lbf-stage-2>
                 <stage-1-duration-sec source="authentic" type="double">30</stage-1-duration-sec>
@@ -2765,6 +2765,11 @@ HSD:   Horisontal Situation Display: Pilot right Front Panel: controls mode and 
                 <DLZ-optimal-closing-mach type="double">2.5</DLZ-optimal-closing-mach>
                 <ejector-speed-fps type="double">20</ejector-speed-fps>
                 <drop-time type="double">0.5</drop-time>
+                <reaquire type="bool">true</reaquire>
+                <lock-on-after-launch type="bool">true</lock-on-after-launch>
+                <auto-switch-target-allowed type="bool">false</auto-switch-target-allowed>
+                <prowl-flight type="string">gyro-pitch</prowl-flight>
+                <switch-time-sec type="double">5</switch-time-sec>
             </aim-54>
             <mk-83>
                 <type-id type="int">33</type-id>
