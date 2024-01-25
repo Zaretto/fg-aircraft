@@ -349,6 +349,9 @@ var init = func {
     prop = "/payload/armament/fire-control";
     var actuator_Fire_control = compat_failure_modes.set_unserviceable(prop);
     FailureMgr.add_failure_mode(prop, "Fire control", actuator_Fire_control);
+    
+    var fire_fc = compat_failure_modes.set_unserviceable("damage/fire");# will make smoke trail when damaged
+	FailureMgr.add_failure_mode("damage/fire", "Fire", fire_fc);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
