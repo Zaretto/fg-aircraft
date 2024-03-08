@@ -106,18 +106,34 @@
               </position>
           
             <propulsion>
+                <amad-fire type="int">0</amad-fire>
+                <amad-fire-button-armed type="int">0</amad-fire-button-armed>
+                <damage-reset alias="/fdm/jsbsim/gear/damage-reset"/>
+                <amad-fire-test-ok type="int">0</amad-fire-test-ok>
+                <fire-discharge-mode type="int">1</fire-discharge-mode>
+                <fire-extinguisher-level type="int">1</fire-extinguisher-level>
                 <engine n="0">
                     <augmentation-alight type="double">false</augmentation-alight>
+                    <blowout type="int">0</blowout>
+                    <fire-button-armed type="int">0</fire-button-armed>
+                    <fire-extinguished type="int">0</fire-extinguished>
+                    <fire-test-ok type="int">0</fire-test-ok>
+                    <overtemp type="int">0</overtemp>
                 </engine>
                 <engine n="1">
                     <augmentation-alight type="double">false</augmentation-alight>
+                    <blowout type="int">0</blowout>
+                    <fire-button-armed type="int">0</fire-button-armed>
+                    <fire-extinguished type="int">0</fire-extinguished>
+                    <fire-test-ok type="int">0</fire-test-ok>
+                    <overtemp type="int">0</overtemp>
                 </engine>
                 <cft alias="/sim/model/f15/cft"/>
                 <inlet>
-                    <l-inlet-ramp-emerg>0</l-inlet-ramp-emerg>
-                    <r-inlet-ramp-emerg>0</r-inlet-ramp-emerg>
+                    <l-inlet-ramp-emerg type="int">0</l-inlet-ramp-emerg>
+                    <r-inlet-ramp-emerg type="int">0</r-inlet-ramp-emerg>
                 </inlet>
-                <jfs-running>0</jfs-running>
+                <jfs-running type="int">0</jfs-running>
             </propulsion>
 
             <simulation>

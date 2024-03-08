@@ -75,6 +75,28 @@ var dlg_lighting  = gui.Dialog.new("dialog[3]","Aircraft/F-15/Dialogs/lighting.x
     setprop("engines/engine[0]/oil-pressure-psi", 28);
     setprop("engines/engine[1]/oil-pressure-psi", 28);
 
+var masterCaution =  0;
+var master_caution_active  = 0;
+
+check_caution = func(mprop, caution_light){
+    if  (getprop(mprop))
+    {
+        if (!getprop(caution_light))
+        {
+            setprop(caution_light,1);
+            masterCaution = 1;
+        }
+        master_caution_active = 1;
+    }
+    else
+    {
+        if (getprop(caution_light))
+        {
+            setprop(caution_light,0);
+        }
+    }
+}
+
 var runEMMISC = func {
 
 # disable if we are in replay mode
@@ -94,8 +116,8 @@ var runEMMISC = func {
 
     setprop("systems/electrical/outputs/DG", getprop("fdm/jsbsim/systems/electrics/ac-left-main-bus"));
 
-    var masterCaution =  masterCaution_light_set.getValue();
-    var master_caution_active  = 0;
+    masterCaution =  masterCaution_light_set.getValue();
+    master_caution_active  = 0;
     var engine_crank_switch_pos = getprop("sim/model/f15/controls/engine/engine-crank");
 
     if ( ((engine_crank_switch_pos == 1 or l_eng_starter.getBoolValue()) and l_eng_running.getBoolValue()) 
@@ -509,6 +531,10 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-cas-pitch",0);
         }
     }
+check_caution("fdm/jsbsim/propulsion/engine[0]/bleedair-temp-high", "sim/model/f15/lights/ca-l-bleed-air");
+check_caution("fdm/jsbsim/propulsion/engine[1]/bleedair-temp-high", "sim/model/f15/lights/ca-r-bleed-air");
+check_caution("fdm/jsbsim/propulsion/openv-total-temp-too-high", "sim/model/f15/lights//ca-tot-temp-hi");
+
 #anti skid will indicate when the parking brake is on.
     setprop("sim/model/f15/lights/ca-anti-skid", getprop("controls/gear/brake-parking"));
 
