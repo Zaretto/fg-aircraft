@@ -51,8 +51,17 @@
             <output>fcs/throttle-pos-norm[1]</output>
         </scheduled_gain>
     </channel>
+ 
     <channel name="engine-limits-damage">
-
+       <!-- 
+        1 TOT-TEMP-HIGH (3 minute) Fig 3-8 sheet 1 
+        2 L BLEED AIR (overtemp) 
+        2 R BLEED AIR (overtemp)
+        3 L R BURN THRU (abrupt increase in temp in aft keel/boom area 
+        4 AMAD FIRE 
+        5 L R ENG FIRE 
+        -->
+ 
         <fcs_function name="propulsion/openv-mn-must-be-above">
             <description>F100 operating envelope - MN must be above</description>
             <function>
@@ -88,6 +97,7 @@
                 </table>
             </function>
         </fcs_function>
+
         <fcs_function name="propulsion/openv-mn-must-be-below">
             <description>F100 operating envelope - MN must be below</description>
             <function>
@@ -123,6 +133,7 @@
                 </table>
             </function>
         </fcs_function>
+
         <fcs_function name="propulsion/openv-underspeed">
             <description>Exceeded maximum speed as defined by operational envelope</description>
             <function>
@@ -160,7 +171,10 @@
                                 <property>propulsion/openv-mn-must-be-below</property>
                             </gt>
                             <value>1</value>
-                            <value>-1</value>
+                            <difference>
+                                <value>-1.25</value> <!-- arbitrary value to drop quicker-->
+                                <property>propulsion/openv-overspeed</property>
+                            </difference>
                         </ifthen>
                         <value>0.005556</value>
                         <property>simulation/channel-dt</property>
@@ -172,6 +186,7 @@
                 <max>5</max>
             </clipto>
         </fcs_function>
+
         <switch name="propulsion/openv-total-temp-too-high">
             <default value="0" />
             <test value="1">
@@ -179,7 +194,6 @@
             </test>
         </switch>
       
-
         <fcs_function name="propulsion/fire-extinguishers-armed-count">
             <function>
                 <sum>
@@ -190,6 +204,7 @@
             </function>
         </fcs_function>
 
+        <!-- engine 0 -->
         <fcs_function name="propulsion/engine[0]/bleedair-temp-val">
             <description>
                 PB is the only pressure ratio (from ambient) at the burner
@@ -218,10 +233,12 @@
                 </product>
             </function>
         </fcs_function>
+
         <lag_filter name="propulsion/engine[0]/bleedair-temp">
             <input>propulsion/engine[0]/bleedair-temp-val</input>
 			<c1>0.1</c1>
         </lag_filter>
+        
         <switch name="propulsion/engine[0]/bleedair-temp-high">
             <default value="0" />
             <test value="1">
@@ -229,14 +246,6 @@
             </test>
         </switch>
 
-        <!-- 
-        1 TOT-TEMP-HIGH (3 minute) FIg 3-8 sheet 1 
-        2 L BLEED AIR (overtemp) 
-        2 R BLEED AIR (overtemp)
-        3 L R BURN THRU (abrupt increase in temp in aft keel/boom area 
-        4 AMAD FIRE 
-        5 L R ENG FIRE 
-        -->
         <fcs_function name="propulsion/engine[0]/seized">
             <function>
                 <ifthen>
@@ -262,16 +271,23 @@
                 </ifthen>
             </function>
         </fcs_function>
+
         <switch name="propulsion/engine[0]/fire">
             <default value="propulsion/engine[0]/fire" />
-            <test value="1">
-                propulsion/engine[0]/seized ne 0
-            </test>
             <test value="0" logic="OR">
-                propulsion/engine[0]/fire-extinguished ne 0
                 propulsion/damage-reset ne 0
             </test>
+            <test value="0">
+                propulsion/engine[0]/seized ne 0
+                propulsion/engine[0]/fire-intensity lt 0.0001
+                propulsion/engine[0]/fire-extinguished ne 0
+            </test>
+            <test value="1">
+                propulsion/engine[0]/seized ne 0
+                propulsion/engine[0]/fire-extinguished lt 0.001
+            </test>
         </switch>
+
         <fcs_function name="propulsion/engine[0]/fire-intensity">
             <function>
                 <ifthen>
@@ -285,7 +301,13 @@
                             <value>0</value>
                         </nq>
                     </or>
-                    <value>0</value>
+                    <difference>
+                        <property>propulsion/engine[0]/fire-intensity</property>
+                        <product>
+                            <property>simulation/channel-dt</property>
+                            <value>0.003</value> <!-- cools at twuce the rate -->
+                        </product>
+                    </difference>
                     <sum>
                         <property>propulsion/engine[0]/fire-intensity</property>
                         <product>
@@ -300,6 +322,7 @@
                 <max>1</max>
             </clipto>
         </fcs_function>
+
         <fcs_function name="propulsion/engine[0]/fire-extinguished">
             <function>
                 <ifthen>
@@ -330,11 +353,7 @@
                         <lt>
                             <quotient>
                                 <property>propulsion/engine[0]/fire-intensity</property>
-                                <sum>
-                                    <property>propulsion/engine[0]/fire-button-armed</property>
-                                    <property>propulsion/engine[1]/fire-button-armed</property>
-                                    <property>propulsion/amad-fire-button-armed</property>
-                                </sum>
+                                <property>propulsion/fire-extinguishers-armed-count</property>
                             </quotient>
                             <!-- 
                                 the chance of the fire being extinguised will be 
@@ -356,24 +375,48 @@
                 <min>0</min>
                 <max>1</max>
             </clipto>
-        </fcs_function> 
-        
+        </fcs_function>
+
         <switch name="propulsion/engine[0]/overtemp">
             <default value="0" />
             <test value="1">
                 propulsion/openv-overspeed gt 1.5
+                propulsion/engine[0]/fire-extinguished eq 0
             </test>
         </switch>
+
         <switch name="propulsion/engine[0]/blowout">
             <default value="0" />
             <test value="1">
                 propulsion/openv-underspeed ge 0.4
             </test>
         </switch>
+
         <switch name="propulsion/engine[0]/stalled">
             <default value="0" />
             <test value="1">
                 propulsion/openv-underspeed ge 1
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/fire-test-ok">
+            <default value="0" />
+            <test value="1">
+                propulsion/fire-discharge-mode eq 0
+                propulsion/engine[0]/n2 gt 10
+                propulsion/engine[0]/fire eq 0
+                propulsion/fire-extinguisher-level ne 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/burn-thru">
+            <default value="propulsion/engine[0]/burn-thru"/>
+            <test value="0">
+                propulsion/damage-reset ne 0
+            </test>
+            <test value="1">
+                propulsion/openv-overspeed gt 3.5
+                propulsion/engine[0]/augmentation-alight gt 0
             </test>
         </switch>
 
@@ -406,10 +449,12 @@
                 </product>
             </function>
         </fcs_function>
+
         <lag_filter name="propulsion/engine[1]/bleedair-temp">
             <input>propulsion/engine[1]/bleedair-temp-val</input>
 			<c1>0.1</c1>
         </lag_filter>
+
         <switch name="propulsion/engine[1]/bleedair-temp-high">
             <default value="0" />
             <test value="1">
@@ -417,14 +462,6 @@
             </test>
         </switch>
 
-        <!-- 
-        1 TOT-TEMP-HIGH (3 minute) FIg 3-8 sheet 1 
-        2 L BLEED AIR (overtemp) 
-        2 R BLEED AIR (overtemp)
-        3 L R BURN THRU (abrupt increase in temp in aft keel/boom area 
-        4 AMAD FIRE 
-        5 L R ENG FIRE 
-        -->
         <fcs_function name="propulsion/engine[1]/seized">
             <function>
                 <ifthen>
@@ -450,19 +487,25 @@
                 </ifthen>
             </function>
         </fcs_function>
+
         <switch name="propulsion/engine[1]/fire">
             <default value="propulsion/engine[1]/fire" />
-            <test value="1">
-                propulsion/engine[1]/seized ne 0
-            </test>
             <test value="0" logic="OR">
-                propulsion/engine[1]/fire-extinguished ne 0
                 propulsion/damage-reset ne 0
             </test>
+            <test value="0">
+                propulsion/engine[1]/seized ne 0
+                propulsion/engine[1]/fire-intensity lt 0.0001
+                propulsion/engine[1]/fire-extinguished ne 0
+            </test>
+            <test value="1">
+                propulsion/engine[1]/seized ne 0
+                propulsion/engine[1]/fire-extinguished lt 0.001
+            </test>
         </switch>
+
         <fcs_function name="propulsion/engine[1]/fire-intensity">
             <function>
-
                 <ifthen>
                     <or>
                         <lt>
@@ -474,7 +517,13 @@
                             <value>0</value>
                         </nq>
                     </or>
-                    <value>0</value>
+                    <difference>
+                        <property>propulsion/engine[1]/fire-intensity</property>
+                        <product>
+                            <property>simulation/channel-dt</property>
+                            <value>0.003</value> <!-- cools at twuce the rate -->
+                        </product>
+                    </difference>
                     <sum>
                         <property>propulsion/engine[1]/fire-intensity</property>
                         <product>
@@ -489,6 +538,7 @@
                 <max>1</max>
             </clipto>
         </fcs_function>
+
         <fcs_function name="propulsion/engine[1]/fire-extinguished">
             <function>
                 <ifthen>
@@ -519,11 +569,7 @@
                         <lt>
                             <quotient>
                                 <property>propulsion/engine[1]/fire-intensity</property>
-                                <sum>
-                                    <property>propulsion/engine[1]/fire-button-armed</property>
-                                    <property>propulsion/engine[1]/fire-button-armed</property>
-                                    <property>propulsion/amad-fire-button-armed</property>
-                                </sum>
+                                <property>propulsion/fire-extinguishers-armed-count</property>
                             </quotient>
                             <!-- 
                                 the chance of the fire being extinguised will be 
@@ -551,19 +597,96 @@
             <default value="0" />
             <test value="1">
                 propulsion/openv-overspeed gt 1.5
+                propulsion/engine[1]/fire-extinguished eq 0
             </test>
         </switch>
+
         <switch name="propulsion/engine[1]/blowout">
             <default value="0" />
             <test value="1">
                 propulsion/openv-underspeed ge 0.4
             </test>
         </switch>
+
         <switch name="propulsion/engine[1]/stalled">
             <default value="0" />
             <test value="1">
                 propulsion/openv-underspeed ge 1
             </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/fire-test-ok">
+            <default value="0" />
+            <test value="1">
+                propulsion/fire-discharge-mode eq 0
+                propulsion/engine[1]/n2 gt 10
+                propulsion/engine[1]/fire eq 0
+                propulsion/fire-extinguisher-level ne 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/burn-thru">
+            <default value="propulsion/engine[1]/burn-thru"/>
+            <test value="0">
+                propulsion/damage-reset ne 0
+            </test>
+            <test value="1">
+                propulsion/openv-overspeed gt 3.5
+                propulsion/engine[1]/augmentation-alight gt 0
+            </test>
+        </switch>
+
+        <!-- AMAD -->
+        <switch name="propulsion/amad-fire-test-ok">
+            <default value="0" />
+            <test value="1">
+                systems/electrics/egenerator-kva eq 1
+                propulsion/fire-discharge-mode eq 0
+                propulsion/fire-extinguisher-level ne 0
+            </test>
+        </switch>
+             
+        <!-- depelete extinguisher level whenever button is pressed -->
+        <fcs_function name="propulsion/fire-extinguisher-level-v">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>propulsion/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <value>2</value>
+                    <ifthen>
+                        <and>
+                            <nq>
+                                <property>propulsion/fire-discharge-mode-ltv</property>
+                                <property>propulsion/fire-discharge-mode</property>
+                            </nq>
+                            <eq>
+                                <property>propulsion/fire-discharge-mode</property>
+                                <value>2</value>
+                            </eq>
+                            <gt>
+                                <property>propulsion/fire-extinguishers-armed-count</property>
+                                <value>0</value>
+                            </gt>
+                        </and>
+                        <difference>
+                            <property>propulsion/fire-extinguisher-level</property>
+                            <value>1</value>
+                        </difference>
+                        <property>propulsion/fire-extinguisher-level</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>10</max>
+            </clipto>
+            <output>propulsion/fire-extinguisher-level</output>
+        </fcs_function>
+
+        <switch name="propulsion/fire-discharge-mode-ltv">
+            <default value="propulsion/fire-discharge-mode" />
         </switch>
     </channel>
 
@@ -856,12 +979,6 @@
             <output>propulsion/engine[0]/casing-temperature-R</output>
             <c1>0.01</c1>
         </lag_filter>
-        <switch name="propulsion/engine[0]/burn-thru">
-            <default value="0"/>
-            <test value="1">
-                propulsion/engine[0]/casing-temperature-R gt 1965
-            </test>
-        </switch>
         <!-- augmentation -->
         <fcs_function name="propulsion/engine[0]/alt/nozzle-dmd-norm">
             <function>
@@ -1190,12 +1307,6 @@
             <output>propulsion/engine[1]/casing-temperature-R</output>
             <c1>0.01</c1>
         </lag_filter>
-        <switch name="propulsion/engine[1]/burn-thru">
-            <default value="0"/>
-            <test value="1">
-                propulsion/engine[1]/casing-temperature-R gt 1965
-            </test>
-        </switch>
         <!-- augmentation -->
         <fcs_function name="propulsion/engine[1]/alt/nozzle-dmd-norm">
             <function>

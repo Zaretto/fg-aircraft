@@ -6291,13 +6291,14 @@
         <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
         <value>0</value>
       </greater-than>
-      <property>sim/model/f15/lights/master-test-lights</property>
-      <property>fdm/jsbsim/propulsion/amad-fire</property>
-      <property>fdm/jsbsim/propulsion/amad-fire-test-ok</property>
-
+      <or>
+        <property>sim/model/f15/lights/master-test-lights</property>
+        <property>fdm/jsbsim/propulsion/amad-fire</property>
+        <property>fdm/jsbsim/propulsion/amad-fire-test-ok</property>
+      </or>
     </condition>
   </animation>
-  <!-- left engine fie buttons-->
+  <!-- left engine fire buttons-->
   <animation>
     <type>select</type>
     <object-name>fire-button-left-on</object-name>
@@ -6361,6 +6362,33 @@
       <binding>
         <command>property-adjust</command>
         <property>fdm/jsbsim/propulsion/engine[0]/fire-button-armed</property>
+        <factor>1</factor>
+        <min>0</min>
+        <max>1</max>
+        <wrap>false</wrap>
+      </binding>
+    </action>
+  </animation>
+  <animation>
+    <type>slider</type>
+    <object-name>amad-fire-button</object-name>
+    <object-name>amad-fire-button-lamp</object-name>
+    <property>fdm/jsbsim/propulsion/amad-fire-button-armed</property>
+    <factor>-0.0020</factor>
+    <center>
+      <x-m>0.0081</x-m>
+      <y-m>-0.0017</y-m>
+      <z-m>-0.0529</z-m>
+    </center>
+    <axis>
+      <x>1</x>
+      <y>0</y>
+      <z>0</z>
+    </axis>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>fdm/jsbsim/propulsion/amad-fire-button-armed</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>

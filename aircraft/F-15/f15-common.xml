@@ -19,6 +19,16 @@
     </gear>
     <fdm>
         <jsbsim>
+            <aero>
+                <pb type="double"/>
+                <qb type="double"/>
+                <rb type="double"/>
+                <bi2vel type="double"/>
+                <ci2vel type="double"/>
+                <alpha-rad type="double"/>
+                <cos-alpha-rad type="double"/>
+                <sin-alpha-rad type="double"/>
+            </aero>
             <autoflight>
                 <input>
                   <hdg-active>0</hdg-active>
@@ -64,17 +74,20 @@
                 <flap-cmd-sum />
                 <hook-engage />
                 <steer-maneuver>0</steer-maneuver>
-          
-                <aileron-deadzone alias="/autopilot/settings/aileron-deadzone"/>
-                <elevator-deadzone alias="/autopilot/settings/elevator-deadzone"/>
-                <rudder-deadzone alias="/autopilot/settings/rudder-deadzone"/>
-                
+
+                <aileron-deadzone alias="/autopilot/settings/aileron-deadzone" />
+                <elevator-deadzone alias="/autopilot/settings/elevator-deadzone" />
+                <rudder-deadzone alias="/autopilot/settings/rudder-deadzone" />
+                <aileron-aero-deg type="double" />
+                <elevon-aero-deg type="double" />
+                <elevon-diff-aero-deg type="double" />
+                <rudder-aero-deg type="double" />
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
-                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable"/>
-                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable"/>
-                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable"/>
+                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable" />
+                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable" />
+                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable" />
             </fcs>
 
             <gear>
@@ -96,12 +109,22 @@
                    <locked type="double">0</locked>
                 </unit>
             </gear>
-
             <metrics>
                 <two-place-canopy type="int">0</two-place-canopy>
+                <stores-aiml-factor type="double" />
+                <stores-aimr-factor type="double" />
+                <stores-aiml-factor-negated type="double" />
+                <stores-aimr-factor-negated type="double" />
+                <stores-tank-factor type="double" />
+                <stores-tank-factor-c type="double" />
+                <stores-tank-factor-l type="double" />
+                <stores-tank-factor-l-negated type="double" />
+                <stores-tank-factor-r type="double" />
+                <two-place-canopy type="double" />
             </metrics>
 
             <position>
+                <aircraft-on-ground type="double"/>
                 <aircraft-on-ground-last-value>2</aircraft-on-ground-last-value>
               </position>
           
@@ -111,12 +134,13 @@
                 <damage-reset alias="/fdm/jsbsim/gear/damage-reset"/>
                 <amad-fire-test-ok type="int">0</amad-fire-test-ok>
                 <fire-discharge-mode type="int">1</fire-discharge-mode>
-                <fire-extinguisher-level type="int">1</fire-extinguisher-level>
+                <fire-extinguisher-level type="double">1</fire-extinguisher-level>
                 <engine n="0">
                     <augmentation-alight type="double">false</augmentation-alight>
                     <blowout type="int">0</blowout>
                     <fire-button-armed type="int">0</fire-button-armed>
                     <fire-extinguished type="int">0</fire-extinguished>
+                    <fire-intensity type="double"/>
                     <fire-test-ok type="int">0</fire-test-ok>
                     <overtemp type="int">0</overtemp>
                 </engine>
@@ -125,6 +149,7 @@
                     <blowout type="int">0</blowout>
                     <fire-button-armed type="int">0</fire-button-armed>
                     <fire-extinguished type="int">0</fire-extinguished>
+                    <fire-intensity type="double"/>
                     <fire-test-ok type="int">0</fire-test-ok>
                     <overtemp type="int">0</overtemp>
                 </engine>
@@ -132,6 +157,7 @@
                 <inlet>
                     <l-inlet-ramp-emerg type="int">0</l-inlet-ramp-emerg>
                     <r-inlet-ramp-emerg type="int">0</r-inlet-ramp-emerg>
+                    <ramp1-position-norm  type="double"/>
                 </inlet>
                 <jfs-running type="int">0</jfs-running>
             </propulsion>
@@ -146,7 +172,6 @@
                     <pitch-ratio-emergency>0</pitch-ratio-emergency>
                     <roll-ratio-emergency>0</roll-ratio-emergency>
                 </cadc>
-
 
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
@@ -212,13 +237,14 @@
                     <tailhook-pos-max-deg>52.369</tailhook-pos-max-deg>
                     <tailhook-pos-min-deg>0</tailhook-pos-min-deg>
                 </hook>
-
+                    
                 <hydraulics>
                     <bidi-activation>2100</bidi-activation>
                     <!-- the min pressure is really for when no hydraulic fluid and the pressure has been at that level
                      for more than 10 seconds, so for now we will not model this as there is no way for fluid to be depleted -->
                     <bidi-cutoff-min-pressure>-500</bidi-cutoff-min-pressure>
                     <bidi-normal-pressure>2500</bidi-normal-pressure>
+                    <combined-system-pressure type="double"/>
                     <combined-system-pump-failed>0</combined-system-pump-failed>
                     <combined-system-psi type="int">2200</combined-system-psi>
                     <emerg-flyt-hyd-switch>0</emerg-flyt-hyd-switch>
