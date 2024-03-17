@@ -213,9 +213,9 @@ engines at 11 percent rpm.
 
         <summer name="systems/hydraulics/util-system-bleed">
             <input>systems/hydraulics/util-system-feedin</input>
+            <input>systems/hydraulics/jfs-util-feedin</input>
             <input>-systems/hydraulics/emerg-gear-bleed</input>
             <input>-systems/hydraulics/emerg-gen-util-bleed</input>
-            <input>-systems/hydraulics/jfs-accumulator-rate</input>
         </summer>
         <fcs_function name="systems/hydraulics/util-system-input-psi">
             <function>
@@ -225,7 +225,7 @@ engines at 11 percent rpm.
                         <property>systems/hydraulics/util-system-bleed</property>
                         <property>simulation/channel-dt</property>
                     </product>
-            </sum>
+                </sum>
             </function>
             <clipto>
                 <min>0</min>
@@ -280,8 +280,6 @@ engines at 11 percent rpm.
                           accumulator
          -->
 
-    <property value="0">systems/hydraulics/b-system-psi</property>
-
     <channel name="HydsA">
         <scheduled_gain name="systems/hydraulics/a-pump-psi">
             <input>propulsion/engine[1]/n2</input>
@@ -325,7 +323,10 @@ engines at 11 percent rpm.
         <fcs_function name="systems/hydraulics/a-accumulator-input-psi-s">
             <function>
                 <sum>
-                    <property>-systems/hydraulics/a-bleed</property>
+                    <product>
+                        <property>systems/hydraulics/a-bleed</property>
+                        <value>-1</value>
+                    </product>
                     <property>systems/hydraulics/a-feedin-b-psi-s</property>
                     <property>systems/hydraulics/a-pump-psi</property>
                 </sum>
@@ -435,6 +436,15 @@ engines at 11 percent rpm.
             </clipto>
         </fcs_function> -->
 
+        <fcs_function name="systems/hydraulics/jfs-util-feedin">
+            <function>
+                <product>
+                    <property>propulsion/jfs-running</property>
+                    <value>3000</value>
+                    <property>simulation/channel-dt</property>
+                </product>
+            </function>
+        </fcs_function>
         <fcs_function name="systems/hydraulics/jfs-accumulator-rate">
             <description>
                 JFS accu is approx 10 times smaller than Util accum so adjust psi downwards by a
@@ -448,22 +458,27 @@ engines at 11 percent rpm.
            <function>
                 <product>
                     <sum>
-                        <property>-systems/hydraulics/jfs-bleed</property>
+                        <product>
+                            <property>systems/hydraulics/jfs-bleed</property>
+                            <value>-1</value>
+                        </product>
                         <ifthen>
-                            <gt>
-                                <property>systems/hydraulics/util-system-accumulator-psi</property>
-                                <value>400</value>
-                            </gt>
+                            <and>
+                                <gt>
+                                    <property>systems/hydraulics/util-system-accumulator-psi</property>
+                                    <value>400</value>
+                                </gt>
+                                <lt>
+                                    <property>systems/hydraulics/jfs-accumulator-input-psi</property>
+                                    <value>1999</value>
+                                </lt>
+                            </and>
                             <quotient>
                                 <property>systems/hydraulics/util-system-accumulator-psi</property>
                                 <value>10</value>
                             </quotient>
                             <value>0</value>
                         </ifthen>
-                        <product>
-                            <property>propulsion/jfs-running</property>
-                            <value>20</value>
-                        </product>
                     </sum>
                     <property>simulation/channel-dt</property>
                 </product>
