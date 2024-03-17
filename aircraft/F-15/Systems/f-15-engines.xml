@@ -158,7 +158,29 @@
                 <max>1</max>
             </clipto>
         </fcs_function>
-
+        <!-- scale factor so that the difference between the overspeed and current makes a difference to the
+             rate at which the overspeed is accumulated (or dissipated)
+        -->
+        <fcs_function name="propulsion/openv-overspeed-factor">
+            <function>
+                <sum>
+                    <value>1</value>
+                    <pow>
+                        <abs>
+                            <difference>
+                                <property>velocities/mach</property>
+                                <property>propulsion/openv-mn-must-be-below</property>
+                            </difference>
+                        </abs>
+                        <value>3</value>
+                    </pow>
+                </sum>
+            </function>
+            <clipto>
+                <min>1</min>
+                <max>10</max>
+            </clipto>
+        </fcs_function>
         <fcs_function name="propulsion/openv-overspeed">
             <description>Exceeded maximum speed as defined by operational envelope</description>
             <function>
@@ -178,12 +200,13 @@
                         </ifthen>
                         <value>0.005556</value>
                         <property>simulation/channel-dt</property>
+                        <property>propulsion/openv-overspeed-factor</property>
                     </product>
                 </sum>
             </function>
             <clipto>
                 <min>0</min>
-                <max>5</max>
+                <max>5.1</max>
             </clipto>
         </fcs_function>
 
@@ -205,6 +228,28 @@
         </fcs_function>
 
         <!-- engine 0 -->
+        <fcs_function name="propulsion/engine[0]/fire-point">
+            <function>
+                <ifthen>
+                    <lt>
+                        <property>propulsion/engine[0]/fire-point</property>
+                        <value>1</value>
+                    </lt>
+                    <sum>
+                        <value>4.5</value>
+                        <quotient>
+                            <urandom />
+                            <value>3.13</value>
+                        </quotient>
+                    </sum>
+                    <property>propulsion/engine[0]/fire-point</property>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>3.2</min>
+                <max>5</max>
+            </clipto>
+        </fcs_function>
         <fcs_function name="propulsion/engine[0]/bleedair-temp-val">
             <description>
                 PB is the only pressure ratio (from ambient) at the burner
@@ -258,7 +303,7 @@
                         <and>
                             <ge>
                                 <property>propulsion/openv-overspeed</property>
-                                <value>5</value>
+                                <property>propulsion/engine[0]/fire-point</property>
                             </ge>
                             <gt>
                                 <property>propulsion/engine[0]/PB</property>
@@ -421,6 +466,28 @@
         </switch>
 
         <!-- engine 1-->
+        <fcs_function name="propulsion/engine[1]/fire-point">
+            <function>
+                <ifthen>
+                    <lt>
+                        <property>propulsion/engine[1]/fire-point</property>
+                        <value>1</value>
+                    </lt>
+                    <sum>
+                        <value>4.5</value>
+                        <quotient>
+                            <urandom />
+                            <value>3.13</value>
+                        </quotient>
+                    </sum>
+                    <property>propulsion/engine[1]/fire-point</property>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>3.2</min>
+                <max>5</max>
+            </clipto>
+        </fcs_function>
         <fcs_function name="propulsion/engine[1]/bleedair-temp-val">
             <description>
                 PB is the only pressure ratio (from ambient) at the burner
@@ -474,7 +541,7 @@
                         <and>
                             <ge>
                                 <property>propulsion/openv-overspeed</property>
-                                <value>5</value>
+                                <property>propulsion/engine[1]/fire-point</property>
                             </ge>
                             <gt>
                                 <property>propulsion/engine[1]/PB</property>
@@ -645,7 +712,7 @@
                 propulsion/fire-extinguisher-level ne 0
             </test>
         </switch>
-             
+
         <!-- depelete extinguisher level whenever button is pressed -->
         <fcs_function name="propulsion/fire-extinguisher-level-v">
             <function>
