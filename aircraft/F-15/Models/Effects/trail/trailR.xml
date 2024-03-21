@@ -12,24 +12,24 @@
 
     <condition>
       <and>
-          <not>
-              <property>sim/model/f15/fx/smoke</property>
-          </not>
+        <not>
+          <property>sim/model/f15/fx/smoke</property>
+        </not>
         <greater-than>
-                    <property>engines/engine[1]/PB</property>
-                    <value>1.1</value>
+          <property>engines/engine[1]/PB</property>
+          <value>1.1</value>
         </greater-than>
         <greater-than>
-                    <property>environment/relative-humidity</property>
-                    <value>60</value>
-                </greater-than>
-                <less-than>
-                    <property>/environment/temperature-degc</property>
-                    <value>-36.5</value>
-                </less-than>
-                <not>
-              <property>fdm/jsbsim/gear/wow</property>
-                </not>
+          <property>environment/relative-humidity</property>
+          <value>60</value>
+        </greater-than>
+        <less-than>
+          <property>/environment/temperature-degc</property>
+          <value>-36.5</value>
+        </less-than>
+        <not>
+          <property>fdm/jsbsim/gear/wow</property>
+        </not>
       </and>
     </condition>
 
