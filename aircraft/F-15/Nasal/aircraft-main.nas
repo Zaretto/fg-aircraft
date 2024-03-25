@@ -18,6 +18,11 @@ LOG_INFO = 3;
 LOG_WARN = 4;
 LOG_ALERT = 5;
 
+if (props["UpdateManager"] == nil){
+    print("Fallback update manager");
+    props.UpdateManager = UpdateManager.UpdateManager;
+}
+
 var payload_dialog_reload = func(from) { 
 #    logprint(3, "payload_dialog_reload: ",from);    
     setprop("sim/gui/dialogs/payload-reload",!getprop("sim/gui/dialogs/payload-reload",1) or 1); 
@@ -27,7 +32,7 @@ var deltaT = 1.0;
 
 var currentG = 1.0;
 var minVersion = props.globals.getNode("/sim/version/flightgear/min-model-version",1);
-minVersion.setValue(2018.3);
+minVersion.setValue(getprop("/sim/minimum-fg-version"));
 # Version checking based on the work of Joshua Davidson
 if (num(string.replace(getprop("/sim/version/flightgear"),".","")) < minVersion.getValue()*100) {
 var error_mismatch = gui.Dialog.new("sim/gui/dialogs/fg-version/dialog", "Dialogs/error-mismatch.xml");

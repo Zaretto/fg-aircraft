@@ -53,6 +53,11 @@ setprop("/fdm/jsbsim/systems/hook/arrestor-wire-engaged-hook",0); # FG 2018.1 ha
 
 aircraft.data.add(VtcRadialDeg, TcModeSwitch);
 
+if (props["UpdateManager"] == nil){
+    print("Fallback update manager");
+    props.UpdateManager = UpdateManager.UpdateManager;
+}
+
 
 # Compute local magnetic deviation.
 var local_mag_deviation = func {
