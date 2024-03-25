@@ -46,9 +46,6 @@ var listen_to = func (pilot) {
     {
 #		logprint(3, "Accepted ",  pilot.getNode("sim/model/path").getValue());
 
-		if (getprop("/sim/walker/outside"))
-			setprop("sim/walker/key-triggers/outside-toggle",1);
-
 		return 1;
 	}
     else
@@ -59,9 +56,7 @@ var listen_to = func (pilot) {
 }
 
 var when_disconnecting = func (pilot) {
-	if (getprop("/sim/walker/outside"))
-		setprop("sim/walker/key-triggers/outside-toggle",0);
-    setprop("/sim/walker/outside",1);
+
 }
 
 ###############################################################################

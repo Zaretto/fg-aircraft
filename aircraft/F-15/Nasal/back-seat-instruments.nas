@@ -61,17 +61,6 @@ instruments_data_import = func
 
     aircraft.ownship_pos.set_latlon(Pilot.getNode("position/latitude-deg").getValue(), Pilot.getNode("position/longitude-deg").getValue());
 
-    if (getprop("/sim/walker/outside"))
-    {
-        Pilot.getNode("sim/model/hide-pilot",1).setValue(0);
-        Pilot.getNode("sim/model/hide-backseater",1).setValue(0);
-    }
-    else
-    {
-        Pilot.getNode("sim/model/hide-pilot",1).setValue(0);
-        Pilot.getNode("sim/model/hide-backseater",1).setValue(1);
-    }
-
     var total_fuel_lbs = Pilot.getNode("sim/multiplay/generic/int[8]",1).getValue();
     var engines_engine0_egt_degC = Pilot.getNode("sim/multiplay/generic/int[9]",1).getValue();
     var engines_engine0_fuel_flow_pph = Pilot.getNode("sim/multiplay/generic/int[10]",1).getValue();
@@ -167,8 +156,6 @@ var backseat_update = maketimer(UPDATE_PERIOD, func
 var init = func {
 
 	logprint(3, "Initializing F-15 Back Seat Systems");
-    if (!getprop("/sim/walker/outside"))
-        setprop("sim/walker/key-triggers/outside-toggle",1);
     #
     #
     # Set the electrics for yasim (basic electrical model)

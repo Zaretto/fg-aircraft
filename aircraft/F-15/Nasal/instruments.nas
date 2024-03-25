@@ -158,10 +158,7 @@ aircraft.data.add(
     "instrumentation/transponder/inputs/digit[2]", 
     "instrumentation/transponder/inputs/digit[3]",
     "sim/multiplay/generic/int[17]", # Radar status
-    "sim/model/hide-pilot",
-    "sim/model/hide-backseater",
-    "sim/model/hide-pilots-auto",
-"sim/model/f15/controls/VSD/brightness",
+    "sim/model/f15/controls/VSD/brightness",
 	"sim/model/f15/controls/VSD/contrast",
                   "sim/model/f15/controls/VSD/on-off",
                   "controls/lighting/anti-collision-switch",

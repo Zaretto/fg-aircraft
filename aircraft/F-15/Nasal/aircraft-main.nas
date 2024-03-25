@@ -569,39 +569,6 @@ var cold_and_dark = func()
 
 
 
-setlistener("sim/walker/outside", func
-{
-#    if (getprop("sim/walker/outside") and getprop("sim/walker/outfit") == 1)
-    if (getprop("sim/walker/outside"))
-    {
-        setprop("sim/model/hide-pilot",1);
-        if (two_seater)
-            setprop("sim/model/hide-backseater",1);
-    }
-    else
-    {
-        setprop("sim/model/hide-pilot",0);
-        if (two_seater)
-            setprop("sim/model/hide-backseater",0);
-    }
-});
-setlistener("sim/walker/outfit", func
-{
-#    if (getprop("sim/walker/outside") and getprop("sim/walker/outfit") == 1)
-    if (getprop("sim/walker/outside"))
-    {
-        setprop("sim/model/hide-pilot",1);
-        if (two_seater)
-            setprop("sim/model/hide-backseater",1);
-    }
-    else
-    {
-        setprop("sim/model/hide-pilot",0);
-        if (two_seater)
-            setprop("sim/model/hide-backseater",0);
-    }
-});
-
 var resetView = func () {
   setprop("sim/current-view/field-of-view", getprop("sim/current-view/config/default-field-of-view-deg"));
   setprop("sim/current-view/heading-offset-deg", getprop("sim/current-view/config/heading-offset-deg"));
