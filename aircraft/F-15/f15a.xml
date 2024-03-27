@@ -17,6 +17,12 @@
             chord, the following equation is used for all A through D
             models of the F-15: (measurements in inches).
             % MAC = (xcg - 408.1 * 100) / 191.33
+
+            As of 2024 I've now changed the axes system so that 0,0,0 is the CG (25.65% MAC)
+            after some thinking and testing it seems to be a nicer way to do it.
+
+            Of course changing the origin has no effect on anything else because it is all relative
+            to the origin.
         </note>
         <limitation></limitation>
         <reference
@@ -90,17 +96,17 @@
         <wingspan unit="FT">42.8</wingspan>
         <chord unit="IN">191.3</chord> <!-- 485.90cm -->
         <location unit="IN" name="EYEPOINT">
-            <x>197</x>
+            <x>-237.717</x>
             <y>0</y>
             <z>-3.94</z>
         </location>
         <location unit="IN" name="VRP">
-            <x>386</x>
+            <x>-48.717</x>
             <y>0</y>
             <z>0</z>
         </location>
         <location unit="IN" name="AERORP">
-            <x>434.717</x> <!-- 0.2565 %MAC, 49.06in, 124.633cm, -->
+            <x>0</x> <!-- 0.2565 %MAC, 49.06in, 124.633cm, -->
             <y>0</y>
             <z>0</z>
         </location>
@@ -108,7 +114,7 @@
 
     <mass_balance>
         <location unit="IN" name="CG">
-            <x>433</x>
+            <x>-1.71699999999998</x>
             <y>0</y>
             <z>0</z>
         </location>
@@ -128,7 +134,7 @@
         <pointmass name="Station2-1">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station2-1">
-                <x>10.593</x>
+                <x>-0.4488118</x>
                 <y>-3.721</y>
                 <z>0.388</z>
             </location>
@@ -137,7 +143,7 @@
         <pointmass name="Station2-2">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station2-2">
-                <x>11.617</x>
+                <x>0.575188200000001</x>
                 <y>-3.3034</y>
                 <z>-0.091</z>
             </location>
@@ -146,7 +152,7 @@
         <pointmass name="Station2-3">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station2-3">
-                <x>10.95</x>
+                <x>-0.0918118000000003</x>
                 <y>-2.891</y>
                 <z>0.461</z>
             </location>
@@ -155,7 +161,7 @@
         <pointmass name="Station3">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station3">
-                <x>9.35</x>
+                <x>-1.6918118</x>
                 <y>-1.611</y>
                 <z>0.567</z>
             </location>
@@ -164,7 +170,7 @@
         <pointmass name="Station4">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station4">
-                <x>13.27</x>
+                <x>2.2281882</x>
                 <y>-1.611</y>
                 <z>0.567</z>
             </location>
@@ -173,7 +179,7 @@
         <pointmass name="Station5">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station5">
-                <x>10.950</x>
+                <x>-0.0918118000000003</x>
                 <y>0</y>
                 <z>-1.231</z>
             </location>
@@ -182,7 +188,7 @@
         <pointmass name="Station6">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station6">
-                <x>13.27</x>
+                <x>2.2281882</x>
                 <y>1.611</y>
                 <z>0.567</z>
             </location>
@@ -191,7 +197,7 @@
         <pointmass name="Station7">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station7">
-                <x>9.35</x>
+                <x>-1.6918118</x>
                 <y>1.611</y>
                 <z>0.567</z>
             </location>
@@ -200,7 +206,7 @@
         <pointmass name="Station8">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station8-1 (2-3)">
-                <x>10.95</x>
+                <x>-0.0918118000000003</x>
                 <y>2.891</y>
                 <z>0.461</z>
             </location>
@@ -209,7 +215,7 @@
         <pointmass name="Station9">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station8-2 (2-2)">
-                <x>11.617</x>
+                <x>0.575188200000001</x>
                 <y>3.3034</y>
                 <z>-0.091</z>
             </location>
@@ -218,7 +224,7 @@
         <pointmass name="Station10">
             <weight unit="LBS">0</weight>
             <location unit="M" name="Pointmass Station8-3 (2-1)">
-                <x>10.593</x>
+                <x>-0.4488118</x>
                 <y>3.721</y>
                 <z>0.388</z>
             </location>
@@ -227,7 +233,7 @@
         <pointmass name="CFT11">
             <weight unit="LBS">0</weight>
             <location unit="M" name="CFT left">
-                <x>11.396</x>
+                <x>0.354188200000001</x>
                 <y>-1.76</y>
                 <z>0.021</z>
               </location>
@@ -236,7 +242,7 @@
         <pointmass name="CFT12">
             <weight unit="LBS">0</weight>
             <location unit="M" name="CFT right">
-                <x>11.396</x>
+                <x>0.354188200000001</x>
                 <y>1.76</y>
                 <z>0.021</z>
               </location>
@@ -245,7 +251,7 @@
         <pointmass name="PylonL">
             <weight unit="LBS">0</weight>
             <location unit="M" name="PylonL">
-                <x>11.25</x>
+                <x>0.2081882</x>
                 <y>-3.3034</y>
                 <z>1.4077</z>
             </location>
@@ -254,7 +260,7 @@
         <pointmass name="PylonR">
             <weight unit="LBS">0</weight>
             <location unit="M" name="PylonR">
-                <x>11.25</x>
+                <x>0.2081882</x>
                 <y>3.3034</y>
                 <z>1.4077</z>
             </location>
@@ -263,7 +269,7 @@
         <pointmass name="F-15D-extra">
             <weight unit="LBS">0</weight>
             <location unit="M" name="F-15D">
-                <x>6.642</x>
+                <x>-4.3998118</x>
                 <y>0</y>
                 <z>-0.5</z>
             </location>
@@ -277,7 +283,7 @@
     <ground_reactions>
         <contact type="BOGEY" name="NOSE_LG">
             <location unit="IN">
-                <x>197</x>
+                <x>-237.717</x>
                 <y>0</y>
                 <z>-77.6496063</z>
             </location>
@@ -292,7 +298,7 @@
         </contact>
         <contact type="BOGEY" name="LEFT_MLG">
             <location unit="IN">
-                <x>451</x>
+                <x>16.283</x>
                 <y>-98</y>
                 <z>-84.3385827</z>
             </location>
@@ -307,7 +313,7 @@
         </contact>
         <contact type="BOGEY" name="RIGHT_MLG">
             <location unit="IN">
-                <x>451</x>
+                <x>16.283</x>
                 <y>98</y>
                 <z>-84.3385827</z>
             </location>
@@ -325,7 +331,7 @@
             look about right and also to help with the dynamics --> 
         <contact type="STRUCTURE" name="NOSE_LG_DOORS">
             <location unit="IN">
-                <x>197</x>
+                <x>-237.717</x>
                 <y>0</y>
                 <z>-30.6496063</z>
             </location>
@@ -338,7 +344,7 @@
         </contact>
         <contact type="STRUCTURE" name="LEFT_MLG_DOORS">
             <location unit="IN">
-                <x>451</x>
+                <x>16.283</x>
                 <y>-98</y>
                 <z>-30</z>
             </location>
@@ -351,7 +357,7 @@
         </contact>
         <contact type="STRUCTURE" name="RIGHT_MLG_DOORS">
             <location unit="IN">
-                <x>451</x>
+                <x>16.283</x>
                 <y>98</y>
                 <z>-30</z>
             </location>
@@ -365,7 +371,7 @@
         
         <contact type="STRUCTURE" name="LEFT_WING_TIP">
             <location unit="IN">
-                <x>472</x>
+                <x>37.283</x>
                 <y>-256.8</y>
                 <z>13</z>
             </location>
@@ -377,7 +383,7 @@
         </contact>
         <contact type="STRUCTURE" name="RIGHT_WING_TIP">
             <location unit="IN">
-                <x>472</x>
+                <x>37.283</x>
                 <y>256.8</y>
                 <z>13</z>
             </location>
@@ -389,7 +395,7 @@
         </contact>
         <contact type="STRUCTURE" name="CANOPY">
             <location unit="IN">
-                <x>214</x>
+                <x>-220.717</x>
                 <y>0</y>
                 <z>10</z>
             </location>
@@ -401,7 +407,7 @@
         </contact>
         <contact type="STRUCTURE" name="RADOME_FRONT">
             <location unit="IN">
-                <x>20</x>
+                <x>-414.717</x>
                 <y>0</y>
                 <z>-18</z>
             </location>
@@ -413,7 +419,7 @@
         </contact>
         <contact type="STRUCTURE" name="LEFT_VERTICAL_TAIL">
             <location unit="IN">
-                <x>744</x>
+                <x>309.283</x>
                 <y>-98</y>
                 <z>60</z>
             </location>
@@ -425,7 +431,7 @@
         </contact>
         <contact type="STRUCTURE" name="RIGHT_VERTICAL_TAIL">
             <location unit="IN">
-                <x>744</x>
+                <x>309.283</x>
                 <y>98</y>
                 <z>60</z>
             </location>
@@ -437,7 +443,7 @@
         </contact>
         <contact type="STRUCTURE" name="REAR_BODY_LEFT">
             <location unit="IN">
-                <x>669</x>
+                <x>234.283</x>
                 <y>-58</y>
                 <z>-12</z>
             </location>
@@ -449,7 +455,7 @@
         </contact>
         <contact type="STRUCTURE" name="REAR_BODY_RIGHT">
             <location unit="IN">
-                <x>669</x>
+                <x>234.283</x>
                 <y>58</y>
                 <z>-12</z>
             </location>
@@ -461,7 +467,7 @@
         </contact>
         <contact type="STRUCTURE" name="NOSE_CONE">
             <location unit="IN">
-                <x>0</x>
+                <x>-434.717</x>
                 <y>0</y>
                 <z>-15</z>
             </location>
@@ -484,7 +490,7 @@
             <feed>9</feed>
             <thruster file="direct">
                 <location unit="IN">
-                    <x>682</x>
+                    <x>247.283</x>
                     <y>-12</y>
                     <z>0</z>
                 </location>
@@ -505,7 +511,7 @@
             <feed>8</feed>
             <thruster file="direct">
                 <location unit="IN">
-                    <x>682</x>
+                    <x>247.283</x>
                     <y>12</y>
                     <z>0</z>
                 </location>
@@ -520,7 +526,7 @@
         <tank type="FUEL" name="0 Left Engine Feed (Tank3)">
             <!--0: Left Engine Feed-->
             <location unit="M">
-                <x>9.0</x>
+                <x>-2.0418118</x>
                 <y>0</y>
                 <z>0.179</z>
             </location>
@@ -534,7 +540,7 @@
         <tank type="FUEL" name="1 Right Engine Feed (Tank1)">
             <!--1: Right Engine Feed-->
             <location unit="M">
-                <x>9.0</x>
+                <x>-2.0418118</x>
                 <y>0</y>
                 <z>0.179</z>
             </location>
@@ -548,7 +554,7 @@
         <tank type="FUEL" name="2 Tank 1">
             <!--2: Tank 1-->
             <location unit="IN">
-                <x>444.717</x>
+                <x>10</x>
                 <y>0</y>
                 <z>0.5</z>
             </location>
@@ -563,7 +569,7 @@
         <tank type="FUEL" name="3 Left Wing Tank">
             <!--3: Left Wing Tank-->
             <location unit="M">
-                <x>11.204</x>
+                <x>0.162188200000001</x>
                 <y>-2.595</y>
                 <z>0.771</z>
             </location>
@@ -578,7 +584,7 @@
         <tank type="FUEL" name="4 Right Wing Tank">
             <!--4: Right Wing Tank-->
             <location unit="M">
-              <x>11.204</x>
+              <x>0.162188200000001</x>
               <y>2.595</y>
               <z>0.771</z>
             </location>
@@ -592,7 +598,7 @@
         <tank type="FUEL" name="5 Left External Wing Tank">
             <!--5: Left External Wing Tank-->
             <location unit="M">
-              <x>11.617</x>
+              <x>0.575188200000001</x>
               <y>-3.3034</y>
               <z>-0.091</z>
             </location>
@@ -606,7 +612,7 @@
         <tank type="FUEL" name="6 Right External Wing Tank">
             <!--6: Right External Wing Tank-->
             <location unit="M">
-              <x>11.617</x>
+              <x>0.575188200000001</x>
               <y>3.3034</y>
               <z>-0.091</z>
             </location>
@@ -620,7 +626,7 @@
         <tank type="FUEL" name="7 Centre External Tank">
             <!--7: External Tank-->
             <location unit="M">
-                <x>10.950</x>
+                <x>-0.0918118000000003</x>
                 <y>0</y>
                 <z>-1.231</z>
             </location>
@@ -634,7 +640,7 @@
         <tank type="FUEL" name="8 left conformal Tank">
             <!--8: left conformal Tank-->
             <location unit="M">
-                <x>11.396</x>
+                <x>0.354188200000001</x>
                 <y>-1.76</y>
                 <z>0.021</z>
             </location>
@@ -648,7 +654,7 @@
         <tank type="FUEL" name="9 Right conformal Tank">
             <!--9: Right conformal Tank-->
             <location unit="M">
-              <x>11.396</x>
+              <x>0.354188200000001</x>
               <y>1.76</y>
               <z>0.021</z>
             </location>
@@ -662,7 +668,7 @@
         <tank type="FUEL" name="10 Left Feed line">
             <!--10: Left Feed line-->
             <location unit="IN">
-                <x>489</x>
+                <x>54.283</x>
                 <y>-38</y>
                 <z>-47</z>
             </location>
@@ -674,7 +680,7 @@
         <tank type="FUEL" name="11 Right Feed line">
             <!--11: Right Feed line-->
             <location unit="IN">
-                <x>489</x>
+                <x>54.283</x>
                 <y>38</y>
                 <z>-47</z>
             </location>
@@ -692,7 +698,7 @@
         <force name="ai-wake" frame="BODY">
             <location unit="M">
                 <!-- Center of the main wing leading edge -->
-                <x> 9.40857</x>
+                <x>-1.6332418</x>
                 <y> 0.0 </y>
                 <z> 0.63046 </z>
             </location>
@@ -712,7 +718,7 @@
        
         <force name="catapult" frame="BODY">
             <location unit="IN">
-                <x>667</x>
+                <x>232.283</x>
                 <y>0</y>
                 <z>0</z>
             </location>
@@ -724,7 +730,7 @@
         </force>
         <force name="holdback" frame="BODY">
             <location unit="IN">
-                <x>667</x>
+                <x>232.283</x>
                 <y>0</y>
                 <z>0</z>
             </location>
@@ -736,7 +742,7 @@
         </force>
         <force name="hook" frame="BODY">
             <location unit="IN">
-                <x>300</x>
+                <x>-134.717</x>
                 <y>0</y>
                 <z>0</z>
             </location>

@@ -378,17 +378,25 @@
                 </ifthen>
             </function>
         </fcs_function>
-        
+        <switch name="metrics/aero-rp-x-in-base">
+            <default value="metrics/aero-rp-x-in-base" />
+            <test value="metrics/aero-rp-x-in">
+                metrics/aero-rp-x-in-base le 0
+            </test>
+        </switch>
         <fcs_function name="aero/aero-rp-x-in">
             <function>
                 <description>Centre of pressure due to mach</description>
-                <table>
-                    <independentVar lookup="row">velocities/mach</independentVar>
-                    <tableData>
-                        0.00    434.717
-                        2.4     450.2
-                    </tableData>
-                </table>
+                <sum>
+                    <property>metrics/aero-rp-x-in-base</property>
+                    <table>
+                        <independentVar lookup="row">velocities/mach</independentVar>
+                        <tableData>
+                            0.00 0.0000
+                            2.4 15.4830
+                        </tableData>
+                    </table>
+                </sum>
             </function>
             <output>metrics/aero-rp-x-in</output>
         </fcs_function>
