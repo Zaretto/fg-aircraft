@@ -235,7 +235,6 @@ var setupRanges = func {
             append(radar_ranges, rNode.getNode("entry").getValue());
         }
     }
-    debug.dump(radar_ranges);
 };
 setupRanges();
 
@@ -1385,6 +1384,10 @@ else
 		obj.deviationA = nil;
         obj.deviationE = nil;
         obj.elevation = nil;
+        obj.tacobj = {parents: [tacview.tacobj]};
+        obj.tacobj.tacviewID = left(md5(obj.unique),5);
+        obj.tacobj.valid = 1;
+
     
 		return obj;
 	},
@@ -1736,6 +1739,7 @@ else
     get_model: func {
         return me.ModelType;
     },
+    getModel : func { return me.get_model();}, # for tacview compatibility
     isRadiating: func (coord) {
         me.rn = me.get_range();
         if (me.get_model() != "buk-m2" and me.get_model() != "s-300" and me.get_model() != "missile_frigate" and me.get_model() != "fleet" and me.get_type()!=MARINE) {
@@ -1789,6 +1793,8 @@ else
     },
 	list : [],
 };
+getCompleteList = func { tgts_list;}
+getPriorityTarget = func { active_u;}
 
 # Notes:
 
