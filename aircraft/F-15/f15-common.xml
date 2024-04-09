@@ -29,34 +29,6 @@
                 <cos-alpha-rad type="double"/>
                 <sin-alpha-rad type="double"/>
             </aero>
-            <autoflight>
-                <input>
-                  <hdg-active>0</hdg-active>
-                  <pitch-switch>0</pitch-switch>
-                  <!-- autoflight-rules.xml -->
-                  <roll-switch>0</roll-switch>
-                  <vs-active>0</vs-active>
-                </input>
-                <pitch>
-                  <altitude-2-sec-ahead>0</altitude-2-sec-ahead>
-                  <d-gain>0</d-gain>
-                  <i-gain>0</i-gain>
-                  <master-pid>0</master-pid>
-                  <p-gain>0</p-gain>
-                  <vs>
-                    <pid>0</pid>
-                  </vs>
-                </pitch>
-                <roll>
-                  <d-gain>0</d-gain>
-                  <heading>
-                    <pi>0</pi>
-                  </heading>
-                  <i-gain>0</i-gain>
-                  <master-pid>0</master-pid>
-                  <p-gain>0</p-gain>
-                </roll>
-              </autoflight>
 
               <cas>
                 <ari-input>0</ari-input>
@@ -78,16 +50,19 @@
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone" />
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone" />
                 <rudder-deadzone alias="/autopilot/settings/rudder-deadzone" />
-                <aileron-aero-deg type="double" />
-                <elevon-aero-deg type="double" />
-                <elevon-diff-aero-deg type="double" />
-                <rudder-aero-deg type="double" />
+                <aileron-pos-deg type="double" />
+                <elevon-pos-deg type="double" />
+                <differential-elevator-pos-deg type="double" />
+                <rudder-pos-deg type="double" />
                 <aileron-control  type="double">0</aileron-control>
                 <elevator-control type="double">0</elevator-control>
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
-                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable" />
-                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable" />
-                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable" />
+                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable"/>
+                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable"/>
+                <roll-sas-enable type="double">0</roll-sas-enable>
+                <roll-trim-sas-cmd-norm />
+                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable"/>
+                <steer-maneuver type="double">0</steer-maneuver>
             </fcs>
 
             <gear>
@@ -170,9 +145,16 @@
             </simulation>
  
             <systems>
+                <afcs>
+                    <elevator-cmd-delta />
+                    <heading-hold-active type="double">0</heading-hold-active>
+                    <SAS-roll-demand type="double">0</SAS-roll-demand>
+                    <heading-bank-max type="double">30</heading-bank-max>
+                  </afcs>
                 <cadc>
                     <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
                     <pitch-ratio-emergency>0</pitch-ratio-emergency>
+                    <pitch-ratio-emergency-value type="double">0.5</pitch-ratio-emergency-value>
                     <roll-ratio-emergency>0</roll-ratio-emergency>
                 </cadc>
 
@@ -272,11 +254,12 @@
             <tuning1>1.0</tuning1>
         </jsbsim>
     </fdm>
+    <a alias="/fdm/jsbsim/cas"/>
 
     <sim>
         <minimum-fg-version>2017.3</minimum-fg-version>
         <description>F-15</description>
-        <author>Richard Harrison, Enrique Laso, Nikolai V. Chr., Joshua Davidson</author>
+        <author>Richard Harrison, Enrique Laso (3d), Nikolai V. Chr.</author>
         <status>production</status>
 	<tacview-recording type="bool">0</tacview-recording>
         <config>

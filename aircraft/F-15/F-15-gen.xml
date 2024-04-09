@@ -778,7 +778,7 @@
     <description>BASE LIFT</description>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
             <tableData>
                                 -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30	
                     -20	  -0.88961	  -0.88240	  -0.87355	  -0.85401	  -0.83132	  -0.78252	  -0.72778	  -0.68079	  -0.64225	  -0.60318	  -0.55738	  -0.49530	  -0.43452	
@@ -852,7 +852,7 @@
     <description>BASE PITCHING MOMENT</description>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
             <tableData>
                                 -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30	
                     -20	   0.42961	   0.40811	   0.38651	   0.34970	   0.31293	   0.23544	   0.15107	   0.08225	   0.02845	  -0.02413	  -0.08227	  -0.15839	  -0.22694	
@@ -1003,7 +1003,7 @@
     <function name="aero/c/CMLDAD">
     <description>ROLLING MOMENT DUE TO AILERON DEFLECTION</description>
     <product>
-          <property>fcs/aileron-aero-deg</property>
+          <property>fcs/aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1043,7 +1043,7 @@
     <function name="aero/c/CMLDRD">
     <description>ROLLING MOMENT DUE TO RUDDER DEFLECTION</description>
     <product>
-          <property>fcs/rudder-aero-deg</property>
+          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1083,10 +1083,10 @@
     <function name="aero/c/CMLDTD">
     <description>ROLL MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION - CLDD</description>
     <product>
-          <property>fcs/elevon-diff-aero-deg</property>
+          <property>fcs/differential-elevator-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
             <tableData>
                                 -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30	
                     -20	  -0.00006	   0.00027	   0.00050	   0.00079	   0.00157	   0.00228	   0.00232	   0.00195	   0.00171	   0.00182	   0.00222	   0.00217	   0.00146	
@@ -1201,7 +1201,7 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
-            <independentVar lookup="table">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="table">fcs/elevator-pos-deg</independentVar>
               <tableData breakPoint="-30">
                               -20	       -10	        -5	        -2	         0	         2	         5	        10	        20	
                     -20	   0.14044	   0.07521	   0.03756	   0.01586	  -0.00006	  -0.01596	  -0.03765	  -0.07533	  -0.14038	
@@ -1597,10 +1597,10 @@
     <function name="aero/c/CFYDTD">
     <description>SIDE FORCE DUE TO DIFFERENTIAL TAIL DEFLECTION - CYDTD</description>
     <product>
-          <property>fcs/elevon-diff-aero-deg</property>
+          <property>fcs/differential-elevator-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
             <tableData>
                                 -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30	
                     -20	  -0.00052	   0.00013	  -0.00080	  -0.00190	  -0.00186	  -0.00152	  -0.00113	  -0.00121	  -0.00095	  -0.00027	   0.00029	   0.00097	   0.00142	
@@ -1713,7 +1713,7 @@
     <function name="aero/c/CYDAD">
     <description>SIDE FORCE DUE TO AILERON DEFLECTION</description>
     <product>
-          <property>fcs/aileron-aero-deg</property>
+          <property>fcs/aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1753,7 +1753,7 @@
     <function name="aero/c/CYDRD">
     <description>SIDE FORCE DUE TO RUDDER DEFLECTION</description>
     <product>
-          <property>fcs/rudder-aero-deg</property>
+          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -1795,7 +1795,7 @@
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
-            <independentVar lookup="table">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="table">fcs/elevator-pos-deg</independentVar>
               <tableData breakPoint="-30">
                               -20	       -10	        -5	        -2	         0	         2	         5	        10	        20	
                     -20	  -0.07898	  -0.04494	  -0.02243	  -0.00912	   0.00002	   0.00916	   0.02246	   0.04497	   0.07894	
@@ -2191,7 +2191,7 @@
     <function name="aero/c/CMNDAD">
     <description>YAWING MOMENT DUE TO AILERON DEFLECTION</description>
     <product>
-          <property>fcs/aileron-aero-deg</property>
+          <property>fcs/aileron-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2231,7 +2231,7 @@
     <function name="aero/c/CMNDRD">
     <description>YAWING MOMENT DUE TO RUDDER DEFLECTION</description>
     <product>
-          <property>fcs/rudder-aero-deg</property>
+          <property>fcs/rudder-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -2271,10 +2271,10 @@
     <function name="aero/c/CMNDTD">
     <description>YAWING MOMENT DUE TO DIFFERENTIAL TAIL DEFLECTION</description>
     <product>
-          <property>fcs/elevon-diff-aero-deg</property>
+          <property>fcs/differential-elevator-pos-deg</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
-            <independentVar lookup="column">fcs/elevon-aero-deg</independentVar>
+            <independentVar lookup="column">fcs/elevator-pos-deg</independentVar>
             <tableData>
                                 -30	        -25	        -20	        -15	        -10	         -5	          0	          5	         10	         15	         20	         25	         30	
                     -20	   0.00141	   0.00111	   0.00160	   0.00208	   0.00175	   0.00114	   0.00053	   0.00035	   0.00008	  -0.00045	  -0.00107	  -0.00167	  -0.00177	
@@ -2532,11 +2532,11 @@
         <property caption="phi-deg">attitude/phi-deg</property>
         <property caption="psi-deg">attitude/psi-deg</property>
         <property caption="theta-deg">attitude/theta-deg</property>
-        <property caption="aileron-aero-deg">fcs/aileron-aero-deg</property>
-        <property caption="elevon-aero-deg">fcs/elevon-aero-deg</property>
-        <property caption="elevon-diff-aero-deg">fcs/elevon-diff-aero-deg</property>
+        <property caption="aileron-aero-deg">fcs/aileron-pos-deg</property>
+        <property caption="elevon-aero-deg">fcs/elevator-pos-deg</property>
+        <property caption="elevon-diff-aero-deg">fcs/differential-elevator-pos-deg</property>
         <property caption="flap-pos-deg">fcs/flap-pos-deg</property>
-        <property caption="rudder-aero-deg">fcs/rudder-aero-deg</property>
+        <property caption="rudder-aero-deg">fcs/rudder-pos-deg</property>
         <property caption="fbx-total-lbs">forces/fbx-total-lbs</property>
         <property caption="fby-total-lbs">forces/fby-total-lbs</property>
         <property caption="fbz-total-lbs">forces/fbz-total-lbs</property>

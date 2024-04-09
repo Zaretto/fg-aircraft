@@ -423,16 +423,16 @@ var AircraftModule =
                 fuel_update();
             }
             else if (frame_count == 4) {
-                awg_9.hud_nearest_tgt();
+                 awg_9.hud_nearest_tgt();
                 
-                if ( notification.ArmSysRunning ) {
-                    armament_update();
-                }
-                armament_update2();
+                 if ( notification.ArmSysRunning ) {
+                     armament_update();
+                 }
+                 armament_update2();
             }
-            else if (frame_count == 6) {
-                afcs_filters();
-            }
+            # else if (frame_count == 6) {
+            #     afcs_filters();
+            # }
         }
     },
 };
