@@ -59,7 +59,6 @@
                 <left-aileron-normalization  type="double">0</left-aileron-normalization>
                 <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable"/>
                 <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable"/>
-                <roll-sas-enable type="double">0</roll-sas-enable>
                 <roll-trim-sas-cmd-norm />
                 <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable"/>
                 <steer-maneuver type="double">0</steer-maneuver>
@@ -155,7 +154,7 @@
                     <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
                     <pitch-ratio-emergency>0</pitch-ratio-emergency>
                     <pitch-ratio-emergency-value type="double">0.5</pitch-ratio-emergency-value>
-                    <roll-ratio-emergency>0.5</roll-ratio-emergency>
+                    <roll-ratio-emergency>0</roll-ratio-emergency>
                 </cadc>
 
                 <catapult>
@@ -792,9 +791,9 @@
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
-                        <pitch-damper-enable type="int"/>
-                        <roll-damper-enable type="int"/>
-                        <yaw-damper-enable type="int"/>
+                        <pitch-damper-enable type="int">1</pitch-damper-enable>
+                        <roll-damper-enable type="int">1</roll-damper-enable>
+                        <yaw-damper-enable type="int">1</yaw-damper-enable>
                     </CAS>
                     <AFCS>
                         <engage type="bool">false</engage>
