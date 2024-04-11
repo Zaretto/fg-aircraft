@@ -5172,10 +5172,9 @@
                 <property>aero/coefficients/DClGE</property>
             </sum>
         </function>
-        <axis name="Z">
+        <axis name="LIFT">
             <function name="aero/force/LIFT">
                 <product>
-                    <value>-1</value>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CLIFT</property>
@@ -5196,10 +5195,9 @@
                     <property>aero/coefficients/DCdCFT</property>
                 </sum>
         </function>
-        <axis name="X">
+        <axis name="DRAG">
             <function name="aero/force/DRAG">
                 <product>
-                    <value>-1</value>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CDRAG</property>
@@ -5221,10 +5219,9 @@
                 <property>aero/coefficients/CFYGEAR</property>
             </sum>
         </function>
-        <axis name="Y">
+        <axis name="SIDE">
             <function name="aero/force/SIDE">
                 <product>
-                    <value>-1</value>
                     <property>aero/qbar-psf</property>
                     <property>metrics/Sw-sqft</property>
                     <property>aero/coefficients/CSIDE</property>
@@ -5334,6 +5331,20 @@
         <property caption="Ax">accelerations/a-pilot-x-ft_sec2</property>
         <property caption="Ay">accelerations/a-pilot-y-ft_sec2</property>
         <property caption="Az">accelerations/a-pilot-z-ft_sec2</property>
+        <property caption="alpha">aero/alpha-deg</property>
+        <property caption="drag">aero/force/DRAG</property>
+        <property caption="lift">aero/force/LIFT</property>
+        <property caption="side">aero/force/SIDE</property>
+        <property caption="pitch">aero/force/PITCH</property>
+        <property caption="roll">aero/force/ROLL</property>
+        <property caption="yaw">aero/force/YAW</property>
+        <property caption="qbar-UV">aero/qbar-UV-psf</property>
+        <property caption="qbar-UW">aero/qbar-UW-psf</property>
+        <property caption="yaw-damper-sum-v0">fcs/yaw-damper-sum-v0</property>
+        <property caption="yaw-damper-sum-v0">fcs/yaw-damper-sum-v</property>
+        <property caption="yaw-damper-factor">fcs/yaw-damper-factor</property>
+        <property caption="yaw-damper-factor-c1">fcs/yaw-damper-factor-c1</property>
+        
     </output>
 <!--
      <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
