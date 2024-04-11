@@ -50,29 +50,35 @@
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone" />
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone" />
                 <rudder-deadzone alias="/autopilot/settings/rudder-deadzone" />
+
                 <aileron-pos-deg type="double" />
                 <elevon-pos-deg type="double" />
-                <differential-elevator-pos-deg type="double" />
                 <rudder-pos-deg type="double" />
-                <aileron-control  type="double">0</aileron-control>
-                <elevator-control type="double">0</elevator-control>
-                <left-aileron-normalization  type="double">0</left-aileron-normalization>
-                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable"/>
-                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable"/>
-                <roll-trim-sas-cmd-norm />
-                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable"/>
+                <differential-elevator-pos-deg type="double" />
+
+                <sas-pitch-enable alias="/sim/model/f15/controls/CAS/sas-pitch-enable" />
+                <sas-roll-enable alias="/sim/model/f15/controls/CAS/sas-roll-enable" />
+                <sas-yaw-enable alias="/sim/model/f15/controls/CAS/sas-yaw-enable" />
+
+                <roll-sas-output />
                 <steer-maneuver type="double">0</steer-maneuver>
+
+                <ari-lateral-enabled type="int">1</ari-lateral-enabled>
+                <pitch-ratio-emergency>0</pitch-ratio-emergency>
+                <pitch-ratio-emergency-value type="double">0.5</pitch-ratio-emergency-value>
+                <roll-ratio-emergency>0</roll-ratio-emergency>
             </fcs>
 
             <gear>
                 <damage-reset>0</damage-reset>
                 <gear-asym>0</gear-asym>
+                <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
                 <serviceable>1</serviceable>
           
                 <emergency-handle type="double">0</emergency-handle>
                 <emerg-pos type="double">0</emerg-pos>
                 <emerg-pos-dmd type="double">0</emerg-pos-dmd>
-                <gear-pos-norm type="double">1</gear-pos-norm>
+                <gear-position-norm type="double">1</gear-position-norm>
                 <unit n="0">
                   <locked type="double">0</locked>
                 </unit>
@@ -150,12 +156,6 @@
                     <SAS-roll-demand type="double">0</SAS-roll-demand>
                     <heading-bank-max type="double">30</heading-bank-max>
                   </afcs>
-                <cadc>
-                    <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
-                    <pitch-ratio-emergency>0</pitch-ratio-emergency>
-                    <pitch-ratio-emergency-value type="double">0.5</pitch-ratio-emergency-value>
-                    <roll-ratio-emergency>0</roll-ratio-emergency>
-                </cadc>
 
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
@@ -710,7 +710,7 @@
               </signal>
               <signal>
                 <type>float</type>
-                <property type="string">fdm/jsbsim/gear/gear-command-position-norm</property>
+                <property type="string">fdm/jsbsim/gear/gear-position-norm</property>
               </signal>
             </config>
         </flight-recorder>
@@ -791,9 +791,9 @@
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
-                        <pitch-damper-enable type="int">1</pitch-damper-enable>
-                        <roll-damper-enable type="int">1</roll-damper-enable>
-                        <yaw-damper-enable type="int">1</yaw-damper-enable>
+                        <sas-pitch-enable type="int"/>
+                        <sas-roll-enable type="int"/>
+                        <sas-yaw-enable type="int"/>
                     </CAS>
                     <AFCS>
                         <engage type="bool">false</engage>

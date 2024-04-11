@@ -4917,7 +4917,7 @@
       <function name="aero/coefficients/CFXGEAR">
         <description>DRAG INCREMENT DUE TO GEAR</description>
         <product>
-          <property>gear/gear-command-position-norm</property>
+          <property>gear/gear-position-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -4958,7 +4958,7 @@
       <function name="aero/coefficients/CFYGEAR">
         <description>SIDEFORCE INCREMENT DUE TO GEAR</description>
         <product>
-          <property>gear/gear-command-position-norm</property>
+          <property>gear/gear-position-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -4999,7 +4999,7 @@
       <function name="aero/coefficients/CFZGEAR">
         <description>LIFT INCREMENT DUE TO GEAR</description>
         <product>
-          <property>gear/gear-command-position-norm</property>
+          <property>gear/gear-position-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -5041,7 +5041,7 @@
       <function name="aero/coefficients/CMLGEAR">
         <description>ROLLING MOMENT INCREMENT DUE TO GEAR</description>
         <product>
-          <property>gear/gear-command-position-norm</property>
+          <property>gear/gear-position-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -5082,7 +5082,7 @@
       <function name="aero/coefficients/CMMGEAR">
         <description>PITCHING MOMENT INCREMENT DUE TO GEAR</description>
         <product>
-          <property>gear/gear-command-position-norm</property>
+          <property>gear/gear-position-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -5123,7 +5123,7 @@
       <function name="aero/coefficients/CMNGEAR">
         <description>YAWING MOMENT INCREMENT DUE TO GEAR</description>
         <product>
-          <property>gear/gear-command-position-norm</property>
+          <property>gear/gear-position-norm</property>
           <table>
             <independentVar lookup="row">aero/alpha-deg</independentVar>
             <independentVar lookup="column">aero/beta-deg</independentVar>
@@ -5306,7 +5306,7 @@
             </function>
         </axis>
     </aerodynamics>
-     <!--
+     
         <output name="c:/temp/F-15-JSBOut.csv" type="CSV" rate="10">
         <property caption="AccelError">cas/pitch/accel-error</property>
         <property caption="PilotGdamped">/accelerations/pilot-gdamped</property>
@@ -5335,7 +5335,7 @@
         <property caption="Ay">accelerations/a-pilot-y-ft_sec2</property>
         <property caption="Az">accelerations/a-pilot-z-ft_sec2</property>
     </output>
-
+<!--
      <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
         <property>position/aircraft-on-ground</property>
         <property>velocities/h-dot-fps</property>
