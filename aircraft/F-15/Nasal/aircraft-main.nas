@@ -42,9 +42,6 @@ var fixAirframe = func {
     if (getprop("payload/armament/msg")==1 and !getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
         screen.log.write(pylons.msgA);
     } else {
-    # F-15 doesn't support wing detachment.
-        left_wing_torn.setValue(0);
-        right_wing_torn.setValue(0);
     	setprop ("fdm/jsbsim/gear/damage-reset", 1);
     	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
     	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
@@ -199,24 +196,6 @@ var position_flash_init  = func {
 	}
 }
 
-# lighting
-var lighting_collision = props.globals.getNode("sim/model/f15/lighting/anti-collision/state", 1);
-var lighting_position  = props.globals.getNode("sim/model/f15/lighting/position/state", 1);
-
-# wing detachment.
-var left_wing_torn     = props.globals.getNode("sim/model/f15/wings/left-wing-torn");
-var right_wing_torn    = props.globals.getNode("sim/model/f15/wings/right-wing-torn");
-
-# 0, -1 (left) or 1 (right).
-var wing_torn_generic     = props.globals.getNode("sim/multiplay/generic/float[3]",1);
-
-var main_flap_generic  = props.globals.getNode("sim/multiplay/generic/float[1]",1);
-var aileron_generic   = props.globals.getNode("sim/multiplay/generic/float[2]",1);
-#var slat_generic       = props.globals.getNode("sim/multiplay/generic/float[3]",1);
-var left_elev_generic  = props.globals.getNode("sim/multiplay/generic/float[4]",1);
-var right_elev_generic = props.globals.getNode("sim/multiplay/generic/float[5]",1);
-var elev_output   = props.globals.getNode("surface-positions/elevator-pos-norm", 1);
-var fuel_dump_generic  = props.globals.getNode("sim/multiplay/generic/int[0]",1);
 # sim/multiplay/generic/int[1] used by formation slimmers.
 # sim/multiplay/generic/int[2] used by radar standby.
 var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);

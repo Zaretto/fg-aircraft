@@ -7,7 +7,6 @@
     <channel name="Mechanical">
         <fcs_function name="systems/cadc/rudder-effectivity">
             <function>
-                <description>High speed CADC control effectivity limitation of rudder</description>
                     <table>
                         <independentVar lookup="row">velocities/vc-kts</independentVar>
                         <tableData>
@@ -17,47 +16,6 @@
                     </table>
             </function>
         </fcs_function>
-
-        <fcs_function name="fcs/pitch-ratio-dmd">
-            <function>
-                <description>High speed CADC control effectivity limitation of elevator</description>
-                <product>
-                    <sum>
-                        <value>1</value>
-                        <abs>
-                            <property>inertia/cg-x-mac-percent</property>
-                        </abs>
-                    </sum>
-                    <table>
-                        <independentVar lookup="row">velocities/vc-kts</independentVar>
-                        <tableData>
-                            0 1.0
-                            300 1.0
-                            400 0.7
-                            500 0.4
-                            600 0.2
-                            900 0.05
-                            1100 0.08
-                        </tableData>
-                    </table>
-                </product>
-            </function>
-            <clipto>
-                <min> -1 </min>
-                <max> 1 </max>
-            </clipto>
-        </fcs_function>
-
-		<switch name="fcs/pitch-ratio">
-            <description>Aircraft on ground</description>
-            <default value="fcs/pitch-ratio-dmd" />
-            <test value="fcs/pitch-ratio-emergency-value" logic="OR">
-                fcs/pitch-ratio-emergency ne 0
-            </test>
-            <test value="1" logic="OR">
-                gear/gear-position-norm ne 0
-            </test>
-        </switch>
    </channel>
 
     <channel name="CAS longitudinal">
@@ -358,7 +316,6 @@
 
          <fcs_function name="systems/cadc/roll-ratio-dmd">
             <function>
-                <description>High speed CADC control effectivity limitation of aileron</description>
                 <table>
                     <independentVar lookup="row">velocities/vc-kts</independentVar>
                     <tableData>
@@ -404,50 +361,67 @@
             </test>
             <output>fcs/yaw-damper-active</output>
         </switch>
-
-        <scheduled_gain name="fcs/yaw-damper-sum">
-            <input>velocities/r-aero-rad_sec</input>
-            <table>
-                <independentVar>velocities/vc-kts</independentVar>
-                <tableData>
-                    0 0
-                    80 0
-                    120 3.6251
-                    650 1.65
-                    890 1.00
-                    1000 0.5
-                </tableData>
-            </table>
+        <fcs_function name="fcs/yaw-damper-factor-c1">
+            <function>
+                <table>
+                    <independentVar>velocities/vc-kts</independentVar>
+                    <tableData>
+                        200 50
+                        250 100
+                        600 600
+                        700 1200
+                        1000 1200
+                    </tableData>
+                </table>
+            </function>
+        </fcs_function>
+        <fcs_function name="fcs/yaw-damper-sum-v0">
+            <function>
+                <product>
+                    <property>velocities/r-aero-rad_sec</property>
+                    <property>fcs/yaw-damper-factor</property>
+                    <not>
+                        <property>position/aircraft-on-ground</property>
+                    </not>
+                    <table>
+                        <independentVar>velocities/vc-kts</independentVar>
+                        <tableData>
+                             0     0.00
+                            80     0.00
+                           100     0.00
+                           105     1.00
+                           200     6.00
+                           300     2.00
+                           400     2.00
+                           600     1.00
+                           700     0.80
+                           800     0.60
+                           999     0.60
+                        </tableData>
+                    </table>
+                </product>
+            </function>
             <clipto>
                 <min>-1.2000</min>
                 <max>1.2000</max>
             </clipto>
-        </scheduled_gain>
+        </fcs_function>
+        <lag_filter name="fcs/yaw-damper-sum-v">
+            <input>fcs/yaw-damper-sum-v0</input>
+            <c1>fcs/yaw-damper-factor-c1</c1>
+        </lag_filter >
+        <lead_lag_filter name="fcs/yaw-damper-sum">
+            <input>fcs/yaw-damper-sum-v</input>
+            <c1>2</c1>
+            <c2>0</c2>
+            <c3>2</c3>
+            <c4>1</c4>
+        </lead_lag_filter >
 
-        <scheduled_gain name="fcs/yaw-damper-dmd">
+        <pure_gain name="fcs/yaw-damper-dmd">
             <input>fcs/yaw-damper-sum</input>
-            <table>
-                <independentVar>aero/qbar-psf</independentVar>
-                <tableData>
-                    2.9900 0.0000
-                    3.0000 1.0000
-                </tableData>
-            </table>
             <gain>fcs/yaw-damper-active</gain>
-        </scheduled_gain>
-        <!--<scheduled_gain name="Yaw Damper Rate">
-        <input>velocities/r-aero-rad_sec</input>
-        <table>
-            <independentVar lookup="row">velocities/ve-kts</independentVar>
-            <tableData>
-                30     0.00
-                60     1.6
-                400     0.5
-                800     0.5
-            </tableData>
-        </table>
-        <gain>fcs/yaw-damper-active</gain>
-    </scheduled_gain>-->
+        </pure_gain>
 
         <scheduled_gain name="fcs/roll-rate-limiter">
             <input>fcs/aileron-cmd-norm</input>
@@ -586,8 +560,15 @@
                 </product>
             </function>
         </fcs_function>
-
-        <aerosurface_scale name="fcs/differential-elevator-pos-deg">
+        <summer name="fcs/elevator-left-pos-norm">
+            <input>fcs/elevator-pos-norm</input>
+            <input>fcs/differential-elevator-pos-norm</input>
+        </summer>
+        <summer name="fcs/elevator-right-pos-norm">
+            <input>fcs/elevator-pos-norm</input>
+            <input>-fcs/differential-elevator-pos-norm</input>
+        </summer>
+                        <aerosurface_scale name="fcs/differential-elevator-pos-deg">
             <input>fcs/differential-elevator-pos-norm</input>
             <domain>
                 <min> -1 </min>
@@ -847,7 +828,7 @@
             <gain>systems/cadc/rudder-effectivity</gain>
         </pure_gain>
 
-        <summer name="Rudder Sum">
+        <summer name="fcs/rudder-pos-norm">
             <input>fcs/rudder-command-sum</input>
             <input>fcs/yaw-damper-dmd</input>
             <clipto>
@@ -856,41 +837,24 @@
             </clipto>
         </summer>
 
-        <switch name="fcs/rudder-actuator-pos">
-            <default value="fcs/rudder-sum"/>
-            <test value="fcs/rudder-actuator-pos">
+        <switch name="fcs/rudder-pos-norm-0">
+            <default value="fcs/rudder-pos-norm"/>
+            <test value="fcs/rudder-pos-norm-0">
                 systems/hydraulics/flight-system-pressure ne 1
             </test>
         </switch>
-        <kinematic name="Rudder Control">
-            <input>fcs/rudder-actuator-pos</input>
-            <traverse>
-                <setting>
-                    <position>-0.35</position>
-                    <time>0.90</time>
-					<!-- based on 30 deg/sec -->
-                </setting>
-                <setting>
-                    <position>0.35</position>
-                    <time>0.90</time>
-					<!-- based on 30 deg/sec -->
-                </setting>
-            </traverse>
-            <output>fcs/rudder-pos-rad</output>
-        </kinematic>
+        <lead_lag_filter name="fcs/rudder-pos-norm">
+            <input>fcs/rudder-pos-norm-0</input>
+            <c1>0</c1>
+            <c2>20</c2>
+            <c3>1</c3>
+            <c4>20</c4>
+        </lead_lag_filter>
 	
-        <aerosurface_scale name="rudder normalization">
-            <input>fcs/rudder-pos-rad</input>
-            <domain>
-                <min> -0.35 </min>
-                <max>  0.35 </max>
-            </domain>
-            <range>
-                <min> -1 </min>
-                <max> 1 </max>
-            </range>
-            <output>fcs/rudder-pos-norm</output>
-        </aerosurface_scale>
+        <pure_gain name="fcs/rudder-pos-deg">
+            <input>fcs/rudder-pos-norm</input>
+            <gain>30</gain>
+        </pure_gain>
     </channel>
 
     <channel name="Flaps">

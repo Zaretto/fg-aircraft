@@ -9,7 +9,6 @@
    | Enrique Laso: Original external 3d model (2015).
    | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work was a good basis. (pre 2015)
    | Nikolai V. Chr.: Improvements to Weapons, Radar, new SIT on MPCD, HUD (2015->current)
-   | Joshua Davidson: Flight Controls and autopilot (2018-2019)
    | ________________________________________________________________
    | Various authors have contributed liveries as per commit history.
 -->
@@ -67,6 +66,9 @@
                 <pitch-ratio-emergency>0</pitch-ratio-emergency>
                 <pitch-ratio-emergency-value type="double">0.5</pitch-ratio-emergency-value>
                 <roll-ratio-emergency>0</roll-ratio-emergency>
+
+                <yaw-damper-factor type="double">1</yaw-damper-factor>
+                <yaw-damper-factor-c1 type="double">50</yaw-damper-factor-c1>
             </fcs>
 
             <gear>
@@ -766,7 +768,7 @@
         </startup>
         <systems>
             <autopilot n="0">
-                <path>Aircraft/F-15/Systems/autoflight-rules.xml</path>
+                <path>Aircraft/Generic/generic-autopilot.xml</path>
             </autopilot>
             <property-rule n="100">
                 <path>Aircraft/F-15/Systems/armament-rules.xml</path>
@@ -791,9 +793,9 @@
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
-                        <sas-pitch-enable type="int"/>
-                        <sas-roll-enable type="int"/>
-                        <sas-yaw-enable type="int"/>
+                        <sas-pitch-enable type="int">1</sas-pitch-enable>
+                        <sas-roll-enable type="int">1</sas-roll-enable>
+                        <sas-yaw-enable type="int">1</sas-yaw-enable>
                     </CAS>
                     <AFCS>
                         <engage type="bool">false</engage>
@@ -1300,12 +1302,13 @@
                 <bool n="69" alias="/sim/model/f15/payload/selected/aim9-r2" />
                 <bool n="70" alias="/sim/model/f15/payload/selected/CFT-pylon-l-CFT-pylon-r" />
 
-                <float n="1">0</float> <!-- rudders  -->
-                <float n="2">0</float> <!-- left aileron  -->
-                <float n="3">0</float> <!-- right aileron  -->
-                <float n="4">0</float> <!-- left elevon  -->
-                <float n="5">0</float> <!-- right elevon -->
-                <float n="6">0</float> <!-- refuel probe/door -->
+                <float n="1" alias="/fdm/jsbsim/fcs/rudder-pos-norm"/> <!-- rudders  -->
+                <float n="2" alias="/fdm/jsbsim/fcs/left-aileron-pos-norm"/><!-- left aileron  -->
+                <float n="3" alias="/fdm/jsbsim/fcs/right-aileron-pos-norm"/><!-- right aileron  -->
+                <float n="4" alias="/fdm/jsbsim/fcs/elevator-left-pos-norm"/><!-- left elevon  -->
+                <float n="5" alias="/fdm/jsbsim/fcs/elevator-right-pos-norm"/><!-- right elevon -->
+                <float n="6" alias="/sim/model/f15/refuel/position-norm"/><!-- refuel probe/door -->
+
                 <float n="8" alias="/engines/engine[0]/augmentation-burner" />
                 <float n="9" alias="/engines/engine[1]/augmentation-burner" />
                 <float n="10" alias="/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" />
