@@ -70,12 +70,12 @@ var current_flame_number = 0;
 var autoThrottle = props.globals.getNode("autopilot/locks/speed", 1);
 
 var toggleAutoThrottle = func {
-	if (autoThrottle.getValue() == "speed-with-throttle")
+	if (autoThrottle.getValue() == "speed-with-throttle-mach")
 		autoThrottle.setValue("");
 	else 
 	{
-		autoThrottle.setValue("speed-with-throttle");
-		setprop("/autopilot/settings/target-speed-kt", getprop("/instrumentation/airspeed-indicator/indicated-mach"));
+		autoThrottle.setValue("speed-with-throttle-mach");
+		setprop("/autopilot/settings/target-speed-mach", getprop("/instrumentation/airspeed-indicator/indicated-mach"));
 	}
 }
 #####################
