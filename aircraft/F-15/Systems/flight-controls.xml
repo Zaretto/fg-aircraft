@@ -5,7 +5,7 @@
 	-->
 
     <channel name="Mechanical">
-        <fcs_function name="systems/cadc/rudder-effectivity">
+        <fcs_function name="fcs/rudder-effectivity">
             <function>
                     <table>
                         <independentVar lookup="row">velocities/vc-kts</independentVar>
@@ -24,7 +24,7 @@
             <test logic="AND" value="1">
                 fcs/elevator-cmd-norm ge -0.15
                 fcs/elevator-cmd-norm le 0.15
-                fcs/sas-pitch-enable ne 0.0
+                fcs/cas-pitch-enable ne 0.0
             </test>
             <output>fcs/pitch-damper-active</output>
         </switch>
@@ -314,7 +314,7 @@
             </test>
         </switch>
 
-         <fcs_function name="systems/cadc/roll-ratio-dmd">
+         <fcs_function name="fcs/roll-ratio-dmd">
             <function>
                 <table>
                     <independentVar lookup="row">velocities/vc-kts</independentVar>
@@ -332,10 +332,15 @@
                         1000 0.01 -->
                     </table>
             </function>
+            <clipto>
+                <min>0.25</min>
+                <max>1.0</max>
+            </clipto>
         </fcs_function>
-        <switch name="systems/cadc/roll-ratio">
+
+        <switch name="fcs/roll-ratio">
             <description>Roll ratio actual</description>
-            <default value="systems/cadc/roll-ratio-dmd" />
+            <default value="fcs/roll-ratio-dmd" />
             <test value="0.5" logic="OR">
                 fcs/roll-ratio-emergency ne 0
             </test>
@@ -346,18 +351,18 @@
     </channel>
 
     <channel name="CAS Lateral">
-        <switch name="fcs/roll-sas-active">
+        <switch name="fcs/roll-cas-active">
             <default value="0.0" />
             <test logic="AND" value="1">
-                fcs/sas-roll-enable ne 0.0
+                fcs/cas-roll-enable ne 0.0
             </test>
-            <output>fcs/roll-sas-active</output>
+            <output>fcs/roll-cas-active</output>
         </switch>
 
         <switch name="fcs/yaw-damper-active">
             <default value="0.0" />
             <test logic="AND" value="1">
-                fcs/roll-sas-active ne 0.0
+                fcs/roll-cas-active ne 0.0
             </test>
             <output>fcs/yaw-damper-active</output>
         </switch>
@@ -429,14 +434,14 @@
                 <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
                 <tableData>
                     -6.2 -1.0
-                    -1.4 0.0
-                    1.4 0.0
-                    6.2 -1.0
+                    -1.4  0.0
+                     1.4  0.0
+                     6.2 -1.0
                 </tableData>
             </table>
-            <gain>fcs/roll-sas-active</gain>
+            <gain>fcs/roll-cas-active</gain>
         </scheduled_gain>
-        <summer name="fcs/roll-sas-output">
+        <summer name="fcs/roll-cas-output">
 			<input>fcs/roll-rate-limiter</input>
 		</summer>
 
@@ -600,7 +605,7 @@
         <summer name="fcs/roll-trim-sum-raw">
             <input>fcs/aileron-cmd-norm</input>
             <input>fcs/roll-trim-cmd-norm</input>
-            <input>fcs/roll-sas-output</input>
+            <input>fcs/roll-cas-output</input>
             <clipto>
                 <min> -1 </min>
                 <max> 1 </max>
@@ -609,7 +614,7 @@
 
         <pure_gain name="fcs/roll-trim-sum-norm">
             <input>fcs/roll-trim-sum-raw</input>
-            <gain>systems/cadc/roll-ratio</gain>
+            <gain>fcs/roll-ratio</gain>
         </pure_gain>
 
         <switch name="fcs/roll-trim-actuator-norm">
@@ -825,7 +830,7 @@
         </summer>
         <pure_gain name="fcs/rudder-command-sum">
             <input>fcs/rudder-command-raw-sum</input>
-            <gain>systems/cadc/rudder-effectivity</gain>
+            <gain>fcs/rudder-effectivity</gain>
         </pure_gain>
 
         <summer name="fcs/rudder-pos-norm">

@@ -212,7 +212,7 @@ var carrier_ara_63_heading = nil;
 
 var wow = 1;
 setprop("fdm/jsbsim/fcs/roll-trim-actuator",0) ;
-setprop("controls/flight/SAS-roll",0);
+setprop("controls/flight/cas-roll",0);
 
 #
 #
@@ -464,9 +464,9 @@ var quickstart = func() {
     setprop("engines/engine[1]/out-of-fuel",0);
     setprop("engines/engine[1]/run",1);
     setprop("engines/engine[1]/run",1);
-    setprop("sim/model/f15/controls/CAS/sas-pitch-enable",1);
-    setprop("sim/model/f15/controls/CAS/sas-roll-enable",1);
-    setprop("sim/model/f15/controls/CAS/sas-yaw-enable",1);
+    setprop("sim/model/f15/controls/CAS/cas-pitch-enable",1);
+    setprop("sim/model/f15/controls/CAS/cas-roll-enable",1);
+    setprop("sim/model/f15/controls/CAS/cas-yaw-enable",1);
 
 setprop("engines/engine[1]/cutoff",0);
 setprop("engines/engine[0]/cutoff",0);
@@ -508,9 +508,9 @@ var cold_and_dark = func()
     setprop("controls/lighting/stby-inst", 0);
     setprop("controls/lighting/warn-caution", 0);
 
-    setprop("sim/model/f15/controls/CAS/sas-pitch-enable",0);
-    setprop("sim/model/f15/controls/CAS/sas-roll-enable",0);
-    setprop("sim/model/f15/controls/CAS/sas-yaw-enable",0);
+    setprop("sim/model/f15/controls/CAS/cas-pitch-enable",0);
+    setprop("sim/model/f15/controls/CAS/cas-roll-enable",0);
+    setprop("sim/model/f15/controls/CAS/cas-yaw-enable",0);
 
     setprop("sim/model/f15/controls/HUD/brightness",0);
     setprop("sim/model/f15/controls/HUD/on-off",0);

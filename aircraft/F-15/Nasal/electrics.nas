@@ -430,7 +430,7 @@ var runEMMISC = func {
             setprop("sim/model/f15/lights/ca-launch-bar",0);
         }
     }
-    if  (!getprop("sim/model/f15/controls/CAS/sas-yaw-enable"))
+    if  (!getprop("sim/model/f15/controls/CAS/cas-yaw-enable"))
     {
         if (!getprop("sim/model/f15/lights/ca-cas-yaw"))
         {
@@ -498,7 +498,7 @@ var runEMMISC = func {
         }
     }
 
-    if  (!getprop("sim/model/f15/controls/CAS/sas-roll-enable"))
+    if  (!getprop("sim/model/f15/controls/CAS/cas-roll-enable"))
     {
         if (!getprop("sim/model/f15/lights/ca-cas-roll"))
         {
@@ -515,7 +515,7 @@ var runEMMISC = func {
         }
     }
 
-    if  (!getprop("sim/model/f15/controls/CAS/sas-pitch-enable"))
+    if  (!getprop("sim/model/f15/controls/CAS/cas-pitch-enable"))
     {
         if (!getprop("sim/model/f15/lights/ca-cas-pitch"))
         {

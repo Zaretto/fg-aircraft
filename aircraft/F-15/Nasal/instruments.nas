@@ -208,9 +208,9 @@ aircraft.data.add(
                   "ai/submodels/submodel[3]/count",
                   "sim/model/f15/systems/gun/rounds",
                   "sim/model/instrumentation/vhf/mode",
-                  "sim/model/f15/controls/CAS/sas-pitch-enable",
-                  "sim/model/f15/controls/CAS/sas-roll-enable",
-                  "sim/model/f15/controls/CAS/sas-yaw-enable",
+                  "sim/model/f15/controls/CAS/cas-pitch-enable",
+                  "sim/model/f15/controls/CAS/cas-roll-enable",
+                  "sim/model/f15/controls/CAS/cas-yaw-enable",
                   "sim/model/f15/controls/MPCD/mode",
                   "sim/model/f15/controls/windshield-heat",
                   "controls/pilots-displays/hsd-mode-nav",
@@ -283,7 +283,7 @@ var common_init = func
     aoa_max.setDoubleValue(0);
 
     setprop("sim/replay/buffer/medium-res-sample-dt", 0.02); 
-    setprop("controls/flight/SAS-roll",0);
+    setprop("controls/flight/cas-roll",0);
     setprop("sim/model/f15/controls/AFCS/engage",0);
     setprop("autopilot/locks/altitude","");
     setprop("autopilot/locks/heading","");

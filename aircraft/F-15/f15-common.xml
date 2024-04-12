@@ -55,11 +55,11 @@
                 <rudder-pos-deg type="double" />
                 <differential-elevator-pos-deg type="double" />
 
-                <sas-pitch-enable alias="/sim/model/f15/controls/CAS/sas-pitch-enable" />
-                <sas-roll-enable alias="/sim/model/f15/controls/CAS/sas-roll-enable" />
-                <sas-yaw-enable alias="/sim/model/f15/controls/CAS/sas-yaw-enable" />
+                <cas-pitch-enable alias="/sim/model/f15/controls/CAS/cas-pitch-enable" />
+                <cas-roll-enable alias="/sim/model/f15/controls/CAS/cas-roll-enable" />
+                <cas-yaw-enable alias="/sim/model/f15/controls/CAS/cas-yaw-enable" />
 
-                <roll-sas-output />
+                <roll-cas-output />
                 <steer-maneuver type="double">0</steer-maneuver>
 
                 <ari-lateral-enabled type="int">1</ari-lateral-enabled>
@@ -155,7 +155,7 @@
                 <afcs>
                     <elevator-cmd-delta />
                     <heading-hold-active type="double">0</heading-hold-active>
-                    <SAS-roll-demand type="double">0</SAS-roll-demand>
+                    <cas-roll-demand type="double">0</cas-roll-demand>
                     <heading-bank-max type="double">30</heading-bank-max>
                   </afcs>
 
@@ -796,9 +796,9 @@
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
-                        <sas-pitch-enable type="int">1</sas-pitch-enable>
-                        <sas-roll-enable type="int">1</sas-roll-enable>
-                        <sas-yaw-enable type="int">1</sas-yaw-enable>
+                        <cas-pitch-enable type="int">1</cas-pitch-enable>
+                        <cas-roll-enable type="int">1</cas-roll-enable>
+                        <cas-yaw-enable type="int">1</cas-yaw-enable>
                     </CAS>
                     <AFCS>
                         <engage type="bool">false</engage>
