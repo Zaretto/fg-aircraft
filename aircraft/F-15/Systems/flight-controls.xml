@@ -316,21 +316,13 @@
 
          <fcs_function name="fcs/roll-ratio-dmd">
             <function>
-                <table>
-                    <independentVar lookup="row">velocities/vc-kts</independentVar>
-                    <tableData>
-                        0 1.0
-                        180 1.0
-                        400 0.4
-                        1000 0.12
-                </tableData>
-                        <!-- 0 1.0
-                        180 1.0
-                        250 0.5
-                        400 0.05
-                        600 0.02
-                        1000 0.01 -->
-                    </table>
+                <sum>
+                    <property>fcs/roll-ratio-base</property>
+                    <product>
+                        <property>velocities/vc-kts</property>
+                        <property>fcs/roll-ratio-factor</property>
+                    </product>
+                </sum>
             </function>
             <clipto>
                 <min>0.25</min>
