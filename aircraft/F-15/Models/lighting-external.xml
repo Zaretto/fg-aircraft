@@ -792,82 +792,85 @@ Items prefixed with RBT are the rembrandt light cones.
             <z>0</z>
         </position>
         <ambient>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>0.6588</r>
+            <g>0.3608</g>
+            <b>0.1451</b>
+            <a>1.0000</a>
         </ambient>
         <diffuse>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>0.6588</r>
+            <g>0.3608</g>
+            <b>0.1451</b>
+            <a>1.0000</a>
         </diffuse>
         <specular>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>0.6588</r>
+            <g>0.3608</g>
+            <b>0.1451</b>
+            <a>1.0000</a>
         </specular>
         <attenuation>
-            <!--<c>1</c>
-            <l>1.7</l>
-            <q>0.1</q>-->
-            <!--<c>1</c>
-            <l>2.7</l>
-            <q>1</q>-->
             <c>1</c>
-            <l>2.7</l>
-            <q>1</q>
+            <l>0.8</l>
+            <q>1.0</q>
         </attenuation>
+        <cutoff>100</cutoff>
         <near-m>0.01</near-m>
-        <far-m>17.3</far-m>
-        <dim-factor>
-            <property>engines/engine[0]/afterburner</property>
-        </dim-factor>        
+        <far-m>14.3</far-m>
+          <dim-factor>
+            <expression>
+              <product>
+                <property>engines/engine[1]/afterburner</property>
+                <value>0.2</value>
+              </product>
+            </expression>
+          </dim-factor>
     </animation>
     <animation>
-        <dim-factor>
-            <property>engines/engine[1]/afterburner</property>
-        </dim-factor>
         <type>light</type>
         <light-type>point</light-type>
         <name>right afterburner</name>
         <object-name>RBT-afterburner_halo_r</object-name>
-        <nopreview/>
+        <nopreview />
         <position>
             <x>8.512</x>
             <y>0.7</y>
             <z>0</z>
         </position>
         <ambient>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>0.6588</r>
+            <g>0.3608</g>
+            <b>0.1451</b>
+            <a>1.0000</a>
         </ambient>
         <diffuse>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>0.6588</r>
+            <g>0.3608</g>
+            <b>0.1451</b>
+            <a>1.0000</a>
         </diffuse>
         <specular>
-            <r>0.95</r>
-            <g>0.9</g>
-            <b>0.9</b>
-            <a>1</a>
+            <r>0.6588</r>
+            <g>0.3608</g>
+            <b>0.1451</b>
+            <a>1.0000</a>
         </specular>
         <attenuation>
-            <!--<c>1</c>
-            <l>2.7</l>
-            <q>1</q>-->
             <c>1</c>
-            <l>2.7</l>
-            <q>1</q>
+            <l>0.8</l>
+            <q>1.0</q>
         </attenuation>
+        <cutoff>100</cutoff>
         <near-m>0.01</near-m>
-        <far-m>17.3</far-m>
+        <far-m>14.3</far-m>
+        <dim-factor>
+            <expression>
+                <product>
+                    <property>engines/engine[1]/afterburner</property>
+                    <value>0.2</value>
+                </product>
+            </expression>
+        </dim-factor>
     </animation>
     <!-- formation lights -->
     <animation>
@@ -1016,7 +1019,7 @@ Items prefixed with RBT are the rembrandt light cones.
         <y-offset>0</y-offset>
         <z-offset>0</z-offset>
     </animation>
-<!-- This is the halo brightness - available scene light-->
+    <!-- This is the halo brightness - available scene light-->
     <animation>
         <type>scale</type>
         <object-name>coll_halo_WR</object-name>
