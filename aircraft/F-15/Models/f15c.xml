@@ -1106,7 +1106,21 @@
         <min-m>2</min-m>
         <max-m>9999</max-m>
     </animation>
-
+    <animation>
+        <type>select</type>
+        <object-name>Backseater</object-name>
+        <condition>
+            <and>
+                <equals>
+                    <property>sim/model/f15/variant</property>
+                    <value>D</value>
+                </equals>
+                <not>
+                  <property>/sim/current-view/internal</property>
+                </not>
+            </and>
+        </condition>
+    </animation>
     <animation>
         <type>select</type>
         <object-name>FanLHighSpeed</object-name>
