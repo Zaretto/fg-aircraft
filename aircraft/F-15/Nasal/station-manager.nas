@@ -147,7 +147,7 @@ var Station = {
 						};
 					} elsif (me.weaponName == "AIM-120") {
 						mf = func (struct) {
-							if (struct.dist_m != -1 and struct.dist_m*M2NM < 10 and struct.guidance == "sample") {
+							if (struct.dist_m != -1 and struct.dist_m*M2NM < 10 and struct.guidance == "inertial") {
 								screen.log.write("AIM-120: Pitbull", 1,1,0);
 								return {"guidance":"radar","abort_midflight_function":1};
 							}
