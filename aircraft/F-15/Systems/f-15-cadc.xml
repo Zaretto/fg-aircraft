@@ -258,7 +258,7 @@
                     <quotient>
                         <difference>
                             <property> inertia/cg-x-in</property>
-                            <v>391.2</v>
+                            <v>-41.800000</v>
                         </difference>
                         <product>
                             <property>metrics/cbarw-ft</property>
@@ -596,7 +596,7 @@
         <!-- warning silence -->
         <switch name="systems/cadc/gear-warn-silence-cmd">
             <default value="0"/>
-            <test value="systems/cadc/gear-warn-silence-dmd">
+            <test value="gear/gear-warn-silence-dmd">
                 gear/unit[1]/locked eq 0
             </test>
             <test value="systems/cadc/gear-warn-silence-cmd">
@@ -607,7 +607,7 @@
         <switch name="systems/cadc/gear-warn-silence">
             <default value="0"/>
             <test value="1">
-                systems/cadc/gear-warn-silence-dmd ne systems/cadc/gear-warn-silence-cmd
+                gear/gear-warn-silence-dmd ne systems/cadc/gear-warn-silence-cmd
             </test>
             <test value="0">
                 gear/unit[1]/locked ne 0

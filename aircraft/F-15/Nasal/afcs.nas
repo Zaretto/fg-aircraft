@@ -1,7 +1,7 @@
 #
 # F-15 AFCS (Auto Flight Control System)  interfaces
 # ---------------------------
-# Connects the autopilot (rewritten by Octal450 (Joshua Davidson) to the autopilot system and the 
+# Connects the autopilot (part JSBSim and part traditional) to the panels and UI
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2017-10-15
 #
@@ -189,7 +189,7 @@ var routeManagerUpdate = func {
 
 			delta_angle = math.abs(geo.normdeg180(current_course - next_course));
 			max_bank = delta_angle * 1.5;
-			max_bank_limit = getprop("/fdm/jsbsim/autoflight/roll/heading/bank-max");
+			max_bank_limit = getprop("/fdm/jsbsim/systems/afcs/heading-bank-max");
 			if (max_bank > max_bank_limit) {
 				max_bank = max_bank_limit;
 			}

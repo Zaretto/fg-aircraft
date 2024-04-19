@@ -9,7 +9,6 @@
    | Enrique Laso: Original external 3d model (2015).
    | xii: F-14 origin of radar, missiles. Most have been modified but Alexis's excellent work was a good basis. (pre 2015)
    | Nikolai V. Chr.: Improvements to Weapons, Radar, new SIT on MPCD, HUD (2015->current)
-   | Joshua Davidson: Flight Controls and autopilot (2018-2019)
    | ________________________________________________________________
    | Various authors have contributed liveries as per commit history.
 -->
@@ -29,34 +28,6 @@
                 <cos-alpha-rad type="double"/>
                 <sin-alpha-rad type="double"/>
             </aero>
-            <autoflight>
-                <input>
-                  <hdg-active>0</hdg-active>
-                  <pitch-switch>0</pitch-switch>
-                  <!-- autoflight-rules.xml -->
-                  <roll-switch>0</roll-switch>
-                  <vs-active>0</vs-active>
-                </input>
-                <pitch>
-                  <altitude-2-sec-ahead>0</altitude-2-sec-ahead>
-                  <d-gain>0</d-gain>
-                  <i-gain>0</i-gain>
-                  <master-pid>0</master-pid>
-                  <p-gain>0</p-gain>
-                  <vs>
-                    <pid>0</pid>
-                  </vs>
-                </pitch>
-                <roll>
-                  <d-gain>0</d-gain>
-                  <heading>
-                    <pi>0</pi>
-                  </heading>
-                  <i-gain>0</i-gain>
-                  <master-pid>0</master-pid>
-                  <p-gain>0</p-gain>
-                </roll>
-              </autoflight>
 
               <cas>
                 <ari-input>0</ari-input>
@@ -78,27 +49,42 @@
                 <aileron-deadzone alias="/autopilot/settings/aileron-deadzone" />
                 <elevator-deadzone alias="/autopilot/settings/elevator-deadzone" />
                 <rudder-deadzone alias="/autopilot/settings/rudder-deadzone" />
-                <aileron-aero-deg type="double" />
-                <elevon-aero-deg type="double" />
-                <elevon-diff-aero-deg type="double" />
-                <rudder-aero-deg type="double" />
-                <aileron-control  type="double">0</aileron-control>
-                <elevator-control type="double">0</elevator-control>
-                <left-aileron-normalization  type="double">0</left-aileron-normalization>
-                <pitch-damper-enable alias="/sim/model/f15/controls/CAS/pitch-damper-enable" />
-                <roll-damper-enable alias="/sim/model/f15/controls/CAS/roll-damper-enable" />
-                <yaw-damper-enable alias="/sim/model/f15/controls/CAS/yaw-damper-enable" />
+
+                <aileron-pos-deg type="double" />
+                <elevon-pos-deg type="double" />
+                <rudder-pos-deg type="double" />
+                <differential-elevator-pos-deg type="double" />
+
+                <cas-pitch-enable alias="/sim/model/f15/controls/CAS/cas-pitch-enable" />
+                <cas-roll-enable alias="/sim/model/f15/controls/CAS/cas-roll-enable" />
+                <cas-yaw-enable alias="/sim/model/f15/controls/CAS/cas-yaw-enable" />
+
+                <roll-cas-output />
+                <steer-maneuver type="double">0</steer-maneuver>
+
+                <ari-lateral-enabled type="int">1</ari-lateral-enabled>
+                <pitch-ratio-emergency>0</pitch-ratio-emergency>
+                <pitch-ratio-emergency-value type="double">0.5</pitch-ratio-emergency-value>
+                <roll-ratio-emergency>0</roll-ratio-emergency>
+
+                <yaw-damper-factor type="double">1</yaw-damper-factor>
+                <yaw-damper-factor-c1 type="double">50</yaw-damper-factor-c1>
+
+                <!-- roll ratio is a linear function  -->
+                <roll-ratio-factor type="double">-0.00145</roll-ratio-factor>
+                <roll-ratio-base type="double">1.35</roll-ratio-base>
             </fcs>
 
             <gear>
                 <damage-reset>0</damage-reset>
                 <gear-asym>0</gear-asym>
+                <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
                 <serviceable>1</serviceable>
           
                 <emergency-handle type="double">0</emergency-handle>
                 <emerg-pos type="double">0</emerg-pos>
                 <emerg-pos-dmd type="double">0</emerg-pos-dmd>
-                <gear-pos-norm type="double">1</gear-pos-norm>
+                <gear-position-norm type="double">1</gear-position-norm>
                 <unit n="0">
                   <locked type="double">0</locked>
                 </unit>
@@ -170,11 +156,12 @@
             </simulation>
  
             <systems>
-                <cadc>
-                    <gear-warn-silence-dmd>0</gear-warn-silence-dmd>
-                    <pitch-ratio-emergency>0</pitch-ratio-emergency>
-                    <roll-ratio-emergency>0</roll-ratio-emergency>
-                </cadc>
+                <afcs>
+                    <elevator-cmd-delta />
+                    <heading-hold-active type="double">0</heading-hold-active>
+                    <cas-roll-demand type="double">0</cas-roll-demand>
+                    <heading-bank-max type="double">30</heading-bank-max>
+                  </afcs>
 
                 <catapult>
                     <cat-pos-porm type="int">0</cat-pos-porm>
@@ -272,11 +259,12 @@
             <tuning1>1.0</tuning1>
         </jsbsim>
     </fdm>
+    <a alias="/fdm/jsbsim/cas"/>
 
     <sim>
         <minimum-fg-version>2017.3</minimum-fg-version>
         <description>F-15</description>
-        <author>Richard Harrison, Enrique Laso, Nikolai V. Chr., Joshua Davidson</author>
+        <author>Richard Harrison, Enrique Laso (3d), Nikolai V. Chr.</author>
         <status>production</status>
 	<tacview-recording type="bool">0</tacview-recording>
         <config>
@@ -728,7 +716,7 @@
               </signal>
               <signal>
                 <type>float</type>
-                <property type="string">fdm/jsbsim/gear/gear-command-position-norm</property>
+                <property type="string">fdm/jsbsim/gear/gear-position-norm</property>
               </signal>
             </config>
         </flight-recorder>
@@ -784,7 +772,10 @@
         </startup>
         <systems>
             <autopilot n="0">
-                <path>Aircraft/F-15/Systems/autoflight-rules.xml</path>
+                <path>Aircraft/Generic/generic-autopilot.xml</path>
+            </autopilot>
+            <autopilot n="101">
+                <path>Aircraft/F-15/Systems/f-15-autothrottle.xml</path>
             </autopilot>
             <property-rule n="100">
                 <path>Aircraft/F-15/Systems/armament-rules.xml</path>
@@ -809,9 +800,9 @@
                 <controls>
                     <windshield-heat type="int">0</windshield-heat>
                     <CAS>
-                        <pitch-damper-enable type="int"/>
-                        <roll-damper-enable type="int"/>
-                        <yaw-damper-enable type="int"/>
+                        <cas-pitch-enable type="int">1</cas-pitch-enable>
+                        <cas-roll-enable type="int">1</cas-roll-enable>
+                        <cas-yaw-enable type="int">1</cas-yaw-enable>
                     </CAS>
                     <AFCS>
                         <engage type="bool">false</engage>
@@ -1318,12 +1309,13 @@
                 <bool n="69" alias="/sim/model/f15/payload/selected/aim9-r2" />
                 <bool n="70" alias="/sim/model/f15/payload/selected/CFT-pylon-l-CFT-pylon-r" />
 
-                <float n="1">0</float> <!-- rudders  -->
-                <float n="2">0</float> <!-- left aileron  -->
-                <float n="3">0</float> <!-- right aileron  -->
-                <float n="4">0</float> <!-- left elevon  -->
-                <float n="5">0</float> <!-- right elevon -->
-                <float n="6">0</float> <!-- refuel probe/door -->
+                <float n="1" alias="/fdm/jsbsim/fcs/rudder-pos-norm"/> <!-- rudders  -->
+                <float n="2" alias="/fdm/jsbsim/fcs/left-aileron-pos-norm"/><!-- left aileron  -->
+                <float n="3" alias="/fdm/jsbsim/fcs/right-aileron-pos-norm"/><!-- right aileron  -->
+                <float n="4" alias="/fdm/jsbsim/fcs/elevator-left-pos-norm"/><!-- left elevon  -->
+                <float n="5" alias="/fdm/jsbsim/fcs/elevator-right-pos-norm"/><!-- right elevon -->
+                <float n="6" alias="/sim/model/f15/refuel/position-norm"/><!-- refuel probe/door -->
+
                 <float n="8" alias="/engines/engine[0]/augmentation-burner" />
                 <float n="9" alias="/engines/engine[1]/augmentation-burner" />
                 <float n="10" alias="/fdm/jsbsim/propulsion/engine[0]/alt/nozzle-pos-norm" />

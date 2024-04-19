@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<PropertyList>
+	<!-- =============================================================== -->
+	<!-- Velocity Modes                                                  -->
+	<!-- =============================================================== -->
+
+	<pid-controller>
+		<name>Autothrottle mach</name>
+		<debug>false</debug>
+		<enable>
+			<condition>
+                <not>
+					<property>fdm/jsbsim/position/aircraft-on-ground</property>
+				</not>
+				<equals>
+					<property>autopilot/locks/speed</property>
+					<value>speed-with-throttle-mach</value>
+				</equals>
+			</condition>
+		</enable>
+		<input>
+			<property>/instrumentation/airspeed-indicator/indicated-mach</property>
+		</input>
+		<reference>
+			<property>/autopilot/settings/target-speed-mach</property>
+		</reference>
+		<output>
+			<property>autopilot/internal/auto-throttle-demand</property>
+		</output>
+		<config>
+			<Kp>50</Kp>
+			<beta>1.0</beta>
+			<alpha>0.1</alpha>
+			<gamma>0.0</gamma>
+			<Ti>10.0</Ti>
+			<Td>0.00001</Td>
+			<u_min>0.081</u_min>
+			<u_max>
+				<condition>
+					<equals>
+						<property>/autopilot/locks/autothrottle-permit-augmentation</property>
+						<value>1</value>
+					</equals>
+				</condition>
+				<value>5.0</value>
+			</u_max>
+			<u_max>1.0</u_max>
+		</config>
+	</pid-controller>
+
+	<filter>
+		<name>Convert autothrottle demand into throttle position. </name>
+		<type>gain</type>
+		<gain>1.0</gain>
+		<enable>
+			<condition>
+				<equals>
+					<property>autopilot/locks/speed</property>
+					<value>speed-with-throttle-mach</value>
+				</equals>
+				<not>
+					<property>fdm/jsbsim/position/aircraft-on-ground</property>
+				</not>
+			</condition>
+		</enable>
+		<input>
+			<expression>
+				<table>
+					<property>autopilot/internal/auto-throttle-demand</property>
+					<entry>
+						<ind>0.0</ind>
+						<dep>0.00000</dep>
+					</entry>
+					<entry>
+						<ind>1.0</ind>
+						<dep>0.91722</dep>
+					</entry>
+					<entry>
+						<ind>5.0</ind>
+						<dep>1.00000</dep>
+					</entry>
+				</table>
+			</expression>
+		</input>
+		<output>
+			<property>/controls/engines/engine[0]/throttle</property>
+			<property>/controls/engines/engine[1]/throttle</property>
+		</output>
+	</filter>
+</PropertyList>

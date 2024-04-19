@@ -5,7 +5,7 @@
     <name>needle-pitch-ratio</name>
     <type>rotate</type>
     <object-name>needle-pitch-ratio</object-name>
-    <property>fdm/jsbsim/systems/cadc/pitch-ratio</property>
+    <property>fdm/jsbsim/fcs/pitch-ratio</property>
     <factor>225</factor>
     <center>
       <x-m>-5.7031</x-m>
@@ -25,7 +25,7 @@
       <repeatable>false</repeatable>
       <binding>
         <command>property-toggle</command>
-        <property>fdm/jsbsim/systems/cadc/pitch-ratio-emergency</property>
+        <property>fdm/jsbsim/fcs/pitch-ratio-emergency</property>
       </binding>
     </action>
   </animation>
@@ -33,7 +33,7 @@
     <name>pitch-ratio-switch</name>
     <type>rotate</type>
     <object-name>pitch-ratio-switch</object-name>
-    <property>fdm/jsbsim/systems/cadc/pitch-ratio-emergency</property>
+    <property>fdm/jsbsim/fcs/pitch-ratio-emergency</property>
     <offset-deg>30</offset-deg>
     <factor>-60</factor>
     <center>
@@ -787,7 +787,7 @@
       <button>0</button>
       <binding>
         <command>property-toggle</command>
-        <property>fdm/jsbsim/systems/cadc/gear-warn-silence-dmd</property>
+        <property>fdm/jsbsim/gear/gear-warn-silence-dmd</property>
       </binding>
     </action>
   </animation>
@@ -3640,7 +3640,7 @@
   <animation>
     <type>knob</type>
     <object-name>misc-roll-ratio-switch</object-name>
-    <property>fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+    <property>fdm/jsbsim/fcs/roll-ratio-emergency</property>
     <factor>60</factor>
     <offset-deg>-30</offset-deg>
     <center>
@@ -3656,7 +3656,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+        <property>fdm/jsbsim/fcs/roll-ratio-emergency</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -3791,7 +3791,7 @@
   <animation>
     <type>knob</type>
     <object-name>cas-yaw-switch</object-name>
-    <property>sim/model/f15/controls/CAS/yaw-damper-enable</property>
+    <property>sim/model/f15/controls/CAS/cas-yaw-enable</property>
     <factor>-60</factor>
     <offset-deg>30</offset-deg>
     <center>
@@ -3807,7 +3807,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>sim/model/f15/controls/CAS/yaw-damper-enable</property>
+        <property>sim/model/f15/controls/CAS/cas-yaw-enable</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -3818,7 +3818,7 @@
   <animation>
     <type>knob</type>
     <object-name>cas-roll-switch</object-name>
-    <property>sim/model/f15/controls/CAS/roll-damper-enable</property>
+    <property>sim/model/f15/controls/CAS/cas-roll-enable</property>
     <factor>-60</factor>
     <offset-deg>30</offset-deg>
     <center>
@@ -3834,7 +3834,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>sim/model/f15/controls/CAS/roll-damper-enable</property>
+        <property>sim/model/f15/controls/CAS/cas-roll-enable</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -3845,7 +3845,7 @@
   <animation>
     <type>knob</type>
     <object-name>cas-pitch-switch</object-name>
-    <property>sim/model/f15/controls/CAS/pitch-damper-enable</property>
+    <property>sim/model/f15/controls/CAS/cas-pitch-enable</property>
     <factor>-60</factor>
     <offset-deg>30</offset-deg>
     <center>
@@ -3861,7 +3861,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>sim/model/f15/controls/CAS/pitch-damper-enable</property>
+        <property>sim/model/f15/controls/CAS/cas-pitch-enable</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -8738,7 +8738,7 @@
         <!-- use the negative flag to indicate no power -->
         <less-than>
           <property>instrumentation/altimeter/indicated-altitude-ft</property>
-          <value>0</value>
+          <value>-9</value>
         </less-than>
         <equals>
           <property>fdm/jsbsim/systems/electrics/ac-essential-bus1</property>
@@ -11418,7 +11418,7 @@
     <name>needle-pitch-ratio</name>
     <type>rotate</type>
     <object-name>prp_needle-pitch-ratio</object-name>
-    <property>fdm/jsbsim/systems/cadc/pitch-ratio</property>
+    <property>fdm/jsbsim/fcs/pitch-ratio</property>
     <factor>225</factor>
     <center>
       <x-m>-4.2396</x-m>
@@ -11438,7 +11438,7 @@
       <repeatable>false</repeatable>
       <binding>
         <command>property-toggle</command>
-        <property>fdm/jsbsim/systems/cadc/pitch-ratio-emergency</property>
+        <property>fdm/jsbsim/fcs/pitch-ratio-emergency</property>
       </binding>
     </action>
   </animation>
@@ -11446,7 +11446,7 @@
     <name>pitch-ratio-switch</name>
     <type>rotate</type>
     <object-name>prp_pitch-ratio-switch</object-name>
-    <property>fdm/jsbsim/systems/cadc/pitch-ratio-emergency</property>
+    <property>fdm/jsbsim/fcs/pitch-ratio-emergency</property>
     <offset-deg>30</offset-deg>
     <factor>-60</factor>
     <center>
@@ -12057,7 +12057,7 @@
       <button>0</button>
       <binding>
         <command>property-toggle</command>
-        <property>fdm/jsbsim/systems/cadc/gear-warn-silence-dmd</property>
+        <property>fdm/jsbsim/gear/gear-warn-silence-dmd</property>
       </binding>
     </action>
   </animation>
@@ -14157,7 +14157,7 @@
   <animation>
     <type>knob</type>
     <object-name>lsp_misc-roll-ratio-switch</object-name>
-    <property>fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+    <property>fdm/jsbsim/fcs/roll-ratio-emergency</property>
     <factor>60</factor>
     <offset-deg>-30</offset-deg>
     <center>
@@ -14173,7 +14173,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>fdm/jsbsim/systems/cadc/roll-ratio-emergency</property>
+        <property>fdm/jsbsim/fcs/roll-ratio-emergency</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -14308,7 +14308,7 @@
   <animation>
     <type>knob</type>
     <object-name>lsp_cas-yaw-switch</object-name>
-    <property>sim/model/f15/controls/CAS/yaw-damper-enable</property>
+    <property>sim/model/f15/controls/CAS/cas-yaw-enable</property>
     <factor>-60</factor>
     <offset-deg>30</offset-deg>
     <center>
@@ -14324,7 +14324,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>sim/model/f15/controls/CAS/yaw-damper-enable</property>
+        <property>sim/model/f15/controls/CAS/cas-yaw-enable</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -14335,7 +14335,7 @@
   <animation>
     <type>knob</type>
     <object-name>lsp_cas-roll-switch</object-name>
-    <property>sim/model/f15/controls/CAS/roll-damper-enable</property>
+    <property>sim/model/f15/controls/CAS/cas-roll-enable</property>
     <factor>-60</factor>
     <offset-deg>30</offset-deg>
     <center>
@@ -14351,7 +14351,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>sim/model/f15/controls/CAS/roll-damper-enable</property>
+        <property>sim/model/f15/controls/CAS/cas-roll-enable</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>
@@ -14362,7 +14362,7 @@
   <animation>
     <type>knob</type>
     <object-name>lsp_cas-pitch-switch</object-name>
-    <property>sim/model/f15/controls/CAS/pitch-damper-enable</property>
+    <property>sim/model/f15/controls/CAS/cas-pitch-enable</property>
     <factor>-60</factor>
     <offset-deg>30</offset-deg>
     <center>
@@ -14378,7 +14378,7 @@
     <action>
       <binding>
         <command>property-adjust</command>
-        <property>sim/model/f15/controls/CAS/pitch-damper-enable</property>
+        <property>sim/model/f15/controls/CAS/cas-pitch-enable</property>
         <factor>1</factor>
         <min>0</min>
         <max>1</max>

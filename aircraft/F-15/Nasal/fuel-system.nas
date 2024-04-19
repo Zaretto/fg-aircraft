@@ -313,8 +313,7 @@ setlistener("sim/model/f15/controls/fuel/dump-switch", func(v) {
 
 var r_probe = aircraft.door.new("sim/model/f15/refuel/", 1);
 var RprobePos        = props.globals.getNode("sim/model/f15/refuel/position-norm", 1);
-var RprobePosGeneric = props.globals.getNode("sim/multiplay/generic/float[6]",1);
-RprobePosGeneric.alias(RprobePos);
+
 
 setlistener("sim/model/f15/controls/fuel/refuel-probe-switch", func {
     var v = getprop("sim/model/f15/controls/fuel/refuel-probe-switch");
