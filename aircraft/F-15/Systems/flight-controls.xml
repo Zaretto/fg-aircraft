@@ -421,7 +421,7 @@
         </pure_gain>
 
         <scheduled_gain name="fcs/roll-rate-limiter">
-            <input>fcs/aileron-cmd-norm</input>
+            <input>fcs/aileron-cmd-scheduled</input>
             <table>
                 <independentVar lookup="row">velocities/p-aero-rad_sec</independentVar>
                 <tableData>
@@ -594,9 +594,38 @@
 
 	<!-- aileron: +/- 5deg : +/- 33 deg/sec -->
     <channel name="Roll">
-        <summer name="fcs/roll-trim-sum-raw">
+
+        <summer name="fcs/aileron-cmd-norm-trimmed">
+            <property>fcs/roll-trim-cmd-norm</property>
             <input>fcs/aileron-cmd-norm</input>
-            <input>fcs/roll-trim-cmd-norm</input>
+        </summer>
+
+        <fcs_function name="fcs/aileron-cmd-scheduled">
+            <description>
+                Lateral position adjusted for position instead of force (fig 19 - NASA TM 72861)
+            </description>
+            <function>
+                <sum>
+                    <table>
+                        <independentVar lookup="row">fcs/aileron-cmd-norm-trimmed</independentVar>
+                        <tableData>
+                            -1.0000    -1.0000
+                            -0.5670    -0.5108
+                            -0.3960    -0.2888
+                            -0.0532     0.0000
+                             0.0000     0.0000
+                             0.0532     0.0000
+                             0.3960     0.2888
+                             0.5670     0.5108
+                             1.0000     1.0000
+                        </tableData>
+                    </table>
+                </sum>
+            </function>
+        </fcs_function>
+        
+        <summer name="fcs/roll-trim-sum-raw">
+            <input>fcs/aileron-cmd-scheduled</input>
             <input>fcs/roll-cas-output</input>
             <clipto>
                 <min> -1 </min>
@@ -774,21 +803,22 @@
             </clipto>
         </fcs_function>-->
         <fcs_function name="fcs/ari-lateral-rudder-demand-norm">
-			<!--This is the amount of rudder per inch of lateral stick. NASA-TM-72861, Figure 23
-                The tables have been normalized to remove the inches of stick movement, based on my understanding that there is about 4inches of stick deflection.-->
+            <!--This is the amount of rudder per inch of lateral stick. 
+                NASA-TM-72861, Figure 23
+                The tables have been normalized on inches of stick movement, based on my understanding that there is about 4inches of stick deflection.-->
             <description>ARI</description>
             <function>
                 <product>
-                    <property>fcs/aileron-cmd-norm</property>
+                    <property>fcs/aileron-cmd-scheduled</property>
                     <property>fcs/ari-lateral-enabled</property>
                     <table>
                         <independentVar lookup="row">fcs/elevator-pos-deg</independentVar>
                         <independentVar lookup="column">fcs/flap-pos-deg</independentVar>
                         <tableData>
-                            0 30
-                            -24 -0.923 -0.818
-                            0 -0.105 0.000
-                            15 0.406 0.511
+                                      0       30
+                            -24  -0.923   -0.818
+                              0  -0.105    0.000
+                             15   0.406    0.511
                         </tableData>
                     </table>
                 </product>
