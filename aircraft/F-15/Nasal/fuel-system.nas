@@ -192,7 +192,9 @@ var build_new_tanks = func {
 	WingExternal_R   = Tank.newExternal("External Wing R", 6, 1, TankRightSide);
 	Centre_External  = Tank.newExternal("Centre External", 7, 1, TankBothSide); 
     Conformal_L  = Tank.newExternal("Conformal Left", 8, 1, TankLeftSide); 
+    Conformal_L.external = 0;
 	Conformal_R  = Tank.newExternal("Conformal Right", 9, 1, TankRightSide); 
+    Conformal_R.external = 0;
 }
 
 
