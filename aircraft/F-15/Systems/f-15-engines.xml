@@ -54,7 +54,7 @@
  
     <channel name="engine-limits-damage">
        <!-- 
-        1 TOT-TEMP-HIGH (3 minute) Fig 3-8 sheet 1 
+        1 TOT-TEMP-HIGH (3 minute limit) Fig 3-8 sheet 1 
         2 L BLEED AIR (overtemp) 
         2 R BLEED AIR (overtemp)
         3 L R BURN THRU (abrupt increase in temp in aft keel/boom area 
@@ -213,7 +213,7 @@
         <switch name="propulsion/openv-total-temp-too-high">
             <default value="0" />
             <test value="1">
-                propulsion/openv-overspeed ge 1
+                propulsion/openv-overspeed ge 0.5
             </test>
         </switch>
       
@@ -259,6 +259,7 @@
                 where gamma is the ratio of specific heats.
                 T2 / T1 = (p2 / pt1) ^ ((gamma -1) / gamma)
                 sigma 0.09 M4 @60000
+                The trigger point is based on an estimation of how long this might take as no data is available
             </description>
             <function>
                 <product>
@@ -291,6 +292,7 @@
             </test>
         </switch>
 
+        <!-- seized will be true when engine has been on fire.-->
         <fcs_function name="propulsion/engine[0]/seized">
             <function>
                 <ifthen>
@@ -497,6 +499,7 @@
                 where gamma is the ratio of specific heats.
                 T2 / T1 = (p2 / pt1) ^ ((gamma -1) / gamma)
                 sigma 0.09 M4 @60000
+                The trigger point is based on an estimation of how long this might take as no data is available
             </description>
             <function>
                 <product>
