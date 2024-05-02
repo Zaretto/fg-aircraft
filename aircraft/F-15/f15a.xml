@@ -5599,8 +5599,9 @@
             </function>
         </axis>
     </aerodynamics>
-     
-        <output name="c:/temp/F-15-JSBOut.csv" type="CSV" rate="10">
+
+    <!--
+    <output name="c:/temp/F-15-JSBOut.csv" type="CSV" rate="10">
         <property caption="PilotGdamped">/accelerations/pilot-gdamped</property>
         <property caption="ElapsedSec">/sim/time/elapsed-sec</property>
         <property caption="VcKts">velocities/vc-kts</property>
@@ -5620,21 +5621,20 @@
         <property caption="Ax">accelerations/a-pilot-x-ft_sec2</property>
         <property caption="Ay">accelerations/a-pilot-y-ft_sec2</property>
         <property caption="Az">accelerations/a-pilot-z-ft_sec2</property>
-        <!-- <property caption="alpha">aero/alpha-deg</property>
+        <property caption="yaw-damper-sum-v0">fcs/yaw-damper-sum-v0</property>
+        <property caption="yaw-damper-sum-v0">fcs/yaw-damper-sum-v</property>
+        <property caption="yaw-damper-factor">fcs/yaw-damper-factor</property>
+        <property caption="yaw-damper-factor-c1">fcs/yaw-damper-factor-c1</property>
+    </output> 
+
+    <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+        <property caption="alpha">aero/alpha-deg</property>
         <property caption="drag">aero/force/DRAG</property>
         <property caption="lift">aero/force/LIFT</property>
         <property caption="side">aero/force/SIDE</property>
         <property caption="pitch">aero/force/PITCH</property>
         <property caption="roll">aero/force/ROLL</property>
-        <property caption="yaw">aero/force/YAW</property> -->
-        <property caption="yaw-damper-sum-v0">fcs/yaw-damper-sum-v0</property>
-        <property caption="yaw-damper-sum-v0">fcs/yaw-damper-sum-v</property>
-        <property caption="yaw-damper-factor">fcs/yaw-damper-factor</property>
-        <property caption="yaw-damper-factor-c1">fcs/yaw-damper-factor-c1</property>
-        
-    </output>
-<!--
-     <output name="c:/users/richard/dev/flightgear/aircraft/f-14b/JSBOut.csv" type="CSV" rate="10">
+        <property caption="yaw">aero/force/YAW</property>
         <property>position/aircraft-on-ground</property>
         <property>velocities/h-dot-fps</property>
         <property>velocities/u-aero-fps</property>
@@ -5653,5 +5653,6 @@
 
         <property>gear/unit[2]/damaged</property>
         <property>gear/unit[2]/WOW</property>
-</output>-->
+    </output>
+-->
 </fdm_config>

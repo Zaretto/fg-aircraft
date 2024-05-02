@@ -605,25 +605,23 @@
                 Lateral position adjusted for position instead of force (fig 19 - NASA TM 72861)
             </description>
             <function>
-                <sum>
-                    <table>
-                        <independentVar lookup="row">fcs/aileron-cmd-norm-trimmed</independentVar>
-                        <tableData>
-                            -1.0000    -1.0000
-                            -0.5670    -0.5108
-                            -0.3960    -0.2888
-                            -0.0532     0.0000
-                             0.0000     0.0000
-                             0.0532     0.0000
-                             0.3960     0.2888
-                             0.5670     0.5108
-                             1.0000     1.0000
-                        </tableData>
-                    </table>
-                </sum>
+                <table>
+                    <independentVar lookup="row">fcs/aileron-cmd-norm-trimmed</independentVar>
+                    <tableData>
+                        -1.0000    -1.0000
+                        -0.5670    -0.5108
+                        -0.3960    -0.2888
+                        -0.0532     0.0000
+                         0.0000     0.0000
+                         0.0532     0.0000
+                         0.3960     0.2888
+                         0.5670     0.5108
+                         1.0000     1.0000
+                    </tableData>
+                </table>
             </function>
         </fcs_function>
-        
+
         <summer name="fcs/roll-trim-sum-raw">
             <input>fcs/aileron-cmd-scheduled</input>
             <input>fcs/roll-cas-output</input>
