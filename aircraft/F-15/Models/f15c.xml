@@ -24,23 +24,23 @@
 
          var self = cmdarg();
          print("Model load F-15 ", self.getPath(), " ID ",_module_id);
-
-         if (find("F-15D.xml", getprop("sim/model/path")) != -1) {
-             setprop("sim/model/f15/variant","D");
+         var modelPath = self.getNode("sim/model/path").getValue();
+         if (modelPath != nil and find("F-15D.xml", modelPath) != -1) {
+            self.getNode("sim/model/f15/variant",1).setValue("D");
              print ("D variant");
          } else {
-             setprop("sim/model/f15/variant","C");
+            self.getNode("sim/model/f15/variant",1).setValue("C");
          }
          
          var livery_update = aircraft.livery_update.new("Aircraft/F-15/Models/Liveries", 10 );
 
          # nasal module locator
-         var modelPath = split("/",self.getNode("sim/model/path").getValue());
+         var modelPathElements = split("/", modelPath);
          var basePath = "";
-         if (size(modelPath) > 3)
-           basePath = string.join("/",modelPath[0:size(modelPath)-3]);
+         if (size(modelPathElements) > 3)
+           basePath = string.join("/",modelPathElements[0:size(modelPathElements)-3]);
 
-         locate_nasal = func(nasal_file){
+         var locate_nasal = func(nasal_file){
              var fn_nasal_file = resolvepath("Nasal") ~ "/" ~ nasal_file;
              if (io.stat(fn_nasal_file) == nil)
                fn_nasal_file = getprop("/sim/fg-root") ~ "/Nasal/" ~ nasal_file;
@@ -69,7 +69,7 @@
          # - we assume that if we have the network we have the VSD. This should always be the case.
          if (!contains(globals, "f15_net")) {
              print("LOAD F-15 mp network", self.getPath());
-             fn_net = locate_nasal("mp-network.nas");
+             var fn_net = locate_nasal("mp-network.nas");
 
              if (fn_net != nil) {
                  io.load_nasal(fn_net, "f15_net");
@@ -79,20 +79,16 @@
              }
          }
          #print("Model load VSD");
-         if (getprop("/sim/model/f15/backseat-load-network-required")or 0) {
-             if (!contains(globals, "f15vsd")) {
-                 var fn_vsd = locate_nasal("VSD/VSD_main.nas");
-                 if (fn_vsd != nil)
-                   io.load_nasal(fn_vsd, "f15vsd");
-             }
-             #print("Model init VSD ",_module_id);
+         if (contains(globals, "f15vsd")) {
+             print("F-15: Model init VSD _module_id=",_module_id);
              # ensure that everyone knows that we have just been loaded.
              var modelNotification = emesary.Notification.new("F15Model", _module_id);
              modelNotification.root_node = self;
+             emesary.GlobalTransmitter.PrintRecipients();
              emesary.GlobalTransmitter.NotifyAll(modelNotification);
-             #emesary.GlobalTransmitter.PrintRecipients();
+
          } else {
-             print("F-15: not backset so not loading backseat VSD");
+             print("F-15: not backseat so not loading backseat VSD");
          }
 
 
