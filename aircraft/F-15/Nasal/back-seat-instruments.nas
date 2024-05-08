@@ -9,7 +9,7 @@ var acLat = props.getNode("/position/latitude-deg",1);
 var acLon = props.getNode("/position/longitude-deg",1);
 var acAlt = props.getNode("/position/altitude-ft",1);
 
-# Check pilot's aircraft path from it's callsign.
+# Check pilot's aircraft path from its callsign.
 var PilotCallsign = props.globals.getNode("/sim/remote/pilot-callsign");
 var Pilot = nil;
 
@@ -25,6 +25,8 @@ var set_node_from = func(Pilot, target, source)
 
 var check_pilot_callsign = func() 
 {
+    if (PilotCallsign == nil)
+        return;
     r_callsign = PilotCallsign.getValue();
     if ( r_callsign )
     {
@@ -34,6 +36,7 @@ var check_pilot_callsign = func()
             if ( p.getChild("callsign").getValue() == r_callsign ) 
             {
                 Pilot = p; 
+                Pilot.getNode("sim/model/f15/variant",1).setValue("D");
             }
         }
     } 
@@ -50,17 +53,23 @@ var select_ecm_nav = func
 	var ecm_nav_mode = Pilot.getNode("sim/model/f15/controls/rio-ecm-display/mode-ecm-nav");
 	ecm_nav_mode.setBoolValue( ! ecm_nav_mode.getBoolValue());
 }
+var ownship_pos = geo.Coord.new();
 
-##
-# Receive basic instruments data over MP from pilot's aircraft.
-instruments_data_import = func
+var BackseatModule = 
 {
+    update: func(notification)
+    {
+    if (notification.FrameCount == 0){
+        check_pilot_callsign();
+    }
     if (Pilot == nil)
         return;
-    Pilot.getNode("sim/model/f15/variant",1).setValue("D");
 
-    aircraft.ownship_pos.set_latlon(Pilot.getNode("position/latitude-deg").getValue(), Pilot.getNode("position/longitude-deg").getValue());
+    ownship_pos.set_latlon(Pilot.getNode("position/latitude-deg").getValue(), Pilot.getNode("position/longitude-deg").getValue());
+    notification.ownship_pos = ownship_pos;
 
+    ##
+    # Receive basic instruments data over MP from pilot's aircraft.
     var total_fuel_lbs = Pilot.getNode("sim/multiplay/generic/int[8]",1).getValue();
     var engines_engine0_egt_degC = Pilot.getNode("sim/multiplay/generic/int[9]",1).getValue();
     var engines_engine0_fuel_flow_pph = Pilot.getNode("sim/multiplay/generic/int[10]",1).getValue();
@@ -128,29 +137,17 @@ instruments_data_import = func
     acAlt.setValue(Pilot.getNode("/position/altitude-ft",1).getValue());
     Pilot.getNode("instrumentation/airspeed-indicator/true-speed-kt",1).setValue(Pilot.getNode("velocities/true-airspeed-kt",1).getValue());
 
-#			Pilot.getNode("sim/model/f15/instrumentation/tacan/mode", 1)
-#			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
-#			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
-#			Pilot.getNode("instrumentation/tacan/indicated-distance-nm", 1).setValue( l[6] );
-#			var SteerSubmodeCode = Pilot.getNode("sim/model/f15/controls/pilots-displays/steer-submode-code", 1);
-#			SteerSubmodeCode.setValue( l[7] );
-#			Pilot.getNode("sim/model/f15/instrumentation/hsd/needle-deflection", 1).setValue( l[8] );
-#			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
-#			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
-}
-
-# Main loop ###############
-
-var backseat_update = maketimer(UPDATE_PERIOD, func
-{
-	awg_9.rdr_loop();
-    check_pilot_callsign();
-    instruments_data_import();
-#    emesary.GlobalTransmitter.NotifyAll(notificationUpdate4);
-
-    #		instruments_data_export();
-});
-
+    #			Pilot.getNode("sim/model/f15/instrumentation/tacan/mode", 1)
+    #			Pilot.getNode("instrumentation/tacan/indicated-mag-bearing-deg", 1).setValue( l[4] );
+    #			Pilot.getNode("instrumentation/tacan/in-range", 1).setBoolValue( l[5] );
+    #			Pilot.getNode("instrumentation/tacan/indicated-distance-nm", 1).setValue( l[6] );
+    #			var SteerSubmodeCode = Pilot.getNode("sim/model/f15/controls/pilots-displays/steer-submode-code", 1);
+    #			SteerSubmodeCode.setValue( l[7] );
+    #			Pilot.getNode("sim/model/f15/instrumentation/hsd/needle-deflection", 1).setValue( l[8] );
+    #			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
+    #			Pilot.getNode("instrumentation/nav[1]/radials/selected-deg", 1).setValue( l[9] );
+    }
+};
 
 # Init ####################
 var init = func {
@@ -181,8 +178,8 @@ var init = func {
 	check_pilot_callsign();
 	radardist.init();
 	awg_9.init();
-    backseat_update.restart(UPDATE_PERIOD);
 }
 
 setlistener("sim/signals/fdm-initialized", init);
 
+emexec.ExecModule.register("Backseat-instruments",{}, BackseatModule, 1);

@@ -12,7 +12,9 @@
 var DCT = dual_control_tools;
 
 # Pilot/copilot aircraft identifiers. Used by dual_control.
-var pilot_type   = "Aircraft/F-15/Models/F-15D.xml";
+var pilot_typeD   = "Aircraft/F-15/Models/F-15D.xml";
+var pilot_typeC   = "Aircraft/F-15/Models/F-15C.xml";
+pilot_type   =pilot_typeD;
 var copilot_type = "Aircraft/F-15/Models/f15-bs.xml";
 
 props.globals.initNode("/sim/remote/pilot-callsign", "", "STRING");

@@ -290,6 +290,7 @@
                         <binding>
                             <command>nasal</command>
                             <script>
+                                aircraft_dual_control.pilot_type = aircraft_dual_control.pilot_typeD;
                                 dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_type);
                             </script>
                         </binding>
@@ -299,7 +300,8 @@
                         <binding>
                             <command>nasal</command>
                             <script>
-                                dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_typeC);
+                                aircraft_dual_control.pilot_type = aircraft_dual_control.pilot_typeC;
+                                dual_control_tools.copilot_dialog.show(aircraft_dual_control.pilot_type);
                             </script>
                         </binding>
                     </item>
@@ -635,6 +637,9 @@
         <rcs>
             <file>Aircraft/F-15/Nasal/rcs.nas</file>
         </rcs>
+        <f15vsd>
+            <file>Nasal/VSD/VSD_main.nas</file>
+        </f15vsd>
         <BS_instruments>
             <file>Nasal/back-seat-instruments.nas</file>
         </BS_instruments>
