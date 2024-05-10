@@ -122,23 +122,42 @@
                 <amad-fire-test-ok type="int">0</amad-fire-test-ok>
                 <fire-discharge-mode type="int">1</fire-discharge-mode>
                 <fire-extinguisher-level type="double">1</fire-extinguisher-level>
+                <engine-config-needed type="int">1</engine-config-needed>
                 <engine n="0">
+                    <config>
+                        <!-- These are all factors; typically 1.0+/0.1 -->
+                        <digital-eec type="int">0</digital-eec>
+                        <burn-thru-point type="double">1.0</burn-thru-point>
+                        <fire-point type="double">1.0</fire-point>
+                        <overtemp-point type="double">1.0</overtemp-point>
+                        <engine-variance-delta-pla type="double">0.0</engine-variance-delta-pla>
+                        <variance type="double">1</variance>
+                    </config>
+                    <eec-active alias="/sim/model/f15/controls/engines/l-eec-switch"/>
                     <augmentation-alight type="double">false</augmentation-alight>
                     <blowout type="int">0</blowout>
                     <fire-button-armed type="int">0</fire-button-armed>
                     <fire-extinguished type="int">0</fire-extinguished>
                     <fire-intensity type="double"/>
-                    <fire-point type="double"/>
                     <fire-test-ok type="int">0</fire-test-ok>
                     <overtemp type="int">0</overtemp>
                 </engine>
                 <engine n="1">
+                    <config>
+                        <!-- These are all factors; typically 1.0+/0.1 -->
+                        <digital-eec type="int">0</digital-eec>
+                        <burn-thru-point type="double">1.0</burn-thru-point>
+                        <fire-point type="double">1.0</fire-point>
+                        <overtemp-point type="double">1.0</overtemp-point>
+                        <engine-variance-delta-pla type="double">0.0</engine-variance-delta-pla>
+                        <variance type="double">1</variance>
+                    </config>
+                    <eec-active alias="/sim/model/f15/controls/engines/r-eec-switch"/>
                     <augmentation-alight type="double">false</augmentation-alight>
                     <blowout type="int">0</blowout>
                     <fire-button-armed type="int">0</fire-button-armed>
                     <fire-extinguished type="int">0</fire-extinguished>
                     <fire-intensity type="double"/>
-                    <fire-point type="double"/>
                     <fire-test-ok type="int">0</fire-test-ok>
                     <overtemp type="int">0</overtemp>
                 </engine>
@@ -2182,11 +2201,15 @@
     <engines>
         <engine n="0">
             <running>true</running>
-            <PB>0</PB>
+            <PB alias="/fdm/jsbsim/propulsion/engine[0]/PB"/>
+            <afterburner alias="/fdm/jsbsim/propulsion/engine[0]/augmentation-alight"/>
+            <augmentation-burner alias="/fdm/jsbsim/propulsion/engine[0]/augmentation-burner"/>
         </engine>
         <engine n="1">
             <running>true</running>
-            <PB>0</PB>
+            <PB alias="/fdm/jsbsim/propulsion/engine[1]/PB"/>
+            <afterburner alias="/fdm/jsbsim/propulsion/engine[1]/augmentation-alight"/>
+            <augmentation-burner alias="/fdm/jsbsim/propulsion/engine[1]/augmentation-burner"/>
         </engine>
     </engines>
 
@@ -2651,6 +2674,11 @@
         </nasal>
     </fallback>
     
+    <surface-positions>
+        <l-ramp1-position-deg alias="/fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"/>
+        <r-ramp1-position-deg alias="/fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"/>
+    </surface-positions>
+
     <nasal>
         <fallback>
             <file>Aircraft/F-15/Nasal/fallback/fallback-module.nas</file>

@@ -533,7 +533,10 @@ var runEMMISC = func {
     }
 check_caution("fdm/jsbsim/propulsion/engine[0]/bleedair-temp-high", "sim/model/f15/lights/ca-l-bleed-air");
 check_caution("fdm/jsbsim/propulsion/engine[1]/bleedair-temp-high", "sim/model/f15/lights/ca-r-bleed-air");
-check_caution("fdm/jsbsim/propulsion/openv-total-temp-too-high", "sim/model/f15/lights//ca-tot-temp-hi");
+check_caution("fdm/jsbsim/propulsion/openv-total-temp-too-high", "sim/model/f15/lights/ca-tot-temp-hi");
+
+check_caution("fdm/jsbsim/propulsion/engine[0]/eec-fail", "sim/model/f15/lights/ca-l-eng-contr");
+check_caution("fdm/jsbsim/propulsion/engine[1]/eec-fail", "sim/model/f15/lights/ca-r-eng-contr");
 
 #anti skid will indicate when the parking brake is on.
     setprop("sim/model/f15/lights/ca-anti-skid", getprop("controls/gear/brake-parking"));

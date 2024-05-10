@@ -138,27 +138,7 @@ var computeEngines = func {
     else
         setprop("engines/engine[1]/egt-hot",0);
 
-    if ( getprop("sim/replay/time") > 0 ) 
-    { 
-        setprop("engines/engine[0]/augmentation", getprop("engines/engine[0]/afterburner"));
-        setprop("engines/engine[1]/augmentation", getprop("engines/engine[1]/afterburner"));
-    }
-    else
-    {
-# not in replay so copy the properties;
-        # 
-        setprop("engines/engine[0]/PB",getprop("fdm/jsbsim/propulsion/engine[0]/PB"));
-        setprop("engines/engine[1]/PB",getprop("fdm/jsbsim/propulsion/engine[1]/PB"));
-
-        setprop("engines/engine[0]/afterburner", getprop("fdm/jsbsim/propulsion/engine[0]/augmentation-alight"));
-        setprop("engines/engine[1]/afterburner", getprop("fdm/jsbsim/propulsion/engine[1]/augmentation-alight"));
-        setprop("engines/engine[0]/augmentation-burner", getprop("fdm/jsbsim/propulsion/engine[0]/augmentation-burner"));
-        setprop("engines/engine[1]/augmentation-burner", getprop("fdm/jsbsim/propulsion/engine[1]/augmentation-burner"));
-
-        setprop("surface-positions/l-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/l-ramp1-position-deg"));
-        setprop("surface-positions/r-ramp1-position-deg",getprop("fdm/jsbsim/propulsion/inlet/r-ramp1-position-deg"));
-    }
-	#
+    #
 	#
 	# Auto retract speedbrake when power advanced to mil or greate.
 	if (throttle_0.getValue() >= 0.95 or throttle_1.getValue() >= 0.95)

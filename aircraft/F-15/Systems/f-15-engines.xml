@@ -13,47 +13,145 @@
     -->
 
 <system name="ENGINES">
-    <channel name="engine-control">
 
-        <scheduled_gain name="ThrottleL">
-            <input>fcs/throttle-pos-norm[0]</input>
-            <table>
-                <independentVar>fcs/throttle-pos-norm[0]</independentVar>
-                <tableData>
-                    <!-- 5 stage non linear augmentation-->
-                    0.00    0.0
-                    0.8999  0.999
-                    0.91    1.0
-                    0.93    1.25
-                    0.95    1.50
-                    0.97    1.75
-                    1.00    2.0
-                </tableData>
-            </table>
-            <output>fcs/throttle-pos-norm[0]</output>
-        </scheduled_gain>
+    <!-- Run once system that configures the unique parameters for each engine -->
+    <channel name="F100-L-engine-config" execute="propulsion/engine-config-needed">
 
-        <scheduled_gain name="ThrottleR">
-            <input>fcs/throttle-pos-norm[1]</input>
-            <table>
-                <independentVar>fcs/throttle-pos-norm[1]</independentVar>
-                <tableData>
-                    <!-- 5 stage non linear augmentation-->
-                    0.00    0.0
-                    0.8999  0.999
-                    0.91    1.0
-                    0.93    1.25
-                    0.95    1.50
-                    0.97    1.75
-                    1.00    2.0
-                </tableData>
-            </table>
-            <output>fcs/throttle-pos-norm[1]</output>
-        </scheduled_gain>
+        <fcs_function name="propulsion/engine[0]/config/variance">
+            <function>
+                <sum>
+                    <value>1.0</value>
+                    <product>
+                        <urandom />
+                        <value>0.05</value>
+                    </product>
+                </sum>
+            </function>
+            <clipto>
+                <min>0.95</min>
+                <max>1.05</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/config/fire-point">
+            <function>
+                <product>
+                    <value>4.5</value>
+                    <property>propulsion/engine[0]/config/variance</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/config/burn-thru-point">
+            <function>
+                <product>
+                    <value>3.5</value>
+                    <property>propulsion/engine[0]/config/variance</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/config/overtemp-point">
+            <function>
+                <product>
+                    <value>0.5</value>
+                    <property>propulsion/engine[0]/config/variance</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/config/engine-variance-delta-pla">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>propulsion/engine[0]/config/digital-eec</property>
+                        <value>0</value>
+                    </eq>
+                    <quotient>
+                        <urandom />
+                        <value>50</value>
+                    </quotient>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
     </channel>
- 
+
+    <channel name="F100-R-engine-config" execute="propulsion/engine-config-needed">
+
+        <fcs_function name="propulsion/engine[1]/config/variance">
+            <function>
+                <sum>
+                    <value>1.0</value>
+                    <product>
+                        <urandom />
+                        <value>0.05</value>
+                    </product>
+                </sum>
+            </function>
+            <clipto>
+                <min>0.95</min>
+                <max>1.05</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/config/fire-point">
+            <function>
+                <product>
+                    <value>4.5</value>
+                    <property>propulsion/engine[1]/config/variance</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/config/burn-thru-point">
+            <function>
+                <product>
+                    <value>3.5</value>
+                    <property>propulsion/engine[1]/config/variance</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/config/overtemp-point">
+            <function>
+                <product>
+                    <value>0.5</value>
+                    <property>propulsion/engine[1]/config/variance</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/config/engine-variance-delta-pla">
+            <function>
+                <ifthen>
+                    <eq>
+                        <property>propulsion/engine[1]/config/digital-eec</property>
+                        <value>0</value>
+                    </eq>
+                    <quotient>
+                        <urandom />
+                        <value>50</value>
+                    </quotient>
+                    <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+    </channel>
+
+    <channel name="engine-config" execute="propulsion/engine-config-needed">
+        <fcs_function name="tied/propulsion/engine-config-needed">
+            <function>
+                <v>0</v>
+            </function>
+            <output>propulsion/engine-config-needed</output>
+        </fcs_function>
+    </channel>
+
     <channel name="engine-limits-damage">
-       <!-- 
+        <!-- 
         1 TOT-TEMP-HIGH (3 minute limit) Fig 3-8 sheet 1 
         2 L BLEED AIR (overtemp) 
         2 R BLEED AIR (overtemp)
@@ -68,31 +166,31 @@
                 <table>
                     <independentVar lookup="row">position/h-sl-ft</independentVar>
                     <tableData>
-                        0                   0
-                        3281                0
-                        6562                0
-                        9843                0
-                        13123               0
-                        16404               0
-                        19685               0
-                        22966               0.041195
-                        26247               0.101788
-                        29528               0.162382
-                        32808               0.222975
-                        36089               0.283568
-                        39370               0.344161
-                        42651               0.404755
-                        45932               0.465348
-                        49213               0.525941
-                        52494               0.586534
-                        55774               0.647127
-                        59055               0.707721
-                        62336               0.768314
-                        65617               0.828907
-                        68898               0.889500
-                        72179               1.130490
-                        73819               2.493650
-                        80000               2.493650
+                            0  0.000000
+                         3281  0.000000
+                         6562  0.000000
+                         9843  0.000000
+                        13123  0.000000
+                        16404  0.000000
+                        19685  0.000000
+                        22966  0.041195
+                        26247  0.101788
+                        29528  0.162382
+                        32808  0.222975
+                        36089  0.283568
+                        39370  0.344161
+                        42651  0.404755
+                        45932  0.465348
+                        49213  0.525941
+                        52494  0.586534
+                        55774  0.647127
+                        59055  0.707721
+                        62336  0.768314
+                        65617  0.828907
+                        68898  0.889500
+                        72179  1.130490
+                        73819  2.493650
+                        80000  2.493650
                     </tableData>
                 </table>
             </function>
@@ -104,31 +202,31 @@
                 <table>
                     <independentVar lookup="row">position/h-sl-ft</independentVar>
                     <tableData>
-                        0                   1.233490
-                        3281                1.315350
-                        6562                1.397200
-                        9843                1.479060
-                        13123               1.560920
-                        16404               1.642780
-                        19685               1.724640
-                        22966               1.848510
-                        26247               1.979740
-                        29528               2.110970
-                        32808               2.230080
-                        36089               2.325410
-                        39370               2.420750
-                        42651               2.489280
-                        45932               2.489720
-                        49213               2.490150
-                        52494               2.490590
-                        55774               2.491030
-                        59055               2.491470
-                        62336               2.491900
-                        65617               2.492340
-                        68898               2.492780
-                        72179               2.493220
-                        75459               2.493650
-                        80000               2.493650
+                            0  1.23349
+                         3281  1.31535
+                         6562  1.39720
+                         9843  1.47906
+                        13123  1.56092
+                        16404  1.64278
+                        19685  1.72464
+                        22966  1.84851
+                        26247  1.97974
+                        29528  2.11097
+                        32808  2.23008
+                        36089  2.32541
+                        39370  2.42075
+                        42651  2.48928
+                        45932  2.48972
+                        49213  2.49015
+                        52494  2.49059
+                        55774  2.49103
+                        59055  2.49147
+                        62336  2.49190
+                        65617  2.49234
+                        68898  2.49278
+                        72179  2.49322
+                        75459  2.49365
+                        80000  2.49365
                     </tableData>
                 </table>
             </function>
@@ -194,7 +292,8 @@
                             </gt>
                             <value>1</value>
                             <difference>
-                                <value>-1.25</value> <!-- arbitrary value to drop quicker-->
+                                <!-- arbitrary value to drop quicker-->
+                                <value>-1.25</value>
                                 <property>propulsion/openv-overspeed</property>
                             </difference>
                         </ifthen>
@@ -227,484 +326,6 @@
             </function>
         </fcs_function>
 
-        <!-- engine 0 -->
-        <fcs_function name="propulsion/engine[0]/fire-point">
-            <function>
-                <ifthen>
-                    <lt>
-                        <property>propulsion/engine[0]/fire-point</property>
-                        <value>1</value>
-                    </lt>
-                    <sum>
-                        <value>4.5</value>
-                        <quotient>
-                            <urandom />
-                            <value>3.13</value>
-                        </quotient>
-                    </sum>
-                    <property>propulsion/engine[0]/fire-point</property>
-                </ifthen>
-            </function>
-            <clipto>
-                <min>3.2</min>
-                <max>5</max>
-            </clipto>
-        </fcs_function>
-        <fcs_function name="propulsion/engine[0]/bleedair-temp-val">
-            <description>
-                PB is the only pressure ratio (from ambient) at the burner
-                and this is close enough to where the bleed air is taken to give
-                us a pressure to work with.
-                Temperature ratio is pressure ratio ^ (gamma-1)/gamma
-                where gamma is the ratio of specific heats.
-                T2 / T1 = (p2 / pt1) ^ ((gamma -1) / gamma)
-                sigma 0.09 M4 @60000
-                The trigger point is based on an estimation of how long this might take as no data is available
-            </description>
-            <function>
-                <product>
-                    <ifthen>
-                        <gt>
-                            <property>propulsion/openv-overspeed</property>
-                            <value>1.0</value>
-                        </gt>
-                        <product>
-                            <property>propulsion/openv-overspeed</property>
-                            <property>propulsion/openv-overspeed</property>
-                        </product>
-                        <value>1</value>
-                    </ifthen>
-                    <property>propulsion/engine[0]/PB</property>
-                    <property>atmosphere/T-R</property>
-                </product>
-            </function>
-        </fcs_function>
-
-        <lag_filter name="propulsion/engine[0]/bleedair-temp">
-            <input>propulsion/engine[0]/bleedair-temp-val</input>
-			<c1>0.1</c1>
-        </lag_filter>
-        
-        <switch name="propulsion/engine[0]/bleedair-temp-high">
-            <default value="0" />
-            <test value="1">
-                propulsion/engine[0]/bleedair-temp gt 2000
-            </test>
-        </switch>
-
-        <!-- seized will be true when engine has been on fire.-->
-        <fcs_function name="propulsion/engine[0]/seized">
-            <function>
-                <ifthen>
-                    <nq>
-                        <property>propulsion/damage-reset</property>
-                        <v>0</v>
-                    </nq>
-                    <v>0</v>
-                    <ifthen>
-                        <and>
-                            <ge>
-                                <property>propulsion/openv-overspeed</property>
-                                <property>propulsion/engine[0]/fire-point</property>
-                            </ge>
-                            <gt>
-                                <property>propulsion/engine[0]/PB</property>
-                                <value>1.6</value>
-                            </gt>
-                        </and>
-                        <value>1</value>
-                        <property>propulsion/engine[0]/seized</property>
-                    </ifthen>
-                </ifthen>
-            </function>
-        </fcs_function>
-
-        <switch name="propulsion/engine[0]/fire">
-            <default value="propulsion/engine[0]/fire" />
-            <test value="0" logic="OR">
-                propulsion/damage-reset ne 0
-            </test>
-            <test value="0">
-                propulsion/engine[0]/seized ne 0
-                propulsion/engine[0]/fire-intensity lt 0.0001
-                propulsion/engine[0]/fire-extinguished ne 0
-            </test>
-            <test value="1">
-                propulsion/engine[0]/seized ne 0
-                propulsion/engine[0]/fire-extinguished lt 0.001
-            </test>
-        </switch>
-
-        <fcs_function name="propulsion/engine[0]/fire-intensity">
-            <function>
-                <ifthen>
-                    <or>
-                        <lt>
-                            <property>propulsion/engine[0]/fire</property>
-                            <value>1</value>
-                        </lt>
-                        <nq>
-                            <property>propulsion/engine[0]/fire-extinguished</property>
-                            <value>0</value>
-                        </nq>
-                    </or>
-                    <difference>
-                        <property>propulsion/engine[0]/fire-intensity</property>
-                        <product>
-                            <property>simulation/channel-dt</property>
-                            <value>0.003</value> <!-- cools at twuce the rate -->
-                        </product>
-                    </difference>
-                    <sum>
-                        <property>propulsion/engine[0]/fire-intensity</property>
-                        <product>
-                            <property>simulation/channel-dt</property>
-                            <value>0.001667</value> <!-- ~ 10 minutes for full fire. -->
-                        </product>
-                    </sum>
-                </ifthen>
-            </function>
-            <clipto>
-                <min>0</min>
-                <max>1</max>
-            </clipto>
-        </fcs_function>
-
-        <fcs_function name="propulsion/engine[0]/fire-extinguished">
-            <function>
-                <ifthen>
-                    <nq>
-                        <property>propulsion/damage-reset</property>
-                        <v>0</v>
-                    </nq>
-                    <v>0</v>
-                    <ifthen>
-                        <and>
-                            <eq>
-                                <property>propulsion/fire-discharge-mode</property>
-                                <value>2</value>
-                            </eq>
-                            <gt>
-                                <property>propulsion/engine[0]/fire-button-armed</property>
-                                <value>0</value>
-                            </gt>
-                            <gt>
-                                <property>propulsion/engine[0]/fire</property>
-                                <value>0</value>
-                            </gt>
-                            <ge>
-                                <property>propulsion/fire-extinguisher-level</property>
-                                <value>1</value>
-                            </ge>
-                        </and>
-                        <lt>
-                            <quotient>
-                                <property>propulsion/engine[0]/fire-intensity</property>
-                                <property>propulsion/fire-extinguishers-armed-count</property>
-                            </quotient>
-                            <!-- 
-                                the chance of the fire being extinguised will be 
-                                based on the number of elements (L,R,AMAD) discharged 
-                                and the intensity of the fire
-                                so the formula
-                                is intensity / (number of buttons) 
-                                so with an intensity of 1.0 being the max 
-                                the fire will be extinguishable during the first three minutes
-                                however with three first it will only work in the first minute.
-                            -->
-                            <value>1.3</value>
-                        </lt>
-                        <property>propulsion/engine[0]/fire-extinguished</property>
-                    </ifthen>
-                </ifthen>
-            </function>
-            <clipto>
-                <min>0</min>
-                <max>1</max>
-            </clipto>
-        </fcs_function>
-
-        <switch name="propulsion/engine[0]/overtemp">
-            <default value="0" />
-            <test value="1">
-                propulsion/openv-overspeed gt 1.5
-                propulsion/engine[0]/fire-extinguished eq 0
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[0]/blowout">
-            <default value="0" />
-            <test value="1">
-                propulsion/openv-underspeed ge 0.4
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[0]/stalled">
-            <default value="0" />
-            <test value="1">
-                propulsion/openv-underspeed ge 1
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[0]/fire-test-ok">
-            <default value="0" />
-            <test value="1">
-                propulsion/fire-discharge-mode eq 0
-                propulsion/engine[0]/n2 gt 10
-                propulsion/engine[0]/fire eq 0
-                propulsion/fire-extinguisher-level ne 0
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[0]/burn-thru">
-            <default value="propulsion/engine[0]/burn-thru"/>
-            <test value="0">
-                propulsion/damage-reset ne 0
-            </test>
-            <test value="1">
-                propulsion/openv-overspeed gt 3.5
-                propulsion/engine[0]/augmentation-alight gt 0
-            </test>
-        </switch>
-
-        <!-- engine 1-->
-        <fcs_function name="propulsion/engine[1]/fire-point">
-            <function>
-                <ifthen>
-                    <lt>
-                        <property>propulsion/engine[1]/fire-point</property>
-                        <value>1</value>
-                    </lt>
-                    <sum>
-                        <value>4.5</value>
-                        <quotient>
-                            <urandom />
-                            <value>3.13</value>
-                        </quotient>
-                    </sum>
-                    <property>propulsion/engine[1]/fire-point</property>
-                </ifthen>
-            </function>
-            <clipto>
-                <min>3.2</min>
-                <max>5</max>
-            </clipto>
-        </fcs_function>
-        <fcs_function name="propulsion/engine[1]/bleedair-temp-val">
-            <description>
-                PB is the only pressure ratio (from ambient) at the burner
-                and this is close enough to where the bleed air is taken to give
-                us a pressure to work with.
-                Temperature ratio is pressure ratio ^ (gamma-1)/gamma
-                where gamma is the ratio of specific heats.
-                T2 / T1 = (p2 / pt1) ^ ((gamma -1) / gamma)
-                sigma 0.09 M4 @60000
-                The trigger point is based on an estimation of how long this might take as no data is available
-            </description>
-            <function>
-                <product>
-                    <ifthen>
-                        <gt>
-                            <property>propulsion/openv-overspeed</property>
-                            <value>1.0</value>
-                        </gt>
-                        <product>
-                            <property>propulsion/openv-overspeed</property>
-                            <property>propulsion/openv-overspeed</property>
-                        </product>
-                        <value>1</value>
-                    </ifthen>
-                    <property>propulsion/engine[1]/PB</property>
-                    <property>atmosphere/T-R</property>
-                </product>
-            </function>
-        </fcs_function>
-
-        <lag_filter name="propulsion/engine[1]/bleedair-temp">
-            <input>propulsion/engine[1]/bleedair-temp-val</input>
-			<c1>0.1</c1>
-        </lag_filter>
-
-        <switch name="propulsion/engine[1]/bleedair-temp-high">
-            <default value="0" />
-            <test value="1">
-                propulsion/engine[1]/bleedair-temp gt 2000
-            </test>
-        </switch>
-
-        <fcs_function name="propulsion/engine[1]/seized">
-            <function>
-                <ifthen>
-                    <nq>
-                        <property>propulsion/damage-reset</property>
-                        <v>0</v>
-                    </nq>
-                    <v>0</v>
-                    <ifthen>
-                        <and>
-                            <ge>
-                                <property>propulsion/openv-overspeed</property>
-                                <property>propulsion/engine[1]/fire-point</property>
-                            </ge>
-                            <gt>
-                                <property>propulsion/engine[1]/PB</property>
-                                <value>1.6</value>
-                            </gt>
-                        </and>
-                        <value>1</value>
-                        <property>propulsion/engine[1]/seized</property>
-                    </ifthen>
-                </ifthen>
-            </function>
-        </fcs_function>
-
-        <switch name="propulsion/engine[1]/fire">
-            <default value="propulsion/engine[1]/fire" />
-            <test value="0" logic="OR">
-                propulsion/damage-reset ne 0
-            </test>
-            <test value="0">
-                propulsion/engine[1]/seized ne 0
-                propulsion/engine[1]/fire-intensity lt 0.0001
-                propulsion/engine[1]/fire-extinguished ne 0
-            </test>
-            <test value="1">
-                propulsion/engine[1]/seized ne 0
-                propulsion/engine[1]/fire-extinguished lt 0.001
-            </test>
-        </switch>
-
-        <fcs_function name="propulsion/engine[1]/fire-intensity">
-            <function>
-                <ifthen>
-                    <or>
-                        <lt>
-                            <property>propulsion/engine[1]/fire</property>
-                            <value>1</value>
-                        </lt>
-                        <nq>
-                            <property>propulsion/engine[1]/fire-extinguished</property>
-                            <value>0</value>
-                        </nq>
-                    </or>
-                    <difference>
-                        <property>propulsion/engine[1]/fire-intensity</property>
-                        <product>
-                            <property>simulation/channel-dt</property>
-                            <value>0.003</value> <!-- cools at twuce the rate -->
-                        </product>
-                    </difference>
-                    <sum>
-                        <property>propulsion/engine[1]/fire-intensity</property>
-                        <product>
-                            <property>simulation/channel-dt</property>
-                            <value>0.001667</value> <!-- ~ 10 minutes for full fire. -->
-                        </product>
-                    </sum>
-                </ifthen>
-            </function>
-            <clipto>
-                <min>0</min>
-                <max>1</max>
-            </clipto>
-        </fcs_function>
-
-        <fcs_function name="propulsion/engine[1]/fire-extinguished">
-            <function>
-                <ifthen>
-                    <nq>
-                        <property>propulsion/damage-reset</property>
-                        <v>0</v>
-                    </nq>
-                    <v>0</v>
-                    <ifthen>
-                        <and>
-                            <eq>
-                                <property>propulsion/fire-discharge-mode</property>
-                                <value>2</value>
-                            </eq>
-                            <gt>
-                                <property>propulsion/engine[1]/fire-button-armed</property>
-                                <value>0</value>
-                            </gt>
-                            <gt>
-                                <property>propulsion/engine[1]/fire</property>
-                                <value>0</value>
-                            </gt>
-                            <ge>
-                                <property>propulsion/fire-extinguisher-level</property>
-                                <value>1</value>
-                            </ge>
-                        </and>
-                        <lt>
-                            <quotient>
-                                <property>propulsion/engine[1]/fire-intensity</property>
-                                <property>propulsion/fire-extinguishers-armed-count</property>
-                            </quotient>
-                            <!-- 
-                                the chance of the fire being extinguised will be 
-                                based on the number of elements (L,R,AMAD) discharged 
-                                and the intensity of the fire
-                                so the formula
-                                is intensity / (number of buttons) 
-                                so with an intensity of 1.0 being the max 
-                                the fire will be extinguishable during the first three minutes
-                                however with three first it will only work in the first minute.
-                            -->
-                            <value>1.3</value>
-                        </lt>
-                        <property>propulsion/engine[1]/fire-extinguished</property>
-                    </ifthen>
-                </ifthen>
-            </function>
-            <clipto>
-                <min>0</min>
-                <max>1</max>
-            </clipto>
-        </fcs_function> 
-        
-        <switch name="propulsion/engine[1]/overtemp">
-            <default value="0" />
-            <test value="1">
-                propulsion/openv-overspeed gt 1.5
-                propulsion/engine[1]/fire-extinguished eq 0
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[1]/blowout">
-            <default value="0" />
-            <test value="1">
-                propulsion/openv-underspeed ge 0.4
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[1]/stalled">
-            <default value="0" />
-            <test value="1">
-                propulsion/openv-underspeed ge 1
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[1]/fire-test-ok">
-            <default value="0" />
-            <test value="1">
-                propulsion/fire-discharge-mode eq 0
-                propulsion/engine[1]/n2 gt 10
-                propulsion/engine[1]/fire eq 0
-                propulsion/fire-extinguisher-level ne 0
-            </test>
-        </switch>
-
-        <switch name="propulsion/engine[1]/burn-thru">
-            <default value="propulsion/engine[1]/burn-thru"/>
-            <test value="0">
-                propulsion/damage-reset ne 0
-            </test>
-            <test value="1">
-                propulsion/openv-overspeed gt 3.5
-                propulsion/engine[1]/augmentation-alight gt 0
-            </test>
-        </switch>
 
         <!-- AMAD -->
         <switch name="propulsion/amad-fire-test-ok">
@@ -761,18 +382,328 @@
     </channel>
 
     <channel name="F100-L">
+        <fcs_function name="propulsion/engine[0]/bleedair-temp-val">
+            <description>
+                PB is the only pressure ratio (from ambient) at the burner
+                and this is close enough to where the bleed air is taken to give
+                us a pressure to work with.
+                Temperature ratio is pressure ratio ^ (gamma-1)/gamma
+                where gamma is the ratio of specific heats.
+                T2 / T1 = (p2 / pt1) ^ ((gamma -1) / gamma)
+                sigma 0.09 M4 @60000
+                The trigger point is based on an estimation of how long this might take as no data
+                is available
+            </description>
+            <function>
+                <product>
+                    <ifthen>
+                        <gt>
+                            <property>propulsion/openv-overspeed</property>
+                            <value>1.0</value>
+                        </gt>
+                        <product>
+                            <property>propulsion/openv-overspeed</property>
+                            <property>propulsion/openv-overspeed</property>
+                        </product>
+                        <value>1</value>
+                    </ifthen>
+                    <property>propulsion/engine[0]/PB</property>
+                    <property>atmosphere/T-R</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <lag_filter name="propulsion/engine[0]/bleedair-temp">
+            <input>propulsion/engine[0]/bleedair-temp-val</input>
+            <c1>0.1</c1>
+        </lag_filter>
+
+        <switch name="propulsion/engine[0]/bleedair-temp-high">
+            <default value="0" />
+            <test value="1">
+                propulsion/engine[0]/bleedair-temp gt 2000
+            </test>
+        </switch>
+
+        <!-- seized will be true when engine has been on fire.-->
+        <fcs_function name="propulsion/engine[0]/seized">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>propulsion/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <ge>
+                                <property>propulsion/openv-overspeed</property>
+                                <property>propulsion/engine[0]/config/fire-point</property>
+                            </ge>
+                            <gt>
+                                <property>propulsion/engine[0]/PB</property>
+                                <value>1.6</value>
+                            </gt>
+                        </and>
+                        <value>1</value>
+                        <property>propulsion/engine[0]/seized</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/engine[0]/fire">
+            <default value="propulsion/engine[0]/fire" />
+            <test value="0" logic="OR">
+                propulsion/damage-reset ne 0
+            </test>
+            <test value="0">
+                propulsion/engine[0]/seized ne 0
+                propulsion/engine[0]/fire-intensity lt 0.0001
+                propulsion/engine[0]/fire-extinguished ne 0
+            </test>
+            <test value="1">
+                propulsion/engine[0]/seized ne 0
+                propulsion/engine[0]/fire-extinguished lt 0.001
+            </test>
+        </switch>
+
+        <fcs_function name="propulsion/engine[0]/fire-intensity">
+            <function>
+                <ifthen>
+                    <or>
+                        <lt>
+                            <property>propulsion/engine[0]/fire</property>
+                            <value>1</value>
+                        </lt>
+                        <nq>
+                            <property>propulsion/engine[0]/fire-extinguished</property>
+                            <value>0</value>
+                        </nq>
+                    </or>
+                    <difference>
+                        <property>propulsion/engine[0]/fire-intensity</property>
+                        <product>
+                            <!-- cools at twuce the rate -->
+                            <property>simulation/channel-dt</property>
+                            <value>0.003</value>
+                        </product>
+                    </difference>
+                    <sum>
+                        <property>propulsion/engine[0]/fire-intensity</property>
+                        <product>
+                            <!-- ~ 10 minutes for full fire. -->
+                            <property>simulation/channel-dt</property>
+                            <value>0.001667</value>
+                        </product>
+                    </sum>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/fire-extinguished">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>propulsion/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <eq>
+                                <property>propulsion/fire-discharge-mode</property>
+                                <value>2</value>
+                            </eq>
+                            <gt>
+                                <property>propulsion/engine[0]/fire-button-armed</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>propulsion/engine[0]/fire</property>
+                                <value>0</value>
+                            </gt>
+                            <ge>
+                                <property>propulsion/fire-extinguisher-level</property>
+                                <value>1</value>
+                            </ge>
+                        </and>
+                        <lt>
+                            <quotient>
+                                <property>propulsion/engine[0]/fire-intensity</property>
+                                <property>propulsion/fire-extinguishers-armed-count</property>
+                            </quotient>
+                            <!-- 
+                            the chance of the fire being extinguised will be 
+                            based on the number of elements (L,R,AMAD) discharged 
+                            and the intensity of the fire
+                            so the formula
+                            is intensity / (number of buttons) 
+                            so with an intensity of 1.0 being the max 
+                            the fire will be extinguishable during the first three minutes
+                            however with three first it will only work in the first minute.
+                        -->
+                            <value>1.3</value>
+                        </lt>
+                        <property>propulsion/engine[0]/fire-extinguished</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+
+        <switch name="propulsion/engine[0]/overtemp">
+            <default value="0" />
+            <test value="1">
+                propulsion/openv-overspeed gt propulsion/engine[0]/config/overtemp-point
+                propulsion/engine[0]/fire-extinguished eq 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/blowout">
+            <default value="0" />
+            <test value="1">
+                propulsion/openv-underspeed ge 0.4
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/stalled">
+            <default value="0" />
+            <test value="1">
+                propulsion/openv-underspeed ge 1
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/fire-test-ok">
+            <default value="0" />
+            <test value="1">
+                propulsion/fire-discharge-mode eq 0
+                propulsion/engine[0]/n2 gt 10
+                propulsion/engine[0]/fire eq 0
+                propulsion/fire-extinguisher-level ne 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[0]/burn-thru">
+            <default value="propulsion/engine[0]/burn-thru" />
+            <test value="0">
+                propulsion/damage-reset ne 0
+            </test>
+            <test value="1">
+                propulsion/openv-overspeed gt propulsion/engine[0]/config/burn-thru-point
+                propulsion/engine[0]/augmentation-alight gt 0
+            </test>
+        </switch>
+        <fcs_function name="propulsion/engine[0]/eec-idle-increment">
+            <description>
+                The EEC increases idle rpm from normal idle at 0.8 Mach to military
+                power at 1.4 Mach. To reduce thrust below military, the pilot must
+                slow the airplane below Mach 1.4.
+            </description>
+            <function>
+                <ifthen>
+                    <and>
+                        <eq>
+                            <property>propulsion/engine[0]/config/digital-eec</property>
+                            <value>0</value>
+                        </eq>
+                        <eq>
+                            <property>propulsion/engine[0]/eec-active</property>
+                            <value>1</value>
+                        </eq>
+                        <not>
+                            <property>propulsion/engine[0]/eec-fail</property>
+                        </not>
+                        <lt>
+                            <property>fcs/throttle-cmd-norm[0]</property>
+                            <value>0.85</value>
+                        </lt>
+                        <gt>
+                            <property>velocities/mach</property>
+                            <value>0.8</value>
+                        </gt>
+                    </and>
+                    <sum>
+                        <product>
+                            <property>propulsion/engine[0]/config/engine-variance-delta-pla</property>
+                            <value>-1</value>
+                        </product>
+                        <table>
+                            <independentVar>velocities/mach</independentVar>
+                            <tableData>
+                               0.8    0.1
+                               1.4    1.0
+                            </tableData>
+                        </table>
+                    </sum>
+                <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[0]/throttle-pos-norm">
+            <description>
+                5 stage non linear augmentation.
+                Throttle position of 90% is start of augmentation.
+                90..100% is stages 1..5 of augmentation
+            </description>
+            <function>
+                <ifthen>
+                    <lt>
+                        <property>fcs/throttle-cmd-norm[0]</property>
+                        <value>0.85</value>
+                    </lt>
+                    <ifthen>
+                        <lt>
+                            <property>propulsion/engine[0]/n2</property>
+                            <value>50</value>
+                        </lt>
+                        <property>fcs/throttle-cmd-norm[0]</property>
+                        <min>
+                            <sum>
+                                <property>propulsion/engine[0]/config/engine-variance-delta-pla</property>
+                                <property>propulsion/engine[0]/eec-idle-increment</property>
+                                <product>
+                                    <value>1.2</value>
+                                    <property>fcs/throttle-cmd-norm[0]</property>
+                                </product>
+                            </sum>
+                            <value>1.0</value>
+                        </min>
+                    </ifthen>
+                    <table>
+                        <independentVar>fcs/throttle-cmd-norm[0]</independentVar>
+                        <tableData>
+                            0.90    1.00
+                            0.93    1.25
+                            0.95    1.50
+                            0.97    1.75
+                            1.00    2.00
+                        </tableData>
+                    </table>
+                </ifthen>
+            </function>
+        </fcs_function>
+     
         <fcs_function name="propulsion/engine[0]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
                 <table>
                     <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                     <tableData>
-                        0	18.2
-                        10	12.7
-                        24	8.45
-                        42	5.25
-                        56	4.77
-                        100	4.4
+                          0 18.20
+                         10 12.70
+                         24  8.45
+                         42  5.25
+                         56  4.77
+                        100  4.40
                     </tableData>
                 </table>
             </function>
@@ -783,12 +714,12 @@
                 <table>
                     <independentVar lookup="row">propulsion/engine[0]/n1</independentVar>
                     <tableData>
-                        0	3.20
-                        10	2.15
-                        24	0.99
-                        42	0.56
-                        56	0.25
-                        100	0.21
+                          0  3.20
+                         10  2.15
+                         24  0.99
+                         42  0.56
+                         56  0.25
+                        100  0.21
                     </tableData>
                 </table>
             </function>
@@ -811,20 +742,23 @@
         <fcs_function name="propulsion/engine[0]/EGT-C-dmd">
             <description>Engine 0 EGT Degrees C</description>
             <function>
+                <product>
+                    <property>propulsion/engine[0]/config/variance</property>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <independentVar lookup="column">propulsion/engine[0]/fuel-flow-rate-norm</independentVar>
                     <tableData>
-                        0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
-                        0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
-                        0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
-                        0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
-                        0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
-                        0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
-                        0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
-                        0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                            0.000  0.001  0.009  0.020  0.030  0.040  0.050  0.060  0.070  0.080  0.100  0.120  0.140  0.160  0.200  0.240  0.320  0.400  0.560  0.800  0.984
+                       0.0      0    271    281    292    301    310    319    328    336    344    359    374    387    400    424    447    492    537    641    808    870
+                       0.2      0    268    277    288    297    307    315    324    332    340    355    369    383    395    419    442    486    531    633    798    860
+                       0.3      0    260    269    279    288    297    306    314    322    330    344    358    371    383    406    428    471    515    614    774    833
+                       0.5      0    249    257    267    276    285    293    301    308    316    330    343    355    367    389    410    451    493    588    741    798
+                       0.6      0    232    240    250    258    266    274    281    288    295    308    320    332    343    364    383    421    460    549    692    746
+                       0.8      0    216    223    232    240    247    254    261    268    274    286    298    308    319    338    356    391    428    510    643    693
+                       0.9      0    208    215    223    231    238    245    251    258    264    275    286    297    307    325    343    377    412    491    619    667
                     </tableData>
                 </table>
+                </product>
             </function>
         </fcs_function>
 
@@ -840,23 +774,23 @@
                     <independentVar lookup="row">propulsion/engine[0]/n2</independentVar>
                     <independentVar lookup="column">velocities/mach</independentVar>
                     <tableData>
-                            0.00000 0.20000 0.30000 0.45000 0.60000 0.80000 0.90000 3.00000
-                        0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                        8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                        16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
-                        24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
-                        32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
-                        40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
-                        48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
-                        56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
-                        63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
-                        71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
-                        79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
-                        87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
-                        95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
-                        97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
-                        98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
-                        100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                                0.00     0.20     0.30     0.45     0.60     0.80     0.90     3.00
+                          0  1.00000  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                          8  1.09966  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                         16  1.26926  0.97069  0.93186  0.93963  0.93963  0.93963  0.93963  0.93963
+                         24  1.37453  0.99197  0.95229  0.92944  0.93963  0.93963  0.93963  0.93963
+                         32  1.56636  1.00992  0.96952  0.92105  0.89341  0.93963  0.93963  0.93963
+                         40  1.87550  1.03223  0.99094  0.94140  0.91316  0.91316  0.93963  0.93963
+                         48  2.25353  1.06785  1.02514  0.95338  0.91524  0.91835  0.97369  0.97369
+                         56  2.61381  1.12695  1.08188  1.00614  0.96590  0.96918  0.97369  0.97369
+                         63  2.84760  1.22096  1.17212  1.09007  1.04647  1.05002  0.99630  0.99630
+                         71  2.98150  1.34177  1.28810  1.19793  1.15002  1.15392  1.09488  1.09488
+                         79  3.00594  1.53633  1.47488  1.37164  1.31677  1.32124  1.25365  1.25365
+                         87  3.07269  1.80555  1.73333  1.61200  1.54752  1.55278  1.47333  1.47333
+                         95  3.49481  2.16568  2.07905  1.93352  1.85618  1.86248  1.76719  1.76719
+                         97  3.71122  2.63418  2.52881  2.35179  2.25772  2.26539  2.14949  2.14949
+                         98  3.84257  2.77040  2.65959  2.47341  2.37448  2.38255  2.26065  2.26065
+                        100  4.15840  2.84159  2.72792  2.53697  2.43549  2.44376  2.31873  2.31873
                     </tableData>
                 </table>
             </function>
@@ -868,8 +802,8 @@
                         <value>1.0</value>
                         <product>
                             <sum>
-                                <property>fcs/throttle-pos-norm[0]</property>
-                                <value>-1</value>
+                                <property>propulsion/engine[0]/throttle-pos-norm</property>
+                                <value>-1.07</value>
                             </sum>
                             <value>5</value>
                         </product>
@@ -882,32 +816,44 @@
             </clipto>
         </fcs_function>
         <switch name="propulsion/engine[0]/augmentation-ignition">
-            <default value="0"/>
+            <default value="0" />
             <test value="1">
                 propulsion/engine[0]/PB gt 2.14
                 propulsion/engine[0]/augmentation-stage gt 0
                 propulsion/engine[0]/augmentation-alight eq 0
             </test>
         </switch>
-        <switch name="propulsion/engine[0]/augmentation-igniting">
-            <default value="0"/>
-            <test value="1">
-                propulsion/engine[0]/augmentation-ignition gt 0
-                propulsion/engine[0]/augmentation-alight eq 0
+
+        <!-- If the DEEC detects a failure that prevents it from safely controlling
+        the engine it will automatically switch to the secondary mode, the
+        same as ENG CONTR switch OFF. In this mode afterburner operation is
+        inhibited, thrust is limited to about 80%-100% of normal MIL -->
+        <switch name="propulsion/engine[0]/augmentation-can-ignite">
+            <default value="1" />
+            <test value="0">
+                propulsion/engine[0]/eec-fail ne 0
+                propulsion/engine[0]/config/digital-eec ne 0
+            </test>
+            <test value="0">
+                propulsion/engine[0]/burn-thru ne 0
             </test>
         </switch>
 
-        <!--<lag_filter name="propulsion/engine[0]/augmentation-alight">
-            <input></input>
-            <output>propulsion/engine[0]/augmentation-alightC</output>
-            <c1>0.001</c1>
-        </lag_filter >-->
+        <switch name="propulsion/engine[0]/augmentation-igniting">
+            <default value="0" />
+            <test value="1">
+                propulsion/engine[0]/augmentation-ignition gt 0
+                propulsion/engine[0]/augmentation-alight eq 0
+                propulsion/engine[0]/augmentation-can-ignite ne 0
+            </test>
+        </switch>
+
         <actuator name="propulsion/engine[0]/augmentation-ignition-sequence">
             <input> propulsion/engine[0]/augmentation-igniting </input>
             <rate_limit> 1.2 </rate_limit>
             <clipto>
                 <min> 0 </min>
-                <max>  1</max>
+                <max> 1 </max>
             </clipto>
         </actuator>
 
@@ -916,44 +862,33 @@
             <test value="propulsion/engine[0]/augmentation-stage">
                 propulsion/engine[0]/augmentation-stage ne propulsion/engine[0]/augmentation-alight
                 propulsion/engine[0]/augmentation-alight ne 0
-                propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[0]/thrust-lbs gt 100
             </test>
             <test value="propulsion/engine[0]/augmentation-stage">
                 propulsion/engine[0]/augmentation-ignition-sequence gt 0.9
-                propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[0]/thrust-lbs gt 100
             </test>
             <test value="propulsion/engine[0]/augmentation-alight">
                 propulsion/engine[0]/augmentation-stage gt 0
                 propulsion/engine[0]/augmentation-alight ne 0
-                propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[0]/thrust-lbs gt 100
             </test>
             <test value="0">
                 propulsion/engine[0]/blowout ne 0
             </test>
         </switch>
         <switch name="propulsion/engine[0]/augmentation-burner">
-            <default value="0"/>
+            <default value="0" />
             <test value="1">
                 propulsion/engine[0]/augmentation-alight ne 0
-                propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[0]/thrust-lbs gt 100
             </test>
             <test value="propulsion/engine[0]/augmentation-ignition-sequence">
                 propulsion/engine[0]/augmentation-ignition-sequence ne 0
-                propulsion/engine[0]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[0]/thrust-lbs gt 100
             </test>
         </switch>
-        <!--<fcs_function name="propulsion/engine[0]/augmentation-alight-delta">
-            <function>
-                <difference>
-                    <property>propulsion/engine[0]/augmentation-alight</property>
-                    <property>propulsion/engine[0]/augmentation-alight-dmd</property>
-                </difference>
-            </function>
-            <clipto>
-                <min>0</min>
-                <max>5</max>
-            </clipto>
-        </fcs_function>-->
+
         <actuator name="propulsion/engine[0]/augmentation-alight">
             <input> propulsion/engine[0]/augmentation-alight-dmd </input>
             <rate_limit> 10 </rate_limit>
@@ -970,6 +905,27 @@
                 </sum>
             </function>
         </fcs_function>
+        <fcs_function name="fcs/throttle-pos-norm[0]">
+            <function>
+                <sum>
+                    <min>
+                        <property>propulsion/engine[0]/throttle-pos-norm</property>
+                        <value>1</value>
+                    </min>
+                    <product>
+                        <max>
+                            <value>0</value>
+                            <difference>
+                                <property>propulsion/engine[0]/augmentation-alight</property>
+                                <value>1</value>
+                            </difference>
+                        </max>
+                        <value>0.2</value>
+                    </product>
+                </sum>
+            </function>
+            <output>fcs/throttle-pos-norm[0]</output>
+        </fcs_function>
         <!-- EGT equations -->
         <fcs_function name="propulsion/engine[0]/EGTaug-C-dmd">
             <description>Engine 0 EGT increment due to augmentation</description>
@@ -977,9 +933,9 @@
                 <table>
                     <independentVar lookup="row">propulsion/engine[0]/augmentation-stage</independentVar>
                     <tableData>
-                        0.00	0
-                        1.00	86
-                        5.00	171
+                        0      0
+                        1     86
+                        5    171
                     </tableData>
                 </table>
             </function>
@@ -990,6 +946,7 @@
             <output>propulsion/engine[0]/EGTaug-C</output>
             <c1>0.03</c1>
         </lag_filter >
+
         <fcs_function name="propulsion/engine[0]/EGT-R-dmd">
             <description>EGT Demand degrees R</description>
             <function>
@@ -1003,6 +960,7 @@
                 </product>
             </function>
         </fcs_function>
+
         <fcs_function name="propulsion/engine[0]/pt">
             <description>Total Pressure</description>
             <function>
@@ -1026,6 +984,7 @@
                 </pow>
             </function>
         </fcs_function>
+
         <fcs_function name="propulsion/engine[0]/delta">
             <description>Delta</description>
             <function>
@@ -1049,31 +1008,155 @@
             <output>propulsion/engine[0]/casing-temperature-R</output>
             <c1>0.01</c1>
         </lag_filter>
+
         <!-- augmentation -->
-        <fcs_function name="propulsion/engine[0]/alt/nozzle-dmd-norm">
+        <fcs_function name="propulsion/engine[0]/alt/nozzle-dmd-pos-base">
+            <description>
+                                TO 15-15A-1 page 1-8
+
+            VARIABLE AREA EXHAUST NOZZLE
+                The engine has a convergent-divergent nozzle system
+                which is continuously variable between minimum and
+                maximum opening. The nozzle is positioned pneu-
+                matically by engine bleed air.
+
+            EXHAUST NOZZLE CONTROL
+                The F100-PW-100/220 engine nozzle is controlled by throttle and
+                landing gear handle position.
+                
+                With F100-PW-220 engine with DEEC ON, gear handle DOWN, and throttle
+                in IDLE, the nozzle will be approximately 80%. As the throttle is
+                advanced, the nozzle closes to near minimum area. With the landing
+                gear handle UP, the nozzle is near minimum area at all times except at
+                MIL or above. At MIL power the nozzle position indicators reflect a
+                slightly open nozzle (5-20%). As the throttle is advanced into
+                afterburner range, the nozzle schedules further open to compensate for
+                increasing afterburner fuel flow.  With the DEEC OFF or in secondary
+                mode, nozzle position is closed to near the minimum area inflight or
+                on the ground. This results in higher idle thrust and taxi speeds.
+
+                With F100-PW-100 engine with EEC ON, gear handle DOWN, and throttle in
+                IDLE, the nozzle will be approximately 80%. As the throttle is
+                advanced, the nozzle closes to near minimum area. 
+
+                With the landing gear handle UP and EEC ON, the nozzle position is
+                35-50% from IDLE to mid-range and closes to near minimum area as
+                throttle is advanced beyond mid- range. At MIL power nozzle position
+                indicators will reflect a slightly open nozzle (5-20%) when the EEC
+                begins trimming nozzle position. As the throttle is advanced into
+                afterburner range the nozzle will schedule open to compensate for
+                increasing after- burner fuel flow. 
+
+                With the EEC OFF, nozzle position is 35-50% below mid-range and closes
+                to near mini- mum areas as throttle is advanced beyond mid-range
+                during flight or ground operations (except when after- burner is
+                selected). This will result in higher idle thrust and taxi speeds.
+
+                With F100-PW-220 engine with DEEC ON, gear handle DOWN, and throttle
+                in IDLE, the nozzle will be approximately 80%. As the throttle is
+                advanced, the nozzle closes to near minimum area. 
+                
+                With the landing gear handle UP, the nozzle is near minimum area at
+                all times except at MIL or above. At MIL power the nozzle position
+                indicators reflect a slightly open nozzle (5-20%). As the throttle is
+                advanced into afterburner range, the nozzle schedules further open to
+                compensate for increasing afterburner fuel flow.  With the DEEC OFF or
+                in secondary mode, nozzle position is closed to near the minimum area
+                inflight or on the ground. This results in higher idle thrust and taxi
+                speeds.
+            </description>
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <table>
-                    <independentVar lookup="row">fcs/throttle-pos-norm[0]</independentVar>
-                    <tableData>
-                        0.0 	0.81807
-                        0.2235	0.81807
-                        1.0000	0.15248
-                    </tableData>
-                </table>
+                <ifthen>
+                    <eq>
+                        <property>propulsion/engine[0]/config/digital-eec</property>
+                        <value>0</value>
+                    </eq>
+                    <ifthen>
+                        <!-- EEC -->
+                        <eq>
+                            <property>propulsion/engine[0]/eec-active</property>
+                            <value>0</value>
+                        </eq>
+                        <!-- EEC OFF nozzle position is 35-50% below mid-range and 
+                             closes to near minimum areas as throttle is advanced beyond mid-range
+                             during flight or ground operations (except when afterburner is selected).-->
+                        <table>
+                        <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
+                        <tableData>
+                            0.0  0.35
+                            0.5  0.50
+                            1.0  0.05
+                        </tableData> 
+                        </table>
+                        <!-- EEC ON -->
+                        <table>
+                            <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
+                            <independentVar lookup="column">gear/gear-cmd-norm</independentVar>
+                            <tableData>
+                                           0     1
+                                0.0000  0.00  0.80
+                                0.2235  0.00  0.80
+                                0.8000  0.20  0.20
+                                1.0000  0.05  0.05
+                            </tableData> 
+                        </table>
+                    </ifthen>
+                    <ifthen>
+                        <!-- DEEC -->
+                        <eq>
+                            <property>propulsion/engine[0]/eec-active</property>
+                            <value>0</value>
+                        </eq>
+                        <value>0.01</value>
+                        <table>
+                            <independentVar lookup="row">fcs/throttle-cmd-norm[0]</independentVar>
+                            <independentVar lookup="column">gear/gear-cmd-norm</independentVar>
+                            <tableData>
+                                           0     1
+                                0.0000  0.35  0.80
+                                0.2235  0.50  0.80
+                                0.8000  0.20  0.05
+                                1.0000  0.05  0.01
+                            </tableData>
+                        </table>
+                    </ifthen>
+                </ifthen>
             </function>
         </fcs_function>
 
-        <switch name="propulsion/engine[0]/alt/nozzle-cmd-norm">
-            <default value="propulsion/engine[0]/alt/nozzle-dmd-norm"/>
-            <test value="1.0" logic="OR">
+        <fcs_function name="propulsion/engine[0]/eec-fail">
+            <function>
+                <or>
+                    <property>propulsion/engine[0]/burn-thru</property>
+                    <not>
+                        <property>propulsion/engine[0]/eec-active</property>
+                    </not>
+                </or>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[0]/nozzle-pos-augmentor">
+            <function>
+                <product>
+                    <property>propulsion/engine[0]/augmentation-alight</property>
+                    <value>0.2</value>
+                </product>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+        <switch name="propulsion/engine[0]/alt/nozzle-pos">
+            <default value="propulsion/engine[0]/alt/nozzle-dmd-pos-base"/>
+            <test value="propulsion/engine[0]/nozzle-pos-augmentor" logic="OR">
                 propulsion/engine[0]/augmentation-alight gt 0
                 propulsion/engine[0]/augmentation-ignition gt 0.4
-                propulsion/engine[0]/n2 lt 60
             </test>
         </switch>
+        
         <kinematic name="propulsion/engine[0]/alt/nozzle-pos-norm">
-            <input>propulsion/engine[0]/alt/nozzle-cmd-norm</input>
+            <input>propulsion/engine[0]/alt/nozzle-pos</input>
             <traverse>
                 <setting>
                     <position>0</position>
@@ -1085,22 +1168,332 @@
                 </setting>
             </traverse>
         </kinematic>
-        <!-- a/b lighting envelope; use outside of this envelope will increase risk of blowout-->
+        <!-- todo: add a/b lighting envelope; use outside of this envelope will increase risk of blowout-->
     </channel>
 
     <channel name="F100-R">
+        <fcs_function name="propulsion/engine[1]/bleedair-temp-val">
+            <description>
+                PB is the only pressure ratio (from ambient) at the burner
+                and this is close enough to where the bleed air is taken to give
+                us a pressure to work with.
+                Temperature ratio is pressure ratio ^ (gamma-1)/gamma
+                where gamma is the ratio of specific heats.
+                T2 / T1 = (p2 / pt1) ^ ((gamma -1) / gamma)
+                sigma 0.09 M4 @60000
+                The trigger point is based on an estimation of how long this might take as no data
+                is available
+            </description>
+            <function>
+                <product>
+                    <ifthen>
+                        <gt>
+                            <property>propulsion/openv-overspeed</property>
+                            <value>1.0</value>
+                        </gt>
+                        <product>
+                            <property>propulsion/openv-overspeed</property>
+                            <property>propulsion/openv-overspeed</property>
+                        </product>
+                        <value>1</value>
+                    </ifthen>
+                    <property>propulsion/engine[1]/PB</property>
+                    <property>atmosphere/T-R</property>
+                </product>
+            </function>
+        </fcs_function>
+
+        <lag_filter name="propulsion/engine[1]/bleedair-temp">
+            <input>propulsion/engine[1]/bleedair-temp-val</input>
+            <c1>0.1</c1>
+        </lag_filter>
+
+        <switch name="propulsion/engine[1]/bleedair-temp-high">
+            <default value="0" />
+            <test value="1">
+                propulsion/engine[1]/bleedair-temp gt 2000
+            </test>
+        </switch>
+
+        <!-- seized will be true when engine has been on fire.-->
+        <fcs_function name="propulsion/engine[1]/seized">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>propulsion/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <ge>
+                                <property>propulsion/openv-overspeed</property>
+                                <property>propulsion/engine[1]/config/fire-point</property>
+                            </ge>
+                            <gt>
+                                <property>propulsion/engine[1]/PB</property>
+                                <value>1.6</value>
+                            </gt>
+                        </and>
+                        <value>1</value>
+                        <property>propulsion/engine[1]/seized</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <switch name="propulsion/engine[1]/fire">
+            <default value="propulsion/engine[1]/fire" />
+            <test value="0" logic="OR">
+                propulsion/damage-reset ne 0
+            </test>
+            <test value="0">
+                propulsion/engine[1]/seized ne 0
+                propulsion/engine[1]/fire-intensity lt 0.0001
+                propulsion/engine[1]/fire-extinguished ne 0
+            </test>
+            <test value="1">
+                propulsion/engine[1]/seized ne 0
+                propulsion/engine[1]/fire-extinguished lt 0.001
+            </test>
+        </switch>
+
+        <fcs_function name="propulsion/engine[1]/fire-intensity">
+            <function>
+                <ifthen>
+                    <or>
+                        <lt>
+                            <property>propulsion/engine[1]/fire</property>
+                            <value>1</value>
+                        </lt>
+                        <nq>
+                            <property>propulsion/engine[1]/fire-extinguished</property>
+                            <value>0</value>
+                        </nq>
+                    </or>
+                    <difference>
+                        <property>propulsion/engine[1]/fire-intensity</property>
+                        <product>
+                            <!-- cools at twuce the rate -->
+                            <property>simulation/channel-dt</property>
+                            <value>0.003</value>
+                        </product>
+                    </difference>
+                    <sum>
+                        <property>propulsion/engine[1]/fire-intensity</property>
+                        <product>
+                            <!-- ~ 10 minutes for full fire. -->
+                            <property>simulation/channel-dt</property>
+                            <value>0.001667</value>
+                        </product>
+                    </sum>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/fire-extinguished">
+            <function>
+                <ifthen>
+                    <nq>
+                        <property>propulsion/damage-reset</property>
+                        <v>0</v>
+                    </nq>
+                    <v>0</v>
+                    <ifthen>
+                        <and>
+                            <eq>
+                                <property>propulsion/fire-discharge-mode</property>
+                                <value>2</value>
+                            </eq>
+                            <gt>
+                                <property>propulsion/engine[1]/fire-button-armed</property>
+                                <value>0</value>
+                            </gt>
+                            <gt>
+                                <property>propulsion/engine[1]/fire</property>
+                                <value>0</value>
+                            </gt>
+                            <ge>
+                                <property>propulsion/fire-extinguisher-level</property>
+                                <value>1</value>
+                            </ge>
+                        </and>
+                        <lt>
+                            <quotient>
+                                <property>propulsion/engine[1]/fire-intensity</property>
+                                <property>propulsion/fire-extinguishers-armed-count</property>
+                            </quotient>
+                            <!-- 
+                            the chance of the fire being extinguised will be 
+                            based on the number of elements (L,R,AMAD) discharged 
+                            and the intensity of the fire
+                            so the formula
+                            is intensity / (number of buttons) 
+                            so with an intensity of 1.0 being the max 
+                            the fire will be extinguishable during the first three minutes
+                            however with three first it will only work in the first minute.
+                        -->
+                            <value>1.3</value>
+                        </lt>
+                        <property>propulsion/engine[1]/fire-extinguished</property>
+                    </ifthen>
+                </ifthen>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+
+        <switch name="propulsion/engine[1]/overtemp">
+            <default value="0" />
+            <test value="1">
+                propulsion/openv-overspeed gt propulsion/engine[1]/config/overtemp-point
+                propulsion/engine[1]/fire-extinguished eq 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/blowout">
+            <default value="0" />
+            <test value="1">
+                propulsion/openv-underspeed ge 0.4
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/stalled">
+            <default value="0" />
+            <test value="1">
+                propulsion/openv-underspeed ge 1
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/fire-test-ok">
+            <default value="0" />
+            <test value="1">
+                propulsion/fire-discharge-mode eq 0
+                propulsion/engine[1]/n2 gt 10
+                propulsion/engine[1]/fire eq 0
+                propulsion/fire-extinguisher-level ne 0
+            </test>
+        </switch>
+
+        <switch name="propulsion/engine[1]/burn-thru">
+            <default value="propulsion/engine[1]/burn-thru" />
+            <test value="0">
+                propulsion/damage-reset ne 0
+            </test>
+            <test value="1">
+                propulsion/openv-overspeed gt propulsion/engine[1]/config/burn-thru-point
+                propulsion/engine[1]/augmentation-alight gt 0
+            </test>
+        </switch>
+        <fcs_function name="propulsion/engine[1]/eec-idle-increment">
+            <description>
+                The EEC increases idle rpm from normal idle at 0.8 Mach to military
+                power at 1.4 Mach. To reduce thrust below military, the pilot must
+                slow the airplane below Mach 1.4.
+            </description>
+            <function>
+                <ifthen>
+                    <and>
+                        <eq>
+                            <property>propulsion/engine[1]/config/digital-eec</property>
+                            <value>0</value>
+                        </eq>
+                        <eq>
+                            <property>propulsion/engine[1]/eec-active</property>
+                            <value>1</value>
+                        </eq>
+                        <not>
+                            <property>propulsion/engine[1]/eec-fail</property>
+                        </not>
+                        <lt>
+                            <property>fcs/throttle-cmd-norm[1]</property>
+                            <value>0.85</value>
+                        </lt>
+                        <gt>
+                            <property>velocities/mach</property>
+                            <value>0.8</value>
+                        </gt>
+                    </and>
+                    <sum>
+                        <product>
+                            <property>propulsion/engine[1]/config/engine-variance-delta-pla</property>
+                            <value>-1</value>
+                        </product>
+                        <table>
+                            <independentVar>velocities/mach</independentVar>
+                            <tableData>
+                               0.8    0.1
+                               1.4    1.0
+                            </tableData>
+                        </table>
+                    </sum>
+                <value>0</value>
+                </ifthen>
+            </function>
+        </fcs_function>
+
+        <fcs_function name="propulsion/engine[1]/throttle-pos-norm">
+            <description>
+                5 stage non linear augmentation.
+                Throttle position of 90% is start of augmentation.
+                90..100% is stages 1..5 of augmentation
+            </description>
+            <function>
+                <ifthen>
+                    <lt>
+                        <property>fcs/throttle-cmd-norm[1]</property>
+                        <value>0.85</value>
+                    </lt>
+                    <ifthen>
+                        <lt>
+                            <property>propulsion/engine[1]/n2</property>
+                            <value>50</value>
+                        </lt>
+                        <property>fcs/throttle-cmd-norm[1]</property>
+                        <min>
+                            <sum>
+                                <property>propulsion/engine[1]/config/engine-variance-delta-pla</property>
+                                <property>propulsion/engine[1]/eec-idle-increment</property>
+                                <product>
+                                    <value>1.2</value>
+                                    <property>fcs/throttle-cmd-norm[1]</property>
+                                </product>
+                            </sum>
+                            <value>1.0</value>
+                        </min>
+                    </ifthen>
+                    <table>
+                        <independentVar>fcs/throttle-cmd-norm[1]</independentVar>
+                        <tableData>
+                            0.90    1.00
+                            0.93    1.25
+                            0.95    1.50
+                            0.97    1.75
+                            1.00    2.00
+                        </tableData>
+                    </table>
+                </ifthen>
+            </function>
+        </fcs_function>
+     
         <fcs_function name="propulsion/engine[1]/c-egt-lead">
             <description>EGT LEAD N1 %</description>
             <function>
                 <table>
                     <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                     <tableData>
-                        0	18.2
-                        10	12.7
-                        24	8.45
-                        42	5.25
-                        56	4.77
-                        100	4.4
+                          0 18.20
+                         10 12.70
+                         24  8.45
+                         42  5.25
+                         56  4.77
+                        100  4.40
                     </tableData>
                 </table>
             </function>
@@ -1111,12 +1504,12 @@
                 <table>
                     <independentVar lookup="row">propulsion/engine[1]/n1</independentVar>
                     <tableData>
-                        0	3.20
-                        10	2.15
-                        24	0.99
-                        42	0.56
-                        56	0.25
-                        100	0.21
+                          0  3.20
+                         10  2.15
+                         24  0.99
+                         42  0.56
+                         56  0.25
+                        100  0.21
                     </tableData>
                 </table>
             </function>
@@ -1137,22 +1530,25 @@
         </fcs_function>
 
         <fcs_function name="propulsion/engine[1]/EGT-C-dmd">
-            <description>Engine 0 EGT Degrees C</description>
+            <description>Engine 1 EGT Degrees C</description>
             <function>
+                <product>
+                    <property>propulsion/engine[1]/config/variance</property>
                 <table>
                     <independentVar lookup="row">velocities/mach</independentVar>
                     <independentVar lookup="column">propulsion/engine[1]/fuel-flow-rate-norm</independentVar>
                     <tableData>
-                        0	0.001	0.009	0.02	0.03	0.04	0.05	0.06	0.07	0.08	0.1	0.12	0.14	0.16	0.2	0.24	0.32	0.4	0.56	0.8	0.984
-                        0	0	271	281	292	301	310	319	328	336	344	359	374	387	400	424	447	492	537	641	808	870
-                        0.2	0	268	277	288	297	307	315	324	332	340	355	369	383	395	419	442	486	531	633	798	860
-                        0.3	0	260	269	279	288	297	306	314	322	330	344	358	371	383	406	428	471	515	614	774	833
-                        0.5	0	249	257	267	276	285	293	301	308	316	330	343	355	367	389	410	451	493	588	741	798
-                        0.6	0	232	240	250	258	266	274	281	288	295	308	320	332	343	364	383	421	460	549	692	746
-                        0.8	0	216	223	232	240	247	254	261	268	274	286	298	308	319	338	356	391	428	510	643	693
-                        0.9	0	208	215	223	231	238	245	251	258	264	275	286	297	307	325	343	377	412	491	619	667
+                            0.000  0.001  0.009  0.020  0.030  0.040  0.050  0.060  0.070  0.080  0.100  0.120  0.140  0.160  0.200  0.240  0.320  0.400  0.560  0.800  0.984
+                       0.0      0    271    281    292    301    310    319    328    336    344    359    374    387    400    424    447    492    537    641    808    870
+                       0.2      0    268    277    288    297    307    315    324    332    340    355    369    383    395    419    442    486    531    633    798    860
+                       0.3      0    260    269    279    288    297    306    314    322    330    344    358    371    383    406    428    471    515    614    774    833
+                       0.5      0    249    257    267    276    285    293    301    308    316    330    343    355    367    389    410    451    493    588    741    798
+                       0.6      0    232    240    250    258    266    274    281    288    295    308    320    332    343    364    383    421    460    549    692    746
+                       0.8      0    216    223    232    240    247    254    261    268    274    286    298    308    319    338    356    391    428    510    643    693
+                       0.9      0    208    215    223    231    238    245    251    258    264    275    286    297    307    325    343    377    412    491    619    667
                     </tableData>
                 </table>
+                </product>
             </function>
         </fcs_function>
 
@@ -1162,29 +1558,29 @@
          rpm the augmentor can fire. 
       -->
         <fcs_function name="propulsion/engine[1]/PB">
-            <description>Engine 0 SS Burner pressure ratio</description>
+            <description>Engine 1 SS Burner pressure ratio</description>
             <function>
                 <table>
                     <independentVar lookup="row">propulsion/engine[1]/n2</independentVar>
                     <independentVar lookup="column">velocities/mach</independentVar>
                     <tableData>
-                        0.00000	0.20000	0.30000	0.45000	0.60000	0.80000	0.90000	3.00000
-                        0	1.00000	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                        8	1.09966	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963	0.93963
-                        16	1.26926	0.97069	0.93186	0.93963	0.93963	0.93963	0.93963	0.93963
-                        24	1.37453	0.99197	0.95229	0.92944	0.93963	0.93963	0.93963	0.93963
-                        32	1.56636	1.00992	0.96952	0.92105	0.89341	0.93963	0.93963	0.93963
-                        40	1.87550	1.03223	0.99094	0.94140	0.91316	0.91316	0.93963	0.93963
-                        48	2.25353	1.06785	1.02514	0.95338	0.91524	0.91835	0.97369	0.97369
-                        56	2.61381	1.12695	1.08188	1.00614	0.96590	0.96918	0.97369	0.97369
-                        63	2.84760	1.22096	1.17212	1.09007	1.04647	1.05002	0.99630	0.99630
-                        71	2.98150	1.34177	1.28810	1.19793	1.15002	1.15392	1.09488	1.09488
-                        79	3.00594	1.53633	1.47488	1.37164	1.31677	1.32124	1.25365	1.25365
-                        87	3.07269	1.80555	1.73333	1.61200	1.54752	1.55278	1.47333	1.47333
-                        95	3.49481	2.16568	2.07905	1.93352	1.85618	1.86248	1.76719	1.76719
-                        97	3.71122	2.63418	2.52881	2.35179	2.25772	2.26539	2.14949	2.14949
-                        98	3.84257	2.77040	2.65959	2.47341	2.37448	2.38255	2.26065	2.26065
-                        100	4.15840	2.84159	2.72792	2.53697	2.43549	2.44376	2.31873	2.31873
+                                0.00     0.20     0.30     0.45     0.60     0.80     0.90     3.00
+                          0  1.00000  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                          8  1.09966  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963  0.93963
+                         16  1.26926  0.97069  0.93186  0.93963  0.93963  0.93963  0.93963  0.93963
+                         24  1.37453  0.99197  0.95229  0.92944  0.93963  0.93963  0.93963  0.93963
+                         32  1.56636  1.00992  0.96952  0.92105  0.89341  0.93963  0.93963  0.93963
+                         40  1.87550  1.03223  0.99094  0.94140  0.91316  0.91316  0.93963  0.93963
+                         48  2.25353  1.06785  1.02514  0.95338  0.91524  0.91835  0.97369  0.97369
+                         56  2.61381  1.12695  1.08188  1.00614  0.96590  0.96918  0.97369  0.97369
+                         63  2.84760  1.22096  1.17212  1.09007  1.04647  1.05002  0.99630  0.99630
+                         71  2.98150  1.34177  1.28810  1.19793  1.15002  1.15392  1.09488  1.09488
+                         79  3.00594  1.53633  1.47488  1.37164  1.31677  1.32124  1.25365  1.25365
+                         87  3.07269  1.80555  1.73333  1.61200  1.54752  1.55278  1.47333  1.47333
+                         95  3.49481  2.16568  2.07905  1.93352  1.85618  1.86248  1.76719  1.76719
+                         97  3.71122  2.63418  2.52881  2.35179  2.25772  2.26539  2.14949  2.14949
+                         98  3.84257  2.77040  2.65959  2.47341  2.37448  2.38255  2.26065  2.26065
+                        100  4.15840  2.84159  2.72792  2.53697  2.43549  2.44376  2.31873  2.31873
                     </tableData>
                 </table>
             </function>
@@ -1196,8 +1592,8 @@
                         <value>1.0</value>
                         <product>
                             <sum>
-                                <property>fcs/throttle-pos-norm[1]</property>
-                                <value>-1</value>
+                                <property>propulsion/engine[1]/throttle-pos-norm</property>
+                                <value>-1.07</value>
                             </sum>
                             <value>5</value>
                         </product>
@@ -1210,78 +1606,79 @@
             </clipto>
         </fcs_function>
         <switch name="propulsion/engine[1]/augmentation-ignition">
-            <default value="0"/>
+            <default value="0" />
             <test value="1">
                 propulsion/engine[1]/PB gt 2.14
                 propulsion/engine[1]/augmentation-stage gt 0
                 propulsion/engine[1]/augmentation-alight eq 0
             </test>
         </switch>
-        <switch name="propulsion/engine[1]/augmentation-igniting">
-            <default value="0"/>
-            <test value="1">
-                propulsion/engine[1]/augmentation-ignition gt 0
-                propulsion/engine[1]/augmentation-alight eq 0
+
+        <!-- If the DEEC detects a failure that prevents it from safely controlling
+        the engine it will automatically switch to the secondary mode, the
+        same as ENG CONTR switch OFF. In this mode afterburner operation is
+        inhibited, thrust is limited to about 80%-100% of normal MIL -->
+        <switch name="propulsion/engine[1]/augmentation-can-ignite">
+            <default value="1" />
+            <test value="0">
+                propulsion/engine[1]/eec-fail ne 0
+                propulsion/engine[1]/config/digital-eec ne 0
+            </test>
+            <test value="0">
+                propulsion/engine[1]/burn-thru ne 0
             </test>
         </switch>
 
-        <!--<lag_filter name="propulsion/engine[1]/augmentation-alight">
-            <input></input>
-            <output>propulsion/engine[1]/augmentation-alightC</output>
-            <c1>0.001</c1>
-        </lag_filter >-->
+        <switch name="propulsion/engine[1]/augmentation-igniting">
+            <default value="0" />
+            <test value="1">
+                propulsion/engine[1]/augmentation-ignition gt 0
+                propulsion/engine[1]/augmentation-alight eq 0
+                propulsion/engine[1]/augmentation-can-ignite ne 0
+            </test>
+        </switch>
+
         <actuator name="propulsion/engine[1]/augmentation-ignition-sequence">
             <input> propulsion/engine[1]/augmentation-igniting </input>
             <rate_limit> 1.2 </rate_limit>
             <clipto>
                 <min> 0 </min>
-                <max>  1</max>
+                <max> 1 </max>
             </clipto>
         </actuator>
 
         <switch name="propulsion/engine[1]/augmentation-alight-dmd">
-            <default value="0"/>
+            <default value="0" />
             <test value="propulsion/engine[1]/augmentation-stage">
                 propulsion/engine[1]/augmentation-stage ne propulsion/engine[1]/augmentation-alight
                 propulsion/engine[1]/augmentation-alight ne 0
-                propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[1]/thrust-lbs gt 100
             </test>
             <test value="propulsion/engine[1]/augmentation-stage">
                 propulsion/engine[1]/augmentation-ignition-sequence gt 0.9
-                propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[1]/thrust-lbs gt 100
             </test>
             <test value="propulsion/engine[1]/augmentation-alight">
                 propulsion/engine[1]/augmentation-stage gt 0
                 propulsion/engine[1]/augmentation-alight ne 0
-                propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[1]/thrust-lbs gt 100
             </test>
             <test value="0">
                 propulsion/engine[1]/blowout ne 0
             </test>
         </switch>
         <switch name="propulsion/engine[1]/augmentation-burner">
-            <default value="0"/>
+            <default value="0" />
             <test value="1">
                 propulsion/engine[1]/augmentation-alight ne 0
-                propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[1]/thrust-lbs gt 100
             </test>
             <test value="propulsion/engine[1]/augmentation-ignition-sequence">
                 propulsion/engine[1]/augmentation-ignition-sequence ne 0
-                propulsion/engine[1]/thrust-lbs gt 100 <!-- engine alight -->
+                propulsion/engine[1]/thrust-lbs gt 100
             </test>
         </switch>
-        <!--<fcs_function name="propulsion/engine[1]/augmentation-alight-delta">
-            <function>
-                <difference>
-                    <property>propulsion/engine[1]/augmentation-alight</property>
-                    <property>propulsion/engine[1]/augmentation-alight-dmd</property>
-                </difference>
-            </function>
-            <clipto>
-                <min>0</min>
-                <max>5</max>
-            </clipto>
-        </fcs_function>-->
+
         <actuator name="propulsion/engine[1]/augmentation-alight">
             <input> propulsion/engine[1]/augmentation-alight-dmd </input>
             <rate_limit> 10 </rate_limit>
@@ -1298,16 +1695,37 @@
                 </sum>
             </function>
         </fcs_function>
+        <fcs_function name="fcs/throttle-pos-norm[1]">
+            <function>
+                <sum>
+                    <min>
+                        <property>propulsion/engine[1]/throttle-pos-norm</property>
+                        <value>1</value>
+                    </min>
+                    <product>
+                        <max>
+                            <value>0</value>
+                            <difference>
+                                <property>propulsion/engine[1]/augmentation-alight</property>
+                                <value>1</value>
+                            </difference>
+                        </max>
+                        <value>0.2</value>
+                    </product>
+                </sum>
+            </function>
+            <output>fcs/throttle-pos-norm[1]</output>
+        </fcs_function>
         <!-- EGT equations -->
         <fcs_function name="propulsion/engine[1]/EGTaug-C-dmd">
-            <description>Engine 0 EGT increment due to augmentation</description>
+            <description>Engine 1 EGT increment due to augmentation</description>
             <function>
                 <table>
                     <independentVar lookup="row">propulsion/engine[1]/augmentation-stage</independentVar>
                     <tableData>
-                        0.00	0
-                        1.00	86
-                        5.00	171
+                        0      0
+                        1     86
+                        5    171
                     </tableData>
                 </table>
             </function>
@@ -1318,6 +1736,7 @@
             <output>propulsion/engine[1]/EGTaug-C</output>
             <c1>0.03</c1>
         </lag_filter >
+
         <fcs_function name="propulsion/engine[1]/EGT-R-dmd">
             <description>EGT Demand degrees R</description>
             <function>
@@ -1331,6 +1750,7 @@
                 </product>
             </function>
         </fcs_function>
+
         <fcs_function name="propulsion/engine[1]/pt">
             <description>Total Pressure</description>
             <function>
@@ -1354,6 +1774,7 @@
                 </pow>
             </function>
         </fcs_function>
+
         <fcs_function name="propulsion/engine[1]/delta">
             <description>Delta</description>
             <function>
@@ -1377,31 +1798,155 @@
             <output>propulsion/engine[1]/casing-temperature-R</output>
             <c1>0.01</c1>
         </lag_filter>
+
         <!-- augmentation -->
-        <fcs_function name="propulsion/engine[1]/alt/nozzle-dmd-norm">
+        <fcs_function name="propulsion/engine[1]/alt/nozzle-dmd-pos-base">
+            <description>
+                                TO 15-15A-1 page 1-8
+
+            VARIABLE AREA EXHAUST NOZZLE
+                The engine has a convergent-divergent nozzle system
+                which is continuously variable between minimum and
+                maximum opening. The nozzle is positioned pneu-
+                matically by engine bleed air.
+
+            EXHAUST NOZZLE CONTROL
+                The F100-PW-100/220 engine nozzle is controlled by throttle and
+                landing gear handle position.
+                
+                With F100-PW-220 engine with DEEC ON, gear handle DOWN, and throttle
+                in IDLE, the nozzle will be approximately 80%. As the throttle is
+                advanced, the nozzle closes to near minimum area. With the landing
+                gear handle UP, the nozzle is near minimum area at all times except at
+                MIL or above. At MIL power the nozzle position indicators reflect a
+                slightly open nozzle (5-20%). As the throttle is advanced into
+                afterburner range, the nozzle schedules further open to compensate for
+                increasing afterburner fuel flow.  With the DEEC OFF or in secondary
+                mode, nozzle position is closed to near the minimum area inflight or
+                on the ground. This results in higher idle thrust and taxi speeds.
+
+                With F100-PW-100 engine with EEC ON, gear handle DOWN, and throttle in
+                IDLE, the nozzle will be approximately 80%. As the throttle is
+                advanced, the nozzle closes to near minimum area. 
+
+                With the landing gear handle UP and EEC ON, the nozzle position is
+                35-50% from IDLE to mid-range and closes to near minimum area as
+                throttle is advanced beyond mid- range. At MIL power nozzle position
+                indicators will reflect a slightly open nozzle (5-20%) when the EEC
+                begins trimming nozzle position. As the throttle is advanced into
+                afterburner range the nozzle will schedule open to compensate for
+                increasing after- burner fuel flow. 
+
+                With the EEC OFF, nozzle position is 35-50% below mid-range and closes
+                to near mini- mum areas as throttle is advanced beyond mid-range
+                during flight or ground operations (except when after- burner is
+                selected). This will result in higher idle thrust and taxi speeds.
+
+                With F100-PW-220 engine with DEEC ON, gear handle DOWN, and throttle
+                in IDLE, the nozzle will be approximately 80%. As the throttle is
+                advanced, the nozzle closes to near minimum area. 
+                
+                With the landing gear handle UP, the nozzle is near minimum area at
+                all times except at MIL or above. At MIL power the nozzle position
+                indicators reflect a slightly open nozzle (5-20%). As the throttle is
+                advanced into afterburner range, the nozzle schedules further open to
+                compensate for increasing afterburner fuel flow.  With the DEEC OFF or
+                in secondary mode, nozzle position is closed to near the minimum area
+                inflight or on the ground. This results in higher idle thrust and taxi
+                speeds.
+            </description>
             <function>
                 <description>PLA Vs Nozzle open area Exhaust Nozzle Control TO 15-15A-1 page 1-8 </description>
-                <table>
-                    <independentVar lookup="row">fcs/throttle-pos-norm[1]</independentVar>
-                    <tableData>
-                        0.0 	0.81807
-                        0.2235	0.81807
-                        1.0000	0.15248
-                    </tableData>
-                </table>
+                <ifthen>
+                    <eq>
+                        <property>propulsion/engine[1]/config/digital-eec</property>
+                        <value>0</value>
+                    </eq>
+                    <ifthen>
+                        <!-- EEC -->
+                        <eq>
+                            <property>propulsion/engine[1]/eec-active</property>
+                            <value>0</value>
+                        </eq>
+                        <!-- EEC OFF nozzle position is 35-50% below mid-range and 
+                             closes to near minimum areas as throttle is advanced beyond mid-range
+                             during flight or ground operations (except when afterburner is selected).-->
+                        <table>
+                        <independentVar lookup="row">fcs/throttle-cmd-norm[1]</independentVar>
+                        <tableData>
+                            0.0  0.35
+                            0.5  0.50
+                            1.0  0.05
+                        </tableData> 
+                        </table>
+                        <!-- EEC ON -->
+                        <table>
+                            <independentVar lookup="row">fcs/throttle-cmd-norm[1]</independentVar>
+                            <independentVar lookup="column">gear/gear-cmd-norm</independentVar>
+                            <tableData>
+                                           0     1
+                                0.0000  0.00  0.80
+                                0.2235  0.00  0.80
+                                0.8000  0.20  0.20
+                                1.0000  0.05  0.05
+                            </tableData> 
+                        </table>
+                    </ifthen>
+                    <ifthen>
+                        <!-- DEEC -->
+                        <eq>
+                            <property>propulsion/engine[1]/eec-active</property>
+                            <value>0</value>
+                        </eq>
+                        <value>0.01</value>
+                        <table>
+                            <independentVar lookup="row">fcs/throttle-cmd-norm[1]</independentVar>
+                            <independentVar lookup="column">gear/gear-cmd-norm</independentVar>
+                            <tableData>
+                                           0     1
+                                0.0000  0.35  0.80
+                                0.2235  0.50  0.80
+                                0.8000  0.20  0.05
+                                1.0000  0.05  0.01
+                            </tableData>
+                        </table>
+                    </ifthen>
+                </ifthen>
             </function>
         </fcs_function>
 
-        <switch name="propulsion/engine[1]/alt/nozzle-cmd-norm">
-            <default value="propulsion/engine[1]/alt/nozzle-dmd-norm"/>
-            <test value="1.0" logic="OR">
+        <fcs_function name="propulsion/engine[1]/eec-fail">
+            <function>
+                <or>
+                    <property>propulsion/engine[1]/burn-thru</property>
+                    <not>
+                        <property>propulsion/engine[1]/eec-active</property>
+                    </not>
+                </or>
+            </function>
+        </fcs_function>
+        <fcs_function name="propulsion/engine[1]/nozzle-pos-augmentor">
+            <function>
+                <product>
+                    <property>propulsion/engine[1]/augmentation-alight</property>
+                    <value>0.2</value>
+                </product>
+            </function>
+            <clipto>
+                <min>0</min>
+                <max>1</max>
+            </clipto>
+        </fcs_function>
+        <switch name="propulsion/engine[1]/alt/nozzle-pos">
+            <default value="propulsion/engine[1]/alt/nozzle-dmd-pos-base"/>
+            <test value="propulsion/engine[1]/nozzle-pos-augmentor" logic="OR">
                 propulsion/engine[1]/augmentation-alight gt 0
                 propulsion/engine[1]/augmentation-ignition gt 0.4
-                propulsion/engine[1]/n2 lt 60
             </test>
         </switch>
+        
         <kinematic name="propulsion/engine[1]/alt/nozzle-pos-norm">
-            <input>propulsion/engine[1]/alt/nozzle-cmd-norm</input>
+            <input>propulsion/engine[1]/alt/nozzle-pos</input>
             <traverse>
                 <setting>
                     <position>0</position>
@@ -1413,6 +1958,7 @@
                 </setting>
             </traverse>
         </kinematic>
-
+        <!-- todo: add a/b lighting envelope; use outside of this envelope will increase risk of blowout-->
     </channel>
+  
 </system>
