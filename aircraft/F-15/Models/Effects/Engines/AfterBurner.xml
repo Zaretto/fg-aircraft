@@ -8,12 +8,18 @@ Afterburner effects model
 3. To get the flame trail to look right we control both the emissive light and the transparency - so at noon there isn't much light emission and it is fairly transparent.
 4. Using rembrandt lighting cone for each engine - positioned roughly in the edge of the nozzles
 
+ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
+
 Components:
 
 * FlameTrail is the illuminated long trail 
 * FlameModel are the shockrings
 * FlameModelBurn is the augmentation diffuser ring at the exist of the turbine
-ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
+* ALS-FlameTrail is the ALS thruster
+* - when using ALS use FlameModelBurn and ALS-FlameTrail and possibly FlameModel
+* - FlameModel doesn't look right in compositor so it will be disabled.
+* /params/augmentation-alight is 0..5 with 1..5 being augmentation stages
+* /params/augmentation-ignition  is 0..1 
 -->
 <PropertyList>
 
@@ -53,12 +59,9 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
                 <greater-than>
                     <property alias="/params/augmentation-alight"/>
                     <!-- alight -->
-                    <value>0</value>
+                    <value>1</value>
                 </greater-than>
             </or>
-            <not>
-                <property>/sim/rendering/shaders/skydome</property>
-            </not>
         </condition>
     </animation>
 
@@ -73,6 +76,9 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
             <not>
                 <property>/sim/rendering/shaders/skydome</property>
             </not>
+            <not>
+                <property>/sim/rendering/compositor-active</property>
+            </not>
         </condition>
     </animation>
     <animation>
@@ -81,7 +87,7 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <condition>
             <greater-than>
                 <property alias="/params/augmentation-ignition"/>
-                <value>0.8</value>
+                <value>0.96</value>
             </greater-than>
         </condition>
     </animation>
@@ -235,10 +241,10 @@ ref: https://www.youtube.com/watch?v=ZC_DIf5SSmM
         <type>material</type>
         <object-name>FlameModelBurn</object-name>
         <emission>
-            <red>1</red>
-            <green>0.78</green>
-            <blue>0.67</blue>
-            <property alias="/params/augmentation-ignition"/>
+            <red>0.2</red>
+            <green>0.156</green>
+            <blue>0.134</blue>
+            <property alias="/params/augmentation-alight"/>
         </emission>
    </animation>
 
