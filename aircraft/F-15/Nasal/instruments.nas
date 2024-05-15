@@ -321,7 +321,7 @@ var init = func {
     emesary.GlobalTransmitter.NotifyAll(emesary.Notification.new("F15Init", 1, 0));
 	init_fuel_system();
   ext_loads_init();
-	
+	setprop("/sim/rendering/compositor-active", getprop("/sim/rendering/compositor-reload-required") != nil);
 	aircraft.data.load();
 	f15_net.mp_network_init(1);
 	weapons_init();

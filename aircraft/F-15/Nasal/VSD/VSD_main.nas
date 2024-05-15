@@ -86,7 +86,7 @@ var VSD_Device =
     obj.VSDsvg = obj.dev_canvas.createGroup();
     var pres = canvas.parsesvg(obj.VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg");
 # Parse an SVG file and add the parsed elements to the given group
-    printf("VSD : %s Load SVG %s",designation,pres);
+    logprint(3, sprintf("VSD : %s Load SVG %s",designation,pres));
     obj.VSDsvg.setTranslation(10,5);
 #
 # create the object that will control all of this
@@ -186,7 +186,7 @@ var VSD_Device =
             var pnode = me.placement.getNode("module-id");
             if (pnode == nil)
                 return;
-#            logprint(3, "VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
+            logprint(3, "VSD: rebind ",pnode.getValue(), " -> ", target_module_id);
             pnode.setValue(target_module_id);
             return;
         }
@@ -380,11 +380,11 @@ var ModelEventsRecipient =
 
                     VSD = VSD_Device.new(designation, textureImage, notification.Ident, root_node);
                     emexec.ExecModule.register(name, properties_to_monitor, VSD, 4);
-                    logprint(3, "VSD initialization finished ",notification.Ident);
+                    logprint(3, "VSD: initialization finished ",notification.Ident);
                     emexec.ExecModule.transmitter.PrintRecipients();
                 }
                 else  {
-                    print("using existing VSD");
+                    logprint(3, "VSD: using existing VSD");
                     # we already have a VSD so just bind (add placement)
                     VSD.bindDisplay(notification.Ident, textureImage);
                 }

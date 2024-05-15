@@ -281,7 +281,6 @@ init = func() {
 # Run at 20hz - invoked from main loop in instruments.nas
 var rdr_loop = func(notification) {
     if (notification["ownship_pos"] == nil){
-        print("Radar: disabled as no ownship position");
         return;
     }
 
