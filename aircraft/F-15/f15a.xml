@@ -757,7 +757,7 @@
     <flight_control name="FCS">
         <channel name="Nose Wheel Steering">
             <switch name="systems/NWS/engaged">
-                <default value="0"/>
+                <default value="0" />
                 <test value="1">
                     gear/unit[0]/wheel-speed-fps le 221
                     systems/hydraulics/combined-system-pressure ne 0
@@ -774,7 +774,7 @@
                 <output>systems/NWS/engaged</output>
             </switch>
 
-            <scheduled_gain name="tied/steer-pos-deg"> <!-- Prevent failed to tie object error -JD -->
+            <scheduled_gain name="fcs/steer-pos-deg-dmd"> <!-- Prevent failed to tie object error -JD -->
                 <input>fcs/steer-cmd-norm</input>
                 <table>
                     <independentVar lookup="row">gear/unit[0]/wheel-speed-fps</independentVar>
@@ -787,8 +787,12 @@
                         300   0    0    0
                     </tableData>
                 </table>
-                <output>fcs/steer-pos-deg</output>
             </scheduled_gain>
+            <actuator name="fcs/steer-pos-deg_actuator">
+                <input>fcs/steer-pos-deg-dmd</input>
+                <rate_limit>100</rate_limit>
+                <output>fcs/steer-pos-deg</output>
+            </actuator>
         </channel>
     </flight_control>
     <system file="f-15-hydraulic"/>
