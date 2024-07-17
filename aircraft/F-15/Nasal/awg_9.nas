@@ -82,6 +82,7 @@ var AzField           = props.globals.getNode("instrumentation/radar/az-field", 
 var HoField           = props.globals.getNode("instrumentation/radar/ho-field", 1);
 var RangeRadar2       = props.globals.getNode("instrumentation/radar/radar2-range",1);
 var RadarStandby      = props.globals.getNode("instrumentation/radar/radar-standby",1);
+var RadarMode         = props.globals.getNode("instrumentation/radar/radar-mode",1);
 var RadarStandbyMP    = props.globals.getNode("sim/multiplay/generic/int[2]",1);
 var OurAlt            = props.globals.getNode("position/altitude-ft",1);
 var OurHdg            = props.globals.getNode("orientation/heading-deg",1);
@@ -1114,8 +1115,11 @@ var rounding1000 = func(n) {
 # Controls
 # ---------------------------------------------------------------------
 var toggle_radar_standby = func() {
-	if ( pilot_lock and ! we_are_bs ) { return }
-	RadarStandby.setBoolValue(!RadarStandby.getBoolValue());
+    if ( pilot_lock and ! we_are_bs ) { return }
+    if (RadarMode.getValue() != 1)
+        RadarMode.setValue(1);
+    else
+        RadarMode.setValue(2);
 }
 
 var range_control = func(n) {#richard there was 2 of this method, I kinda deleted the unused one of them, not sure I should have done that if you kept it for some reason. Sorry, was maybe a bit too fast there.
