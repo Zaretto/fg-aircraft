@@ -235,6 +235,7 @@ var ext_loads_set = func(s) {
     } elsif ( s == "Training" ) {
         success = pylons.train();
     }
+    setprop("controls/armament/combat-jettison-count",0);
     if (success) {
         ext_loads_set2(s);
     }
@@ -440,6 +441,11 @@ var update_weapons_over_mp = func
 
 # Emergency jettison:
 # -------------------
+#TO 1F-15A-1:1-27 
+# EMERG JETT BUTTON PUSH TO JETT
+# All pylons with cartridges installed and all fuselage/CFT mounted
+# missiles are jettisoned simultaneously, in the air or on the ground,
+# when button is pressed.
 setlistener("controls/armament/emergency-jettison", func(v) {
     if (v.getValue() > 0.8) {
         foreach (var T; Tank.list) {
@@ -466,8 +472,122 @@ setlistener("controls/armament/emergency-jettison", func(v) {
     }
 },0,0);
 
-# Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
+#--------------------------------
+# Selective jettison implementation
+#
+# aircraft diagram of what they call the stations.
+#
+#              |       |
+#  ____________| /   \ |___________
+#      2 ______|       |_____ 8
+#                  5       
+# for us tanks are station 1,5,9
+var lcr_station_map = [
+    [[1],     [5], [9]],
+    [[0,1,2], [5], [8,9,10]],
+    [[0,1,2], [5], [8,9,10]]
+];
 
+
+# jettison a selection and a type
+# 1 = left,
+# 2 = center
+# 3 = right
+# the type will be used to pick the element from the lcr_station_map
+# which maps from the id and type to the internal stations
+var selective_jettison = func (id, type){
+    foreach(var station_id; lcr_station_map[type][id-1]){
+
+        setprop("controls/armament/station["~station_id~"]/jettison-all",1);
+        setprop("payload/weight["~station_id~"]/selected","none");
+
+        #fuel tanks also need to be deselected
+        if (station_id == 1)
+            setprop("consumables/fuel/tank[5]/selected",0);
+        if (station_id == 5)
+            setprop("consumables/fuel/tank[6]/selected",0);
+        if (station_id == 9)
+            setprop("consumables/fuel/tank[7]/selected",0);
+    }
+}
+# 0 PYLON Selects pylon and stores on station(s) selected 
+# 1 STORES Selects stores on stations selected
+# 2 RACK Jettisons the MER or store from the pylon.
+var description_R = ["PYLON","STORE","RACK"];
+
+var describe_selective_jettison = func(id){
+    var cbtNode = props.globals.getNode("sim/model/f15/controls/MPCD/cbtjett["~id~"]",0);
+    if (cbtNode != nil){
+        var str = "CBT "~(id+1)~" ";
+
+        if (cbtNode.getValue("left"))
+            str = str ~ "L";
+
+        if (cbtNode.getValue("center"))
+            str = str ~ "C";
+
+        if (cbtNode.getValue("right"))
+            str = str ~ "R";
+
+        if (cbtNode.getValue("left-conformal"))
+            str = str ~ "LC";
+
+        if (cbtNode.getValue("right-conformal"))
+            str = str ~ "RC";
+
+        str = str ~ " " ~description_R[cbtNode.getValue("type")];
+        return str;
+    }
+    return "**";
+}
+
+#
+# perform the programmed jettison
+# id can be 0 or 1.
+var combat_jettison = func(id){
+    var cbtNode = props.globals.getNode("sim/model/f15/controls/MPCD/cbtjett["~id~"]",0);
+    if (cbtNode != nil){
+        var type = cbtNode.getValue("type");
+
+        if (cbtNode.getValue("left"))
+            selective_jettison(1, type);
+        
+        if (cbtNode.getValue("center"))
+            selective_jettison(2, type);
+
+        if (cbtNode.getValue("right"))
+            selective_jettison(3, type);
+    }
+    else
+        logprint(4,"Invalid CBT JETT "~id);
+}
+
+var mpcd_jettision_mode_description = ["MAN-FF","MAN-RET","ALTN REL","OFF","COMBAT","A/A","A/G"];
+#
+# selective jettison based on the MPCD selection (knob)
+# and settings (pages)
+setlistener("controls/armament/mpcd-jettison-button", func(v) {
+    if (v.getValue() > 0.9){
+        var mode = getprop("controls/armament/mpcd-jettison-mode");
+        
+        if (mode == 4){
+            var id = getprop("controls/armament/combat-jettison-count");
+            if (id == 0 or id == 1){
+                combat_jettison(id);
+                id  = id + 1;
+                screen.log.write("CBT JETTISON "~id);
+                setprop("controls/armament/combat-jettison-count",id);
+            }
+            else
+                screen.log.write("ALREADY JETTISONED");
+        }
+        else if (mode >= 0 and mode <= size(mpcd_jettision_mode_description))
+            screen.log.write("CANNOT JETTISON: "~mpcd_jettision_mode_description[mode]);
+        setprop("controls/armament/mpcd-jettison-button",0);
+    }
+},0,0);
+
+# Puts the jettisoned tanks models on the ground after impact (THX Vivian Mezza).
 var droptanks = func(n) {
 	if (wow) { setprop("sim/model/f15/controls/armament/tanks-ground-sound", 1) }
 	var droptank = droptank_node.getValue();

@@ -376,6 +376,14 @@
                 <desc>Cycle through the 3 refuelling probe switch positions</desc>
             </key>
             <key>
+                <name>J</name>
+                <desc>MPCD Jettison button</desc>
+            </key>
+            <key>
+                <name>K</name>
+                <desc>MPCD Jettison mode</desc>
+            </key>
+            <key>
                 <name>m</name>
                 <desc>Cycle Stick Weapon Mode Selector</desc>
             </key>
@@ -534,7 +542,7 @@
                 <!-- Nose Wheel Steering -->
                 <signal>
                     <type>float</type>
-                    <property type="string">controls/flight/NWS</property>
+                    <property type="string">gear/gear[0]/steering-norm</property>
                 </signal>
 
                 <signal>
@@ -923,6 +931,29 @@
                         <brightness type="double">1</brightness>
                         <contrast type="double">0.6</contrast>
                         <on-off type="bool">0</on-off>
+
+                        <!-- 
+                            default Combat Jettision for F-15
+                        # CBT 1 C STORE
+                        # CBT 2 LR PYLON
+                        -->
+                        <cbtjett n="0">
+                            <left type="bool">false</left>
+                            <center type="bool">true</center>
+                            <right type="bool">false</right>
+                            <left-conformal type="bool">false</left-conformal>
+                            <right-conformal type="bool">false</right-conformal>
+                            <type type="int">1</type>
+                        </cbtjett>
+                        <cbtjett n="1">
+                            <left type="bool">true</left>
+                            <center type="bool">false</center>
+                            <right type="bool">true</right>
+                            <left-conformal type="bool">false</left-conformal>
+                            <right-conformal type="bool">false</right-conformal>
+                            <type type="int">0</type>
+                        </cbtjett>
+                       
                     </MPCD>
                     <TEWS>
                         <brightness type="double">1</brightness>
@@ -1677,7 +1708,7 @@
 
     <payload>
         <weight n="1">
-            <name>Left Wing (Station 2)</name>
+            <name>Left Wing Station 2</name>
             <tank>5</tank>
             <weight-lb alias="/fdm/jsbsim/inertia/pointmass-weight-lbs[1]"/>
             <selected>Droptank</selected>
@@ -2152,6 +2183,9 @@
             <trigger type="bool">false</trigger>
             <cycle-mode type="bool">false</cycle-mode>
             <master-arm type="bool">false</master-arm>
+            <mpcd-jettison-mode type="int">3</mpcd-jettison-mode>
+            <mpcd-jettison-button type="float">0</mpcd-jettison-button>
+            <combat-jettison-count type="int">0</combat-jettison-count>
             <selected-armament type="string"/>
             <dual type="int">1</dual><!-- set this to control if next bomb release should be released as a pair or more. 1=single -->
         </armament>
@@ -2437,6 +2471,27 @@
                         }
                         ]]>
                     </script>
+                </binding>
+            </key>
+            <key n="74">
+                <name>J</name>
+                <desc>MPCD jettison</desc>
+                <binding>
+                    <command>property-assign</command>
+                    <property>controls/armament/mpcd-jettison-button</property>
+                    <value type="double">1</value>
+                </binding>
+            </key>
+            <key n="75">
+                <name>K</name>
+                <desc>MPCD jettison mode</desc>
+                <binding>
+                    <command>property-adjust</command>
+                    <property>controls/armament/mpcd-jettison-mode</property>
+                    <step type="int">1</step>
+                    <min>0</min>
+                    <max>7</max>
+                    <wrap>true</wrap>
                 </binding>
             </key>
 

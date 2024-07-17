@@ -5,7 +5,23 @@
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
 #
+HUDFont = "condensed.txf";#"LiberationFonts/LiberationSans-Bold.ttf";#"notosansmono-black.ttf";
+VSDFont = "condensed.txf";#;
+TEWSFont = "condensed.txf";
+MPCDFont = "condensed.txf";#
 
+var canvas_font_mapper = func(family, weight) {
+#    print("font map ",family," ",weight);
+    # return "HornetDisplay-Regular.ttf";
+    return "notosansmono-black.ttf";
+    return "HornetDisplay-Bold.ttf";
+    return "monoMMM_5.ttf";
+    return "LiberationFonts/LiberationSans-Bold.ttf";
+};
+var mpcd_font_mapper = func(family, weight)  {return MPCDFont;}
+var vsd_font_mapper  = func(family, weight)  {return VSDFont;}
+var hud_font_mapper  = func(family, weight)  {return HUDFont;}
+var tews_font_mapper  = func(family, weight) {return TEWSFont;}
 
 var CurrentIASnode = props.globals.getNode("velocities/airspeed-kt");
 var acFrost = props.globals.getNode("environment/aircraft-effects/frost-level",1);
@@ -42,6 +58,7 @@ var fixAirframe = func {
     if (getprop("payload/armament/msg")==1 and !getprop("fdm/jsbsim/gear/unit[0]/WOW")) {
         screen.log.write(pylons.msgA);
     } else {
+        setprop("controls/armament/combat-jettison-count",0);
     	setprop ("fdm/jsbsim/gear/damage-reset", 1);
     	setprop ("fdm/jsbsim/systems/flyt/min-g-reached", 0);
     	setprop ("fdm/jsbsim/systems/flyt/max-g-reached", 0);
@@ -635,9 +652,7 @@ var F15MainModule =
             aircraft.rain.update();
             aircraft.computeEngines ();
             acFrost.setValue(sysFrost.getValue());
-        } elsif (frame_count == 1)
-            aircraft.computeNWS ();
-        elsif (frame_count == 3)
+        } elsif (frame_count == 3)
             updateVolume();
         elsif (frame_count == 4)
             radarStandbyNode.setValue((radarMPnode.getValue() or 0)>= 2);

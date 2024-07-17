@@ -19,7 +19,71 @@ var HSDblepFontSize  = 24; # 15;
 var HSDlargeFontSize = 36; # 25;
 var HSDfontSize      = 24; # 16;
 var HSDlineWidth     =  6; # 1.5;
-var HSDfontFace      = "condensed.txf";        
+var HSDfontFace      = "notosansmono-black.ttf";        
+
+#
+# Menu Id's:
+# The event that comes back from the animations will be 0 for off and 1..20 for the 
+# button ID. The PFD menu item code will adjust the event.
+#
+#    10  11  12  13 14 
+#
+#  0                     5            
+#
+#  1                     6            
+#
+#  2                     7            
+#
+#  3                     8            
+#
+#  4                     9            
+#
+#    15  16  17  18 19
+#
+#------------------------
+#
+# TO-1F-15C has different numbering scheme the numbers are assigned anti-clockwise
+# starting from LEFT (top->bottom), BOTTOM (left->right), RIGHT(bottom->top), TOP (right->left)
+# PB  1..5   LEFT
+# PB  6..10  BOTTOM
+# PB 11..15  RIGHT (bot->top) 
+# PB 16..20 is TOP (right->left)
+# 
+#    20  19  18  17  16 
+#  1                     15
+# 
+#  2                     14
+# 
+#  3                     13
+# 
+#  4                     12
+# 
+#  5                     11
+#     6   7   8   9  10
+#     
+var PB1 = 0;
+var PB2 = 1;
+var PB3 = 2;
+var PB4 = 3;
+var PB5 = 4;
+
+var PB6  = 15;
+var PB7  = 16;
+var PB8  = 17;
+var PB9  = 18;
+var PB10 = 19;
+
+var PB15 = 5;
+var PB14 = 6;
+var PB13 = 7;
+var PB12 = 8;
+var PB11 = 9;
+
+var PB20 = 10;
+var PB19 = 11;
+var PB18 = 12;
+var PB17 = 13;
+var PB16 = 14;
 
 var MPCD_Station =
 {
@@ -115,7 +179,6 @@ var MPCD_Station =
                 mode = "";
                 na = "";
             }
-
             me.status.setText(mode);
             me.label.setText(na);
 
@@ -267,7 +330,7 @@ var MPCD_Device =
         dev_canvas.setColorBackground(0.003921,0.1764,0, 0);
 # Create a group for the parsed elements
         obj.PFDsvg = dev_canvas.createGroup();
-        var pres = canvas.parsesvg(obj.PFDsvg, "Nasal/MPCD/MPCD_0_0.svg");
+        var pres = canvas.parsesvg(obj.PFDsvg, "Nasal/MPCD/MPCD_0_0.svg", {'font-mapper': aircraft.mpcd_font_mapper});
 # Parse an SVG file and add the parsed elements to the given group
         obj.PFDsvg.setTranslation (0.0, 0.0);
 #
@@ -965,6 +1028,8 @@ var MPCD_Device =
         me.p1_3.LBL_FLARE = me.PFDsvg.getElementById("LBL_FLARE");
         me.p1_3.LBL_NONAVY = me.PFDsvg.getElementById("LBL_NONAVY");
         me.p1_3.LBL_CMD_MSS = me.PFDsvg.getElementById("LBL_CMD_MSS");
+        me.p1_3.LBL_CBT_1 = me.PFDsvg.getElementById("p1_3_CBT_1");
+        me.p1_3.LBL_CBT_2 = me.PFDsvg.getElementById("p1_3_CBT_2");
 
 ## AG page
         me.p1_4 = me.PFD.addPage("PACS Menu", "p1_4");
@@ -984,10 +1049,100 @@ var MPCD_Device =
         me.p1_4.LBL_FLARE = me.PFDsvg.getElementById("LBL_FLARE-g");
         me.p1_4.LBL_NONAVY = me.PFDsvg.getElementById("LBL_NONAVY-g");
         me.p1_4.LBL_CMD_MSS = me.PFDsvg.getElementById("LBL_CMD_MSS-g");
-        me.p1_4.LBL_CBT_g = me.PFDsvg.getElementById("LBL_CBT_g");
-        me.p1_4.LBL_CBT2_g = me.PFDsvg.getElementById("LBL_CBT2_g");
-        me.p1_4.LBL_CBT_g.setText("A/G");
-        me.p1_4.LBL_CBT2_g.setText("---");
+        me.p1_4.LBL_CBT_g = me.PFDsvg.getElementById("LBL_CBT_g1");
+        me.p1_4.LBL_CBT2_g = me.PFDsvg.getElementById("LBL_CBT_g2");
+
+## CBT JETT page
+        me.p1_5 = me.PFD.addPage("Combat Jettison Page", "p1_5");
+        me.p1_5.LM2_RACK_RECT = me.PFDsvg.getElementById("LM2_RACK_RECT");
+        me.p1_5.LM3_STORE_RECT = me.PFDsvg.getElementById("LM3_STORE_RECT");
+        me.p1_5.LM4_PYLON_RECT = me.PFDsvg.getElementById("LM4_PYLON_RECT");
+        me.p1_5.BM_1_CBT_1_RECT = me.PFDsvg.getElementById("BM_1_CBT_1_RECT");
+        me.p1_5.BM_2_CBT_2_RECT = me.PFDsvg.getElementById("BM_2_CBT_2_RECT");
+        me.p1_5.TM10_L_RECT = me.PFDsvg.getElementById("TM10_L_RECT");
+        me.p1_5.TM11_LC_RECT = me.PFDsvg.getElementById("TM11_LC_RECT");
+        me.p1_5.TM12_C_RECT = me.PFDsvg.getElementById("TM12_C_RECT");
+        me.p1_5.TM13_RC_RECT = me.PFDsvg.getElementById("TM13_RC_RECT");
+        me.p1_5.TM14_R_RECT = me.PFDsvg.getElementById("TM14_R_RECT");
+        me.p1_5.LBL_CBT_1 = me.PFDsvg.getElementById("p1_5_CBT_1");
+        me.p1_5.LBL_CBT_2 = me.PFDsvg.getElementById("p1_5_CBT_2");
+
+# These should be set when the button pushed...
+        me.p1_5.BM_2_CBT_2_RECT.setVisible(0);
+        me.p1_5.LM2_RACK_RECT.setVisible(0);
+        me.p1_5.LM3_STORE_RECT.setVisible(1);
+        me.p1_5.LM4_PYLON_RECT.setVisible(0);
+
+        me.p1_5.TM10_L_RECT  .setVisible(0);
+        me.p1_5.TM11_LC_RECT .setVisible(0);
+        me.p1_5.TM12_C_RECT  .setVisible(1);
+        me.p1_5.TM13_RC_RECT .setVisible(0);
+        me.p1_5.TM14_R_RECT  .setVisible(0);
+
+#
+#PROGRAMMING COMBAT JETTISON
+#
+# Combat jettison is a two-push capability. With COMBAT selected on
+# the SELECT JETT knob, the first push jettisons whatever is assigned to
+# the CBT 1 program and the second jettisons whatever is assigned to the
+# CBT 2 program.  Programming combat jettison is accomplished by
+# selecting the ARMT display, then selecting the CBT JETT display
+# (figure 1-13). The SELECT JETT knob may be in either OFF or
+# COMBAT. Select the desired station(s) from PB’s 16 thru 20; 1 and 2
+# are then displayed at PB 6 and PB 7 respectively. Select the CBT 1
+# program by pressing PB 6; then select STORE, RACK or PYLON at PB 2, 3,
+# or 4, respec- tively; STORE is automatically boxed when the dis- play
+# is selected. Press ENTER (PB 10) to complete programming for CBT
+# 1. Repeat these steps for CBT 2, with 2 selected on the display. If
+# the SELECT JETT knob is in COMBAT, CBT 1 and CBT 2 are boxed on the
+# display.
+# 
+# 1. ARMT main menu
+# 2. CBT JETT from ARMT
+# 3. SELJET Knob COMBAT or OFF
+# 4. Select stations for CBT 1; (selected station is boxed) (LM)
+# 5. TOP button to select store; store on LEFT menu is boxed
+# 6. Select store, rack, pylon for selected station. selection is boxed
+# on LM. (RH guess top menu changes to display STORE (e.g. FUEL)), RACK,
+# PYLON
+
+# 
+
+# As one, two or all stations can be selected for each program, there may be different 
+# variations seen in column 2, for instance: 
+# CBT 1 LLCRC STORE means that for program 1 left + left conformal tank + right conformal tank stations were selected and stores will be jettisoned. 
+# CBT 2 LLCCRCR RACK means that for program 2 all stations were selected and racks will be jettisoned etc.  
+# Setting up combat jettison program 
+# 1. Enter the CBT JETT page. 
+# 2. Select the desired program (1 by default) pressing PB 5 or 6.  
+# 3. Select the stations you want to program to jettison by pressing PBs 16 thru 20. 
+# Mark stations will become boxed.  
+# 4. When happy, select rack / store or pylon option using PBs 2 thru 4.  
+# 5. Validate the selection by pressing ENTER (PB 10).   
+
+#Each combat program will be displayed in the centre of the display, two lines each
+#with 3 parts as follows:
+#
+#Part 1                        Part2                         Part3
+#------------------------------------------------------------------
+#CBT 1                         L (left)                       RACK
+#CBT 2                         C (center)                    STORE
+#                              R (right)                     PYLON
+#                     
+#                              LC (left conformal tank)     
+#                              RC (right conformal tank)     
+#e.g. CBT 1 LRC PYLON means that for program 1 left + right conformal tank stations were  selected and pylon will be jettisoned.  
+# properties:
+# cbtjett[0]/left
+# cbtjett[0]/center
+# cbtjett[0]/right
+# cbtjett[0]/left-conformal
+# cbtjett[0]/right-conformal
+# cbtjett[0]/type
+		me.p1_5.notifyButtonBase = me.p1_5.notifyButton;
+        me.p1_5.notifyButton = func (eventi) {
+            me.notifyButtonBase (eventi);
+        };
         var oo = me;
         var update_flares = func(o) {
             v = getprop("/ai/submodels/submodel[5]/count");
@@ -1079,7 +1234,6 @@ var MPCD_Device =
                             if (v.getValue())
                                 me.mpcd_button_pushed = v.getValue();
                             else {
-                                printf("%s: Button %d",me.designation, me.mpcd_button_pushed);
                                 me.PFD.notifyButton(me.mpcd_button_pushed);
                                 me.mpcd_button_pushed = 0;
                             }
@@ -1103,7 +1257,62 @@ var MPCD_Device =
                         }
                     }
             );
+        # gets the description of what is loaded onto the stations
+        # L,C,R. 
+        # does not support CFT
+        me.p1_5.get_loadout_desc = func (station,mode=0){
+            # use 2 as this will have all the stores
+            var str = "";
+            foreach(var idx; aircraft.lcr_station_map[mode][station]){
+                var v = getprop("payload/weight["~idx~"]/selected") or "";
+                if (v == "Droptank")
+                v = "FUEL";
+                if (v != "" and v != "Empty" and v != "none"){
+                    if (str != "")
+                        str = str ~"\n";
+                    str = str ~ string.truncateAt(v," ");
+                }
+            }
+            return str;
+        };
+        # called whenever the menus related to CBT jettison are changed.
+        # probably also will be used for the A/A and A/G Jettison page
+        # which will likely reuse p1_5 or some of the logic.
+        # the listener sets the property which is then picked up in the update
+        # loop to save this being called too many times.
+        me.reload_cbt_menus = func{
+            me.reload_cbt_menus_required = 0;
+            me.p1_5.menu10.title = me.p1_5.get_loadout_desc(0,0);
+            me.p1_5.menu12.title = me.p1_5.get_loadout_desc(1,0);
+            me.p1_5.menu14.title  = me.p1_5.get_loadout_desc(2,0);
+            me.PFD.updateMenus();
+            
+            
+            var j1 = aircraft.describe_selective_jettison(0);
+            var j2 = aircraft.describe_selective_jettison(1);
+            if (getprop("controls/armament/combat-jettison-count") > 0)
+                j1 = "CBT 1: PERFORMED";
+            if (getprop("controls/armament/combat-jettison-count") > 1)
+                j2 = "CBT 2: PERFORMED";
 
+            me.p1_3.LBL_CBT_1.setText(j1);
+            me.p1_4.LBL_CBT_g.setText(j1);
+            me.p1_5.LBL_CBT_1.setText(j1);
+            me.p1_4.LBL_CBT2_g.setText(j2);
+            me.p1_3.LBL_CBT_2.setText(j2);
+            me.p1_5.LBL_CBT_2.setText(j2);
+
+        };
+        ## Droptank or Empty pylon
+        setlistener("payload/weight[0]/selected", func {me.reload_cbt_menus_required = 1;});
+        setlistener("payload/weight[1]/selected", func {me.reload_cbt_menus_required = 1;});
+        setlistener("payload/weight[2]/selected", func {me.reload_cbt_menus_required = 1;});
+        setlistener("payload/weight[5]/selected", func {me.reload_cbt_menus_required = 1;});
+        setlistener("payload/weight[8]/selected", func {me.reload_cbt_menus_required = 1;});
+        setlistener("payload/weight[9]/selected", func {me.reload_cbt_menus_required = 1;});
+        setlistener("payload/weight[10]/selected", func {me.reload_cbt_menus_required = 1;});
+
+        me.reload_cbt_menus_required = 0;
         me.mpcd_button_pushed = 0;
         me.setupMenus();
         me.PFD.selectPage(me.p1_1);
@@ -1112,16 +1321,7 @@ var MPCD_Device =
     # Add the menus to each page. 
     setupMenus : func
     {
-#
-# Menu Id's
-# 0           5            
-# 1           6            
-# 2           7            
-# 3           8            
-# 4           9            
-#
-# Top: 10 11 12 13 14 
-# Bot: 15 16 17 18 19
+
         me.mpcd_spin_reset_time = 0;
 
         me.p1_1.addMenuItem(0, "ARMT", me.p1_2);
@@ -1141,7 +1341,7 @@ var MPCD_Device =
 
         me.p1_2.addMenuItem(1, "A/A", me.p1_3);
         me.p1_2.addMenuItem(2, "A/G", me.p1_4);
-        me.p1_2.addMenuItem(3, "CBT JETT", me.p1_3);
+        me.p1_2.addMenuItem(3, "CBT\nJETT", me.p1_5);
         me.p1_2.addMenuItem(4, "WPN LOAD", me.p1_3);
         me.p1_2.addMenuItem(9, "M", me.p1_1);
 
@@ -1150,9 +1350,6 @@ var MPCD_Device =
         me.p1_3.addMenuItem(4, "2/2", me.p1_3);
         me.p1_3.addMenuItem(8, "TM\nPWR", me.p1_3);
         me.p1_3.addMenuItem(9, "M", me.p1_1);
-        me.p1_3.addMenuItem(10, "PYLON", me.p1_3);
-        me.p1_3.addMenuItem(12, "FUEL", me.p1_3);
-        me.p1_3.addMenuItem(14, "PYLON", me.p1_3);
         me.p1_3.addMenuItem(15, "MODE S", me.p1_3);
 
         me.p1_4.addMenuItem(2, "SIT", me.p_HSD);
@@ -1165,6 +1362,16 @@ var MPCD_Device =
 #        me.p1_4.addMenuItem(14, "PYLON", me.p1_4);
 #        me.p1_4.addMenuItem(15, "MODE S", me.p1_3);
 
+        me.p1_5.menu10 = me.p1_5.addMenuItem(10, "x", me.p1_5);
+        me.p1_5.menu12 = me.p1_5.addMenuItem(12, "x", me.p1_5);
+        me.p1_5.menu14 = me.p1_5.addMenuItem(14, "x", me.p1_5);
+        me.p1_5.addMenuItem(1, "RACK", me.p1_5);
+        me.p1_5.addMenuItem(2, "STORE", me.p1_5);
+        me.p1_5.addMenuItem(3, "PYLON", me.p1_5);
+        me.p1_5.addMenuItem(9, "MENU", me.p1_1);
+        me.p1_5.menu15 = me.p1_5.addMenuItem(15, "1", me.p1_5);
+        me.p1_5.menu16 = me.p1_5.addMenuItem(16, "2", me.p1_5);
+        me.p1_5.addMenuItem(19, "ENTER", me.p1_3);
 
     },
 
@@ -1196,7 +1403,8 @@ var MPCD_Device =
                 }
             }
         }
-
+        if (me.reload_cbt_menus_required)
+            me.reload_cbt_menus();
         if (me.mfd_device_status)
             me.PFD.update();
     },

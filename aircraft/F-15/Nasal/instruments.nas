@@ -327,6 +327,8 @@ var init = func {
 	weapons_init();
 	tacan_switch_init();
 	radardist.init();
+    setprop("controls/armament/combat-jettison-count",0);
+
 	awg_9.init();
 #	an_arc_182v.init();
 #	an_arc_159v1.init();
