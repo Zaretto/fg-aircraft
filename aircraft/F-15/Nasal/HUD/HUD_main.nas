@@ -99,7 +99,7 @@ var F15HUD = {
         obj.svg = obj.canvas.createGroup();
  
 # Parse an SVG file and add the parsed elements to the given group
-        logprint(3, "HUD Parse SVG ",canvas.parsesvg(obj.svg, svgname));
+        logprint(3, "HUD Parse SVG ",canvas.parsesvg(obj.svg, svgname),  {'font-mapper': aircraft.hud_font_mapper});
 
         obj.canvas._node.setValues({
                                     "name": "F-15 HUD",
@@ -125,14 +125,14 @@ var F15HUD = {
         obj.target_locked = obj.get_element("target_locked");
         obj.target_locked.setVisible(0);
 
-        obj.window1 = obj.get_text("window1", "condensed.txf",9,1.4);
-        obj.window2 = obj.get_text("window2", "condensed.txf",9,1.4);
-        obj.window3 = obj.get_text("window3", "condensed.txf",9,1.4);
-        obj.window4 = obj.get_text("window4", "condensed.txf",9,1.4);
-        obj.window5 = obj.get_text("window5", "condensed.txf",9,1.4);
-        obj.window6 = obj.get_text("window6", "condensed.txf",9,1.4);
-        obj.window7 = obj.get_text("window7", "condensed.txf",9,1.4);
-        obj.window8 = obj.get_text("window8", "condensed.txf",9,1.4);
+        obj.window1 = obj.get_text("window1", aircraft.HUDFont,9,1.4);
+        obj.window2 = obj.get_text("window2", aircraft.HUDFont,9,1.4);
+        obj.window3 = obj.get_text("window3", aircraft.HUDFont,9,1.4);
+        obj.window4 = obj.get_text("window4", aircraft.HUDFont,9,1.4);
+        obj.window5 = obj.get_text("window5", aircraft.HUDFont,9,1.4);
+        obj.window6 = obj.get_text("window6", aircraft.HUDFont,9,1.4);
+        obj.window7 = obj.get_text("window7", aircraft.HUDFont,9,1.4);
+        obj.window8 = obj.get_text("window8", aircraft.HUDFont,9,1.4);
 
         obj.window1.setVisible(0);
 

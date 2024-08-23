@@ -25,7 +25,7 @@ var TEWSSymbol = {
             if (sym != nil)
             {
                 obj.label = sym;
-                obj.label.setFont("condensed.txf").setFontSize(10, 1.0);
+                obj.label.setFont(aircraft.TEWSFont).setFontSize(10, 1.0);
                 obj.valid = 1;
                 obj.setVisible(0);
             }
@@ -100,7 +100,7 @@ var TEWSDisplay = {
         obj.TEWSsvg = obj.canvas.createGroup();
  
         # Parse an SVG file and add the parsed elements to the given group
-        canvas.parsesvg(obj.TEWSsvg, svgname);
+        canvas.parsesvg(obj.TEWSsvg, svgname,  {'font-mapper': aircraft.tews_font_mapper});
         #obj.TEWSsvg.setTranslation (-20.0, 37.0);
         #logprint(3, "TEWS INIT");
         obj.tews_on = 1;

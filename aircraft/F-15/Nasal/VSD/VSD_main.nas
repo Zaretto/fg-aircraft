@@ -84,30 +84,30 @@ var VSD_Device =
     obj.dev_canvas.setColorBackground(0.0039215686274509803921568627451,0.17647058823529411764705882352941,0, 0.00);
 # Create a group for the parsed elements
     obj.VSDsvg = obj.dev_canvas.createGroup();
-    var pres = canvas.parsesvg(obj.VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg");
+    var pres = canvas.parsesvg(obj.VSDsvg, "Aircraft/F-15/Nasal/VSD/VSD.svg",  {'font-mapper': aircraft.vsd_font_mapper});
 # Parse an SVG file and add the parsed elements to the given group
     logprint(3, sprintf("VSD : %s Load SVG %s",designation,pres));
     obj.VSDsvg.setTranslation(10,5);
 #
 # create the object that will control all of this
     obj.window1 = obj.VSDsvg.getElementById("window-1");
-    obj.window1.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.window1.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.window2 = obj.VSDsvg.getElementById("window-2");
-    obj.window2.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.window2.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.window3 = obj.VSDsvg.getElementById("window-3");
-    obj.window3.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.window3.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.window4 = obj.VSDsvg.getElementById("window-4");
-    obj.window4.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.window4.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.acue = obj.VSDsvg.getElementById("ACUE");
-    obj.acue.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.acue.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.acue.setText ("A");
     obj.acue.setVisible(0);
     obj.ecue = obj.VSDsvg.getElementById("ECUE");
-    obj.ecue.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.ecue.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.ecue.setText ("E");
     obj.ecue.setVisible(0);
     obj.morhcue = obj.VSDsvg.getElementById("MORHCUE");
-    obj.morhcue.setFont("condensed.txf").setFontSize(12, 1.2);
+    obj.morhcue.setFont(aircraft.VSDFont).setFontSize(12, 1.2);
     obj.morhcue.setText ("mh");
     obj.morhcue.setVisible(0);
     obj.max_symbols = 21;

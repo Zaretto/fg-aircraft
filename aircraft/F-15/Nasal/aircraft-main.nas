@@ -5,10 +5,8 @@
 # ---------------------------
 # Richard Harrison (rjh@zaretto.com) 2014-11-23. Based on F-14b by xii
 #
-HUDFont = "condensed.txf";#"LiberationFonts/LiberationSans-Bold.ttf";#"notosansmono-black.ttf";
-VSDFont = "condensed.txf";#;
-TEWSFont = "condensed.txf";
-MPCDFont = "condensed.txf";#
+var stdFont =  "condensed.txf";#"richud.ttf";#"LiberationFonts/LiberationSans-Bold.ttf";#"notosansmono-black.ttf";
+HUDFont =  VSDFont = TEWSFont = MPCDFont = stdFont;
 
 var canvas_font_mapper = func(family, weight) {
 #    print("font map ",family," ",weight);
