@@ -17,7 +17,6 @@ Items prefixed with RBT are the rembrandt light cones.
 
     <light-params>
         <position-factor>sim/multiplay/generic/int[4]</position-factor>
-        <colision-factor>-14</colision-factor>
         <halo-factor>-20</halo-factor>
     </light-params>
 
@@ -38,7 +37,6 @@ Items prefixed with RBT are the rembrandt light cones.
                 <property>sim/multiplay/generic/float[14]</property> <!-- electrics -->
                 <value>0</value>
             </greater-than>
-            <property>/sim/rendering/rembrandt/enabled</property>
         </condition>
         <object-name>RBT-vert-tail-light-r</object-name>
         <object-name>RBT-vert-tail-light-l</object-name>
@@ -56,10 +54,12 @@ Items prefixed with RBT are the rembrandt light cones.
 
     <animation>
         <type>select</type>
+        <object-name>coll_halo_WL</object-name>
         <object-name>coll_halo_WR</object-name>
+        <object-name>RBT-coll_halo_WL</object-name>
+        <object-name>RBT-coll_halo_WR</object-name>
         <object-name>WingCollisionLightRight</object-name>
         <object-name>WingCollisionLightLeft</object-name>
-        <object-name>RBT-coll_halo_WR</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -74,8 +74,7 @@ Items prefixed with RBT are the rembrandt light cones.
         <object-name>TailCollisionLight</object-name>
         <emission>
             <property>sim/multiplay/generic/int[3]</property>
-                        <factor>0.1</factor>
-
+            <factor>0.1</factor>
             <red>1</red>
             <green>1</green>
             <blue>1</blue>
@@ -86,6 +85,9 @@ Items prefixed with RBT are the rembrandt light cones.
         <object-name>WingPositionLightRight</object-name>
         <object-name>WingPositionLightLeft</object-name>
         <object-name>TailPositionLight</object-name>
+        <object-name>pos_halo_WL</object-name>
+        <object-name>pos_halo_WR</object-name>
+        <object-name>pos_halo_Tail</object-name>
         <emission>
             <factor-prop>sim/multiplay/generic/int[4]</factor-prop>
             <red>0.2</red>
@@ -111,7 +113,7 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>RBT-coll_halo_WR</name>
+        <name>coll_halo_WR-light</name>
         <object-name>RBT-coll_halo_WR</object-name>
         <ambient>
             <r>1</r>
@@ -134,20 +136,20 @@ Items prefixed with RBT are the rembrandt light cones.
         
         <position>
             <x>0.042</x>
-            <y>2.3911</y>
-            <z>0.6044</z>
+            <y>2.333</y>
+            <z>0.61</z>
         </position>
         <direction>
-            <x>-1.5</x>
-            <y>3</y>
-            <z>0</z>
+            <x>-3.5</x>
+            <y>5</y>
+            <z>-0.5</z>
         </direction>
         <attenuation>
-            <c>3.0</c>
+            <c>2.0</c>
             <l>0.2</l>
-            <q>0.8</q>
+            <q>0.5</q>
         </attenuation>
-        <exponent>5</exponent>
+        <exponent>2.5</exponent>
         <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -185,13 +187,13 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>RBT-coll_halo_TR</name>
+        <name>coll_halo_TR-light</name>
         <object-name>RBT-coll_halo_TR</object-name>
-        <nopreview/>
+        <nopreview />
         <position>
-                <x>8.4811</x>
-                <y>1.8063</y>
-                <z>3.2934</z>
+            <x>8.4811</x>
+            <y>1.8063</y>
+            <z>3.2934</z>
         </position>
         <direction>
             <x>11</x>
@@ -216,12 +218,13 @@ Items prefixed with RBT are the rembrandt light cones.
             <b>0</b>
             <a>1.0</a>
         </specular>
+        
         <attenuation>
-            <c>3.0</c>
+            <c>2.0</c>
             <l>0.2</l>
-            <q>0.8</q>
+            <q>0.5</q>
         </attenuation>
-        <exponent>1</exponent>
+        <exponent>2.5</exponent>
         <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -230,7 +233,6 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>select</type>
         <object-name>coll_halo_WL</object-name>
-        <object-name>RBT-coll_halo_WL</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -257,7 +259,7 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>RBT-coll_halo_WL</name>
+        <name>coll_halo_WL-light</name>
         <object-name>RBT-coll_halo_WL</object-name>
         <ambient>
             <r>1</r>
@@ -280,20 +282,20 @@ Items prefixed with RBT are the rembrandt light cones.
         
         <position>
             <x>0.042</x>
-            <y>-2.3911</y>
-            <z>0.6044</z>
+            <y>-2.333</y>
+            <z>0.61</z>
         </position>
         <direction>
-            <x>-1.5</x>
-            <y>-3</y>
-            <z>0</z>
+            <x>-3.5</x>
+            <y>-5</y>
+            <z>-0.5</z>
         </direction>
         <attenuation>
-            <c>3.0</c>
+            <c>2.0</c>
             <l>0.2</l>
-            <q>0.8</q>
+            <q>0.5</q>
         </attenuation>
-        <exponent>5</exponent>
+        <exponent>2.5</exponent>
         <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
@@ -304,7 +306,6 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>select</type>
         <object-name>pos_halo_WL</object-name>
-        <object-name>RBT-coll_halo_WL</object-name>
         <object-name>TailCollisionLight</object-name>
         <object-name>WingPositionLightLeft</object-name>
         <condition>
@@ -320,7 +321,6 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>rotate</type>
         <object-name>pos_halo_WL</object-name>
-        <object-name>RBT-coll_halo_WL</object-name>
         <property>surface-positions/wing-fold-pos-norm</property>
         <factor>-7.0</factor>
         <center>
@@ -357,7 +357,7 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>RBT-pos_halo_WL</name>
+        <name>pos_halo_WL-light</name>
         <object-name>RBT-pos_halo_WL</object-name>
         <nopreview/>
         <position>
@@ -365,6 +365,12 @@ Items prefixed with RBT are the rembrandt light cones.
             <y>-6.247</y>
             <z>0.2290</z>
         </position>
+        <direction>
+            <x>-0.9988</x>
+            <y>-2</y>
+            <z>-0.0349</z>
+        </direction>
+        
         <ambient>
             <r>1</r>
             <g>0.15</g>
@@ -383,17 +389,14 @@ Items prefixed with RBT are the rembrandt light cones.
             <b>0</b>
             <a>1.0</a>
         </specular>
+
         <dim-factor>
             <property>sim/multiplay/generic/int[4]</property>
             <factor>0.2</factor>
             <min>0</min>
             <max>5</max>
         </dim-factor>
-        <direction>
-            <x>-0.9988</x>
-            <y>-2</y>
-            <z>-0.0349</z>
-        </direction>
+
         <attenuation>
             <c>2.0</c>
             <l>0.2</l>
@@ -409,7 +412,6 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>select</type>
         <object-name>pos_halo_WR</object-name>
-        <object-name>RBT-coll_halo_WR</object-name>
         <object-name>WingPositionLightRight</object-name>
         <condition>
             <greater-than>
@@ -422,7 +424,6 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>rotate</type>
         <object-name>pos_halo_WR</object-name>
-        <object-name>RBT-coll_halo_WR</object-name>
         <property>surface-positions/wing-fold-pos-norm</property>
         <factor>-7.0</factor>
         <center>
@@ -458,7 +459,7 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>RBT-pos_halo_WR</name>
+        <name>pos_halo_WR-light</name>
         <object-name>RBT-pos_halo_WR</object-name>
         <nopreview/>
         <position>
@@ -466,6 +467,12 @@ Items prefixed with RBT are the rembrandt light cones.
             <y>6.247</y>
             <z>0.2290</z>
         </position>
+        <direction>
+            <x>-0.9988</x>
+            <y>2</y>
+            <z>-0.0349</z>
+        </direction>
+
         <ambient>
             <r>0</r>
             <g>0.9</g>
@@ -484,18 +491,14 @@ Items prefixed with RBT are the rembrandt light cones.
             <b>0.1</b>
             <a>1</a>
         </specular>
+
         <dim-factor>
-            <property>sim/multiplay/generic/int[4]</property>
             <property>sim/multiplay/generic/int[4]</property>
             <factor>0.2</factor>
             <min>0</min>
             <max>5</max>
         </dim-factor>
-        <direction>
-            <x>-0.9988</x>
-            <y>2</y>
-            <z>-0.0349</z>
-        </direction>
+
         <attenuation>
             <c>2.0</c>
             <l>0.2</l>
@@ -541,10 +544,22 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>RBT-pos_halo_Tail</name>
+        <name>pos_halo_Tail-light</name>
         <object-name>RBT-pos_halo_Tail</object-name>
-        <nopreview/>
-    <ambient>
+        <nopreview />
+
+        <position>
+            <x>8.4811</x>
+            <y>-1.8063</y>
+            <z>3.2934</z>
+        </position>
+        <direction>
+            <x>11</x>
+            <y>-1.8</y>
+            <z>3.32</z>
+        </direction>
+
+        <ambient>
             <r>0.95</r>
             <g>0.9</g>
             <b>0.9</b>
@@ -562,39 +577,30 @@ Items prefixed with RBT are the rembrandt light cones.
             <b>0.9</b>
             <a>1</a>
         </specular>
-        <position>
-                <x>8.4811</x>
-                <y>-1.8063</y>
-                <z>3.2934</z>
-        </position>
-        <direction>
-            <x>11</x>
-            <y>-1.8</y>
-            <z>3.32</z>
-        </direction>
+        <dim-factor>
+            <expression>
+                <product>
+                    <property>sim/multiplay/generic/int[4]</property>
+                    <value>0.2</value>
+                </product>
+            </expression>
+        </dim-factor>
         <attenuation>
-            <c>3.0</c>
+            <c>2.0</c>
             <l>0.2</l>
-            <q>0.8</q>
+            <q>0.5</q>
         </attenuation>
-        <exponent>1</exponent>
+        <exponent>2.5</exponent>
         <cutoff>80</cutoff>
         <near-m>0.01</near-m>
         <far-m>10</far-m>
-
-        <dim-factor>
-            <property>sim/multiplay/generic/int[4]</property>
-            <factor>0.4</factor>
-            <min>0</min>
-            <max>5</max>
-        </dim-factor>
     </animation>
 
 
     <!-- Taxi light cone -->
     <animation>
         <type>select</type>
-        <object-name>taxi-lights</object-name>
+        <object-name>taxi-lights-group</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -619,44 +625,16 @@ Items prefixed with RBT are the rembrandt light cones.
         <name>taxi-light</name>
         <object-name>taxi-light-cone</object-name>
         <nopreview/>
-
-        <attenuation>
-            <!--<c>  0.300 </c>
-            <l>  0.200 </l>
-            <q>  0.002 </q>-->
-            <c>1.0</c>
-            <l>0.02</l>
-            <q>0.0009</q>
-        </attenuation>
-        <direction>
-            <x> -0.998 </x>
-            <y>  0.000 </y>
-            <z> -0.125 </z>
-        </direction>
-        <exponent> 9.0 </exponent>
-        <cutoff>   80.0 </cutoff>
-        <near-m>    2.5 </near-m>
-        <far-m>    65.0 </far-m>
-
         <position>
             <x>-6.69842</x>
             <y>0</y>
             <z>-0.7944</z>
         </position>
-        <!--<direction>
-            <x>-1</x>
-            <y>0</y>
-            <z>-0.024</z>
-        </direction>-->
-        <!--<attenuation>
-            <c>2.0</c>
-            <l>0.002</l>
-            <q>0.00005</q>
-        </attenuation>
-        <exponent>66.0</exponent>
-        <cutoff>100</cutoff>
-        <near-m>0.01</near-m>
-        <far-m>100</far-m>-->
+        <direction>
+            <x> -0.998 </x>
+            <y>  0.000 </y>
+            <z> 0.125 </z>
+        </direction>
 
         <ambient>
             <r>  0.5 </r>
@@ -676,12 +654,24 @@ Items prefixed with RBT are the rembrandt light cones.
             <b>  0.5 </b>
             <a>  1.0 </a>
         </specular>
+      
+        <attenuation>
+            <c>1.0</c>
+            <l>0.002</l>
+            <q>0.00009</q>
+        </attenuation>
+
+        <exponent> 9.0 </exponent>
+        <cutoff>   80.0 </cutoff>
+        <near-m>    2.5 </near-m>
+        <far-m>    65.0 </far-m>
+
     </animation>
 
     <!-- Landing lights -->
     <animation>
         <type>select</type>
-        <object-name>landing-lights</object-name>
+        <object-name>landing-lights-group</object-name>
         <condition>
             <greater-than>
                 <property>sim/multiplay/generic/float[14]</property>
@@ -700,31 +690,21 @@ Items prefixed with RBT are the rembrandt light cones.
         <name>landing-light</name>
         <object-name>landing-light-cone</object-name>
         <nopreview/>
-       <position>
-            <x>-8.812</x>
+        <position>
+            <x>-6.9</x>
             <y>0</y>
-            <z>-0.8144</z>
+            <z>-0.7944</z>
         </position>
-
         <direction>
             <x> -0.998 </x>
             <y>  0.000 </y>
-            <z>  0.06 </z>
+            <z> -0.125 </z>
         </direction>
-        <attenuation>
-            <c>1.0</c>
-            <l>0.002</l>
-            <q>0.00005</q>
-        </attenuation>
-        <exponent>30.0</exponent>
-        <cutoff>669</cutoff>
-        <far-m>479</far-m>
-        <near-m>3.5</near-m>
 
         <ambient>
-            <r>  0.3 </r>
-            <g>  0.3 </g>
-            <b>  0.3 </b>
+            <r>  0.5 </r>
+            <g>  0.5 </g>
+            <b>  0.5 </b>
             <a>  1.0 </a>
         </ambient>
         <diffuse>
@@ -739,53 +719,30 @@ Items prefixed with RBT are the rembrandt light cones.
             <b>  0.5 </b>
             <a>  1.0 </a>
         </specular>
-        <!--<direction>
-            <x>-1</x>
-            <y>0</y>
-            <z>-0.024</z>
-        </direction>-->
-        <!--<position>
-            <x>-3.812</x>
-            <y>0</y>
-            <z>-0.8144</z>
-        </position>
-        <ambient>
-            <r>0.75</r>
-            <g>0.7</g>
-            <b>0.7</b>
-            <a>1</a>
-        </ambient>
-        <diffuse>
-            <r>0.75</r>
-            <g>0.7</g>
-            <b>0.7</b>
-            <a>1</a>
-        </diffuse>
-        <specular>
-            <r>0.75</r>
-            <g>0.7</g>
-            <b>0.7</b>
-            <a>1</a>
-        </specular>
+
         <attenuation>
+            <!--<c>  0.300 </c>
+            <l>  0.200 </l>
+            <q>  0.002 </q>-->
             <c>1.0</c>
-            <l>0.002</l>
-            <q>0.00005</q>
+            <l>0.02</l>
+            <q>0.0009</q>
         </attenuation>
-        <exponent>46.0</exponent>
-        <cutoff>1200</cutoff>
-        <near-m>0.01</near-m>
-        <far-m>1200</far-m>
-        -->
+
+        <exponent> 9.0 </exponent>
+        <cutoff>   80.0 </cutoff>
+        <near-m>    2.5 </near-m>
+        <far-m>    65.0 </far-m>
+
     </animation>
 
-<!-- afterburners -->
+    <!-- afterburners -->
     <animation>
         <type>light</type>
         <light-type>point</light-type>
-        <name>left afterburner</name>
+        <name>left-afterburner-light</name>
         <object-name>RBT-afterburner_halo_l</object-name>
-        <nopreview/>
+        <nopreview />
         <position>
             <x>8.512</x>
             <y>-0.7</y>
@@ -817,19 +774,19 @@ Items prefixed with RBT are the rembrandt light cones.
         <cutoff>100</cutoff>
         <near-m>0.01</near-m>
         <far-m>14.3</far-m>
-          <dim-factor>
+        <dim-factor>
             <expression>
-              <product>
-                <property>engines/engine[1]/afterburner</property>
-                <value>0.2</value>
-              </product>
+                <product>
+                    <property>engines/engine[1]/afterburner</property>
+                    <value>0.2</value>
+                </product>
             </expression>
-          </dim-factor>
+        </dim-factor>
     </animation>
     <animation>
         <type>light</type>
         <light-type>point</light-type>
-        <name>right afterburner</name>
+        <name>right-afterburner-light</name>
         <object-name>RBT-afterburner_halo_r</object-name>
         <nopreview />
         <position>
@@ -874,7 +831,7 @@ Items prefixed with RBT are the rembrandt light cones.
     </animation>
     <!-- formation lights -->
     <animation>
-        <object-name>FormationLights</object-name>
+        <object-name>formation-lights-group</object-name>
         <type>material</type>
         <condition>
             <greater-than>
@@ -892,7 +849,7 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>left vertical tail light</name>
+        <name>left-vertical-tail-light</name>
         <object-name>RBT-vert-tail-light-l</object-name>
         <nopreview/>
         <position>
@@ -953,7 +910,7 @@ Items prefixed with RBT are the rembrandt light cones.
     <animation>
         <type>light</type>
         <light-type>spot</light-type>
-        <name>Right vertical tail light</name>
+        <name>right-vertical-tail-light</name>
         <object-name>RBT-vert-tail-light-r</object-name>
         <nopreview/>
         <position>

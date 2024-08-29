@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PropertyList>
+    <update-interval-secs type="double">0.1</update-interval-secs>
+    <filter>
+        <!-- With the anti-collision lights on, the position lights automatically go to steady full
+        brilliance, regardless of the position of the position lights knob -->
+        <name>rule-position-light-intensity</name>
+        <type>gain</type>
+        <gain>1.0</gain>
+        <input>
+            <expression>
+                <min>
+                    <sum>
+                        <property>sim/model/f15/controls/lighting/position-switch</property>
+                        <product>
+                            <property>sim/multiplay/generic/int[3]</property>
+                            <value>5</value>
+                        </product>
+                    </sum>
+                    <value>6</value>
+                </min>
+            </expression>
+        </input>
+        <output>
+            <property>sim/multiplay/generic/int[4]</property>
+        </output>
+    </filter>
+    <!-- indicates that the collision lights are flashing -->
+    <logic>
+        <input>
+          <greater-than>
+            <property>sim/model/f15/controls/lighting/position-switch</property>
+            <value>5.0</value>
+          </greater-than>
+        </input>
+        <output>sim/multiplay/generic/bool[71]</output>
+      </logic>
+</PropertyList>

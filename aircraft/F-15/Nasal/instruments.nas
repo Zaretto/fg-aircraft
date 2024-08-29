@@ -179,7 +179,7 @@ aircraft.data.add(
                   "controls/lighting/logo-lights",
                   "controls/lighting/nav-lights",
                   "controls/lighting/panel-norm",
-                  "controls/lighting/position-flash-switch",
+                  "controls/lighting/position-switch",
                   "controls/lighting/position-tail-switch",
                   "controls/lighting/position-wing-switch",
                   "controls/lighting/standby-inst",
@@ -222,8 +222,6 @@ aircraft.data.add(
                   "sim/model/f15/controls/lighting/hook-bypass",
                   "controls/lighting/instruments-norm",
                   "controls/lighting/panel-norm",
-                  "sim/model/f15/controls/lighting/anti-collision-switch",
-                  "sim/model/f15/controls/lighting/position-flash-switch",
                   "sim/model/f15/controls/lighting/position-wing-switch",
                   "autopilot/settings/aileron-deadzone",
                   "autopilot/settings/elevator-deadzone"

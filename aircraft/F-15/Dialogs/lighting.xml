@@ -192,10 +192,11 @@
             </checkbox>
             <slider>
                 <name>Position</name>
-                <property>sim/multiplay/generic/int[4]</property>
+                <property>sim/model/f15/controls/lighting/position-switch</property>
                 <live>1</live>
                 <min>0</min>
-                <max>5</max>
+                <max>6</max>
+                <step>1</step>
                 <binding>
                     <command>dialog-apply</command>
                 </binding>
@@ -234,7 +235,7 @@
                         setprop("sim/multiplay/generic/int[6]", 0);
                         setprop("sim/multiplay/generic/int[1]", 0);
                         setprop("sim/multiplay/generic/int[3]", 1);
-                        setprop("sim/multiplay/generic/int[4]", 5);
+                        setprop("sim/model/f15/controls/lighting/position-switch", 5);
                         setprop("sim/multiplay/generic/int[5]", 0);
     setprop("sim/model/f15/controls/HUD/brightness",0.4);
     setprop("sim/model/f15/controls/VSD/brightness",1);

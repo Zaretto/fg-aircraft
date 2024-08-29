@@ -119,18 +119,11 @@ var radarMPnode = props.globals.getNode("instrumentation/radar/radar-mode",1);
 # Lighting 
 #setprop("sim/model/path","data/Aircraft/f15/F15.xml");
 
-# Collision lights flasher
 var anti_collision_switch = props.globals.getNode("sim/model/f15/controls/lighting/anti-collision-switch");
-aircraft.light.new("sim/model/f15/lighting/anti-collision", [0.09, 1.20], anti_collision_switch);
-var position_flash_sw = props.globals.getNode("sim/model/f15/controls/lighting/position-flash-switch",1);
-
-# Navigation lights steady/flash dimmed/bright
-var position_flash_sw = props.globals.getNode("sim/model/f15/controls/lighting/position-flash-switch");
-var position = aircraft.light.new("sim/model/f15/lighting/position", [0.08, 1.15]);
-setprop("sim/model/f15/lighting/position/enabled", 1);
+var position_sw = props.globals.getNode("sim/model/f15/controls/lighting/position-switch",1);
+var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
 setprop("sim/model/f15/fx/smoke",0);
 
-var lighting_taxi  = props.globals.getNode("controls/lighting/taxi-light", 1);
 
 getprop("fdm/jsbsim/fcs/flap-pos-norm",0);
 var sw_pos_prop = props.globals.getNode("sim/model/f15/controls/lighting/position-wing-switch", 1);
@@ -158,64 +151,7 @@ var  setprop_inrange = func(p,v,mn,mx)
     setprop(p,v);
 };
 
-var position_switch = func(n) {
-	var sw_pos = sw_pos_prop.getValue();
-	if (n == 1) {
-		if (sw_pos == 0) {
-			sw_pos_prop.setIntValue(1);
-			position.switch(0);
-			position_intens = 0;
-		} elsif (sw_pos == 1) {
-			sw_pos_prop.setIntValue(2);
-			position.switch(1);
-			position_intens = 6;
-		}
-	} else {
-		if (sw_pos == 2) {
-			sw_pos_prop.setIntValue(1);
-			position.switch(0);
-			position_intens = 0;
-		} elsif (sw_pos == 1) {
-			sw_pos_prop.setIntValue(0);
-			position.switch(1);
-			position_intens = 3;
-		}
-	}	
-}
-var position_flash_switch = func {
-	if (! position_flash_sw.getBoolValue() ) {
-		position_flash_sw.setBoolValue(1);
-		position.blink();
-	} else {
-		position_flash_sw.setBoolValue(0);
-		position.cont();
-	}
-}
 
-var position_flash_init  = func {
-	if (position_flash_sw.getBoolValue() ) {
-		position.blink();
-	} else {
-		position.cont();
-	}
-	var sw_pos = sw_pos_prop.getValue();
-	if (sw_pos == 0 ) {
-		position_intens = 3;
-		position.switch(1);
-	} elsif (sw_pos == 1 ) {
-		position_intens = 0;
-		position.switch(0);
-	} elsif (sw_pos == 2 ) {
-		position_intens = 6;
-		position.switch(1);
-	}
-}
-
-# sim/multiplay/generic/int[1] used by formation slimmers.
-# sim/multiplay/generic/int[2] used by radar standby.
-var lighting_collision_generic = props.globals.getNode("sim/multiplay/generic/int[3]",1);
-var lighting_position_generic  = props.globals.getNode("sim/multiplay/generic/int[4]",1);
-var lighting_taxi_generic       = props.globals.getNode("sim/multiplay/generic/int[6]",1);
 
 #
 #
@@ -410,8 +346,6 @@ var n2_r = getprop("engines/engine[1]/n2");
 # volume: -0.3 + 0.01 * engines/engine[0]/n2
 }
 
-position_flash_init();
-
 var two_seater = getprop("fdm/jsbsim/metrics/two-place-canopy");
 if (two_seater)
 logprint(3, "F-15 two seat variant (B,D,E)");
@@ -545,7 +479,7 @@ var cold_and_dark = func()
 
     setprop("sim/multiplay/generic/int[1]", 0);
     setprop("sim/multiplay/generic/int[3]", 0);
-    setprop("sim/multiplay/generic/int[4]", 0);
+    setprop("sim/model/f15/controls/lighting/position-switch", 0);
     setprop("sim/multiplay/generic/int[5]", 0);
     setprop("sim/multiplay/generic/int[6]", 0);
     setprop("sim/model/f15/controls/windshield-heat",0);
