@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PropertyList>
+    <filter>
+        <name>master-caution-count</name>
+        <debug>false</debug>
+        <type>gain</type>
+        <gain>1.0</gain>
+        <input>
+            <expression>
+                <min>
+                    <sum>
+                        <product>
+                            <difference>
+                                <property>/sim/current-view/y-offset-m</property>
+                                <value>0.35</value>
+                            </difference>
+                            <value>1000</value>
+                        </product>
+                    </sum>
+                    <value>32</value>
+                </min>
+            </expression>
+        </input>
+        <output>
+            <property>/sim/hud/clipping/top1</property>
+        </output>
+    </filter>
+</PropertyList>

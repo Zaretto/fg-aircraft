@@ -1,0 +1,177 @@
+<factor>
+  <expression>
+    <max>
+      <sum>
+        <property>sim/multiplay/generic/int[4]</property>
+        <product>
+          <property>sim/multiplay/generic/int[3]</property>
+          <value>5</value>
+        </product>
+      </sum>
+      <value>5</value>
+    </max>
+  </expression>
+</factor>
+
+<or>
+  <property>sim/multiplay/generic/int[3]</property>
+  <property>sim/multiplay/generic/int[4]</property>
+</or>
+<greater-than>
+  <expression>
+    <!-- Richard's way of making lights flash entirely in an expression. 
+                     We take the sim time (decimal) and modulus this by the total duration of the blink
+                     From this we subtract the ON time; which will give us a value of -blink_time..0
+                     using min we limit this to 0; multiply it by 1000 and limit to 1 thus giving us a flashing
+                     light
+                    -->
+    <min>
+      <product>
+        <min>
+          <difference>
+            <mod>
+              <property>/sim/time/elapsed-sec</property>
+              <value>0.6</value> <!-- cycle time total (on+off)-->
+            </mod>
+            <value>0.3</value> <!-- on time -->
+          </difference>
+          <value>0</value>
+        </min>
+        <value>-1000</value>
+        <property>sim/multiplay/generic/bool[71]</property>
+      </product>
+      <value>1</value>
+    </min>
+  </expression>
+  <value>0</value>
+</greater-than>
+
+
+<!-- 1 if flash -->
+<abs>
+  <min>
+    <difference>
+      <value>5</value>
+      <property>sim/multiplay/generic/int[4]</property>
+    </difference>
+    <value>0</value>
+  </min>
+</abs>
+
+
+<filter>
+  <!-- With the anti-collision lights on, the position lights automatically go to steady full
+                            brilliance, regardless of the position of the position lights knob -->
+  <name>rule-position-light-intensity</name>
+  <type>gain</type>
+  <gain>1.0</gain>
+  <input>
+    <expression>
+      <!-- Richard's way of making lights flash entirely in an expression.                       -->
+      <min>
+        <value>1</value>
+        <sum>
+          <property>sim/multiplay/generic/int[3]</property>
+          <product>
+            <min>
+              <property>sim/multiplay/generic/int[4]</property>
+              <value>5</value>
+            </min>
+            <value>0.2</value>
+            <!-- 1 if flash -->
+            <difference>
+              <value>1</value>
+              <abs>
+                <min>
+                  <difference>
+                    <value>5</value>
+                    <property>sim/multiplay/generic/int[4]</property>
+                  </difference>
+                  <value>0</value>
+                </min>
+              </abs>
+            </difference>
+          </product>
+          <!-- flash on/off-->
+          <min>
+            <value>1</value>
+            <product>
+              <min>
+                <difference>
+                  <mod>
+                    <property>/sim/time/elapsed-sec</property>
+                    <value>0.5</value> <!-- cycle time total (on+off)-->
+                  </mod>
+                  <value>0.4</value> <!-- on time -->
+                </difference>
+                <value>0</value>
+              </min>
+              <value>-2</value>
+              <property>sim/multiplay/generic/bool[71]</property>
+            </product>
+          </min>
+        </sum>
+      </min>
+
+    </expression>
+  </input>
+  <output>
+    <property>/apos1</property>
+  </output>
+</filter>  
+                    
+
+F-15C flashing collision lights
+<factor>
+    <expression>
+        <!-- Richard's way of making lights flash entirely in an expression.                       -->
+        <min>
+            <value>1</value>
+            <sum>
+                <property>sim/multiplay/generic/int[3]</property>
+                <product>
+                    <min>
+                        <property>sim/multiplay/generic/int[4]</property>
+                        <value>5</value>
+                    </min>
+                    <value>0.2</value>
+                    <!-- 1 if flash -->
+                    <difference>
+                        <value>1</value>
+                        <abs>
+                            <min>
+                                <difference>
+                                    <value>5</value>
+                                    <property>sim/multiplay/generic/int[4]</property>
+                                </difference>
+                                <value>0</value>
+                            </min>
+                        </abs>
+                    </difference>
+                </product>
+                <!-- flash on/off-->
+                <min>
+                    <value>1</value>
+                    <sum>
+                        <product>
+                            <min>
+                                <difference>
+                                    <mod>
+                                        <property>/sim/time/elapsed-sec</property>
+                                        <value>0.5</value> <!-- cycle time total
+                                        (on+off)-->
+                                    </mod>
+                                    <value>0.4</value> <!-- on time -->
+                                </difference>
+                                <value>0</value>
+                            </min>
+                            <value>-1.8</value>
+                            <property>sim/multiplay/generic/bool[71]</property>
+                        </product>
+                        <value>0.4</value>
+                    </sum>
+                </min>
+            </sum>
+        </min>
+    </expression>
+</factor>
