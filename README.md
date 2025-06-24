@@ -3,17 +3,51 @@ Zaretto FlightGear Aircraft Models
 
 Aircraft directory contains the FlightGear aircraft models by Richard Harrison
 
-F-14B - see http://zaretto.com/f-14. JSBSim aero model and improvements to original f-14b by xii, flying_toaster;
+Since 14/06/2025 I moved to using submodules and separated out the F-14 and F-15. New issues should be raised on each submodule rather than on this repository
 
-F-15 - C and D variants. http://zaretto.com/f-15. JSBSim aero model, external model by flying_toaster; cockpit photo textures by geneb.
+
+F-14B - https://github.com/Zaretto/f-14b.git 
+        F-14 A and B variants. see http://zaretto.com/f-14. 
+        JSBSim aero model and improvements to original f-14b by xii, flying_toaster;
+        Issues: https://github.com/Zaretto/f-14b/issues
+
+F-15 - https://github.com/Zaretto/F-15.git  
+       C and D variants. http://zaretto.com/f-15. JSBSim aero model, external model by flying_toaster; cockpit photo textures by geneb.
+       Issues: https://github.com/Zaretto/F-15/issues
+
+       Cloning the Repository
+
+When cloning for the first time, use the --recursive flag so that Git initializes and updates all the submodules automatically:
+
+git clone --recursive [repository_url]
+
+git submodule update --init --recursive
+
+Pulling Updates
+
+To pull changes from the remote repository—including updates within submodules—run the following command from the root directory of the repository:
+
+git pull --recurse-submodules
+
+This command updates the main repository and fetches new commits in all initialized submodules. To ensure all submodules are synchronized to the commit versions specified in the main repository, it’s a good idea to run:
+
+git submodule update --init --recursive
+
+
+Check Submodule Status
+
+You can check the state and commit of each submodule with:
+
+git submodule status
 
 -----------------------------------------------------------------
-Contributions are welcomed. If there's something you want to improve or fix raise an issue here. If you know what you want to do then spell it out in the issue. https://github.com/Zaretto/fg-aircraft/issues
 
-Branches are as follows:
-* master is generally where I do most of the development. the 
-* develop I use only for large changes (to keep master free from in development breaking changes). 
-* flightgear-release branch is generally what I use to make the archives that are distributed on my page.
+Branches are as follows, following GitFlow 
+
+* master is for releases
+* develop is for the next version
+* feature/name is for individual features
+* release/#.## is for an upcoming release.
 
 It is best if you reference the issue in the commit or pull message.
 
@@ -22,6 +56,9 @@ So to summarise;
 - communicate by raising an issue
 - contribute by making the changes to the master branch, test and then when you're happy generate a pull request
 - wait for the pull request to be reviewed and accepted. 
+
+---------
+
 
 ------
 
